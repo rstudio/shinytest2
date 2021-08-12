@@ -1,15 +1,17 @@
 Package: shinytest2
-Title: What the Package Does (One Line, Title Case)
+Title: Test Shiny Apps
 Version: 0.0.0.9000
 Authors@R:
-    person(given = "Barret",
-           family = "Schloerke",
-           role = c("aut", "cre"),
-           email = "barret@rstudio.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    c(
+        person("Barret", "Schloerke", role = "aut", email = "barret@rstudio.com", comment = c(ORCID = "0000-0001-9986-114X")),
+        person(family = "RStudio", role = c("cph", "fnd"))
+    )
+Description: For automated testing of Shiny applications, using
+    a headless browser, driven through 'Chromium' based browsers.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+URL: https://github.com/rstudio/shinytest2
+BugReports: https://github.com/rstudio/shinytest2/issues
