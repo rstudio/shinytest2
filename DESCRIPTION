@@ -1,0 +1,66 @@
+Package: shinytest2
+Title: Test Shiny Apps
+Version: 0.0.0.9000
+Authors@R:
+    c(
+        person("Barret", "Schloerke", role = c("cre", "aut"), email = "barret@rstudio.com", comment = c(ORCID = "0000-0001-9986-114X")),
+        person(family = "RStudio", role = c("cph", "fnd")),
+        person("Winston", "Chang", role ="ctb", email = "winston@rstudio.com", comment = "Original author to rstudio/shinytest"),
+        person("Gábor", "Csárdi", role = "ctb", email = "gabor@rstudio.com", comment = "Original author to rstudio/shinytest"),
+        person("Hadley", "Wickham", role = "ctb", email = "hadley@rstudio.com", comment = "Original author to rstudio/shinytest"),
+        person(family = "Mango Solutions", role = c("cph", "ccp"), comment = "Original author to rstudio/shinytest")
+    )
+Description: For automated testing of Shiny applications, using
+    a headless browser, driven through 'Chromium' based browsers.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+URL: https://github.com/rstudio/shinytest2
+BugReports: https://github.com/rstudio/shinytest2/issues
+SystemRequirements: Google Chrome
+Imports:
+    R6 (>= 2.4.0),
+    chromote,
+    testthat (>= 3.0.0),
+    fs,
+    callr,
+    crayon,
+    parsedate,
+    rlang,
+    checkmate,
+    digest,
+    ellipsis,
+    globals,
+    httpuv,
+    httr,
+    jsonlite,
+    pingr,
+    rematch,
+    rmarkdown,
+    shiny,
+    withr
+Remotes:
+    rstudio/chromote,
+    r-lib/testthat
+Config/needs/website:
+    pkgdown,
+    r-lib/testthat
+Config/testthat/edition: 3
+Collate:
+    'app-get-all-values.R'
+    'chromote_methods.R'
+    'debug.R'
+    'httr.R'
+    'initialize.R'
+    'log.R'
+    'utils.R'
+    'platform.R'
+    'save-app.R'
+    'set-inputs.R'
+    'shiny-driver.R'
+    'shiny-start.R'
+    'snapshot.R'
+    'testthat.R'
+    'widget.R'
