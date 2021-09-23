@@ -23,10 +23,6 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
           needs: website
-          extra-packages: |
-            pkgdown
-            testthat
-
 
       - name: Verify reference (PR)
         if: github.event_name != 'push'
