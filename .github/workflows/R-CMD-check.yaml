@@ -11,65 +11,19 @@ jobs:
     name: R Versions
     runs-on: ubuntu-latest
     outputs:
-      devel: ${{ steps.devel.outputs.installed-r-version }}
+      devel:   ${{ steps.devel.outputs.installed-r-version }}
       release: ${{ steps.release.outputs.installed-r-version }}
-      oldrel1: ${{ steps.oldrel1.outputs.installed-r-version }}
-      oldrel2: ${{ steps.oldrel2.outputs.installed-r-version }}
-      oldrel3: ${{ steps.oldrel3.outputs.installed-r-version }}
-      oldrel4: ${{ steps.oldrel4.outputs.installed-r-version }}
+      oldrel-1: ${{ steps.oldrel-1.outputs.installed-r-version }}
+      oldrel-2: ${{ steps.oldrel-2.outputs.installed-r-version }}
+      oldrel-3: ${{ steps.oldrel-3.outputs.installed-r-version }}
+      oldrel-4: ${{ steps.oldrel-4.outputs.installed-r-version }}
     steps:
-    - name: devel
-      uses: r-lib/actions/setup-r@master
-      id: devel
-      with:
-        r-version: devel
-        install-r: false # No need to install. Just need version
-
-    - name: release
-      uses: r-lib/actions/setup-r@master
-      id: release
-      with:
-        r-version: release
-        install-r: false # No need to install. Just need version
-
-    - name: oldrel/1
-      uses: r-lib/actions/setup-r@master
-      id: oldrel1
-      with:
-        r-version: oldrel/1
-        install-r: false # No need to install. Just need version
-
-    - name: oldrel/2
-      uses: r-lib/actions/setup-r@master
-      id: oldrel2
-      with:
-        r-version: oldrel/2
-        install-r: false # No need to install. Just need version
-
-    - name: oldrel/3
-      uses: r-lib/actions/setup-r@master
-      id: oldrel3
-      with:
-        r-version: oldrel/3
-        install-r: false # No need to install. Just need version
-
-    - name: oldrel/4
-      uses: r-lib/actions/setup-r@master
-      id: oldrel4
-      with:
-        r-version: oldrel/4
-        install-r: false # No need to install. Just need version
-
-    - name: Set Output
-      id: set_versions
-      run: |
-        echo "devel: ${{ steps.devel.outputs.installed-r-version }}"
-        echo "release: ${{ steps.release.outputs.installed-r-version }}"
-        echo "oldrel1: ${{ steps.oldrel1.outputs.installed-r-version }}"
-        echo "oldrel2: ${{ steps.oldrel2.outputs.installed-r-version }}"
-        echo "oldrel3: ${{ steps.oldrel3.outputs.installed-r-version }}"
-        echo "oldrel4: ${{ steps.oldrel4.outputs.installed-r-version }}"
-
+    - { id: devel,    uses: r-lib/actions/setup-r@v1, with: { r-version: devel,    install-r: false } }
+    - { id: release,  uses: r-lib/actions/setup-r@v1, with: { r-version: release,  install-r: false } }
+    - { id: oldrel-1, uses: r-lib/actions/setup-r@v1, with: { r-version: oldrel-1, install-r: false } }
+    - { id: oldrel-2, uses: r-lib/actions/setup-r@v1, with: { r-version: oldrel-2, install-r: false } }
+    - { id: oldrel-3, uses: r-lib/actions/setup-r@v1, with: { r-version: oldrel-3, install-r: false } }
+    - { id: oldrel-4, uses: r-lib/actions/setup-r@v1, with: { r-version: oldrel-4, install-r: false } }
 
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
@@ -87,10 +41,10 @@ jobs:
           - {os: windows-latest, r: '3.6'}
           - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.devel }}', http-user-agent: "release" }
           - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.release }}'}
-          - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.oldrel1 }}'}
-          - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.oldrel2 }}'}
-          - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.oldrel3 }}'}
-          - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.oldrel4 }}'}
+          - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.oldrel-1 }}'}
+          - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.oldrel-2 }}'}
+          - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.oldrel-3 }}'}
+          - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.oldrel-4 }}'}
 
     env:
       RSPM: ${{ matrix.config.rspm }}
@@ -109,20 +63,8 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
           extra-packages: rcmdcheck
-          needs: website
 
-      - name: Check
-        env:
-          _R_CHECK_CRAN_INCOMING_: false
-        shell: Rscript {0}
-        run: |
-          options(crayon.enabled = TRUE)
-          rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
-
-      - name: Show testthat output
-        if: always()
-        run: find check -name 'testthat.Rout*' -exec cat '{}' \; || true
-        shell: bash
+      - uses: r-lib/actions/check-r-package@v1
 
       - name: Upload check results
         if: failure()

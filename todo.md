@@ -31,3 +31,30 @@ https://github.com/r-lib/vdiffr/blob/fc03e91cccac04baa875063513b630d80c02e197/R/
 
 
 use the annouce_snapshot_file w/ the `suffix` so that they other files are not deleted. Do not announce the main file?
+
+Make two classes of shinytest objects:
+* One for shinytest2 legacy that throws deprecation messages and errors.
+  * ShinyDriver2Legacy$new()?
+* Another that is the ideal shinytest2 object. This should not contain deprecated methods
+  * ShinyDriver2$new() ?
+  * Shintest2$new() ?
+
+Alpha order input values when serializing to json
+
+conversion notes
+  shinytest -> shinytest2
+  phantomTimeout -> X
+
+
+  `$findElement()` does not support `linkText`, `partialLinkText`, `xpath`
+
+  $evaluateScriptAsync -> $evaluateScript
+
+  `Widget$new(element=)` -> `Widget2$new(nodeId=)`
+
+  app$snapshot(*) -> expect_shinytest2_snapshot(app, *)
+
+  make a second class for ShinyDriver2Legacy
+    ShinyDriver2$initalize() Added `...`
+    ShinyDriver2Legacy$snapshotInit(path=) does not makes sense
+    ShinyDriver2Legacy$snapshotInit(screenshot=) was moved to ShinyDriver2$initialize(screenshot=)
