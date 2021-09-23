@@ -175,8 +175,7 @@ Send specified key presses to control.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{keys}}{Keys to send to the widget or the app. See \link[webdriver:key]{webdriver::key}
-for how to specific special keys.}
+\item{\code{keys}}{Keys to send to the widget or the app.}
 }
 \if{html}{\out{</div>}}
 }

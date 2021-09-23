@@ -143,8 +143,8 @@ Widget2 <- R6Class(
     },
 
     #' @description Send specified key presses to control.
-    #' @param keys Keys to send to the widget or the app. See [webdriver::key]
-    #'   for how to specific special keys.
+    #' @param keys Keys to send to the widget or the app.
+    # ' See [webdriver::key] for how to specific special keys.
     sendKeys = function(keys) {
       "!DEBUG widget2_sendKeys `private$name`"
       # TODO-barret

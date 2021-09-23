@@ -7,7 +7,8 @@ is_linux   <- function() Sys.info()[['sysname']] == 'Linux'
 #' Get the name of the OS
 #'
 #' Returns the name of the current OS. This can be useful for the `suffix` when
-#' running [testApp()].
+# TODO-barret link to func
+#' running `testApp()`.
 #'
 #' @export
 #' @describeIn os_name Operating system name

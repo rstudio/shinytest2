@@ -2,7 +2,7 @@
 % Please edit documentation in R/testthat.R
 \name{expect_st2_snapshot}
 \alias{expect_st2_snapshot}
-\title{Test Shinytest2 code chunk}
+\title{Expect a shinytest2 snapshot}
 \usage{
 expect_st2_snapshot(
   app,
@@ -11,13 +11,26 @@ expect_st2_snapshot(
   items = NULL,
   screenshot = NULL,
   cran = FALSE,
-  transform = NULL,
   variant = os_name_and_r_version()
 )
 }
-\description{
-Used to shim in extra information (platform and R version) into the \code{desc}ription of the test.
+\arguments{
+\item{app}{A \link{ShinyDriver2} object.}
+
+\item{...}{Must be empty. Allows for parameter expansion.}
+
+\item{name}{The prefix name to be used for the snapshot. By default, this uses the name supplied to \code{app} on initialization.}
+
+\item{items}{Elements to only be included in the snapshot. If supplied, can contain \code{inputs}, \code{output}, and \code{export}. Each value of \code{items} can either be \code{TRUE} (for all values) or a character list of names to use.}
+
+\item{screenshot}{A boolean indicating whether to take a screenshot.}
+
+\item{cran}{Should these expectations be verified on CRAN? By default,
+they are not, because snapshot tests tend to be fragile because they
+often rely on minor details of dependencies.}
+
+\item{variant}{A character vector of the form \verb{[os_name]-[r_version]} indicating the operating system and R version (\code{major.minor}) being tested.}
 }
-\details{
-Since \code{shinytest::test_that} will know which platform is being run, other platform's test snaps will not be auto-deleted due to not being used.
+\description{
+Expect a shinytest2 snapshot
 }

@@ -61,9 +61,14 @@ chromote_eval <- function(chromote, js, ..., wait_ = TRUE) {
 
 #' Evaluate a script on the window context
 #'
-#' @param arguments V
+#' @param chromote A ChromoteSession object
+#' @param js_script A string containing the script to be evaluated
+#' @param ... Arguments passed to `chromote$Runtime$evaluate`, such as `wait_`
+#' @param awaitPromise If TRUE, the function will wait for the `js_script` promise to be resolved
+#' @param arguments A list of arguments to be passed into the `js_script`
+#' @param timeout The maximum time (milliseconds) `chromote` will wait for the `js_script` promise to be resolved
 #' @importFrom rlang %||%
-chromote_eval_script <- function(chromote, js_script, awaitPromise = TRUE, arguments = NULL, timeout = 10 * 1000, ...) {
+chromote_eval_script <- function(chromote, js_script, ..., awaitPromise = TRUE, arguments = NULL, timeout = 10 * 1000) {
   assert_chromote(chromote)
   checkmate::assert_character(js_script, any.missing = FALSE, len = 1)
   utils::str(rlang::names2(arguments %||% ""))
@@ -82,7 +87,7 @@ chromote_eval_script <- function(chromote, js_script, awaitPromise = TRUE, argum
     ...
   )
 }
-#' Evaluate on the window context, blocking until the wrapping promise is resolved
+# Evaluate on the window context, blocking until the wrapping promise is resolved
 chromote_eval_script_callback <- function(chromote, js_script, awaitPromise = TRUE, arguments = NULL, timeout = 10 * 1000, ...) {
   stop("TODO-barret")
   assert_chromote(chromote)

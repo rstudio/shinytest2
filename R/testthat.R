@@ -8,7 +8,6 @@ sd2_expectSnapshot <- function(
   screenshot = NULL,
   cran = FALSE,
   error = FALSE,
-  transform = NULL,
   variant = getOption("shinytest2.variant", os_name_and_r_version())
 ) {
   testthat::expect_s3_class(self, "ShinyDriver2")
@@ -25,8 +24,6 @@ sd2_expectSnapshot <- function(
       paste0(self$name, "-", x)
     }
   }
-
-  name_prefix <-
 
   # compare json
   testthat::expect_snapshot_file(
@@ -51,13 +48,16 @@ sd2_expectSnapshot <- function(
 }
 
 
-#' Test Shinytest2 code chunk
+#' Expect a shinytest2 snapshot
 #'
-#' Used to shim in extra information (platform and R version) into the `desc`ription of the test.
 #'
-#' Since `shinytest::test_that` will know which platform is being run, other platform's test snaps will not be auto-deleted due to not being used.
-#'
-#' @inheritParams testthat::test_that
+#' @param app A [ShinyDriver2] object.
+#' @param ... Must be empty. Allows for parameter expansion.
+#' @param name The prefix name to be used for the snapshot. By default, this uses the name supplied to `app` on initialization.
+#' @param items Elements to only be included in the snapshot. If supplied, can contain `inputs`, `output`, and `export`. Each value of `items` can either be `TRUE` (for all values) or a character list of names to use.
+#' @param screenshot A boolean indicating whether to take a screenshot.
+#' @param variant A character vector of the form `[os_name]-[r_version]` indicating the operating system and R version (`major.minor`) being tested.
+#' @inheritParams testthat::expect_snapshot_file
 #' @export
 expect_st2_snapshot <- function(
   app,
@@ -66,8 +66,6 @@ expect_st2_snapshot <- function(
   items = NULL,
   screenshot = NULL,
   cran = FALSE,
-  # error = FALSE,
-  transform = NULL,
   variant = os_name_and_r_version()
 ) {
   app$expectSnapshot(
@@ -76,7 +74,6 @@ expect_st2_snapshot <- function(
     items = items,
     screenshot = screenshot,
     cran = cran,
-    transform = transform,
     variant = variant
   )
 

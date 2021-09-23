@@ -14,7 +14,7 @@ os_name_and_r_version()
 }
 \description{
 Returns the name of the current OS. This can be useful for the \code{suffix} when
-running \code{\link[=testApp]{testApp()}}.
+running \code{testApp()}.
 }
 \section{Functions}{
 \itemize{

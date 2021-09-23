@@ -7,14 +7,24 @@
 chromote_eval_script(
   chromote,
   js_script,
+  ...,
   awaitPromise = TRUE,
   arguments = NULL,
-  timeout = 10 * 1000,
-  ...
+  timeout = 10 * 1000
 )
 }
 \arguments{
-\item{arguments}{V}
+\item{chromote}{A ChromoteSession object}
+
+\item{js_script}{A string containing the script to be evaluated}
+
+\item{...}{Arguments passed to \code{chromote$Runtime$evaluate}, such as \code{wait_}}
+
+\item{awaitPromise}{If TRUE, the function will wait for the \code{js_script} promise to be resolved}
+
+\item{arguments}{A list of arguments to be passed into the \code{js_script}}
+
+\item{timeout}{The maximum time (milliseconds) \code{chromote} will wait for the \code{js_script} promise to be resolved}
 }
 \description{
 Evaluate a script on the window context
