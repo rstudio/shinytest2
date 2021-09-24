@@ -44,7 +44,7 @@ Imports:
 Remotes:
     rstudio/chromote,
     r-lib/testthat
-Config/needs/website:
+Config/Needs/website:
     pkgdown,
     r-lib/testthat
 Config/testthat/edition: 3
