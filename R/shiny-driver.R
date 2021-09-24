@@ -23,9 +23,6 @@ ShinyDriver2 <- R6Class(
   "ShinyDriver2",
 
   public = list(
-    name = NULL, # character / NULL
-    variant = NULL, # character / NULL
-
     #' @param path Path to a directory containing a Shiny app, i.e. a
     #'   single `app.R` file or a `server.R`-`ui.R` pair.
     #' @param loadTimeout How long to wait for the app to load, in ms.
@@ -53,7 +50,7 @@ ShinyDriver2 <- R6Class(
       screenshot = TRUE,
       checkNames = TRUE,
       name = NULL,
-      variant = os_name_and_r_version(),
+      variant = getOption("shinytest2.variant", os_name_and_r_version()),
       debug = c("none", "all", shinytest2::ShinyDriver2$debugLogTypes),
       # phantomTimeout = 5000,
       seed = NULL,
@@ -590,6 +587,8 @@ ShinyDriver2 <- R6Class(
   ),
 
   private = list(
+    name = NULL, # character / NULL
+    variant = NULL, # character / NULL
 
     state = "stopped",                  # stopped or running
     path = NULL,                        # Full path to app (including filename if it's a .Rmd)

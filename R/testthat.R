@@ -8,20 +8,22 @@ sd2_expectSnapshot <- function(
   screenshot = NULL,
   cran = FALSE,
   error = FALSE,
-  variant = getOption("shinytest2.variant", os_name_and_r_version())
+  variant = NULL
 ) {
   testthat::expect_s3_class(self, "ShinyDriver2")
   ellipsis::check_dots_empty()
+
+  variant <- variant %||% private$variant
 
   snapshot_info <- sd2_snapshot(self, private, items = items, name = name, screenshot = screenshot)
   # utils::str(snapshot_info)
 
   add_self_name_prefix <- function(x) {
     x <- fs::path_file(x)
-    if (is.null(self$name)) {
+    if (is.null(private$name)) {
       x
     } else {
-      paste0(self$name, "-", x)
+      paste0(private$name, "-", x)
     }
   }
 
