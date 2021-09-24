@@ -8,8 +8,8 @@ sd2_initialize <- function(
   shinyOptions, renderArgs, options
 ) {
 
-  self$variant <- variant
-  self$name <-
+  private$variant <- variant
+  private$name <-
     if (!is.null(name)) {
       name
     } else {

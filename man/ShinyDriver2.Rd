@@ -69,7 +69,7 @@ with a live app.
   screenshot = TRUE,
   checkNames = TRUE,
   name = NULL,
-  variant = os_name_and_r_version(),
+  variant = getOption("shinytest2.variant", os_name_and_r_version()),
   debug = c("none", "all", shinytest2::ShinyDriver2$debugLogTypes),
   seed = NULL,
   cleanLogs = TRUE,
