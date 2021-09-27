@@ -161,7 +161,7 @@ with a live app.</p>
 <li><p><a href='#method-listWidgets'><code>ShinyDriver2$listWidgets()</code></a></p></li>
 <li><p><a href='#method-checkUniqueWidgetNames'><code>ShinyDriver2$checkUniqueWidgetNames()</code></a></p></li>
 <li><p><a href='#method-executeScript'><code>ShinyDriver2$executeScript()</code></a></p></li>
-<li><p><a href='#method-executeScriptAsync'><code>ShinyDriver2$executeScriptAsync()</code></a></p></li>
+<li><p><a href='#method-executeScriptCallback'><code>ShinyDriver2$executeScriptCallback()</code></a></p></li>
 <li><p><a href='#method-findWidget'><code>ShinyDriver2$findWidget()</code></a></p></li>
 <li><p><a href='#method-expectUpdate'><code>ShinyDriver2$expectUpdate()</code></a></p></li>
 <li><p><a href='#method-setInputs'><code>ShinyDriver2$setInputs()</code></a></p></li>
@@ -467,7 +467,7 @@ condition returns <code>true</code>.</p></dd>
 </dl><p></div></p>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p><code>TRUE</code> if expression evaluates to <code>true</code> without error, before
-timeout. Otherwise returns <code>NA</code>.</p>
+timeout. Otherwise returns <code>FALSE</code>.</p>
 <p><hr>
 <a id="method-waitForShiny"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>waitForShiny()</code></h3>
 <p>Waits until Shiny is not busy, i.e. the reactive graph has finished
@@ -533,9 +533,9 @@ input and output widget.</p></dd>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>Self, invisibly.</p>
 <p><hr>
-<a id="method-executeScriptAsync"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>executeScriptAsync()</code></h3>
+<a id="method-executeScriptCallback"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>executeScriptCallback()</code></h3>
 <p>Execute JS code asynchronously.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>executeScriptAsync</span><span class='op'>(</span><span class='va'>script</span>, <span class='va'>...</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>executeScriptCallback</span><span class='op'>(</span><span class='va'>script</span>, <span class='va'>...</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
