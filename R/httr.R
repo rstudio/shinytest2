@@ -1,11 +1,11 @@
 httr_get <- function(url) {
   pieces <- httr::parse_url(url)
 
-  cat("Url parts: \n")
-  utils::str(list(
-    url = url,
-    pieces = pieces
-  ))
+  # cat("Url parts: \n")
+  # utils::str(list(
+  #   url = url,
+  #   pieces = pieces
+  # ))
 
   if (!pingr::is_up(pieces$hostname, pieces$port)) {
     stop("Shiny app is no longer running")

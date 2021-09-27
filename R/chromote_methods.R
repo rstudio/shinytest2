@@ -9,12 +9,12 @@ assert_chromote <- function(chromote) {
 #   node$nodeId
 # }
 
-
+# TODO-barret; implement wait_ logic using all promises and `chromote$waitFor(p)`
 chromote_eval <- function(chromote, js, ..., wait_ = TRUE) {
   assert_chromote(chromote)
   checkmate::assert_character(js, any.missing = FALSE, len = 1)
 
-  cat("\n", js, "\n")
+  # cat("\n", js, "\n")
 
   result <-
     withCallingHandlers(
@@ -26,7 +26,7 @@ chromote_eval <- function(chromote, js, ..., wait_ = TRUE) {
       },
       error = function(e) {
         # Return something similar to a timeout object
-        # Ex: `chromote_wait_for_condition(b, "false", timeout_ms = 100)`
+        # Ex: `chromote_wait_for_condition(b, "false", timeout = 100)`
         list(results = list(
           type = "object",
           subtype = "error",
@@ -35,6 +35,8 @@ chromote_eval <- function(chromote, js, ..., wait_ = TRUE) {
         ))
       }
     )
+
+  # Runtime.queryObjects
 
   post_result <- function(ret_val) {
     if (identical(ret_val$result$subtype, "error")) {
@@ -47,6 +49,7 @@ chromote_eval <- function(chromote, js, ..., wait_ = TRUE) {
     }
     ret_val
   }
+
   if (wait_) {
     post_result(result)
   } else {
@@ -57,27 +60,40 @@ chromote_eval <- function(chromote, js, ..., wait_ = TRUE) {
 
 
 
-
-
-#' Evaluate a script on the window context
+#' Execute a JavaScript script
+#'
+#' Given `wait_ = TRUE`, `chromote_execute_script()` will block the testing R session
+#' until the script has completed the JS execution tick within the headless browser.
+#'
 #'
 #' @param chromote A ChromoteSession object
 #' @param js_script A string containing the script to be evaluated
 #' @param ... Arguments passed to `chromote$Runtime$evaluate`, such as `wait_`
-#' @param awaitPromise If TRUE, the function will wait for the `js_script` promise to be resolved
-#' @param arguments A list of arguments to be passed into the `js_script`
-#' @param timeout The maximum time (milliseconds) `chromote` will wait for the `js_script` promise to be resolved
+#' @param awaitPromise If `TRUE` (default), the function will wait for the Promise object returned from `js_script`. If `wait_ == FALSE`, `awaitPromise` will overwritten to `FALSE`.
+#' @param arguments An unnamed list of arguments to be passed into the `js_script`
+#' @param timeout The maximum time (milliseconds) `chromote` will wait for the `js_script` to resolved
+#' @param wait_ Determines if `chromote` should return a `Promise` object or wait for the `js_script` to be resolved
 #' @importFrom rlang %||%
-chromote_eval_script <- function(chromote, js_script, ..., awaitPromise = TRUE, arguments = NULL, timeout = 10 * 1000) {
+#' @describeIn chromote_execute_script Executes the supplied Javascript script (`js_script`) within a function. The function has the `window` context and access to `arguments` supplied.
+#' @export
+chromote_execute_script <- function(chromote, js_script, ..., awaitPromise = wait_, arguments = list(), timeout = 10 * 1000, wait_ = TRUE) {
   assert_chromote(chromote)
-  checkmate::assert_character(js_script, any.missing = FALSE, len = 1)
-  utils::str(rlang::names2(arguments %||% ""))
   checkmate::assert_true(isTRUE(all(rlang::names2(arguments %||% "") == "")))
+  checkmate::assert_character(js_script, any.missing = FALSE, len = 1)
+  # utils::str(rlang::names2(arguments %||% ""))
+
+  wait_ <- isTRUE(wait_)
+  awaitPromise <- isTRUE(awaitPromise)
+
+  stopifnot(wait_); # TODO-barret; implement `wait_` logic
+
+  if ((!wait_) && awaitPromise) {
+    # warning("Calling `chromote_execute_script(..., awaitPromise = TRUE, wait_ = FALSE)` does not make sense. Setting `awaitPromise = FALSE`")
+    awaitPromise <- FALSE
+  }
 
   args_serialized <- toJSON(arguments)
-
   js_script <- paste0("(function() { ", js_script, " }).apply(null, ", args_serialized, ");")
-  print(js_script)
 
   chromote_eval(
     chromote,
@@ -87,72 +103,98 @@ chromote_eval_script <- function(chromote, js_script, ..., awaitPromise = TRUE, 
     ...
   )
 }
-# Evaluate on the window context, blocking until the wrapping promise is resolved
-chromote_eval_script_callback <- function(chromote, js_script, awaitPromise = TRUE, arguments = NULL, timeout = 10 * 1000, ...) {
-  stop("TODO-barret")
-  assert_chromote(chromote)
+
+assert_wait_is_true_for_chromote_execute_script <- function(wait_, fn_name, redirect_fn_name = NULL) {
+  if (!isTRUE(wait_)) {
+    stop(paste0(
+      "`", fn_name, "(wait_=) must be `TRUE`.",
+      if (!is.null(redirect_fn_name)) {
+        paste0(" If `wait_` needs to be `FALSE`, use `", redirect_fn_name, "()`")
+      }
+    ))
+    stop()
+  }
+
+}
+#' @describeIn chromote_execute_script Executes the supplied Javascript script (`js_script`) within a function. The function has the `window` context and access to `arguments` supplied. An extra argument (`resolve(val)`) is added to the `arguments` list. If `wait_ = TRUE`, then `chromote_execute_script_callback()` will block the main R session until `resolve()` has been called.
+#' @export
+chromote_execute_script_callback <- function(chromote, js_script, ..., arguments = list(), timeout = 15 * 1000, wait_ = TRUE) {
+  assert_wait_is_true_for_chromote_execute_script(wait_, "chromote_execute_script_callback", "chromote_execute_script")
+  if ("awaitPromise" %in% rlang::names2(list(...))) {
+    stop("`awaitPromise` can not be supplied to chromote_execute_script_callback()")
+  }
   checkmate::assert_character(js_script, any.missing = FALSE, len = 1)
-  checkmate::assert_true(isTRUE(rlang::names2(arguments %||% "") == ""))
 
-  args_serialized <- toJSON(arguments)
+  # 1. Pass in user args (via `chromote_execute_script()`)
+  # 2. Append the resolve function to args
+  #   * We MUST wrap user code in a `function()` as arrow functions `=>` do not support `arguments`
+  #   * By having the wrapping `Promise` contain an arrow function, then `arguments` does not get a new binding
+  #     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions#no_binding_of_arguments
+  # 3. Call fn w/ user args and resolve function.
+  #   * The fn contents should be the user script and have `window` as the context
+  #   * This allows for the user to be none the wiser about where `callback` comes from.
+  #   * `callback` is a function that only takes a `value` argument.
+  #   * There is no ability to `reject()`.
 
-  js_script <- paste0("(function() { ", js_script, " }).apply(null, ", args_serialized, ");")
-  print(js_script)
-
-  chromote_eval(
-    chromote,
-    js_script,
-    awaitPromise = awaitPromise,
-    timeout = timeout,
-    ...
+  js_script <- paste0(
+"return new Promise((resolve, reject) => {\n",
+"  (function() {\n",
+    js_script, "\n",
+# Call fn w/ user arguments and resolve function using the `window` context
+"  }).apply(null, [...arguments, resolve]);
+});"
   )
+  chromote_execute_script(chromote, js_script, ..., awaitPromise = wait_, arguments = arguments, timeout = timeout, wait_ = wait_)
 }
 
 
 
 #' Have chromote wait for a js condition to be met
 #'
-#' @return `TRUE` if expression evaluates to `true` without error, before
-#'   timeout. Otherwise returns `NA`.
-#' @noRd
-chromote_wait_for_condition <- function(chromote, condition_js, timeout_ms = 30 * 1000, delay_ms = 100) {
-  assert_chromote(chromote)
+#' @return `TRUE` if expression evaluates to `TRUE` without error, before
+#'   timeout. Otherwise returns `FALSE`.
+#' @param condition_js A piece of JavaScript code that should eventually evaluate to a [`true`thy value](https://developer.mozilla.org/en-US/docs/Glossary/Truthy).
+#' @param interval How long (milliseconds) Chrome should wait between checking `condition_js`
+#' @describeIn chromote_execute_script Waits for `condition_js` to return a `true`thy value. In this con
+chromote_wait_for_condition <- function(chromote, condition_js, ..., timeout = 15 * 1000, interval = 100, wait_ = TRUE) {
+  assert_wait_is_true_for_chromote_execute_script(wait_, "chromote_wait_for_condition", NULL)
+  ellipsis::check_dots_empty()
   checkmate::assert_character(condition_js, any.missing = FALSE, len = 1)
-  checkmate::assert_number(timeout_ms, lower = 0)
-  checkmate::assert_number(delay_ms, lower = 0)
+  checkmate::assert_number(timeout, lower = 0)
+  checkmate::assert_number(interval, lower = 0)
 
-  js <- paste0(
-    "
-    new Promise(function (resolve, reject) {
-      var start = new Date();
-      function condition() {
-        return ", condition_js, ";
-      };
-      // Use `chromote_wait_for_condition` as the error message matches the R method
-      function chromote_wait_for_condition() {
-        var diffTime = new Date() - (+start + ", timeout_ms, ");
-        if (diffTime > 0) {
-          return reject(new Error('Timeout waiting for condition'));
-        }
-        if (condition()) {
-          return resolve();
-        }
-        setTimeout(chromote_wait_for_condition, ", delay_ms, ");
-      }
-      chromote_wait_for_condition();
-    });
-    "
+  # Must use manual calulation of timeout, as `chromote` does not have a
+  # way to cancel the `setTimeout` that has already been submitted. (Which will never stop resubmitting)
+  js_script <- paste0(
+# `callback` provided by chromote_execute_script_callback()
+"let callback = arguments[0];
+let start = new Date();
+function condition() {
+  return ", condition_js, ";
+};\n",
+# Use `chromote_wait_for_condition` as the error message matches the R method
+"function chromote_wait_for_condition() {
+  let diffTime = new Date() - (+start + ", timeout, ");
+  if (diffTime > 0) {
+    return reject(new Error('Timeout waiting for condition'));
+  }
+  if (condition()) {
+    return callback();
+  }
+  setTimeout(chromote_wait_for_condition, ", interval, ");
+}
+chromote_wait_for_condition();"
   )
-  ret <- chromote_eval(
+  ret <- chromote_execute_script_callback(
     chromote,
-    js,
-    # Wait for promise to finish
-    awaitPromise = TRUE,
-    # use Inf timeout to let promise fail on timeout instead
-    timeout_ = Inf
+    js_script,
+    ## Do not supply timeout to chrome devtools protocol or chromote. Instead, use manual timeout logic.
+    timeout_ = Inf,
+    wait_ = wait_
   )
+
   if (identical(ret$result$subtype, "error")) {
-    return(NA)
+    return(FALSE)
   }
 
   TRUE
@@ -220,7 +262,7 @@ chromote_find_elements <- function(chromote, css, rootId = chromote_root_node_id
 
 
 
-chromote_eval_script_on_document <- function(chromote, js_script, awaitPromise = TRUE, arguments = NULL, timeout = Inf, ...) {
+chromote_execute_script_on_document <- function(chromote, js_script, awaitPromise = TRUE, arguments = list(), timeout_ = Inf, ...) {
   assert_chromote(chromote)
   checkmate::assert_character(js_script, any.missing = FALSE, len = 1)
 
@@ -234,7 +276,7 @@ chromote_eval_script_on_document <- function(chromote, js_script, awaitPromise =
     awaitPromise = awaitPromise,
     arguments = arguments,
     # use Inf timeout to let promise fail on timeout instead
-    timeout_ = timeout,
+    timeout_ = timeout_,
     ...
   )
 }

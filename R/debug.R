@@ -1,6 +1,5 @@
 as_debug <- function(x) {
   x <- unique(x)
-  print(x)
   checkmate::assert_subset(x, c(ShinyDriver2$debugLogTypes, c("all", "none")), empty.ok = FALSE)
 
   if ("all" %in% x) {

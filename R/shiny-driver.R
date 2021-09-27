@@ -306,10 +306,10 @@ ShinyDriver2 <- R6Class(
         png <- png::readPNG(path)
         plot(as.raster(png))
       } else {
-        utils::str(list(
-          path = path,
-          file = filename
-        ))
+        # utils::str(list(
+        #   path = path,
+        #   file = filename
+        # ))
         fs::file_copy(path, filename)
       }
 
@@ -345,7 +345,7 @@ ShinyDriver2 <- R6Class(
     #' @param expr A string containing JavaScript code. Will wait until the
     #'   condition returns `true`.
     #' @return `TRUE` if expression evaluates to `true` without error, before
-    #'   timeout. Otherwise returns `NA`.
+    #'   timeout. Otherwise returns `FALSE`.
     waitFor = function(expr, checkInterval = 100, timeout = 3000) {
       "!DEBUG sd2_waitFor"
       chromote_wait_for_condition(private$chromote_obj, expr, timeout_ms = timeout, delay_ms = checkInterval)
@@ -365,7 +365,7 @@ ShinyDriver2 <- R6Class(
       chromote_wait_for_condition(
         private$chromote_obj,
         "!$('html').first().hasClass('shiny-busy')",
-        timeout_ms = 3000,
+        timeout = 3 * 1000,
         delay_ms = checkInterval
       )
     },
@@ -406,7 +406,7 @@ ShinyDriver2 <- R6Class(
       # TODO-barret; chromote$Runtime$evaluate() is blocking for the JS _tick_
       # TODO-barret; incorporate `wait_` parameters to not wait for the _tick_ to finish
       "!DEBUG sd2_executeScript"
-      chromote_eval_script(
+      chromote_execute_script(
         private$chromote_obj,
         script,
         awaitPromise = TRUE,
@@ -419,11 +419,11 @@ ShinyDriver2 <- R6Class(
     #' @param script JS to execute. If a JS Promise is returned, `$executeScriptAsync()` will return and not wait for the promise to resolved.
     #' @param ... Additional arguments to script.
     #' @return Self, invisibly.
-    executeScriptAsync = function(script, ...) {
+    executeScriptCallback = function(script, ...) {
       # TODO-barret; Write this as a js function that is inside a promise that the final arg is the promise's resolve function.
       # Make sure the window is the context when executing the script.
       "!DEBUG sd2_executeScriptAsync"
-      chromote_eval_script(
+      chromote_execute_script(
         private$chromote_obj,
         script,
         awaitPromise = FALSE,
@@ -752,13 +752,14 @@ sd2_waitForValue <- function(self, private, name, ignore = list(NULL, ""), iotyp
 
 sd2_listWidgets <- function(self, private) {
   "!DEBUG sd2_listWidgets"
-  # TODO-barret; make sure function works. `$web` is not defined.
+  # TODO-barret; make sure function works
   res <- chromote_eval(private$chromote_obj,
     "shinytest2.listWidgets()"
   )
   res$input <- unlist(res$input)
   res$output <- unlist(res$output)
   utils::str(res)
+  message("method does not work. Must call Runtime.queryObjects() on objectId being returned.")
   res
 }
 

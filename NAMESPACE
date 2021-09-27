@@ -3,6 +3,8 @@
 S3method(format,shinytest_logs)
 S3method(print,shinytest_logs)
 export(ShinyDriver2)
+export(chromote_execute_script)
+export(chromote_execute_script_callback)
 export(expect_st2_snapshot)
 export(os_name)
 export(os_name_and_r_version)

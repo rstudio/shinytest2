@@ -48,7 +48,8 @@ conversion notes
 
   `$findElement()` does not support `linkText`, `partialLinkText`, `xpath`
 
-  $evaluateScriptAsync -> $evaluateScript
+  <!-- $executeScript -> $executeScript -->
+  $executeScriptAsync -> $executeScriptCallback
 
   `Widget$new(element=)` -> `Widget2$new(nodeId=)`
 
@@ -58,3 +59,7 @@ conversion notes
     ShinyDriver2$initalize() Added `...`
     ShinyDriver2Legacy$snapshotInit(path=) does not makes sense
     ShinyDriver2Legacy$snapshotInit(screenshot=) was moved to ShinyDriver2$initialize(screenshot=)
+
+
+ShinyDriver2$waitFor returns `FALSE` if a condition is not found in time. (Not `NA`)
+execut

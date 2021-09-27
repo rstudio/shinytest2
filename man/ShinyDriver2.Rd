@@ -39,7 +39,7 @@ with a live app.
 \item \href{#method-listWidgets}{\code{ShinyDriver2$listWidgets()}}
 \item \href{#method-checkUniqueWidgetNames}{\code{ShinyDriver2$checkUniqueWidgetNames()}}
 \item \href{#method-executeScript}{\code{ShinyDriver2$executeScript()}}
-\item \href{#method-executeScriptAsync}{\code{ShinyDriver2$executeScriptAsync()}}
+\item \href{#method-executeScriptCallback}{\code{ShinyDriver2$executeScriptCallback()}}
 \item \href{#method-findWidget}{\code{ShinyDriver2$findWidget()}}
 \item \href{#method-expectUpdate}{\code{ShinyDriver2$expectUpdate()}}
 \item \href{#method-setInputs}{\code{ShinyDriver2$setInputs()}}
@@ -487,7 +487,7 @@ condition returns \code{true}.}
 }
 \subsection{Returns}{
 \code{TRUE} if expression evaluates to \code{true} without error, before
-timeout. Otherwise returns \code{NA}.
+timeout. Otherwise returns \code{FALSE}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -588,12 +588,12 @@ Self, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-executeScriptAsync"></a>}}
-\if{latex}{\out{\hypertarget{method-executeScriptAsync}{}}}
-\subsection{Method \code{executeScriptAsync()}}{
+\if{html}{\out{<a id="method-executeScriptCallback"></a>}}
+\if{latex}{\out{\hypertarget{method-executeScriptCallback}{}}}
+\subsection{Method \code{executeScriptCallback()}}{
 Execute JS code asynchronously.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$executeScriptAsync(script, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$executeScriptCallback(script, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

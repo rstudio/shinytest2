@@ -55,7 +55,7 @@ sd2_snapshot <- function(
   # Convert to text, then replace base64-encoded images with hashes of them.
   original_content <- content <- raw_to_utf8(req$content)
   content <- hash_snapshot_image_data(content)
-  utils::str(content)
+  # utils::str(content)
   # TODO-barret; turn into alpha sorted lists; insert logic here! https://github.com/rstudio/shinytest/issues/409
   conent <- sort_second_level_keys(content)
   content <- jsonlite::prettify(content, indent = 2)
