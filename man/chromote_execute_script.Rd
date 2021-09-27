@@ -3,6 +3,7 @@
 \name{chromote_execute_script}
 \alias{chromote_execute_script}
 \alias{chromote_execute_script_callback}
+\alias{chromote_wait_for_condition}
 \title{Execute a JavaScript script}
 \usage{
 chromote_execute_script(
@@ -23,6 +24,15 @@ chromote_execute_script_callback(
   timeout = 15 * 1000,
   wait_ = TRUE
 )
+
+chromote_wait_for_condition(
+  chromote,
+  condition_js,
+  ...,
+  timeout = 15 * 1000,
+  interval = 100,
+  wait_ = TRUE
+)
 }
 \arguments{
 \item{chromote}{A ChromoteSession object}
@@ -31,11 +41,21 @@ chromote_execute_script_callback(
 
 \item{...}{Arguments passed to \code{chromote$Runtime$evaluate}, such as \code{wait_}}
 
-\item{awaitPromise}{If \code{TRUE} (default), the function will wait for the \code{js_script} promise to be resolved. If \code{wait_ == FALSE}, \code{awaitPromise} will be set to \code{FALSE}.}
+\item{awaitPromise}{If \code{TRUE} (default), the function will wait for the Promise object returned from \code{js_script}. If \code{wait_ == FALSE}, \code{awaitPromise} will overwritten to \code{FALSE}.}
 
 \item{arguments}{An unnamed list of arguments to be passed into the \code{js_script}}
 
-\item{timeout}{The maximum time (milliseconds) \code{chromote} will wait for the \code{js_script} promise to be resolved}
+\item{timeout}{The maximum time (milliseconds) \code{chromote} will wait for the \code{js_script} to resolved}
+
+\item{wait_}{Determines if \code{chromote} should return a \code{Promise} object or wait for the \code{js_script} to be resolved}
+
+\item{condition_js}{A piece of JavaScript code that should eventually evaluate to a \href{https://developer.mozilla.org/en-US/docs/Glossary/Truthy}{\code{true}thy value}.}
+
+\item{interval}{How long Chrome should wait between checking \code{condition_js}}
+}
+\value{
+\code{TRUE} if expression evaluates to \code{TRUE} without error, before
+timeout. Otherwise returns \code{FALSE}.
 }
 \description{
 Given \code{wait_ = TRUE}, \code{chromote_execute_script()} will block the testing R session
@@ -46,5 +66,7 @@ until the script has completed the JS execution tick within the headless browser
 \item \code{chromote_execute_script}: Executes the supplied Javascript script (\code{js_script}) within a function. The function has the \code{window} context and access to \code{arguments} supplied.
 
 \item \code{chromote_execute_script_callback}: Executes the supplied Javascript script (\code{js_script}) within a function. The function has the \code{window} context and access to \code{arguments} supplied. An extra argument (\code{resolve(val)}) is added to the \code{arguments} list. If \code{wait_ = TRUE}, then \code{chromote_execute_script_callback()} will block the main R session until \code{resolve()} has been called.
+
+\item \code{chromote_wait_for_condition}: Waits for \code{condition_js} to return a \code{true}thy value. In this con
 }}
 

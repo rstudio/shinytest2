@@ -69,9 +69,10 @@ chromote_eval <- function(chromote, js, ..., wait_ = TRUE) {
 #' @param chromote A ChromoteSession object
 #' @param js_script A string containing the script to be evaluated
 #' @param ... Arguments passed to `chromote$Runtime$evaluate`, such as `wait_`
-#' @param awaitPromise If `TRUE` (default), the function will wait for the `js_script` promise to be resolved. If `wait_ == FALSE`, `awaitPromise` will be set to `FALSE`.
+#' @param awaitPromise If `TRUE` (default), the function will wait for the Promise object returned from `js_script`. If `wait_ == FALSE`, `awaitPromise` will overwritten to `FALSE`.
 #' @param arguments An unnamed list of arguments to be passed into the `js_script`
-#' @param timeout The maximum time (milliseconds) `chromote` will wait for the `js_script` promise to be resolved
+#' @param timeout The maximum time (milliseconds) `chromote` will wait for the `js_script` to resolved
+#' @param wait_ Determines if `chromote` should return a `Promise` object or wait for the `js_script` to be resolved
 #' @importFrom rlang %||%
 #' @describeIn chromote_execute_script Executes the supplied Javascript script (`js_script`) within a function. The function has the `window` context and access to `arguments` supplied.
 #' @export
@@ -107,7 +108,7 @@ assert_wait_is_true_for_chromote_execute_script <- function(wait_, fn_name, redi
   if (!isTRUE(wait_)) {
     stop(paste0(
       "`", fn_name, "(wait_=) must be `TRUE`.",
-      if (redirect_to_chromote_execute_script) {
+      if (!is.null(redirect_fn_name)) {
         paste0(" If `wait_` needs to be `FALSE`, use `", redirect_fn_name, "()`")
       }
     ))
@@ -152,7 +153,9 @@ chromote_execute_script_callback <- function(chromote, js_script, ..., arguments
 #'
 #' @return `TRUE` if expression evaluates to `TRUE` without error, before
 #'   timeout. Otherwise returns `FALSE`.
-#' @describeIn chromote_execute_script
+#' @param condition_js A piece of JavaScript code that should eventually evaluate to a [`true`thy value](https://developer.mozilla.org/en-US/docs/Glossary/Truthy).
+#' @param interval How long (milliseconds) Chrome should wait between checking `condition_js`
+#' @describeIn chromote_execute_script Waits for `condition_js` to return a `true`thy value. In this con
 chromote_wait_for_condition <- function(chromote, condition_js, ..., timeout = 15 * 1000, interval = 100, wait_ = TRUE) {
   assert_wait_is_true_for_chromote_execute_script(wait_, "chromote_wait_for_condition", NULL)
   ellipsis::check_dots_empty()
