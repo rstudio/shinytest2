@@ -115,12 +115,13 @@ sd2_initialize <- function(
   #   ))
   # }
 
+# private$chromote_obj$view()
   # browser()
 
-  if (is.na(chromote_wait_for_condition(
+  if (!isTRUE(chromote_wait_for_condition(
     private$chromote_obj,
     "window.shinytest2 && window.shinytest2.ready === true",
-    timeout_ms = loadTimeout
+    timeout = loadTimeout
   ))) {
     abort(paste0(
       "Shiny app did not load in ", loadTimeout, "ms.\n",
@@ -146,7 +147,6 @@ sd2_initialize <- function(
   )$result$value
   if (identical(private$shinyWorkerId, ""))
     private$shinyWorkerId <- NA_character_
-
   # private$shinyTestSnapshotBaseUrl <- private$web$executeScript(
   #   'if (Shiny.shinyapp.getTestSnapshotBaseUrl)
   #     return Shiny.shinyapp.getTestSnapshotBaseUrl({ fullUrl:true });
