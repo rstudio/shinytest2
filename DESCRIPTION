@@ -41,6 +41,8 @@ Imports:
     rmarkdown,
     shiny,
     withr
+Suggests:
+    plotly
 Remotes:
     rstudio/chromote,
     r-lib/testthat
