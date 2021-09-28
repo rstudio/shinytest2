@@ -387,7 +387,6 @@ ShinyDriver2 <- R6Class(
     #' Lists the names of all input and output widgets
     #' @return A list of two character vectors, named `input` and `output`.
     listWidgets = function() {
-      # TODO-barret
       sd2_listWidgets(self, private)
     },
 
@@ -752,14 +751,12 @@ sd2_waitForValue <- function(self, private, name, ignore = list(NULL, ""), iotyp
 
 sd2_listWidgets <- function(self, private) {
   "!DEBUG sd2_listWidgets"
-  # TODO-barret; make sure function works
   res <- chromote_eval(private$chromote_obj,
     "shinytest2.listWidgets()"
-  )
+  )$result$value
+
   res$input <- unlist(res$input)
   res$output <- unlist(res$output)
-  utils::str(res)
-  message("method does not work. Must call Runtime.queryObjects() on objectId being returned.")
   res
 }
 
