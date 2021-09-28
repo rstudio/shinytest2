@@ -68,7 +68,7 @@ expect_st2_snapshot <- function(
   items = NULL,
   screenshot = NULL,
   cran = FALSE,
-  variant = os_name_and_r_version()
+  variant = NULL
 ) {
   app$expectSnapshot(
     ...,
