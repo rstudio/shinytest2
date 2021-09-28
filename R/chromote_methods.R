@@ -10,7 +10,7 @@ assert_chromote <- function(chromote) {
 # }
 
 # TODO-barret; implement wait_ logic using all promises and `chromote$waitFor(p)`
-chromote_eval <- function(chromote, js, ..., wait_ = TRUE) {
+chromote_eval <- function(chromote, js, ..., returnByValue = TRUE, wait_ = TRUE) {
   assert_chromote(chromote)
   checkmate::assert_character(js, any.missing = FALSE, len = 1)
 
@@ -22,7 +22,7 @@ chromote_eval <- function(chromote, js, ..., wait_ = TRUE) {
         # https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#method-evaluate
         chromote$
           Runtime$
-          evaluate(js, ..., wait_ = wait_)
+          evaluate(js, ..., returnByValue = returnByValue, wait_ = wait_)
       },
       error = function(e) {
         # Return something similar to a timeout object
@@ -289,13 +289,13 @@ chromote_node_id_to_object_id <- function(chromote, node_id) {
   chromote$DOM$resolveNode(node_id)$object$objectId
 }
 
-chromote_call_js_on_object <- function(chromote, object_id, fn_js, ...) {
+chromote_call_js_on_object <- function(chromote, object_id, fn_js, ..., returnByValue = TRUE) {
   assert_chromote(chromote)
   checkmate::assert_character(object_id, any.missing = FALSE, len = 1)
   checkmate::assert_character(fn_js, any.missing = FALSE, len = 1)
 
   # https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#method-callFunctionOn
-  chromote$Runtime$callFunctionOn(fn_js, objectId = object_id, ...)
+  chromote$Runtime$callFunctionOn(fn_js, objectId = object_id, ..., returnByValue = returnByValue)
 }
 
 chromote_call_js_on_node <- function(chromote, node_id, fn_js, ...) {
