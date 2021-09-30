@@ -286,7 +286,7 @@ ShinyDriver2 <- R6Class(
         normalize_png_res_header(path)
       }
 
-      if (!is.null(list(...)$id)) {
+      if (!is.null(list2(...)$id)) {
         stop("TODO-barret")
         png <- png::readPNG(path)
         element <- self$findElement(paste0("#", id))

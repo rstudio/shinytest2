@@ -118,9 +118,10 @@ assert_wait_is_true_for_chromote_execute_script <- function(wait_, fn_name, redi
 }
 #' @describeIn chromote_execute_script Executes the supplied Javascript script (`js_script`) within a function. The function has the `window` context and access to `arguments` supplied. An extra argument (`resolve(val)`) is added to the `arguments` list. If `wait_ = TRUE`, then `chromote_execute_script_callback()` will block the main R session until `resolve()` has been called.
 #' @export
-chromote_execute_script_callback <- function(chromote, js_script, ..., arguments = list(), timeout = 15 * 1000, wait_ = TRUE) {
+#' @importFrom rlang list2
+chromote_execute_script_callback <- function(chromote, js_script, ..., arguments = list2(), timeout = 15 * 1000, wait_ = TRUE) {
   assert_wait_is_true_for_chromote_execute_script(wait_, "chromote_execute_script_callback", "chromote_execute_script")
-  if ("awaitPromise" %in% rlang::names2(list(...))) {
+  if ("awaitPromise" %in% rlang::names2(list2(...))) {
     stop("`awaitPromise` can not be supplied to chromote_execute_script_callback()")
   }
   checkmate::assert_character(js_script, any.missing = FALSE, len = 1)

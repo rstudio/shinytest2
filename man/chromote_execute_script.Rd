@@ -20,7 +20,7 @@ chromote_execute_script_callback(
   chromote,
   js_script,
   ...,
-  arguments = list(),
+  arguments = list2(),
   timeout = 15 * 1000,
   wait_ = TRUE
 )
