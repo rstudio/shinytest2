@@ -400,6 +400,7 @@ shows on current graphics device.
 \if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$takeScreenshot(
   filename = NULL,
   ...,
+  delay = 0,
   selector = "html",
   cliprect = NULL,
   region = c("content", "padding", "border", "margin"),
@@ -412,6 +413,8 @@ shows on current graphics device.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{delay}}{The amount of seconds to wait before taking a screenshot}
+
 \item{\code{wait_}}{Wait until all reactive updates have completed?}
 
 \item{\code{file}}{File name to save the screenshot to. If \code{NULL}, then
