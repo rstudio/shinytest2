@@ -204,7 +204,7 @@ chromote_wait_for_condition();"
 
 
 
-chromote_set_device_metrics <- function(chromote, ..., width = NULL, height = NULL, deviceScaleFactor = NULL, mobile = NULL) {
+chromote_set_device_metrics <- function(chromote, ..., width = NULL, height = NULL, deviceScaleFactor = 1, mobile = FALSE) {
   assert_chromote(chromote)
   ellipsis::check_dots_empty()
 
