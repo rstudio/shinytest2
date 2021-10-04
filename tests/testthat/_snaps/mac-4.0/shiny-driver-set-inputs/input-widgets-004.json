@@ -1,0 +1,64 @@
+{
+  "input": {
+    "action": 1,
+    "bsSwitch": true,
+    "checkGroup": [
+      "2",
+      "3"
+    ],
+    "checkbox": true,
+    "checkboxGroupButtons": null,
+    "date": "2015-01-01",
+    "dates": [
+      "2015-01-01",
+      "2015-02-20"
+    ],
+    "file": null,
+    "knob": 0,
+    "matSwitch": true,
+    "num": 100,
+    "picker": [
+      "E",
+      "S",
+      "T"
+    ],
+    "prettyCheckbox": true,
+    "radio": "2",
+    "search": "",
+    "search_text": "",
+    "select": "2",
+    "slider1": 65,
+    "slider2": [
+      35,
+      85
+    ],
+    "sliderText": "Strongly disagree",
+    "tabset": "shinyWidgets",
+    "text": "Text entered"
+  },
+  "output": {
+    "actionOut": "[1] 1\nattr(,\"class\")\n[1] \"integer\"                \"shinyActionButtonValue\"",
+    "bsSwitchOut": "[1] TRUE",
+    "checkGroupOut": "[1] \"2\" \"3\"",
+    "checkboxGroupButtonsOut": "NULL",
+    "checkboxOut": "[1] TRUE",
+    "dateOut": "[1] \"2015-01-01\"",
+    "datesOut": "[1] \"2015-01-01\" \"2015-02-20\"",
+    "fileOut": "NULL",
+    "knobOut": "[1] 0",
+    "matSwitchOut": "[1] TRUE",
+    "numOut": "[1] 100",
+    "pickerOut": "[1] \"E\" \"S\" \"T\"",
+    "prettyCheckboxOut": "[1] TRUE",
+    "radioOut": "[1] \"2\"",
+    "searchOut": "[1] \"\"",
+    "selectOut": "[1] \"2\"",
+    "slider1Out": "[1] 65",
+    "slider2Out": "[1] 35 85",
+    "sliderTextOut": "[1] \"Strongly disagree\"",
+    "textOut": "[1] \"Text entered\""
+  },
+  "export": {
+
+  }
+}
