@@ -100,6 +100,7 @@ sd2_getTestSnapshotUrl <- function(
     reqString("output", output),
     reqString("export", export),
     paste0("format=", format),
+    "sortC=1",
     sep = "&"
   )
 }
