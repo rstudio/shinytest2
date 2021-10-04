@@ -43,7 +43,8 @@ Imports:
     withr
 Remotes:
     rstudio/chromote,
-    r-lib/testthat
+    r-lib/testthat,
+    rstudio/shiny#3515
 Config/Needs/website:
     pkgdown,
     r-lib/testthat
