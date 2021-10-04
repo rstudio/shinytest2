@@ -171,7 +171,11 @@ ShinyDriver2 <- R6Class(
     #'   named `width` and `height`.
     getWindowSize = function() {
       "!DEBUG sd2_getWindowSize"
-      private$web$getWindow()$getSize()
+      viewport <- private$chromote_obj$Page$getLayoutMetrics()$cssLayoutViewport
+      list(
+        width = viewport$clientWidth,
+        height = viewport$clientHeight
+      )
     },
 
     ## Debugging
