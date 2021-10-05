@@ -42,7 +42,8 @@ Imports:
     shiny,
     withr
 Suggests:
-    plotly
+    plotly,
+    shinyWidgets
 Remotes:
     rstudio/chromote,
     r-lib/testthat,

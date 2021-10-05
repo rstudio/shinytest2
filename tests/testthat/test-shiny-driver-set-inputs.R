@@ -34,12 +34,12 @@ test_that("set kitchen sink of inputs", {
     "picker" = c("T", "E", "S"),
     "prettyCheckbox" = TRUE,
   )
+
+  # TODO-barret; Currently do not work
   #     "checkboxGroupButtons" = c(2,3),
   #     "knob" = 50,
   #     "search" = "Test text", # must hit enter to submit
   #     "sliderText" = "Strongly agree",
-  # )
 
   app$expectSnapshot(screenshot = TRUE)
-  # browser()
 })

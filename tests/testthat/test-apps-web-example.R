@@ -12,12 +12,16 @@
 # Current shinytest2 code using `app$**()`:
 test_that("basic website example works", {
   app <- ShinyDriver2$new(test_path("apps/website-example"))
-  # app <- ShinyDriver2$new(test_path("apps/website-example"), local_threshold = 0, variant_threshold = 0)
   app$setInputs(name = "Hadley")
   app$setInputs(greet = "click")
+
+  # Take picture and record inputs / outputs
   app$expectSnapshot()
-  # app$expectDOM()
-  # app$expectHtml("#greet")
+
+  # app$expectDOM("#greet")
+  # app$expectHtml()
+
+  # Only record `output[c("greenting")]`
   app$expectSnapshot(items = list(output = "greeting"))
 })
 
