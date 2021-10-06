@@ -51,7 +51,7 @@ chromote_wait_for_condition(
 
 \item{condition_js}{A piece of JavaScript code that should eventually evaluate to a \href{https://developer.mozilla.org/en-US/docs/Glossary/Truthy}{\code{true}thy value}.}
 
-\item{interval}{How long Chrome should wait between checking \code{condition_js}}
+\item{interval}{How long (milliseconds) Chrome should wait between checking \code{condition_js}}
 }
 \value{
 \code{TRUE} if expression evaluates to \code{TRUE} without error, before
