@@ -1,13 +1,13 @@
 on:
-  push:
-    branches: [main, rc-**]
-  pull_request:
-    branches: [main]
+  push: { branches: [main, rc-**] }
+  pull_request: { branches: [main]}
 
-name: R-CMD-check
+name: Package Checks
 
 jobs:
-  R-CMD-check:
-    uses: schloerke/shiny-actions/.github/workflows/call-r-cmd-check.yaml@main
   pkgdown:
-    uses: schloerke/shiny-actions/.github/workflows/call-r-pkgdown.yaml@main
+    uses: rstudio/shinycoreci/.github/workflows/call-pkgdown.yaml@master
+  Rituals:
+    uses: rstudio/shinycoreci/.github/workflows/call-rituals.yaml@v1
+  R-CMD-check:
+    uses: rstudio/shinycoreci/.github/workflows/call-R-CMD-check.yaml@v1
