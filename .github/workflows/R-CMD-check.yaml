@@ -1,74 +1,13 @@
 on:
-  push:
-    branches: [main, rc-**]
-  pull_request:
-    branches: [main]
+  push: { branches: [main, rc-**] }
+  pull_request: { branches: [main]}
 
-name: R-CMD-check
+name: Package Checks
 
 jobs:
-  rversions:
-    name: R Versions
-    runs-on: ubuntu-latest
-    outputs:
-      devel:   ${{ steps.devel.outputs.installed-r-version }}
-      release: ${{ steps.release.outputs.installed-r-version }}
-      oldrel-1: ${{ steps.oldrel-1.outputs.installed-r-version }}
-      oldrel-2: ${{ steps.oldrel-2.outputs.installed-r-version }}
-      oldrel-3: ${{ steps.oldrel-3.outputs.installed-r-version }}
-      oldrel-4: ${{ steps.oldrel-4.outputs.installed-r-version }}
-    steps:
-    - { id: devel,    uses: r-lib/actions/setup-r@v1, with: { r-version: devel,    install-r: false } }
-    - { id: release,  uses: r-lib/actions/setup-r@v1, with: { r-version: release,  install-r: false } }
-    - { id: oldrel-1, uses: r-lib/actions/setup-r@v1, with: { r-version: oldrel-1, install-r: false } }
-    - { id: oldrel-2, uses: r-lib/actions/setup-r@v1, with: { r-version: oldrel-2, install-r: false } }
-    - { id: oldrel-3, uses: r-lib/actions/setup-r@v1, with: { r-version: oldrel-3, install-r: false } }
-    - { id: oldrel-4, uses: r-lib/actions/setup-r@v1, with: { r-version: oldrel-4, install-r: false } }
-
+  pkgdown:
+    uses: rstudio/shinycoreci/.github/workflows/call-pkgdown.yaml@master
+  Rituals:
+    uses: rstudio/shinycoreci/.github/workflows/call-rituals.yaml@v1
   R-CMD-check:
-    runs-on: ${{ matrix.config.os }}
-
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
-
-    needs:
-      - rversions
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - {os: macOS-latest,   r: '${{ needs.rversions.outputs.release }}'}
-          - {os: windows-latest, r: '${{ needs.rversions.outputs.release }}'}
-          - {os: windows-latest, r: '3.6'}
-          - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.devel }}', http-user-agent: "release" }
-          - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.release }}'}
-          - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.oldrel-1 }}'}
-          - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.oldrel-2 }}'}
-          - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.oldrel-3 }}'}
-          - {os: ubuntu-20.04,   r: '${{ needs.rversions.outputs.oldrel-4 }}'}
-
-    env:
-      RSPM: ${{ matrix.config.rspm }}
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: r-lib/actions/setup-pandoc@v1
-      - uses: r-lib/actions/setup-r@v1
-        with:
-          r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
-          use-public-rspm: true
-
-      - uses: r-lib/actions/setup-r-dependencies@v1
-        with:
-          extra-packages: rcmdcheck
-
-      - uses: r-lib/actions/check-r-package@v1
-
-      - name: Upload check results
-        if: failure()
-        uses: actions/upload-artifact@main
-        with:
-          name: ${{ matrix.config.os }}-r${{ matrix.config.r }}-results
-          path: check
+    uses: rstudio/shinycoreci/.github/workflows/call-R-CMD-check.yaml@v1
