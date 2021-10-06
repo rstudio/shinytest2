@@ -6,34 +6,8 @@ on:
 
 name: R-CMD-check
 
-
 jobs:
-  r-versions:
-    name: R Versions
-    runs-on: ubuntu-latest
-    outputs:
-      config: ${{ steps.config.outputs.config }}
-    steps:
-    - id: config
-      uses: schloerke/shiny-actions/team/config@main
-
-  check:
-    runs-on: ${{ matrix.config.os }}
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
-
-    needs: [r-versions]
-    strategy:
-      fail-fast: false
-      matrix:
-        config: ${{ needs.r-versions.outputs.config }}
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: schloerke/shiny-actions/team/r-cmd-check@main
-        with:
-          r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
-          extra-packages: rcmdcheck
-      - name: Upload check results
-        if: failure()
-        uses: schloerke/shiny-actions/team/upload-r-cmd-check-results
+  R-CMD-check:
+    uses: schloerke/shiny-actions/.github/workflows/call-r-cmd-check.yaml@main
+  pkgdown:
+    uses: schloerke/shiny-actions/.github/workflows/call-r-pkgdown.yaml@main
