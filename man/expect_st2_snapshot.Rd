@@ -10,8 +10,7 @@ expect_st2_snapshot(
   name = NULL,
   items = NULL,
   screenshot = NULL,
-  cran = FALSE,
-  variant = NULL
+  cran = FALSE
 )
 }
 \arguments{

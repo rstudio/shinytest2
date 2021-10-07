@@ -131,7 +131,7 @@ sd2_expectSnapshotJS <- function(
     checkmate::assert_integer(length(formals(post_script)), lower = 1)
     result <- post_script(result)
   }
-  str(result)
+
   testthat_expect_snapshot_output(
     private,
     result,
