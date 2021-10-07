@@ -79,7 +79,7 @@ chromote_eval <- function(chromote, js, ..., returnByValue = TRUE, wait_ = TRUE)
 #' @export
 chromote_execute_script <- function(chromote, js_script, ..., awaitPromise = wait_, arguments = list(), timeout = 10 * 1000, wait_ = TRUE) {
   assert_chromote(chromote)
-  checkmate::assert_true(isTRUE(all(rlang::names2(arguments %||% "") == "")))
+  checkmate::assert_true(!rlang::is_named(arguments))
   checkmate::assert_character(js_script, any.missing = FALSE, len = 1)
   # utils::str(rlang::names2(arguments %||% ""))
 
