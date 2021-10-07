@@ -93,6 +93,7 @@ sd2_flushInputs <- function(self, private, wait, timeout) {
 
 sd2_uploadFile <- function(self, private, ..., wait_ = TRUE, values_ = TRUE,
                           timeout_ = 3000) {
+  stop("TODO-barret; sd2_uploadFile()")
   if (values_ && !wait_) {
     abort(c(
       "values_=TRUE and wait_=FALSE are not compatible.",
@@ -108,7 +109,7 @@ sd2_uploadFile <- function(self, private, ..., wait_ = TRUE, values_ = TRUE,
   # Wait for two messages by calling `.start(timeout, 2)`. This is because
   # uploading a file will result in two messages before the file is successfully
   # uploaded.
-  private$web$executeScript(
+  private$chromote_obj$executeScript(
     "var timeout = arguments[0];
     shinytest2.outputValuesWaiter.start(timeout, 2);",
     timeout_
@@ -118,7 +119,7 @@ sd2_uploadFile <- function(self, private, ..., wait_ = TRUE, values_ = TRUE,
 
   self$findWidget(names(inputs)[1])$uploadFile(inputs[[1]])
 
-  res <- private$web$executeScriptAsync(
+  private$chromote_obj$executeScriptAsync(
     "var wait = arguments[0];
     var callback = arguments[1];
     shinytest2.outputValuesWaiter.finish(wait, callback);",
