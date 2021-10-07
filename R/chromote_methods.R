@@ -13,6 +13,7 @@ assert_chromote <- function(chromote) {
 chromote_eval <- function(chromote, js, ..., returnByValue = TRUE, wait_ = TRUE) {
   assert_chromote(chromote)
   checkmate::assert_character(js, any.missing = FALSE, len = 1)
+  checkmate::assert_true(wait_)
 
   # cat("\n", js, "\n")
 
@@ -22,7 +23,7 @@ chromote_eval <- function(chromote, js, ..., returnByValue = TRUE, wait_ = TRUE)
         # https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#method-evaluate
         chromote$
           Runtime$
-          evaluate(js, ..., returnByValue = returnByValue, wait_ = wait_)
+          evaluate(js, ..., returnByValue = returnByValue)
       },
       error = function(e) {
         # Return something similar to a timeout object
@@ -49,12 +50,12 @@ chromote_eval <- function(chromote, js, ..., returnByValue = TRUE, wait_ = TRUE)
     }
     ret_val
   }
+  post_result(result)
+  # if (wait_) {
 
-  if (wait_) {
-    post_result(result)
-  } else {
-    result$then(post_result)
-  }
+  # } else {
+  #   result$then(post_result)
+  # }
 
 }
 
@@ -78,7 +79,7 @@ chromote_eval <- function(chromote, js, ..., returnByValue = TRUE, wait_ = TRUE)
 #' @export
 chromote_execute_script <- function(chromote, js_script, ..., awaitPromise = wait_, arguments = list(), timeout = 10 * 1000, wait_ = TRUE) {
   assert_chromote(chromote)
-  checkmate::assert_true(isTRUE(all(rlang::names2(arguments %||% "") == "")))
+  checkmate::assert_true(!rlang::is_named(arguments))
   checkmate::assert_character(js_script, any.missing = FALSE, len = 1)
   # utils::str(rlang::names2(arguments %||% ""))
 

@@ -26,6 +26,8 @@ sd2_setupDebugging <- function(self, private, debug) {
 sd2_getDebugLog <- function(self, private, type) {
   "!DEBUG sd2_getDebugLog"
 
+  stop("TODO-barret; sd2_getDebugLog()")
+
   type <- as_debug(type)
 
   output <- list()
@@ -46,7 +48,7 @@ sd2_getDebugLog <- function(self, private, type) {
 
   if ("shinytest" %in% type) {
     "!DEBUG sd2_getDebugLog shinytest log"
-    output$shinytest <- make_shinytest_log(private$web$executeScript(
+    output$shinytest <- make_shinytest_log(private$chromote_obj$executeScript(
       "if (! window.shinytest) { return([]) }
        var res = window.shinytest2.log_entries;
        window.shinytest2.log_entries = [];
@@ -58,7 +60,7 @@ sd2_getDebugLog <- function(self, private, type) {
 }
 
 sd2_enableDebugLogMessages <- function(self, private, enable = TRUE) {
-  private$web$executeScript(
+  private$chromote_obj$executeScript(
     "window.shinytest2.log_messages = arguments[0]",
     enable
   )
