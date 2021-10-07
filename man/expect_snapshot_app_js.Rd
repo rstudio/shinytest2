@@ -23,7 +23,7 @@ expect_snapshot_app_js(
 \item{arguments}{A list of arguments to be passed to the script.}
 
 \item{post_script}{A function to be called on the result of the script before taking the snapshot.
-\code{\link[=expect_snapshot_app_dom]{expect_snapshot_app_dom()}} and \code{\link[=expect_snapshot_app_text]{expect_snapshot_app_text()}} both use \code{\link[utils:unlist]{utils::unlist()}}.}
+\code{\link[=expect_snapshot_app_dom]{expect_snapshot_app_dom()}} and \code{\link[=expect_snapshot_app_text]{expect_snapshot_app_text()}} both use \code{\link[=unlist]{unlist()}}.}
 
 \item{cran}{Should these expectations be verified on CRAN? By default,
 they are not, because snapshot tests tend to be fragile because they

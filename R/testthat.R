@@ -84,13 +84,9 @@ sd2_expectSnapshot <- function(
 #' @param name The prefix name to be used for the snapshot. By default, this uses the name supplied to `app` on initialization.
 #' @param items Elements to only be included in the snapshot. If supplied, can contain `inputs`, `output`, and `export`. Each value of `items` can either be `TRUE` (for all values) or a character list of names to use.
 #' @param screenshot A boolean indicating whether to take a screenshot.
-#' @param variant A character vector of the form `[os_name]-[r_version]` indicating the operating system and R version (`major.minor`) being tested.
 #' @inheritParams testthat::expect_snapshot_file
 #' @export
-# expect_snapshot_st2?
-# expect_snapshot_app?
-# expect_snapshot_dom?
-expect_st2_snapshot <- function(
+expect_snapshot_app <- function(
   app,
   ...,
   name = NULL,
@@ -153,7 +149,7 @@ sd2_expectSnapshotJS <- function(
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @param arguments A list of arguments to be passed to the script.
 #' @param post_script A function to be called on the result of the script before taking the snapshot.
-#'   [`expect_snapshot_app_dom()`] and [`expect_snapshot_app_text()`] both use [`utils::unlist()`].
+#'   [`expect_snapshot_app_dom()`] and [`expect_snapshot_app_text()`] both use [`unlist()`].
 #' @inheritParams testthat::expect_snapshot_output
 #' @export
 expect_snapshot_app_js <- function(
