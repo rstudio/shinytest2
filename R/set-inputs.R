@@ -9,7 +9,8 @@ sd2_setInputs <- function(self, private, ..., wait_ = TRUE, values_ = TRUE,
 
   priority_ <- match.arg(priority_)
 
-  input_values <- lapply(list(...), function(value) {
+  inputs <- list2(...)
+  input_values <- lapply(inputs, function(value) {
     list(
       value = value,
       allowInputNoBinding = allowInputNoBinding_,
@@ -99,7 +100,7 @@ sd2_uploadFile <- function(self, private, ..., wait_ = TRUE, values_ = TRUE,
     ))
   }
 
-  inputs <- list(...)
+  inputs <- list2(...)
   if (length(inputs) != 1 || !is_all_named(inputs)) {
     abort("Can only upload file to exactly one input, and input must be named")
   }

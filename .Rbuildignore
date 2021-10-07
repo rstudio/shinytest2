@@ -2,3 +2,5 @@
 ^\.github$
 .Rproj$
 todo.md
+^.*\.Rproj$
+^\.Rproj\.user$

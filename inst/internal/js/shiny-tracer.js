@@ -1,3 +1,5 @@
+
+
 console.log("Adding shinytest2!")
 
 window.shinytest2 = (function() {
@@ -311,6 +313,8 @@ window.shinytest2 = (function() {
             return;
         }
 
+        shimCssChanges()
+
         createShinyEventHandlers();
 
         // Check if we're already connected and the Shiny session has been
@@ -352,6 +356,20 @@ window.shinytest2 = (function() {
     }
     waitForReady();
 
+
+    function shimCssChanges() {
+      // # TODO-future if the * border-radius: unset is not good, look into https://stackoverflow.com/questions/55857777/why-does-chrome-always-add-a-1px-border-radius-even-when-specific-corners-are-s
+      // #   as a general solution
+      // # Also look into https://css-tricks.com/box-sizing/#universal-box-sizing
+      // # This allows users to opt out, where we may want to be opinionated about the border-radius
+      $("head").append(`
+        <style>
+          *:not(.shiny-input-container *){
+            border-radius: unset !important;
+          }
+        </style>
+      `);
+    }
 
     function createShinyEventHandlers() {
         $(document).on("shiny:busy", function(e) {

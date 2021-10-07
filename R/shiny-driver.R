@@ -171,7 +171,11 @@ ShinyDriver2 <- R6Class(
     #'   named `width` and `height`.
     getWindowSize = function() {
       "!DEBUG sd2_getWindowSize"
-      private$web$getWindow()$getSize()
+      viewport <- private$chromote_obj$Page$getLayoutMetrics()$cssLayoutViewport
+      list(
+        width = viewport$clientWidth,
+        height = viewport$clientHeight
+      )
     },
 
     ## Debugging
@@ -252,11 +256,13 @@ ShinyDriver2 <- R6Class(
     #' @param parent If `TRUE`, will take screenshot of parent of `id`; this
     #'   is useful if you also want to capture the label attached to a Shiny
     #'   control.
+    #' @param delay The amount of seconds to wait before taking a screenshot
     #' @return Self, invisibly.
     # takeScreenshotLegacy = function(file = NULL, id = NULL, parent = FALSE) {
     takeScreenshot = function(
       filename = NULL,
       ..., # ignored? Send to chromote?
+      delay = 0,
       selector = "html",
       cliprect = NULL,
       region = c("content", "padding", "border", "margin"),
@@ -266,27 +272,41 @@ ShinyDriver2 <- R6Class(
     ) {
       "!DEBUG sd2_takeScreenshot"
       stopifnot(isTRUE(wait_))
+      delay <- delay %||% 0
+      checkmate::assert_number(delay, lower = 0, finite = TRUE, null.ok = TRUE)
 
       # TODO-barret
       self$logEvent("Taking screenshot")
-      path <- tempfile()
-      private$chromote_obj$screenshot(
-        filename = path,
-        ...,
-        selector = selector,
-        cliprect = cliprect,
-        region = region,
-        expand = expand,
-        scale = scale,
-        wait_ = wait_
+      path <- tempfile("st2-", fileext = ".png")
+
+      if (delay > 0) {
+        Sys.sleep(delay)
+      }
+
+      # TODO-future: implement `selector` usage. May have to go back to using `chromote_obj$screenshot()`
+      screenshot_data <- private$chromote_obj$Page$captureScreenshot(format = "png")$data
+      writeBin(
+        jsonlite::base64_dec(screenshot_data),
+        path
       )
+      # private$chromote_obj$screenshot(
+      #   filename = path,
+      #   ...,
+      #   delay = 5,
+      #   selector = selector,
+      #   cliprect = cliprect,
+      #   region = region,
+      #   expand = expand,
+      #   scale = scale,
+      #   wait_ = wait_
+      # )
 
       # Fix up the PNG resolution header on windows
       if (is_windows()) {
         normalize_png_res_header(path)
       }
 
-      if (!is.null(list(...)$id)) {
+      if (!is.null(list2(...)$id)) {
         stop("TODO-barret")
         png <- png::readPNG(path)
         element <- self$findElement(paste0("#", id))
@@ -387,7 +407,6 @@ ShinyDriver2 <- R6Class(
     #' Lists the names of all input and output widgets
     #' @return A list of two character vectors, named `input` and `output`.
     listWidgets = function() {
-      # TODO-barret
       sd2_listWidgets(self, private)
     },
 
@@ -752,14 +771,12 @@ sd2_waitForValue <- function(self, private, name, ignore = list(NULL, ""), iotyp
 
 sd2_listWidgets <- function(self, private) {
   "!DEBUG sd2_listWidgets"
-  # TODO-barret; make sure function works
   res <- chromote_eval(private$chromote_obj,
     "shinytest2.listWidgets()"
-  )
+  )$result$value
+
   res$input <- unlist(res$input)
   res$output <- unlist(res$output)
-  utils::str(res)
-  message("method does not work. Must call Runtime.queryObjects() on objectId being returned.")
   res
 }
 

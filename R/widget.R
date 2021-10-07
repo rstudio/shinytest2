@@ -262,7 +262,7 @@ sd2_findWidget <- function(chromote, name, iotype) {
 
   Widget2$new(
     name = name,
-    element = elNodeIds[[1]],
+    nodeId = elNodeIds[[1]],
     type = unname(widget_names[type[[2]]] %|% type[[2]]),
     iotype = type[[1]],
     chromote = chromote

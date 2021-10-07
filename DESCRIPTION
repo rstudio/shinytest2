@@ -14,7 +14,6 @@ Description: For automated testing of Shiny applications, using
     a headless browser, driven through 'Chromium' based browsers.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 URL: https://github.com/rstudio/shinytest2
@@ -41,6 +40,9 @@ Imports:
     rmarkdown,
     shiny,
     withr
+Suggests:
+    plotly,
+    shinyWidgets
 Remotes:
     rstudio/chromote,
     r-lib/testthat,

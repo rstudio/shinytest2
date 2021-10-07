@@ -14,7 +14,14 @@ test_that("basic website example works", {
   app <- ShinyDriver2$new(test_path("apps/website-example"))
   app$setInputs(name = "Hadley")
   app$setInputs(greet = "click")
+
+  # Take picture and record inputs / outputs
   app$expectSnapshot()
+
+  # app$expectDOM("#greet")
+  # app$expectHtml()
+
+  # Only record `output[c("greenting")]`
   app$expectSnapshot(items = list(output = "greeting"))
 })
 
