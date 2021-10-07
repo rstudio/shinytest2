@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • shinytest2</title>
+<title>Expect a shinytest2 snapshot — expect_snapshot_app • shinytest2</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Expect a shinytest2 snapshot — expect_snapshot_app" />
+<meta property="og:description" content="Expect a shinytest2 snapshot" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -108,78 +109,59 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Expect a shinytest2 snapshot</h1>
+    <small class="dont-index">Source: <a href='https://github.com/rstudio/shinytest2/blob/master/R/testthat.R'><code>R/testthat.R</code></a></small>
+    <div class="hidden name"><code>expect_snapshot_app.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Expect a shinytest2 snapshot</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>expect_snapshot_app</span><span class='op'>(</span>
+  <span class='va'>app</span>,
+  <span class='va'>...</span>,
+  name <span class='op'>=</span> <span class='cn'>NULL</span>,
+  items <span class='op'>=</span> <span class='cn'>NULL</span>,
+  screenshot <span class='op'>=</span> <span class='cn'>NULL</span>,
+  cran <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="ShinyDriver2.html">ShinyDriver2</a></code> </p>
-        </td>
-        <td><p>Remote control a Shiny app running in a headless browser</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Widget2.html">Widget2</a></code> </p>
-        </td>
-        <td><p>A Shiny Widget</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="chromote_execute_script.html">chromote_execute_script()</a></code> <code><a href="chromote_execute_script.html">chromote_execute_script_callback()</a></code> <code><a href="chromote_execute_script.html">chromote_wait_for_condition()</a></code> </p>
-        </td>
-        <td><p>Execute a JavaScript script</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expect_snapshot_app.html">expect_snapshot_app()</a></code> </p>
-        </td>
-        <td><p>Expect a shinytest2 snapshot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expect_snapshot_app_dom.html">expect_snapshot_app_text()</a></code> <code><a href="expect_snapshot_app_dom.html">expect_snapshot_app_dom()</a></code> </p>
-        </td>
-        <td><p>Expect App DOM or text snapshot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expect_snapshot_app_js.html">expect_snapshot_app_js()</a></code> </p>
-        </td>
-        <td><p>Expect snapshot of JS script</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="os_name.html">os_name()</a></code> <code><a href="os_name.html">r_version()</a></code> <code><a href="os_name.html">os_name_and_r_version()</a></code> </p>
-        </td>
-        <td><p>Get the name of the OS</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>app</th>
+      <td><p>A <a href='ShinyDriver2.html'>ShinyDriver2</a> object.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Must be empty. Allows for parameter expansion.</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>The prefix name to be used for the snapshot. By default, this uses the name supplied to <code>app</code> on initialization.</p></td>
+    </tr>
+    <tr>
+      <th>items</th>
+      <td><p>Elements to only be included in the snapshot. If supplied, can contain <code>inputs</code>, <code>output</code>, and <code>export</code>. Each value of <code>items</code> can either be <code>TRUE</code> (for all values) or a character list of names to use.</p></td>
+    </tr>
+    <tr>
+      <th>screenshot</th>
+      <td><p>A boolean indicating whether to take a screenshot.</p></td>
+    </tr>
+    <tr>
+      <th>cran</th>
+      <td><p>Should these expectations be verified on CRAN? By default,
+they are not, because snapshot tests tend to be fragile because they
+often rely on minor details of dependencies.</p></td>
+    </tr>
     </table>
-  </div>
 
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

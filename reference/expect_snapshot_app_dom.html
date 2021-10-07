@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • shinytest2</title>
+<title>Expect App DOM or text snapshot — expect_snapshot_app_text • shinytest2</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,10 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Expect App DOM or text snapshot — expect_snapshot_app_text" />
+<meta property="og:description" content="These methods will find all matching elements and extract their respective values.
+These values will then be stored as a snapshot.
+The snapshot variant will be extracted from the app object directly." />
 
 
 
@@ -58,7 +61,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -108,78 +111,65 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Expect App DOM or text snapshot</h1>
+    <small class="dont-index">Source: <a href='https://github.com/rstudio/shinytest2/blob/master/R/testthat.R'><code>R/testthat.R</code></a></small>
+    <div class="hidden name"><code>expect_snapshot_app_dom.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>These methods will find all matching elements and extract their respective values.
+These values will then be stored as a snapshot.
+The snapshot <code>variant</code> will be extracted from the <code>app</code> object directly.</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>expect_snapshot_app_text</span><span class='op'>(</span><span class='va'>app</span>, <span class='va'>selector</span>, <span class='va'>...</span>, cran <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="ShinyDriver2.html">ShinyDriver2</a></code> </p>
-        </td>
-        <td><p>Remote control a Shiny app running in a headless browser</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Widget2.html">Widget2</a></code> </p>
-        </td>
-        <td><p>A Shiny Widget</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="chromote_execute_script.html">chromote_execute_script()</a></code> <code><a href="chromote_execute_script.html">chromote_execute_script_callback()</a></code> <code><a href="chromote_execute_script.html">chromote_wait_for_condition()</a></code> </p>
-        </td>
-        <td><p>Execute a JavaScript script</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expect_snapshot_app.html">expect_snapshot_app()</a></code> </p>
-        </td>
-        <td><p>Expect a shinytest2 snapshot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expect_snapshot_app_dom.html">expect_snapshot_app_text()</a></code> <code><a href="expect_snapshot_app_dom.html">expect_snapshot_app_dom()</a></code> </p>
-        </td>
-        <td><p>Expect App DOM or text snapshot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expect_snapshot_app_js.html">expect_snapshot_app_js()</a></code> </p>
-        </td>
-        <td><p>Expect snapshot of JS script</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="os_name.html">os_name()</a></code> <code><a href="os_name.html">r_version()</a></code> <code><a href="os_name.html">os_name_and_r_version()</a></code> </p>
-        </td>
-        <td><p>Get the name of the OS</p></td>
-      </tr>
-    </tbody>
+<span class='fu'>expect_snapshot_app_dom</span><span class='op'>(</span><span class='va'>app</span>, <span class='va'>selector</span>, <span class='va'>...</span>, outerHTML <span class='op'>=</span> <span class='cn'>FALSE</span>, cran <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>app</th>
+      <td><p>A <a href='ShinyDriver2.html'>ShinyDriver2</a> object.</p></td>
+    </tr>
+    <tr>
+      <th>selector</th>
+      <td><p>A DOM selector to be passed into jQuery</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Must be empty. Allows for parameter expansion.</p></td>
+    </tr>
+    <tr>
+      <th>cran</th>
+      <td><p>Should these expectations be verified on CRAN? By default,
+they are not, because snapshot tests tend to be fragile because they
+often rely on minor details of dependencies.</p></td>
+    </tr>
+    <tr>
+      <th>outerHTML</th>
+      <td><p>If <code>TRUE</code>, the full DOM structure will be returned (<code>el.outerHTML</code>).
+If <code>FALSE</code>, the full DOM structure of the child elements will be returned (<code>$(el).html()</code>).</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
+
+    
+<ul>
+<li><p><code>expect_snapshot_app_text</code>: This method will extract the text value of all matching elements via <code>$(el).text()</code>.
+This method is more robust to internal package change as only the text values will be return.
+When possible, use <code>expect_snapshot_app_text()</code> over <code>expect_snapshot_app_dom()</code> to allow package authors room to change.</p></li>
+<li><p><code>expect_snapshot_app_dom</code>: This method will extract the relevant DOM structure of all matching elements.
+This method is great for testing the full DOM structure of particular HTML elements.
+It is recommended to only use this method on DOM elements that you have full control over.
+This will help avoid false-positives when underlying packages may update.</p></li>
+</ul>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
