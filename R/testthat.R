@@ -204,22 +204,31 @@ expect_snapshot_app_text <- function(
     cran = cran
   )
 }
-#' @describeIn expect_snapshot_app_dom This method will extract the full DOM structure of all matching elements via `el.outerHTML`.
+#' @describeIn expect_snapshot_app_dom This method will extract the relevant DOM structure of all matching elements.
 #'   This method is great for testing the full DOM structure of particular HTML elements.
 #'   It is recommended to only use this method on DOM elements that you have full control over.
 #'   This will help avoid false-positives when underlying packages may update.
+#' @param outerHTML If `TRUE`, the full DOM structure will be returned (`el.outerHTML`).
+#'   If `FALSE`, the full DOM structure of the child elements will be returned (`$(el).html()`).
 #' @export
 expect_snapshot_app_dom <- function(
   app,
   selector,
   ...,
   # variant = NULL,
+  outerHTML = FALSE,
   cran = FALSE
 ) {
   ellipsis::check_dots_empty()
+  html_code <-
+    if (isTRUE(outerHTML)) {
+      "item.outerHTML"
+    } else {
+      "$(item).html()"
+    }
   expect_snapshot_app_js(
     app,
-    script = paste0("return $(\"", selector, "\").map(function(i, item) { return item.outerHTML }).get();"),
+    script = paste0("return $(\"", selector, "\").map(function(i, item) { return ", html_code, "; }).get();"),
     # variant = variant,
     post_script = unlist,
     cran = cran
