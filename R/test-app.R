@@ -84,7 +84,7 @@ test_app <- function(
   #   withr::local_dir(testsDir)
   #   # Some apps have different behavior if RSTUDIO is present.
   #   withr::local_envvar(c(RSTUDIO = ""))
-  #   withr::local_options(list(shinytest.app.dir = "appdir"))
+  #   withr::local_options(list(shinytest2.app.dir = "appdir"))
 
   #   # This will kill any existing Shiny processes launched by shinytest,
   #   # in case they're using some of the same resources.

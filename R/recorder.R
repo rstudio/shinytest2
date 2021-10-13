@@ -89,13 +89,13 @@ record_test <- function(
   # Use options to pass value to recorder app
   withr::with_options(
     list(
-      shinytest.recorder.url  = url,
-      shinytest.app           = app,
-      shinytest.debug         = debug,
-      # shinytest.load.mode     = load_mode,
-      shinytest.load.timeout  = if (!missing(loadTimeout)) loadTimeout,
-      shinytest.seed          = seed,
-      shinytest.shiny.options = shinyOptions
+      shinytest2.recorder.url  = url,
+      shinytest2.app           = app,
+      shinytest2.debug         = debug,
+      # shinytest2.load.mode     = load_mode,
+      shinytest2.load.timeout  = if (!missing(loadTimeout)) loadTimeout,
+      shinytest2.seed          = seed,
+      shinytest2.shiny.options = shinyOptions
     ),
     res <- shiny::runApp(system.file("internal", "recorder", package = "shinytest2"))
   )
@@ -104,7 +104,7 @@ record_test <- function(
     testthat::test_file(path = res$test_file)
   }
 
-  if (is.null(res$appDir)) {
+  if (is.null(res$test_file)) {
     # Quit without saving
 
   } else if (isTRUE(res$run)) {
@@ -123,7 +123,7 @@ record_test <- function(
     ))
   }
 
-  invisible(res$file)
+  invisible(res$test_file)
 }
 
 

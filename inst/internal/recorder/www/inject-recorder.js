@@ -117,7 +117,7 @@ window.recorder = (function() {
                 });
 
                 // Send updated values to server
-                Shiny.onInputChange("testevents:shinytest.testevents", recorder.testEvents);
+                Shiny.onInputChange("testevents:shinytest2.testevents", recorder.testEvents);
             }
 
             if (message.fileDownload) {
@@ -130,7 +130,7 @@ window.recorder = (function() {
                 });
 
                 // Send updated values to server
-                Shiny.onInputChange("testevents:shinytest.testevents", recorder.testEvents);
+                Shiny.onInputChange("testevents:shinytest2.testevents", recorder.testEvents);
             }
 
             if (message.outputEvent) {
@@ -142,7 +142,7 @@ window.recorder = (function() {
                 });
 
                 // Send updated values to server
-                Shiny.onInputChange("testevents:shinytest.testevents", recorder.testEvents);
+                Shiny.onInputChange("testevents:shinytest2.testevents", recorder.testEvents);
             }
 
             if (message.outputSnapshot) {
@@ -155,7 +155,7 @@ window.recorder = (function() {
                 });
 
                 // Send updated values to server
-                Shiny.onInputChange("testevents:shinytest.testevents", recorder.testEvents);
+                Shiny.onInputChange("testevents:shinytest2.testevents", recorder.testEvents);
             }
 
             if (message.snapshotKeypress) {
@@ -172,7 +172,7 @@ window.recorder = (function() {
                 time: Date.now()
             });
             // Send updated values to server
-            Shiny.onInputChange("testevents:shinytest.testevents", recorder.testEvents);
+            Shiny.onInputChange("testevents:shinytest2.testevents", recorder.testEvents);
         };
 
         // Generate snapshot via keypress within parent context as well
@@ -196,7 +196,7 @@ window.recorder = (function() {
                 });
 
                 // Send updated values to server
-                Shiny.onInputChange("testevents:shinytest.testevents", recorder.testEvents);
+                Shiny.onInputChange("testevents:shinytest2.testevents", recorder.testEvents);
             }
         });
     });

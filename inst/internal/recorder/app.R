@@ -1,12 +1,12 @@
 library(promises)
 
-target_url   <- getOption("shinytest.recorder.url")
-app          <- getOption("shinytest.app")
-debug        <- getOption("shinytest.debug")
-load_mode    <- getOption("shinytest.load.mode", FALSE)
-load_timeout <- getOption("shinytest.load.timeout")
-start_seed   <- getOption("shinytest.seed")
-shiny_options<- getOption("shinytest.shiny.options")
+target_url   <- getOption("shinytest2.recorder.url")
+app          <- getOption("shinytest2.app")
+debug        <- getOption("shinytest2.debug")
+load_mode    <- getOption("shinytest2.load.mode", FALSE)
+load_timeout <- getOption("shinytest2.load.timeout")
+start_seed   <- getOption("shinytest2.seed")
+shiny_options<- getOption("shinytest2.shiny.options")
 
 # If there are any reasons to not run a test, a message should be appended to
 # this vector.
@@ -16,15 +16,15 @@ add_dont_run_reason <- function(reason) {
 }
 
 if (is.null(target_url) || is.null(app$getAppDir())) {
-  stop("Test recorder requires the 'shinytest.recorder.url' and ",
-    "'shinytest.app.dir' options to be set.")
+  stop("Test recorder requires the 'shinytest2.recorder.url' and ",
+    "'shinytest2.app.dir' options to be set.")
 }
 
 # Can't register more than once, so remove existing one just in case.
-removeInputHandler("shinytest.testevents")
+removeInputHandler("shinytest2.testevents")
 
 # Need to avoid Shiny's default recursive unlisting
-registerInputHandler("shinytest.testevents", function(val, shinysession, name) {
+registerInputHandler("shinytest2.testevents", function(val, shinysession, name) {
   val
 })
 
@@ -285,6 +285,11 @@ codeGenerators <- list(
   }
 )
 
+appDirBasename <- function() {
+  # app$private$path
+  fs::path_file(shinytest2:::app_path(app$getAppDir())$dir)
+}
+
 generateTestCode <- function(events, name, seed, useTimes = FALSE,
   allowInputNoBinding = FALSE)
 {
@@ -376,7 +381,7 @@ generateTestCode <- function(events, name, seed, useTimes = FALSE,
   )
 
   paste0(
-    "test_that(\"", fs::path_file(shinytest2:::app_path(app$getAppDir())$dir)," - CUSTOM NAME\", {\n",
+    "test_that(\"", fs::path_file(shinytest2:::app_path(app$getAppDir())$dir)," - ", appDirBasename(), "\", {\n",
     inner_code,
     "})\n"
   )
@@ -492,7 +497,8 @@ shinyApp(
       # file.path(app$getTestsDir(), paste0(input$testname, ".R"))
       tryCatch({
         rprojroot::find_testthat_root_file(
-          paste0("test-", input$testname, ".R"),
+          paste0("test-st2-", appDirBasename(), ".R"),
+          # TODO-barret; Given the application directory or the calling directory? Calling directory will need to be passed in
           path = app$getAppDir()
         )
       }, error = function(e) {
@@ -554,46 +560,32 @@ shinyApp(
 
     saveAndExit <- function(delete_test_file = FALSE) {
       stopApp({
-        # If no snapshot events occurred, don't write file. However, in load
-        # testing mode, we don't expect snapshots (except one at the end).
-        if (!load_mode && numSnapshots() == 0) {
-          message("No snapshot or download events occurred; not saving test code.")
-          invisible(list(
-            appDir = NULL,
-            file = NULL,
-            run = FALSE
-          ))
 
-        } else {
+        seed <- as.integer(input$seed)
+        if (is.null(seed) || is.na(seed))
+          seed <- NULL
 
-          seed <- as.integer(input$seed)
-          if (is.null(seed) || is.na(seed))
-            seed <- NULL
+        code <- generateTestCode(input$testevents, input$testname,
+          seed = seed, useTimes = load_mode,
+          allowInputNoBinding = input$allowInputNoBinding)
 
-          code <- generateTestCode(input$testevents, input$testname,
-            seed = seed, useTimes = load_mode,
-            allowInputNoBinding = input$allowInputNoBinding)
-
-          if (isTRUE(delete_test_file)) {
-            unlink(saveFile())
-          }
-          if (file.exists(saveFile())) {
-            cat("\n\n", file = saveFile(), append = TRUE)
-          }
-          cat(code, file = saveFile(), append = TRUE)
-          message("Saved test code to ", saveFile())
-          if (input$editSaveFile) {
-            file.edit(saveFile())
-          }
-
-          invisible(list(
-            test_file = saveFile(),
-            appDir = app$getAppDir(),
-            file = paste0(input$testname, ".R"),
-            run = input$runScript && (length(dont_run_reasons) == 0),
-            dont_run_reasons = dont_run_reasons
-          ))
+        if (isTRUE(delete_test_file)) {
+          unlink(saveFile())
         }
+        if (file.exists(saveFile())) {
+          cat("\n\n", file = saveFile(), append = TRUE)
+        }
+        cat(code, file = saveFile(), append = TRUE)
+        message("Saved test code to ", saveFile())
+        if (input$editSaveFile) {
+          file.edit(saveFile())
+        }
+
+        invisible(list(
+          test_file = saveFile(),
+          run = input$runScript && (length(dont_run_reasons) == 0),
+          dont_run_reasons = dont_run_reasons
+        ))
       })
     }
 
@@ -706,7 +698,6 @@ shinyApp(
       stopApp({
         message("Quitting without saving or running tests.")
         invisible(list(
-          appDir = NULL,
           file = NULL,
           run = FALSE
         ))
