@@ -214,6 +214,14 @@ locally and 10s when running on CI. Maximum value is 10s.</p></dd>
 
 <dt><code>name</code></dt><dd><p>Name of a shiny widget.</p></dd>
 
+<dt><code>variant</code></dt><dd><p>If not-<code>NULL</code>, results will be saved in
+_snaps/variant/test.md<code>, so </code>variant` must be a single
+string of alphanumeric characters suitable for use as a
+directory name.You can variants to deal with cases where the snapshot output
+varies and you want to capture and test the variations.
+Common use cases include variations for operating system, R
+version, or version of key dependency.</p></dd>
+
 <dt><code>debug</code></dt><dd><p>Start the app in debugging mode? In debugging mode debug
 messages are printed to the console.</p></dd>
 
