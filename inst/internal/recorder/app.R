@@ -384,7 +384,7 @@ shinyApp(
           )
         ),
         textInput("testname", label = "On exit, save test script as:", value = "mytest"),
-        checkboxInput("editSaveFile", "Open script in editor on exit", value = TRUE),
+        if (rstudioapi::isAvailable()) checkboxInput("editSaveFile", "Open script in editor on exit", value = TRUE),
         checkboxInput("runScript", "Run test script on exit", value = TRUE),
         checkboxInput(
           "allowInputNoBinding",
@@ -528,7 +528,7 @@ shinyApp(
         }
         cat(code, file = saveFile(), append = TRUE)
         message("Saved test code to ", saveFile())
-        if (input$editSaveFile) {
+        if (isTRUE(input$editSaveFile)) {
           file.edit(saveFile())
         }
 
