@@ -31,6 +31,7 @@ ShinyDriver2 <- R6Class(
     #' @param screenshot Take screenshots for each snapshot?
     # ' @param phantomTimeout How long to wait when connecting to phantomJS
     # '  process, in ms
+    #' @template variant
     #' @param checkNames Check if widget names are unique?
     #' @param debug Start the app in debugging mode? In debugging mode debug
     #'   messages are printed to the console.
@@ -216,26 +217,26 @@ ShinyDriver2 <- R6Class(
     #' @description Get current url
     getUrl = function() {
       "!DEBUG sd2_getUrl"
-      chromote_eval(private$chromote_obj, "window.location.href")
+      chromote_eval(private$chromote_obj, "window.location.href")$result$value
     },
 
     #' @description Get page title
     getTitle = function() {
       "!DEBUG sd2_getTitle"
-      chromote_eval(private$chromote_obj, "document.title")
+      chromote_eval(private$chromote_obj, "document.title")$result$value
     },
 
     #' @description Get complete source of current page.
     getSource = function() {
       "!DEBUG sd2_getSource"
-      chromote_eval(private$chromote_obj, "document.documentElement.outerHTML")
+      chromote_eval(private$chromote_obj, "document.documentElement.outerHTML")$result$value
     },
 
     #' @description Return to previous page
     #' @return Self, invisibly.
     goBack = function() {
       "!DEBUG sd2_goBack"
-      chromote_eval(private$chromote_obj, "history.back()")
+      chromote_eval(private$chromote_obj, "history.back()")$result$value
       invisible(self)
     },
 
@@ -243,7 +244,7 @@ ShinyDriver2 <- R6Class(
     #' @return Self, invisibly.
     refresh = function() {
       "!DEBUG refresh"
-      chromote_eval(private$chromote_obj, "location.reload()")
+      chromote_eval(private$chromote_obj, "location.reload()")$result$value
       invisible(self)
     },
 

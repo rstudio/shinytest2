@@ -4,3 +4,4 @@
 todo.md
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^man-roxygen$
