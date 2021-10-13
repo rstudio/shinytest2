@@ -441,7 +441,6 @@ shinyApp(
     }
 
     saveFile <- reactive({
-      message("saveFile()")
       # file.path(app$getTestsDir(), paste0(input$testname, ".R"))
       tryCatch({
         rprojroot::find_testthat_root_file(
@@ -573,7 +572,6 @@ shinyApp(
     }
 
     observeEvent(input$exit_save, {
-      message("observed!")
 
       if (numSnapshots() == 0) {
         showModal(
@@ -606,9 +604,7 @@ shinyApp(
       }
 
       p <- p %...>% {
-        message("save file?")
         if (file.exists(saveFile())) {
-          message("save file exists")
           presentModal(
             modalDialog(
               paste0("Overwrite ", basename(saveFile()), "?"),
@@ -622,14 +618,12 @@ shinyApp(
             c("overwrite_overwrite", "overwrite_append")
           )
         } else {
-          message("no save file")
           promise_resolve(TRUE)
         }
       }
 
       p <- p %...>% {
         delete_test_file <- identical(., "overwrite_overwrite")
-        message("save and exit. Delete test file: ", delete_test_file)
         saveAndExit(delete_test_file)
       }
 
