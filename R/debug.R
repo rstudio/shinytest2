@@ -26,8 +26,6 @@ sd2_setupDebugging <- function(self, private, debug) {
 sd2_getDebugLog <- function(self, private, type) {
   "!DEBUG sd2_getDebugLog"
 
-  stop("TODO-barret; sd2_getDebugLog()")
-
   type <- as_debug(type)
 
   output <- list()
@@ -43,6 +41,7 @@ sd2_getDebugLog <- function(self, private, type) {
 
   if ("browser" %in% type) {
     "!DEBUG sd2_getDebugLog browser"
+    stop("TODO-barret; sd2_getDebugLog(type = 'browser')")
     output$browser <- make_browser_log(private$web$readLog())
   }
 

@@ -80,6 +80,52 @@ is_rmd <- function(path) {
   }
 }
 
+is_app <- function(path) {
+  tryCatch(
+    {
+      shiny::shinyAppDir(path)
+      TRUE
+    },
+    # shiny::shinyAppDir() throws a classed exception when path isn't a
+    # directory, or it doesn't contain an app.R (or server.R) file
+    # https://github.com/rstudio/shiny/blob/a60406a/R/shinyapp.R#L116-L119
+    invalidShinyAppDir = function(x) FALSE,
+    # If we get some other error, it's probably from sourcing
+    # of the app file(s), so throw that error now
+    error = function(x) abort(conditionMessage(x))
+  )
+}
+
+app_path <- function(path, arg = "path") {
+  # must also check for dir (windows trailing '/')
+  if (!(file.exists(path) || dir.exists(path))) {
+    stop(paste0("'", path, "' doesn't exist"), call. = FALSE)
+  }
+
+  if (is_app(path)) {
+    app <- path
+    dir <- path
+  } else if (is_rmd(path)) {
+    # Fallback for old behaviour
+    if (length(dir(dirname(path), pattern = "\\.[Rr]md$")) > 1) {
+      abort("For testing, only one .Rmd file is allowed per directory.")
+    }
+    app <- path
+    dir <- dirname(path)
+  } else {
+    rmds <- dir(path, pattern = "\\.Rmd$", full.names = TRUE)
+    if (length(rmds) != 1) {
+      abort(paste0(
+        "`", arg, "` doesn't contain 'app.R', 'server.R', or exactly one '.Rmd'"
+      ))
+    } else {
+      app <- rmds
+      dir <- dirname(app)
+    }
+  }
+
+  list(app = app, dir = dir)
+}
 
 
 # https://github.com/rstudio/shiny/blob/2360bde13efac1fe501efee447a8f3dde0136722/R/shiny.R#L35-L49
