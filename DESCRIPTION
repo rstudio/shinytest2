@@ -41,6 +41,8 @@ Imports:
     shiny,
     withr
 Suggests:
+    rprojroot,
+    rstudioapi,
     plotly,
     shinyWidgets
 Remotes:
@@ -66,6 +68,7 @@ Collate:
     'shiny-driver.R'
     'shiny-start.R'
     'snapshot.R'
+    'staticimports.R'
     'test-app.R'
     'testthat.R'
     'widget.R'

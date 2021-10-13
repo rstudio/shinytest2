@@ -31,7 +31,7 @@ ShinyDriver2 <- R6Class(
     #' @param screenshot Take screenshots for each snapshot?
     # ' @param phantomTimeout How long to wait when connecting to phantomJS
     # '  process, in ms
-    #' @param variant
+    #' @template variant
     #' @param checkNames Check if widget names are unique?
     #' @param debug Start the app in debugging mode? In debugging mode debug
     #'   messages are printed to the console.

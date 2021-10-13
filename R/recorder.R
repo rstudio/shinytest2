@@ -2,35 +2,24 @@
 #'
 #' @param app A [ShinyDriver2()] object, or path to a Shiny
 #'   application.
-# ' @param load_mode A boolean that determines whether or not the resulting test
-# '   script should be appropriate for load testing.
 #' @param seed A random seed to set before running the app. This seed will also
 #'   be used in the test script.
-#' @param variant
-#'   If not-`NULL`, results will be saved in
-#'   _snaps/{variant}/{test.md}`, so `variant` must be a single
-#'   string of alphanumeric characters suitable for use as a
-#'   directory name.
-#'
-#'   You can variants to deal with cases where the snapshot output
-#'   varies and you want to capture and test the variations.
-#'   Common use cases include variations for operating system, R
-#'   version, or version of key dependency.
+#' @template variant
 #' @param loadTimeout Maximum time to wait for the Shiny application to load, in
 #'   milliseconds. If a value is provided, it will be saved in the test script.
-#' @param debug start the underlying [ShinyDriver()] in `debug`
+#' @param debug start the underlying [ShinyDriver2()] in `debug`
 #'   mode and print those debug logs to the R console once recording is
 #'   finished. The default, `'shiny_console'`, captures and prints R
 #'   console output from the recorded R shiny process. Any value that the
-#'   `debug` argument in [ShinyDriver()] accepts may be used
+#'   `debug` argument in [ShinyDriver2()] accepts may be used
 #'   (e.g., `'none'` may be used to completely suppress the driver logs).
 #' @param shinyOptions A list of options to pass to `runApp()`. If a value
 #'   is provided, it will be saved in the test script.
+#' @param ... Used for parameter expansion
 #' @export
 record_test <- function(
   app = ".",
   ...,
-  # load_mode = FALSE,
   seed = NULL,
   variant = os_name_and_r_version(),
   loadTimeout = 10000,
@@ -38,6 +27,9 @@ record_test <- function(
   shinyOptions = list()
 ) {
   ellipsis::check_dots_empty()
+
+  checkmate::assert_true(is_installed("rprojroot"))
+  checkmate::assert_true(is_installed("rprojroot"))
 
   for (class_val in c("shiny.appobj", "ShinyDriver")) {
     if (inherits(app, class_val)) {
@@ -92,7 +84,6 @@ record_test <- function(
       shinytest2.recorder.url  = url,
       shinytest2.app           = app,
       shinytest2.debug         = debug,
-      # shinytest2.load.mode     = load_mode,
       shinytest2.load.timeout  = if (!missing(loadTimeout)) loadTimeout,
       shinytest2.seed          = seed,
       shinytest2.shiny.options = shinyOptions
@@ -114,10 +105,10 @@ record_test <- function(
 
   } else {
     if (length(res$dont_run_reasons) > 0) {
-      inform(c("Not running test script because", res$dont_run_reasons))
+      rlang::inform(c("Not running test script because", res$dont_run_reasons))
     }
 
-    inform(sprintf(
+    rlang::inform(sprintf(
       'After making changes to the test script, run it with:\n  testthat::test_file("%s")',
       test_app_()
     ))

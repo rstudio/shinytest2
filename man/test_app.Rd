@@ -4,46 +4,27 @@
 \alias{test_app}
 \title{Run tests for a Shiny application}
 \usage{
-test_app(
-  appDir = ".",
-  ...,
-  reporter = missing_arg(),
-  package = missing_arg(),
-  quiet = FALSE,
-  compareImages = TRUE,
-  interactive = is_interactive(),
-  suffix = NULL
-)
+test_app(appDir = ".", ..., reporter = missing_arg(), package = missing_arg())
 }
 \arguments{
 \item{appDir}{Path to directory containing a Shiny app (e.g. \code{app.R}) or
 single interactive \code{.Rmd}.}
 
-\item{quiet}{Should output be suppressed? This is useful for automated
-testing.}
+\item{...}{Ignored. Used for parameter expansion}
 
-\item{compareImages}{Should screenshots be compared? It can be useful to set
-this to \code{FALSE} when the expected results were taken on a different
-platform from the one currently being used to test the application.}
+\item{reporter}{Reporter to use to summarise output. Can be supplied
+as a string (e.g. "summary") or as an R6 object
+(e.g. \code{SummaryReporter$new()}).
 
-\item{interactive}{If there are any differences between current results and
-expected results, provide an interactive graphical viewer that shows the
-changes and allows the user to accept or reject the changes.}
+See \link[testthat]{Reporter} for more details and a list of built-in reporters.}
 
-\item{suffix}{An optional suffix for the expected results directory. For
-example, if the suffix is \code{"mac"}, the expected directory would be
-\code{mytest-expected-mac}.}
-
-\item{testnames}{Test script(s) to run. The .R extension of the filename is
-optional. For example, \code{"mytest"} or \code{c("mytest", "mytest2.R")}.
-If \code{NULL} (the default), all scripts in the tests/ directory will be
-run.}
+\item{package}{If these tests belong to a package, the name of the package.}
 }
 \description{
 Run tests for a Shiny application
 }
 \seealso{
-\code{\link[=snapshotCompare]{snapshotCompare()}} and \code{\link[=snapshotUpdate]{snapshotUpdate()}} if
+\code{\link[testthat:snapshot_accept]{testthat::snapshot_review()}} and \code{\link[testthat:snapshot_accept]{testthat::snapshot_accept()}} if
 you want to compare or update snapshots after testing. In most cases, the
 user is prompted to do these tasks interactively, but there are also times
 where it is useful to call these functions from the console.

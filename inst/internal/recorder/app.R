@@ -3,7 +3,6 @@ library(promises)
 target_url   <- getOption("shinytest2.recorder.url")
 app          <- getOption("shinytest2.app")
 debug        <- getOption("shinytest2.debug")
-load_mode    <- getOption("shinytest2.load.mode", FALSE)
 load_timeout <- getOption("shinytest2.load.timeout")
 start_seed   <- getOption("shinytest2.seed")
 shiny_options<- getOption("shinytest2.shiny.options")
@@ -141,7 +140,7 @@ inputProcessors <- list(
 )
 
 # Add in input processors registered by other packages.
-inputProcessors <- mergeVectors(inputProcessors, shinytest::getInputProcessors())
+inputProcessors <- mergeVectors(inputProcessors, shinytest2::getInputProcessors())
 
 # Given an input value taken from the client, return the value that would need
 # to be passed to app$set_input() to set the input to that value.
@@ -157,7 +156,7 @@ processInputValue <- function(value, inputType) {
     if (tryLoadPackage(pkg)) {
       # The set of inputProcessors may have changed by loading the package, so
       # re-merge the registered input processors.
-      inputProcessors <<- mergeVectors(inputProcessors, shinytest::getInputProcessors())
+      inputProcessors <<- mergeVectors(inputProcessors, shinytest2::getInputProcessors())
     }
   }
 
@@ -192,27 +191,13 @@ quoteName <- function(name) {
 }
 
 codeGenerators <- list(
-  initialize = function(event, nextEvent = NULL, useTimes = FALSE, ...) {
+  initialize = function(event, nextEvent = NULL, ...) {
     NA_character_
   },
 
-  input = function(event, nextEvent = NULL, useTimes = FALSE, allowInputNoBinding = FALSE, ...) {
+  input = function(event, nextEvent = NULL, allowInputNoBinding = FALSE, ...) {
     # Extra arguments when using times
     args <- ""
-    if (useTimes && !is.null(nextEvent)) {
-      if (nextEvent$type == "input") {
-        # When using timings, don't wait when next event is also setting an input.
-        args <- ", values_ = FALSE, wait_ = FALSE"
-
-      } else if (nextEvent$type == "outputEvent") {
-        # When the next event is an output event, use 3 * the timediff value
-        # (rounded to the nearest whole number) for the timeout, or 3 seconds,
-        # whichever is larger.
-          args <- paste0(", timeout_ = ",
-          max(3000, round(nextEvent$timediff * 3, -3))
-        )
-      }
-    }
 
     if (event$inputType == "shiny.fileupload") {
       filename <- processInputValue(event$value, event$inputType)
@@ -268,19 +253,19 @@ codeGenerators <- list(
     }
   },
 
-  fileDownload = function(event, nextEvent = NULL, useTimes = FALSE, ...) {
+  fileDownload = function(event, nextEvent = NULL, ...) {
     paste0('app$snapshotDownload("', event$name, '")')
   },
 
-  outputEvent = function(event, nextEvent = NULL, useTimes = FALSE, ...) {
+  outputEvent = function(event, nextEvent = NULL, ...) {
      NA_character_
   },
 
-  outputSnapshot = function(event, nextEvent = NULL, useTimes = FALSE, ...) {
+  outputSnapshot = function(event, nextEvent = NULL, ...) {
     paste0('expect_snapshot_app(app, items = list(output = "', event$name, '"))')
   },
 
-  snapshot = function(event, nextEvent = NULL, useTimes = FALSE, ...) {
+  snapshot = function(event, nextEvent = NULL, ...) {
     "expect_snapshot_app(app)"
   }
 )
@@ -290,29 +275,18 @@ appDirBasename <- function() {
   fs::path_file(shinytest2:::app_path(app$getAppDir())$dir)
 }
 
-generateTestCode <- function(events, name, seed, useTimes = FALSE,
+generateTestCode <- function(events, name, seed,
   allowInputNoBinding = FALSE)
 {
-  if (useTimes) {
-    # Convert from absolute to relative times; first event has time 0.
-    startTime <- NA
-    if (length(events) != 0) {
-      events[[1]]$timediff <- 0
-      for (i in seq_len(length(events)-1)) {
-        events[[i+1]]$timediff <- events[[i+1]]$time - events[[i]]$time
-      }
-    }
-  }
 
   # Generate code for each input and output event
   eventCode <- mapply(
-    function(event, nextEvent, useTimes) {
-      codeGenerators[[event$type]](event, nextEvent, useTimes,
+    function(event, nextEvent) {
+      codeGenerators[[event$type]](event, nextEvent,
                                    allowInputNoBinding = allowInputNoBinding)
     },
     events,
-    c(events[-1], list(NULL)),
-    useTimes
+    c(events[-1], list(NULL))
   )
 
   # Find the indices of the initialize event and output events. The code lines
@@ -323,60 +297,37 @@ generateTestCode <- function(events, name, seed, useTimes = FALSE,
   }, logical(1))
 
   if (length(eventCode) != 0) {
-    if (useTimes) {
-      timingCode <- vapply(events, function(event) {
-        sprintf("Sys.sleep(%0.1f)", event$timediff / 1000)
-      }, "")
-
-      # Remove unwanted events
-      eventCode  <- eventCode[!removeEvents]
-      timingCode <- timingCode[!removeEvents]
-
-      # Interleave events and times with c(rbind()) trick
-      eventCode <- c(rbind(timingCode, eventCode))
-
-    } else {
-      # Remove unwanted events
-      eventCode  <- eventCode[!removeEvents]
-    }
+    # Remove unwanted events
+    eventCode  <- eventCode[!removeEvents]
 
     eventCode <- paste0("  ", eventCode, collapse = "\n")
   }
 
   # TODO-barret add testthat ed 3 wrapper code
+  # Need paste instead of file.path because app$getAppFilename() can be NULL which makes file.path grumpy.
+  app_path <- paste(
+    # Get relative path from app to the testthat tests directory
+    fs::path_rel(app$getAppDir(), rprojroot::find_testthat_root_file(path = app$getAppDir())),
+    app$getAppFilename(),
+    sep = "/"
+  )
   inner_code <- paste(
-    if (load_mode) {
-      '  app <- ShinyLoadDriver$new()'
-    } else {
-      # browser()
-      # Need paste instead of file.path because app$getAppFilename() can be NULL which makes file.path grumpy.
-      app_path <- paste(
-        # Get relative path from app to the testthat tests directory
-        fs::path_rel(app$getAppDir(), rprojroot::find_testthat_root_file(path = app$getAppDir())),
-        app$getAppFilename(),
-        sep = "/"
-      )
-
-      paste0(
-        "  app <- ShinyDriver2$new(\n",
-        "    ", paste(c(
-          paste0("test_path(\"", app_path, "\")"),
-          if (!is.null(seed)) paste0("seed = %s", seed),
-          if (!is.null(load_timeout)) paste0("loadTimeout = ", load_timeout),
-          if (length(shiny_options) > 0) paste0("shinyOptions = ", deparse2(shiny_options)),
-          "variant = os_name_and_r_version()"
-          ),
-          collapse = ",\n    "
-        ), "\n",
-        '  )'
-      )
-    },
+    paste0(
+      "  app <- ShinyDriver2$new(\n",
+      "    ", paste(c(
+        paste0("test_path(\"", app_path, "\")"),
+        if (!is.null(seed)) paste0("seed = %s", seed),
+        if (!is.null(load_timeout)) paste0("loadTimeout = ", load_timeout),
+        if (length(shiny_options) > 0) paste0("shinyOptions = ", deparse2(shiny_options)),
+        "variant = os_name_and_r_version()"
+        ),
+        collapse = ",\n    "
+      ), "\n",
+      '  )'
+    ),
     # paste0('app$snapshotInit("', name, '")'),
     # '',
     eventCode,
-    if (load_mode) {
-      '\n  app$snapshot()\n  app$stop()\n  app$getEventLog()\n'
-    },
     sep = "\n"
   )
 
@@ -406,22 +357,20 @@ shinyApp(
     div(id = "shiny-recorder",
       div(class = "shiny-recorder-header", "Test event recorder"),
       div(class = "shiny-recorder-controls",
-        if (!load_mode) {
-          span(
-            actionLink("snapshot",
-              span(
-                img(src = "snapshot.png", class = "shiny-recorder-icon"),
-                "Take snapshot"
-              ),
-              style = "display: inline;"
+        span(
+          actionLink("snapshot",
+            span(
+              img(src = "snapshot.png", class = "shiny-recorder-icon"),
+              "Take snapshot"
             ),
-            tooltip(
-              HTML("You can also Ctrl-click or &#8984;-click on an output to snapshot just that one output.<br> To trigger a snapshot via the keyboard, press Ctrl-shift-S or &#8984;-shift-S"),
-              placement = "bottom"
-            ),
-            hr()
-          )
-        },
+            style = "display: inline;"
+          ),
+          tooltip(
+            HTML("You can also Ctrl-click or &#8984;-click on an output to snapshot just that one output.<br> To trigger a snapshot via the keyboard, press Ctrl-shift-S or &#8984;-shift-S"),
+            placement = "bottom"
+          ),
+          hr()
+        ),
         actionLink("exit_save",
           span(
             img(src = "exit-save.png", class = "shiny-recorder-icon"),
@@ -434,10 +383,9 @@ shinyApp(
             "Quit without saving"
           )
         ),
-        textInput("testname", label = "On exit, save test script as:",
-          value = if (load_mode) "myloadtest" else "mytest"),
+        textInput("testname", label = "On exit, save test script as:", value = "mytest"),
         checkboxInput("editSaveFile", "Open script in editor on exit", value = TRUE),
-        if (!load_mode) checkboxInput("runScript", "Run test script on exit", value = TRUE),
+        checkboxInput("runScript", "Run test script on exit", value = TRUE),
         checkboxInput(
           "allowInputNoBinding",
           tagList("Save inputs that do not have a binding",
@@ -565,9 +513,12 @@ shinyApp(
         if (is.null(seed) || is.na(seed))
           seed <- NULL
 
-        code <- generateTestCode(input$testevents, input$testname,
-          seed = seed, useTimes = load_mode,
-          allowInputNoBinding = input$allowInputNoBinding)
+        code <- generateTestCode(
+          input$testevents,
+          input$testname,
+          seed = seed,
+          allowInputNoBinding = input$allowInputNoBinding
+        )
 
         if (isTRUE(delete_test_file)) {
           unlink(saveFile())
@@ -624,7 +575,7 @@ shinyApp(
     observeEvent(input$exit_save, {
       message("observed!")
 
-      if (!load_mode && numSnapshots() == 0) {
+      if (numSnapshots() == 0) {
         showModal(
           modalDialog("Must have at least one snapshot to save and exit.")
         )

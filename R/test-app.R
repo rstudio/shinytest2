@@ -2,43 +2,47 @@
 #'
 #' @param appDir Path to directory containing a Shiny app (e.g. `app.R`) or
 #'   single interactive `.Rmd`.
-#' @param testnames Test script(s) to run. The .R extension of the filename is
-#'   optional. For example, `"mytest"` or `c("mytest", "mytest2.R")`.
-#'   If `NULL` (the default), all scripts in the tests/ directory will be
-#'   run.
-#' @param quiet Should output be suppressed? This is useful for automated
-#'   testing.
-#' @param compareImages Should screenshots be compared? It can be useful to set
-#'   this to `FALSE` when the expected results were taken on a different
-#'   platform from the one currently being used to test the application.
-#' @param interactive If there are any differences between current results and
-#'   expected results, provide an interactive graphical viewer that shows the
-#'   changes and allows the user to accept or reject the changes.
-#' @param suffix An optional suffix for the expected results directory. For
-#'   example, if the suffix is `"mac"`, the expected directory would be
-#'   `mytest-expected-mac`.
-#'
-#' @seealso [snapshotCompare()] and [snapshotUpdate()] if
+#' @param ... Ignored. Used for parameter expansion
+#' @inheritParams testthat::test_file
+# ' @param testnames Test script(s) to run. The .R extension of the filename is
+# '   optional. For example, `"mytest"` or `c("mytest", "mytest2.R")`.
+# '   If `NULL` (the default), all scripts in the tests/ directory will be
+# '   run.
+# ' @param quiet Should output be suppressed? This is useful for automated
+# '   testing.
+# ' @param compareImages Should screenshots be compared? It can be useful to set
+# '   this to `FALSE` when the expected results were taken on a different
+# '   platform from the one currently being used to test the application.
+# ' @param interactive If there are any differences between current results and
+# '   expected results, provide an interactive graphical viewer that shows the
+# '   changes and allows the user to accept or reject the changes.
+# ' @param suffix An optional suffix for the expected results directory. For
+# '   example, if the suffix is `"mac"`, the expected directory would be
+# '   `mytest-expected-mac`.
+# '
+#' @seealso [testthat::snapshot_review()] and [testthat::snapshot_accept()] if
 #'   you want to compare or update snapshots after testing. In most cases, the
 #'   user is prompted to do these tasks interactively, but there are also times
 #'   where it is useful to call these functions from the console.
 #'
-#' @ TODO-barret; should this be exported?
+# TODO-barret; should this be exported? Or should it just be `testthat::test_file()`?
 #' @export
-#' @importFrom rlang missing_arg
+#' @importFrom rlang missing_arg is_interactive
 test_app <- function(
   appDir = ".",
   # testnames = NULL,
   ...,
   reporter = missing_arg(),
-  package = missing_arg(),
-  quiet = FALSE,
-  compareImages = TRUE,
-  interactive = is_interactive(),
-  suffix = NULL
+  package = missing_arg()
+  # quiet = FALSE,
+  # compareImages = TRUE,
+  # interactive = is_interactive(),
+  # suffix = NULL
 ) {
 
-  library(shinytest)
+  library(shinytest2)
+
+
 
   reporter <- rlang::maybe_missing(reporter, rlang::fn_fmls(testthat::test_file)$reporter)
   package <- rlang::maybe_missing(package, rlang::fn_fmls(testthat::test_file)$package)
@@ -51,6 +55,7 @@ test_app <- function(
   app_folder <- fs::path_file(app_path(appDir, "appDir")$dir)
   test_path <- rprojroot::find_testthat_root_file(
     paste0("test-", app_folder, ".R"),
+    # TODO-barret; shoudl this be relative to the app or to the caller?
     path = app_folder
   )
 

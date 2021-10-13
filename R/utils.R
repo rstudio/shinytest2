@@ -1,3 +1,6 @@
+# @staticimports pkg:staticimports
+#  is_installed
+
 
 ckm8_assert_single_string <- function(x, .var.name = checkmate::vname(x)) {
   checkmate::assert_character(x, len = 1, any.missing = FALSE, .var.name = .var.name)
