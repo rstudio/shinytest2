@@ -4,7 +4,6 @@
 #'   application.
 #' @param seed A random seed to set before running the app. This seed will also
 #'   be used in the test script.
-#' @template variant
 #' @param loadTimeout Maximum time to wait for the Shiny application to load, in
 #'   milliseconds. If a value is provided, it will be saved in the test script.
 #' @param debug start the underlying [ShinyDriver2()] in `debug`
@@ -21,7 +20,6 @@ record_test <- function(
   app = ".",
   ...,
   seed = NULL,
-  variant = os_name_and_r_version(),
   loadTimeout = 10000,
   debug = "shiny_console",
   shinyOptions = list()

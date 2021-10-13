@@ -8,7 +8,6 @@ record_test(
   app = ".",
   ...,
   seed = NULL,
-  variant = os_name_and_r_version(),
   loadTimeout = 10000,
   debug = "shiny_console",
   shinyOptions = list()
@@ -22,16 +21,6 @@ application.}
 
 \item{seed}{A random seed to set before running the app. This seed will also
 be used in the test script.}
-
-\item{variant}{If not-\code{NULL}, results will be saved in
-_snaps/{variant}/{test.md}\verb{, so }variant` must be a single
-string of alphanumeric characters suitable for use as a
-directory name.
-
-You can variants to deal with cases where the snapshot output
-varies and you want to capture and test the variations.
-Common use cases include variations for operating system, R
-version, or version of key dependency.}
 
 \item{loadTimeout}{Maximum time to wait for the Shiny application to load, in
 milliseconds. If a value is provided, it will be saved in the test script.}
