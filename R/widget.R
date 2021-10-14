@@ -52,7 +52,7 @@ Widget2 <- R6Class(
     isOutput = function() private$iotype == "output",
 
     #' @description Get current value of control.
-    getValue = function(){
+    getValue = function() {
       "!DEBUG widget2_getValue `private$name`"
 
       if (private$iotype == "input") {
@@ -116,7 +116,7 @@ Widget2 <- R6Class(
         value
       )
 
-      setValueScript <-"
+      setValueScript <- "
         function() {
           var el = $(this);
           var val = arguments[0];

@@ -132,13 +132,13 @@ test_app <- function(
 # #'  3. Assuming all top-level R files in `tests/` appear to be shinytest, return that dir.
 # #' @noRd
 # findTestsDir <- function(appDir, mustExist=TRUE, quiet=TRUE) {
-#   if (basename(appDir) == "tests"){
+#   if (basename(appDir) == "tests") {
 #     # We were given a */tests/ directory. It's possible that we're in the middle of a nested tests
 #     # directory and the application dir is actually one level up. This happens in certain versions
 #     # of the RStudio IDE.
 #     # https://github.com/rstudio/rstudio/issues/5677
 
-#     if (!dir_exists(file.path(appDir, "tests"))){
+#     if (!dir_exists(file.path(appDir, "tests"))) {
 #       # We're in a dir called `tests` and there's not another `tests` directory inside, so we can
 #       # assume that the app dir is actually probably one level up.
 #       appDir <- dirname(appDir)
@@ -180,7 +180,7 @@ test_app <- function(
 #     return(shinytestDir)
 #   }
 
-#   if (!any(is_test) && !mustExist){
+#   if (!any(is_test) && !mustExist) {
 #     # There may be some stuff in the tests directory, but if it's not shinytest-related...
 #     # Ignore and just use the nested dir
 #     return(shinytestDir)

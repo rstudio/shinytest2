@@ -59,7 +59,7 @@ ShinyDriver2 <- R6Class(
       shinyOptions = list(),
       renderArgs = NULL,
       options = list()
-    ){
+   ) {
       ellipsis::check_dots_empty()
 
       # TODO-barret

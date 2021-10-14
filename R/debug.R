@@ -140,7 +140,7 @@ format.shinytest_logs <- function(x, ..., short = FALSE) {
       return(
         paste0(
           types[x$type[i]], "> ",
-          colors[[ x$type[i] ]](x$message[i])
+          colors[[x$type[i]]](x$message[i])
         )
       )
     }
@@ -159,7 +159,7 @@ format.shinytest_logs <- function(x, ..., short = FALSE) {
       " ",
       time,
       " ",
-      colors[[ x$type[i] ]](x$message[i])
+      colors[[x$type[i]]](x$message[i])
     )
   }, character(1))
 

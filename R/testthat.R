@@ -1,4 +1,4 @@
-testthat_expect_snapshot_output <- function(
+testthat_expect_snapshot_output <- function( # nolint
   private,
   x,
   cran = FALSE

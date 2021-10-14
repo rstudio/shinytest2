@@ -1,11 +1,11 @@
 library(promises)
 
-target_url   <- getOption("shinytest2.recorder.url")
-app          <- getOption("shinytest2.app")
-debug        <- getOption("shinytest2.debug")
-load_timeout <- getOption("shinytest2.load.timeout")
-start_seed   <- getOption("shinytest2.seed")
-shiny_options<- getOption("shinytest2.shiny.options")
+target_url    <- getOption("shinytest2.recorder.url")
+app           <- getOption("shinytest2.app")
+debug         <- getOption("shinytest2.debug")
+load_timeout  <- getOption("shinytest2.load.timeout")
+start_seed    <- getOption("shinytest2.seed")
+shiny_options <- getOption("shinytest2.shiny.options")
 
 # If there are any reasons to not run a test, a message should be appended to
 # this vector.

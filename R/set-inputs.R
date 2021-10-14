@@ -33,7 +33,7 @@ sd2_setInputs <- function(self, private, ..., wait_ = TRUE, values_ = TRUE,
     inform_where(paste0(
       "setInputs(", call_text, "): ",
       "Server did not update any output values within ",
-      format(timeout_/1000, digits = 2), " seconds. ",
+      format(timeout_ / 1000, digits = 2), " seconds. ",
       "If this is expected, use `wait_=FALSE, values_=FALSE`, or increase the value of timeout_."
     ))
   }
