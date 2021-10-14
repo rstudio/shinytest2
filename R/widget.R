@@ -75,7 +75,7 @@ Widget2 <- R6Class(
               }"
             )$result$value
           },
-          verbatimTextOutput = ,
+          verbatimTextOutput = , # nolint
           textOutput = {
             chromote_call_js_on_node(
               private$chromote_obj,

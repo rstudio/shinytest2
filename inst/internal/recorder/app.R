@@ -29,7 +29,7 @@ registerInputHandler("shinytest2.testevents", function(val, shinysession, name) 
 
 escapeString <- function(s) {
   # escape \ as well as "
-  s <- gsub('\\', '\\\\', s, fixed = TRUE)
+  s <- gsub("\\", "\\\\", s, fixed = TRUE)
   gsub('"', '\\"', s, fixed = TRUE)
 }
 
@@ -323,7 +323,7 @@ generateTestCode <- function(events, name, seed,
         ),
         collapse = ",\n    "
       ), "\n",
-      '  )'
+      "  )"
     ),
     # paste0('app$snapshotInit("', name, '")'),
     # '',
@@ -332,7 +332,7 @@ generateTestCode <- function(events, name, seed,
   )
 
   paste0(
-    "test_that(\"", fs::path_file(shinytest2:::app_path(app$getAppDir())$dir)," - ", appDirBasename(), "\", {\n",
+    "test_that(\"", fs::path_file(shinytest2:::app_path(app$getAppDir())$dir), " - ", appDirBasename(), "\", {\n",
     inner_code,
     "})\n"
   )

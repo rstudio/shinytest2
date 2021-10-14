@@ -74,7 +74,7 @@ parse_url <- function(url) {
   )
 }
 is_rmd <- function(path) {
-  if (utils::file_test('-d', path)) {
+  if (utils::file_test("-d", path)) {
     FALSE
   } else if (grepl("\\.Rmd", path, ignore.case = TRUE)) {
     TRUE

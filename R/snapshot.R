@@ -143,18 +143,18 @@ hash_snapshot_image_data <- function(data) {
   }
 
   # Image data indices
-  image_start_idx <- as.integer(attr2(image_offsets, "capture.start")[,"img_data"])
+  image_start_idx <- as.integer(attr2(image_offsets, "capture.start")[, "img_data"])
   image_stop_idx <- image_start_idx +
-    as.integer(attr2(image_offsets, "capture.length")[,"img_data"]) - 1
+    as.integer(attr2(image_offsets, "capture.length")[, "img_data"]) - 1
 
   # Text (non-image) data indices
   text_start_idx <- c(
     0,
-    attr2(image_offsets, "capture.start")[,"data_url"] +
-      attr2(image_offsets, "capture.length")[,"data_url"]
+    attr2(image_offsets, "capture.start")[, "data_url"] +
+      attr2(image_offsets, "capture.length")[, "data_url"]
   )
   text_stop_idx <- c(
-    attr(image_offsets, "capture.start")[,"data_url"] - 1,
+    attr(image_offsets, "capture.start")[, "data_url"] - 1,
     nchar(data)
   )
 
