@@ -1,0 +1,13 @@
+linters: with_defaults(
+    line_length_linter = NULL, # 186
+    object_name_linter = NULL, # 143
+    commented_code_linter = NULL, # 108
+    object_usage_linter = NULL, # 31
+    commas_linter = NULL, # 10
+    open_curly_linter = NULL, # 10
+    single_quotes_linter = NULL, # 8
+    cyclocomp_linter = NULL, # 3
+    dummy_linter = NULL
+  )
+exclusions: list(
+  )
