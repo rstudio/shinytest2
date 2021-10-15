@@ -30,7 +30,7 @@ ShinyDriver2$set("public", "expectSnapshotJS", function(
     result,
     cran = cran
   )
-}
+})
 
 
 # ShinyDriver2

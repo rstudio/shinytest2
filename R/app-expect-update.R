@@ -15,4 +15,4 @@ ShinyDriver2$set("public", "expectUpdate", function(
   stop("not implemented")
   ShinyDriver2$expectUpdate(self, private, output, ..., timeout = timeout,
                     iotype = match.arg(iotype))
-},
+})

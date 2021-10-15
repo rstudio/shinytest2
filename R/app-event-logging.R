@@ -12,7 +12,7 @@ ShinyDriver2$set("public", "logEvent", function(event, ...) {
 
   private$eventLog[[length(private$eventLog) + 1]] <- content
   invisible(self)
-}
+})
 
 #' @description Retrieve event log.
 #' @include shiny-driver.R
@@ -40,4 +40,4 @@ ShinyDriver2$set("public", "getEventLog", function(self, private) {
   vecs <- c(workerid = private$shinyWorkerId, vecs)
 
   as.data.frame(vecs, stringsAsFactors = FALSE)
-}
+})

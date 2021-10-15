@@ -11,7 +11,7 @@
 ShinyDriver2$set("public", "waitFor", function(expr, checkInterval = 100, timeout = 3000) {
   "!DEBUG ShinyDriver2$waitFor"
   chromote_wait_for_condition(private$chromote_obj, expr, timeout_ms = timeout, delay_ms = checkInterval)
-},
+})
 
 #' @description
 #' Waits until Shiny is not busy, i.e. the reactive graph has finished
@@ -31,7 +31,7 @@ ShinyDriver2$set("public", "waitForShiny", function()  {
     timeout = 3 * 1000,
     delay_ms = checkInterval
   )
-},
+})
 
 #' @description
 #' Waits until the `input` or `output` with name `name` is not one of

@@ -30,7 +30,7 @@ ShinyDriver2$set("public", "isRmd", function() {
 ShinyDriver2$set("public", "getRelativePathToApp", function() {
   # TODO-barret; remove this?
   abort("app$getRelativePathToApp() is no longer used")
-},
+})
 
 #' @description Deprecated. Directory where tests are located
 #' @include shiny-driver.R
@@ -42,4 +42,4 @@ ShinyDriver2$set("public", "getTestsDir", function() {
   # TODO-barret; Or should this be relative to the calling directory?
   rprojroot::find_testthat_root_file(path = self$getAppDir())
 
-},
+})

@@ -77,7 +77,7 @@ ShinyDriver2$set("private", "queueInputs", function(inputs) {
     "shinytest2.inputQueue.add(arguments[0]);",
     inputs
   )
-}
+})
 
 #' @include shiny-driver.R
 ShinyDriver2$set("private", "flushInputs", function(wait = TRUE, timeout = 1000) {
@@ -109,7 +109,7 @@ ShinyDriver2$set("private", "flushInputs", function(wait = TRUE, timeout = 1000)
   #   wait,
   #   timeout
   # )
-}
+})
 
 
 #' @description

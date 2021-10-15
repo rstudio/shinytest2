@@ -265,7 +265,7 @@ ShinyDriver2$set("public", "findWidget", function(name, iotype = c("auto", "inpu
     iotype = type[[1]],
     chromote = chromote
   )
-}
+})
 
 
 
