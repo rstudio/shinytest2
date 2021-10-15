@@ -12,12 +12,12 @@ with a live app.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
+\item \href{#method-getAllValues}{\code{ShinyDriver2$getAllValues()}}
 \item \href{#method-new}{\code{ShinyDriver2$new()}}
 \item \href{#method-stop}{\code{ShinyDriver2$stop()}}
 \item \href{#method-getValue}{\code{ShinyDriver2$getValue()}}
 \item \href{#method-setValue}{\code{ShinyDriver2$setValue()}}
 \item \href{#method-click}{\code{ShinyDriver2$click()}}
-\item \href{#method-getAllValues}{\code{ShinyDriver2$getAllValues()}}
 \item \href{#method-sendKeys}{\code{ShinyDriver2$sendKeys()}}
 \item \href{#method-setWindowSize}{\code{ShinyDriver2$setWindowSize()}}
 \item \href{#method-getWindowSize}{\code{ShinyDriver2$getWindowSize()}}
@@ -59,6 +59,15 @@ with a live app.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getAllValues"></a>}}
+\if{latex}{\out{\hypertarget{method-getAllValues}{}}}
+\subsection{Method \code{getAllValues()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getAllValues(input = TRUE, output = TRUE, export = TRUE)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
@@ -83,45 +92,7 @@ with a live app.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{path}}{Path to a directory containing a Shiny app, i.e. a
-single \code{app.R} file or a \code{server.R}-\code{ui.R} pair.}
-
-\item{\code{loadTimeout}}{How long to wait for the app to load, in ms.
-This includes the time to start R. Defaults to 5s when running
-locally and 10s when running on CI. Maximum value is 10s.}
-
-\item{\code{screenshot}}{Take screenshots for each snapshot?}
-
-\item{\code{checkNames}}{Check if widget names are unique?}
-
 \item{\code{name}}{Name of a shiny widget.}
-
-\item{\code{variant}}{If not-\code{NULL}, results will be saved in
-_snaps/{variant}/{test.md}\verb{, so }variant` must be a single
-string of alphanumeric characters suitable for use as a
-directory name.
-
-You can variants to deal with cases where the snapshot output
-varies and you want to capture and test the variations.
-Common use cases include variations for operating system, R
-version, or version of key dependency.}
-
-\item{\code{debug}}{Start the app in debugging mode? In debugging mode debug
-messages are printed to the console.}
-
-\item{\code{seed}}{An optional random seed to use before starting the application.
-For apps that use R's random number generator, this can make their
-behavior repeatable.}
-
-\item{\code{cleanLogs}}{Whether to remove the stdout and stderr logs when the
-Shiny process object is garbage collected.}
-
-\item{\code{shinyOptions}}{A list of options to pass to \code{\link[shiny:runApp]{shiny::runApp()}}.}
-
-\item{\code{renderArgs}}{Passed to \code{rmarkdown::run()} for interactive \code{.Rmd}s.}
-
-\item{\code{options}}{A list of \code{\link[base:options]{base::options()}} to set in the driver's child
-process.}
 }
 \if{html}{\out{</div>}}
 }
@@ -204,25 +175,6 @@ plus \code{click()}; see the \link{Widget2} documentation for more details.
 \item{\code{iotype}}{Type of the Shiny widget. Usually shinytest2 finds the widgets
 by their name, so this is only needed if you use the same name for an
 input and output widget.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getAllValues"></a>}}
-\if{latex}{\out{\hypertarget{method-getAllValues}{}}}
-\subsection{Method \code{getAllValues()}}{
-Returns a named list of all inputs, outputs, and export values.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getAllValues(input = TRUE, output = TRUE, export = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{input, output, export}}{Either \code{TRUE} to return all
-input/output/exported values, or a character vector of specific
-controls.}
 }
 \if{html}{\out{</div>}}
 }

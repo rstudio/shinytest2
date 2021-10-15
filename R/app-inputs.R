@@ -1,5 +1,23 @@
-sd2_setInputs <- function(self, private, ..., wait_ = TRUE, values_ = TRUE,
-                         timeout_ = 3000, allowInputNoBinding_ = FALSE, priority_ = c("input", "event")) {
+#' @description
+#' Sets input values.
+#' @param ... Name-value pairs, `name1 = value1, name2 = value2` etc.
+#'   Enput with name `name1` will be assigned value `value1`.
+#' @param allowInputNoBinding_ When setting the value of an input, allow
+#'   it to set the value of an input even if that input does not have
+#'   an input binding.
+#' @param priority_ Sets the event priority. For expert use only: see
+#'   <https://shiny.rstudio.com/articles/communicating-with-js.html#values-vs-events> for details.
+#' @param values_ If `TRUE`, will return final updated values of inputs.
+#' @return Returns updated values, invisibly.
+#' @include shiny-driver.R
+ShinyDriver2$set("public", "setInputs", function(
+  ...,
+  wait_ = TRUE,
+  values_ = TRUE,
+  timeout_ = 3000,
+  allowInputNoBinding_ = FALSE,
+  priority_ = c("input", "event")
+) {
   if (values_ && !wait_) {
     abort(c(
       "values_=TRUE and wait_=FALSE are not compatible.",
@@ -47,11 +65,11 @@ sd2_setInputs <- function(self, private, ..., wait_ = TRUE, values_ = TRUE,
 
 
   invisible(values)
-}
+})
 
 
-
-sd2_queueInputs <- function(self, private, inputs) {
+#' @include shiny-driver.R
+ShinyDriver2$set("private", "queueInputs", function(inputs) {
   checkmate::assert_true(rlang::is_named(inputs))
 
   # todo-barret; make sure it works
@@ -61,9 +79,11 @@ sd2_queueInputs <- function(self, private, inputs) {
   )
 }
 
-sd2_flushInputs <- function(self, private, wait, timeout) {
+#' @include shiny-driver.R
+ShinyDriver2$set("private", "flushInputs", function(wait = TRUE, timeout = 1000) {
   # TODO-barret; make sure it works
   # TODO-barret; where does `callback` come from?
+  # TODO-barret; use self$executeScriptCallback
   self$executeScript(
     "
     var wait = arguments[0];
@@ -91,9 +111,17 @@ sd2_flushInputs <- function(self, private, wait, timeout) {
   # )
 }
 
-sd2_uploadFile <- function(self, private, ..., wait_ = TRUE, values_ = TRUE,
+
+#' @description
+#' Uploads a file to a file input.
+#' @param ... Name-path pairs, e.g. `name1 = path1`. The file located at
+#' `path1` will be uploaded to file input with name `name1`.
+#' @param values_ If `TRUE`, will return final updated values of download
+#'   control.
+ShinyDriver2$set("public", "uploadFile", function(self, private, ..., wait_ = TRUE, values_ = TRUE,
                           timeout_ = 3000) {
-  stop("TODO-barret; sd2_uploadFile()")
+  # TODO-barret; Implement this; https://github.com/rstudio/shinytest2/issues/20
+  stop("TODO-barret; ShinyDriver2$uploadFile()")
   if (values_ && !wait_) {
     abort(c(
       "values_=TRUE and wait_=FALSE are not compatible.",
@@ -136,4 +164,4 @@ sd2_uploadFile <- function(self, private, ..., wait_ = TRUE, values_ = TRUE,
     invisible(self$getAllValues())
   else
     invisible()
-}
+})

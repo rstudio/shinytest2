@@ -1,4 +1,15 @@
-sd2_startShiny <- function(self, private, path, seed, loadTimeout, shinyOptions, renderArgs, options) {
+#' @include shiny-driver.R
+ShinyDriver2$set("private", "shinyProcess", NULL) # `callr::r_bg()` object
+
+#' @include shiny-driver.R
+ShinyDriver2$set("private", "startShiny", function(
+  path,
+  seed = NULL,
+  loadTimeout = 10000,
+  shinyOptions = list(),
+  renderArgs = NULL,
+  options = list()
+) {
   ckm8_assert_single_string(path)
 
   private$path <- normalizePath(path)
@@ -90,34 +101,4 @@ sd2_startShiny <- function(self, private, path, seed, loadTimeout, shinyOptions,
   private$setShinyUrl(url)
 
   private$shinyProcess <- p
-}
-
-
-sd2_getShinyUrl <- function(self, private) {
-  paste0(
-    private$shinyUrlProtocol, "://", private$shinyUrlHost,
-    if (!is.null(private$shinyUrlPort)) paste0(":", private$shinyUrlPort),
-    private$shinyUrlPath
-  )
-}
-
-sd2_setShinyUrl <- function(self, private, url) {
-  res <- parse_url(url)
-
-  if (nzchar(res$port)) {
-    res$port <- as.integer(res$port)
-    ckm8_assert_single_integer(res$port)
-  } else {
-    res$port <- NULL
-  }
-
-  res$path <- if (nzchar(res$path)) res$path else "/"
-
-  ckm8_assert_single_string(res$host)
-  ckm8_assert_single_url(res$path)
-
-  private$shinyUrlProtocol <- res$protocol
-  private$shinyUrlHost     <- res$host
-  private$shinyUrlPort     <- res$port
-  private$shinyUrlPath     <- res$path
-}
+})

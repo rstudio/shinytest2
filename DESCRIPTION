@@ -26,7 +26,7 @@ Imports:
     fs,
     callr,
     crayon,
-    parsedate,
+    parsedate (>= 1.2.0),
     rlang,
     checkmate,
     digest,
@@ -54,18 +54,18 @@ Config/Needs/website:
     r-lib/testthat
 Config/testthat/edition: 3
 Collate:
+    'shiny-driver.R'
     'app-get-all-values.R'
+    'app-initialize.R'
     'chromote_methods.R'
     'debug.R'
     'httr.R'
-    'initialize.R'
     'log.R'
     'utils.R'
     'platform.R'
     'recorder.R'
     'save-app.R'
     'set-inputs.R'
-    'shiny-driver.R'
     'shiny-start.R'
     'snapshot.R'
     'staticimports.R'

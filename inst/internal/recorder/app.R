@@ -303,7 +303,6 @@ generateTestCode <- function(events, name, seed,
     eventCode <- paste0("  ", eventCode, collapse = "\n")
   }
 
-  # TODO-barret add testthat ed 3 wrapper code
   # Need paste instead of file.path because app$getAppFilename() can be NULL which makes file.path grumpy.
   app_path <- paste(
     # Get relative path from app to the testthat tests directory

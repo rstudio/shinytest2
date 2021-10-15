@@ -178,18 +178,16 @@ Widget2 <- R6Class(
 
 
 
-#' Try to deduce the shiny input/output element type from its name
-#'
-#' @param name The name of the Shiny input or output to search for.
-#' @param iotype It is possible that an input has the same name as
-#'   an output, and in this case there is no way to get element without
-#'   knowing whether it is an input or output element.
-#'
-#' @noRd
+#' @description
+#' Finds the a Shiny input or output control.
+#' @return A [Widget2].
 #' @importFrom rlang %|%
-sd2_findWidget <- function(chromote, name, iotype) {
-
+#' @include shiny-driver.R
+ShinyDriver2$set("public", "findWidget", function(name, iotype = c("auto", "input", "output")) {
   "!DEBUG finding a Widget2 `name` (`iotype`)"
+  chromote <- private$chromote_obj
+
+  iotype <- match.arg(iotype)
 
   css <- if (iotype == "auto") {
     paste0("#", name)
@@ -268,3 +266,100 @@ sd2_findWidget <- function(chromote, name, iotype) {
     chromote = chromote
   )
 }
+
+
+
+
+#' @description
+#' Finds a widget and queries its value. See the `getValue()` method of
+#' [Widget2] for more details.
+#' @include shiny-driver.R
+ShinyDriver2$set("public", "getValue", function(name, iotype = c("auto", "input", "output")) {
+  "!DEBUG ShinyDriver2$getValue `name` (`iotype`)"
+  self$findWidget(name, iotype)$getValue()
+})
+
+#' @description
+#' Finds a widget and sets its value. It's a shortcut for `findElement()`
+#' plus `setValue()`; see the [Widget2] documentation for more details.
+#'
+#' @param value New value.
+#' @return Self, invisibly.
+#' @include shiny-driver.R
+ShinyDriver2$set("public", "setValue", function(name, value, iotype = c("auto", "input", "output")) {
+  "!DEBUG ShinyDriver2$setValue `name`"
+  self$findWidget(name, iotype)$setValue(value)
+  invisible(self)
+})
+
+#' @description
+#' Find a widget and click it. It's a shortcut for `findElement()`
+#' plus `click()`; see the [Widget2] documentation for more details.
+#' @include shiny-driver.R
+ShinyDriver2$set("public", "click", function(name, iotype = c("auto", "input", "output")) {
+  self$findWidget(name, iotype)$click()
+})
+
+#' @description
+#' Sends the specified keys to specific HTML element. Shortcut for
+#' `findWidget()` plus `sendKeys()`.
+#' @param keys Keys to send to the widget or the app.
+# ' See [webdriver::key] for how to specific special keys.
+#' @return Self, invisibly.
+#' @include shiny-driver.R
+ShinyDriver2$set("public", "sendKeys", function(name, keys) {
+  "!DEBUG ShinyDriver2$sendKeys `name`"
+  # TODO-barret; ? still todo?
+  self$findWidget(name)$sendKeys(keys)
+  invisible(self)
+})
+
+
+#' @description
+#' Lists the names of all input and output widgets
+#' @return A list of two character vectors, named `input` and `output`.
+#' @include shiny-driver.R
+ShinyDriver2$set("public", "listWidgets", function(self, private) {
+  "!DEBUG ShinyDriver2$listWidgets"
+  res <- chromote_eval(private$chromote_obj,
+    "shinytest2.listWidgets()"
+  )$result$value
+
+  res$input <- unlist(res$input)
+  res$output <- unlist(res$output)
+  res
+})
+
+#' @description
+#' Check if Shiny widget names are unique.
+#' @include shiny-driver.R
+ShinyDriver2$set("public", "checkUniqueWidgetNames", function(self, private) {
+  "!DEBUG ShinyDriver2$checkUniqueWidgetNames"
+  widgets <- self$listWidgets()
+  inputs <- widgets$input
+  outputs <- widgets$output
+
+  check <- function(what, ids) {
+    if (any(duplicated(ids))) {
+      dup <- paste(unique(ids[duplicated(ids)]), collapse = ", ")
+      warning("Possible duplicate ", what, " widget ids: ", dup)
+    }
+  }
+
+  if (any(inputs %in% outputs)) {
+    dups <- unique(inputs[inputs %in% outputs])
+    warning(
+      "Widget ids both for input and output: ",
+      paste(dups, collapse = ", ")
+    )
+
+    ## Otherwise the following checks report it, too
+    inputs <- setdiff(inputs, dups)
+    outputs <- setdiff(outputs, dups)
+  }
+
+  if (length(inputs) > 0) check("input", inputs)
+  if (length(outputs) > 0) check("output", outputs)
+
+  invisible(self)
+})
