@@ -5,6 +5,6 @@ test_that("basic text and dom outputs are captured", {
   expect_snapshot_app_text(app, "#text")
   expect_snapshot_app_text(app, "#custom")
 
-  expect_snapshot_app_dom(app, "#custom", outerHTML = FALSE)
-  expect_snapshot_app_dom(app, "#custom", outerHTML = TRUE)
+  expect_snapshot_app_dom(app, "#custom", outer_html = FALSE)
+  expect_snapshot_app_dom(app, "#custom", outer_html = TRUE)
 })

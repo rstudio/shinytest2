@@ -1,7 +1,7 @@
 library(shiny)
 
 ui <- fluidPage(
-  plotlyOutput(outputId = "p")
+  plotly::plotlyOutput(outputId = "p")
 )
 
 server <- function(input, output, session, ...) {

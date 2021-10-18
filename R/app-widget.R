@@ -260,7 +260,7 @@ ShinyDriver2$set("public", "findWidget", function(name, iotype = c("auto", "inpu
 
   Widget2$new(
     name = name,
-    nodeId = el_node_ids[[1]],
+    node_id = el_node_ids[[1]],
     type = unname(widget_names[type[[2]]] %|% type[[2]]),
     iotype = type[[1]],
     chromote = chromote

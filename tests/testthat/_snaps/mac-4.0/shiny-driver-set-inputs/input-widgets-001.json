@@ -30,18 +30,18 @@
     "text": "Enter text..."
   },
   "output": {
-    "actionOut": "[1] 0\nattr(,\"class\")\n[1] \"integer\"                \"shinyActionButtonValue\"",
-    "checkGroupOut": "[1] \"1\"",
-    "checkboxOut": "[1] FALSE",
-    "dateOut": "[1] \"2014-01-01\"",
-    "datesOut": "[1] \"2014-01-01\" \"2014-02-20\"",
-    "fileOut": "NULL",
-    "numOut": "[1] 1",
-    "radioOut": "[1] \"1\"",
-    "selectOut": "[1] \"1\"",
-    "slider1Out": "[1] 50",
-    "slider2Out": "[1] 25 75",
-    "textOut": "[1] \"Enter text...\""
+    "action_out": "[1] 0\nattr(,\"class\")\n[1] \"integer\"                \"shinyActionButtonValue\"",
+    "checkGroup_out": "[1] \"1\"",
+    "checkbox_out": "[1] FALSE",
+    "date_out": "[1] \"2014-01-01\"",
+    "dates_out": "[1] \"2014-01-01\" \"2014-02-20\"",
+    "file_out": "NULL",
+    "num_out": "[1] 1",
+    "radio_out": "[1] \"1\"",
+    "select_out": "[1] \"1\"",
+    "slider1_out": "[1] 50",
+    "slider2_out": "[1] 25 75",
+    "text_out": "[1] \"Enter text...\""
   },
   "export": {
 
