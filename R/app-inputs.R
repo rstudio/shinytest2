@@ -137,7 +137,7 @@ ShinyDriver2$set("public", "uploadFile", function(..., wait_ = TRUE, values_ = T
   # Wait for two messages by calling `.start(timeout, 2)`. This is because
   # uploading a file will result in two messages before the file is successfully
   # uploaded.
-  private$chromote_obj$executeScript(
+  self$chromote_session$executeScript(
     "var timeout = arguments[0];
     shinytest2.outputValuesWaiter.start(timeout, 2);",
     timeout_
@@ -147,7 +147,7 @@ ShinyDriver2$set("public", "uploadFile", function(..., wait_ = TRUE, values_ = T
 
   self$findWidget(names(inputs)[1])$uploadFile(inputs[[1]])
 
-  private$chromote_obj$executeScriptAsync(
+  self$chromote_session$executeScriptAsync(
     "var wait = arguments[0];
     var callback = arguments[1];
     shinytest2.outputValuesWaiter.finish(wait, callback);",

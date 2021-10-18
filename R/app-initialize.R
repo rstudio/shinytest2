@@ -102,7 +102,7 @@ ShinyDriver2$set("public", "initialize", function(
   "!DEBUG create new phantomjs session"
   self$logEvent("Creating new phantomjs session")
   # private$web <- Session$new(port = private$phantomPort)
-  private$chromote_obj <- chromote::ChromoteSession$new()
+  self$chromote_session <- chromote::ChromoteSession$new()
 
   # ## Set implicit timeout to zero. According to the standard it should
   # ## be zero, but phantomjs uses about 200 ms
@@ -112,19 +112,19 @@ ShinyDriver2$set("public", "initialize", function(
   "!DEBUG navigate to Shiny app"
   self$logEvent("Navigating to Shiny app")
   # private$web$go(private$getShinyUrl())
-  private$chromote_obj$Page$navigate(private$getShinyUrl())
+  self$chromote_session$Page$navigate(private$getShinyUrl())
 
   # This feels like it is too late. There is no guarantee that the script will load in time.
   "!DEBUG inject shiny-tracer.js to load before all other scripts"
   self$logEvent("Injecting shiny-tracer.js")
   # private$web$executeScript(js_content)
-  # js_id <- private$chromote_obj$Page$addScriptToEvaluateOnNewDocument(js_file)
-  # js_id <- private$chromote_obj$Page$addScriptToEvaluateOnNewDocument("https://cdnjs.cloudflare.com/ajax/libs/react-is/18.0.0-alpha-fd5e01c2e-20210913/umd/react-is.production.min.js")
+  # js_id <- self$chromote_session$Page$addScriptToEvaluateOnNewDocument(js_file)
+  # js_id <- self$chromote_session$Page$addScriptToEvaluateOnNewDocument("https://cdnjs.cloudflare.com/ajax/libs/react-is/18.0.0-alpha-fd5e01c2e-20210913/umd/react-is.production.min.js")
   # print(list(js_id = js_id))
   utils::capture.output({
 
     chromote_eval(
-      private$chromote_obj,
+      self$chromote_session,
       js_content
     )
   })
@@ -142,7 +142,7 @@ ShinyDriver2$set("public", "initialize", function(
 
   #   Sys.sleep(0.1)
   # }
-  # private$chromote_obj$Page$loadEventFired()
+  # self$chromote_session$Page$loadEventFired()
 
 
   "!DEBUG wait until Shiny starts"
@@ -158,11 +158,11 @@ ShinyDriver2$set("public", "initialize", function(
   #   ))
   # }
 
-# private$chromote_obj$view()
+# self$chromote_session$view()
   # browser()
 
   if (!isTRUE(chromote_wait_for_condition(
-    private$chromote_obj,
+    self$chromote_session,
     "window.shinytest2 && window.shinytest2.ready === true",
     timeout = load_timeout
   ))) {
@@ -185,7 +185,7 @@ ShinyDriver2$set("public", "initialize", function(
   #   'return Shiny.shinyapp.config.workerId'
   # )
   private$shinyWorkerId <- chromote_eval( # nolint
-    private$chromote_obj,
+    self$chromote_session,
     "Shiny.shinyapp.config.workerId"
   )$result$value
   if (identical(private$shinyWorkerId, ""))
@@ -197,7 +197,7 @@ ShinyDriver2$set("public", "initialize", function(
   #     return null;'
   # )
   private$shinyTestUrl <- chromote_eval( # nolint
-    private$chromote_obj,
+    self$chromote_session,
     "Shiny.shinyapp.getTestSnapshotBaseUrl ? Shiny.shinyapp.getTestSnapshotBaseUrl({fullUrl:true}) : null"
   )$result$value
 

@@ -8,7 +8,7 @@ ShinyDriver2$set("public", "executeScript", function(script, ...) {
   # TODO-barret; incorporate `wait_` parameters to not wait for the _tick_ to finish
   "!DEBUG ShinyDriver2$executeScript"
   chromote_execute_script(
-    private$chromote_obj,
+    self$chromote_session,
     script,
     awaitPromise = TRUE,
     arguments = rlang::list2(...)
@@ -23,7 +23,7 @@ ShinyDriver2$set("public", "executeScript", function(script, ...) {
 ShinyDriver2$set("public", "executeScriptCallback", function(script, ..., timeout_ = 15 * 1000) {
   "!DEBUG ShinyDriver2$executeScriptCallback"
   chromote_execute_script_callback(
-    private$chromote_obj,
+    self$chromote_session,
     script,
     arguments = rlang::list2(...)
   )

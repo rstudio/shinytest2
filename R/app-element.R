@@ -11,7 +11,7 @@ ShinyDriver2$set("public", "findElement", function(css = NULL
 ) {
   "!DEBUG ShinyDriver2$findElement '`css`'"
   # private$web$findElement(css, linkText, partialLinkText, xpath)
-  chromote_find_element(private$chromote_obj, css)
+  chromote_find_element(self$chromote_session, css)
 })
 
 #' @description
@@ -22,5 +22,5 @@ ShinyDriver2$set("public", "findElements", function(css = NULL
 # , linkText = NULL, partialLinkText = NULL, xpath = NULL
 ) {
   "!DEBUG ShinyDriver2$findElements '`css`'"
-  chromote_find_elements(private$chromote_obj, css)
+  chromote_find_elements(self$chromote_session, css)
 })

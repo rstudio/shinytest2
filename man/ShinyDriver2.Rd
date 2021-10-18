@@ -13,6 +13,7 @@ with a live app.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-expectSnapshot}{\code{ShinyDriver2$expectSnapshot()}}
+\item \href{#method-view}{\code{ShinyDriver2$view()}}
 \item \href{#method-getDebugLog}{\code{ShinyDriver2$getDebugLog()}}
 \item \href{#method-enableDebugLogMessages}{\code{ShinyDriver2$enableDebugLogMessages()}}
 \item \href{#method-getAppDir}{\code{ShinyDriver2$getAppDir()}}
@@ -77,6 +78,15 @@ with a live app.
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-view"></a>}}
+\if{latex}{\out{\hypertarget{method-view}{}}}
+\subsection{Method \code{view()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$view()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-getDebugLog"></a>}}

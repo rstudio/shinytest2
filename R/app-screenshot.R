@@ -39,13 +39,13 @@ ShinyDriver2$set("public", "takeScreenshot", function(
   }
 
   # TODO-barret: implement `selector` usage. May have to go back to using `chromote_obj$screenshot()`
-  screenshot_data <- private$chromote_obj$Page$captureScreenshot(format = "png")$data
+  screenshot_data <- self$chromote_session$Page$captureScreenshot(format = "png")$data
   writeBin(
     jsonlite::base64_dec(screenshot_data),
     path
   )
   # TODO-barret: use prior screenshot code below instead of code above. The code below works with selectors and larger regions.
-  # private$chromote_obj$screenshot(
+  # self$chromote_session$screenshot(
   #   filename = path,
   #   ...,
   #   delay = 5,
