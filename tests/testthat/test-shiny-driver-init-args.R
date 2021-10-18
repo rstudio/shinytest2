@@ -5,6 +5,6 @@ test_that("name arg works", {
   )
   app$setInputs(name = "Hadley")
   app$setInputs(greet = "click")
-  expect_snapshot_app(app)
-  expect_snapshot_app(app, items = list(output = "greeting"))
+  app_expect_appshot(app)
+  app_expect_appshot(app, items = list(output = "greeting"))
 })

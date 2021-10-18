@@ -5,5 +5,5 @@ test_that("plotly webgl works", {
 
   app <- ShinyDriver2$new(test_path("apps/plotly-webgl"), variant = os_name_and_r_version());
   app$waitForValue("p", iotype = "output", ignore = list(NULL))
-  expect_snapshot_app(app, items = list(output = "p"), screenshot = TRUE)
+  app_expect_appshot(app, items = list(output = "p"), screenshot = TRUE)
 })

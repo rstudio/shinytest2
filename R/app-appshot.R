@@ -50,7 +50,7 @@ testthat_expect_snapshot_file <- function(
 #' @inheritParams testthat::expect_snapshot_file
 #' @export
 # TODO-barret rename to `app_expect_appshot
-expect_snapshot_app <- function(
+app_expect_appshot <- function(
   app,
   ...,
   name = NULL,
