@@ -1,5 +1,6 @@
 #' @include shiny-driver.R
 # TODO-barret; Why do these values exist when we have `public$getUrl()`? They should all be removed in favor of a single `$shinyURL` field
+# https://github.com/rstudio/shinytest2/issues/22
 ShinyDriver2$set("private", "shinyUrlProtocol", NULL) # "http" or "https"
 ShinyDriver2$set("private", "shinyUrlHost",     NULL) # usually 127.0.0.1
 ShinyDriver2$set("private", "shinyUrlPort",     NULL)
