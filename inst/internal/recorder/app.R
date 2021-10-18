@@ -332,7 +332,7 @@ generateTestCode <- function(events, name, seed,
 
   paste0(
     "test_that(\"", fs::path_file(shinytest2:::app_path(app$getAppDir())$dir), " - ", appDirBasename(), "\", {\n",
-    inner_code,
+    inner_code, "\n",
     "})\n"
   )
 }
@@ -521,8 +521,14 @@ shinyApp(
         if (isTRUE(delete_test_file)) {
           unlink(saveFile())
         }
+        add_library_call <- TRUE
         if (file.exists(saveFile())) {
-          cat("\n\n", file = saveFile(), append = TRUE)
+          code <- paste0(code, "\n\n")
+          # don't double library()
+          add_library_call <- !any(grepl(readLines(saveFile()), "^library\\(shinytest2\\)$"))
+        }
+        if (add_library_call) {
+          code <- paste0("library(shinytest2)\n", code)
         }
         cat(code, file = saveFile(), append = TRUE)
         message("Saved test code to ", saveFile())
