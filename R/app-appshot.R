@@ -36,44 +36,7 @@ testthat_expect_snapshot_file <- function(
 }
 
 
-sd2_expectSnapshot <- function(
-  self,
-  private,
-  ...,
-  name = NULL,
-  items = NULL,
-  screenshot = NULL,
-  cran = FALSE,
-  error = FALSE
-  # , variant = NULL
-) {
-  testthat::expect_s3_class(self, "ShinyDriver2")
-  ellipsis::check_dots_empty()
 
-  snapshot_info <- sd2_snapshot(self, private, items = items, name = name, screenshot = screenshot)
-  # utils::str(snapshot_info)
-
-  # compare json
-  testthat_expect_snapshot_file(
-    private,
-    snapshot_info$json_path,
-    cran = cran,
-    compare = testthat::compare_file_text
-    # , variant = variant
-  )
-
-  # compare screenshot
-  if (!is.null(snapshot_info$screenshot_path)) {
-    testthat_expect_snapshot_file(
-      private,
-      snapshot_info$screenshot_path,
-      cran = cran,
-      compare = testthat::compare_file_binary
-      # , variant = variant
-    )
-  }
-
-}
 
 
 #' Expect a shinytest2 snapshot
@@ -125,8 +88,30 @@ ShinyDriver2$set("public", "expectSnapshot", function(
   error = FALSE,
   cran = FALSE
 ) {
-  sd2_expectSnapshot(
-    self, private, ..., name = name, items = items, screenshot = screenshot,
-    cran = cran, error = error
+  testthat::expect_s3_class(self, "ShinyDriver2")
+  ellipsis::check_dots_empty()
+
+  snapshot_info <- sd2_snapshot(self, private, items = items, name = name, screenshot = screenshot)
+
+  # compare json
+  testthat_expect_snapshot_file(
+    private,
+    snapshot_info$json_path,
+    cran = cran,
+    compare = testthat::compare_file_text
+    # , variant = variant
   )
+
+  # compare screenshot
+  if (!is.null(snapshot_info$screenshot_path)) {
+    testthat_expect_snapshot_file(
+      private,
+      snapshot_info$screenshot_path,
+      cran = cran,
+      compare = testthat::compare_file_binary
+      # , variant = variant
+    )
+  }
+
+  invisible(self)
 })
