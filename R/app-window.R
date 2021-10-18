@@ -5,7 +5,7 @@
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "setWindowSize", function(width, height) {
   "!DEBUG ShinyDriver2$setWindowSize `width`x`height`"
-  chromote_set_window_size(private$chromote_obj, width = width, height = height)
+  chromote_set_window_size(self$chromote_session, width = width, height = height)
   invisible(self)
 })
 
@@ -15,7 +15,7 @@ ShinyDriver2$set("public", "setWindowSize", function(width, height) {
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "getWindowSize", function() {
   "!DEBUG ShinyDriver2$getWindowSize"
-  viewport <- private$chromote_obj$Page$getLayoutMetrics()$cssLayoutViewport
+  viewport <- self$chromote_session$Page$getLayoutMetrics()$cssLayoutViewport
   list(
     width = viewport$clientWidth,
     height = viewport$clientHeight
