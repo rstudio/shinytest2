@@ -17,7 +17,6 @@ httr_get <- function(url) {
     },
     # Attempt to capture empty reply error and provide better message
     error = function(e) {
-      error_text <- as.character(e)
       if (grepl("Empty reply from server", as.character(e), fixed = TRUE)) {
         stop("Shiny app is no longer running")
       }

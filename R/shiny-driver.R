@@ -20,19 +20,5 @@
 #' @importFrom R6 R6Class
 #' @export
 ShinyDriver2 <- R6Class(
-  "ShinyDriver2",
-
-  # public = rlang::list2(
-
-
-
-
-  #   # #' @description Deprecated.
-  #   # #' @param ... Ignored
-  #   # snapshotCompare = function(...) {
-  #   #   # TODO-barret
-  #   #   abort("app$snapshotCompare() is no longer used")
-  #   # }
-  # )
-
+  "ShinyDriver2"
 )

@@ -14,8 +14,8 @@ ShinyDriver2$set("public", "expectSnapshotJS", function(
   post_script = NULL,
   cran = FALSE
 ) {
-  arguments = list2(...)
   ellipsis::check_dots_unnamed()
+  arguments <- list2(...)
   testthat::expect_s3_class(self, "ShinyDriver2")
 
   result <- self$executeScript(script, !!!arguments)

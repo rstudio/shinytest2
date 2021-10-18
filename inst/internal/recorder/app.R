@@ -1,3 +1,4 @@
+library(shiny)
 library(promises)
 
 target_url    <- getOption("shinytest2.recorder.url")
@@ -69,7 +70,7 @@ tooltip <- function(text, placement = "top") {
 }
 
 enable_tooltip_script <- function() {
-  tags$script("$('a[data-toggle=\"tooltip\"]').tooltip({ delay: 250 });")
+  shiny::tags$script("$('a[data-toggle=\"tooltip\"]').tooltip({ delay: 250 });")
 }
 
 # Given a vector/list, return TRUE if any elements are unnamed, FALSE otherwise.

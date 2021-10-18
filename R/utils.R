@@ -63,7 +63,7 @@ parse_url <- function(url) {
   get_piece <- function(n) {
     if (start[[n]] == 0) return("")
 
-    s <- substring(url, start[[n]], start[[n]] + length[[n]] - 1)
+    substring(url, start[[n]], start[[n]] + length[[n]] - 1)
   }
 
   list(
