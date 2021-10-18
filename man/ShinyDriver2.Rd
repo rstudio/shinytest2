@@ -83,7 +83,7 @@ with a live app.
 \if{latex}{\out{\hypertarget{method-getDebugLog}{}}}
 \subsection{Method \code{getDebugLog()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getDebugLog(type = c("all", ShinyDriver2$debugLogTypes))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getDebugLog(type = c("all", debug_log_types()))}\if{html}{\out{</div>}}
 }
 
 }
@@ -149,13 +149,6 @@ with a live app.
 \if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$findElement(css = NULL)}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{css}}{CSS selector to find an HTML element.}
-}
-\if{html}{\out{</div>}}
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-findElements"></a>}}
@@ -165,13 +158,6 @@ with a live app.
 \if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$findElements(css = NULL)}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{css}}{CSS selector to find an HTML element.}
-}
-\if{html}{\out{</div>}}
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-logEvent"></a>}}
@@ -258,16 +244,16 @@ input and output widget.}
 \if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$new(
   path = ".",
   ...,
-  loadTimeout = NULL,
+  load_timeout = NULL,
   screenshot = TRUE,
-  checkNames = TRUE,
+  check_names = TRUE,
   name = NULL,
   variant = getOption("shinytest2.variant", os_name_and_r_version()),
-  debug = c("none", "all", ShinyDriver2$debugLogTypes),
+  debug = c("none", "all", debug_log_types()),
   seed = NULL,
-  cleanLogs = TRUE,
-  shinyOptions = list(),
-  renderArgs = NULL,
+  clean_logs = TRUE,
+  shiny_args = list(),
+  render_args = NULL,
   options = list()
 )}\if{html}{\out{</div>}}
 }
@@ -290,7 +276,7 @@ input and output widget.}
   wait_ = TRUE,
   values_ = TRUE,
   timeout_ = 3000,
-  allowInputNoBinding_ = FALSE,
+  allow_input_no_binding_ = FALSE,
   priority_ = c("input", "event")
 )}\if{html}{\out{</div>}}
 }
@@ -413,16 +399,9 @@ input and output widget.}
 \if{latex}{\out{\hypertarget{method-waitFor}{}}}
 \subsection{Method \code{waitFor()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$waitFor(expr, checkInterval = 100, timeout = 3000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$waitFor(expr, check_interval = 100, timeout = 3000)}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{checkInterval}}{How often to check for the condition, in ms.}
-}
-\if{html}{\out{</div>}}
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-waitForShiny"></a>}}
@@ -443,7 +422,7 @@ input and output widget.}
   ignore = list(NULL, ""),
   iotype = c("input", "output", "export"),
   timeout = 10000,
-  checkInterval = 400
+  check_interval = 400
 )}\if{html}{\out{</div>}}
 }
 
@@ -455,8 +434,6 @@ input and output widget.}
 \item{\code{iotype}}{Type of the Shiny widget. Usually shinytest2 finds the widgets
 by their name, so this is only needed if you use the same name for an
 input and output widget.}
-
-\item{\code{checkInterval}}{How often to check for the condition, in ms.}
 }
 \if{html}{\out{</div>}}
 }

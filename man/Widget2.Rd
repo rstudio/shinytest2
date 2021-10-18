@@ -33,7 +33,7 @@ methods for finer grained interaction.
 \subsection{Method \code{new()}}{
 Create new \code{Widget2}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Widget2$new(name, nodeId, type, iotype = c("input", "output"), chromote)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Widget2$new(name, node_id, type, iotype = c("input", "output"), chromote)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -41,13 +41,13 @@ Create new \code{Widget2}
 \describe{
 \item{\code{name}}{Name of a Shiny widget.}
 
-\item{\code{nodeId}}{Node Id of an Element from the \code{chromote} session.}
-
 \item{\code{type}}{Widget2 type}
 
 \item{\code{iotype}}{Input/output type.}
 
 \item{\code{chromote}}{Chromote Session}
+
+\item{\code{nodeId}}{Node Id of an Element from the \code{chromote} session.}
 }
 \if{html}{\out{</div>}}
 }

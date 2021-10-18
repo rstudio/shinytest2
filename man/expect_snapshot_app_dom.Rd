@@ -7,7 +7,7 @@
 \usage{
 expect_snapshot_app_text(app, selector, ..., cran = FALSE)
 
-expect_snapshot_app_dom(app, selector, ..., outerHTML = FALSE, cran = FALSE)
+expect_snapshot_app_dom(app, selector, ..., outer_html = FALSE, cran = FALSE)
 }
 \arguments{
 \item{app}{A \link{ShinyDriver2} object.}
@@ -20,7 +20,7 @@ expect_snapshot_app_dom(app, selector, ..., outerHTML = FALSE, cran = FALSE)
 they are not, because snapshot tests tend to be fragile because they
 often rely on minor details of dependencies.}
 
-\item{outerHTML}{If \code{TRUE}, the full DOM structure will be returned (\code{el.outerHTML}).
+\item{outer_html}{If \code{TRUE}, the full DOM structure will be returned (\code{el.outerHTML}).
 If \code{FALSE}, the full DOM structure of the child elements will be returned (\verb{$(el).html()}).}
 }
 \description{
