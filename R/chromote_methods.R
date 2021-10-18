@@ -80,7 +80,7 @@ chromote_eval <- function(
 #' @param wait_ Determines if `chromote` should return a `Promise` object or wait for the `js_script` to be resolved
 #' @importFrom rlang %||%
 #' @describeIn chromote_execute_script Executes the supplied Javascript script (`js_script`) within a function. The function has the `window` context and access to `arguments` supplied.
-#' @export
+#' @noRd
 chromote_execute_script <- function(
   chromote, js_script, ...,
   awaitPromise = wait_, # nolint
@@ -126,8 +126,8 @@ assert_wait_is_true <- function(wait_, fn_name, redirect_fn_name = NULL) {
 
 }
 #' @describeIn chromote_execute_script Executes the supplied Javascript script (`js_script`) within a function. The function has the `window` context and access to `arguments` supplied. An extra argument (`resolve(val)`) is added to the `arguments` list. If `wait_ = TRUE`, then `chromote_execute_script_callback()` will block the main R session until `resolve()` has been called.
-#' @export
 #' @importFrom rlang list2
+#' @noRd
 chromote_execute_script_callback <- function( # nolint
   chromote,
   js_script,
