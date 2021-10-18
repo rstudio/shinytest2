@@ -187,7 +187,7 @@ with a live app.
 \if{latex}{\out{\hypertarget{method-getEventLog}{}}}
 \subsection{Method \code{getEventLog()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getEventLog(self, private)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getEventLog()}\if{html}{\out{</div>}}
 }
 
 }
@@ -308,14 +308,7 @@ input and output widget.}
 \if{latex}{\out{\hypertarget{method-uploadFile}{}}}
 \subsection{Method \code{uploadFile()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$uploadFile(
-  self,
-  private,
-  ...,
-  wait_ = TRUE,
-  values_ = TRUE,
-  timeout_ = 3000
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$uploadFile(..., wait_ = TRUE, values_ = TRUE, timeout_ = 3000)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -569,7 +562,7 @@ input and output widget.}
 \if{latex}{\out{\hypertarget{method-listWidgets}{}}}
 \subsection{Method \code{listWidgets()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$listWidgets(self, private)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$listWidgets()}\if{html}{\out{</div>}}
 }
 
 }
@@ -578,7 +571,7 @@ input and output widget.}
 \if{latex}{\out{\hypertarget{method-checkUniqueWidgetNames}{}}}
 \subsection{Method \code{checkUniqueWidgetNames()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$checkUniqueWidgetNames(self, private)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$checkUniqueWidgetNames()}\if{html}{\out{</div>}}
 }
 
 }
