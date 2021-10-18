@@ -1,7 +1,15 @@
-# Note: This queries the server
-sd2_getAllValues <- function(self, private, input, output, export) {
+
+#' @description
+#' Returns a named list of all inputs, outputs, and export values.
+#'
+#' @param input,output,export Either `TRUE` to return all
+#'   input/output/exported values, or a character vector of specific
+#'   controls.
+#' @include shiny-driver.R
+ShinyDriver2$set("public", "getAllValues", function(input = TRUE, output = TRUE, export = TRUE) {
+  # Note: This queries the server
   self$logEvent("Getting all values")
-  "!DEBUG sd_getAllValues"
+  "!DEBUG ShinyDriver2$getAllValues"
 
   url <- private$getTestSnapshotUrl(input, output, export, format = "rds")
   req <- httr_get(url)
@@ -10,4 +18,4 @@ sd2_getAllValues <- function(self, private, input, output, export) {
   on.exit(unlink(tmpfile))
   writeBin(req$content, tmpfile)
   readRDS(tmpfile)
-}
+})

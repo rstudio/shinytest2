@@ -26,7 +26,7 @@ Imports:
     fs,
     callr,
     crayon,
-    parsedate,
+    parsedate (>= 1.2.0),
     rlang,
     checkmate,
     digest,
@@ -54,21 +54,34 @@ Config/Needs/website:
     r-lib/testthat
 Config/testthat/edition: 3
 Collate:
+    'shiny-driver.R'
+    'app-appshot.R'
+    'app-chromote.R'
+    'app-debug.R'
+    'app-directory.R'
+    'app-element.R'
+    'app-event-logging.R'
+    'app-execute.R'
+    'app-expect-update.R'
+    'app-expect.R'
     'app-get-all-values.R'
+    'app-initialize.R'
+    'app-inputs.R'
+    'app-page.R'
+    'app-screenshot.R'
+    'app-snapshot.R'
+    'app-start.R'
+    'app-stop.R'
+    'app-url.R'
+    'app-wait.R'
+    'app-widget.R'
+    'app-window.R'
     'chromote_methods.R'
-    'debug.R'
     'httr.R'
-    'initialize.R'
-    'log.R'
     'utils.R'
     'platform.R'
     'recorder.R'
     'save-app.R'
-    'set-inputs.R'
-    'shiny-driver.R'
-    'shiny-start.R'
-    'snapshot.R'
+    'shinytest2_logs.R'
     'staticimports.R'
     'test-app.R'
-    'testthat.R'
-    'widget.R'

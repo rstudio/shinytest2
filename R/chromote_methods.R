@@ -10,7 +10,11 @@ assert_chromote <- function(chromote) {
 # }
 
 # TODO-barret; implement wait_ logic using all promises and `chromote$waitFor(p)`
-chromote_eval <- function(chromote, js, ..., returnByValue = TRUE, wait_ = TRUE) {
+chromote_eval <- function(
+  chromote, js, ...,
+  returnByValue = TRUE, # nolint
+  wait_ = TRUE
+) {
   assert_chromote(chromote)
   checkmate::assert_character(js, any.missing = FALSE, len = 1)
   checkmate::assert_true(wait_)
@@ -77,20 +81,24 @@ chromote_eval <- function(chromote, js, ..., returnByValue = TRUE, wait_ = TRUE)
 #' @importFrom rlang %||%
 #' @describeIn chromote_execute_script Executes the supplied Javascript script (`js_script`) within a function. The function has the `window` context and access to `arguments` supplied.
 #' @export
-chromote_execute_script <- function(chromote, js_script, ..., awaitPromise = wait_, arguments = list(), timeout = 10 * 1000, wait_ = TRUE) {
+chromote_execute_script <- function(
+  chromote, js_script, ...,
+  awaitPromise = wait_, # nolint
+  arguments = list(), timeout = 10 * 1000, wait_ = TRUE
+) {
   assert_chromote(chromote)
   checkmate::assert_true(!rlang::is_named(arguments))
   checkmate::assert_character(js_script, any.missing = FALSE, len = 1)
   # utils::str(rlang::names2(arguments %||% ""))
 
   wait_ <- isTRUE(wait_)
-  awaitPromise <- isTRUE(awaitPromise)
+  await_promise <- isTRUE(awaitPromise)
 
   stopifnot(wait_); # TODO-barret; implement `wait_` logic
 
-  if ((!wait_) && awaitPromise) {
+  if ((!wait_) && await_promise) {
     # warning("Calling `chromote_execute_script(..., awaitPromise = TRUE, wait_ = FALSE)` does not make sense. Setting `awaitPromise = FALSE`")
-    awaitPromise <- FALSE
+    await_promise <- FALSE
   }
 
   args_serialized <- toJSON(arguments)
@@ -99,13 +107,13 @@ chromote_execute_script <- function(chromote, js_script, ..., awaitPromise = wai
   chromote_eval(
     chromote,
     js_script,
-    awaitPromise = awaitPromise,
+    awaitPromise = await_promise,
     timeout = timeout,
     ...
   )
 }
 
-assert_wait_is_true_for_chromote_execute_script <- function(wait_, fn_name, redirect_fn_name = NULL) {
+assert_wait_is_true <- function(wait_, fn_name, redirect_fn_name = NULL) {
   if (!isTRUE(wait_)) {
     stop(paste0(
       "`", fn_name, "(wait_=) must be `TRUE`.",
@@ -120,8 +128,15 @@ assert_wait_is_true_for_chromote_execute_script <- function(wait_, fn_name, redi
 #' @describeIn chromote_execute_script Executes the supplied Javascript script (`js_script`) within a function. The function has the `window` context and access to `arguments` supplied. An extra argument (`resolve(val)`) is added to the `arguments` list. If `wait_ = TRUE`, then `chromote_execute_script_callback()` will block the main R session until `resolve()` has been called.
 #' @export
 #' @importFrom rlang list2
-chromote_execute_script_callback <- function(chromote, js_script, ..., arguments = list2(), timeout = 15 * 1000, wait_ = TRUE) {
-  assert_wait_is_true_for_chromote_execute_script(wait_, "chromote_execute_script_callback", "chromote_execute_script")
+chromote_execute_script_callback <- function( # nolint
+  chromote,
+  js_script,
+  ...,
+  arguments = list2(),
+  timeout = 15 * 1000,
+  wait_ = TRUE
+) {
+  assert_wait_is_true(wait_, "chromote_execute_script_callback", "chromote_execute_script")
   if ("awaitPromise" %in% rlang::names2(list2(...))) {
     stop("`awaitPromise` can not be supplied to chromote_execute_script_callback()")
   }
@@ -159,7 +174,7 @@ chromote_execute_script_callback <- function(chromote, js_script, ..., arguments
 #' @param interval How long (milliseconds) Chrome should wait between checking `condition_js`
 #' @describeIn chromote_execute_script Waits for `condition_js` to return a `true`thy value. In this con
 chromote_wait_for_condition <- function(chromote, condition_js, ..., timeout = 15 * 1000, interval = 100, wait_ = TRUE) {
-  assert_wait_is_true_for_chromote_execute_script(wait_, "chromote_wait_for_condition", NULL)
+  assert_wait_is_true(wait_, "chromote_wait_for_condition", NULL)
   ellipsis::check_dots_empty()
   checkmate::assert_character(condition_js, any.missing = FALSE, len = 1)
   checkmate::assert_number(timeout, lower = 0)
@@ -205,14 +220,14 @@ chromote_wait_for_condition();"
 
 
 
-chromote_set_device_metrics <- function(chromote, ..., width = NULL, height = NULL, deviceScaleFactor = 1, mobile = FALSE) {
+chromote_set_device_metrics <- function(chromote, ..., width = NULL, height = NULL, device_scale_factor = 1, mobile = FALSE) {
   assert_chromote(chromote)
   ellipsis::check_dots_empty()
 
   chromote$Emulation$setDeviceMetricsOverride(
     width = width,
     height = height,
-    deviceScaleFactor = deviceScaleFactor,
+    deviceScaleFactor = device_scale_factor,
     mobile = mobile
   )
 }
@@ -232,13 +247,13 @@ chromote_root_node_id <- function(chromote) {
 }
 
 
-chromote_find_element <- function(chromote, css, rootId = chromote_root_node_id(chromote)) {
+chromote_find_element <- function(chromote, css, root_id = chromote_root_node_id(chromote)) {
   assert_chromote(chromote)
   checkmate::assert_character(css, any.missing = FALSE, len = 1)
 
   # Returns a list of nodeId values
   # https://chromedevtools.github.io/devtools-protocol/tot/DOM/#method-querySelector
-  node_id <- chromote$DOM$querySelector(rootId, css)$nodeId
+  node_id <- chromote$DOM$querySelector(root_id, css)$nodeId
 
   # Do not return a missing nodeId
   if (node_id == 0L) return(NULL)
@@ -246,7 +261,7 @@ chromote_find_element <- function(chromote, css, rootId = chromote_root_node_id(
 }
 
 
-chromote_find_elements <- function(chromote, css, rootId = chromote_root_node_id(chromote)) {
+chromote_find_elements <- function(chromote, css, root_id = chromote_root_node_id(chromote)) {
   assert_chromote(chromote)
   checkmate::assert_character(css, any.missing = FALSE, len = 1)
 
@@ -254,7 +269,7 @@ chromote_find_elements <- function(chromote, css, rootId = chromote_root_node_id
   unlist(
     # Returns a list of nodeId values
     # https://chromedevtools.github.io/devtools-protocol/tot/DOM/#method-querySelectorAll
-    chromote$DOM$querySelectorAll(rootId, css)$nodeIds
+    chromote$DOM$querySelectorAll(root_id, css)$nodeIds
   )
 }
 
@@ -263,7 +278,7 @@ chromote_find_elements <- function(chromote, css, rootId = chromote_root_node_id
 
 
 
-
+# nolint start
 chromote_execute_script_on_document <- function(chromote, js_script, awaitPromise = TRUE, arguments = list(), timeout_ = Inf, ...) {
   assert_chromote(chromote)
   checkmate::assert_character(js_script, any.missing = FALSE, len = 1)
@@ -304,3 +319,4 @@ chromote_call_js_on_node <- function(chromote, node_id, fn_js, ...) {
   object_id <- chromote_node_id_to_object_id(chromote, node_id)
   chromote_call_js_on_object(chromote, object_id, fn_js, ...)
 }
+# nolint end

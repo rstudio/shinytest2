@@ -1,13 +1,56 @@
+#' @include shiny-driver.R
+ShinyDriver2$set("private", "name",    NULL) # character / NULL
+ShinyDriver2$set("private", "variant", NULL) # character / NULL
+ShinyDriver2$set("private", "state", "stopped") # stopped or running
+ShinyDriver2$set("private", "shinyTestUrl", NULL) # URL for shiny's test API
+ShinyDriver2$set("private", "shinyWorkerId", NA_character_)
+
+
+
+
+#' @param path Path to a directory containing a Shiny app, i.e. a
+#'   single `app.R` file or a `server.R`-`ui.R` pair.
+#' @param load_timeout How long to wait for the app to load, in ms.
+#'   This includes the time to start R. Defaults to 5s when running
+#'   locally and 10s when running on CI. Maximum value is 10s.
+#' @param screenshot Take screenshots for each snapshot?
+# ' @param phantomTimeout How long to wait when connecting to phantomJS
+# '  process, in ms
+#' @template variant
+#' @param check_names Check if widget names are unique?
+#' @param debug Start the app in debugging mode? In debugging mode debug
+#'   messages are printed to the console.
+#' @param seed An optional random seed to use before starting the application.
+#'   For apps that use R's random number generator, this can make their
+#'   behavior repeatable.
+#' @param clean_logs Whether to remove the stdout and stderr logs when the
+#'   Shiny process object is garbage collected.
+#' @param shiny_args A list of options to pass to [shiny::runApp()].
+#' @param render_args Passed to `rmarkdown::run()` for interactive `.Rmd`s.
+#' @param options A list of [base::options()] to set in the driver's child
+#'   process.
 #' @importFrom callr process
 #' @importFrom rlang abort
-
-sd2_initialize <- function(
-  self, private,
-  path, loadTimeout, checkNames, name, variant,
-  debug, phantomTimeout, seed, cleanLogs,
-  shinyOptions, renderArgs, options
+#' @include shiny-driver.R
+ShinyDriver2$set("public", "initialize", function(
+  path = ".",
+  ...,
+  load_timeout = NULL,
+  screenshot = TRUE,
+  check_names = TRUE,
+  name = NULL,
+  variant = getOption("shinytest2.variant", os_name_and_r_version()),
+  debug = c("none", "all", debug_log_types()),
+  # phantomTimeout = 5000,
+  seed = NULL,
+  clean_logs = TRUE,
+  shiny_args = list(),
+  render_args = NULL,
+  options = list()
 ) {
+  ellipsis::check_dots_empty()
 
+  private$snapshotScreenshot <- screenshot # nolint
   private$variant <- variant
   private$name <-
     if (!is.null(name)) {
@@ -24,9 +67,9 @@ sd2_initialize <- function(
         )
       }
     }
-  private$cleanLogs <- cleanLogs
-  if (is.null(loadTimeout)) {
-    loadTimeout <- if (on_ci()) 10000 else 5000
+  private$cleanLogs <- isTRUE(clean_logs) # nolint
+  if (is.null(load_timeout)) {
+    load_timeout <- if (on_ci()) 10000 else 5000
   }
 
   self$logEvent("Start ShinyDriver2 initialization")
@@ -48,7 +91,7 @@ sd2_initialize <- function(
   } else {
     "!DEBUG starting shiny app from path"
     self$logEvent("Starting Shiny app")
-    private$startShiny(path, seed, loadTimeout, shinyOptions, renderArgs, options)
+    private$startShiny(path, seed, load_timeout, shiny_args, render_args, options)
   }
 
   # Read js content before init'ing chromote to reduce time between
@@ -88,11 +131,11 @@ sd2_initialize <- function(
 
 
   "!DEBUG wait for navigation to happen"
-  # nav_stop_time <- as.numeric(Sys.time()) + loadTimeout
+  # nav_stop_time <- as.numeric(Sys.time()) + load_timeout
   # while(identical(private$web$getUrl(), "about:blank")) {
   #   if (as.numeric(Sys.time()) > nav_stop_time) {
   #     abort(paste0(
-  #       "Failed to navigate to Shiny app in ", loadTimeout, "ms.\n",
+  #       "Failed to navigate to Shiny app in ", load_timeout, "ms.\n",
   #       format(self$getDebugLog())
   #     ))
   #   }
@@ -106,11 +149,11 @@ sd2_initialize <- function(
   self$logEvent("Waiting until Shiny app starts")
   # load_ok <- private$web$waitFor(
   #   'window.shinytest2 && window.shinytest2.ready === true',
-  #   timeout = loadTimeout
+  #   timeout = load_timeout
   # )
   # if (!load_ok) {
   #   abort(paste0(
-  #     "Shiny app did not load in ", loadTimeout, "ms.\n",
+  #     "Shiny app did not load in ", load_timeout, "ms.\n",
   #     format(self$getDebugLog())
   #   ))
   # }
@@ -121,10 +164,10 @@ sd2_initialize <- function(
   if (!isTRUE(chromote_wait_for_condition(
     private$chromote_obj,
     "window.shinytest2 && window.shinytest2.ready === true",
-    timeout = loadTimeout
+    timeout = load_timeout
   ))) {
     abort(paste0(
-      "Shiny app did not load in ", loadTimeout, "ms.\n",
+      "Shiny app did not load in ", load_timeout, "ms.\n",
       NULL
       # TODO-barret
       # format(self$getDebugLog())
@@ -141,39 +184,46 @@ sd2_initialize <- function(
   # private$shinyWorkerId <- private$web$executeScript(
   #   'return Shiny.shinyapp.config.workerId'
   # )
-  private$shinyWorkerId <- chromote_eval(
+  private$shinyWorkerId <- chromote_eval( # nolint
     private$chromote_obj,
     "Shiny.shinyapp.config.workerId"
   )$result$value
   if (identical(private$shinyWorkerId, ""))
-    private$shinyWorkerId <- NA_character_
+    private$shinyWorkerId <- NA_character_ # nolint
   # private$shinyTestSnapshotBaseUrl <- private$web$executeScript(
   #   'if (Shiny.shinyapp.getTestSnapshotBaseUrl)
   #     return Shiny.shinyapp.getTestSnapshotBaseUrl({ fullUrl:true });
   #   else
   #     return null;'
   # )
-  private$shinyTest2SnapshotBaseUrl <- chromote_eval(
+  private$shinyTestUrl <- chromote_eval( # nolint
     private$chromote_obj,
     "Shiny.shinyapp.getTestSnapshotBaseUrl ? Shiny.shinyapp.getTestSnapshotBaseUrl({fullUrl:true}) : null"
   )$result$value
 
   "!DEBUG checking widget names"
-  if (checkNames) self$checkUniqueWidgetNames()
+  if (check_names) self$checkUniqueWidgetNames()
 
   invisible(self)
-}
+})
 
 
-sd2_snapshotInitLegacy <- function(self, private, path, screenshot) {
-  if (grepl("^/", path)) {
-    abort("Snapshot dir must be a relative path.")
-  }
+# #' @description
+# # TODO-barret link `recordTest()`
+# #' Download a snapshot. Generally, you should not call this function
+# #' yourself; it will be generated by `recordTest()` as needed.
+# #' @param path Directory to save snapshots.
+# #' @param screenshot Take screenshots for each snapshot?
+# ShinyDriver2$set("public", "snapshotInit", function(path, screenshot = TRUE) {
+#   if (grepl("^/", path)) {
+#     abort("Snapshot dir must be a relative path.")
+#   }
 
-  # Strip off trailing slash if present
-  path <- sub("/$", "", path)
+#   # Strip off trailing slash if present
+#   path <- sub("/$", "", path)
 
-  private$snapshotCount <- 0
-  private$snapshotDir <- path
-  private$snapshotScreenshot <- screenshot
-}
+#   private$snapshotCount <- 0
+#   private$snapshotDir <- path
+#   private$snapshotScreenshot <- screenshot
+#   self
+# })

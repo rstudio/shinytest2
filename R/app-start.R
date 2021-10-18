@@ -1,10 +1,21 @@
-sd2_startShiny <- function(self, private, path, seed, loadTimeout, shinyOptions, renderArgs, options) {
+#' @include shiny-driver.R
+ShinyDriver2$set("private", "shinyProcess", NULL) # `callr::r_bg()` object
+
+#' @include shiny-driver.R
+ShinyDriver2$set("private", "startShiny", function(
+  path,
+  seed = NULL,
+  load_timeout = 10000,
+  shiny_args = list(),
+  render_args = NULL,
+  options = list()
+) {
   ckm8_assert_single_string(path)
 
   private$path <- normalizePath(path)
 
-  if (is.null(shinyOptions$port)) {
-    shinyOptions$port <- httpuv::randomPort()
+  if (is.null(shiny_args$port)) {
+    shiny_args$port <- httpuv::randomPort()
   }
 
   tempfile_format <- tempfile("%s-", fileext = ".log")
@@ -15,7 +26,7 @@ sd2_startShiny <- function(self, private, path, seed, loadTimeout, shinyOptions,
   p <- withr::with_envvar(
     c("R_TESTS" = NA),
     callr::r_bg(
-      function(path, shinyOptions, rmd, seed, rng_kind, renderArgs, options) {
+      function(path, shiny_args, rmd, seed, rng_kind, render_args, options) {
 
         if (!is.null(seed)) {
           # Prior to R 3.6, RNGkind has 2 args, otherwise it has 3
@@ -25,24 +36,24 @@ sd2_startShiny <- function(self, private, path, seed, loadTimeout, shinyOptions,
         }
 
         options <- as.list(options)
-        options$shiny.testmode <- TRUE
+        options[["shiny.testmode"]] <- TRUE
         do.call(base::options, options)
 
         if (rmd) {
           # Shiny document
-          rmarkdown::run(path, shiny_args = shinyOptions, render_args = renderArgs)
+          rmarkdown::run(path, shiny_args = shiny_args, render_args = render_args)
         } else {
           # Normal shiny app
-          do.call(shiny::runApp, c(path, shinyOptions))
+          do.call(shiny::runApp, c(path, shiny_args))
         }
       },
       args = list(
         path = path,
-        shinyOptions = shinyOptions,
+        shiny_args = shiny_args,
         rmd = is_rmd(path),
         seed = seed,
         rng_kind = rng_kind,
-        renderArgs = renderArgs,
+        render_args = render_args,
         options = options
       ),
       stdout = sprintf(tempfile_format, "shiny-stdout"),
@@ -60,7 +71,7 @@ sd2_startShiny <- function(self, private, path, seed, loadTimeout, shinyOptions,
 
   "!DEBUG finding shiny port"
   ## Try to read out the port. Try 5 times/sec, until timeout.
-  max_i <- loadTimeout / 1000 * 5
+  max_i <- load_timeout / 1000 * 5
   for (i in seq_len(max_i)) {
     err_lines <- readLines(p$get_error_file())
 
@@ -89,35 +100,5 @@ sd2_startShiny <- function(self, private, path, seed, loadTimeout, shinyOptions,
   url <- sub(".*(https?://.*)", "\\1", line)
   private$setShinyUrl(url)
 
-  private$shinyProcess <- p
-}
-
-
-sd2_getShinyUrl <- function(self, private) {
-  paste0(
-    private$shinyUrlProtocol, "://", private$shinyUrlHost,
-    if (!is.null(private$shinyUrlPort)) paste0(":", private$shinyUrlPort),
-    private$shinyUrlPath
-  )
-}
-
-sd2_setShinyUrl <- function(self, private, url) {
-  res <- parse_url(url)
-
-  if (nzchar(res$port)) {
-    res$port <- as.integer(res$port)
-    ckm8_assert_single_integer(res$port)
-  } else {
-    res$port <- NULL
-  }
-
-  res$path <- if (nzchar(res$path)) res$path else "/"
-
-  ckm8_assert_single_string(res$host)
-  ckm8_assert_single_url(res$path)
-
-  private$shinyUrlProtocol <- res$protocol
-  private$shinyUrlHost     <- res$host
-  private$shinyUrlPort     <- res$port
-  private$shinyUrlPath     <- res$path
-}
+  private$shinyProcess <- p # nolint
+})

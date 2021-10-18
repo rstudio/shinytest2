@@ -33,18 +33,18 @@
     "text": "Text entered"
   },
   "output": {
-    "actionOut": "[1] 1\nattr(,\"class\")\n[1] \"integer\"                \"shinyActionButtonValue\"",
-    "checkGroupOut": "[1] \"2\" \"3\"",
-    "checkboxOut": "[1] TRUE",
-    "dateOut": "[1] \"2015-01-01\"",
-    "datesOut": "[1] \"2015-01-01\" \"2015-02-20\"",
-    "fileOut": "NULL",
-    "numOut": "[1] 100",
-    "radioOut": "[1] \"2\"",
-    "selectOut": "[1] \"2\"",
-    "slider1Out": "[1] 65",
-    "slider2Out": "[1] 35 85",
-    "textOut": "[1] \"Text entered\""
+    "action_out": "[1] 1\nattr(,\"class\")\n[1] \"integer\"                \"shinyActionButtonValue\"",
+    "checkGroup_out": "[1] \"2\" \"3\"",
+    "checkbox_out": "[1] TRUE",
+    "date_out": "[1] \"2015-01-01\"",
+    "dates_out": "[1] \"2015-01-01\" \"2015-02-20\"",
+    "file_out": "NULL",
+    "num_out": "[1] 100",
+    "radio_out": "[1] \"2\"",
+    "select_out": "[1] \"2\"",
+    "slider1_out": "[1] 65",
+    "slider2_out": "[1] 35 85",
+    "text_out": "[1] \"Text entered\""
   },
   "export": {
 

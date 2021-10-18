@@ -1,12 +1,22 @@
-sd2_logEvent <- function(self, private, event, ...) {
+#' @include shiny-driver.R
+ShinyDriver2$set("private", "eventLog", list())
+
+#' @description Add event to log.
+#' @param event Event name
+#' @param ... Addition data to store for event
+#' @include shiny-driver.R
+ShinyDriver2$set("public", "logEvent", function(event, ...) {
 
   content <- list(time = Sys.time(), event = event, ...)
   stopifnot(is_all_named(content))
 
   private$eventLog[[length(private$eventLog) + 1]] <- content
-}
+  invisible(self)
+})
 
-sd2_getEventLog <- function(self, private) {
+#' @description Retrieve event log.
+#' @include shiny-driver.R
+ShinyDriver2$set("public", "getEventLog", function() {
   log <- private$eventLog
 
   # Log is a row-first list of lists which we need to convert to a data frame.
@@ -30,4 +40,4 @@ sd2_getEventLog <- function(self, private) {
   vecs <- c(workerid = private$shinyWorkerId, vecs)
 
   as.data.frame(vecs, stringsAsFactors = FALSE)
-}
+})

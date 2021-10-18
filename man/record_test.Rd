@@ -8,9 +8,9 @@ record_test(
   app = ".",
   ...,
   seed = NULL,
-  loadTimeout = 10000,
+  load_timeout = 10000,
   debug = "shiny_console",
-  shinyOptions = list()
+  shiny_args = list()
 )
 }
 \arguments{
@@ -22,7 +22,7 @@ application.}
 \item{seed}{A random seed to set before running the app. This seed will also
 be used in the test script.}
 
-\item{loadTimeout}{Maximum time to wait for the Shiny application to load, in
+\item{load_timeout}{Maximum time to wait for the Shiny application to load, in
 milliseconds. If a value is provided, it will be saved in the test script.}
 
 \item{debug}{start the underlying \code{\link[=ShinyDriver2]{ShinyDriver2()}} in \code{debug}
@@ -32,7 +32,7 @@ console output from the recorded R shiny process. Any value that the
 \code{debug} argument in \code{\link[=ShinyDriver2]{ShinyDriver2()}} accepts may be used
 (e.g., \code{'none'} may be used to completely suppress the driver logs).}
 
-\item{shinyOptions}{A list of options to pass to \code{runApp()}. If a value
+\item{shiny_args}{A list of options to pass to \code{runApp()}. If a value
 is provided, it will be saved in the test script.}
 }
 \description{

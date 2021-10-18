@@ -4,10 +4,10 @@
 \alias{test_app}
 \title{Run tests for a Shiny application}
 \usage{
-test_app(appDir = ".", ..., reporter = missing_arg(), package = missing_arg())
+test_app(app_dir = ".", ..., reporter = missing_arg(), package = missing_arg())
 }
 \arguments{
-\item{appDir}{Path to directory containing a Shiny app (e.g. \code{app.R}) or
+\item{app_dir}{Path to directory containing a Shiny app (e.g. \code{app.R}) or
 single interactive \code{.Rmd}.}
 
 \item{...}{Ignored. Used for parameter expansion}

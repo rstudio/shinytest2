@@ -1,22 +1,22 @@
 # Combined from: https://github.com/rstudio/shinycoreci-apps/blob/3951d87bd91f27928a4cdf439c113590ce804508/apps/081-widgets-gallery/
 
-widgetIds <- NULL
-widget <- function(name, widgetObject, title = NULL) {
+widget_ids <- NULL
+widget <- function(name, widget_object, title = NULL) {
   # Collect all widget ids
-  widgetIds <<- append(widgetIds, name)
+  widget_ids <<- append(widget_ids, name)
 
   column(4,
     wellPanel(
       if (!is.null(title)) h3(title),
-      widgetObject,
+      widget_object,
       hr(),
       p("Current Value:", style = "color:#888888;"),
-      verbatimTextOutput(paste0(name, "Out"))
+      verbatimTextOutput(paste0(name, "_out"))
     )
   )
 }
 
-widgetGallery <- tabPanel(
+widget_gallery <- tabPanel(
   title = strong("{shiny}"),
   value = "shiny",
 
@@ -86,7 +86,7 @@ widgetGallery <- tabPanel(
   )
 )
 
-shinyWidgets <- tabPanel(
+shiny_widgets <- tabPanel(
   title = strong("{shinyWidgets}"),
   value = "shinyWidgets",
 
@@ -171,8 +171,8 @@ ui <- fluidPage(
 
   tabsetPanel(
     id = "tabset",
-    widgetGallery,
-    shinyWidgets
+    widget_gallery,
+    shiny_widgets
   )
 )
 
@@ -181,16 +181,16 @@ ui <- fluidPage(
 server <- function(input, output) {
 
   # Display all widget outputs (except for `file`)
-  lapply(widgetIds, function(widgetId) {
-    if (widgetId %in% "file") return()
+  lapply(widget_ids, function(widget_id) {
+    if (widget_id %in% "file") return()
 
-    output[[paste0(widgetId, "Out")]] <- renderPrint({
-      input[[widgetId]]
+    output[[paste0(widget_id, "_out")]] <- renderPrint({
+      input[[widget_id]]
     })
   })
 
   # Display `file` output
-  output$fileOut <- renderPrint({
+  output$file_out <- renderPrint({
     if (is.null(input$file))
       return(NULL)
     df <- input$file

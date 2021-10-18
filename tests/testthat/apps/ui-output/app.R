@@ -7,11 +7,11 @@ ui <- fluidPage(
 )
 server <- function(input, output, session) {
   output$html <- renderText({
-    req(input$val)
-    HTML(input$val)
+    shiny::req(input$val)
+    shiny::HTML(input$val)
   })
   output$text <- renderText({
-    req(input$val)
+    shiny::req(input$val)
     input$val
   })
 }

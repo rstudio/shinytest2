@@ -19,7 +19,7 @@ test_that("set kitchen sink of inputs", {
     # "file" = null,
     "select" = "2",
     "slider1" = 65,
-    "slider2" = c(35,85),
+    "slider2" = c(35, 85),
     "text" = "Text entered",
   )
   expect_snapshot_app(app, screenshot = TRUE)
