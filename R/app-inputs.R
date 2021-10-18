@@ -118,7 +118,7 @@ ShinyDriver2$set("private", "flushInputs", function(wait = TRUE, timeout = 1000)
 #' `path1` will be uploaded to file input with name `name1`.
 #' @param values_ If `TRUE`, will return final updated values of download
 #'   control.
-ShinyDriver2$set("public", "uploadFile", function(self, private, ..., wait_ = TRUE, values_ = TRUE,
+ShinyDriver2$set("public", "uploadFile", function(..., wait_ = TRUE, values_ = TRUE,
                           timeout_ = 3000) {
   # TODO-barret; Implement this; https://github.com/rstudio/shinytest2/issues/20
   stop("TODO-barret; ShinyDriver2$uploadFile()")

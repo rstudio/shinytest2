@@ -114,7 +114,7 @@ ShinyDriver2$set("public", "snapshotDownload", function(id, filename) {
 
 create_snapshot_dir <- function(dir, count) {
   if (count == 1) {
-    if (dir_exists(dir)) {
+    if (fs::dir_exists(dir)) {
       unlink(dir, recursive = TRUE)
     }
     dir.create(dir, recursive = TRUE)

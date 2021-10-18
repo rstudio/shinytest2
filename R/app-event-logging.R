@@ -16,7 +16,7 @@ ShinyDriver2$set("public", "logEvent", function(event, ...) {
 
 #' @description Retrieve event log.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "getEventLog", function(self, private) {
+ShinyDriver2$set("public", "getEventLog", function() {
   log <- private$eventLog
 
   # Log is a row-first list of lists which we need to convert to a data frame.

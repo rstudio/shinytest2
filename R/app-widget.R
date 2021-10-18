@@ -319,7 +319,7 @@ ShinyDriver2$set("public", "sendKeys", function(name, keys) {
 #' Lists the names of all input and output widgets
 #' @return A list of two character vectors, named `input` and `output`.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "listWidgets", function(self, private) {
+ShinyDriver2$set("public", "listWidgets", function() {
   "!DEBUG ShinyDriver2$listWidgets"
   res <- chromote_eval(private$chromote_obj,
     "shinytest2.listWidgets()"
@@ -333,7 +333,7 @@ ShinyDriver2$set("public", "listWidgets", function(self, private) {
 #' @description
 #' Check if Shiny widget names are unique.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "checkUniqueWidgetNames", function(self, private) {
+ShinyDriver2$set("public", "checkUniqueWidgetNames", function() {
   "!DEBUG ShinyDriver2$checkUniqueWidgetNames"
   widgets <- self$listWidgets()
   inputs <- widgets$input
