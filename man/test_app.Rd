@@ -7,6 +7,9 @@
 test_app(app_dir = ".", ..., reporter = missing_arg(), package = missing_arg())
 }
 \arguments{
+\item{app_dir}{Path to directory containing a Shiny app (e.g. \code{app.R}) or
+single interactive \code{.Rmd}.}
+
 \item{...}{Ignored. Used for parameter expansion}
 
 \item{reporter}{Reporter to use to summarise output. Can be supplied
@@ -16,9 +19,6 @@ as a string (e.g. "summary") or as an R6 object
 See \link[testthat]{Reporter} for more details and a list of built-in reporters.}
 
 \item{package}{If these tests belong to a package, the name of the package.}
-
-\item{appDir}{Path to directory containing a Shiny app (e.g. \code{app.R}) or
-single interactive \code{.Rmd}.}
 }
 \description{
 Run tests for a Shiny application

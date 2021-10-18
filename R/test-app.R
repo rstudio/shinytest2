@@ -1,6 +1,6 @@
 #' Run tests for a Shiny application
 #'
-#' @param appDir Path to directory containing a Shiny app (e.g. `app.R`) or
+#' @param app_dir Path to directory containing a Shiny app (e.g. `app.R`) or
 #'   single interactive `.Rmd`.
 #' @param ... Ignored. Used for parameter expansion
 #' @inheritParams testthat::test_file

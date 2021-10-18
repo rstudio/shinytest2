@@ -1,4 +1,9 @@
 #' @include shiny-driver.R
+#' Debug log types
+#'
+#' All supported debug log types that are not `"all"` or `"none"`.
+#'
+#' @keywords internal
 #' @export
 # # TODO-barret document with debug method?
 debug_log_types <- function() {
