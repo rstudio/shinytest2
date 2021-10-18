@@ -14,7 +14,7 @@ sd2_snapshot <- function(
 ) {
   if (!is.list(items) && !is.null(items))
     abort("'items' must be NULL or a list.")
-  private$snapshotCount <- private$snapshotCount + 1
+  private$snapshotCount <- private$snapshotCount + 1 # nolint
 
   temp_save_dir  <- private$tempAppshotDir
 
@@ -93,7 +93,7 @@ ShinyDriver2$set("public", "snapshotDownload", function(id, filename) {
   current_dir <- paste0(self$getSnapshotDir(), "-current")
   private$tempAppshotDir
 
-  private$snapshotCount <- private$snapshotCount + 1
+  private$snapshotCount <- private$snapshotCount + 1 # nolint
 
   if (is.null(filename)) {
     filename <- sprintf("%03d.download", private$snapshotCount)
@@ -129,7 +129,7 @@ ShinyDriver2$set("private", "getTestSnapshotUrl", function(
   export = TRUE,
   format = "json"
 ) {
-  reqString <- function(group, value) {
+  q_string <- function(group, value) {
     if (isTRUE(value))
       paste0(group, "=1")
     else if (is.character(value))
@@ -139,9 +139,9 @@ ShinyDriver2$set("private", "getTestSnapshotUrl", function(
   }
   paste(
     private$shinyTestUrl,
-    reqString("input", input),
-    reqString("output", output),
-    reqString("export", export),
+    q_string("input", input),
+    q_string("output", output),
+    q_string("export", export),
     paste0("format=", format),
     "sortC=1",
     sep = "&"

@@ -29,7 +29,7 @@
 #' @export
 #' @importFrom rlang missing_arg is_interactive
 test_app <- function(
-  appDir = ".",
+  app_dir = ".",
   # testnames = NULL,
   ...,
   reporter = missing_arg(),
@@ -52,7 +52,7 @@ test_app <- function(
   # `testthat::test_file(testFilePath)`
   # Maybe look at testthat::snapshot_review()?
 
-  app_folder <- fs::path_file(app_path(appDir, "appDir")$dir)
+  app_folder <- fs::path_file(app_path(app_dir, "app_dir")$dir)
   test_path <- rprojroot::find_testthat_root_file(
     paste0("test-", app_folder, ".R"),
     # TODO-barret; shoudl this be relative to the app or to the caller?

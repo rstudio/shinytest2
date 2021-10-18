@@ -2,7 +2,7 @@
 #' Sets input values.
 #' @param ... Name-value pairs, `name1 = value1, name2 = value2` etc.
 #'   Enput with name `name1` will be assigned value `value1`.
-#' @param allowInputNoBinding_ When setting the value of an input, allow
+#' @param allow_input_no_binding_ When setting the value of an input, allow
 #'   it to set the value of an input even if that input does not have
 #'   an input binding.
 #' @param priority_ Sets the event priority. For expert use only: see
@@ -15,7 +15,7 @@ ShinyDriver2$set("public", "setInputs", function(
   wait_ = TRUE,
   values_ = TRUE,
   timeout_ = 3000,
-  allowInputNoBinding_ = FALSE,
+  allow_input_no_binding_ = FALSE,
   priority_ = c("input", "event")
 ) {
   if (values_ && !wait_) {
@@ -31,7 +31,7 @@ ShinyDriver2$set("public", "setInputs", function(
   input_values <- lapply(inputs, function(value) {
     list(
       value = value,
-      allowInputNoBinding = allowInputNoBinding_,
+      allowInputNoBinding = allow_input_no_binding_,
       priority = priority_
     )
   })

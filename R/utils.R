@@ -2,6 +2,7 @@
 #  is_installed
 
 
+# nolint start
 ckm8_assert_single_string <- function(x, .var.name = checkmate::vname(x)) {
   checkmate::assert_character(x, len = 1, any.missing = FALSE, .var.name = .var.name)
 }
@@ -11,6 +12,7 @@ ckm8_assert_single_integer <- function(x, .var.name = checkmate::vname(x)) {
 ckm8_assert_single_url <- function(x, .var.name = checkmate::vname(x)) {
   checkmate::assert_character(x, pattern = "^/", len = 1, any.missing = FALSE, .var.name = .var.name)
 }
+# nolint end
 
 # Cache a value given output of `fn`
 cache_fn_val <- function(fn) {
@@ -131,6 +133,7 @@ app_path <- function(path, arg = "path") {
 }
 
 
+# nolint start
 # https://github.com/rstudio/shiny/blob/2360bde13efac1fe501efee447a8f3dde0136722/R/shiny.R#L35-L49
 toJSON <- function(x, ...,  dataframe = "columns", null = "null", na = "null",
   auto_unbox = TRUE, digits = getOption("shiny.json.digits", 16),
@@ -147,6 +150,7 @@ toJSON <- function(x, ...,  dataframe = "columns", null = "null", na = "null",
    force = force, POSIXt = POSIXt, UTC = UTC, rownames = rownames,
    keep_vec_names = keep_vec_names, json_verbatim = TRUE, ...)
 }
+# nolint end
 
 
 

@@ -10,23 +10,23 @@ ShinyDriver2$set("private", "shinyWorkerId", NA_character_)
 
 #' @param path Path to a directory containing a Shiny app, i.e. a
 #'   single `app.R` file or a `server.R`-`ui.R` pair.
-#' @param loadTimeout How long to wait for the app to load, in ms.
+#' @param load_timeout How long to wait for the app to load, in ms.
 #'   This includes the time to start R. Defaults to 5s when running
 #'   locally and 10s when running on CI. Maximum value is 10s.
 #' @param screenshot Take screenshots for each snapshot?
 # ' @param phantomTimeout How long to wait when connecting to phantomJS
 # '  process, in ms
 #' @template variant
-#' @param checkNames Check if widget names are unique?
+#' @param check_names Check if widget names are unique?
 #' @param debug Start the app in debugging mode? In debugging mode debug
 #'   messages are printed to the console.
 #' @param seed An optional random seed to use before starting the application.
 #'   For apps that use R's random number generator, this can make their
 #'   behavior repeatable.
-#' @param cleanLogs Whether to remove the stdout and stderr logs when the
+#' @param clean_logs Whether to remove the stdout and stderr logs when the
 #'   Shiny process object is garbage collected.
-#' @param shinyOptions A list of options to pass to [shiny::runApp()].
-#' @param renderArgs Passed to `rmarkdown::run()` for interactive `.Rmd`s.
+#' @param shiny_args A list of options to pass to [shiny::runApp()].
+#' @param render_args Passed to `rmarkdown::run()` for interactive `.Rmd`s.
 #' @param options A list of [base::options()] to set in the driver's child
 #'   process.
 #' @importFrom callr process
@@ -35,22 +35,22 @@ ShinyDriver2$set("private", "shinyWorkerId", NA_character_)
 ShinyDriver2$set("public", "initialize", function(
   path = ".",
   ...,
-  loadTimeout = NULL,
+  load_timeout = NULL,
   screenshot = TRUE,
-  checkNames = TRUE,
+  check_names = TRUE,
   name = NULL,
   variant = getOption("shinytest2.variant", os_name_and_r_version()),
-  debug = c("none", "all", ShinyDriver2$debugLogTypes),
+  debug = c("none", "all", debug_log_types()),
   # phantomTimeout = 5000,
   seed = NULL,
-  cleanLogs = TRUE,
-  shinyOptions = list(),
-  renderArgs = NULL,
+  clean_logs = TRUE,
+  shiny_args = list(),
+  render_args = NULL,
   options = list()
 ) {
   ellipsis::check_dots_empty()
 
-  private$snapshotScreenshot <- screenshot
+  private$snapshotScreenshot <- screenshot # nolint
   private$variant <- variant
   private$name <-
     if (!is.null(name)) {
@@ -67,9 +67,9 @@ ShinyDriver2$set("public", "initialize", function(
         )
       }
     }
-  private$cleanLogs <- isTRUE(cleanLogs)
-  if (is.null(loadTimeout)) {
-    loadTimeout <- if (on_ci()) 10000 else 5000
+  private$cleanLogs <- isTRUE(clean_logs) # nolint
+  if (is.null(load_timeout)) {
+    load_timeout <- if (on_ci()) 10000 else 5000
   }
 
   self$logEvent("Start ShinyDriver2 initialization")
@@ -91,7 +91,7 @@ ShinyDriver2$set("public", "initialize", function(
   } else {
     "!DEBUG starting shiny app from path"
     self$logEvent("Starting Shiny app")
-    private$startShiny(path, seed, loadTimeout, shinyOptions, renderArgs, options)
+    private$startShiny(path, seed, load_timeout, shiny_args, render_args, options)
   }
 
   # Read js content before init'ing chromote to reduce time between
@@ -131,11 +131,11 @@ ShinyDriver2$set("public", "initialize", function(
 
 
   "!DEBUG wait for navigation to happen"
-  # nav_stop_time <- as.numeric(Sys.time()) + loadTimeout
+  # nav_stop_time <- as.numeric(Sys.time()) + load_timeout
   # while(identical(private$web$getUrl(), "about:blank")) {
   #   if (as.numeric(Sys.time()) > nav_stop_time) {
   #     abort(paste0(
-  #       "Failed to navigate to Shiny app in ", loadTimeout, "ms.\n",
+  #       "Failed to navigate to Shiny app in ", load_timeout, "ms.\n",
   #       format(self$getDebugLog())
   #     ))
   #   }
@@ -149,11 +149,11 @@ ShinyDriver2$set("public", "initialize", function(
   self$logEvent("Waiting until Shiny app starts")
   # load_ok <- private$web$waitFor(
   #   'window.shinytest2 && window.shinytest2.ready === true',
-  #   timeout = loadTimeout
+  #   timeout = load_timeout
   # )
   # if (!load_ok) {
   #   abort(paste0(
-  #     "Shiny app did not load in ", loadTimeout, "ms.\n",
+  #     "Shiny app did not load in ", load_timeout, "ms.\n",
   #     format(self$getDebugLog())
   #   ))
   # }
@@ -164,10 +164,10 @@ ShinyDriver2$set("public", "initialize", function(
   if (!isTRUE(chromote_wait_for_condition(
     private$chromote_obj,
     "window.shinytest2 && window.shinytest2.ready === true",
-    timeout = loadTimeout
+    timeout = load_timeout
   ))) {
     abort(paste0(
-      "Shiny app did not load in ", loadTimeout, "ms.\n",
+      "Shiny app did not load in ", load_timeout, "ms.\n",
       NULL
       # TODO-barret
       # format(self$getDebugLog())
@@ -184,25 +184,25 @@ ShinyDriver2$set("public", "initialize", function(
   # private$shinyWorkerId <- private$web$executeScript(
   #   'return Shiny.shinyapp.config.workerId'
   # )
-  private$shinyWorkerId <- chromote_eval(
+  private$shinyWorkerId <- chromote_eval( # nolint
     private$chromote_obj,
     "Shiny.shinyapp.config.workerId"
   )$result$value
   if (identical(private$shinyWorkerId, ""))
-    private$shinyWorkerId <- NA_character_
+    private$shinyWorkerId <- NA_character_ # nolint
   # private$shinyTestSnapshotBaseUrl <- private$web$executeScript(
   #   'if (Shiny.shinyapp.getTestSnapshotBaseUrl)
   #     return Shiny.shinyapp.getTestSnapshotBaseUrl({ fullUrl:true });
   #   else
   #     return null;'
   # )
-  private$shinyTestUrl <- chromote_eval(
+  private$shinyTestUrl <- chromote_eval( # nolint
     private$chromote_obj,
     "Shiny.shinyapp.getTestSnapshotBaseUrl ? Shiny.shinyapp.getTestSnapshotBaseUrl({fullUrl:true}) : null"
   )$result$value
 
   "!DEBUG checking widget names"
-  if (checkNames) self$checkUniqueWidgetNames()
+  if (check_names) self$checkUniqueWidgetNames()
 
   invisible(self)
 })

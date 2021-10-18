@@ -102,7 +102,7 @@ expect_snapshot_app_text <- function(
 #'   This method is great for testing the full DOM structure of particular HTML elements.
 #'   It is recommended to only use this method on DOM elements that you have full control over.
 #'   This will help avoid false-positives when underlying packages may update.
-#' @param outerHTML If `TRUE`, the full DOM structure will be returned (`el.outerHTML`).
+#' @param outer_html If `TRUE`, the full DOM structure will be returned (`el.outerHTML`).
 #'   If `FALSE`, the full DOM structure of the child elements will be returned (`$(el).html()`).
 #' @export
 # TODO-barret; rename to `app_expect_dom()`
@@ -111,12 +111,12 @@ expect_snapshot_app_dom <- function(
   selector,
   ...,
   # variant = NULL,
-  outerHTML = FALSE,
+  outer_html = FALSE,
   cran = FALSE
 ) {
   ellipsis::check_dots_empty()
   html_code <-
-    if (isTRUE(outerHTML)) {
+    if (isTRUE(outer_html)) {
       "item.outerHTML"
     } else {
       "$(item).html()"

@@ -1,6 +1,5 @@
 linters: with_defaults(
     line_length_linter = NULL,
-    object_name_linter = NULL, # 143
     commented_code_linter = NULL,
     open_curly_linter = NULL,
     cyclocomp_linter = NULL,

@@ -5,12 +5,13 @@
 #' `timeout` is exceeded.
 #' @param expr A string containing JavaScript code. Will wait until the
 #'   condition returns `true`.
+#' @param check_interval How often to check for the condition, in ms.
 #' @return `TRUE` if expression evaluates to `true` without error, before
 #'   timeout. Otherwise returns `FALSE`.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "waitFor", function(expr, checkInterval = 100, timeout = 3000) {
+ShinyDriver2$set("public", "waitFor", function(expr, check_interval = 100, timeout = 3000) {
   "!DEBUG ShinyDriver2$waitFor"
-  chromote_wait_for_condition(private$chromote_obj, expr, timeout_ms = timeout, delay_ms = checkInterval)
+  chromote_wait_for_condition(private$chromote_obj, expr, timeout_ms = timeout, delay_ms = check_interval)
 })
 
 #' @description
@@ -29,7 +30,7 @@ ShinyDriver2$set("public", "waitForShiny", function()  {
     private$chromote_obj,
     "!$('html').first().hasClass('shiny-busy')",
     timeout = 3 * 1000,
-    delay_ms = checkInterval
+    delay_ms = check_interval
   )
 })
 
@@ -47,23 +48,23 @@ ShinyDriver2$set("public", "waitForValue", function(
   ignore = list(NULL, ""),
   iotype = c("input", "output", "export"),
   timeout = 10000,
-  checkInterval = 400
+  check_interval = 400
 ) {
   "!DEBUG ShinyDriver2$waitForValue"
 
   iotype <- match.arg(iotype)
 
   checkmate::assert_number(timeout, lower = 0, finite = FALSE, na.ok = FALSE)
-  checkmate::assert_number(checkInterval, lower = 0, finite = FALSE, na.ok = FALSE)
+  checkmate::assert_number(check_interval, lower = 0, finite = FALSE, na.ok = FALSE)
 
-  timeoutSec <- timeout / 1000
-  checkIntervalSec <- checkInterval / 1000
+  timeoute_sec <- timeout / 1000
+  check_interval_sec <- check_interval / 1000
 
   now <- function() {
     as.numeric(Sys.time())
   }
 
-  endTime <- now() + timeoutSec
+  end_time <- now() + timeoute_sec
 
   while (TRUE) {
     value <- try({
@@ -78,20 +79,20 @@ ShinyDriver2$set("public", "waitForValue", function(
     # if no error when trying ot retrieve the value..
     if (!inherits(value, "try-error")) {
       # check against all invalid values
-      isInvalid <- vapply(ignore, identical, logical(1), x = value)
+      is_invalid <- vapply(ignore, identical, logical(1), x = value)
       # if no matches, then it's a success!
-      if (!any(isInvalid)) {
+      if (!any(is_invalid)) {
         return(value)
       }
     }
 
     # if too much time has elapsed... throw
-    if (now() > endTime) {
+    if (now() > end_time) {
       abort(paste0("timeout reached when waiting for value: ", name))
     }
 
     # wait a little bit for shiny to do some work
-    Sys.sleep(checkIntervalSec)
+    Sys.sleep(check_interval_sec)
   }
 
   invisible(self)

@@ -6,7 +6,7 @@ app           <- getOption("shinytest2.app")
 debug         <- getOption("shinytest2.debug")
 load_timeout  <- getOption("shinytest2.load.timeout")
 start_seed    <- getOption("shinytest2.seed")
-shiny_options <- getOption("shinytest2.shiny.options")
+shiny_args    <- getOption("shinytest2.shiny.args")
 
 # If there are any reasons to not run a test, a message should be appended to
 # this vector.
@@ -28,7 +28,7 @@ registerInputHandler("shinytest2.testevents", function(val, shinysession, name) 
   val
 })
 
-escapeString <- function(s) {
+escape_string <- function(s) {
   # escape \ as well as "
   s <- gsub("\\", "\\\\", s, fixed = TRUE)
   gsub('"', '\\"', s, fixed = TRUE)
@@ -52,7 +52,7 @@ deparse2 <- function(x) {
 
 
 # A modified version of shiny::numericInput but with a placholder
-numericInput <- function(..., placeholder = NULL) {
+numeric_input <- function(..., placeholder = NULL) {
   res <- shiny::numericInput(...)
   res$children[[2]]$attribs$placeholder <- placeholder
   res
@@ -74,7 +74,7 @@ enable_tooltip_script <- function() {
 }
 
 # Given a vector/list, return TRUE if any elements are unnamed, FALSE otherwise.
-anyUnnamed <- function(x) {
+any_unnamed <- function(x) {
   # Zero-length vector
   if (length(x) == 0) return(FALSE)
 
@@ -91,8 +91,8 @@ anyUnnamed <- function(x) {
 # with a given name in the resulting vector. If b has any elements with the same
 # name as elements in a, the element in a is dropped. Also, if there are any
 # duplicated names in a or b, only the last one with that name is kept.
-mergeVectors <- function(a, b) {
-  if (anyUnnamed(a) || anyUnnamed(b)) {
+merge_vectors <- function(a, b) {
+  if (any_unnamed(a) || any_unnamed(b)) {
     stop("Vectors must be either NULL or have names for all elements")
   }
 
@@ -101,7 +101,7 @@ mergeVectors <- function(a, b) {
   x[!drop_idx]
 }
 
-inputProcessors <- list(
+input_processors <- list(
   default = function(value) {
     # This function is designed to operate on atomic vectors (not lists), so if
     # this is a list, we need to unlist it.
@@ -110,7 +110,7 @@ inputProcessors <- list(
 
     if (length(value) > 1) {
       # If it's an array, recurse
-      vals <- vapply(value, inputProcessors$default, "")
+      vals <- vapply(value, input_processors$default, "")
       return(paste0(
         "c(",
         paste0(vals, collapse = ", "),
@@ -123,7 +123,7 @@ inputProcessors <- list(
     }
 
     if (is.character(value)) {
-      return(paste0('"', escapeString(value), '"'))
+      return(paste0('"', escape_string(value), '"'))
     } else {
       return(as.character(value))
     }
@@ -136,54 +136,54 @@ inputProcessors <- list(
   shiny.fileupload = function(value) {
     # Extract filenames, then send to default processor
     value <- vapply(value, function(file) file$name, character(1))
-    inputProcessors$default(value)
+    input_processors$default(value)
   }
 )
 
 # Add in input processors registered by other packages.
-inputProcessors <- mergeVectors(inputProcessors, shinytest2::getInputProcessors())
+input_processors <- merge_vectors(input_processors, shinytest2::get_input_processors())
 
 # Given an input value taken from the client, return the value that would need
 # to be passed to app$set_input() to set the input to that value.
-processInputValue <- function(value, inputType) {
-  if (is.null(inputProcessors[[inputType]])) {
+process_input_value <- function(value, input_type) {
+  if (is.null(input_processors[[input_type]])) {
     # For input with type "mypkg.foo", get "mypkg", and then try to load it.
     # This is helpful in cases where the R session running `recordTest()` has
     # not loaded the package with the input type. (There's a separate R session
     # running the Shiny app.) See https://github.com/rstudio/learnr/pull/407 for
     # more info.
-    pkg <- strsplit(inputType, ".", fixed = TRUE)[[1]][1]
+    pkg <- strsplit(input_type, ".", fixed = TRUE)[[1]][1]
 
-    if (tryLoadPackage(pkg)) {
-      # The set of inputProcessors may have changed by loading the package, so
+    if (try_load_package(pkg)) {
+      # The set of `input_processors` may have changed by loading the package, so
       # re-merge the registered input processors.
-      inputProcessors <<- mergeVectors(inputProcessors, shinytest2::getInputProcessors())
+      input_processors <<- merge_vectors(input_processors, shinytest2::get_input_processors())
     }
   }
 
   # Check again if the input type is now registered.
-  if (is.null(inputProcessors[[inputType]])) {
-    inputType <- "default"
+  if (is.null(input_processors[[input_type]])) {
+    input_type <- "default"
   }
 
-  inputProcessors[[inputType]](value)
+  input_processors[[input_type]](value)
 }
 
 # Try to load a package, but only once; subsequent calls with the same value of
 # `pkg` will do nothing. Returns TRUE if the package is successfully loaded,
 # FALSE otherwise.
-triedPackages <- character()
-tryLoadPackage <- function(pkg) {
-  if (pkg %in% triedPackages) {
+tried_packages <- character()
+try_load_package <- function(pkg) {
+  if (pkg %in% tried_packages) {
     return(FALSE)
   }
-  triedPackages <<- c(triedPackages, pkg)
+  tried_packages <<- c(tried_packages, pkg)
   requireNamespace(pkg, quietly = TRUE)
 }
 
 # Quote variable/argument names. Normal names like x, x1, or x_y will not be changed, but
 # if there are any strange characters, it will be quoted; x-1 will return `x-1`.
-quoteName <- function(name) {
+quote_name <- function(name) {
   if (!grepl("^[a-zA-Z0-9_]*$", name)) {
     paste0("`", name, "`")
   } else {
@@ -191,21 +191,21 @@ quoteName <- function(name) {
   }
 }
 
-codeGenerators <- list(
-  initialize = function(event, nextEvent = NULL, ...) {
+code_generators <- list(
+  initialize = function(event, next_event = NULL, ...) {
     NA_character_
   },
 
-  input = function(event, nextEvent = NULL, allowInputNoBinding = FALSE, ...) {
+  input = function(event, next_event = NULL, allow_no_input_binding = FALSE, ...) {
     # Extra arguments when using times
     args <- ""
 
     if (event$inputType == "shiny.fileupload") {
-      filename <- processInputValue(event$value, event$inputType)
+      filename <- process_input_value(event$value, event$inputType)
 
       code <- paste0(
         "app$uploadFile(",
-        quoteName(event$name), " = ", filename,
+        quote_name(event$name), " = ", filename,
         args,
         ")"
       )
@@ -228,63 +228,63 @@ codeGenerators <- list(
     } else if (event$hasBinding) {
       paste0(
         "app$setInputs(",
-        quoteName(event$name), " = ",
-        processInputValue(event$value, event$inputType),
+        quote_name(event$name), " = ",
+        process_input_value(event$value, event$inputType),
         args,
         ")"
       )
 
     } else {
-      if (allowInputNoBinding) {
-        args <- paste0(args, ", allowInputNoBinding_ = TRUE")
+      if (allow_no_input_binding) {
+        args <- paste0(args, ", allow_no_input_binding_ = TRUE")
         if (identical(event$priority, "event")) args <- paste0(args, ', priority_ = "event"')
         paste0(
           "app$setInputs(",
-          quoteName(event$name), " = ",
-          processInputValue(event$value, inputType = "default"),
+          quote_name(event$name), " = ",
+          process_input_value(event$value, input_type = "default"),
           args,
           ")"
         )
       } else {
         paste0(
-          "# Input '", quoteName(event$name),
+          "# Input '", quote_name(event$name),
           "' was set, but doesn't have an input binding."
         )
       }
     }
   },
 
-  fileDownload = function(event, nextEvent = NULL, ...) {
+  fileDownload = function(event, next_event = NULL, ...) {
     paste0('app$snapshotDownload("', event$name, '")')
   },
 
-  outputEvent = function(event, nextEvent = NULL, ...) {
+  outputEvent = function(event, next_event = NULL, ...) {
      NA_character_
   },
 
-  outputSnapshot = function(event, nextEvent = NULL, ...) {
+  outputSnapshot = function(event, next_event = NULL, ...) {
     paste0('expect_snapshot_app(app, items = list(output = "', event$name, '"))')
   },
 
-  snapshot = function(event, nextEvent = NULL, ...) {
+  snapshot = function(event, next_event = NULL, ...) {
     "expect_snapshot_app(app)"
   }
 )
 
-appDirBasename <- function() {
+app_dir_basename <- function() {
   # app$private$path
   fs::path_file(shinytest2:::app_path(app$getAppDir())$dir)
 }
 
-generateTestCode <- function(events, name, seed,
-  allowInputNoBinding = FALSE)
+generate_test_code <- function(events, name, seed,
+  allow_no_input_binding = FALSE)
 {
 
   # Generate code for each input and output event
-  eventCode <- mapply(
-    function(event, nextEvent) {
-      codeGenerators[[event$type]](event, nextEvent,
-                                   allowInputNoBinding = allowInputNoBinding)
+  event_code <- mapply(
+    function(event, next_event) {
+      code_generators[[event$type]](event, next_event,
+                                   allow_no_input_binding = allow_no_input_binding)
     },
     events,
     c(events[-1], list(NULL))
@@ -293,15 +293,15 @@ generateTestCode <- function(events, name, seed,
   # Find the indices of the initialize event and output events. The code lines
   # and (optional) Sys.sleep() calls for these events will be removed later.
   # We need the output events for now in order to calculate times.
-  removeEvents <- vapply(events, function(event) {
+  remove_events <- vapply(events, function(event) {
     event$type %in% c("initialize", "outputEvent")
   }, logical(1))
 
-  if (length(eventCode) != 0) {
+  if (length(event_code) != 0) {
     # Remove unwanted events
-    eventCode  <- eventCode[!removeEvents]
+    event_code  <- event_code[!remove_events]
 
-    eventCode <- paste0("  ", eventCode, collapse = "\n")
+    event_code <- paste0("  ", event_code, collapse = "\n")
   }
 
   # Need paste instead of file.path because app$getAppFilename() can be NULL which makes file.path grumpy.
@@ -318,7 +318,7 @@ generateTestCode <- function(events, name, seed,
         paste0("test_path(\"", app_path, "\")"),
         if (!is.null(seed)) paste0("seed = %s", seed),
         if (!is.null(load_timeout)) paste0("loadTimeout = ", load_timeout),
-        if (length(shiny_options) > 0) paste0("shinyOptions = ", deparse2(shiny_options)),
+        if (length(shiny_args) > 0) paste0("shiny_args = ", deparse2(shiny_args)),
         "variant = os_name_and_r_version()"
         ),
         collapse = ",\n    "
@@ -327,18 +327,18 @@ generateTestCode <- function(events, name, seed,
     ),
     # paste0('app$snapshotInit("', name, '")'),
     # '',
-    eventCode,
+    event_code,
     sep = "\n"
   )
 
   paste0(
-    "test_that(\"", fs::path_file(shinytest2:::app_path(app$getAppDir())$dir), " - ", appDirBasename(), "\", {\n",
+    "test_that(\"", fs::path_file(shinytest2:::app_path(app$getAppDir())$dir), " - ", app_dir_basename(), "\", {\n",
     inner_code, "\n",
     "})\n"
   )
 }
 
-hasInputsWithoutBinding <- function(events) {
+has_inputs_without_binding <- function(events) {
   any(vapply(events, function(event) {
     return(event$type == "input" && !event$hasBinding)
   }, TRUE))
@@ -387,7 +387,7 @@ shinyApp(
         if (rstudioapi::isAvailable()) checkboxInput("editSaveFile", "Open script in editor on exit", value = TRUE),
         checkboxInput("runScript", "Run test script on exit", value = TRUE),
         checkboxInput(
-          "allowInputNoBinding",
+          "allow_no_input_binding",
           tagList("Save inputs that do not have a binding",
             tooltip(
               paste(
@@ -400,7 +400,7 @@ shinyApp(
           ),
           value = FALSE
         ),
-        numericInput("seed",
+        numeric_input("seed",
           label = tagList("Random seed:",
             tooltip("A seed is recommended if your application uses any randomness. This includes all Shiny Rmd documents.")
           ),
@@ -410,7 +410,7 @@ shinyApp(
       ),
       div(class = "shiny-recorder-header", "Recorded events"),
       div(id = "recorded-events",
-        tableOutput("recordedEvents")
+        tableOutput("recorded_events")
       ),
       enable_tooltip_script()
     )
@@ -426,25 +426,25 @@ shinyApp(
 
     # echo console output from the driver object (in real-time)
     if (!identical(debug, "none")) {
-      nConsoleLines <- 0
+      n_console_lines <- 0
       observe({
         invalidateLater(500)
         logs <- app$getDebugLog(debug)
         n <- nrow(logs)
-        if (n > nConsoleLines) {
-          newLines <- seq.int(nConsoleLines + 1, n)
-          print(logs[newLines, ], short = TRUE)
+        if (n > n_console_lines) {
+          new_lines <- seq.int(n_console_lines + 1, n)
+          print(logs[new_lines, ], short = TRUE)
           cat("\n")
         }
-        nConsoleLines <<- n
+        n_console_lines <<- n
       })
     }
 
-    saveFile <- reactive({
+    save_file <- reactive({
       # file.path(app$getTestsDir(), paste0(input$testname, ".R"))
       tryCatch({
         rprojroot::find_testthat_root_file(
-          paste0("test-st2-", appDirBasename(), ".R"),
+          paste0("test-st2-", app_dir_basename(), ".R"),
           # TODO-barret; Given the application directory or the calling directory? Calling directory will need to be passed in
           path = app$getAppDir()
         )
@@ -455,14 +455,14 @@ shinyApp(
     })
 
     # Number of snapshot or fileDownload events in input$testevents
-    numSnapshots <- reactive({
+    num_snapshots <- reactive({
       snapshots <- vapply(input$testevents, function(event) {
         return(event$type %in% c("snapshot", "outputSnapshot", "fileDownload"))
       }, logical(1))
       sum(snapshots)
     })
 
-    output$recordedEvents <- renderTable(
+    output$recorded_events <- renderTable(
       {
         # Genereate list of lists from all events. Inner lists have 'type' and
         # 'name' fields.
@@ -505,40 +505,40 @@ shinyApp(
       rownames = TRUE
     )
 
-    saveAndExit <- function(delete_test_file = FALSE) {
+    save_and_exit <- function(delete_test_file = FALSE) {
       stopApp({
 
         seed <- as.integer(input$seed)
         if (is.null(seed) || is.na(seed))
           seed <- NULL
 
-        code <- generateTestCode(
+        code <- generate_test_code(
           input$testevents,
           input$testname,
           seed = seed,
-          allowInputNoBinding = input$allowInputNoBinding
+          allow_no_input_binding = input$allow_no_input_binding
         )
 
         if (isTRUE(delete_test_file)) {
-          unlink(saveFile())
+          unlink(save_file())
         }
         add_library_call <- TRUE
-        if (file.exists(saveFile())) {
+        if (file.exists(save_file())) {
           code <- paste0(code, "\n\n")
           # don't double library()
-          add_library_call <- !any(grepl(readLines(saveFile()), "^library\\(shinytest2\\)$"))
+          add_library_call <- !any(grepl(readLines(save_file()), "^library\\(shinytest2\\)$"))
         }
         if (add_library_call) {
           code <- paste0("library(shinytest2)\n", code)
         }
-        cat(code, file = saveFile(), append = TRUE)
-        message("Saved test code to ", saveFile())
+        cat(code, file = save_file(), append = TRUE)
+        message("Saved test code to ", save_file())
         if (isTRUE(input$editSaveFile)) {
-          file.edit(saveFile())
+          file.edit(save_file())
         }
 
         invisible(list(
-          test_file = saveFile(),
+          test_file = save_file(),
           run = input$runScript && (length(dont_run_reasons) == 0),
           dont_run_reasons = dont_run_reasons
         ))
@@ -546,7 +546,7 @@ shinyApp(
     }
 
 
-    presentModal <- function(modalDialog, cancels, oks) {
+    present_modal <- function(modal_dialog, cancels, oks) {
       promise(function(resolve, reject) {
 
         obs <- list()
@@ -573,25 +573,25 @@ shinyApp(
           )
         })
 
-        showModal(modalDialog)
+        showModal(modal_dialog)
       })
     }
 
     observeEvent(input$exit_save, {
 
-      if (numSnapshots() == 0) {
+      if (num_snapshots() == 0) {
         showModal(
-          modalDialog("Must have at least one snapshot to save and exit.")
+          modal_dialog("Must have at least one snapshot to save and exit.")
         )
         return()
       }
 
       p <- promise_resolve(TRUE)
 
-      if (hasInputsWithoutBinding(input$testevents) && !input$allowInputNoBinding) {
+      if (has_inputs_without_binding(input$testevents) && !input$allow_no_input_binding) {
         p <- p %...>% {
-          presentModal(
-            modalDialog(
+          present_modal(
+            modal_dialog(
               tagList(
                 "There are some input events (marked with a *) that do not have a corresponding input binding.",
                 "If you want them to be saved in the test script, press Cancel, then check ",
@@ -610,10 +610,10 @@ shinyApp(
       }
 
       p <- p %...>% {
-        if (file.exists(saveFile())) {
-          presentModal(
-            modalDialog(
-              paste0("Overwrite ", basename(saveFile()), "?"),
+        if (file.exists(save_file())) {
+          present_modal(
+            modal_dialog(
+              paste0("Overwrite ", basename(save_file()), "?"),
               footer = tagList(
                 actionButton("overwrite_cancel",   "Cancel",   `data-dismiss` = "modal"),
                 actionButton("overwrite_append", "Append", `data-dismiss` = "modal"),
@@ -630,7 +630,7 @@ shinyApp(
 
       p <- p %...>% {
         delete_test_file <- identical(., "overwrite_overwrite")
-        saveAndExit(delete_test_file)
+        save_and_exit(delete_test_file)
       }
 
       # When Cancel is pressed, catch the rejection.

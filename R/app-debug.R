@@ -1,17 +1,21 @@
 #' @include shiny-driver.R
-ShinyDriver2$debugLogTypes <- c(
-  "shiny_console",
-  "browser",
-  "shinytest2"
-)
+#' @export
+# # TODO-barret document with debug method?
+debug_log_types <- function() {
+  c(
+    "shiny_console",
+    "browser",
+    "shinytest2"
+  )
+}
 
 
 as_debug <- function(x) {
   x <- unique(x)
-  checkmate::assert_subset(x, c(ShinyDriver2$debugLogTypes, c("all", "none")), empty.ok = FALSE)
+  checkmate::assert_subset(x, c(debug_log_types(), c("all", "none")), empty.ok = FALSE)
 
   if ("all" %in% x) {
-    x <- ShinyDriver2$debugLogTypes
+    x <- debug_log_types()
   } else if ("none" %in% x) {
     x <- character(0)
   }
@@ -74,7 +78,7 @@ filter_log_text <- function(str) {
 #' @param type Log type: `"all"`, `"shiny_console"`, `"browser"`,
 #'   or `"shinytest2"`.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "getDebugLog", function(type = c("all", ShinyDriver2$debugLogTypes)) {
+ShinyDriver2$set("public", "getDebugLog", function(type = c("all", debug_log_types())) {
 
   type <- as_debug(match.arg(type, several.ok = TRUE))
 

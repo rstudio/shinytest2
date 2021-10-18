@@ -12,13 +12,6 @@
 #' @param timeout,timeout_ Amount of time to wait before giving up (milliseconds).
 #' @param wait_ Wait until all reactive updates have completed?
 #' @param name Name of a shiny widget.
-#' @param css CSS selector to find an HTML element.
-#' @param linkText Find `<a>` HTML elements based on exact `innerText`
-#' @param partialLinkText Find `<a>` HTML elements based on partial `innerText`
-#' @param xpath Find HTML elements using XPath expressions.
-#' @param checkInterval How often to check for the condition, in ms.
 #' @importFrom R6 R6Class
 #' @export
-ShinyDriver2 <- R6Class(
-  "ShinyDriver2"
-)
+ShinyDriver2 <- R6Class("ShinyDriver2") # nolint
