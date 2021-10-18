@@ -114,7 +114,7 @@ The snapshot variant will be extracted from the app object directly." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Expect App DOM or text snapshot</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rstudio/shinytest2/blob/master/R/testthat.R'><code>R/testthat.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/rstudio/shinytest2/blob/master/R/app-expect.R'><code>R/app-expect.R</code></a></small>
     <div class="hidden name"><code>expect_snapshot_app_dom.Rd</code></div>
     </div>
 
@@ -126,7 +126,7 @@ The snapshot <code>variant</code> will be extracted from the <code>app</code> ob
 
     <pre class="usage"><span class='fu'>expect_snapshot_app_text</span><span class='op'>(</span><span class='va'>app</span>, <span class='va'>selector</span>, <span class='va'>...</span>, cran <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>expect_snapshot_app_dom</span><span class='op'>(</span><span class='va'>app</span>, <span class='va'>selector</span>, <span class='va'>...</span>, outerHTML <span class='op'>=</span> <span class='cn'>FALSE</span>, cran <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+<span class='fu'>expect_snapshot_app_dom</span><span class='op'>(</span><span class='va'>app</span>, <span class='va'>selector</span>, <span class='va'>...</span>, outer_html <span class='op'>=</span> <span class='cn'>FALSE</span>, cran <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -150,7 +150,7 @@ they are not, because snapshot tests tend to be fragile because they
 often rely on minor details of dependencies.</p></td>
     </tr>
     <tr>
-      <th>outerHTML</th>
+      <th>outer_html</th>
       <td><p>If <code>TRUE</code>, the full DOM structure will be returned (<code>el.outerHTML</code>).
 If <code>FALSE</code>, the full DOM structure of the child elements will be returned (<code>$(el).html()</code>).</p></td>
     </tr>

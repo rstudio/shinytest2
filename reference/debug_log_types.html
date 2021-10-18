@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Expect snapshot of JS script output — expect_snapshot_app_js • shinytest2</title>
+<title>Debug log types — debug_log_types • shinytest2</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Expect snapshot of JS script output — expect_snapshot_app_js" />
-<meta property="og:description" content="This is a building block function that should be called by other functions.
-For example, expect_snapshot_app_dom() and expect_snapshot_app_text() are thin wrappers around this function." />
+<meta property="og:title" content="Debug log types — debug_log_types" />
+<meta property="og:description" content="All supported debug log types that are not &quot;all&quot; or &quot;none&quot;." />
 
 
 
@@ -112,56 +111,17 @@ For example, expect_snapshot_app_dom() and expect_snapshot_app_text() are thin w
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Expect snapshot of JS script output</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rstudio/shinytest2/blob/master/R/app-expect.R'><code>R/app-expect.R</code></a></small>
-    <div class="hidden name"><code>expect_snapshot_app_js.Rd</code></div>
+    <h1>Debug log types</h1>
+    <small class="dont-index">Source: <a href='https://github.com/rstudio/shinytest2/blob/master/R/app-debug.R'><code>R/app-debug.R</code></a></small>
+    <div class="hidden name"><code>debug_log_types.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This is a building block function that should be called by other functions.
-For example, <code><a href='expect_snapshot_app_text.html'>expect_snapshot_app_dom()</a></code> and <code><a href='expect_snapshot_app_text.html'>expect_snapshot_app_text()</a></code> are thin wrappers around this function.</p>
+    <p>All supported debug log types that are not <code>"all"</code> or <code>"none"</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>expect_snapshot_app_js</span><span class='op'>(</span>
-  <span class='va'>app</span>,
-  <span class='va'>script</span>,
-  <span class='va'>...</span>,
-  arguments <span class='op'>=</span> <span class='fu'>list2</span><span class='op'>(</span><span class='op'>)</span>,
-  post_script <span class='op'>=</span> <span class='cn'>NULL</span>,
-  cran <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>debug_log_types</span><span class='op'>(</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>app</th>
-      <td><p>A <a href='ShinyDriver2.html'>ShinyDriver2</a> object.</p></td>
-    </tr>
-    <tr>
-      <th>script</th>
-      <td><p>A string containing the JS script to be executed.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Must be empty. Allows for parameter expansion.</p></td>
-    </tr>
-    <tr>
-      <th>arguments</th>
-      <td><p>A list of arguments to be passed to the script.</p></td>
-    </tr>
-    <tr>
-      <th>post_script</th>
-      <td><p>A function to be called on the result of the script before taking the snapshot.
-<code><a href='expect_snapshot_app_text.html'>expect_snapshot_app_dom()</a></code> and <code><a href='expect_snapshot_app_text.html'>expect_snapshot_app_text()</a></code> both use <code><a href='https://rdrr.io/r/base/unlist.html'>unlist()</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>cran</th>
-      <td><p>Should these expectations be verified on CRAN? By default,
-they are not, because snapshot tests tend to be fragile because they
-often rely on minor details of dependencies.</p></td>
-    </tr>
-    </table>
 
 
   </div>
