@@ -19,12 +19,14 @@ ShinyDriver2$set("public", "executeScript", function(script, ...) {
 #' @param ... Additional arguments to script.
 #' @return Self, invisibly.
 #' @include shiny-driver.R
+# TODO-barret; Should this be a `timeout` parameter? (Not `timeout_) Or should all `timeout` parameters be renamed to `timeout_`?
 ShinyDriver2$set("public", "executeScriptCallback", function(script, ..., timeout_ = 15 * 1000) {
   "!DEBUG ShinyDriver2$executeScriptCallback"
   chromote_execute_script_callback(
     self$chromote_session,
     script,
-    arguments = rlang::list2(...)
+    arguments = rlang::list2(...),
+    timeout = timeout_
   )
   invisible(self)
 })

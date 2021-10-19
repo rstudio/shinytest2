@@ -72,7 +72,6 @@ ShinyDriver2$set("public", "setInputs", function(
 ShinyDriver2$set("private", "queueInputs", function(inputs) {
   checkmate::assert_true(rlang::is_named(inputs))
 
-  # todo-barret; make sure it works
   self$executeScript(
     "shinytest2.inputQueue.add(arguments[0]);",
     inputs
@@ -81,34 +80,18 @@ ShinyDriver2$set("private", "queueInputs", function(inputs) {
 
 #' @include shiny-driver.R
 ShinyDriver2$set("private", "flushInputs", function(wait = TRUE, timeout = 1000) {
-  # TODO-barret; make sure it works
-  # TODO-barret; where does `callback` come from?
-  # TODO-barret; use self$executeScriptCallback
-  self$executeScript(
+  self$executeScriptCallback(
     "
     var wait = arguments[0];
     var timeout = arguments[1];
-    new Promise(function(resolve, reject) {
-      var callback = resolve;
-      shinytest2.outputValuesWaiter.start(timeout);
-      shinytest2.inputQueue.flush();
-      shinytest2.outputValuesWaiter.finish(wait, callback);
-    })
+    var callback = arguments[2];
+    shinytest2.outputValuesWaiter.start(timeout);
+    shinytest2.inputQueue.flush();
+    shinytest2.outputValuesWaiter.finish(wait, callback);
     ",
     wait,
     timeout
   )
-  # # self$blockingUntilCallbackWithExecuteScriptAsync()
-  # self$executeScriptAsync(
-  #   "var wait = arguments[0];
-  #   var timeout = arguments[1];
-  #   var callback = arguments[2];
-  #   shinytest2.outputValuesWaiter.start(timeout);
-  #   shinytest2.inputQueue.flush();
-  #   shinytest2.outputValuesWaiter.finish(wait, callback);",
-  #   wait,
-  #   timeout
-  # )
 })
 
 
