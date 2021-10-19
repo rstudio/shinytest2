@@ -30,32 +30,30 @@ ShinyDriver2$set("public", "takeScreenshot", function(
   delay <- delay %||% 0
   checkmate::assert_number(delay, lower = 0, finite = TRUE, null.ok = TRUE)
 
-  # TODO-barret
   self$logEvent("Taking screenshot")
   path <- tempfile("st2-", fileext = ".png")
 
-  if (delay > 0) {
-    Sys.sleep(delay)
-  }
-
-  # TODO-barret: implement `selector` usage. May have to go back to using `chromote_obj$screenshot()`
-  screenshot_data <- self$chromote_session$Page$captureScreenshot(format = "png")$data
-  writeBin(
-    jsonlite::base64_dec(screenshot_data),
-    path
-  )
-  # TODO-barret: use prior screenshot code below instead of code above. The code below works with selectors and larger regions.
-  # self$chromote_session$screenshot(
-  #   filename = path,
-  #   ...,
-  #   delay = 5,
-  #   selector = selector,
-  #   cliprect = cliprect,
-  #   region = region,
-  #   expand = expand,
-  #   scale = scale,
-  #   wait_ = wait_
+  # # TODO-barret: implement `selector` usage. May have to go back to using `chromote_obj$screenshot()`
+  # if (delay > 0) {
+  #   Sys.sleep(delay)
+  # }
+  # screenshot_data <- self$chromote_session$Page$captureScreenshot(format = "png")$data
+  # writeBin(
+  #   jsonlite::base64_dec(screenshot_data),
+  #   path
   # )
+  # TODO-barret: use prior screenshot code below instead of code above. The code below works with selectors and larger regions.
+  self$chromote_session$screenshot(
+    filename = path,
+    ...,
+    delay = delay,
+    selector = selector,
+    cliprect = cliprect,
+    region = region,
+    expand = expand,
+    scale = scale,
+    wait_ = wait_
+  )
 
   # Fix up the PNG resolution header on windows
   if (is_windows()) {
