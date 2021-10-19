@@ -33,23 +33,21 @@ ShinyDriver2$set("public", "expectSnapshotJS", function(
 })
 
 
-# ShinyDriver2
 
 #' Expect snapshot of JS script output
 #'
 #' This is a building block function that should be called by other functions.
-#' For example, [`expect_snapshot_app_dom()`] and [`expect_snapshot_app_text()`] are thin wrappers around this function.
+#' For example, [`app_expect_html()`] and [`app_expect_text()`] are thin wrappers around this function.
 #'
 #' @param app A [ShinyDriver2] object.
 #' @param script A string containing the JS script to be executed.
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @param arguments A list of arguments to be passed to the script.
 #' @param post_script A function to be called on the result of the script before taking the snapshot.
-#'   [`expect_snapshot_app_dom()`] and [`expect_snapshot_app_text()`] both use [`unlist()`].
+#'   [`app_expect_html()`] and [`app_expect_text()`] both use [`unlist()`].
 #' @inheritParams testthat::expect_snapshot_output
 #' @export
-# TODO-barret; Rename to `app_expect_js()`
-expect_snapshot_app_js <- function(
+app_expect_js <- function(
   app,
   script,
   ...,
@@ -77,12 +75,11 @@ expect_snapshot_app_js <- function(
 #' @param selector A DOM selector to be passed into jQuery
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @inheritParams testthat::expect_snapshot_output
-#' @describeIn expect_snapshot_app_dom This method will extract the text value of all matching elements via `$(el).text()`.
+#' @describeIn app_expect_html This method will extract the text value of all matching elements via `$(el).text()`.
 #'   This method is more robust to internal package change as only the text values will be return.
-#'   When possible, use `expect_snapshot_app_text()` over `expect_snapshot_app_dom()` to allow package authors room to change.
+#'   When possible, use `app_expect_text()` over `app_expect_html()` to allow package authors room to change.
 #' @export
-# TODO-barret; rename to `app_expect_text()`
-expect_snapshot_app_text <- function(
+app_expect_text <- function(
   app,
   selector,
   ...,
@@ -90,7 +87,7 @@ expect_snapshot_app_text <- function(
   cran = FALSE
 ) {
   ellipsis::check_dots_empty()
-  expect_snapshot_app_js(
+  app_expect_js(
     app,
     script = paste0("return $(\"", selector, "\").map(function(i, item) { return $(item).text() }).get();"),
     # variant = variant,
@@ -98,15 +95,14 @@ expect_snapshot_app_text <- function(
     cran = cran
   )
 }
-#' @describeIn expect_snapshot_app_dom This method will extract the relevant DOM structure of all matching elements.
+#' @describeIn app_expect_html This method will extract the relevant DOM structure of all matching elements.
 #'   This method is great for testing the full DOM structure of particular HTML elements.
 #'   It is recommended to only use this method on DOM elements that you have full control over.
 #'   This will help avoid false-positives when underlying packages may update.
 #' @param outer_html If `TRUE`, the full DOM structure will be returned (`el.outerHTML`).
 #'   If `FALSE`, the full DOM structure of the child elements will be returned (`$(el).html()`).
 #' @export
-# TODO-barret; rename to `app_expect_dom()`
-expect_snapshot_app_dom <- function(
+app_expect_html <- function(
   app,
   selector,
   ...,
@@ -121,7 +117,7 @@ expect_snapshot_app_dom <- function(
     } else {
       "$(item).html()"
     }
-  expect_snapshot_app_js(
+  app_expect_js(
     app,
     script = paste0("return $(\"", selector, "\").map(function(i, item) { return ", html_code, "; }).get();"),
     # variant = variant,

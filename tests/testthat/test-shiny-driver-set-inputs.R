@@ -3,7 +3,7 @@ test_that("set kitchen sink of inputs", {
   skip_if_not_installed("shinyWidgets")
   app <- ShinyDriver2$new(test_path("apps/input-widgets"), variant = os_name_and_r_version())
 
-  expect_snapshot_app(app, screenshot = TRUE)
+  app_expect_appshot(app, screenshot = TRUE)
 
   app$setInputs(
     "action" = "click",
@@ -22,11 +22,11 @@ test_that("set kitchen sink of inputs", {
     "slider2" = c(35, 85),
     "text" = "Text entered",
   )
-  expect_snapshot_app(app, screenshot = TRUE)
+  app_expect_appshot(app, screenshot = TRUE)
 
   app$setInputs(tabset = "shinyWidgets")
 
-  expect_snapshot_app(app, screenshot = TRUE)
+  app_expect_appshot(app, screenshot = TRUE)
 
   app$setInputs(
     "bsSwitch" = TRUE,
@@ -41,5 +41,5 @@ test_that("set kitchen sink of inputs", {
   #     "search" = "Test text", # must hit enter to submit
   #     "sliderText" = "Strongly agree",
 
-  expect_snapshot_app(app, screenshot = TRUE)
+  app_expect_appshot(app, screenshot = TRUE)
 })

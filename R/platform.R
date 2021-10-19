@@ -1,20 +1,17 @@
 
 
-is_windows <- function() .Platform$OS.type == "windows"
-is_mac     <- function() Sys.info()[["sysname"]] == "Darwin"
-is_linux   <- function() Sys.info()[["sysname"]] == "Linux"
+is_windows <- cache_fn_val(function() { .Platform$OS.type == "windows" })
+# is_mac     <- function() Sys.info()[["sysname"]] == "Darwin"
+# is_linux   <- function() Sys.info()[["sysname"]] == "Linux"
 
 #' Get the name of the OS
 #'
 #' Returns the name of the current OS. This can be useful for the `suffix` when
-# TODO-barret link to func
-#' running `testApp()`.
+#' running [`test_app()`].
 #'
 #' @export
 #' @describeIn os_name Operating system name
 #' @include utils.R
-# TODO-barret
-# osName
 os_name <- cache_fn_val(function() {
   # Inspriation and reduction of https://github.com/rstudio/renv/blob/ffe5790161fed81226577a31231299e2be2c36ba/R/platform.R
   switch(Sys.info()[["sysname"]],

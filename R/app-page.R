@@ -33,6 +33,8 @@ ShinyDriver2$set("public", "goBack", function() {
 #' @return Self, invisibly.
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "refresh", function() {
+  # TODO-barret; Should this method be included as we can not currently shim the UI.
+  #   If we can add shinytest as an htmldep, then we can use it.
   "!DEBUG refresh"
   chromote_eval(self$chromote_session, "location.reload()")$result$value
   invisible(self)
