@@ -17,12 +17,9 @@ ShinyDriver2$set("public", "takeScreenshot", function(
   filename = NULL,
   ..., # ignored? Send to chromote?
   # TODO-barret; Are all of these params needed? "Less is more"
+  screenshot_args = list(), # TODO-barret; Use this instead of `...` / extra args?
   delay = 0,
   selector = "html",
-  cliprect = NULL,
-  region = c("content", "padding", "border", "margin"),
-  expand = NULL,
-  scale = 1,
   wait_ = TRUE
 ) {
   "!DEBUG sd2_takeScreenshot"
@@ -33,46 +30,17 @@ ShinyDriver2$set("public", "takeScreenshot", function(
   self$logEvent("Taking screenshot")
   path <- tempfile("st2-", fileext = ".png")
 
-  # # TODO-barret: implement `selector` usage. May have to go back to using `chromote_obj$screenshot()`
-  # if (delay > 0) {
-  #   Sys.sleep(delay)
-  # }
-  # screenshot_data <- self$chromote_session$Page$captureScreenshot(format = "png")$data
-  # writeBin(
-  #   jsonlite::base64_dec(screenshot_data),
-  #   path
-  # )
-  # TODO-barret: use prior screenshot code below instead of code above. The code below works with selectors and larger regions.
   self$chromote_session$screenshot(
     filename = path,
     ...,
     delay = delay,
     selector = selector,
-    cliprect = cliprect,
-    region = region,
-    expand = expand,
-    scale = scale,
     wait_ = wait_
   )
 
   # Fix up the PNG resolution header on windows
   if (is_windows()) {
     normalize_png_res_header(path)
-  }
-
-  if (!is.null(list2(...)$id)) {
-    stop("TODO-barret; Remove? This should be able to be implemented using `#ID` selector")
-    png <- png::readPNG(path)
-    element <- self$findElement(paste0("#", id))
-    if (parent) {
-      element <- element$findElement(xpath = "..")
-    }
-    pos <- element$getRect()
-    pos$x2 <- pos$x + pos$width
-    pos$y2 <- pos$y + pos$height
-
-    png <- png[pos$y:pos$y2, pos$x:pos$x2, ]
-    png::writePNG(png, path)
   }
 
   if (is.null(filename)) {
