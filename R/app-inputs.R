@@ -101,10 +101,13 @@ ShinyDriver2$set("private", "flushInputs", function(wait = TRUE, timeout = 1000)
 #' `path1` will be uploaded to file input with name `name1`.
 #' @param values_ If `TRUE`, will return final updated values of download
 #'   control.
-ShinyDriver2$set("public", "uploadFile", function(..., wait_ = TRUE, values_ = TRUE,
-                          timeout_ = 3000) {
+ShinyDriver2$set("public", "uploadFile", function(
+  ...,
+  wait_ = TRUE,
+  values_ = TRUE,
+  timeout_ = 3000
+) {
   # TODO-barret; Implement this; https://github.com/rstudio/shinytest2/issues/20
-  stop("TODO-barret; ShinyDriver2$uploadFile()")
   if (values_ && !wait_) {
     abort(c(
       "values_=TRUE and wait_=FALSE are not compatible.",
@@ -113,14 +116,14 @@ ShinyDriver2$set("public", "uploadFile", function(..., wait_ = TRUE, values_ = T
   }
 
   inputs <- list2(...)
-  if (length(inputs) != 1 || !is_all_named(inputs)) {
+  if (length(inputs) != 1 || !rlang::is_named(inputs)) {
     abort("Can only upload file to exactly one input, and input must be named")
   }
 
   # Wait for two messages by calling `.start(timeout, 2)`. This is because
   # uploading a file will result in two messages before the file is successfully
   # uploaded.
-  self$chromote_session$executeScript(
+  self$executeScript(
     "var timeout = arguments[0];
     shinytest2.outputValuesWaiter.start(timeout, 2);",
     timeout_
@@ -128,9 +131,10 @@ ShinyDriver2$set("public", "uploadFile", function(..., wait_ = TRUE, values_ = T
 
   self$logEvent("Uploading file", input = inputs[[1]])
 
-  self$findWidget(names(inputs)[1])$uploadFile(inputs[[1]])
+  widget <- self$findWidget(names(inputs)[1])
+  widget$uploadFile(inputs[[1]])
 
-  self$chromote_session$executeScriptAsync(
+  self$executeScriptCallback(
     "var wait = arguments[0];
     var callback = arguments[1];
     shinytest2.outputValuesWaiter.finish(wait, callback);",
