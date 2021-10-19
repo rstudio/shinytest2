@@ -16,12 +16,18 @@ test_that("set kitchen sink of inputs", {
     ),
     "num" = 100,
     "radio" = "2",
-    # "file" = null,
+    # "file" = NULL,
     "select" = "2",
     "slider1" = 65,
     "slider2" = c(35, 85),
     "text" = "Text entered",
   )
+  # File upload
+  tmpfile <- "__tmpfile"
+  cat("tmpfile content", file = tmpfile)
+  on.exit({unlink(tmpfile)}, add = TRUE)
+  app$uploadFile(file = test_path("test-shiny-driver-set-inputs.R"))
+
   app_expect_appshot(app, screenshot = TRUE)
 
   app$setInputs(tabset = "shinyWidgets")

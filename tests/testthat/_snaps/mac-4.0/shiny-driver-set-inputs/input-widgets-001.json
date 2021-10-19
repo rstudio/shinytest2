@@ -41,6 +41,7 @@
     "select_out": "[1] \"1\"",
     "slider1_out": "[1] 50",
     "slider2_out": "[1] 25 75",
+    "tabset_out": "[1] \"shiny\"",
     "text_out": "[1] \"Enter text...\""
   },
   "export": {

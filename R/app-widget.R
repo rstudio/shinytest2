@@ -143,30 +143,31 @@ Widget2 <- R6Class( # nolint
       invisible(self)
     },
 
-    #' @description Send specified key presses to control.
-    #' @param keys Keys to send to the widget or the app.
-    # ' See [webdriver::key] for how to specific special keys.
-    sendKeys = function(keys) {
-      "!DEBUG widget2_sendKeys `private$name`"
-      # TODO-barret
-      private$element$sendKeys(keys)
-    },
+    # #' @description Send specified key presses to control.
+    # #' @param keys Keys to send to the widget or the app.
+    # # ' See [webdriver::key] for how to specific special keys.
+    # sendKeys = function(keys) {
+    #   "!DEBUG widget2_sendKeys `private$name`"
+    #   # TODO-barret
+    #   private$element$sendKeys(keys)
+    # },
 
-    #' @description Lists the tab names of a [shiny::tabsetPanel()].
-    #'  It fails for other types of widgets.
-    listTabs = function() {
-      if (private$type != "tabsetPanel") {
-        abort("'listTabs' only works for 'tabsetPanel' Widgets")
-      }
-      tabs <- private$element$findElements("li a")
-      vapply(tabs, function(t) t$getData("value"), "")
-    },
+    # #' @description Lists the tab names of a [shiny::tabsetPanel()].
+    # #'  It fails for other types of widgets.
+    # listTabs = function() {
+    #   if (private$type != "tabsetPanel") {
+    #     abort("'listTabs' only works for 'tabsetPanel' Widgets")
+    #   }
+    #   tabs <- private$element$findElements("li a")
+    #   vapply(tabs, function(t) t$getData("value"), "")
+    # },
 
     #' @description Upload a file to a [shiny::fileInput()].
     #'  It fails for other types of widgets.
     #' @param filename Path to file to upload
     uploadFile = function(filename) {
-      private$element$uploadFile(filename = filename)
+      self$chromote_session$DOM$setFileInputFiles(files = list(fs::path_abs(filename)), nodeId = private$nodeId)
+      # private$element$uploadFile(filename = filename)
     }
   )
 )
