@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get the name of the OS — os_name • shinytest2</title>
+<title>Expect a shinytest2 snapshot — app_expect_appshot • shinytest2</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Get the name of the OS — os_name" />
-<meta property="og:description" content="Returns the name of the current OS. This can be useful for the suffix when
-running test_app()." />
+<meta property="og:title" content="Expect a shinytest2 snapshot — app_expect_appshot" />
+<meta property="og:description" content="Expect a shinytest2 snapshot" />
 
 
 
@@ -112,31 +111,55 @@ running test_app()." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get the name of the OS</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rstudio/shinytest2/blob/master/R/platform.R'><code>R/platform.R</code></a></small>
-    <div class="hidden name"><code>os_name.Rd</code></div>
+    <h1>Expect a shinytest2 snapshot</h1>
+    <small class="dont-index">Source: <a href='https://github.com/rstudio/shinytest2/blob/master/R/app-appshot.R'><code>R/app-appshot.R</code></a></small>
+    <div class="hidden name"><code>app_expect_appshot.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Returns the name of the current OS. This can be useful for the <code>suffix</code> when
-running <code><a href='test_app.html'>test_app()</a></code>.</p>
+    <p>Expect a shinytest2 snapshot</p>
     </div>
 
-    <pre class="usage"><span class='fu'>os_name</span><span class='op'>(</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>app_expect_appshot</span><span class='op'>(</span>
+  <span class='va'>app</span>,
+  <span class='va'>...</span>,
+  name <span class='op'>=</span> <span class='cn'>NULL</span>,
+  items <span class='op'>=</span> <span class='cn'>NULL</span>,
+  screenshot <span class='op'>=</span> <span class='cn'>NULL</span>,
+  cran <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
-<span class='fu'>r_version</span><span class='op'>(</span><span class='op'>)</span>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>app</th>
+      <td><p>A <a href='ShinyDriver2.html'>ShinyDriver2</a> object.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Must be empty. Allows for parameter expansion.</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>The prefix name to be used for the snapshot. By default, this uses the name supplied to <code>app</code> on initialization.</p></td>
+    </tr>
+    <tr>
+      <th>items</th>
+      <td><p>Elements to only be included in the snapshot. If supplied, can contain <code>inputs</code>, <code>output</code>, and <code>export</code>. Each value of <code>items</code> can either be <code>TRUE</code> (for all values) or a character list of names to use.</p></td>
+    </tr>
+    <tr>
+      <th>screenshot</th>
+      <td><p>A boolean indicating whether to take a screenshot.</p></td>
+    </tr>
+    <tr>
+      <th>cran</th>
+      <td><p>Should these expectations be verified on CRAN? By default,
+they are not, because snapshot tests tend to be fragile because they
+often rely on minor details of dependencies.</p></td>
+    </tr>
+    </table>
 
-<span class='fu'>os_name_and_r_version</span><span class='op'>(</span><span class='op'>)</span></pre>
-
-
-    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
-
-    
-<ul>
-<li><p><code>os_name</code>: Operating system name</p></li>
-<li><p><code>r_version</code>: Return the Major and Minor version of the OS. No Patch version</p></li>
-<li><p><code>os_name_and_r_version</code>: Return the <code>os_name()</code> and <code>r_version()</code> join by a <code><a href='https://rdrr.io/r/base/Arithmetic.html'>-</a></code></p></li>
-</ul>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

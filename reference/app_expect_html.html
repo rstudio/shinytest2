@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get the name of the OS — os_name • shinytest2</title>
+<title>Expect App DOM or text snapshot — app_expect_text • shinytest2</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,10 @@
 
 
 
-<meta property="og:title" content="Get the name of the OS — os_name" />
-<meta property="og:description" content="Returns the name of the current OS. This can be useful for the suffix when
-running test_app()." />
+<meta property="og:title" content="Expect App DOM or text snapshot — app_expect_text" />
+<meta property="og:description" content="These methods will find all matching elements and extract their respective values.
+These values will then be stored as a snapshot.
+The snapshot variant will be extracted from the app object directly." />
 
 
 
@@ -112,30 +113,60 @@ running test_app()." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get the name of the OS</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rstudio/shinytest2/blob/master/R/platform.R'><code>R/platform.R</code></a></small>
-    <div class="hidden name"><code>os_name.Rd</code></div>
+    <h1>Expect App DOM or text snapshot</h1>
+    <small class="dont-index">Source: <a href='https://github.com/rstudio/shinytest2/blob/master/R/app-expect.R'><code>R/app-expect.R</code></a></small>
+    <div class="hidden name"><code>app_expect_html.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Returns the name of the current OS. This can be useful for the <code>suffix</code> when
-running <code><a href='test_app.html'>test_app()</a></code>.</p>
+    <p>These methods will find all matching elements and extract their respective values.
+These values will then be stored as a snapshot.
+The snapshot <code>variant</code> will be extracted from the <code>app</code> object directly.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>os_name</span><span class='op'>(</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>app_expect_text</span><span class='op'>(</span><span class='va'>app</span>, <span class='va'>selector</span>, <span class='va'>...</span>, cran <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>r_version</span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'>app_expect_html</span><span class='op'>(</span><span class='va'>app</span>, <span class='va'>selector</span>, <span class='va'>...</span>, outer_html <span class='op'>=</span> <span class='cn'>FALSE</span>, cran <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
-<span class='fu'>os_name_and_r_version</span><span class='op'>(</span><span class='op'>)</span></pre>
-
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>app</th>
+      <td><p>A <a href='ShinyDriver2.html'>ShinyDriver2</a> object.</p></td>
+    </tr>
+    <tr>
+      <th>selector</th>
+      <td><p>A DOM selector to be passed into jQuery</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Must be empty. Allows for parameter expansion.</p></td>
+    </tr>
+    <tr>
+      <th>cran</th>
+      <td><p>Should these expectations be verified on CRAN? By default,
+they are not, because snapshot tests tend to be fragile because they
+often rely on minor details of dependencies.</p></td>
+    </tr>
+    <tr>
+      <th>outer_html</th>
+      <td><p>If <code>TRUE</code>, the full DOM structure will be returned (<code>el.outerHTML</code>).
+If <code>FALSE</code>, the full DOM structure of the child elements will be returned (<code>$(el).html()</code>).</p></td>
+    </tr>
+    </table>
 
     <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
 
     
 <ul>
-<li><p><code>os_name</code>: Operating system name</p></li>
-<li><p><code>r_version</code>: Return the Major and Minor version of the OS. No Patch version</p></li>
-<li><p><code>os_name_and_r_version</code>: Return the <code>os_name()</code> and <code>r_version()</code> join by a <code><a href='https://rdrr.io/r/base/Arithmetic.html'>-</a></code></p></li>
+<li><p><code>app_expect_text</code>: This method will extract the text value of all matching elements via <code>$(el).text()</code>.
+This method is more robust to internal package change as only the text values will be return.
+When possible, use <code>app_expect_text()</code> over <code>app_expect_html()</code> to allow package authors room to change.</p></li>
+<li><p><code>app_expect_html</code>: This method will extract the relevant DOM structure of all matching elements.
+This method is great for testing the full DOM structure of particular HTML elements.
+It is recommended to only use this method on DOM elements that you have full control over.
+This will help avoid false-positives when underlying packages may update.</p></li>
 </ul>
 
   </div>
