@@ -53,5 +53,6 @@ ShinyDriver2$set("private", "finalize", function() {
     unlink(private$shinyProcess$get_error_file())
   }
 
-  # TODO-barret; Remove temp dir when garbage collected?
+  # TODO-barret-question; Remove temp dir when garbage collected?
+  # TODO-barret-ansewr; REmove the files once they have been compared. No need for a temp directory in the first place
 })

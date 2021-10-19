@@ -13,6 +13,9 @@ ShinyDriver2$set("public", "findElement", function(css = NULL
   # private$web$findElement(css, linkText, partialLinkText, xpath)
   chromote_find_element(self$chromote_session, css)
 })
+# app_find_element <- function(app, css) {
+#   chromote::chromote_find_element(self$chromote_session, css)
+# }
 
 #' @description
 #' Find all elements matching CSS selection.

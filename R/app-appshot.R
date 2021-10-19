@@ -49,7 +49,6 @@ testthat_expect_snapshot_file <- function(
 #' @param screenshot A boolean indicating whether to take a screenshot.
 #' @inheritParams testthat::expect_snapshot_file
 #' @export
-# TODO-barret rename to `app_expect_appshot
 app_expect_appshot <- function(
   app,
   ...,

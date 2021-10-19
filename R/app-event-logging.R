@@ -8,7 +8,7 @@ ShinyDriver2$set("private", "eventLog", list())
 ShinyDriver2$set("public", "logEvent", function(event, ...) {
 
   content <- list(time = Sys.time(), event = event, ...)
-  stopifnot(is_all_named(content))
+  stopifnot(rlang::is_named(content))
 
   private$eventLog[[length(private$eventLog) + 1]] <- content
   invisible(self)

@@ -50,8 +50,9 @@ ShinyDriver2$set("public", "expectSnapshotJS", function(
 app_expect_js <- function(
   app,
   script,
-  ...,
-  arguments = list2(), # TODO-barret; or  make this the `...`?
+  ..., # Ignored
+  arguments = list2(), # TODO-barret-question; or  make this the `...`?
+  # TODO-barret-answer; Use `arguments` be consistent throughout the package
   post_script = NULL,
   # variant = NULL,
   cran = FALSE

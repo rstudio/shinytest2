@@ -86,7 +86,8 @@ chromote_eval <- function(
 chromote_execute_script <- function(
   chromote_session,
   script,
-  ...,
+  # TODO-barret-answer; `...` should be empty. Use `eval_args()` instead.
+  ..., # should be empty
   awaitPromise = wait_, # nolint
   arguments = list(),
   timeout = 10 * 1000,
