@@ -1,4 +1,4 @@
-# TODO-barret; should these methods be included? Or should the methods be moved into chromote?
+# TODO-barret; should Element methods be included? Or should the main logic be moved into chromote?
 
 #' @description
 #' Find an HTML element on the page using a CSS selector. If multiple elements are matched, only the first is returned.

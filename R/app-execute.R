@@ -4,7 +4,6 @@
 #' @return Result of the script.
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "executeScript", function(script, ...) {
-  # TODO-barret; chromote$Runtime$evaluate() is blocking for the JS _tick_
   # TODO-barret; incorporate `wait_` parameters to not wait for the _tick_ to finish
   "!DEBUG ShinyDriver2$executeScript"
   chromote_execute_script(

@@ -1,4 +1,4 @@
-# # TODO-barret document with debug method?
+# # TODO-barret document with debug method? Should this be exported since it is used in public function parameters?
 #' Debug log types
 #'
 #' All supported debug log types that are not `"all"` or `"none"`.
