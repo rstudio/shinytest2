@@ -5,7 +5,7 @@
 \title{Have chromote wait for a js condition to be met}
 \usage{
 chromote_wait_for_condition(
-  chromote,
+  chromote_session,
   condition_js,
   ...,
   timeout = 15 * 1000,

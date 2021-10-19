@@ -1,4 +1,7 @@
 #' @description Execute JS code
+#'
+#' This function will block until the code has finished executing its _tick_ in the browser.
+#' If a `Promise` is returned from the script, `$executeScript()` will wait for the promise to resolve.
 #' @param script JS to execute. If a JS Promise is returned, `$executeScript()` will wait for the promise to resolve before returning.
 #' @param ... Additional arguments to script.
 #' @return Result of the script.
