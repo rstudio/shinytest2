@@ -174,11 +174,11 @@ chromote_execute_script_callback <- function( # nolint
 
 #' Have chromote wait for a js condition to be met
 #'
-#' @return `TRUE` if expression evaluates to `TRUE` without error, before
-#'   timeout. Otherwise returns `FALSE`.
 #' @param condition_js A piece of JavaScript code that should eventually evaluate to a [`true`thy value](https://developer.mozilla.org/en-US/docs/Glossary/Truthy).
 #' @param interval How long (milliseconds) Chrome should wait between checking `condition_js`
-#' @describeIn chromote_execute_script Waits for `condition_js` to return a `true`thy value. In this con
+#' @return `TRUE` if expression evaluates to `TRUE` without error, before
+#'   timeout. Otherwise returns `FALSE`.
+#' @noRd
 chromote_wait_for_condition <- function(chromote_session, condition_js, ..., timeout = 15 * 1000, interval = 100, wait_ = TRUE) {
   assert_wait_is_true(wait_, "chromote_wait_for_condition", NULL)
   ellipsis::check_dots_empty()
