@@ -200,3 +200,9 @@ inform_where <- function(message) {
 
   rlang::inform(paste0(message, "\n", bt_string))
 }
+
+
+# Sort items using the C locale, which is used with `method = "radix"`
+sort_c <- function(x) {
+  sort(x, method = "radix")
+}

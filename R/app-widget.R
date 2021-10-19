@@ -323,8 +323,8 @@ ShinyDriver2$set("public", "listWidgets", function() {
   "!DEBUG ShinyDriver2$listWidgets"
   res <- chromote_eval(self$chromote_session, "shinytest2.listWidgets()")$result$value
 
-  res$input <- unlist(res$input)
-  res$output <- unlist(res$output)
+  res$input <- sort_c(unlist(res$input))
+  res$output <- sort_c(unlist(res$output))
   res
 })
 
