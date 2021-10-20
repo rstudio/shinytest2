@@ -25,21 +25,17 @@ ShinyDriver2$set("public", "isRmd", function() {
   is_rmd(private$path)
 })
 
-#' @description Deprecated.
-#' @include shiny-driver.R
-ShinyDriver2$set("public", "getRelativePathToApp", function() {
-  # TODO-barret; remove this?
-  abort("app$getRelativePathToApp() is no longer used")
-})
+# #' @description Deprecated.
+# #' @include shiny-driver.R
+# ShinyDriver2$set("public", "getRelativePathToApp", function() {
+#   abort("app$getRelativePathToApp() is no longer used")
+# })
 
-#' @description Deprecated. Directory where tests are located
-#' @include shiny-driver.R
-ShinyDriver2$set("public", "getTestsDir", function() {
-  # TODO-barret; remove this?
-  abort("app$getTestsDir() is not longer used")
+# #' @description Deprecated. Directory where tests are located
+# #' @include shiny-driver.R
+# ShinyDriver2$set("public", "getTestsDir", function() {
+#   abort("app$getTestsDir() is not longer used")
 
-  # From the 'app' to the 'tests/testthat' directory
-  # TODO-barret; Or should this be relative to the calling directory?
-  rprojroot::find_testthat_root_file(path = self$getAppDir())
-
-})
+#   # From the 'app' to the 'tests/testthat' directory
+#   rprojroot::find_testthat_root_file(path = self$getAppDir())
+# })

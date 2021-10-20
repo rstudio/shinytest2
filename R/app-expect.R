@@ -50,8 +50,9 @@ ShinyDriver2$set("public", "expectSnapshotJS", function(
 app_expect_js <- function(
   app,
   script,
-  ...,
-  arguments = list2(), # TODO-barret; or  make this the `...`?
+  ..., # Ignored
+  arguments = list2(), # TODO-barret-question; or  make this the `...`?
+  # TODO-barret-answer; Use `arguments` be consistent throughout the package
   post_script = NULL,
   # variant = NULL,
   cran = FALSE
@@ -75,7 +76,7 @@ app_expect_js <- function(
 #' @param selector A DOM selector to be passed into jQuery
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @inheritParams testthat::expect_snapshot_output
-#' @describeIn app_expect_html This method will extract the text value of all matching elements via `$(el).text()`.
+#' @describeIn app_expect_html This method will extract the text value of all matching elements via `tag.textContent`.
 #'   This method is more robust to internal package change as only the text values will be return.
 #'   When possible, use `app_expect_text()` over `app_expect_html()` to allow package authors room to change.
 #' @export
@@ -89,7 +90,7 @@ app_expect_text <- function(
   ellipsis::check_dots_empty()
   app_expect_js(
     app,
-    script = paste0("return $(\"", selector, "\").map(function(i, item) { return $(item).text() }).get();"),
+    script = paste0("return Array.from(document.querySelectorAll(\"", selector, "\")).map(function(item, i) { return item.textContent; });"),
     # variant = variant,
     post_script = unlist,
     cran = cran
@@ -99,8 +100,8 @@ app_expect_text <- function(
 #'   This method is great for testing the full DOM structure of particular HTML elements.
 #'   It is recommended to only use this method on DOM elements that you have full control over.
 #'   This will help avoid false-positives when underlying packages may update.
-#' @param outer_html If `TRUE`, the full DOM structure will be returned (`el.outerHTML`).
-#'   If `FALSE`, the full DOM structure of the child elements will be returned (`$(el).html()`).
+#' @param outer_html If `TRUE`, the full DOM structure will be returned (`tag.outerHTML`).
+#'   If `FALSE`, the full DOM structure of the child elements will be returned (`tag.innerHTML`).
 #' @export
 app_expect_html <- function(
   app,
@@ -115,11 +116,11 @@ app_expect_html <- function(
     if (isTRUE(outer_html)) {
       "item.outerHTML"
     } else {
-      "$(item).html()"
+      "item.innerHTML"
     }
   app_expect_js(
     app,
-    script = paste0("return $(\"", selector, "\").map(function(i, item) { return ", html_code, "; }).get();"),
+    script = paste0("return Array.from(document.querySelectorAll(\"", selector, "\")).map(function(item, i) { return ", html_code, "; });"),
     # variant = variant,
     post_script = unlist,
     cran = cran

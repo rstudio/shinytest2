@@ -19,8 +19,6 @@ with a live app.
 \item \href{#method-getAppDir}{\code{ShinyDriver2$getAppDir()}}
 \item \href{#method-getAppFilename}{\code{ShinyDriver2$getAppFilename()}}
 \item \href{#method-isRmd}{\code{ShinyDriver2$isRmd()}}
-\item \href{#method-getRelativePathToApp}{\code{ShinyDriver2$getRelativePathToApp()}}
-\item \href{#method-getTestsDir}{\code{ShinyDriver2$getTestsDir()}}
 \item \href{#method-findElement}{\code{ShinyDriver2$findElement()}}
 \item \href{#method-findElements}{\code{ShinyDriver2$findElements()}}
 \item \href{#method-logEvent}{\code{ShinyDriver2$logEvent()}}
@@ -33,11 +31,6 @@ with a live app.
 \item \href{#method-new}{\code{ShinyDriver2$new()}}
 \item \href{#method-setInputs}{\code{ShinyDriver2$setInputs()}}
 \item \href{#method-uploadFile}{\code{ShinyDriver2$uploadFile()}}
-\item \href{#method-getUrl}{\code{ShinyDriver2$getUrl()}}
-\item \href{#method-getTitle}{\code{ShinyDriver2$getTitle()}}
-\item \href{#method-getSource}{\code{ShinyDriver2$getSource()}}
-\item \href{#method-goBack}{\code{ShinyDriver2$goBack()}}
-\item \href{#method-refresh}{\code{ShinyDriver2$refresh()}}
 \item \href{#method-takeScreenshot}{\code{ShinyDriver2$takeScreenshot()}}
 \item \href{#method-snapshotDownload}{\code{ShinyDriver2$snapshotDownload()}}
 \item \href{#method-stop}{\code{ShinyDriver2$stop()}}
@@ -48,7 +41,6 @@ with a live app.
 \item \href{#method-getValue}{\code{ShinyDriver2$getValue()}}
 \item \href{#method-setValue}{\code{ShinyDriver2$setValue()}}
 \item \href{#method-click}{\code{ShinyDriver2$click()}}
-\item \href{#method-sendKeys}{\code{ShinyDriver2$sendKeys()}}
 \item \href{#method-listWidgets}{\code{ShinyDriver2$listWidgets()}}
 \item \href{#method-checkUniqueWidgetNames}{\code{ShinyDriver2$checkUniqueWidgetNames()}}
 \item \href{#method-setWindowSize}{\code{ShinyDriver2$setWindowSize()}}
@@ -130,24 +122,6 @@ with a live app.
 \subsection{Method \code{isRmd()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$isRmd()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getRelativePathToApp"></a>}}
-\if{latex}{\out{\hypertarget{method-getRelativePathToApp}{}}}
-\subsection{Method \code{getRelativePathToApp()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getRelativePathToApp()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getTestsDir"></a>}}
-\if{latex}{\out{\hypertarget{method-getTestsDir}{}}}
-\subsection{Method \code{getTestsDir()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getTestsDir()}\if{html}{\out{</div>}}
 }
 
 }
@@ -316,51 +290,6 @@ input and output widget.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getUrl"></a>}}
-\if{latex}{\out{\hypertarget{method-getUrl}{}}}
-\subsection{Method \code{getUrl()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getUrl()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getTitle"></a>}}
-\if{latex}{\out{\hypertarget{method-getTitle}{}}}
-\subsection{Method \code{getTitle()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getTitle()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getSource"></a>}}
-\if{latex}{\out{\hypertarget{method-getSource}{}}}
-\subsection{Method \code{getSource()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getSource()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-goBack"></a>}}
-\if{latex}{\out{\hypertarget{method-goBack}{}}}
-\subsection{Method \code{goBack()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$goBack()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-refresh"></a>}}
-\if{latex}{\out{\hypertarget{method-refresh}{}}}
-\subsection{Method \code{refresh()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$refresh()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-takeScreenshot"></a>}}
 \if{latex}{\out{\hypertarget{method-takeScreenshot}{}}}
 \subsection{Method \code{takeScreenshot()}}{
@@ -368,12 +297,9 @@ input and output widget.}
 \if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$takeScreenshot(
   filename = NULL,
   ...,
+  screenshot_args = list(),
   delay = 0,
   selector = "html",
-  cliprect = NULL,
-  region = c("content", "padding", "border", "margin"),
-  expand = NULL,
-  scale = 1,
   wait_ = TRUE
 )}\if{html}{\out{</div>}}
 }
@@ -524,22 +450,6 @@ input and output widget.}
 \item{\code{iotype}}{Type of the Shiny widget. Usually shinytest2 finds the widgets
 by their name, so this is only needed if you use the same name for an
 input and output widget.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-sendKeys"></a>}}
-\if{latex}{\out{\hypertarget{method-sendKeys}{}}}
-\subsection{Method \code{sendKeys()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$sendKeys(name, keys)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{name}}{Name of a shiny widget.}
 }
 \if{html}{\out{</div>}}
 }

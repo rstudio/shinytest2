@@ -13,7 +13,20 @@
       "2015-01-01",
       "2015-02-20"
     ],
-    "file": null,
+    "file": {
+      "name": [
+        "test-shiny-driver-set-inputs.R"
+      ],
+      "size": [
+        1318
+      ],
+      "type": [
+        ""
+      ],
+      "datapath": [
+        "0.R"
+      ]
+    },
     "knob": 0,
     "matSwitch": false,
     "num": 100,
@@ -38,12 +51,13 @@
     "checkbox_out": "[1] TRUE",
     "date_out": "[1] \"2015-01-01\"",
     "dates_out": "[1] \"2015-01-01\" \"2015-02-20\"",
-    "file_out": "NULL",
+    "file_out": "                            name size type      datapath\n1 test-shiny-driver-set-inputs.R 1318      <tempdir>/0.R",
     "num_out": "[1] 100",
     "radio_out": "[1] \"2\"",
     "select_out": "[1] \"2\"",
     "slider1_out": "[1] 65",
     "slider2_out": "[1] 35 85",
+    "tabset_out": "[1] \"shiny\"",
     "text_out": "[1] \"Text entered\""
   },
   "export": {

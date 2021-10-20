@@ -1,4 +1,5 @@
 # Combined from: https://github.com/rstudio/shinycoreci-apps/blob/3951d87bd91f27928a4cdf439c113590ce804508/apps/081-widgets-gallery/
+library(shiny)
 
 widget_ids <- NULL
 widget <- function(name, widget_object, title = NULL) {
@@ -11,7 +12,9 @@ widget <- function(name, widget_object, title = NULL) {
       widget_object,
       hr(),
       p("Current Value:", style = "color:#888888;"),
-      verbatimTextOutput(paste0(name, "_out"))
+      lapply(name, function(name_val) {
+        verbatimTextOutput(paste0(name_val, "_out")) # nolint
+      })
     )
   )
 }
@@ -149,7 +152,7 @@ shiny_widgets <- tabPanel(
       choices = c("Choice A", "Choice B", " Choice C", "Choice D"),
       justified = TRUE, status = "primary"
     )),
-    widget("search", shinyWidgets::searchInput(
+    widget(c("search", "search_text"), shinyWidgets::searchInput(
       inputId = "search",
       label = "Enter your search (hit `Enter` when ready):",
       placeholder = "This is a placeholder",
@@ -173,8 +176,10 @@ ui <- fluidPage(
     id = "tabset",
     widget_gallery,
     shiny_widgets
-  )
+  ),
+  h3("tabset:"), verbatimTextOutput("tabset_out"),
 )
+widget_ids <- c(widget_ids, "tabset")
 
 
 

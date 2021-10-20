@@ -11,7 +11,9 @@ ShinyDriver2$set("public", "expectUpdate", function(
   output, ..., timeout = 3000,
   iotype = c("auto", "input", "output")
 ) {
-  # TODO-barret; Should this method be removed? https://github.com/rstudio/shinytest2/issues/18
+  # TODO-barret-question; Should this method be removed? https://github.com/rstudio/shinytest2/issues/18
+  # TODO-barret-answer; Remove it!
+
   stop("not implemented")
   ShinyDriver2$expectUpdate(output, ..., timeout = timeout,
                     iotype = match.arg(iotype))

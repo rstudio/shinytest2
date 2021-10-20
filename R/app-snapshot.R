@@ -56,8 +56,6 @@ sd2_snapshot <- function(
   # Convert to text, then replace base64-encoded images with hashes of them.
   original_content <- content <- raw_to_utf8(req$content)
   content <- hash_snapshot_image_data(content)
-  # # TODO-barret; remove sort_second_level_keys
-  # content <- sort_second_level_keys(content)
   content <- jsonlite::prettify(content, indent = 2)
   full_json_path <- fs::path(temp_save_dir, json_name)
   create_snapshot_dir(temp_save_dir, private$snapshotCount)
@@ -148,17 +146,6 @@ ShinyDriver2$set("private", "getTestSnapshotUrl", function(
   )
 })
 
-
-sort_second_level_keys <- function(x) {
-  lapply(x, function(items) {
-    if (length(items) == 0) return(items)
-
-    # get names and sort keys for consistent ordering
-    items_names <- names(items)
-    items_names <- sort(items_names)
-    items[items_names]
-  })
-}
 
 # Given a JSON string, find any strings that represent base64-encoded images
 # and replace them with a hash of the value. The image is base64-decoded and

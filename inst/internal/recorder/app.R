@@ -445,7 +445,8 @@ shinyApp(
       tryCatch({
         rprojroot::find_testthat_root_file(
           paste0("test-st2-", app_dir_basename(), ".R"),
-          # TODO-barret; Given the application directory or the calling directory? Calling directory will need to be passed in
+          # TODO-barret-question; Given the application directory or the calling directory? Calling directory will need to be passed in;
+          # TODO-barret-answer; Record the test next to the app directory.
           path = app$getAppDir()
         )
       }, error = function(e) {

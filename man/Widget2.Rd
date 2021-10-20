@@ -21,8 +21,6 @@ methods for finer grained interaction.
 \item \href{#method-getValue}{\code{Widget2$getValue()}}
 \item \href{#method-setValue}{\code{Widget2$setValue()}}
 \item \href{#method-click}{\code{Widget2$click()}}
-\item \href{#method-sendKeys}{\code{Widget2$sendKeys()}}
-\item \href{#method-listTabs}{\code{Widget2$listTabs()}}
 \item \href{#method-uploadFile}{\code{Widget2$uploadFile()}}
 \item \href{#method-clone}{\code{Widget2$clone()}}
 }
@@ -168,34 +166,6 @@ Sends a jQuery click to the element.
 \subsection{Returns}{
 self, invisibly.
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-sendKeys"></a>}}
-\if{latex}{\out{\hypertarget{method-sendKeys}{}}}
-\subsection{Method \code{sendKeys()}}{
-Send specified key presses to control.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Widget2$sendKeys(keys)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{keys}}{Keys to send to the widget or the app.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-listTabs"></a>}}
-\if{latex}{\out{\hypertarget{method-listTabs}{}}}
-\subsection{Method \code{listTabs()}}{
-Lists the tab names of a \code{\link[shiny:tabsetPanel]{shiny::tabsetPanel()}}.
-It fails for other types of widgets.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Widget2$listTabs()}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-uploadFile"></a>}}

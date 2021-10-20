@@ -29,10 +29,6 @@ on_ci <- function() {
  isTRUE(as.logical(Sys.getenv("CI")))
 }
 
-is_all_named <- function(x) {
-  length(names(x)) == length(x) && all(names(x) != "")
-}
-
 raw_to_utf8 <- function(data) {
   res <- rawToChar(data)
   Encoding(res) <- "UTF-8"
@@ -199,4 +195,14 @@ inform_where <- function(message) {
   bt_string <- paste0(format(bt), collapse = "\n")
 
   rlang::inform(paste0(message, "\n", bt_string))
+}
+
+
+# Sort items using the C locale, which is used with `method = "radix"`
+sort_c <- function(x) {
+  if (length(x)) {
+    sort(x, method = "radix")
+  } else {
+    x
+  }
 }

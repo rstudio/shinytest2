@@ -20,8 +20,8 @@ app_expect_html(app, selector, ..., outer_html = FALSE, cran = FALSE)
 they are not, because snapshot tests tend to be fragile because they
 often rely on minor details of dependencies.}
 
-\item{outer_html}{If \code{TRUE}, the full DOM structure will be returned (\code{el.outerHTML}).
-If \code{FALSE}, the full DOM structure of the child elements will be returned (\verb{$(el).html()}).}
+\item{outer_html}{If \code{TRUE}, the full DOM structure will be returned (\code{tag.outerHTML}).
+If \code{FALSE}, the full DOM structure of the child elements will be returned (\code{tag.innerHTML}).}
 }
 \description{
 These methods will find all matching elements and extract their respective values.
@@ -30,7 +30,7 @@ The snapshot \code{variant} will be extracted from the \code{app} object directl
 }
 \section{Functions}{
 \itemize{
-\item \code{app_expect_text}: This method will extract the text value of all matching elements via \verb{$(el).text()}.
+\item \code{app_expect_text}: This method will extract the text value of all matching elements via \code{tag.textContent}.
 This method is more robust to internal package change as only the text values will be return.
 When possible, use \code{app_expect_text()} over \code{app_expect_html()} to allow package authors room to change.
 

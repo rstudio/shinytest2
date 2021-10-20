@@ -67,7 +67,6 @@ Collate:
     'app-get-all-values.R'
     'app-initialize.R'
     'app-inputs.R'
-    'app-page.R'
     'app-screenshot.R'
     'app-snapshot.R'
     'app-start.R'

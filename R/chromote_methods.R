@@ -9,7 +9,7 @@ assert_chromote_session <- function(chromote_session) {
 #   node$nodeId
 # }
 
-# TODO-barret; implement wait_ logic using all promises and `chromote_session$waitFor(p)`
+# TODO-barret-actual; implement wait_ logic using all promises and `chromote_session$waitFor(p)`
 chromote_eval <- function(
   chromote_session,
   js,
@@ -86,7 +86,8 @@ chromote_eval <- function(
 chromote_execute_script <- function(
   chromote_session,
   script,
-  ...,
+  # TODO-barret-answer; `...` should be empty. Use `eval_args()` instead.
+  ..., # should be empty
   awaitPromise = wait_, # nolint
   arguments = list(),
   timeout = 10 * 1000,
