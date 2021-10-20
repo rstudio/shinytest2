@@ -1,4 +1,5 @@
 # Combined from: https://github.com/rstudio/shinycoreci-apps/blob/3951d87bd91f27928a4cdf439c113590ce804508/apps/081-widgets-gallery/
+library(shiny)
 
 widget_ids <- NULL
 widget <- function(name, widget_object, title = NULL) {
