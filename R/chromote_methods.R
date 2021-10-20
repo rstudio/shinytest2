@@ -218,7 +218,7 @@ chromote_wait_for_condition();"
     wait_ = wait_
   )
 
-  if (identical(ret$result$subtype, "error")) {
+  if (identical(ret$result$subtype, "error") || length(ret$exceptionDetails) > 0) {
     return(FALSE)
   }
 
