@@ -28,9 +28,9 @@ test_that("basic website example works", {
 
 # # Eventual ideal code:
 # test_that("prefix works", {
-#   st2_test_app("apps/basic") %>%
-#     st2_set_inputs(name = "Hadley") %>%
-#     st2_set_inputs(greet = "click") %>%
-#     st2_expect_snapshot() %>%
-#     st2_expect_snapshot(items = list(output = "greeting"))
+#   testing_app("apps/basic") %>%
+#     app_set_inputs(name = "Hadley") %>%
+#     app_set_inputs(greet = "click") %>%
+#     app_expect_appshot() %>%
+#     app_expect_appshot(items = list(output = "greeting"))
 # })

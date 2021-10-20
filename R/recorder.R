@@ -89,7 +89,7 @@ record_test <- function(
     res <- shiny::runApp(system.file("internal", "recorder", package = "shinytest2"))
   )
 
-  test_app_ <- function() {
+  test_file_ <- function() {
     testthat::test_file(path = res$test_file)
   }
 
@@ -99,7 +99,7 @@ record_test <- function(
   } else if (isTRUE(res$run)) {
 
     # Run the test script
-    test_app_()
+    test_file_()
 
   } else {
     if (length(res$dont_run_reasons) > 0) {
@@ -108,7 +108,7 @@ record_test <- function(
 
     rlang::inform(sprintf(
       'After making changes to the test script, run it with:\n  testthat::test_file("%s")',
-      test_app_()
+      test_file_()
     ))
   }
 

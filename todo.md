@@ -63,3 +63,11 @@ conversion notes
 
 ShinyDriver2$waitFor returns `FALSE` if a condition is not found in time. (Not `NA`)
 execut
+
+
+
+
+#' @seealso [testthat::snapshot_review()] and [testthat::snapshot_accept()] if
+#'   you want to compare or update snapshots after testing. In most cases, the
+#'   user is prompted to do these tasks interactively, but there are also times
+#'   where it is useful to call these functions from the console.

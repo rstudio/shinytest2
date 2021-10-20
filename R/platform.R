@@ -6,8 +6,8 @@ is_windows <- cache_fn_val(function() { .Platform$OS.type == "windows" })
 
 #' Get the name of the OS
 #'
-#' Returns the name of the current OS. This can be useful for the `suffix` when
-#' running [`test_app()`].
+#' Returns the name of the current OS. This can be useful for the `variant` when
+#' running [`testthat::test_dir()`].
 #'
 #' @export
 #' @describeIn os_name Operating system name
