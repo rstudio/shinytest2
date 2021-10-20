@@ -151,8 +151,8 @@ often rely on minor details of dependencies.</p></td>
     </tr>
     <tr>
       <th>outer_html</th>
-      <td><p>If <code>TRUE</code>, the full DOM structure will be returned (<code>el.outerHTML</code>).
-If <code>FALSE</code>, the full DOM structure of the child elements will be returned (<code>$(el).html()</code>).</p></td>
+      <td><p>If <code>TRUE</code>, the full DOM structure will be returned (<code>tag.outerHTML</code>).
+If <code>FALSE</code>, the full DOM structure of the child elements will be returned (<code>tag.innerHTML</code>).</p></td>
     </tr>
     </table>
 
@@ -160,7 +160,7 @@ If <code>FALSE</code>, the full DOM structure of the child elements will be retu
 
     
 <ul>
-<li><p><code>app_expect_text</code>: This method will extract the text value of all matching elements via <code>$(el).text()</code>.
+<li><p><code>app_expect_text</code>: This method will extract the text value of all matching elements via <code>tag.textContent</code>.
 This method is more robust to internal package change as only the text values will be return.
 When possible, use <code>app_expect_text()</code> over <code>app_expect_html()</code> to allow package authors room to change.</p></li>
 <li><p><code>app_expect_html</code>: This method will extract the relevant DOM structure of all matching elements.
