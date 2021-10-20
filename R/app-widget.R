@@ -139,15 +139,16 @@ Widget2 <- R6Class( # nolint
       invisible(self)
     },
 
+    # # TODO-future; Not for this release. Comment for now.
     # #' @description Send specified key presses to control.
     # #' @param keys Keys to send to the widget or the app.
     # # ' See [webdriver::key] for how to specific special keys.
     # sendKeys = function(keys) {
     #   "!DEBUG widget2_sendKeys `private$name`"
-    #   # TODO-barret
     #   private$element$sendKeys(keys)
     # },
 
+    # # TODO-future; Not for this release. Comment for now.
     # #' @description Lists the tab names of a [shiny::tabsetPanel()].
     # #'  It fails for other types of widgets.
     # listTabs = function() {
@@ -163,7 +164,6 @@ Widget2 <- R6Class( # nolint
     #' @param filename Path to file to upload
     uploadFile = function(filename) {
       self$chromote_session$DOM$setFileInputFiles(files = list(fs::path_abs(filename)), nodeId = private$nodeId)
-      # private$element$uploadFile(filename = filename)
     }
   )
 )
@@ -297,19 +297,19 @@ ShinyDriver2$set("public", "click", function(name, iotype = c("auto", "input", "
   self$findWidget(name, iotype)$click()
 })
 
-#' @description
-#' Sends the specified keys to specific HTML element. Shortcut for
-#' `findWidget()` plus `sendKeys()`.
-#' @param keys Keys to send to the widget or the app.
-# ' See [webdriver::key] for how to specific special keys.
-#' @return Self, invisibly.
-#' @include shiny-driver.R
-ShinyDriver2$set("public", "sendKeys", function(name, keys) {
-  "!DEBUG ShinyDriver2$sendKeys `name`"
-  # TODO-barret; ? still todo?
-  self$findWidget(name)$sendKeys(keys)
-  invisible(self)
-})
+# # TODO-future; Not for this release. Comment for now.
+# #' @description
+# #' Sends the specified keys to specific HTML element. Shortcut for
+# #' `findWidget()` plus `sendKeys()`.
+# #' @param keys Keys to send to the widget or the app.
+# # ' See [webdriver::key] for how to specific special keys.
+# #' @return Self, invisibly.
+# #' @include shiny-driver.R
+# ShinyDriver2$set("public", "sendKeys", function(name, keys) {
+#   "!DEBUG ShinyDriver2$sendKeys `name`"
+#   self$findWidget(name)$sendKeys(keys)
+#   invisible(self)
+# })
 
 
 #' @description

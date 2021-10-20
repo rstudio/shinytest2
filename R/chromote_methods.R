@@ -9,7 +9,7 @@ assert_chromote_session <- function(chromote_session) {
 #   node$nodeId
 # }
 
-# TODO-barret; implement wait_ logic using all promises and `chromote_session$waitFor(p)`
+# TODO-barret-actual; implement wait_ logic using all promises and `chromote_session$waitFor(p)`
 chromote_eval <- function(
   chromote_session,
   js,

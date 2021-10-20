@@ -25,7 +25,8 @@
 #'   user is prompted to do these tasks interactively, but there are also times
 #'   where it is useful to call these functions from the console.
 #'
-# TODO-barret; should this be exported? Or should it just be `testthat::test_file()`?
+# TODO-barret-question; should this be exported? Or should it just be `testthat::test_file()`?
+# TODO-barret-answer; Remove this function!
 #' @export
 #' @importFrom rlang missing_arg is_interactive
 test_app <- function(
