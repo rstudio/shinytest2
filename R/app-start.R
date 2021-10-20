@@ -18,7 +18,7 @@ ShinyDriver2$set("private", "startShiny", function(
     shiny_args$port <- httpuv::randomPort()
   }
 
-  tempfile_format <- tempfile("%s-", fileext = ".log")
+  tempfile_format <- temp_file(pattern = "%s-", fileext = ".log")
 
   # the RNG kind should inherit from the parent process
   rng_kind <- RNGkind()

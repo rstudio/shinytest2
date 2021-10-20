@@ -52,6 +52,7 @@ ShinyDriver2$set("public", "initialize", function(
 
   private$snapshotScreenshot <- screenshot # nolint
   private$variant <- variant
+  private$tempAppshotDir <- temp_file() # nolint
   private$name <-
     if (!is.null(name)) {
       name

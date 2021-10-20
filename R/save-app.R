@@ -1,4 +1,5 @@
-app_save <- function(app, path = tempfile(), env = parent.frame()) {
+# TODO-barret; Test!
+app_save <- function(app, path = temp_file(), env = parent.frame()) {
   if (!rlang::is_installed("globals")) {
     abort(c(
       "globals package required to test app object",
@@ -7,11 +8,11 @@ app_save <- function(app, path = tempfile(), env = parent.frame()) {
   }
 
   if (!dir.exists(path)) {
-    dir.create(path)
+    dir.create(path, recursive = TRUE)
   }
 
   fs::file_copy(
-    system.file("app-template.R", package = "shinytest"),
+    system.file("app-template.R", package = "shinytest2"),
     fs::path(path, "app.R")
   )
 

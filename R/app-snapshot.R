@@ -1,6 +1,6 @@
 #' @include shiny-driver.R
 # Directory for temp storing test artifacts
-ShinyDriver2$set("private", "tempAppshotDir", tempfile("app-")) # Temp folder to store snapshot outputs
+ShinyDriver2$set("private", "tempAppshotDir", NULL) # Temp folder to store snapshot outputs
 ShinyDriver2$set("private", "snapshotCount", 0) # Current snapshot count
 ShinyDriver2$set("private", "snapshotScreenshot", TRUE) # Whether to take screenshots for each snapshot
 
@@ -87,7 +87,7 @@ sd2_snapshot <- function(
 #'   `002.download`, etc.
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "snapshotDownload", function(id, filename) {
-
+  # TODO-barret-implement; https://github.com/rstudio/shinytest2/issues/36
   current_dir <- paste0(self$getSnapshotDir(), "-current")
   private$tempAppshotDir
 
