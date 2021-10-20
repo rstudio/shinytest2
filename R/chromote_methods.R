@@ -165,7 +165,7 @@ chromote_execute_script_callback <- function( # nolint
 "  (function() {\n",
     script, "\n",
 # Call fn w/ user arguments and resolve function using the `window` context
-"  }).apply(null, [...arguments, resolve]);
+"  }).apply(null, [...arguments, resolve, reject]);
 });"
   )
   chromote_execute_script(chromote_session, script, ..., awaitPromise = wait_, arguments = arguments, timeout = timeout, wait_ = wait_)
@@ -191,7 +191,8 @@ chromote_wait_for_condition <- function(chromote_session, condition_js, ..., tim
   # way to cancel the `setTimeout` that has already been submitted. (Which will never stop resubmitting)
   script <- paste0(
 # `callback` provided by chromote_execute_script_callback()
-"let callback = arguments[0];
+"let resolve = arguments[0];
+let reject = arguments[1];
 let start = new Date();
 function condition() {
   return ", condition_js, ";
@@ -200,10 +201,10 @@ function condition() {
 "function chromote_wait_for_condition() {
   let diffTime = new Date() - (+start + ", timeout, ");
   if (diffTime > 0) {
-    return reject(new Error('Timeout waiting for condition'));
+    return reject('Timeout waiting for condition');
   }
   if (condition()) {
-    return callback();
+    return resolve();
   }
   setTimeout(chromote_wait_for_condition, ", interval, ");
 }
