@@ -13,6 +13,84 @@ debug_log_types <- function() {
 }
 
 
+obj_to_string <- function(obj) {
+  switch(obj$type,
+    "string" = obj$value,
+    # There are other sub types that might be useful, but punting for now
+    "object" = "[object Object]",
+    {
+      message("Unknown `obj_to_string()` type: ", obj$type)
+      utils::str(obj)
+      "(unknown)"
+    }
+  )
+}
+frames_to_msg <- function(details, url) {
+  call_frames <- details$stackTrace$callFrames
+  if (length(call_frames) == 0) return("")
+  frames <- do.call(rbind, lapply(call_frames, as.data.frame))
+  # Give anonymous functions a name
+  frames$functionName[frames$functionName == ""] <- "(anonymous)" # nolint
+  # Left justify the names
+  frames$functionName <- format(frames$functionName) # nolint
+  frames$url <- sub(url, "", frames$url)
+  msg <-
+    paste0(
+      "    ", frames$functionName, " @ ", frames$url, ":", frames$lineNumber, ":", frames$columnNumber,
+      collapse = "\n"
+    )
+  paste0("\n", msg)
+}
+exception_thrown_to_msg <- function(info, url) {
+  exception_details <- info$exceptionDetails
+  paste0(
+    exception_details$text, " ", obj_to_string(exception_details$exception),
+    frames_to_msg(exception_details, url)
+  )
+}
+console_api_to_msg <- function(info, url) {
+  args <- vapply(info$args, obj_to_string, character(1))
+
+  paste0(
+    "console.", info$type, "(\"", paste0(args, collapse = "\", \""), "\")",
+    frames_to_msg(info, url)
+  )
+}
+
+
+#' @include shiny-driver.R
+ShinyDriver2$set("private", "browserLogs", list())
+
+sd2_init_browser_debug <- function(self, private) {
+  self$chromote_session$Runtime$consoleAPICalled(function(info) {
+    # message("Runtime.consoleAPICalled")
+    msg <- console_api_to_msg(info, private$getShinyUrl())
+    # TODO-barret; Should these messages be displayed in realtime?
+    # cyan(msg)
+    private$browserLogs[[length(private$browserLogs) + 1]] <-
+      list(
+        message = msg,
+        level = switch(info$type, "error" = "ERROR", "INFO"),
+        timestamp = Sys.time()
+      )
+  })
+  self$chromote_session$Runtime$exceptionThrown(function(info) {
+    # message("Runtime.exceptionThrown")
+    msg <- exception_thrown_to_msg(info, private$getShinyUrl())
+    # TODO-barret; Should these messages be displayed in realtime?
+    # cyan(msg)
+    private$browserLogs[[length(private$browserLogs) + 1]] <-
+      list(
+        message = msg,
+        level = "ERROR",
+        timestamp = Sys.time()
+      )
+  })
+}
+
+
+
+
 as_debug <- function(x) {
   x <- unique(x)
   checkmate::assert_subset(x, c(debug_log_types(), c("all", "none")), empty.ok = FALSE)
@@ -45,7 +123,9 @@ make_shiny_console_log <- function(out, err) {
 }
 
 make_browser_log <- function(log) {
-  log$type <- if (nrow(log)) "browser" else character()
+  if (length(log) == 0) return(NULL)
+  log <- do.call(rbind, lapply(log, as.data.frame))
+  log$type <- "browser"
   log[, c("level", "timestamp", "message", "type")]
 }
 
@@ -98,13 +178,12 @@ ShinyDriver2$set("public", "getDebugLog", function(type = c("all", debug_log_typ
 
   if ("browser" %in% type) {
     "!DEBUG ShinyDriver2$getDebugLog browser"
-    stop("TODO-barret; ShinyDriver2$getDebugLog(type = 'browser')")
-    output$browser <- make_browser_log(private$web$readLog())
+    output$browser <- make_browser_log(private$browserLogs)
   }
 
   if ("shinytest2" %in% type) {
     "!DEBUG ShinyDriver2$getDebugLog shinytest2 log"
-    output$shinytest <- make_shinytest2_log(self$chromote_session$executeScript(
+    output$shinytest <- make_shinytest2_log(self$executeScript(
       "if (! window.shinytest2) { return([]) }
       var res = window.shinytest2.log_entries;
       window.shinytest2.log_entries = [];
@@ -120,7 +199,7 @@ ShinyDriver2$set("public", "getDebugLog", function(type = c("all", debug_log_typ
 #' @param enable New value.
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "enableDebugLogMessages", function(enable = TRUE) {
-  self$chromote_session$executeScript(
+  self$executeScript(
     "window.shinytest2.log_messages = arguments[0]",
     enable
   )

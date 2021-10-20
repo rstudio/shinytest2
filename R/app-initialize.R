@@ -105,6 +105,8 @@ ShinyDriver2$set("public", "initialize", function(
   # private$web <- Session$new(port = private$phantomPort)
   self$chromote_session <- chromote::ChromoteSession$new()
 
+  sd2_init_browser_debug(self, private)
+
   # ## Set implicit timeout to zero. According to the standard it should
   # ## be zero, but phantomjs uses about 200 ms
   # private$web$setTimeout(implicit = 0)

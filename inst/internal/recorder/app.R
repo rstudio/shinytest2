@@ -317,7 +317,7 @@ generate_test_code <- function(events, name, seed,
       "    ", paste(c(
         paste0("test_path(\"", app_path, "\")"),
         if (!is.null(seed)) paste0("seed = %s", seed),
-        if (!is.null(load_timeout)) paste0("loadTimeout = ", load_timeout),
+        if (!is.null(load_timeout)) paste0("load_timeout = ", load_timeout),
         if (length(shiny_args) > 0) paste0("shiny_args = ", deparse2(shiny_args)),
         "variant = os_name_and_r_version()"
         ),

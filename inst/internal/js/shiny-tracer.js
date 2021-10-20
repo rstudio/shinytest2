@@ -1,7 +1,4 @@
 
-
-console.log("Adding shinytest2!")
-
 window.shinytest2 = (function() {
     var shinytest2 = {
         connected: false,

@@ -5,13 +5,13 @@ format.shinytest2_logs <- function(x, ..., short = FALSE) {
   colors <- list(
     shiny_console = magenta,
     browser = cyan,
-    shinytest = blue
+    shinytest2 = blue
   )
 
   types <- c(
     shiny_console = "C",
     browser = "B",
-    shinytest = "S"
+    shinytest2 = "S"
   )
 
   lines <- vapply(seq_len(nrow(x)), function(i) {
