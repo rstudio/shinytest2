@@ -13,8 +13,8 @@ r_version()
 os_name_and_r_version()
 }
 \description{
-Returns the name of the current OS. This can be useful for the \code{suffix} when
-running \code{\link[=test_app]{test_app()}}.
+Returns the name of the current OS. This can be useful for the \code{variant} when
+running \code{\link[testthat:test_dir]{testthat::test_dir()}}.
 }
 \section{Functions}{
 \itemize{
