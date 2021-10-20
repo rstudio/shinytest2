@@ -213,8 +213,8 @@ chromote_wait_for_condition();"
   ret <- chromote_execute_script_callback(
     chromote_session,
     script,
-    ## Do not supply timeout to chrome devtools protocol or chromote_session. Instead, use manual timeout logic.
-    timeout_ = Inf,
+    ## Supply a large "wall time" to chrome devtools protocol. The manual logic should be hit first
+    timeout_ = timeout * 2,
     wait_ = wait_
   )
 
