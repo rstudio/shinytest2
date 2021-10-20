@@ -41,7 +41,6 @@ with a live app.
 \item \href{#method-getValue}{\code{ShinyDriver2$getValue()}}
 \item \href{#method-setValue}{\code{ShinyDriver2$setValue()}}
 \item \href{#method-click}{\code{ShinyDriver2$click()}}
-\item \href{#method-sendKeys}{\code{ShinyDriver2$sendKeys()}}
 \item \href{#method-listWidgets}{\code{ShinyDriver2$listWidgets()}}
 \item \href{#method-checkUniqueWidgetNames}{\code{ShinyDriver2$checkUniqueWidgetNames()}}
 \item \href{#method-setWindowSize}{\code{ShinyDriver2$setWindowSize()}}
@@ -451,22 +450,6 @@ input and output widget.}
 \item{\code{iotype}}{Type of the Shiny widget. Usually shinytest2 finds the widgets
 by their name, so this is only needed if you use the same name for an
 input and output widget.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-sendKeys"></a>}}
-\if{latex}{\out{\hypertarget{method-sendKeys}{}}}
-\subsection{Method \code{sendKeys()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$sendKeys(name, keys)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{name}}{Name of a shiny widget.}
 }
 \if{html}{\out{</div>}}
 }
