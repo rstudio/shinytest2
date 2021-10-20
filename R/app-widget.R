@@ -71,9 +71,7 @@ Widget2 <- R6Class( # nolint
             chromote_call_js_on_node(
               self$chromote_session,
               private$nodeId,
-              "function() {
-                return $(this).html();
-              }"
+              "function() { return this.innerHTML; }"
             )$result$value
           },
           verbatimTextOutput = , # nolint
@@ -81,9 +79,7 @@ Widget2 <- R6Class( # nolint
             chromote_call_js_on_node(
               self$chromote_session,
               private$nodeId,
-              "function() {
-                return $(this).text();
-              }"
+              "function() { return this.textContent; }"
             )$result$value
           },
           abort(paste0("getValue is not implemented for ", private$type))
