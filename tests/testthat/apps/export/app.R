@@ -1,3 +1,5 @@
+library(shiny)
+
 shinyApp(
   ui = basicPage(
     h4("Snapshot URL: "),
