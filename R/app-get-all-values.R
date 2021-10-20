@@ -14,7 +14,7 @@ ShinyDriver2$set("public", "getAllValues", function(input = TRUE, output = TRUE,
   url <- private$getTestSnapshotUrl(input, output, export, format = "rds")
   req <- httr_get(url)
 
-  tmpfile <- tempfile()
+  tmpfile <- temp_file(".rds")
   on.exit(unlink(tmpfile))
   writeBin(req$content, tmpfile)
   readRDS(tmpfile)

@@ -28,7 +28,7 @@ ShinyDriver2$set("public", "takeScreenshot", function(
   checkmate::assert_number(delay, lower = 0, finite = TRUE, null.ok = TRUE)
 
   self$logEvent("Taking screenshot")
-  path <- tempfile("st2-", fileext = ".png")
+  path <- temp_file(".png")
 
   self$chromote_session$screenshot(
     filename = path,

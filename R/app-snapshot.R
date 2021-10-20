@@ -1,6 +1,6 @@
 #' @include shiny-driver.R
 # Directory for temp storing test artifacts
-ShinyDriver2$set("private", "tempAppshotDir", tempfile("app-")) # Temp folder to store snapshot outputs
+ShinyDriver2$set("private", "tempAppshotDir", temp_file()) # Temp folder to store snapshot outputs
 ShinyDriver2$set("private", "snapshotCount", 0) # Current snapshot count
 ShinyDriver2$set("private", "snapshotScreenshot", TRUE) # Whether to take screenshots for each snapshot
 

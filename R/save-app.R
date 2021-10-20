@@ -1,4 +1,4 @@
-app_save <- function(app, path = tempfile(), env = parent.frame()) {
+app_save <- function(app, path = temp_file(), env = parent.frame()) {
   if (!rlang::is_installed("globals")) {
     abort(c(
       "globals package required to test app object",
