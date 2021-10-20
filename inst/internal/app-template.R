@@ -1,5 +1,6 @@
 library(shiny)
-`_data` <- readRDS('data.rds')
+
+`_data` <- readRDS("data.rds") # nolint
 
 lapply(`_data`$packages, library, character.only = TRUE)
 for (prefix in names(`_data`$resources)) {
