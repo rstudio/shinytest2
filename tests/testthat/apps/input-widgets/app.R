@@ -13,7 +13,7 @@ widget <- function(name, widget_object, title = NULL) {
       hr(),
       p("Current Value:", style = "color:#888888;"),
       lapply(name, function(name_val) {
-        verbatimTextOutput(paste0(name_val, "_out"))
+        verbatimTextOutput(paste0(name_val, "_out")) # nolint
       })
     )
   )
