@@ -28,6 +28,7 @@ sd2_snapshot <- function(
   items = NULL,
   name = NULL,
   screenshot = NULL
+  # TODO-barret: screenshot args?
 ) {
   if (!is.list(items) && !is.null(items)) {
     abort("'items' must be NULL or a list.")
@@ -70,9 +71,9 @@ sd2_snapshot <- function(
   url <- private$getTestSnapshotUrl(items$input, items$output, items$export)
   req <- httr_get(url)
 
-
   # Convert to text, then replace base64-encoded images with hashes of them.
-  original_content <- content <- raw_to_utf8(req$content)
+  content <- raw_to_utf8(req$content)
+  # original_content <- content
   content <- hash_snapshot_image_data(content)
   content <- jsonlite::prettify(content, indent = 2)
   full_json_path <- fs::path(temp_save_dir, json_name)
@@ -80,7 +81,7 @@ sd2_snapshot <- function(
   write_utf8(content, full_json_path)
 
   full_screenshot_path <- NULL
-  if (screenshot) {
+  if (isTRUE(screenshot)) {
     # Replace extension with .png
     full_screenshot_path <- fs::path(temp_save_dir, fs::path_ext_set(json_name, "png"))
     self$takeScreenshot(full_screenshot_path)
@@ -88,13 +89,27 @@ sd2_snapshot <- function(
 
   list(
     screenshot_path = full_screenshot_path,
-    json_path = full_json_path,
-    json_original_content = original_content,
-    json_content = content
+    json_path = full_json_path
+    # json_original_content = original_content,
+    # json_content = content
   )
   # TODO-prior;?; Invisibly return JSON content as a string
   # invisible(original_content)
 }
+
+
+# TODO-barret; Include these methods?
+# ShinyDriver2$set("public", "expectSnapshotReactivity", function(
+#   items = NULL,
+#   name = NULL
+# ) {
+#   sd2_snapshot(self, private, items = items, name = name, screenshot = FALSE)
+# })
+# ShinyDriver2$set("public", "expectSnapshotScreenshot", function(
+#   name = NULL
+# ) {
+#   sd2_snapshot(self, private, items = list(input = FALSE, output = FALSE, export = FALSE), name = name, screenshot = TRUE)
+# })
 
 #' @description
 #' Snapshot a file download action. Generally, you should not call this
