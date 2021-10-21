@@ -76,6 +76,7 @@ Collate:
     'app-widget.R'
     'app-window.R'
     'chromote_methods.R'
+    'count.R'
     'httr.R'
     'utils.R'
     'platform.R'

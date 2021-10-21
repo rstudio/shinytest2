@@ -53,6 +53,7 @@ ShinyDriver2$set("public", "initialize", function(
   private$snapshotScreenshot <- screenshot # nolint
   private$variant <- variant
   private$tempAppshotDir <- temp_file() # nolint
+  private$snapshotCount <- Count$new()
   private$name <-
     if (!is.null(name)) {
       name
@@ -222,7 +223,7 @@ ShinyDriver2$set("public", "initialize", function(
 #   # Strip off trailing slash if present
 #   path <- sub("/$", "", path)
 
-#   private$snapshotCount <- 0
+#   private$snapshotCount <- Count$new()
 #   private$snapshotDir <- path
 #   private$snapshotScreenshot <- screenshot
 #   self

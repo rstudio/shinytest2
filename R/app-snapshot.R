@@ -1,24 +1,7 @@
-Count <- R6Class( # nolint
-  "Count",
-  private = list(
-    count = 0
-  ),
-  public = list(
-    increment = function() {
-      private$count <- private$count + 1
-      private$count
-    },
-    get = function() {
-      private$count
-    }
-  )
-)
-
-
 #' @include shiny-driver.R
 # Directory for temp storing test artifacts
 ShinyDriver2$set("private", "tempAppshotDir", NULL) # Temp folder to store snapshot outputs
-ShinyDriver2$set("private", "snapshotCount", Count$new()) # Current snapshot count
+ShinyDriver2$set("private", "snapshotCount", NULL) # Current snapshot count
 ShinyDriver2$set("private", "snapshotScreenshot", TRUE) # Whether to take screenshots for each snapshot
 
 
