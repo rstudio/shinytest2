@@ -38,7 +38,7 @@ sd2_snapshot <- function(
 
   # Do not prefix with `self$name` as that is only necessary for the snapshot file name
   # At this point, the temp folder is already unique
-  json_name <- name %||% sprintf("%03d.json", private$snapshotCount)
+  json_name <- fs::path_ext_set(name %||% sprintf("%03d", snapshot_count), "json")
 
   # The default is to take a screenshot when the snapshotScreenshot option is
   # TRUE and the user does not specify specific items to snapshot.
