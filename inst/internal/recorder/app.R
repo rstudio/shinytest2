@@ -255,7 +255,7 @@ code_generators <- list(
   },
 
   fileDownload = function(event, next_event = NULL, ...) {
-    paste0('app$snapshotDownload("', event$name, '")')
+    paste0('app_expect_download("', event$name, '")')
   },
 
   outputEvent = function(event, next_event = NULL, ...) {
@@ -263,11 +263,11 @@ code_generators <- list(
   },
 
   outputSnapshot = function(event, next_event = NULL, ...) {
-    paste0('expect_snapshot_app(app, items = list(output = "', event$name, '"))')
+    paste0('app_expect_appshot(app, items = list(output = "', event$name, '"))')
   },
 
   snapshot = function(event, next_event = NULL, ...) {
-    "expect_snapshot_app(app)"
+    "app_expect_appshot(app)"
   }
 )
 
