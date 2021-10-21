@@ -1,7 +1,24 @@
+Count <- R6Class( # nolint
+  "Count",
+  private = list(
+    count = 0
+  ),
+  public = list(
+    increment = function() {
+      private$count <- private$count + 1
+      private$count
+    },
+    get = function() {
+      private$count
+    }
+  )
+)
+
+
 #' @include shiny-driver.R
 # Directory for temp storing test artifacts
 ShinyDriver2$set("private", "tempAppshotDir", NULL) # Temp folder to store snapshot outputs
-ShinyDriver2$set("private", "snapshotCount", 0) # Current snapshot count
+ShinyDriver2$set("private", "snapshotCount", Count$new()) # Current snapshot count
 ShinyDriver2$set("private", "snapshotScreenshot", TRUE) # Whether to take screenshots for each snapshot
 
 
@@ -12,10 +29,11 @@ sd2_snapshot <- function(
   name = NULL,
   screenshot = NULL
 ) {
-  if (!is.list(items) && !is.null(items))
+  if (!is.list(items) && !is.null(items)) {
     abort("'items' must be NULL or a list.")
-  private$snapshotCount <- private$snapshotCount + 1 # nolint
+  }
 
+  snapshot_count <- private$snapshotCount$increment()
   temp_save_dir  <- private$tempAppshotDir
 
   # Do not prefix with `self$name` as that is only necessary for the snapshot file name
@@ -58,7 +76,7 @@ sd2_snapshot <- function(
   content <- hash_snapshot_image_data(content)
   content <- jsonlite::prettify(content, indent = 2)
   full_json_path <- fs::path(temp_save_dir, json_name)
-  create_snapshot_dir(temp_save_dir, private$snapshotCount)
+  create_snapshot_dir(temp_save_dir, snapshot_count)
   write_utf8(content, full_json_path)
 
   full_screenshot_path <- NULL
