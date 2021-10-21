@@ -107,7 +107,6 @@ sd2_snapshot_download <- function(
   self, private,
   id, name = NULL
 ) {
-  # TODO-barret-implement; https://github.com/rstudio/shinytest2/issues/36
   temp_save_dir <- private$tempAppshotDir
   snapshot_count <- private$snapshotCount$increment()
 
