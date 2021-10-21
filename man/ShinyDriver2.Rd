@@ -12,8 +12,7 @@ with a live app.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-expectSnapshot}{\code{ShinyDriver2$expectSnapshot()}}
-\item \href{#method-view}{\code{ShinyDriver2$view()}}
+\item \href{#method-expectAppshot}{\code{ShinyDriver2$expectAppshot()}}
 \item \href{#method-getDebugLog}{\code{ShinyDriver2$getDebugLog()}}
 \item \href{#method-enableDebugLogMessages}{\code{ShinyDriver2$enableDebugLogMessages()}}
 \item \href{#method-getAppDir}{\code{ShinyDriver2$getAppDir()}}
@@ -32,7 +31,7 @@ with a live app.
 \item \href{#method-setInputs}{\code{ShinyDriver2$setInputs()}}
 \item \href{#method-uploadFile}{\code{ShinyDriver2$uploadFile()}}
 \item \href{#method-takeScreenshot}{\code{ShinyDriver2$takeScreenshot()}}
-\item \href{#method-snapshotDownload}{\code{ShinyDriver2$snapshotDownload()}}
+\item \href{#method-expectDownload}{\code{ShinyDriver2$expectDownload()}}
 \item \href{#method-stop}{\code{ShinyDriver2$stop()}}
 \item \href{#method-waitFor}{\code{ShinyDriver2$waitFor()}}
 \item \href{#method-waitForShiny}{\code{ShinyDriver2$waitForShiny()}}
@@ -49,11 +48,11 @@ with a live app.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expectSnapshot"></a>}}
-\if{latex}{\out{\hypertarget{method-expectSnapshot}{}}}
-\subsection{Method \code{expectSnapshot()}}{
+\if{html}{\out{<a id="method-expectAppshot"></a>}}
+\if{latex}{\out{\hypertarget{method-expectAppshot}{}}}
+\subsection{Method \code{expectAppshot()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expectSnapshot(
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expectAppshot(
   ...,
   name = NULL,
   items = NULL,
@@ -70,15 +69,6 @@ with a live app.
 }
 \if{html}{\out{</div>}}
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-view"></a>}}
-\if{latex}{\out{\hypertarget{method-view}{}}}
-\subsection{Method \code{view()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$view()}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-getDebugLog"></a>}}
@@ -313,13 +303,20 @@ input and output widget.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-snapshotDownload"></a>}}
-\if{latex}{\out{\hypertarget{method-snapshotDownload}{}}}
-\subsection{Method \code{snapshotDownload()}}{
+\if{html}{\out{<a id="method-expectDownload"></a>}}
+\if{latex}{\out{\hypertarget{method-expectDownload}{}}}
+\subsection{Method \code{expectDownload()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$snapshotDownload(id, filename)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expectDownload(id, ..., name = NULL, cran = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{Name of a shiny widget.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-stop"></a>}}
@@ -335,7 +332,7 @@ input and output widget.}
 \if{latex}{\out{\hypertarget{method-waitFor}{}}}
 \subsection{Method \code{waitFor()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$waitFor(expr, check_interval = 100, timeout = 3000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$waitFor(expr, timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
 }
 
 }
@@ -344,7 +341,7 @@ input and output widget.}
 \if{latex}{\out{\hypertarget{method-waitForShiny}{}}}
 \subsection{Method \code{waitForShiny()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$waitForShiny()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$waitForShiny(timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
 }
 
 }
