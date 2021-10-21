@@ -37,8 +37,6 @@ testthat_expect_snapshot_file <- function(
 
 
 
-
-
 #' Expect a shinytest2 snapshot
 #'
 #'
@@ -58,7 +56,7 @@ app_expect_appshot <- function(
   # variant = NULL,
   cran = FALSE
 ) {
-  app$expectSnapshot(
+  app$expectAppshot(
     ...,
     name = name,
     items = items,
@@ -79,7 +77,7 @@ app_expect_appshot <- function(
 #' @param screenshot Take a screenshot? Overrides value set by
 #'   `$snapshotInit()`
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "expectSnapshot", function(
+ShinyDriver2$set("public", "expectAppshot", function(
   ...,
   name = NULL,
   items = NULL,
