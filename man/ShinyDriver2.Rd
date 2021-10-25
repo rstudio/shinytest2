@@ -24,7 +24,6 @@ with a live app.
 \item \href{#method-getEventLog}{\code{ShinyDriver2$getEventLog()}}
 \item \href{#method-executeScript}{\code{ShinyDriver2$executeScript()}}
 \item \href{#method-executeScriptCallback}{\code{ShinyDriver2$executeScriptCallback()}}
-\item \href{#method-expectUpdate}{\code{ShinyDriver2$expectUpdate()}}
 \item \href{#method-expectSnapshotJS}{\code{ShinyDriver2$expectSnapshotJS()}}
 \item \href{#method-getAllValues}{\code{ShinyDriver2$getAllValues()}}
 \item \href{#method-new}{\code{ShinyDriver2$new()}}
@@ -168,29 +167,6 @@ with a live app.
 \if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$executeScriptCallback(script, ..., timeout_ = 15 * 1000)}\if{html}{\out{</div>}}
 }
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expectUpdate"></a>}}
-\if{latex}{\out{\hypertarget{method-expectUpdate}{}}}
-\subsection{Method \code{expectUpdate()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expectUpdate(
-  output,
-  ...,
-  timeout = 3000,
-  iotype = c("auto", "input", "output")
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{iotype}}{Type of the Shiny widget. Usually shinytest2 finds the widgets
-by their name, so this is only needed if you use the same name for an
-input and output widget.}
-}
-\if{html}{\out{</div>}}
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-expectSnapshotJS"></a>}}
