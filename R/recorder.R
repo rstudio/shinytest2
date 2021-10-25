@@ -26,8 +26,7 @@ record_test <- function(
 ) {
   ellipsis::check_dots_empty()
 
-  checkmate::assert_true(is_installed("rprojroot"))
-  checkmate::assert_true(is_installed("rprojroot"))
+  checkmate::assert_true(rlang::is_installed("rstudioapi"))
 
   for (class_val in c("shiny.appobj", "ShinyDriver")) {
     if (inherits(app, class_val)) {
