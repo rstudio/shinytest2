@@ -7,7 +7,6 @@
 #'   `$snapshotInit()`
 #' @include shiny-driver.R
 #' @importFrom rlang !!!
-# TODO-barret; Is this method needed to be public? Similar to `app$expectAppshot()`
 ShinyDriver2$set("public", "expectSnapshotJS", function(
   script,
   ...,
