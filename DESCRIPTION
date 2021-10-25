@@ -41,9 +41,8 @@ Imports:
     shiny,
     withr
 Suggests:
-    rprojroot,
-    rstudioapi,
     plotly,
+    rstudioapi,
     shinyWidgets
 Remotes:
     rstudio/chromote,
