@@ -30,7 +30,6 @@ Imports:
     parsedate (>= 1.2.0),
     rlang,
     checkmate,
-    digest,
     ellipsis,
     globals,
     httpuv,
