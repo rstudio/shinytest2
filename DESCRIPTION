@@ -61,7 +61,6 @@ Collate:
     'app-element.R'
     'app-event-logging.R'
     'app-execute.R'
-    'app-expect-update.R'
     'app-expect.R'
     'app-get-all-values.R'
     'app-initialize.R'
