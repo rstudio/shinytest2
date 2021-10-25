@@ -19,10 +19,11 @@ RoxygenNote: 7.1.2
 URL: https://github.com/rstudio/shinytest2
 BugReports: https://github.com/rstudio/shinytest2/issues
 SystemRequirements: Google Chrome
+Depends:
+    testthat (>= 3.0.0)
 Imports:
     R6 (>= 2.4.0),
     chromote,
-    testthat (>= 3.0.0),
     fs,
     callr,
     crayon,
