@@ -12,13 +12,13 @@ testthat_app(
 )
 }
 \arguments{
+\item{app_dir}{The base directory for the Shiny application}
+
 \item{env}{Use the shiny application's environment after sourcing the R folder}
 
-\item{reporter}{Use the default \code{testthat} reporter, but also include a \code{fail} reporter to assert there are no errors found}
+\item{reporter}{Uses the \code{\link[testthat:default_reporter]{testthat::default_reporter()}} reporter but also includes a \code{fail} reporter to assert there are no errors found while testing}
 
-\item{...}{Additional arguments passed to \code{\link[=grepl]{grepl()}} to control filtering.}
-
-\item{`./testthat`}{folder to execute tests over}
+\item{...}{Parameters passed to \code{\link[testthat:test_dir]{testthat::test_dir()}}}
 }
 \description{
 To be used within the apps \code{./tests} folder
