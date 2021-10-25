@@ -1,6 +1,6 @@
 
 test_that("Exported values", {
-  app <- ShinyDriver2$new(test_path("apps/export/"))
+  app <- ShinyDriver2$new(test_path("../../."))
 
   x <- app$getAllValues()
   expect_identical(x$export$x, 1)

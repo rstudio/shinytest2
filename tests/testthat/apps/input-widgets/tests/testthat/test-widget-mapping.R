@@ -1,6 +1,6 @@
 test_that("input widgets", {
 
-  app <- ShinyDriver2$new(test_path("apps/input-widgets"))
+  app <- ShinyDriver2$new(test_path("../../."))
 
   expect_equal(app$findWidget("action")$getType(),     "actionButton")
   expect_equal(app$findWidget("checkbox")$getType(),   "checkboxInput")
@@ -19,7 +19,7 @@ test_that("input widgets", {
 
 test_that("output widgets with the same name", {
 
-  app <- ShinyDriver2$new(test_path("apps/input-widgets"))
+  app <- ShinyDriver2$new(test_path("../../."))
 
   names <- c(
     "action_out", "checkbox_out", "checkGroup_out", "date_out", "dates_out",

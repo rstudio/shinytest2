@@ -1,6 +1,6 @@
 
-test_that("Exported values", {
-  app <- ShinyDriver2$new(test_path("apps/download/"), variant = NULL)
+test_that("download files work from link and button", {
+  app <- ShinyDriver2$new(test_path("../../."), variant = NULL)
 
   app$waitFor(paste0("$('#download_link').attr('href') != ''"))
   app$waitFor(paste0("$('#download_button').attr('href') != ''"))

@@ -1,7 +1,8 @@
 # Current shinytest2 code using `app$**()`:
 test_that("set kitchen sink of inputs", {
   skip_if_not_installed("shinyWidgets")
-  app <- ShinyDriver2$new(test_path("apps/input-widgets"), variant = os_name_and_r_version())
+
+  app <- ShinyDriver2$new(test_path("../../."), variant = os_name_and_r_version())
 
   app_expect_appshot(app, screenshot = TRUE)
 

@@ -1,5 +1,5 @@
 test_that("basic text and dom outputs are captured", {
-  app <- ShinyDriver2$new(test_path("apps/ui-output"), variant = NULL)
+  app <- ShinyDriver2$new(test_path("../../."), variant = NULL)
   app$setInputs(val = "<div id='custom'><p>My Custom Output</p></div>")
 
   app_expect_text(app, "#text")
