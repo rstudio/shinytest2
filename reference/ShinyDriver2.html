@@ -134,8 +134,7 @@ with a live app.</p>
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
 
 <ul>
-<li><p><a href='#method-expectSnapshot'><code>ShinyDriver2$expectSnapshot()</code></a></p></li>
-<li><p><a href='#method-view'><code>ShinyDriver2$view()</code></a></p></li>
+<li><p><a href='#method-expectAppshot'><code>ShinyDriver2$expectAppshot()</code></a></p></li>
 <li><p><a href='#method-getDebugLog'><code>ShinyDriver2$getDebugLog()</code></a></p></li>
 <li><p><a href='#method-enableDebugLogMessages'><code>ShinyDriver2$enableDebugLogMessages()</code></a></p></li>
 <li><p><a href='#method-getAppDir'><code>ShinyDriver2$getAppDir()</code></a></p></li>
@@ -154,7 +153,7 @@ with a live app.</p>
 <li><p><a href='#method-setInputs'><code>ShinyDriver2$setInputs()</code></a></p></li>
 <li><p><a href='#method-uploadFile'><code>ShinyDriver2$uploadFile()</code></a></p></li>
 <li><p><a href='#method-takeScreenshot'><code>ShinyDriver2$takeScreenshot()</code></a></p></li>
-<li><p><a href='#method-snapshotDownload'><code>ShinyDriver2$snapshotDownload()</code></a></p></li>
+<li><p><a href='#method-expectDownload'><code>ShinyDriver2$expectDownload()</code></a></p></li>
 <li><p><a href='#method-stop'><code>ShinyDriver2$stop()</code></a></p></li>
 <li><p><a href='#method-waitFor'><code>ShinyDriver2$waitFor()</code></a></p></li>
 <li><p><a href='#method-waitForShiny'><code>ShinyDriver2$waitForShiny()</code></a></p></li>
@@ -170,10 +169,10 @@ with a live app.</p>
 <li><p><a href='#method-clone'><code>ShinyDriver2$clone()</code></a></p></li>
 </ul>
 <p><hr>
-<a id="method-expectSnapshot"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>expectSnapshot()</code></h3>
+<a id="method-expectAppshot"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>expectAppshot()</code></h3>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>expectSnapshot</span><span class='op'>(</span>
+<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>expectAppshot</span><span class='op'>(</span>
   <span class='va'>...</span>,
   name <span class='op'>=</span> <span class='cn'>NULL</span>,
   items <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -187,12 +186,6 @@ with a live app.</p>
 <dt><code>name</code></dt><dd><p>Name of a shiny widget.</p></dd>
 
 </dl><p></div></p>
-<p><hr>
-<a id="method-view"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>view()</code></h3>
-
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>view</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
-
 <p><hr>
 <a id="method-getDebugLog"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>getDebugLog()</code></h3>
 
@@ -362,11 +355,16 @@ input and output widget.</p></dd>
 
 </dl><p></div></p>
 <p><hr>
-<a id="method-snapshotDownload"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>snapshotDownload()</code></h3>
+<a id="method-expectDownload"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>expectDownload()</code></h3>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>snapshotDownload</span><span class='op'>(</span><span class='va'>id</span>, <span class='va'>filename</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>expectDownload</span><span class='op'>(</span><span class='va'>id</span>, <span class='va'>...</span>, name <span class='op'>=</span> <span class='cn'>NULL</span>, cran <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
 
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>name</code></dt><dd><p>Name of a shiny widget.</p></dd>
+
+</dl><p></div></p>
 <p><hr>
 <a id="method-stop"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/base/stop.html'>stop()</a></code></h3>
 
@@ -377,13 +375,13 @@ input and output widget.</p></dd>
 <a id="method-waitFor"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>waitFor()</code></h3>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>waitFor</span><span class='op'>(</span><span class='va'>expr</span>, check_interval <span class='op'>=</span> <span class='fl'>100</span>, timeout <span class='op'>=</span> <span class='fl'>3000</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>waitFor</span><span class='op'>(</span><span class='va'>expr</span>, timeout <span class='op'>=</span> <span class='fl'>3</span> <span class='op'>*</span> <span class='fl'>1000</span>, interval <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span></pre><p></div></p>
 
 <p><hr>
 <a id="method-waitForShiny"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>waitForShiny()</code></h3>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>waitForShiny</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>waitForShiny</span><span class='op'>(</span>timeout <span class='op'>=</span> <span class='fl'>3</span> <span class='op'>*</span> <span class='fl'>1000</span>, interval <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span></pre><p></div></p>
 
 <p><hr>
 <a id="method-waitForValue"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>waitForValue()</code></h3>
