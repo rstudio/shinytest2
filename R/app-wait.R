@@ -5,13 +5,13 @@
 #' `timeout` is exceeded.
 #' @param expr A string containing JavaScript code. Will wait until the
 #'   condition returns `true`.
-#' @param check_interval How often to check for the condition, in ms.
+#' @param interval How often to check for the condition, in ms.
 #' @return `TRUE` if expression evaluates to `true` without error, before
 #'   timeout. Otherwise returns `FALSE`.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "waitFor", function(expr, check_interval = 100, timeout = 3000) {
+ShinyDriver2$set("public", "waitFor", function(expr, timeout = 3 * 1000, interval = 100) {
   "!DEBUG ShinyDriver2$waitFor"
-  chromote_wait_for_condition(self$chromote_session, expr, timeout_ms = timeout, delay_ms = check_interval)
+  chromote_wait_for_condition(self$chromote_session, expr, timeout = timeout, interval = interval)
 })
 
 #' @description
@@ -21,7 +21,7 @@ ShinyDriver2$set("public", "waitFor", function(expr, check_interval = 100, timeo
 #' before take a screenshot.
 #' @return `TRUE` if done before before timeout; `NA` otherwise.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "waitForShiny", function()  {
+ShinyDriver2$set("public", "waitForShiny", function(timeout = 3 * 1000, interval = 100) {
   # Shiny automatically sets using busy/idle events:
   # https://github.com/rstudio/shiny/blob/e2537d/srcjs/shinyapp.js#L647-L655
   # Details of busy event: https://shiny.rstudio.com/articles/js-events.html
@@ -30,7 +30,7 @@ ShinyDriver2$set("public", "waitForShiny", function()  {
     self$chromote_session,
     "!$('html').first().hasClass('shiny-busy')",
     timeout = 3 * 1000,
-    delay_ms = check_interval
+    interval = interval
   )
 })
 

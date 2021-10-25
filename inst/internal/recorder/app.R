@@ -148,7 +148,7 @@ input_processors <- merge_vectors(input_processors, shinytest2::get_input_proces
 process_input_value <- function(value, input_type) {
   if (is.null(input_processors[[input_type]])) {
     # For input with type "mypkg.foo", get "mypkg", and then try to load it.
-    # This is helpful in cases where the R session running `recordTest()` has
+    # This is helpful in cases where the R session running `record_test()` has
     # not loaded the package with the input type. (There's a separate R session
     # running the Shiny app.) See https://github.com/rstudio/learnr/pull/407 for
     # more info.
@@ -255,7 +255,7 @@ code_generators <- list(
   },
 
   fileDownload = function(event, next_event = NULL, ...) {
-    paste0('app$snapshotDownload("', event$name, '")')
+    paste0('app_expect_download("', event$name, '")')
   },
 
   outputEvent = function(event, next_event = NULL, ...) {
@@ -263,11 +263,11 @@ code_generators <- list(
   },
 
   outputSnapshot = function(event, next_event = NULL, ...) {
-    paste0('expect_snapshot_app(app, items = list(output = "', event$name, '"))')
+    paste0('app_expect_appshot(app, items = list(output = "', event$name, '"))')
   },
 
   snapshot = function(event, next_event = NULL, ...) {
-    "expect_snapshot_app(app)"
+    "app_expect_appshot(app)"
   }
 )
 

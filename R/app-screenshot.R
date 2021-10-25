@@ -13,6 +13,7 @@
 #' @return Self, invisibly.
 #' @include shiny-driver.R
 # takeScreenshotLegacy = function(file = NULL, id = NULL, parent = FALSE) {
+# TODO-barret; rename to `$screenshot`?
 ShinyDriver2$set("public", "takeScreenshot", function(
   filename = NULL,
   ..., # ignored? Send to chromote?
