@@ -1,6 +1,7 @@
 ui <- fluidPage(
   downloadButton("download_button", "Download Button"),
-  downloadButton("download_link", "Download Link")
+  downloadButton("download_link", "Download Link"),
+  verbatimTextOutput("add")
 )
 
 server <- function(input, output) {
@@ -21,6 +22,11 @@ server <- function(input, output) {
       write.csv(tail(cars, 10), file)
     }
   )
+
+  # Used to add a `tick` into the app / slow down testing
+  output$add <- renderText({
+    1 + 1
+  })
 }
 
 shinyApp(ui, server)
