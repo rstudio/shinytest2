@@ -15,9 +15,6 @@ with a live app.
 \item \href{#method-expectAppshot}{\code{ShinyDriver2$expectAppshot()}}
 \item \href{#method-getDebugLog}{\code{ShinyDriver2$getDebugLog()}}
 \item \href{#method-enableDebugLogMessages}{\code{ShinyDriver2$enableDebugLogMessages()}}
-\item \href{#method-getAppDir}{\code{ShinyDriver2$getAppDir()}}
-\item \href{#method-getAppFilename}{\code{ShinyDriver2$getAppFilename()}}
-\item \href{#method-isRmd}{\code{ShinyDriver2$isRmd()}}
 \item \href{#method-findElement}{\code{ShinyDriver2$findElement()}}
 \item \href{#method-findElements}{\code{ShinyDriver2$findElements()}}
 \item \href{#method-logEvent}{\code{ShinyDriver2$logEvent()}}
@@ -29,6 +26,7 @@ with a live app.
 \item \href{#method-new}{\code{ShinyDriver2$new()}}
 \item \href{#method-setInputs}{\code{ShinyDriver2$setInputs()}}
 \item \href{#method-uploadFile}{\code{ShinyDriver2$uploadFile()}}
+\item \href{#method-getPath}{\code{ShinyDriver2$getPath()}}
 \item \href{#method-takeScreenshot}{\code{ShinyDriver2$takeScreenshot()}}
 \item \href{#method-expectDownload}{\code{ShinyDriver2$expectDownload()}}
 \item \href{#method-stop}{\code{ShinyDriver2$stop()}}
@@ -84,33 +82,6 @@ with a live app.
 \subsection{Method \code{enableDebugLogMessages()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$enableDebugLogMessages(enable = TRUE)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getAppDir"></a>}}
-\if{latex}{\out{\hypertarget{method-getAppDir}{}}}
-\subsection{Method \code{getAppDir()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getAppDir()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getAppFilename"></a>}}
-\if{latex}{\out{\hypertarget{method-getAppFilename}{}}}
-\subsection{Method \code{getAppFilename()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getAppFilename()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-isRmd"></a>}}
-\if{latex}{\out{\hypertarget{method-isRmd}{}}}
-\subsection{Method \code{isRmd()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$isRmd()}\if{html}{\out{</div>}}
 }
 
 }
@@ -254,6 +225,15 @@ with a live app.
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getPath"></a>}}
+\if{latex}{\out{\hypertarget{method-getPath}{}}}
+\subsection{Method \code{getPath()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getPath()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-takeScreenshot"></a>}}
