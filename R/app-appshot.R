@@ -56,7 +56,7 @@ app_expect_appshot <- function(
   # variant = NULL,
   cran = FALSE
 ) {
-  app$expectAppshot(
+  app$expect_appshot(
     ...,
     name = name,
     items = items,
@@ -77,7 +77,7 @@ app_expect_appshot <- function(
 #' @param screenshot Take a screenshot? Overrides value set by
 #'   `$snapshotInit()`
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "expectAppshot", function(
+ShinyDriver2$set("public", "expect_appshot", function(
   ...,
   name = NULL,
   items = NULL,

@@ -12,7 +12,7 @@ with a live app.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-expectAppshot}{\code{ShinyDriver2$expectAppshot()}}
+\item \href{#method-expect_appshot}{\code{ShinyDriver2$expect_appshot()}}
 \item \href{#method-getDebugLog}{\code{ShinyDriver2$getDebugLog()}}
 \item \href{#method-enableDebugLogMessages}{\code{ShinyDriver2$enableDebugLogMessages()}}
 \item \href{#method-findElement}{\code{ShinyDriver2$findElement()}}
@@ -45,11 +45,11 @@ with a live app.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expectAppshot"></a>}}
-\if{latex}{\out{\hypertarget{method-expectAppshot}{}}}
-\subsection{Method \code{expectAppshot()}}{
+\if{html}{\out{<a id="method-expect_appshot"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_appshot}{}}}
+\subsection{Method \code{expect_appshot()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expectAppshot(
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expect_appshot(
   ...,
   name = NULL,
   items = NULL,
