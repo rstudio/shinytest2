@@ -2,6 +2,9 @@
 ShinyDriver2$set("private", "path", NULL) # Full path to app (including filename if it's a .Rmd)
 
 
+# TODO-barret-issue; Can we get rid of $getAppFilename, $getAppDir, and $isRmd?
+# TODO-barret-issue; Why not make `private$path` into `public$path`? https://github.com/rstudio/shinytest2/issues/43
+
 #' @description Directory where app is located
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "getAppDir", function() {
@@ -9,13 +12,13 @@ ShinyDriver2$set("public", "getAppDir", function() {
   if (self$isRmd()) fs::path_dir(private$path) else private$path
 })
 
-#' @description App file name, i.e. `app.R` or `server.R`. `NULL` for Rmds.
+#' @description The Rmd filename or NULL
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "getAppFilename", function() {
-  if (!self$isRmd()) {
-    NULL
-  } else {
+  if (self$isRmd()) {
     fs::path_file(private$path)
+  } else {
+    NULL
   }
 })
 
@@ -24,18 +27,3 @@ ShinyDriver2$set("public", "getAppFilename", function() {
 ShinyDriver2$set("public", "isRmd", function() {
   is_rmd(private$path)
 })
-
-# #' @description Deprecated.
-# #' @include shiny-driver.R
-# ShinyDriver2$set("public", "getRelativePathToApp", function() {
-#   abort("app$getRelativePathToApp() is no longer used")
-# })
-
-# #' @description Deprecated. Directory where tests are located
-# #' @include shiny-driver.R
-# ShinyDriver2$set("public", "getTestsDir", function() {
-#   abort("app$getTestsDir() is not longer used")
-
-#   # From the 'app' to the 'tests/testthat' directory
-#   rprojroot::find_testthat_root_file(path = self$getAppDir())
-# })

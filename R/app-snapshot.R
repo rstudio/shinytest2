@@ -276,9 +276,8 @@ hash_snapshot_image_data <- function(data) {
   image_hashes <- vapply(image_data, FUN.VALUE = "", function(dat) {
     tryCatch({
       image_data <- jsonlite::base64_dec(dat)
-      digest::digest(
-        image_data,
-        algo = "sha1", serialize = FALSE
+      rlang::hash(
+        image_data
       )
     }, error = function(e) {
       "Error hashing image data"

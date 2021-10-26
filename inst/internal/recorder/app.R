@@ -271,9 +271,14 @@ code_generators <- list(
   }
 )
 
+app_dir <- function() {
+  app$getAppDir()
+}
 app_dir_basename <- function() {
-  # app$private$path
-  fs::path_file(shinytest2:::app_path(app$getAppDir())$dir)
+  fs::path_file(app_dir())
+}
+app_file_basename <- function() {
+  app$getAppFilename() %||% "."
 }
 
 generate_test_code <- function(events, name, seed,
@@ -304,13 +309,8 @@ generate_test_code <- function(events, name, seed,
     event_code <- paste0("  ", event_code, collapse = "\n")
   }
 
-  # Need paste instead of file.path because app$getAppFilename() can be NULL which makes file.path grumpy.
-  app_path <- paste(
-    # Get relative path from app to the testthat tests directory
-    fs::path_rel(app$getAppDir(), rprojroot::find_testthat_root_file(path = app$getAppDir())),
-    app$getAppFilename(),
-    sep = "/"
-  )
+  # From the tests dir, it is up two folders and then the app file
+  app_path <- paste("../../", app_file_basename())
   inner_code <- paste(
     paste0(
       "  app <- ShinyDriver2$new(\n",
@@ -332,7 +332,7 @@ generate_test_code <- function(events, name, seed,
   )
 
   paste0(
-    "test_that(\"", fs::path_file(shinytest2:::app_path(app$getAppDir())$dir), " - ", app_dir_basename(), "\", {\n",
+    "test_that(\"", app_dir_basename(), "\", {\n",
     inner_code, "\n",
     "})\n"
   )
@@ -441,18 +441,7 @@ shinyApp(
     }
 
     save_file <- reactive({
-      # file.path(app$getTestsDir(), paste0(input$testname, ".R"))
-      tryCatch({
-        rprojroot::find_testthat_root_file(
-          paste0("test-st2-", app_dir_basename(), ".R"),
-          # TODO-barret-question; Given the application directory or the calling directory? Calling directory will need to be passed in;
-          # TODO-barret-answer; Record the test next to the app directory.
-          path = app$getAppDir()
-        )
-      }, error = function(e) {
-        message("Error while finding a location to save the test script:", e)
-        req(FALSE)
-      })
+      file.path(app_dir(), "tests", "testthat", paste0(input$testname, ".R"))
     })
 
     # Number of snapshot or fileDownload events in input$testevents
@@ -520,9 +509,14 @@ shinyApp(
           allow_no_input_binding = input$allow_no_input_binding
         )
 
+        # (maybe) Remove prior file
         if (isTRUE(delete_test_file)) {
           unlink(save_file())
         }
+
+        # Make sure folder exists
+        dir.create(fs::path_dir(save_file()), recursive = TRUE, showWarnings = FALSE)
+
         add_library_call <- TRUE
         if (file.exists(save_file())) {
           code <- paste0(code, "\n\n")
