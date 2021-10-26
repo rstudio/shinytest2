@@ -7,10 +7,10 @@
 # ' @param partialLinkText Find `<a>` HTML elements based on partial `innerText`
 # ' @param xpath Find HTML elements using XPath expressions.
 #' @return An NodeId to the element
-ShinyDriver2$set("public", "findElement", function(css = NULL
+ShinyDriver2$set("public", "find_element", function(css = NULL
 ) {
-  "!DEBUG ShinyDriver2$findElement '`css`'"
-  # private$web$findElement(css, linkText, partialLinkText, xpath)
+  "!DEBUG ShinyDriver2$find_element '`css`'"
+  # private$web$find_element(css, linkText, partialLinkText, xpath)
   chromote_find_element(self$get_chromote_session(), css)
 })
 # app_find_element <- function(app, css) {
@@ -21,9 +21,9 @@ ShinyDriver2$set("public", "findElement", function(css = NULL
 #' Find all elements matching CSS selection.
 # ' @return A list of [webdriver::Element]s.
 #' @return An list of NodeId corresponding to the matching elements.
-ShinyDriver2$set("public", "findElements", function(css = NULL
+ShinyDriver2$set("public", "find_elements", function(css = NULL
 # , linkText = NULL, partialLinkText = NULL, xpath = NULL
 ) {
-  "!DEBUG ShinyDriver2$findElements '`css`'"
+  "!DEBUG ShinyDriver2$find_elements '`css`'"
   chromote_find_elements(self$get_chromote_session(), css)
 })

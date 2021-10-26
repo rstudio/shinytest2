@@ -158,7 +158,7 @@ Widget2 <- R6Class( # nolint
     #   if (private$type != "tabsetPanel") {
     #     abort("'listTabs' only works for 'tabsetPanel' Widgets")
     #   }
-    #   tabs <- private$element$findElements("li a")
+    #   tabs <- private$element$find_elements("li a")
     #   vapply(tabs, function(t) t$getData("value"), "")
     # },
 
@@ -280,7 +280,7 @@ ShinyDriver2$set("public", "getValue", function(name, iotype = c("auto", "input"
 })
 
 #' @description
-#' Finds a widget and sets its value. It's a shortcut for `findElement()`
+#' Finds a widget and sets its value. It's a shortcut for `$findWidget()`
 #' plus `setValue()`; see the [Widget2] documentation for more details.
 #'
 #' @param value New value.
@@ -293,8 +293,8 @@ ShinyDriver2$set("public", "setValue", function(name, value, iotype = c("auto", 
 })
 
 #' @description
-#' Find a widget and click it. It's a shortcut for `findElement()`
-#' plus `click()`; see the [Widget2] documentation for more details.
+#' Find a widget and click it. It's a shortcut for `$findWidget()`
+#' plus `$click()`; see the [Widget2] documentation for more details.
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "click", function(name, iotype = c("auto", "input", "output")) {
   self$findWidget(name, iotype)$click()
