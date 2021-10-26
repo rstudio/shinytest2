@@ -198,7 +198,7 @@ ShinyDriver2$set("public", "get_debug_log", function(type = c("all", debug_log_t
 #' Enable/disable debugging messages
 #' @param enable New value.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "enableDebugLogMessages", function(enable = TRUE) {
+ShinyDriver2$set("public", "enable_debug_log_messages", function(enable = TRUE) {
   self$executeScript(
     "window.shinytest2.log_messages = arguments[0]",
     enable

@@ -15,7 +15,7 @@ with a live app.
 \item \href{#method-expect_appshot}{\code{ShinyDriver2$expect_appshot()}}
 \item \href{#method-get_chromote_session}{\code{ShinyDriver2$get_chromote_session()}}
 \item \href{#method-get_debug_log}{\code{ShinyDriver2$get_debug_log()}}
-\item \href{#method-enableDebugLogMessages}{\code{ShinyDriver2$enableDebugLogMessages()}}
+\item \href{#method-enable_debug_log_messages}{\code{ShinyDriver2$enable_debug_log_messages()}}
 \item \href{#method-findElement}{\code{ShinyDriver2$findElement()}}
 \item \href{#method-findElements}{\code{ShinyDriver2$findElements()}}
 \item \href{#method-logEvent}{\code{ShinyDriver2$logEvent()}}
@@ -87,11 +87,11 @@ with a live app.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-enableDebugLogMessages"></a>}}
-\if{latex}{\out{\hypertarget{method-enableDebugLogMessages}{}}}
-\subsection{Method \code{enableDebugLogMessages()}}{
+\if{html}{\out{<a id="method-enable_debug_log_messages"></a>}}
+\if{latex}{\out{\hypertarget{method-enable_debug_log_messages}{}}}
+\subsection{Method \code{enable_debug_log_messages()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$enableDebugLogMessages(enable = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$enable_debug_log_messages(enable = TRUE)}\if{html}{\out{</div>}}
 }
 
 }
