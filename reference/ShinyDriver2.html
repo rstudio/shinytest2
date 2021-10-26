@@ -137,9 +137,6 @@ with a live app.</p>
 <li><p><a href='#method-expectAppshot'><code>ShinyDriver2$expectAppshot()</code></a></p></li>
 <li><p><a href='#method-getDebugLog'><code>ShinyDriver2$getDebugLog()</code></a></p></li>
 <li><p><a href='#method-enableDebugLogMessages'><code>ShinyDriver2$enableDebugLogMessages()</code></a></p></li>
-<li><p><a href='#method-getAppDir'><code>ShinyDriver2$getAppDir()</code></a></p></li>
-<li><p><a href='#method-getAppFilename'><code>ShinyDriver2$getAppFilename()</code></a></p></li>
-<li><p><a href='#method-isRmd'><code>ShinyDriver2$isRmd()</code></a></p></li>
 <li><p><a href='#method-findElement'><code>ShinyDriver2$findElement()</code></a></p></li>
 <li><p><a href='#method-findElements'><code>ShinyDriver2$findElements()</code></a></p></li>
 <li><p><a href='#method-logEvent'><code>ShinyDriver2$logEvent()</code></a></p></li>
@@ -151,6 +148,7 @@ with a live app.</p>
 <li><p><a href='#method-new'><code>ShinyDriver2$new()</code></a></p></li>
 <li><p><a href='#method-setInputs'><code>ShinyDriver2$setInputs()</code></a></p></li>
 <li><p><a href='#method-uploadFile'><code>ShinyDriver2$uploadFile()</code></a></p></li>
+<li><p><a href='#method-getPath'><code>ShinyDriver2$getPath()</code></a></p></li>
 <li><p><a href='#method-takeScreenshot'><code>ShinyDriver2$takeScreenshot()</code></a></p></li>
 <li><p><a href='#method-expectDownload'><code>ShinyDriver2$expectDownload()</code></a></p></li>
 <li><p><a href='#method-stop'><code>ShinyDriver2$stop()</code></a></p></li>
@@ -196,24 +194,6 @@ with a live app.</p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>enableDebugLogMessages</span><span class='op'>(</span>enable <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre><p></div></p>
-
-<p><hr>
-<a id="method-getAppDir"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>getAppDir()</code></h3>
-
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>getAppDir</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
-
-<p><hr>
-<a id="method-getAppFilename"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>getAppFilename()</code></h3>
-
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>getAppFilename</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
-
-<p><hr>
-<a id="method-isRmd"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>isRmd()</code></h3>
-
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>isRmd</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
 <p><hr>
 <a id="method-findElement"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>findElement()</code></h3>
@@ -317,6 +297,12 @@ with a live app.</p>
 <dt><code>wait_</code></dt><dd><p>Wait until all reactive updates have completed?</p></dd>
 
 </dl><p></div></p>
+<p><hr>
+<a id="method-getPath"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>getPath()</code></h3>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>getPath</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
 <p><hr>
 <a id="method-takeScreenshot"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>takeScreenshot()</code></h3>
 
