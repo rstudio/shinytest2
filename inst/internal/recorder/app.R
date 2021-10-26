@@ -279,7 +279,7 @@ app_dir_basename <- function() {
 }
 app_file_basename <- function() {
   path <- app$getPath()
-  if (dir.exists(path)) return (".")
+  if (dir.exists(path)) return(".")
   basename(path)
 }
 
