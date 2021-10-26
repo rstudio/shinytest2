@@ -146,7 +146,6 @@ with a live app.</p>
 <li><p><a href='#method-getEventLog'><code>ShinyDriver2$getEventLog()</code></a></p></li>
 <li><p><a href='#method-executeScript'><code>ShinyDriver2$executeScript()</code></a></p></li>
 <li><p><a href='#method-executeScriptCallback'><code>ShinyDriver2$executeScriptCallback()</code></a></p></li>
-<li><p><a href='#method-expectUpdate'><code>ShinyDriver2$expectUpdate()</code></a></p></li>
 <li><p><a href='#method-expectSnapshotJS'><code>ShinyDriver2$expectSnapshotJS()</code></a></p></li>
 <li><p><a href='#method-getAllValues'><code>ShinyDriver2$getAllValues()</code></a></p></li>
 <li><p><a href='#method-new'><code>ShinyDriver2$new()</code></a></p></li>
@@ -252,24 +251,6 @@ with a live app.</p>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>executeScriptCallback</span><span class='op'>(</span><span class='va'>script</span>, <span class='va'>...</span>, timeout_ <span class='op'>=</span> <span class='fl'>15</span> <span class='op'>*</span> <span class='fl'>1000</span><span class='op'>)</span></pre><p></div></p>
 
-<p><hr>
-<a id="method-expectUpdate"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>expectUpdate()</code></h3>
-
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>ShinyDriver2</span><span class='op'>$</span><span class='fu'>expectUpdate</span><span class='op'>(</span>
-  <span class='va'>output</span>,
-  <span class='va'>...</span>,
-  timeout <span class='op'>=</span> <span class='fl'>3000</span>,
-  iotype <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"auto"</span>, <span class='st'>"input"</span>, <span class='st'>"output"</span><span class='op'>)</span>
-<span class='op'>)</span></pre><p></div></p>
-
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
-<p><div class="arguments"></p><dl>
-<dt><code>iotype</code></dt><dd><p>Type of the Shiny widget. Usually shinytest2 finds the widgets
-by their name, so this is only needed if you use the same name for an
-input and output widget.</p></dd>
-
-</dl><p></div></p>
 <p><hr>
 <a id="method-expectSnapshotJS"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>expectSnapshotJS()</code></h3>
 
