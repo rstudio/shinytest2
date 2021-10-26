@@ -62,7 +62,7 @@ console_api_to_msg <- function(info, url) {
 ShinyDriver2$set("private", "browserLogs", list())
 
 sd2_init_browser_debug <- function(self, private) {
-  self$chromote_session$Runtime$consoleAPICalled(function(info) {
+  self$get_chromote_session()$Runtime$consoleAPICalled(function(info) {
     # message("Runtime.consoleAPICalled")
     msg <- console_api_to_msg(info, private$getShinyUrl())
     # TODO-barret; Should these messages be displayed in realtime?
@@ -74,7 +74,7 @@ sd2_init_browser_debug <- function(self, private) {
         timestamp = Sys.time()
       )
   })
-  self$chromote_session$Runtime$exceptionThrown(function(info) {
+  self$get_chromote_session()$Runtime$exceptionThrown(function(info) {
     # message("Runtime.exceptionThrown")
     msg <- exception_thrown_to_msg(info, private$getShinyUrl())
     # TODO-barret; Should these messages be displayed in realtime?

@@ -31,7 +31,7 @@ ShinyDriver2$set("public", "takeScreenshot", function(
   self$logEvent("Taking screenshot")
   path <- temp_file(".png")
 
-  self$chromote_session$screenshot(
+  self$get_chromote_session()$screenshot(
     filename = path,
     ...,
     delay = delay,

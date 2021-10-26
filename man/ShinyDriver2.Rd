@@ -13,6 +13,7 @@ with a live app.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-expect_appshot}{\code{ShinyDriver2$expect_appshot()}}
+\item \href{#method-get_chromote_session}{\code{ShinyDriver2$get_chromote_session()}}
 \item \href{#method-getDebugLog}{\code{ShinyDriver2$getDebugLog()}}
 \item \href{#method-enableDebugLogMessages}{\code{ShinyDriver2$enableDebugLogMessages()}}
 \item \href{#method-findElement}{\code{ShinyDriver2$findElement()}}
@@ -66,6 +67,15 @@ with a live app.
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_chromote_session"></a>}}
+\if{latex}{\out{\hypertarget{method-get_chromote_session}{}}}
+\subsection{Method \code{get_chromote_session()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$get_chromote_session()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-getDebugLog"></a>}}

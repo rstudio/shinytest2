@@ -115,7 +115,7 @@ sd2_snapshot_download <- function(
   }
 
   # Find the URL to download from (the href of the <a> tag)
-  url <- chromote_eval(self$chromote_session, paste0("$('#", id, "').attr('href')"))$result$value
+  url <- chromote_eval(self$get_chromote_session(), paste0("$('#", id, "').attr('href')"))$result$value
   if (identical(url, "")) {
     stop("Download from '#", id, "' failed")
   }

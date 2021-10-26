@@ -10,6 +10,7 @@ methods for finer grained interaction.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
+\item \href{#method-get_chromote_session}{\code{Widget2$get_chromote_session()}}
 \item \href{#method-new}{\code{Widget2$new()}}
 \item \href{#method-getName}{\code{Widget2$getName()}}
 \item \href{#method-getNodeId}{\code{Widget2$getNodeId()}}
@@ -24,6 +25,15 @@ methods for finer grained interaction.
 \item \href{#method-uploadFile}{\code{Widget2$uploadFile()}}
 \item \href{#method-clone}{\code{Widget2$clone()}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_chromote_session"></a>}}
+\if{latex}{\out{\hypertarget{method-get_chromote_session}{}}}
+\subsection{Method \code{get_chromote_session()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Widget2$get_chromote_session()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}

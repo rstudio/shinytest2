@@ -11,7 +11,7 @@
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "waitFor", function(expr, timeout = 3 * 1000, interval = 100) {
   "!DEBUG ShinyDriver2$waitFor"
-  chromote_wait_for_condition(self$chromote_session, expr, timeout = timeout, interval = interval)
+  chromote_wait_for_condition(self$get_chromote_session(), expr, timeout = timeout, interval = interval)
 })
 
 #' @description
@@ -27,7 +27,7 @@ ShinyDriver2$set("public", "waitForShiny", function(timeout = 3 * 1000, interval
   # Details of busy event: https://shiny.rstudio.com/articles/js-events.html
   # private$web$waitFor()
   chromote_wait_for_condition(
-    self$chromote_session,
+    self$get_chromote_session(),
     "!$('html').first().hasClass('shiny-busy')",
     timeout = 3 * 1000,
     interval = interval

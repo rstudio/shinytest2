@@ -12,10 +12,13 @@ Widget2 <- R6Class( # nolint
     # element = NULL,  # HTML element with name as id
     nodeId = NULL,   # nodeId of the element
     type = NULL,     # e.g. selectInput
-    iotype = NULL    # "input" or "output"
+    iotype = NULL,    # "input" or "output"
+    chromote_session = NULL
   ),
   public = list(
-    chromote_session = NULL, # Chromote Session
+    get_chromote_session = function() {
+      private$chromote_session
+    },
 
     #' @description Create new `Widget2`
     #' @param name Name of a Shiny widget.
@@ -30,7 +33,7 @@ Widget2 <- R6Class( # nolint
       private$nodeId <- node_id # nolint
       private$type <- type
       private$iotype <- iotype
-      self$chromote_session <- chromote_session
+      private$chromote_session <- chromote_session
       invisible(self)
     },
 
@@ -41,7 +44,7 @@ Widget2 <- R6Class( # nolint
     getNodeId = function() private$nodeId,
     #' @description Retrieve the underlying HTML for a widget
     getHtml = function() {
-      chromote_call_js_on_node(self$chromote_session, private$nodeId, "function() { return this.outerHTML; }")$result$value
+      chromote_call_js_on_node(self$get_chromote_session(), private$nodeId, "function() { return this.outerHTML; }")$result$value
     },
     #' @description Widget2 type, e.g. `textInput`, `selectInput`.
     getType = function() private$type,
@@ -58,7 +61,7 @@ Widget2 <- R6Class( # nolint
 
       if (private$iotype == "input") {
         res <- chromote_call_js_on_node(
-          self$chromote_session,
+          self$get_chromote_session(),
           private$nodeId,
           "function() {
             var el = $(this);
@@ -69,7 +72,7 @@ Widget2 <- R6Class( # nolint
         res <- switch(private$type,
           htmlOutput = {
             chromote_call_js_on_node(
-              self$chromote_session,
+              self$get_chromote_session(),
               private$nodeId,
               "function() { return this.innerHTML; }"
             )$result$value
@@ -77,7 +80,7 @@ Widget2 <- R6Class( # nolint
           verbatimTextOutput = , # nolint
           textOutput = {
             chromote_call_js_on_node(
-              self$chromote_session,
+              self$get_chromote_session(),
               private$nodeId,
               "function() { return this.textContent; }"
             )$result$value
@@ -121,7 +124,7 @@ Widget2 <- R6Class( # nolint
           el.trigger('change');
         }
       "
-      chromote_call_js_on_node(self$chromote_session, private$nodeId, set_value_script, arguments = list(value))
+      chromote_call_js_on_node(self$get_chromote_session(), private$nodeId, set_value_script, arguments = list(value))
 
       invisible(self)
     },
@@ -135,7 +138,7 @@ Widget2 <- R6Class( # nolint
           el.click();
         }
       "
-      chromote_call_js_on_node(self$chromote_session, private$nodeId, click_script)
+      chromote_call_js_on_node(self$get_chromote_session(), private$nodeId, click_script)
       invisible(self)
     },
 
@@ -163,7 +166,7 @@ Widget2 <- R6Class( # nolint
     #'  It fails for other types of widgets.
     #' @param filename Path to file to upload
     uploadFile = function(filename) {
-      self$chromote_session$DOM$setFileInputFiles(files = list(fs::path_abs(filename)), nodeId = private$nodeId)
+      self$get_chromote_session()$DOM$setFileInputFiles(files = list(fs::path_abs(filename)), nodeId = private$nodeId)
     }
   )
 )
@@ -196,7 +199,7 @@ ShinyDriver2$set("public", "findWidget", function(name, iotype = c("auto", "inpu
     paste0("#", name, ".shiny-bound-output")
   }
 
-  el_node_ids <- chromote_find_elements(self$chromote_session, css)
+  el_node_ids <- chromote_find_elements(self$get_chromote_session(), css)
 
   if (length(el_node_ids) == 0) {
     abort(paste0(
@@ -214,7 +217,7 @@ ShinyDriver2$set("public", "findWidget", function(name, iotype = c("auto", "inpu
   }
 
   node_id <- el_node_ids[[1]]
-  js_ret <- chromote_call_js_on_node(self$chromote_session, node_id, "
+  js_ret <- chromote_call_js_on_node(self$get_chromote_session(), node_id, "
     function() {
       var el = $(this);
       if (el.data('shinyInputBinding') !== undefined) {
@@ -260,7 +263,7 @@ ShinyDriver2$set("public", "findWidget", function(name, iotype = c("auto", "inpu
     node_id = el_node_ids[[1]],
     type = unname(widget_names[type[[2]]] %|% type[[2]]),
     iotype = type[[1]],
-    chromote_session = self$chromote_session
+    chromote_session = self$get_chromote_session()
   )
 })
 
@@ -318,7 +321,7 @@ ShinyDriver2$set("public", "click", function(name, iotype = c("auto", "input", "
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "listWidgets", function() {
   "!DEBUG ShinyDriver2$listWidgets"
-  res <- chromote_eval(self$chromote_session, "shinytest2.listWidgets()")$result$value
+  res <- chromote_eval(self$get_chromote_session(), "shinytest2.listWidgets()")$result$value
 
   res$input <- sort_c(unlist(res$input))
   res$output <- sort_c(unlist(res$output))

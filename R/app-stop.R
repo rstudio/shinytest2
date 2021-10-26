@@ -13,7 +13,7 @@ ShinyDriver2$set("public", "stop", function() {
 
   self$logEvent("Closing Chrome session")
   # private$web$delete()
-  self$chromote_session$close()
+  self$get_chromote_session()$close()
 
   # If the app is being hosted locally, kill the process.
   if (!is.null(private$shinyProcess)) {
