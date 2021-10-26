@@ -161,7 +161,7 @@ filter_log_text <- function(str) {
 #' @param type Log type: `"all"`, `"shiny_console"`, `"browser"`,
 #'   or `"shinytest2"`.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "getDebugLog", function(type = c("all", debug_log_types())) {
+ShinyDriver2$set("public", "get_debug_log", function(type = c("all", debug_log_types())) {
 
   type <- as_debug(match.arg(type, several.ok = TRUE))
 
@@ -170,19 +170,19 @@ ShinyDriver2$set("public", "getDebugLog", function(type = c("all", debug_log_typ
   # It's possible for there not to be a shinyProcess object, if we're testing
   # against a remote server (as in shinyloadtest).
   if (!is.null(private$shinyProcess) && "shiny_console" %in% type) {
-    "!DEBUG ShinyDriver2$getDebugLog shiny_console"
+    "!DEBUG ShinyDriver2$get_debug_log shiny_console"
     out <- readLines(private$shinyProcess$get_output_file(), warn = FALSE)
     err <- readLines(private$shinyProcess$get_error_file(), warn = FALSE)
     output$shiny_console <- make_shiny_console_log(out = out, err = err)
   }
 
   if ("browser" %in% type) {
-    "!DEBUG ShinyDriver2$getDebugLog browser"
+    "!DEBUG ShinyDriver2$get_debug_log browser"
     output$browser <- make_browser_log(private$browserLogs)
   }
 
   if ("shinytest2" %in% type) {
-    "!DEBUG ShinyDriver2$getDebugLog shinytest2 log"
+    "!DEBUG ShinyDriver2$get_debug_log shinytest2 log"
     output$shinytest <- make_shinytest2_log(self$executeScript(
       "if (! window.shinytest2) { return([]) }
       var res = window.shinytest2.log_entries;

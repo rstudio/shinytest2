@@ -431,7 +431,7 @@ shinyApp(
       n_console_lines <- 0
       observe({
         invalidateLater(500)
-        logs <- app$getDebugLog(debug)
+        logs <- app$get_debug_log(debug)
         n <- nrow(logs)
         if (n > n_console_lines) {
           new_lines <- seq.int(n_console_lines + 1, n)

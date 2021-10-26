@@ -14,7 +14,7 @@ with a live app.
 \itemize{
 \item \href{#method-expect_appshot}{\code{ShinyDriver2$expect_appshot()}}
 \item \href{#method-get_chromote_session}{\code{ShinyDriver2$get_chromote_session()}}
-\item \href{#method-getDebugLog}{\code{ShinyDriver2$getDebugLog()}}
+\item \href{#method-get_debug_log}{\code{ShinyDriver2$get_debug_log()}}
 \item \href{#method-enableDebugLogMessages}{\code{ShinyDriver2$enableDebugLogMessages()}}
 \item \href{#method-findElement}{\code{ShinyDriver2$findElement()}}
 \item \href{#method-findElements}{\code{ShinyDriver2$findElements()}}
@@ -78,11 +78,11 @@ with a live app.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getDebugLog"></a>}}
-\if{latex}{\out{\hypertarget{method-getDebugLog}{}}}
-\subsection{Method \code{getDebugLog()}}{
+\if{html}{\out{<a id="method-get_debug_log"></a>}}
+\if{latex}{\out{\hypertarget{method-get_debug_log}{}}}
+\subsection{Method \code{get_debug_log()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getDebugLog(type = c("all", debug_log_types()))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$get_debug_log(type = c("all", debug_log_types()))}\if{html}{\out{</div>}}
 }
 
 }

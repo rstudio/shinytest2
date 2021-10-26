@@ -140,7 +140,7 @@ ShinyDriver2$set("public", "initialize", function(
   #   if (as.numeric(Sys.time()) > nav_stop_time) {
   #     abort(paste0(
   #       "Failed to navigate to Shiny app in ", load_timeout, "ms.\n",
-  #       format(self$getDebugLog())
+  #       format(self$get_debug_log())
   #     ))
   #   }
 
@@ -158,7 +158,7 @@ ShinyDriver2$set("public", "initialize", function(
   # if (!load_ok) {
   #   abort(paste0(
   #     "Shiny app did not load in ", load_timeout, "ms.\n",
-  #     format(self$getDebugLog())
+  #     format(self$get_debug_log())
   #   ))
   # }
 
@@ -172,7 +172,7 @@ ShinyDriver2$set("public", "initialize", function(
   ))) {
     abort(paste0(
       "Shiny app did not load in ", load_timeout, "ms.\n",
-      format(self$getDebugLog())
+      format(self$get_debug_log())
     ))
   }
 
