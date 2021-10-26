@@ -26,7 +26,7 @@ with a live app.
 \item \href{#method-new}{\code{ShinyDriver2$new()}}
 \item \href{#method-setInputs}{\code{ShinyDriver2$setInputs()}}
 \item \href{#method-uploadFile}{\code{ShinyDriver2$uploadFile()}}
-\item \href{#method-getPath}{\code{ShinyDriver2$getPath()}}
+\item \href{#method-get_path}{\code{ShinyDriver2$get_path()}}
 \item \href{#method-takeScreenshot}{\code{ShinyDriver2$takeScreenshot()}}
 \item \href{#method-expectDownload}{\code{ShinyDriver2$expectDownload()}}
 \item \href{#method-stop}{\code{ShinyDriver2$stop()}}
@@ -227,11 +227,11 @@ with a live app.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getPath"></a>}}
-\if{latex}{\out{\hypertarget{method-getPath}{}}}
-\subsection{Method \code{getPath()}}{
+\if{html}{\out{<a id="method-get_path"></a>}}
+\if{latex}{\out{\hypertarget{method-get_path}{}}}
+\subsection{Method \code{get_path()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getPath()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$get_path()}\if{html}{\out{</div>}}
 }
 
 }

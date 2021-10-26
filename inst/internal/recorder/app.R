@@ -15,7 +15,7 @@ add_dont_run_reason <- function(reason) {
   dont_run_reasons <<- c(dont_run_reasons, reason)
 }
 
-if (is.null(target_url) || is.null(app$getPath())) {
+if (is.null(target_url) || is.null(app$get_path())) {
   stop("Test recorder requires the 'shinytest2.recorder.url' and ",
     "'shinytest2.app.dir' options to be set.")
 }
@@ -272,13 +272,13 @@ code_generators <- list(
 )
 
 app_dir <- function() {
-  app$getPath()
+  app$get_path()
 }
 app_dir_basename <- function() {
   fs::path_file(app_dir())
 }
 app_file_basename <- function() {
-  path <- app$getPath()
+  path <- app$get_path()
   if (dir.exists(path)) return(".")
   basename(path)
 }
