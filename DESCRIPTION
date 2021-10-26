@@ -56,7 +56,6 @@ Collate:
     'app-appshot.R'
     'app-chromote.R'
     'app-debug.R'
-    'app-element.R'
     'app-event-logging.R'
     'app-execute.R'
     'app-expect.R'

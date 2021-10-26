@@ -16,8 +16,6 @@ with a live app.
 \item \href{#method-get_chromote_session}{\code{ShinyDriver2$get_chromote_session()}}
 \item \href{#method-get_debug_log}{\code{ShinyDriver2$get_debug_log()}}
 \item \href{#method-enable_debug_log_messages}{\code{ShinyDriver2$enable_debug_log_messages()}}
-\item \href{#method-findElement}{\code{ShinyDriver2$findElement()}}
-\item \href{#method-findElements}{\code{ShinyDriver2$findElements()}}
 \item \href{#method-logEvent}{\code{ShinyDriver2$logEvent()}}
 \item \href{#method-getEventLog}{\code{ShinyDriver2$getEventLog()}}
 \item \href{#method-executeScript}{\code{ShinyDriver2$executeScript()}}
@@ -92,24 +90,6 @@ with a live app.
 \subsection{Method \code{enable_debug_log_messages()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$enable_debug_log_messages(enable = TRUE)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-findElement"></a>}}
-\if{latex}{\out{\hypertarget{method-findElement}{}}}
-\subsection{Method \code{findElement()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$findElement(css = NULL)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-findElements"></a>}}
-\if{latex}{\out{\hypertarget{method-findElements}{}}}
-\subsection{Method \code{findElements()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$findElements(css = NULL)}\if{html}{\out{</div>}}
 }
 
 }
