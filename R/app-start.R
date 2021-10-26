@@ -94,10 +94,7 @@ ShinyDriver2$set("private", "startShiny", function(
   }
 
   line <- err_lines[grepl("Listening on http", err_lines)]
-
-  # m[, 'port'] should be the same as port, but we don't enforce it.
-  m <- rematch::re_match(text = line, "https?://(?<host>[^:]+):(?<port>[0-9]+)")
-  "!DEBUG shiny up and running, port `m[, 'port']`"
+  "!DEBUG shiny up and running, `line`"
 
   url <- sub(".*(https?://.*)", "\\1", line)
   private$setShinyUrl(url)
