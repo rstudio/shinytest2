@@ -56,8 +56,9 @@ Widget2 <- R6Class( # nolint
     # isOutput = function() private$iotype == "output",
 
     #' @description Get current value of control.
-    getValue = function() {
-      "!DEBUG widget2_getValue `private$name`"
+    # TODO-barret; https://github.com/rstudio/shinytest2/issues/49
+    get_value = function() {
+      "!DEBUG widget2_get_value `private$name`"
 
       if (private$iotype == "input") {
         res <- chromote_call_js_on_node(
@@ -85,7 +86,7 @@ Widget2 <- R6Class( # nolint
               "function() { return this.textContent; }"
             )$result$value
           },
-          abort(paste0("getValue is not implemented for ", private$type))
+          abort(paste0("$get_value() is not implemented for ", private$type))
         )
       }
 
@@ -277,12 +278,12 @@ sd2_find_widget <- function(self, private, name, iotype = c("auto", "input", "ou
 
 
 #' @description
-#' Finds a widget and queries its value. See the `getValue()` method of
+#' Finds a widget and queries its value. See the `get_value()` method of
 #' [Widget2] for more details.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "getValue", function(name, iotype = c("auto", "input", "output")) {
-  "!DEBUG ShinyDriver2$getValue `name` (`iotype`)"
-  private$find_widget(name, iotype)$getValue()
+ShinyDriver2$set("public", "get_value", function(name, iotype = c("auto", "input", "output")) {
+  "!DEBUG ShinyDriver2$get_value `name` (`iotype`)"
+  private$find_widget(name, iotype)$get_value()
 })
 
 #' @description

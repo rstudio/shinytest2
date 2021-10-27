@@ -12,7 +12,7 @@ methods for finer grained interaction.
 \itemize{
 \item \href{#method-get_chromote_session}{\code{Widget2$get_chromote_session()}}
 \item \href{#method-new}{\code{Widget2$new()}}
-\item \href{#method-getValue}{\code{Widget2$getValue()}}
+\item \href{#method-get_value}{\code{Widget2$get_value()}}
 \item \href{#method-setValue}{\code{Widget2$setValue()}}
 \item \href{#method-click}{\code{Widget2$click()}}
 \item \href{#method-upload_file}{\code{Widget2$upload_file()}}
@@ -60,12 +60,12 @@ Create new \code{Widget2}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getValue"></a>}}
-\if{latex}{\out{\hypertarget{method-getValue}{}}}
-\subsection{Method \code{getValue()}}{
+\if{html}{\out{<a id="method-get_value"></a>}}
+\if{latex}{\out{\hypertarget{method-get_value}{}}}
+\subsection{Method \code{get_value()}}{
 Get current value of control.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Widget2$getValue()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Widget2$get_value()}\if{html}{\out{</div>}}
 }
 
 }
