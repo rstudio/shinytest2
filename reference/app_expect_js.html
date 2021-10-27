@@ -113,7 +113,7 @@ For example, app_expect_html() and app_expect_text() are thin wrappers around th
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Expect snapshot of JS script output</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rstudio/shinytest2/blob/master/R/app-expect.R'><code>R/app-expect.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/rstudio/shinytest2/blob/master/R/app-expect-other.R'><code>R/app-expect-other.R</code></a></small>
     <div class="hidden name"><code>app_expect_js.Rd</code></div>
     </div>
 
@@ -127,7 +127,7 @@ For example, <code><a href='app_expect_text.html'>app_expect_html()</a></code> a
   <span class='va'>script</span>,
   <span class='va'>...</span>,
   arguments <span class='op'>=</span> <span class='fu'>list2</span><span class='op'>(</span><span class='op'>)</span>,
-  post_script <span class='op'>=</span> <span class='cn'>NULL</span>,
+  post_fn <span class='op'>=</span> <span class='cn'>NULL</span>,
   cran <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
@@ -151,7 +151,7 @@ For example, <code><a href='app_expect_text.html'>app_expect_html()</a></code> a
       <td><p>A list of arguments to be passed to the script.</p></td>
     </tr>
     <tr>
-      <th>post_script</th>
+      <th>post_fn</th>
       <td><p>A function to be called on the result of the script before taking the snapshot.
 <code><a href='app_expect_text.html'>app_expect_html()</a></code> and <code><a href='app_expect_text.html'>app_expect_text()</a></code> both use <code><a href='https://rdrr.io/r/base/unlist.html'>unlist()</a></code>.</p></td>
     </tr>

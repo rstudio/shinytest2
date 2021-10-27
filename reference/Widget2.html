@@ -130,20 +130,22 @@ methods for finer grained interaction.</p>
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
 
 <ul>
+<li><p><a href='#method-get_chromote_session'><code>Widget2$get_chromote_session()</code></a></p></li>
 <li><p><a href='#method-new'><code>Widget2$new()</code></a></p></li>
-<li><p><a href='#method-getName'><code>Widget2$getName()</code></a></p></li>
-<li><p><a href='#method-getNodeId'><code>Widget2$getNodeId()</code></a></p></li>
-<li><p><a href='#method-getHtml'><code>Widget2$getHtml()</code></a></p></li>
-<li><p><a href='#method-getType'><code>Widget2$getType()</code></a></p></li>
-<li><p><a href='#method-getIoType'><code>Widget2$getIoType()</code></a></p></li>
-<li><p><a href='#method-isInput'><code>Widget2$isInput()</code></a></p></li>
-<li><p><a href='#method-isOutput'><code>Widget2$isOutput()</code></a></p></li>
-<li><p><a href='#method-getValue'><code>Widget2$getValue()</code></a></p></li>
-<li><p><a href='#method-setValue'><code>Widget2$setValue()</code></a></p></li>
+<li><p><a href='#method-get_type'><code>Widget2$get_type()</code></a></p></li>
+<li><p><a href='#method-get_iotype'><code>Widget2$get_iotype()</code></a></p></li>
+<li><p><a href='#method-get_value'><code>Widget2$get_value()</code></a></p></li>
+<li><p><a href='#method-set_value'><code>Widget2$set_value()</code></a></p></li>
 <li><p><a href='#method-click'><code>Widget2$click()</code></a></p></li>
-<li><p><a href='#method-uploadFile'><code>Widget2$uploadFile()</code></a></p></li>
+<li><p><a href='#method-upload_file'><code>Widget2$upload_file()</code></a></p></li>
 <li><p><a href='#method-clone'><code>Widget2$clone()</code></a></p></li>
 </ul>
+<p><hr>
+<a id="method-get_chromote_session"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>get_chromote_session()</code></h3>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>get_chromote_session</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
 <p><hr>
 <a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
 <p>Create new <code>Widget2</code></p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
@@ -169,50 +171,24 @@ methods for finer grained interaction.</p>
 
 </dl><p></div></p>
 <p><hr>
-<a id="method-getName"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>getName()</code></h3>
-<p>Control id (i.e. <code>inputId</code> or <code>outputId</code> that control
-was created with).</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>getName</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
-
-<p><hr>
-<a id="method-getNodeId"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>getNodeId()</code></h3>
-<p>Underlying <code>nodeId</code> to be used within the Chromium session</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>getNodeId</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
-
-<p><hr>
-<a id="method-getHtml"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>getHtml()</code></h3>
-<p>Retrieve the underlying HTML for a widget</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>getHtml</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
-
-<p><hr>
-<a id="method-getType"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>getType()</code></h3>
+<a id="method-get_type"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>get_type()</code></h3>
 <p>Widget2 type, e.g. <code>textInput</code>, <code>selectInput</code>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>getType</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>get_type</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
 <p><hr>
-<a id="method-getIoType"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>getIoType()</code></h3>
+<a id="method-get_iotype"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>get_iotype()</code></h3>
 <p>Is this an input or output control?</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>getIoType</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>get_iotype</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
 <p><hr>
-<a id="method-isInput"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>isInput()</code></h3>
-<p>Is this an input control?</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>isInput</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
-
-<p><hr>
-<a id="method-isOutput"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>isOutput()</code></h3>
-<p>Is this an output control?</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>isOutput</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
-
-<p><hr>
-<a id="method-getValue"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>getValue()</code></h3>
+<a id="method-get_value"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>get_value()</code></h3>
 <p>Get current value of control.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>getValue</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>get_value</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
 <p><hr>
-<a id="method-setValue"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>setValue()</code></h3>
+<a id="method-set_value"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>set_value()</code></h3>
 <p>Set value of control.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>setValue</span><span class='op'>(</span><span class='va'>value</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>set_value</span><span class='op'>(</span><span class='va'>value</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
@@ -227,10 +203,10 @@ was created with).</p><h4 class='hasAnchor' id='arguments'><a class='anchor' hre
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p>self, invisibly.</p>
 <p><hr>
-<a id="method-uploadFile"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>uploadFile()</code></h3>
+<a id="method-upload_file"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>upload_file()</code></h3>
 <p>Upload a file to a <code><a href='https://rdrr.io/pkg/shiny/man/fileInput.html'>shiny::fileInput()</a></code>.
 It fails for other types of widgets.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>uploadFile</span><span class='op'>(</span><span class='va'>filename</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>Widget2</span><span class='op'>$</span><span class='fu'>upload_file</span><span class='op'>(</span><span class='va'>filename</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
