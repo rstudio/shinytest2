@@ -17,7 +17,7 @@ with a live app.
 \item \href{#method-get_debug_log}{\code{ShinyDriver2$get_debug_log()}}
 \item \href{#method-enable_debug_log_messages}{\code{ShinyDriver2$enable_debug_log_messages()}}
 \item \href{#method-log_event}{\code{ShinyDriver2$log_event()}}
-\item \href{#method-getEventLog}{\code{ShinyDriver2$getEventLog()}}
+\item \href{#method-get_event_log}{\code{ShinyDriver2$get_event_log()}}
 \item \href{#method-executeScript}{\code{ShinyDriver2$executeScript()}}
 \item \href{#method-executeScriptCallback}{\code{ShinyDriver2$executeScriptCallback()}}
 \item \href{#method-expectSnapshotJS}{\code{ShinyDriver2$expectSnapshotJS()}}
@@ -103,11 +103,11 @@ with a live app.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getEventLog"></a>}}
-\if{latex}{\out{\hypertarget{method-getEventLog}{}}}
-\subsection{Method \code{getEventLog()}}{
+\if{html}{\out{<a id="method-get_event_log"></a>}}
+\if{latex}{\out{\hypertarget{method-get_event_log}{}}}
+\subsection{Method \code{get_event_log()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getEventLog()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$get_event_log()}\if{html}{\out{</div>}}
 }
 
 }
