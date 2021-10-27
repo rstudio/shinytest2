@@ -54,6 +54,7 @@ Config/testthat/edition: 3
 Collate:
     'shiny-driver.R'
     'app-chromote.R'
+    'app-count.R'
     'app-debug.R'
     'app-event-logging.R'
     'app-execute.R'
@@ -72,7 +73,6 @@ Collate:
     'app-widget.R'
     'app-window.R'
     'chromote_methods.R'
-    'count.R'
     'httr.R'
     'utils.R'
     'platform.R'

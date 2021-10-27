@@ -1,3 +1,7 @@
+
+#' @include shiny-driver.R
+ShinyDriver2$set("private", "appshot_count", "<Count>") # Current snapshot count
+
 Count <- R6Class( # nolint
   "Count",
   private = list(
