@@ -11,13 +11,13 @@ ShinyDriver2$set("public", "stop", function() {
   if (private$state == "stopped")
     return(invisible(self))
 
-  self$logEvent("Closing Chrome session")
+  self$log_event("Closing Chrome session")
   # private$web$delete()
   self$get_chromote_session()$close()
 
   # If the app is being hosted locally, kill the process.
   if (!is.null(private$shinyProcess)) {
-    self$logEvent("Ending Shiny process")
+    self$log_event("Ending Shiny process")
 
     # Attempt soft-kill before hard-kill. This is a workaround for
     # https://github.com/r-lib/processx/issues/95

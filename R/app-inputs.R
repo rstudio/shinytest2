@@ -36,7 +36,7 @@ ShinyDriver2$set("public", "setInputs", function(
     )
   })
 
-  self$logEvent("Setting inputs",
+  self$log_event("Setting inputs",
     input = paste(names(input_values), collapse = ",")
   )
 
@@ -56,7 +56,7 @@ ShinyDriver2$set("public", "setInputs", function(
     ))
   }
 
-  self$logEvent("Finished setting inputs", timedout = res$timedOut)
+  self$log_event("Finished setting inputs", timedout = res$timedOut)
 
   values <- NULL
   if (values_) {
@@ -129,7 +129,7 @@ ShinyDriver2$set("public", "uploadFile", function(
     timeout_
   )
 
-  self$logEvent("Uploading file", input = inputs[[1]])
+  self$log_event("Uploading file", input = inputs[[1]])
 
   widget <- self$findWidget(names(inputs)[1])
   widget$uploadFile(inputs[[1]])
@@ -145,7 +145,7 @@ ShinyDriver2$set("public", "uploadFile", function(
   # transition is 0.6s, so this will ensure that it's done.
   Sys.sleep(0.6)
 
-  self$logEvent("Finished uploading file")
+  self$log_event("Finished uploading file")
 
   if (values_)
     invisible(self$getAllValues())

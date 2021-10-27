@@ -50,7 +50,7 @@ sd2_snapshot <- function(
   if (is.null(items$export)) items$export <- FALSE
 
   # Take snapshot -------------------------------------------------------------
-  self$logEvent("Taking snapshot")
+  self$log_event("Taking snapshot")
   url <- private$getTestSnapshotUrl(items$input, items$output, items$export)
   req <- httr_get(url)
 

@@ -8,7 +8,7 @@
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "getAllValues", function(input = TRUE, output = TRUE, export = TRUE) {
   # Note: This queries the server
-  self$logEvent("Getting all values")
+  self$log_event("Getting all values")
   "!DEBUG ShinyDriver2$getAllValues"
 
   url <- private$getTestSnapshotUrl(input, output, export, format = "rds")

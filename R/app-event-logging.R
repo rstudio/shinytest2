@@ -5,7 +5,7 @@ ShinyDriver2$set("private", "eventLog", list())
 #' @param event Event name
 #' @param ... Addition data to store for event
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "logEvent", function(event, ...) {
+ShinyDriver2$set("public", "log_event", function(event, ...) {
 
   content <- list(time = Sys.time(), event = event, ...)
   stopifnot(rlang::is_named(content))

@@ -74,14 +74,14 @@ ShinyDriver2$set("public", "initialize", function(
     load_timeout <- if (on_ci()) 10000 else 5000
   }
 
-  self$logEvent("Start ShinyDriver2 initialization")
+  self$log_event("Start ShinyDriver2 initialization")
 
   # if (is.null(find_phantom())) {
   #   abort("PhantomJS not found.")
   # }
 
   # "!DEBUG get phantom port (starts phantom if not running)"
-  # self$logEvent("Getting PhantomJS port")
+  # self$log_event("Getting PhantomJS port")
   # private$phantomPort <- get_phantomPort(timeout = phantomTimeout)
 
   if (shiny::is.shiny.appobj(path)) {
@@ -92,7 +92,7 @@ ShinyDriver2$set("public", "initialize", function(
     private$setShinyUrl(path)
   } else {
     "!DEBUG starting shiny app from path"
-    self$logEvent("Starting Shiny app")
+    self$log_event("Starting Shiny app")
     private$startShiny(path, seed, load_timeout, shiny_args, render_args, options)
   }
 
@@ -102,7 +102,7 @@ ShinyDriver2$set("public", "initialize", function(
 
 
   "!DEBUG create new phantomjs session"
-  self$logEvent("Creating new phantomjs session")
+  self$log_event("Creating new phantomjs session")
   # private$web <- Session$new(port = private$phantomPort)
   private$chromote_session <- chromote::ChromoteSession$new()
 
@@ -114,13 +114,13 @@ ShinyDriver2$set("public", "initialize", function(
 
 
   "!DEBUG navigate to Shiny app"
-  self$logEvent("Navigating to Shiny app")
+  self$log_event("Navigating to Shiny app")
   # private$web$go(private$getShinyUrl())
   self$get_chromote_session()$Page$navigate(private$getShinyUrl())
 
   # This feels like it is too late. There is no guarantee that the script will load in time.
   "!DEBUG inject shiny-tracer.js to load before all other scripts"
-  self$logEvent("Injecting shiny-tracer.js")
+  self$log_event("Injecting shiny-tracer.js")
   # private$web$executeScript(js_content)
   # js_id <- self$get_chromote_session()$Page$addScriptToEvaluateOnNewDocument(js_file)
   # js_id <- self$get_chromote_session()$Page$addScriptToEvaluateOnNewDocument("https://cdnjs.cloudflare.com/ajax/libs/react-is/18.0.0-alpha-fd5e01c2e-20210913/umd/react-is.production.min.js")
@@ -150,7 +150,7 @@ ShinyDriver2$set("public", "initialize", function(
 
 
   "!DEBUG wait until Shiny starts"
-  self$logEvent("Waiting until Shiny app starts")
+  self$log_event("Waiting until Shiny app starts")
   # load_ok <- private$web$waitFor(
   #   'window.shinytest2 && window.shinytest2.ready === true',
   #   timeout = load_timeout
@@ -177,7 +177,7 @@ ShinyDriver2$set("public", "initialize", function(
   }
 
   "!DEBUG shiny started"
-  self$logEvent("Shiny app started")
+  self$log_event("Shiny app started")
   private$state <- "running"
 
   private$setupDebugging(debug)
