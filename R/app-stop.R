@@ -11,7 +11,7 @@ ShinyDriver2$set("public", "stop", function() {
   if (private$state == "stopped")
     return(invisible(self))
 
-  self$log_event("Closing Chrome session")
+  self$log_event("Closing chromote session")
   # private$web$delete()
   self$get_chromote_session()$close()
 

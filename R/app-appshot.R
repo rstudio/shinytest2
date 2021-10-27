@@ -88,22 +88,22 @@ ShinyDriver2$set("public", "expect_appshot", function(
   testthat::expect_s3_class(self, "ShinyDriver2")
   ellipsis::check_dots_empty()
 
-  snapshot_info <- sd2_snapshot(self, private, items = items, name = name, screenshot = screenshot)
+  appshot_info <- sd2_appshot(self, private, items = items, name = name, screenshot = screenshot)
 
   # compare json
   testthat_expect_snapshot_file(
     private,
-    snapshot_info$json_path,
+    appshot_info$json_path,
     cran = cran,
     compare = testthat::compare_file_text
     # , variant = variant
   )
 
   # compare screenshot
-  if (!is.null(snapshot_info$screenshot_path)) {
+  if (!is.null(appshot_info$screenshot_path)) {
     testthat_expect_snapshot_file(
       private,
-      snapshot_info$screenshot_path,
+      appshot_info$screenshot_path,
       cran = cran,
       compare = testthat::compare_file_binary
       # , variant = variant

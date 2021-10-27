@@ -102,7 +102,7 @@ ShinyDriver2$set("public", "initialize", function(
 
 
   "!DEBUG create new phantomjs session"
-  self$log_event("Creating new phantomjs session")
+  self$log_event("Creating new chromote session")
   # private$web <- Session$new(port = private$phantomPort)
   private$chromote_session <- chromote::ChromoteSession$new()
 

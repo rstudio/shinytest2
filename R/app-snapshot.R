@@ -6,7 +6,7 @@ ShinyDriver2$set("private", "snapshotScreenshot", TRUE) # Whether to take screen
 
 
 
-sd2_snapshot <- function(
+sd2_appshot <- function(
   self, private,
   items = NULL,
   name = NULL,
@@ -49,8 +49,9 @@ sd2_snapshot <- function(
   if (is.null(items$output)) items$output <- FALSE
   if (is.null(items$export)) items$export <- FALSE
 
-  # Take snapshot -------------------------------------------------------------
-  self$log_event("Taking snapshot")
+  # Take appshot -------------------------------------------------------------
+  self$log_event("Taking appshot")
+  self$log_event("Gathering input/output/export values")
   url <- private$getTestSnapshotUrl(items$input, items$output, items$export)
   req <- httr_get(url)
 
@@ -86,12 +87,12 @@ sd2_snapshot <- function(
 #   items = NULL,
 #   name = NULL
 # ) {
-#   sd2_snapshot(self, private, items = items, name = name, screenshot = FALSE)
+#   sd2_appshot(self, private, items = items, name = name, screenshot = FALSE)
 # })
 # ShinyDriver2$set("public", "expectSnapshotScreenshot", function(
 #   name = NULL
 # ) {
-#   sd2_snapshot(self, private, items = list(input = FALSE, output = FALSE, export = FALSE), name = name, screenshot = TRUE)
+#   sd2_appshot(self, private, items = list(input = FALSE, output = FALSE, export = FALSE), name = name, screenshot = TRUE)
 # })
 
 #' @description
@@ -103,7 +104,7 @@ sd2_snapshot <- function(
 #'   `002.download`, etc.
 # #' @include shiny-driver.R
 # ShinyDriver2$set("public", "snapshotDownload", function(id, name = NULL) {
-sd2_snapshot_download <- function(
+sd2_appshot_download <- function(
   self, private,
   id, name = NULL
 ) {
@@ -113,6 +114,8 @@ sd2_snapshot_download <- function(
   if (is.null(name)) {
     name <- sprintf("%03d.download", snapshot_count)
   }
+
+  self$log_event("Downloading file")
 
   # Find the URL to download from (the href of the <a> tag)
   url <- chromote_eval(self$get_chromote_session(), paste0("$('#", id, "').attr('href')"))$result$value
@@ -150,7 +153,7 @@ ShinyDriver2$set("public", "expectDownload", function(
   testthat::expect_s3_class(self, "ShinyDriver2")
   ellipsis::check_dots_empty()
 
-  snapshot_info <- sd2_snapshot_download(self, private, id = id, name = name)
+  snapshot_info <- sd2_appshot_download(self, private, id = id, name = name)
 
   # compare download_file
   testthat_expect_snapshot_file(

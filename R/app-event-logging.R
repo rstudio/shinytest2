@@ -5,6 +5,7 @@ ShinyDriver2$set("private", "eventLog", list())
 #' @param event Event name
 #' @param ... Addition data to store for event
 #' @include shiny-driver.R
+# TODO-barret-implement; Test this with a snapshot
 ShinyDriver2$set("public", "log_event", function(event, ...) {
 
   content <- list(time = Sys.time(), event = event, ...)
