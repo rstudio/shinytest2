@@ -1,4 +1,7 @@
-Url <- R6Class(
+#' @include shiny-driver.R
+ShinyDriver2$set("private", "shiny_url", "<Url>")
+
+Url <- R6Class( # nolint
   "Url",
   private = list(
     url = NULL
@@ -32,6 +35,3 @@ Url <- R6Class(
     }
   )
 )
-
-#' @include shiny-driver.R
-ShinyDriver2$set("private", "shiny_url", "<Url>")

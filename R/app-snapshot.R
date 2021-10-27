@@ -55,7 +55,7 @@ sd2_appshot <- function(
   # Take appshot -------------------------------------------------------------
   self$log_event("Taking appshot")
   self$log_event("Gathering input/output/export values")
-  url <- sd2_get_shiny_test_snapshot_url(self, private, items$input, items$output, items$export)
+  url <- sd2_get_shiny_test_url(self, private, items$input, items$output, items$export)
   req <- httr_get(url)
 
   # Convert to text, then replace base64-encoded images with hashes of them.
@@ -206,7 +206,7 @@ create_snapshot_dir <- function(dir, count) {
 }
 
 
-sd2_get_shiny_test_snapshot_url <- function(
+sd2_get_shiny_test_url <- function(
   self, private,
   input = TRUE,
   output = TRUE,
