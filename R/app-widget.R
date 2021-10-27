@@ -333,11 +333,10 @@ ShinyDriver2$set("public", "list_widgets", function() {
   res
 })
 
-#' @description
-#' Check if Shiny widget names are unique.
-#' @include shiny-driver.R
-ShinyDriver2$set("public", "checkUniqueWidgetNames", function() {
-  "!DEBUG ShinyDriver2$checkUniqueWidgetNames"
+# ' @description
+# ' Check if Shiny widget names are unique.
+sd2_check_unique_widget_names <- function(self, private) {
+  "!DEBUG sd2_check_unique_widget_names()"
   widgets <- self$list_widgets()
   inputs <- widgets$input
   outputs <- widgets$output
@@ -365,4 +364,4 @@ ShinyDriver2$set("public", "checkUniqueWidgetNames", function() {
   if (length(outputs) > 0) check("output", outputs)
 
   invisible(self)
-})
+}

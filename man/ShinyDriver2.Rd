@@ -36,7 +36,6 @@ with a live app.
 \item \href{#method-set_value}{\code{ShinyDriver2$set_value()}}
 \item \href{#method-click}{\code{ShinyDriver2$click()}}
 \item \href{#method-list_widgets}{\code{ShinyDriver2$list_widgets()}}
-\item \href{#method-checkUniqueWidgetNames}{\code{ShinyDriver2$checkUniqueWidgetNames()}}
 \item \href{#method-setWindowSize}{\code{ShinyDriver2$setWindowSize()}}
 \item \href{#method-getWindowSize}{\code{ShinyDriver2$getWindowSize()}}
 \item \href{#method-clone}{\code{ShinyDriver2$clone()}}
@@ -382,15 +381,6 @@ input and output widget.}
 \subsection{Method \code{list_widgets()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$list_widgets()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-checkUniqueWidgetNames"></a>}}
-\if{latex}{\out{\hypertarget{method-checkUniqueWidgetNames}{}}}
-\subsection{Method \code{checkUniqueWidgetNames()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$checkUniqueWidgetNames()}\if{html}{\out{</div>}}
 }
 
 }

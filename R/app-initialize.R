@@ -204,7 +204,7 @@ ShinyDriver2$set("public", "initialize", function(
   )$result$value
 
   "!DEBUG checking widget names"
-  if (check_names) self$checkUniqueWidgetNames()
+  if (check_names) sd2_check_unique_widget_names(self, private)
 
   invisible(self)
 })
