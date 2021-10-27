@@ -37,7 +37,7 @@ ShinyDriver2$set("public", "stop", function() {
 
 
 #' @include shiny-driver.R
-ShinyDriver2$set("private", "cleanLogs", TRUE) # Whether to clean logs when GC'd
+ShinyDriver2$set("private", "should_clean_logs", TRUE) # Whether to clean logs when GC'd
 
 # Function run on garbage collection
 #' @include shiny-driver.R
@@ -48,7 +48,7 @@ ShinyDriver2$set("private", "finalize", function() {
 
   # Chromote has its own cleanup process on finalize
 
-  if (isTRUE(private$cleanLogs)) {
+  if (isTRUE(private$should_clean_logs)) {
     unlink(private$shinyProcess$get_output_file())
     unlink(private$shinyProcess$get_error_file())
   }

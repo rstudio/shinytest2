@@ -69,7 +69,7 @@ ShinyDriver2$set("public", "initialize", function(
         )
       }
     }
-  private$cleanLogs <- isTRUE(clean_logs) # nolint
+  private$should_clean_logs <- isTRUE(clean_logs) # nolint
   if (is.null(load_timeout)) {
     load_timeout <- if (on_ci()) 10000 else 5000
   }
