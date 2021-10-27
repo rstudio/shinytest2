@@ -21,7 +21,7 @@ with a live app.
 \item \href{#method-execute_script}{\code{ShinyDriver2$execute_script()}}
 \item \href{#method-execute_script_callback}{\code{ShinyDriver2$execute_script_callback()}}
 \item \href{#method-expectSnapshotJS}{\code{ShinyDriver2$expectSnapshotJS()}}
-\item \href{#method-getAllValues}{\code{ShinyDriver2$getAllValues()}}
+\item \href{#method-get_all_values}{\code{ShinyDriver2$get_all_values()}}
 \item \href{#method-new}{\code{ShinyDriver2$new()}}
 \item \href{#method-setInputs}{\code{ShinyDriver2$setInputs()}}
 \item \href{#method-uploadFile}{\code{ShinyDriver2$uploadFile()}}
@@ -139,11 +139,11 @@ with a live app.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getAllValues"></a>}}
-\if{latex}{\out{\hypertarget{method-getAllValues}{}}}
-\subsection{Method \code{getAllValues()}}{
+\if{html}{\out{<a id="method-get_all_values"></a>}}
+\if{latex}{\out{\hypertarget{method-get_all_values}{}}}
+\subsection{Method \code{get_all_values()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getAllValues(input = TRUE, output = TRUE, export = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$get_all_values(input = TRUE, output = TRUE, export = TRUE)}\if{html}{\out{</div>}}
 }
 
 }

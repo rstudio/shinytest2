@@ -73,7 +73,7 @@ ShinyDriver2$set("public", "waitForValue", function(
       # only retrieve `name` from `iotype`
       args[[iotype]] <- name
       # TODO(-prev); Should this be `self$getValue(name, iotype = iotype)`? Note: `self$getValue()` is not generic enough?
-      do.call(self$getAllValues, args)[[iotype]][[name]]
+      do.call(self$get_all_values, args)[[iotype]][[name]]
     }, silent = TRUE)
 
     # if no error when trying ot retrieve the value..

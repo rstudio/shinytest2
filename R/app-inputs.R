@@ -60,7 +60,7 @@ ShinyDriver2$set("public", "setInputs", function(
 
   values <- NULL
   if (values_) {
-    values <- self$getAllValues()
+    values <- self$get_all_values()
   }
 
 
@@ -148,7 +148,7 @@ ShinyDriver2$set("public", "uploadFile", function(
   self$log_event("Finished uploading file")
 
   if (values_)
-    invisible(self$getAllValues())
+    invisible(self$get_all_values())
   else
     invisible()
 })

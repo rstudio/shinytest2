@@ -6,10 +6,10 @@
 #'   input/output/exported values, or a character vector of specific
 #'   controls.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "getAllValues", function(input = TRUE, output = TRUE, export = TRUE) {
+ShinyDriver2$set("public", "get_all_values", function(input = TRUE, output = TRUE, export = TRUE) {
   # Note: This queries the server
   self$log_event("Getting all values")
-  "!DEBUG ShinyDriver2$getAllValues"
+  "!DEBUG ShinyDriver2$get_all_values"
 
   url <- private$getTestSnapshotUrl(input, output, export, format = "rds")
   req <- httr_get(url)
