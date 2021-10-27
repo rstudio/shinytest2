@@ -12,17 +12,10 @@ methods for finer grained interaction.
 \itemize{
 \item \href{#method-get_chromote_session}{\code{Widget2$get_chromote_session()}}
 \item \href{#method-new}{\code{Widget2$new()}}
-\item \href{#method-getName}{\code{Widget2$getName()}}
-\item \href{#method-getNodeId}{\code{Widget2$getNodeId()}}
-\item \href{#method-getHtml}{\code{Widget2$getHtml()}}
-\item \href{#method-getType}{\code{Widget2$getType()}}
-\item \href{#method-getIoType}{\code{Widget2$getIoType()}}
-\item \href{#method-isInput}{\code{Widget2$isInput()}}
-\item \href{#method-isOutput}{\code{Widget2$isOutput()}}
 \item \href{#method-getValue}{\code{Widget2$getValue()}}
 \item \href{#method-setValue}{\code{Widget2$setValue()}}
 \item \href{#method-click}{\code{Widget2$click()}}
-\item \href{#method-uploadFile}{\code{Widget2$uploadFile()}}
+\item \href{#method-upload_file}{\code{Widget2$upload_file()}}
 \item \href{#method-clone}{\code{Widget2$clone()}}
 }
 }
@@ -67,77 +60,6 @@ Create new \code{Widget2}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getName"></a>}}
-\if{latex}{\out{\hypertarget{method-getName}{}}}
-\subsection{Method \code{getName()}}{
-Control id (i.e. \code{inputId} or \code{outputId} that control
-was created with).
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Widget2$getName()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getNodeId"></a>}}
-\if{latex}{\out{\hypertarget{method-getNodeId}{}}}
-\subsection{Method \code{getNodeId()}}{
-Underlying \code{nodeId} to be used within the Chromium session
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Widget2$getNodeId()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getHtml"></a>}}
-\if{latex}{\out{\hypertarget{method-getHtml}{}}}
-\subsection{Method \code{getHtml()}}{
-Retrieve the underlying HTML for a widget
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Widget2$getHtml()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getType"></a>}}
-\if{latex}{\out{\hypertarget{method-getType}{}}}
-\subsection{Method \code{getType()}}{
-Widget2 type, e.g. \code{textInput}, \code{selectInput}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Widget2$getType()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getIoType"></a>}}
-\if{latex}{\out{\hypertarget{method-getIoType}{}}}
-\subsection{Method \code{getIoType()}}{
-Is this an input or output control?
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Widget2$getIoType()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-isInput"></a>}}
-\if{latex}{\out{\hypertarget{method-isInput}{}}}
-\subsection{Method \code{isInput()}}{
-Is this an input control?
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Widget2$isInput()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-isOutput"></a>}}
-\if{latex}{\out{\hypertarget{method-isOutput}{}}}
-\subsection{Method \code{isOutput()}}{
-Is this an output control?
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Widget2$isOutput()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-getValue"></a>}}
 \if{latex}{\out{\hypertarget{method-getValue}{}}}
 \subsection{Method \code{getValue()}}{
@@ -178,13 +100,13 @@ self, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-uploadFile"></a>}}
-\if{latex}{\out{\hypertarget{method-uploadFile}{}}}
-\subsection{Method \code{uploadFile()}}{
+\if{html}{\out{<a id="method-upload_file"></a>}}
+\if{latex}{\out{\hypertarget{method-upload_file}{}}}
+\subsection{Method \code{upload_file()}}{
 Upload a file to a \code{\link[shiny:fileInput]{shiny::fileInput()}}.
 It fails for other types of widgets.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Widget2$uploadFile(filename)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Widget2$upload_file(filename)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

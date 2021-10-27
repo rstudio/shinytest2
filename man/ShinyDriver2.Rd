@@ -24,7 +24,7 @@ with a live app.
 \item \href{#method-get_all_values}{\code{ShinyDriver2$get_all_values()}}
 \item \href{#method-new}{\code{ShinyDriver2$new()}}
 \item \href{#method-set_inputs}{\code{ShinyDriver2$set_inputs()}}
-\item \href{#method-uploadFile}{\code{ShinyDriver2$uploadFile()}}
+\item \href{#method-upload_file}{\code{ShinyDriver2$upload_file()}}
 \item \href{#method-get_path}{\code{ShinyDriver2$get_path()}}
 \item \href{#method-takeScreenshot}{\code{ShinyDriver2$takeScreenshot()}}
 \item \href{#method-expectDownload}{\code{ShinyDriver2$expectDownload()}}
@@ -201,11 +201,11 @@ with a live app.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-uploadFile"></a>}}
-\if{latex}{\out{\hypertarget{method-uploadFile}{}}}
-\subsection{Method \code{uploadFile()}}{
+\if{html}{\out{<a id="method-upload_file"></a>}}
+\if{latex}{\out{\hypertarget{method-upload_file}{}}}
+\subsection{Method \code{upload_file()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$uploadFile(..., wait_ = TRUE, values_ = TRUE, timeout_ = 3000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$upload_file(..., wait_ = TRUE, values_ = TRUE, timeout_ = 3000)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

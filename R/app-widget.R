@@ -37,23 +37,23 @@ Widget2 <- R6Class( # nolint
       invisible(self)
     },
 
-    #' @description Control id (i.e. `inputId` or `outputId` that control
-    #'   was created with).
-    getName = function() private$name,
-    #' @description Underlying `nodeId` to be used within the Chromium session
-    getNodeId = function() private$nodeId,
-    #' @description Retrieve the underlying HTML for a widget
-    getHtml = function() {
-      chromote_call_js_on_node(self$get_chromote_session(), private$nodeId, "function() { return this.outerHTML; }")$result$value
-    },
-    #' @description Widget2 type, e.g. `textInput`, `selectInput`.
-    getType = function() private$type,
-    #' @description Is this an input or output control?
-    getIoType = function() private$iotype,
-    #' @description Is this an input control?
-    isInput = function() private$iotype == "input",
-    #' @description Is this an output control?
-    isOutput = function() private$iotype == "output",
+    # #' @description Control id (i.e. `inputId` or `outputId` that control
+    # #'   was created with).
+    # getName = function() private$name,
+    # #' @description Underlying `nodeId` to be used within the Chromium session
+    # getNodeId = function() private$nodeId,
+    # #' @description Retrieve the underlying HTML for a widget
+    # getHtml = function() {
+    #   chromote_call_js_on_node(self$get_chromote_session(), private$nodeId, "function() { return this.outerHTML; }")$result$value
+    # },
+    # #' @description Widget2 type, e.g. `textInput`, `selectInput`.
+    # getType = function() private$type,
+    # #' @description Is this an input or output control?
+    # getIoType = function() private$iotype,
+    # #' @description Is this an input control?
+    # isInput = function() private$iotype == "input",
+    # #' @description Is this an output control?
+    # isOutput = function() private$iotype == "output",
 
     #' @description Get current value of control.
     getValue = function() {
