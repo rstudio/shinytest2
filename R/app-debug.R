@@ -59,7 +59,7 @@ console_api_to_msg <- function(info, url) {
 
 
 #' @include shiny-driver.R
-ShinyDriver2$set("private", "browserLogs", list())
+ShinyDriver2$set("private", "browser_logs", list())
 
 sd2_init_browser_debug <- function(self, private) {
   self$get_chromote_session()$Runtime$consoleAPICalled(function(info) {
@@ -67,7 +67,7 @@ sd2_init_browser_debug <- function(self, private) {
     msg <- console_api_to_msg(info, private$getShinyUrl())
     # TODO-barret; Should these messages be displayed in realtime?
     # cyan(msg)
-    private$browserLogs[[length(private$browserLogs) + 1]] <-
+    private$browser_logs[[length(private$browser_logs) + 1]] <-
       list(
         message = msg,
         level = switch(info$type, "error" = "ERROR", "INFO"),
@@ -79,7 +79,7 @@ sd2_init_browser_debug <- function(self, private) {
     msg <- exception_thrown_to_msg(info, private$getShinyUrl())
     # TODO-barret; Should these messages be displayed in realtime?
     # cyan(msg)
-    private$browserLogs[[length(private$browserLogs) + 1]] <-
+    private$browser_logs[[length(private$browser_logs) + 1]] <-
       list(
         message = msg,
         level = "ERROR",
@@ -178,7 +178,7 @@ ShinyDriver2$set("public", "get_debug_log", function(type = c("all", debug_log_t
 
   if ("browser" %in% type) {
     "!DEBUG ShinyDriver2$get_debug_log browser"
-    output$browser <- make_browser_log(private$browserLogs)
+    output$browser <- make_browser_log(private$browser_logs)
   }
 
   if ("shinytest2" %in% type) {
