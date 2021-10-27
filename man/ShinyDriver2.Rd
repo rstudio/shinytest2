@@ -35,7 +35,7 @@ with a live app.
 \item \href{#method-get_value}{\code{ShinyDriver2$get_value()}}
 \item \href{#method-set_value}{\code{ShinyDriver2$set_value()}}
 \item \href{#method-click}{\code{ShinyDriver2$click()}}
-\item \href{#method-listWidgets}{\code{ShinyDriver2$listWidgets()}}
+\item \href{#method-list_widgets}{\code{ShinyDriver2$list_widgets()}}
 \item \href{#method-checkUniqueWidgetNames}{\code{ShinyDriver2$checkUniqueWidgetNames()}}
 \item \href{#method-setWindowSize}{\code{ShinyDriver2$setWindowSize()}}
 \item \href{#method-getWindowSize}{\code{ShinyDriver2$getWindowSize()}}
@@ -377,11 +377,11 @@ input and output widget.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-listWidgets"></a>}}
-\if{latex}{\out{\hypertarget{method-listWidgets}{}}}
-\subsection{Method \code{listWidgets()}}{
+\if{html}{\out{<a id="method-list_widgets"></a>}}
+\if{latex}{\out{\hypertarget{method-list_widgets}{}}}
+\subsection{Method \code{list_widgets()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$listWidgets()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$list_widgets()}\if{html}{\out{</div>}}
 }
 
 }

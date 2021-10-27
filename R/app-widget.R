@@ -324,8 +324,8 @@ ShinyDriver2$set("public", "click", function(name, iotype = c("auto", "input", "
 #' Lists the names of all input and output widgets
 #' @return A list of two character vectors, named `input` and `output`.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "listWidgets", function() {
-  "!DEBUG ShinyDriver2$listWidgets"
+ShinyDriver2$set("public", "list_widgets", function() {
+  "!DEBUG ShinyDriver2$list_widgets"
   res <- chromote_eval(self$get_chromote_session(), "shinytest2.listWidgets()")$result$value
 
   res$input <- sort_c(unlist(res$input))
@@ -338,7 +338,7 @@ ShinyDriver2$set("public", "listWidgets", function() {
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "checkUniqueWidgetNames", function() {
   "!DEBUG ShinyDriver2$checkUniqueWidgetNames"
-  widgets <- self$listWidgets()
+  widgets <- self$list_widgets()
   inputs <- widgets$input
   outputs <- widgets$output
 
