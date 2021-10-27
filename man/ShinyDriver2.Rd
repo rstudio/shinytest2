@@ -29,7 +29,7 @@ with a live app.
 \item \href{#method-take_screenshot}{\code{ShinyDriver2$take_screenshot()}}
 \item \href{#method-expect_download}{\code{ShinyDriver2$expect_download()}}
 \item \href{#method-stop}{\code{ShinyDriver2$stop()}}
-\item \href{#method-waitFor}{\code{ShinyDriver2$waitFor()}}
+\item \href{#method-wait_for_condition}{\code{ShinyDriver2$wait_for_condition()}}
 \item \href{#method-wait_for_idle}{\code{ShinyDriver2$wait_for_idle()}}
 \item \href{#method-wait_for_value}{\code{ShinyDriver2$wait_for_value()}}
 \item \href{#method-findWidget}{\code{ShinyDriver2$findWidget()}}
@@ -274,11 +274,11 @@ with a live app.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-waitFor"></a>}}
-\if{latex}{\out{\hypertarget{method-waitFor}{}}}
-\subsection{Method \code{waitFor()}}{
+\if{html}{\out{<a id="method-wait_for_condition"></a>}}
+\if{latex}{\out{\hypertarget{method-wait_for_condition}{}}}
+\subsection{Method \code{wait_for_condition()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$waitFor(expr, timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$wait_for_condition(expr, timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
 }
 
 }

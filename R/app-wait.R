@@ -9,8 +9,9 @@
 #' @return `TRUE` if expression evaluates to `true` without error, before
 #'   timeout. Otherwise returns `FALSE`.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "waitFor", function(expr, timeout = 3 * 1000, interval = 100) {
-  "!DEBUG ShinyDriver2$waitFor"
+# TODO-barret-rename; `self$wait_for_js`? Seems too misleading. `self$wait_for_js_condition` seems too long
+ShinyDriver2$set("public", "wait_for_condition", function(expr, timeout = 3 * 1000, interval = 100) {
+  "!DEBUG ShinyDriver2$wait_for_condition"
   chromote_wait_for_condition(self$get_chromote_session(), expr, timeout = timeout, interval = interval)
 })
 
@@ -21,6 +22,7 @@ ShinyDriver2$set("public", "waitFor", function(expr, timeout = 3 * 1000, interva
 #' before take a screenshot.
 #' @return `TRUE` if done before before timeout; `NA` otherwise.
 #' @include shiny-driver.R
+# TODO-barret-implement; Add `self$wait_for_stable()`; Remove `self$waitForIdle()`?
 ShinyDriver2$set("public", "wait_for_idle", function(timeout = 3 * 1000, interval = 100) {
   # Shiny automatically sets using busy/idle events:
   # https://github.com/rstudio/shiny/blob/e2537d/srcjs/shinyapp.js#L647-L655
@@ -33,7 +35,6 @@ ShinyDriver2$set("public", "wait_for_idle", function(timeout = 3 * 1000, interva
     interval = interval
   )
 })
-# TODO-barret-implement; Add `self$wait_for_stable()`; Remove `self$waitForIdle()`?
 
 #' @description
 #' Waits until the `input` or `output` with name `name` is not one of
