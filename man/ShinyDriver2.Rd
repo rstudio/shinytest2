@@ -32,7 +32,6 @@ with a live app.
 \item \href{#method-wait_for_condition}{\code{ShinyDriver2$wait_for_condition()}}
 \item \href{#method-wait_for_idle}{\code{ShinyDriver2$wait_for_idle()}}
 \item \href{#method-wait_for_value}{\code{ShinyDriver2$wait_for_value()}}
-\item \href{#method-findWidget}{\code{ShinyDriver2$findWidget()}}
 \item \href{#method-getValue}{\code{ShinyDriver2$getValue()}}
 \item \href{#method-setValue}{\code{ShinyDriver2$setValue()}}
 \item \href{#method-click}{\code{ShinyDriver2$click()}}
@@ -303,26 +302,6 @@ with a live app.
   timeout = 10000,
   check_interval = 400
 )}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{name}}{Name of a shiny widget.}
-
-\item{\code{iotype}}{Type of the Shiny widget. Usually shinytest2 finds the widgets
-by their name, so this is only needed if you use the same name for an
-input and output widget.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-findWidget"></a>}}
-\if{latex}{\out{\hypertarget{method-findWidget}{}}}
-\subsection{Method \code{findWidget()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$findWidget(name, iotype = c("auto", "input", "output"))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

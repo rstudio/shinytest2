@@ -131,7 +131,7 @@ ShinyDriver2$set("public", "upload_file", function(
 
   self$log_event("Uploading file", input = inputs[[1]])
 
-  widget <- self$findWidget(names(inputs)[1])
+  widget <- private$find_widget(names(inputs)[1])
   widget$upload_file(inputs[[1]])
 
   self$execute_script_callback(

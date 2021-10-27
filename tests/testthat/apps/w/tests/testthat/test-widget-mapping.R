@@ -1,25 +1,37 @@
 test_that("input widgets", {
 
   app <- ShinyDriver2$new(test_path("../../."))
+  expect_input_widget <- function(name, type) {
+    expect_equal(
+      sd2_find_widget(app, NULL, name)$getType(),
+      type
+    )
+  }
 
-  expect_equal(app$findWidget("action")$getType(),     "actionButton")
-  expect_equal(app$findWidget("checkbox")$getType(),   "checkboxInput")
-  expect_equal(app$findWidget("checkGroup")$getType(), "checkboxGroupInput")
-  expect_equal(app$findWidget("date")$getType(),       "dateInput")
-  expect_equal(app$findWidget("dates")$getType(),      "dateRangeInput")
-  expect_equal(app$findWidget("file")$getType(),       "fileInput")
-  expect_equal(app$findWidget("num")$getType(),        "numericInput")
-  expect_equal(app$findWidget("radio")$getType(),      "radioButtons")
-  expect_equal(app$findWidget("select")$getType(),     "selectInput")
-  expect_equal(app$findWidget("slider1")$getType(),    "sliderInput")
-  expect_equal(app$findWidget("slider2")$getType(),    "sliderInput")
-  expect_equal(app$findWidget("text")$getType(),       "textInput")
+  expect_input_widget("checkbox",   "checkboxInput")
+  expect_input_widget("checkGroup", "checkboxGroupInput")
+  expect_input_widget("date",       "dateInput")
+  expect_input_widget("dates",      "dateRangeInput")
+  expect_input_widget("file",       "fileInput")
+  expect_input_widget("num",        "numericInput")
+  expect_input_widget("radio",      "radioButtons")
+  expect_input_widget("select",     "selectInput")
+  expect_input_widget("slider1",    "sliderInput")
+  expect_input_widget("slider2",    "sliderInput")
+  expect_input_widget("text",       "textInput")
 
 })
 
 test_that("output widgets with the same name", {
 
   app <- ShinyDriver2$new(test_path("../../."))
+  expect_output_widget <- function(name, type) {
+    expect_equal(
+      sd2_find_widget(app, NULL, name, iotype = "output")$getType(),
+      type,
+      info = name
+    )
+  }
 
   names <- c(
     "action_out", "checkbox_out", "checkGroup_out", "date_out", "dates_out",
@@ -27,12 +39,8 @@ test_that("output widgets with the same name", {
     "slider2_out", "text_out"
   )
 
-  for (n in names) {
-    expect_equal(
-      app$findWidget(n, "output")$getType(),
-      "verbatimTextOutput",
-      info = n
-    )
+  for (name in names) {
+    expect_output_widget(name, "verbatimTextOutput")
   }
 
 })

@@ -184,10 +184,14 @@ Widget2 <- R6Class( # nolint
 #' @return A [Widget2].
 #' @importFrom rlang %|%
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "findWidget", function(name, iotype = c("auto", "input", "output")) {
-  "!DEBUG finding a Widget2 `name` (`iotype`)"
+ShinyDriver2$set("private", "find_widget", function(name, iotype = c("auto", "input", "output")) {
 
+  sd2_find_widget(self, private, name, iotype)
+})
+
+sd2_find_widget <- function(self, private, name, iotype = c("auto", "input", "output")) {
   iotype <- match.arg(iotype)
+  "!DEBUG finding a Widget2 `name` (`iotype`)"
 
   css <- if (iotype == "auto") {
     paste0("#", name)
@@ -244,11 +248,13 @@ ShinyDriver2$set("public", "findWidget", function(name, iotype = c("auto", "inpu
     "shiny.dateRangeInput"     = "dateRangeInput",
     "shiny.fileInputBinding"   = "fileInput",
     "shiny.numberInput"        = "numericInput",
+    # TODO-barret-rename to `radioInput`
     "shiny.radioInput"         = "radioButtons",
     "shiny.selectInput"        = "selectInput",
     "shiny.sliderInput"        = "sliderInput",
     "shiny.textInput"          = "textInput",
     "shiny.passwordInput"      = "passwordInput",
+    # TODO-barret-rename to `bootstrapTabInput`
     "shiny.bootstrapTabInput"  = "tabsetPanel",
 
     "shiny.textOutput"         = "textOutput",
@@ -265,7 +271,7 @@ ShinyDriver2$set("public", "findWidget", function(name, iotype = c("auto", "inpu
     iotype = type[[1]],
     chromote_session = self$get_chromote_session()
   )
-})
+}
 
 
 
@@ -276,41 +282,39 @@ ShinyDriver2$set("public", "findWidget", function(name, iotype = c("auto", "inpu
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "getValue", function(name, iotype = c("auto", "input", "output")) {
   "!DEBUG ShinyDriver2$getValue `name` (`iotype`)"
-  self$findWidget(name, iotype)$getValue()
+  private$find_widget(name, iotype)$getValue()
 })
 
 #' @description
-#' Finds a widget and sets its value. It's a shortcut for `$findWidget()`
-#' plus `setValue()`; see the [Widget2] documentation for more details.
+#' Finds a Shiny widget and sets its value. See the [Widget2] documentation for more details.
 #'
 #' @param value New value.
 #' @return Self, invisibly.
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "setValue", function(name, value, iotype = c("auto", "input", "output")) {
   "!DEBUG ShinyDriver2$setValue `name`"
-  self$findWidget(name, iotype)$setValue(value)
+  private$find_widget(name, iotype)$setValue(value)
   invisible(self)
 })
 
 #' @description
-#' Find a widget and click it. It's a shortcut for `$findWidget()`
-#' plus `$click()`; see the [Widget2] documentation for more details.
+#' Find a widget and click it. See the [Widget2] documentation for more details.
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "click", function(name, iotype = c("auto", "input", "output")) {
-  self$findWidget(name, iotype)$click()
+  private$find_widget(name, iotype)$click()
 })
 
 # # TODO-future; Not for this release. Comment for now.
 # #' @description
 # #' Sends the specified keys to specific HTML element. Shortcut for
-# #' `findWidget()` plus `sendKeys()`.
+# #' `find_widget()` plus `sendKeys()`.
 # #' @param keys Keys to send to the widget or the app.
 # # ' See [webdriver::key] for how to specific special keys.
 # #' @return Self, invisibly.
 # #' @include shiny-driver.R
 # ShinyDriver2$set("public", "sendKeys", function(name, keys) {
 #   "!DEBUG ShinyDriver2$sendKeys `name`"
-#   self$findWidget(name)$sendKeys(keys)
+#   private$find_widget(name)$sendKeys(keys)
 #   invisible(self)
 # })
 
