@@ -16,8 +16,7 @@ ShinyDriver2$set("public", "expect_js", function(
   ellipsis::check_dots_unnamed()
   arguments <- list2(...)
   testthat::expect_s3_class(self, "ShinyDriver2")
-
-  result <- self$execute_script(script, ...)
+  result <- self$execute_script(script, !!!arguments)
 
   if (is.function(post_fn)) {
     checkmate::assert_integer(length(formals(post_fn)), lower = 1)
@@ -59,7 +58,8 @@ app_expect_js <- function(
 ) {
   ellipsis::check_dots_empty()
   app$expect_js(
-    script = script, !!!arguments,
+    script = script,
+    !!!arguments,
     post_fn = post_fn,
     cran = cran
   )
@@ -77,11 +77,11 @@ ShinyDriver2$set("public", "expect_text", function(
   cran = FALSE
 ) {
   ellipsis::check_dots_empty()
-  app_expect_js(
-    app,
+  self$expect_js(
     script = paste0("return Array.from(document.querySelectorAll(\"", selector, "\")).map(function(item, i) { return item.textContent; });"),
     post_fn = unlist,
-    cran = cran
+    cran = cran,
+    ...
   )
 
   invisible(self)
@@ -110,7 +110,6 @@ app_expect_text <- function(
   app$expect_text(
     selector = selector,
     cran = cran,
-    post_fn = NULL,
     ...
   )
 }
@@ -140,8 +139,7 @@ ShinyDriver2$set("public", "expect_html", function(
       "item.innerHTML"
     }
 
-  app_expect_js(
-    app,
+  self$expect_js(
     script = paste0("return Array.from(document.querySelectorAll(\"", selector, "\")).map(function(item, i) { return ", html_code, "; });"),
     post_fn = unlist,
     cran = cran
