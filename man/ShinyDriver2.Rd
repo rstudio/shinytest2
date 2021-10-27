@@ -27,7 +27,7 @@ with a live app.
 \item \href{#method-upload_file}{\code{ShinyDriver2$upload_file()}}
 \item \href{#method-get_path}{\code{ShinyDriver2$get_path()}}
 \item \href{#method-take_screenshot}{\code{ShinyDriver2$take_screenshot()}}
-\item \href{#method-expectDownload}{\code{ShinyDriver2$expectDownload()}}
+\item \href{#method-expect_download}{\code{ShinyDriver2$expect_download()}}
 \item \href{#method-stop}{\code{ShinyDriver2$stop()}}
 \item \href{#method-waitFor}{\code{ShinyDriver2$waitFor()}}
 \item \href{#method-waitForShiny}{\code{ShinyDriver2$waitForShiny()}}
@@ -249,11 +249,11 @@ with a live app.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expectDownload"></a>}}
-\if{latex}{\out{\hypertarget{method-expectDownload}{}}}
-\subsection{Method \code{expectDownload()}}{
+\if{html}{\out{<a id="method-expect_download"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_download}{}}}
+\subsection{Method \code{expect_download()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expectDownload(id, ..., name = NULL, cran = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expect_download(id, ..., name = NULL, cran = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

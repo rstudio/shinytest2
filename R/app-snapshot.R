@@ -144,7 +144,7 @@ sd2_appshot_download <- function(
 #'   generates an ascending sequence of names: `001.download`,
 #'   `002.download`, etc.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "expectDownload", function(
+ShinyDriver2$set("public", "expect_download", function(
   id,
   ...,
   name = NULL,
@@ -184,7 +184,7 @@ app_expect_download <- function(
   name = NULL,
   cran = FALSE
 ) {
-  app$expectDownload(
+  app$expect_download(
     id = id,
     ...,
     name = name,
