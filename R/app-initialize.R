@@ -51,8 +51,8 @@ ShinyDriver2$set("public", "initialize", function(
 
   private$snapshotScreenshot <- screenshot # nolint
   private$variant <- variant
-  private$appshot_dir <- temp_file() # nolint
-  private$snapshotCount <- Count$new() # nolint
+  private$appshot_dir <- temp_file()
+  private$appshot_count <- Count$new()
   private$shiny_url <- Url$new()
   private$name <-
     if (!is.null(name)) {
@@ -224,7 +224,7 @@ ShinyDriver2$set("public", "initialize", function(
 #   # Strip off trailing slash if present
 #   path <- sub("/$", "", path)
 
-#   private$snapshotCount <- Count$new()
+#   private$appshot_count <- Count$new()
 #   private$snapshotDir <- path
 #   private$snapshotScreenshot <- screenshot
 #   self
