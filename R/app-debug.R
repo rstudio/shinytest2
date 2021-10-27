@@ -167,12 +167,12 @@ ShinyDriver2$set("public", "get_debug_log", function(type = c("all", debug_log_t
 
   output <- list()
 
-  # It's possible for there not to be a shinyProcess object, if we're testing
+  # It's possible for there not to be a shiny_process object, if we're testing
   # against a remote server (as in shinyloadtest).
-  if (!is.null(private$shinyProcess) && "shiny_console" %in% type) {
+  if (!is.null(private$shiny_process) && "shiny_console" %in% type) {
     "!DEBUG ShinyDriver2$get_debug_log shiny_console"
-    out <- readLines(private$shinyProcess$get_output_file(), warn = FALSE)
-    err <- readLines(private$shinyProcess$get_error_file(), warn = FALSE)
+    out <- readLines(private$shiny_process$get_output_file(), warn = FALSE)
+    err <- readLines(private$shiny_process$get_error_file(), warn = FALSE)
     output$shiny_console <- make_shiny_console_log(out = out, err = err)
   }
 

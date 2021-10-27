@@ -1,5 +1,5 @@
 #' @include shiny-driver.R
-ShinyDriver2$set("private", "shinyProcess", NULL) # `callr::r_bg()` object
+ShinyDriver2$set("private", "shiny_process", NULL) # `callr::r_bg()` object
 
 #' @include shiny-driver.R
 ShinyDriver2$set("private", "startShiny", function(
@@ -99,5 +99,5 @@ ShinyDriver2$set("private", "startShiny", function(
   url <- sub(".*(https?://.*)", "\\1", line)
   private$shiny_url$set(url)
 
-  private$shinyProcess <- p # nolint
+  private$shiny_process <- p # nolint
 })

@@ -16,7 +16,7 @@ ShinyDriver2$set("public", "stop", function() {
   self$get_chromote_session()$close()
 
   # If the app is being hosted locally, kill the process.
-  if (!is.null(private$shinyProcess)) {
+  if (!is.null(private$shiny_process)) {
     self$log_event("Ending Shiny process")
 
     # Attempt soft-kill before hard-kill. This is a workaround for
@@ -24,11 +24,11 @@ ShinyDriver2$set("public", "stop", function() {
     # SIGINT quits the Shiny application, SIGTERM tells R to quit.
     # Unfortunately, SIGTERM isn't quite the same as `q()`, because
     # finalizers with onexit=TRUE don't seem to run.
-    private$shinyProcess$signal(tools::SIGINT)
-    private$shinyProcess$wait(500)
-    private$shinyProcess$signal(tools::SIGTERM)
-    private$shinyProcess$wait(250)
-    private$shinyProcess$kill()
+    private$shiny_process$signal(tools::SIGINT)
+    private$shiny_process$wait(500)
+    private$shiny_process$signal(tools::SIGTERM)
+    private$shiny_process$wait(250)
+    private$shiny_process$kill()
   }
 
   private$state <- "stopped"
@@ -48,9 +48,9 @@ ShinyDriver2$set("private", "finalize", function() {
 
   # Chromote has its own cleanup process on finalize
 
-  if (isTRUE(private$should_clean_logs)) {
-    unlink(private$shinyProcess$get_output_file())
-    unlink(private$shinyProcess$get_error_file())
+  if (isTRUE(private$should_clean_logs) && !is.null(private$shiny_process)) {
+    unlink(private$shiny_process$get_output_file())
+    unlink(private$shiny_process$get_error_file())
   }
 
   # Can not remove snapshot files in the same function that they are created,
