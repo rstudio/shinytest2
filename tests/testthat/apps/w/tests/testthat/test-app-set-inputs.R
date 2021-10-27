@@ -6,7 +6,7 @@ test_that("set kitchen sink of inputs", {
 
   app_expect_appshot(app, screenshot = TRUE)
 
-  app$setInputs(
+  app$set_inputs(
     "action" = "click",
     "checkbox" = TRUE,
     "checkGroup" = c("2", "3"),
@@ -27,15 +27,15 @@ test_that("set kitchen sink of inputs", {
   tmpfile <- "__tmpfile"
   cat("tmpfile content", file = tmpfile)
   on.exit({unlink(tmpfile)}, add = TRUE)
-  app$uploadFile(file = test_path("test-app-set-inputs.R"))
+  app$upload_file(file = test_path("test-app-set-inputs.R"))
 
   app_expect_appshot(app, screenshot = TRUE)
 
-  app$setInputs(tabset = "shinyWidgets")
+  app$set_inputs(tabset = "shinyWidgets")
 
   app_expect_appshot(app, screenshot = TRUE)
 
-  app$setInputs(
+  app$set_inputs(
     "bsSwitch" = TRUE,
     "matSwitch" = TRUE,
     "picker" = c("T", "E", "S"),

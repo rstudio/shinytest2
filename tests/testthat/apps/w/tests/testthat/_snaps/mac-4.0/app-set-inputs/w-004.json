@@ -18,7 +18,7 @@
         "test-app-set-inputs.R"
       ],
       "size": [
-        1299
+        1303
       ],
       "type": [
         ""
@@ -57,7 +57,7 @@
     "checkbox_out": "[1] TRUE",
     "date_out": "[1] \"2015-01-01\"",
     "dates_out": "[1] \"2015-01-01\" \"2015-02-20\"",
-    "file_out": "                   name size type      datapath\n1 test-app-set-inputs.R 1299      <tempdir>/0.R",
+    "file_out": "                   name size type      datapath\n1 test-app-set-inputs.R 1303      <tempdir>/0.R",
     "knob_out": "[1] 0",
     "matSwitch_out": "[1] TRUE",
     "num_out": "[1] 100",

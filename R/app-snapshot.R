@@ -1,12 +1,13 @@
 #' @include shiny-driver.R
 # Directory for temp storing test artifacts
-ShinyDriver2$set("private", "tempAppshotDir", NULL) # Temp folder to store snapshot outputs
-ShinyDriver2$set("private", "snapshotCount", NULL) # Current snapshot count
-ShinyDriver2$set("private", "snapshotScreenshot", TRUE) # Whether to take screenshots for each snapshot
+ShinyDriver2$set("private", "appshot_dir", NULL) # Temp folder to store snapshot outputs
+ShinyDriver2$set("private", "should_take_screenshot", TRUE) # Whether to take screenshots for each snapshot
+ShinyDriver2$set("private", "shiny_test_url", NULL) # URL for shiny's test API
 
 
 
-sd2_snapshot <- function(
+
+sd2_appshot <- function(
   self, private,
   items = NULL,
   name = NULL,
@@ -17,18 +18,19 @@ sd2_snapshot <- function(
     abort("'items' must be NULL or a list.")
   }
 
-  snapshot_count <- private$snapshotCount$increment()
-  temp_save_dir  <- private$tempAppshotDir
+  snapshot_count <- private$appshot_count$increment()
+  temp_save_dir  <- private$appshot_dir
 
   # Do not prefix with `self$name` as that is only necessary for the snapshot file name
   # At this point, the temp folder is already unique
   json_name <- fs::path_ext_set(name %||% sprintf("%03d", snapshot_count), "json")
 
-  # The default is to take a screenshot when the snapshotScreenshot option is
+  # The default is to take a screenshot when the `should_take_screenshot` option is
   # TRUE and the user does not specify specific items to snapshot.
-  if (is.null(screenshot)) {
-    screenshot <- private$snapshotScreenshot && is.null(items)
-  }
+  should_take_screenshot <- isTRUE(
+    screenshot %||%
+    (private$should_take_screenshot && is.null(items))
+  )
 
   # Figure out which items to snapshot ----------------------------------------
   # By default, record all items.
@@ -49,9 +51,10 @@ sd2_snapshot <- function(
   if (is.null(items$output)) items$output <- FALSE
   if (is.null(items$export)) items$export <- FALSE
 
-  # Take snapshot -------------------------------------------------------------
-  self$logEvent("Taking snapshot")
-  url <- private$getTestSnapshotUrl(items$input, items$output, items$export)
+  # Take appshot -------------------------------------------------------------
+  self$log_event("Taking appshot")
+  self$log_event("Gathering input/output/export values")
+  url <- sd2_get_shiny_test_url(self, private, items$input, items$output, items$export)
   req <- httr_get(url)
 
   # Convert to text, then replace base64-encoded images with hashes of them.
@@ -64,10 +67,10 @@ sd2_snapshot <- function(
   write_utf8(content, full_json_path)
 
   full_screenshot_path <- NULL
-  if (isTRUE(screenshot)) {
+  if (should_take_screenshot) {
     # Replace extension with .png
     full_screenshot_path <- fs::path(temp_save_dir, fs::path_ext_set(json_name, "png"))
-    self$takeScreenshot(full_screenshot_path)
+    self$take_screenshot(full_screenshot_path)
   }
 
   list(
@@ -86,12 +89,12 @@ sd2_snapshot <- function(
 #   items = NULL,
 #   name = NULL
 # ) {
-#   sd2_snapshot(self, private, items = items, name = name, screenshot = FALSE)
+#   sd2_appshot(self, private, items = items, name = name, screenshot = FALSE)
 # })
 # ShinyDriver2$set("public", "expectSnapshotScreenshot", function(
 #   name = NULL
 # ) {
-#   sd2_snapshot(self, private, items = list(input = FALSE, output = FALSE, export = FALSE), name = name, screenshot = TRUE)
+#   sd2_appshot(self, private, items = list(input = FALSE, output = FALSE, export = FALSE), name = name, screenshot = TRUE)
 # })
 
 #' @description
@@ -103,25 +106,27 @@ sd2_snapshot <- function(
 #'   `002.download`, etc.
 # #' @include shiny-driver.R
 # ShinyDriver2$set("public", "snapshotDownload", function(id, name = NULL) {
-sd2_snapshot_download <- function(
+sd2_appshot_download <- function(
   self, private,
   id, name = NULL
 ) {
-  temp_save_dir <- private$tempAppshotDir
-  snapshot_count <- private$snapshotCount$increment()
+  temp_save_dir <- private$appshot_dir
+  snapshot_count <- private$appshot_count$increment()
 
   if (is.null(name)) {
     name <- sprintf("%03d.download", snapshot_count)
   }
 
+  self$log_event("Downloading file")
+
   # Find the URL to download from (the href of the <a> tag)
-  url <- chromote_eval(self$chromote_session, paste0("$('#", id, "').attr('href')"))$result$value
-  if (identical(url, "")) {
+  sub_url <- chromote_eval(self$get_chromote_session(), paste0("$('#", id, "').attr('href')"))$result$value
+  if (identical(sub_url, "")) {
     stop("Download from '#", id, "' failed")
   }
   # Add the base location to the URL
-  url <- paste0(private$getShinyUrl(), url)
-  req <- httr_get(url)
+  full_url <- paste0(private$shiny_url$get(), sub_url)
+  req <- httr_get(full_url)
 
   download_path <- fs::path(temp_save_dir, name)
   create_snapshot_dir(temp_save_dir, snapshot_count)
@@ -141,7 +146,7 @@ sd2_snapshot_download <- function(
 #'   generates an ascending sequence of names: `001.download`,
 #'   `002.download`, etc.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "expectDownload", function(
+ShinyDriver2$set("public", "expect_download", function(
   id,
   ...,
   name = NULL,
@@ -150,7 +155,7 @@ ShinyDriver2$set("public", "expectDownload", function(
   testthat::expect_s3_class(self, "ShinyDriver2")
   ellipsis::check_dots_empty()
 
-  snapshot_info <- sd2_snapshot_download(self, private, id = id, name = name)
+  snapshot_info <- sd2_appshot_download(self, private, id = id, name = name)
 
   # compare download_file
   testthat_expect_snapshot_file(
@@ -181,7 +186,7 @@ app_expect_download <- function(
   name = NULL,
   cran = FALSE
 ) {
-  app$expectDownload(
+  app$expect_download(
     id = id,
     ...,
     name = name,
@@ -200,8 +205,8 @@ create_snapshot_dir <- function(dir, count) {
 }
 
 
-#' @include shiny-driver.R
-ShinyDriver2$set("private", "getTestSnapshotUrl", function(
+sd2_get_shiny_test_url <- function(
+  self, private,
   input = TRUE,
   output = TRUE,
   export = TRUE,
@@ -216,7 +221,7 @@ ShinyDriver2$set("private", "getTestSnapshotUrl", function(
       ""
   }
   paste(
-    private$shinyTestUrl,
+    private$shiny_test_url,
     q_string("input", input),
     q_string("output", output),
     q_string("export", export),
@@ -224,7 +229,7 @@ ShinyDriver2$set("private", "getTestSnapshotUrl", function(
     "sortC=1",
     sep = "&"
   )
-})
+}
 
 
 # Given a JSON string, find any strings that represent base64-encoded images

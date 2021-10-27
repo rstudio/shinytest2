@@ -59,27 +59,27 @@ console_api_to_msg <- function(info, url) {
 
 
 #' @include shiny-driver.R
-ShinyDriver2$set("private", "browserLogs", list())
+ShinyDriver2$set("private", "browser_logs", list())
 
 sd2_init_browser_debug <- function(self, private) {
-  self$chromote_session$Runtime$consoleAPICalled(function(info) {
+  self$get_chromote_session()$Runtime$consoleAPICalled(function(info) {
     # message("Runtime.consoleAPICalled")
-    msg <- console_api_to_msg(info, private$getShinyUrl())
+    msg <- console_api_to_msg(info, private$shiny_url$get())
     # TODO-barret; Should these messages be displayed in realtime?
     # cyan(msg)
-    private$browserLogs[[length(private$browserLogs) + 1]] <-
+    private$browser_logs[[length(private$browser_logs) + 1]] <-
       list(
         message = msg,
         level = switch(info$type, "error" = "ERROR", "INFO"),
         timestamp = Sys.time()
       )
   })
-  self$chromote_session$Runtime$exceptionThrown(function(info) {
+  self$get_chromote_session()$Runtime$exceptionThrown(function(info) {
     # message("Runtime.exceptionThrown")
-    msg <- exception_thrown_to_msg(info, private$getShinyUrl())
+    msg <- exception_thrown_to_msg(info, private$shiny_url$get())
     # TODO-barret; Should these messages be displayed in realtime?
     # cyan(msg)
-    private$browserLogs[[length(private$browserLogs) + 1]] <-
+    private$browser_logs[[length(private$browser_logs) + 1]] <-
       list(
         message = msg,
         level = "ERROR",
@@ -161,29 +161,29 @@ filter_log_text <- function(str) {
 #' @param type Log type: `"all"`, `"shiny_console"`, `"browser"`,
 #'   or `"shinytest2"`.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "getDebugLog", function(type = c("all", debug_log_types())) {
+ShinyDriver2$set("public", "get_debug_log", function(type = c("all", debug_log_types())) {
 
   type <- as_debug(match.arg(type, several.ok = TRUE))
 
   output <- list()
 
-  # It's possible for there not to be a shinyProcess object, if we're testing
+  # It's possible for there not to be a shiny_process object, if we're testing
   # against a remote server (as in shinyloadtest).
-  if (!is.null(private$shinyProcess) && "shiny_console" %in% type) {
-    "!DEBUG ShinyDriver2$getDebugLog shiny_console"
-    out <- readLines(private$shinyProcess$get_output_file(), warn = FALSE)
-    err <- readLines(private$shinyProcess$get_error_file(), warn = FALSE)
+  if (!is.null(private$shiny_process) && "shiny_console" %in% type) {
+    "!DEBUG ShinyDriver2$get_debug_log shiny_console"
+    out <- readLines(private$shiny_process$get_output_file(), warn = FALSE)
+    err <- readLines(private$shiny_process$get_error_file(), warn = FALSE)
     output$shiny_console <- make_shiny_console_log(out = out, err = err)
   }
 
   if ("browser" %in% type) {
-    "!DEBUG ShinyDriver2$getDebugLog browser"
-    output$browser <- make_browser_log(private$browserLogs)
+    "!DEBUG ShinyDriver2$get_debug_log browser"
+    output$browser <- make_browser_log(private$browser_logs)
   }
 
   if ("shinytest2" %in% type) {
-    "!DEBUG ShinyDriver2$getDebugLog shinytest2 log"
-    output$shinytest <- make_shinytest2_log(self$executeScript(
+    "!DEBUG ShinyDriver2$get_debug_log shinytest2 log"
+    output$shinytest <- make_shinytest2_log(self$execute_script(
       "if (! window.shinytest2) { return([]) }
       var res = window.shinytest2.log_entries;
       window.shinytest2.log_entries = [];
@@ -198,8 +198,8 @@ ShinyDriver2$set("public", "getDebugLog", function(type = c("all", debug_log_typ
 #' Enable/disable debugging messages
 #' @param enable New value.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "enableDebugLogMessages", function(enable = TRUE) {
-  self$executeScript(
+ShinyDriver2$set("public", "enable_debug_log_messages", function(enable = TRUE) {
+  self$execute_script(
     "window.shinytest2.log_messages = arguments[0]",
     enable
   )
@@ -207,13 +207,13 @@ ShinyDriver2$set("public", "enableDebugLogMessages", function(enable = TRUE) {
 })
 
 
-#' @include shiny-driver.R
-ShinyDriver2$set("private", "setupDebugging", function(debug) {
-  "!DEBUG ShinyDriver2$setupDebugging"
-  debug <- as_debug(debug)
+# #' @include shiny-driver.R
+# ShinyDriver2$set("private", "setup_debugging", function(debug) {
+#   "!DEBUG ShinyDriver2$setup_debugging"
+#   debug <- as_debug(debug)
 
-  if (length(debug)) {
-    ## TODO(-prev): poll the logs
-  }
-  invisible(self)
-})
+#   if (length(debug)) {
+#     ## TODO(-prev): poll the logs?
+#   }
+#   invisible(self)
+# })

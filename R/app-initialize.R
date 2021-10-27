@@ -2,8 +2,7 @@
 ShinyDriver2$set("private", "name",    NULL) # character / NULL
 ShinyDriver2$set("private", "variant", NULL) # character / NULL
 ShinyDriver2$set("private", "state", "stopped") # stopped or running
-ShinyDriver2$set("private", "shinyTestUrl", NULL) # URL for shiny's test API
-ShinyDriver2$set("private", "shinyWorkerId", NA_character_)
+ShinyDriver2$set("private", "shiny_worker_id", NA_character_)
 
 
 
@@ -50,10 +49,11 @@ ShinyDriver2$set("public", "initialize", function(
 ) {
   ellipsis::check_dots_empty()
 
-  private$snapshotScreenshot <- screenshot # nolint
+  private$should_take_screenshot <- isTRUE(screenshot)
   private$variant <- variant
-  private$tempAppshotDir <- temp_file() # nolint
-  private$snapshotCount <- Count$new() # nolint
+  private$appshot_dir <- temp_file()
+  private$appshot_count <- Count$new()
+  private$shiny_url <- Url$new()
   private$name <-
     if (!is.null(name)) {
       name
@@ -69,19 +69,19 @@ ShinyDriver2$set("public", "initialize", function(
         )
       }
     }
-  private$cleanLogs <- isTRUE(clean_logs) # nolint
+  private$should_clean_logs <- isTRUE(clean_logs)
   if (is.null(load_timeout)) {
     load_timeout <- if (on_ci()) 10000 else 5000
   }
 
-  self$logEvent("Start ShinyDriver2 initialization")
+  self$log_event("Start ShinyDriver2 initialization")
 
   # if (is.null(find_phantom())) {
   #   abort("PhantomJS not found.")
   # }
 
   # "!DEBUG get phantom port (starts phantom if not running)"
-  # self$logEvent("Getting PhantomJS port")
+  # self$log_event("Getting PhantomJS port")
   # private$phantomPort <- get_phantomPort(timeout = phantomTimeout)
 
   if (shiny::is.shiny.appobj(path)) {
@@ -89,11 +89,11 @@ ShinyDriver2$set("public", "initialize", function(
   }
 
   if (grepl("^http(s?)://", path)) {
-    private$setShinyUrl(path)
+    private$shiny_url$set(path)
   } else {
     "!DEBUG starting shiny app from path"
-    self$logEvent("Starting Shiny app")
-    private$startShiny(path, seed, load_timeout, shiny_args, render_args, options)
+    self$log_event("Starting Shiny app")
+    sd2_start_shiny(self, private, path, seed, load_timeout, shiny_args, render_args, options)
   }
 
   # Read js content before init'ing chromote to reduce time between
@@ -102,9 +102,9 @@ ShinyDriver2$set("public", "initialize", function(
 
 
   "!DEBUG create new phantomjs session"
-  self$logEvent("Creating new phantomjs session")
+  self$log_event("Creating new chromote session")
   # private$web <- Session$new(port = private$phantomPort)
-  self$chromote_session <- chromote::ChromoteSession$new()
+  private$chromote_session <- chromote::ChromoteSession$new()
 
   sd2_init_browser_debug(self, private)
 
@@ -114,21 +114,21 @@ ShinyDriver2$set("public", "initialize", function(
 
 
   "!DEBUG navigate to Shiny app"
-  self$logEvent("Navigating to Shiny app")
-  # private$web$go(private$getShinyUrl())
-  self$chromote_session$Page$navigate(private$getShinyUrl())
+  self$log_event("Navigating to Shiny app")
+  # private$web$go(private$shiny_url$get())
+  self$get_chromote_session()$Page$navigate(private$shiny_url$get())
 
   # This feels like it is too late. There is no guarantee that the script will load in time.
   "!DEBUG inject shiny-tracer.js to load before all other scripts"
-  self$logEvent("Injecting shiny-tracer.js")
+  self$log_event("Injecting shiny-tracer.js")
   # private$web$executeScript(js_content)
-  # js_id <- self$chromote_session$Page$addScriptToEvaluateOnNewDocument(js_file)
-  # js_id <- self$chromote_session$Page$addScriptToEvaluateOnNewDocument("https://cdnjs.cloudflare.com/ajax/libs/react-is/18.0.0-alpha-fd5e01c2e-20210913/umd/react-is.production.min.js")
+  # js_id <- self$get_chromote_session()$Page$addScriptToEvaluateOnNewDocument(js_file)
+  # js_id <- self$get_chromote_session()$Page$addScriptToEvaluateOnNewDocument("https://cdnjs.cloudflare.com/ajax/libs/react-is/18.0.0-alpha-fd5e01c2e-20210913/umd/react-is.production.min.js")
   # print(list(js_id = js_id))
   utils::capture.output({
 
     chromote_eval(
-      self$chromote_session,
+      self$get_chromote_session(),
       js_content
     )
   })
@@ -140,17 +140,17 @@ ShinyDriver2$set("public", "initialize", function(
   #   if (as.numeric(Sys.time()) > nav_stop_time) {
   #     abort(paste0(
   #       "Failed to navigate to Shiny app in ", load_timeout, "ms.\n",
-  #       format(self$getDebugLog())
+  #       format(self$get_debug_log())
   #     ))
   #   }
 
   #   Sys.sleep(0.1)
   # }
-  # self$chromote_session$Page$loadEventFired()
+  # self$get_chromote_session()$Page$loadEventFired()
 
 
   "!DEBUG wait until Shiny starts"
-  self$logEvent("Waiting until Shiny app starts")
+  self$log_event("Waiting until Shiny app starts")
   # load_ok <- private$web$waitFor(
   #   'window.shinytest2 && window.shinytest2.ready === true',
   #   timeout = load_timeout
@@ -158,58 +158,59 @@ ShinyDriver2$set("public", "initialize", function(
   # if (!load_ok) {
   #   abort(paste0(
   #     "Shiny app did not load in ", load_timeout, "ms.\n",
-  #     format(self$getDebugLog())
+  #     format(self$get_debug_log())
   #   ))
   # }
 
-# self$chromote_session$view()
+# self$get_chromote_session()$view()
   # browser()
 
   if (!isTRUE(chromote_wait_for_condition(
-    self$chromote_session,
+    self$get_chromote_session(),
     "window.shinytest2 && window.shinytest2.ready === true",
     timeout = load_timeout
   ))) {
     abort(paste0(
       "Shiny app did not load in ", load_timeout, "ms.\n",
-      format(self$getDebugLog())
+      format(self$get_debug_log())
     ))
   }
 
   "!DEBUG shiny started"
-  self$logEvent("Shiny app started")
+  self$log_event("Shiny app started")
   private$state <- "running"
 
-  private$setupDebugging(debug)
+  # private$setup_debugging(debug)
 
 
-  # private$shinyWorkerId <- private$web$executeScript(
+  # private$shiny_worker_id <- private$web$executeScript(
   #   'return Shiny.shinyapp.config.workerId'
   # )
-  private$shinyWorkerId <- chromote_eval( # nolint
-    self$chromote_session,
+  private$shiny_worker_id <- chromote_eval(
+    self$get_chromote_session(),
     "Shiny.shinyapp.config.workerId"
   )$result$value
-  if (identical(private$shinyWorkerId, ""))
-    private$shinyWorkerId <- NA_character_ # nolint
+  if (identical(private$shiny_worker_id, ""))
+    private$shiny_worker_id <- NA_character_
   # private$shinyTestSnapshotBaseUrl <- private$web$executeScript(
   #   'if (Shiny.shinyapp.getTestSnapshotBaseUrl)
   #     return Shiny.shinyapp.getTestSnapshotBaseUrl({ fullUrl:true });
   #   else
   #     return null;'
   # )
-  private$shinyTestUrl <- chromote_eval( # nolint
-    self$chromote_session,
+  private$shiny_test_url <- chromote_eval(
+    self$get_chromote_session(),
     "Shiny.shinyapp.getTestSnapshotBaseUrl ? Shiny.shinyapp.getTestSnapshotBaseUrl({fullUrl:true}) : null"
   )$result$value
 
   "!DEBUG checking widget names"
-  if (check_names) self$checkUniqueWidgetNames()
+  if (check_names) sd2_check_unique_widget_names(self, private)
 
   invisible(self)
 })
 
 
+# TODO-barret-remove-code;
 # #' @description
 # #' Download a snapshot. Generally, you should not call this function
 # #' yourself; it will be generated by `record_test()` as needed.
@@ -223,8 +224,8 @@ ShinyDriver2$set("public", "initialize", function(
 #   # Strip off trailing slash if present
 #   path <- sub("/$", "", path)
 
-#   private$snapshotCount <- Count$new()
+#   private$appshot_count <- Count$new()
 #   private$snapshotDir <- path
-#   private$snapshotScreenshot <- screenshot
+#   private$should_take_screenshot <- isTRUE(screenshot)
 #   self
 # })

@@ -11,24 +11,24 @@ ShinyDriver2$set("public", "stop", function() {
   if (private$state == "stopped")
     return(invisible(self))
 
-  self$logEvent("Closing Chrome session")
+  self$log_event("Closing chromote session")
   # private$web$delete()
-  self$chromote_session$close()
+  self$get_chromote_session()$close()
 
   # If the app is being hosted locally, kill the process.
-  if (!is.null(private$shinyProcess)) {
-    self$logEvent("Ending Shiny process")
+  if (!is.null(private$shiny_process)) {
+    self$log_event("Ending Shiny process")
 
     # Attempt soft-kill before hard-kill. This is a workaround for
     # https://github.com/r-lib/processx/issues/95
     # SIGINT quits the Shiny application, SIGTERM tells R to quit.
     # Unfortunately, SIGTERM isn't quite the same as `q()`, because
     # finalizers with onexit=TRUE don't seem to run.
-    private$shinyProcess$signal(tools::SIGINT)
-    private$shinyProcess$wait(500)
-    private$shinyProcess$signal(tools::SIGTERM)
-    private$shinyProcess$wait(250)
-    private$shinyProcess$kill()
+    private$shiny_process$signal(tools::SIGINT)
+    private$shiny_process$wait(500)
+    private$shiny_process$signal(tools::SIGTERM)
+    private$shiny_process$wait(250)
+    private$shiny_process$kill()
   }
 
   private$state <- "stopped"
@@ -37,7 +37,7 @@ ShinyDriver2$set("public", "stop", function() {
 
 
 #' @include shiny-driver.R
-ShinyDriver2$set("private", "cleanLogs", TRUE) # Whether to clean logs when GC'd
+ShinyDriver2$set("private", "should_clean_logs", TRUE) # Whether to clean logs when GC'd
 
 # Function run on garbage collection
 #' @include shiny-driver.R
@@ -48,13 +48,13 @@ ShinyDriver2$set("private", "finalize", function() {
 
   # Chromote has its own cleanup process on finalize
 
-  if (isTRUE(private$cleanLogs)) {
-    unlink(private$shinyProcess$get_output_file())
-    unlink(private$shinyProcess$get_error_file())
+  if (isTRUE(private$should_clean_logs) && !is.null(private$shiny_process)) {
+    unlink(private$shiny_process$get_output_file())
+    unlink(private$shiny_process$get_error_file())
   }
 
   # Can not remove snapshot files in the same function that they are created,
   #   so it is safer to clean up the files when the app is not needed
   #   (Not that big of a memory leak for a single app)
-  unlink(private$tempAppshotDir, recursive = TRUE)
+  unlink(private$appshot_dir, recursive = TRUE)
 })

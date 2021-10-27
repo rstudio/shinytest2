@@ -9,25 +9,27 @@
 #' @return `TRUE` if expression evaluates to `true` without error, before
 #'   timeout. Otherwise returns `FALSE`.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "waitFor", function(expr, timeout = 3 * 1000, interval = 100) {
-  "!DEBUG ShinyDriver2$waitFor"
-  chromote_wait_for_condition(self$chromote_session, expr, timeout = timeout, interval = interval)
+# TODO-barret-rename; `self$wait_for_js`? Seems too misleading. `self$wait_for_js_condition` seems too long
+ShinyDriver2$set("public", "wait_for_condition", function(expr, timeout = 3 * 1000, interval = 100) {
+  "!DEBUG ShinyDriver2$wait_for_condition"
+  chromote_wait_for_condition(self$get_chromote_session(), expr, timeout = timeout, interval = interval)
 })
 
 #' @description
 #' Waits until Shiny is not busy, i.e. the reactive graph has finished
 #' updating. This is useful, for example, if you've resized the window with
-#' `setWindowSize()` and want to make sure all plot redrawing is complete
+#' `$set_window_size()` and want to make sure all plot redrawing is complete
 #' before take a screenshot.
 #' @return `TRUE` if done before before timeout; `NA` otherwise.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "waitForShiny", function(timeout = 3 * 1000, interval = 100) {
+# TODO-barret-implement; Add `self$wait_for_stable()`; Remove `self$waitForIdle()`?
+ShinyDriver2$set("public", "wait_for_idle", function(timeout = 3 * 1000, interval = 100) {
   # Shiny automatically sets using busy/idle events:
   # https://github.com/rstudio/shiny/blob/e2537d/srcjs/shinyapp.js#L647-L655
   # Details of busy event: https://shiny.rstudio.com/articles/js-events.html
   # private$web$waitFor()
   chromote_wait_for_condition(
-    self$chromote_session,
+    self$get_chromote_session(),
     "!$('html').first().hasClass('shiny-busy')",
     timeout = 3 * 1000,
     interval = interval
@@ -43,14 +45,14 @@ ShinyDriver2$set("public", "waitForShiny", function(timeout = 3 * 1000, interval
 #' @param ignore List of possible values to ignore when checking for
 #'   updates.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "waitForValue", function(
+ShinyDriver2$set("public", "wait_for_value", function(
   name,
   ignore = list(NULL, ""),
   iotype = c("input", "output", "export"),
   timeout = 10000,
   check_interval = 400
 ) {
-  "!DEBUG ShinyDriver2$waitForValue"
+  "!DEBUG ShinyDriver2$wait_for_value"
 
   iotype <- match.arg(iotype)
 
@@ -72,8 +74,8 @@ ShinyDriver2$set("public", "waitForValue", function(
       args <- list(input = FALSE, output = FALSE, export = FALSE)
       # only retrieve `name` from `iotype`
       args[[iotype]] <- name
-      # TODO(-prev); Should this be `self$getValue(name, iotype = iotype)`? Note: `self$getValue()` is not generic enough?
-      do.call(self$getAllValues, args)[[iotype]][[name]]
+      # TODO(-prev); Should this be a single `self$get_value(name, iotype = iotype)`? Note: Is `self$get_value()` not generic enough?
+      do.call(self$get_all_values, args)[[iotype]][[name]]
     }, silent = TRUE)
 
     # if no error when trying ot retrieve the value..

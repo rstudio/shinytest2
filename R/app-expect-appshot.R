@@ -2,7 +2,6 @@ testthat_expect_snapshot_output <- function( # nolint
   private,
   x,
   cran = FALSE
-  # , variant = NULL
 ) {
   testthat::expect_snapshot_output(
     x,
@@ -16,7 +15,6 @@ testthat_expect_snapshot_file <- function(
   name = fs::path_file(file),
   cran = FALSE,
   compare = testthat::compare_file_binary
-  # , variant = NULL
 ) {
   # Add name prefix to saved snapshot file
   name <-
@@ -53,16 +51,14 @@ app_expect_appshot <- function(
   name = NULL,
   items = NULL,
   screenshot = NULL,
-  # variant = NULL,
   cran = FALSE
 ) {
-  app$expectAppshot(
+  app$expect_appshot(
     ...,
     name = name,
     items = items,
     screenshot = screenshot,
     cran = cran
-    # , variant = variant
   )
 
 }
@@ -77,7 +73,7 @@ app_expect_appshot <- function(
 #' @param screenshot Take a screenshot? Overrides value set by
 #'   `$snapshotInit()`
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "expectAppshot", function(
+ShinyDriver2$set("public", "expect_appshot", function(
   ...,
   name = NULL,
   items = NULL,
@@ -88,25 +84,23 @@ ShinyDriver2$set("public", "expectAppshot", function(
   testthat::expect_s3_class(self, "ShinyDriver2")
   ellipsis::check_dots_empty()
 
-  snapshot_info <- sd2_snapshot(self, private, items = items, name = name, screenshot = screenshot)
+  appshot_info <- sd2_appshot(self, private, items = items, name = name, screenshot = screenshot)
 
   # compare json
   testthat_expect_snapshot_file(
     private,
-    snapshot_info$json_path,
+    appshot_info$json_path,
     cran = cran,
     compare = testthat::compare_file_text
-    # , variant = variant
   )
 
   # compare screenshot
-  if (!is.null(snapshot_info$screenshot_path)) {
+  if (!is.null(appshot_info$screenshot_path)) {
     testthat_expect_snapshot_file(
       private,
-      snapshot_info$screenshot_path,
+      appshot_info$screenshot_path,
       cran = cran,
       compare = testthat::compare_file_binary
-      # , variant = variant
     )
   }
 

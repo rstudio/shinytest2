@@ -1,23 +1,24 @@
 #' @include shiny-driver.R
-ShinyDriver2$set("private", "eventLog", list())
+ShinyDriver2$set("private", "event_log", list())
 
 #' @description Add event to log.
 #' @param event Event name
 #' @param ... Addition data to store for event
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "logEvent", function(event, ...) {
+ShinyDriver2$set("public", "log_event", function(event, ...) {
 
   content <- list(time = Sys.time(), event = event, ...)
   stopifnot(rlang::is_named(content))
 
-  private$eventLog[[length(private$eventLog) + 1]] <- content
+  private$event_log[[length(private$event_log) + 1]] <- content
   invisible(self)
 })
 
 #' @description Retrieve event log.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "getEventLog", function() {
-  log <- private$eventLog
+# TODO-barret-implement; Test this with a snapshot
+ShinyDriver2$set("public", "get_event_log", function() {
+  log <- private$event_log
 
   # Log is a row-first list of lists which we need to convert to a data frame.
   # Also, rows don't all have the same column names, so we'll
@@ -37,7 +38,7 @@ ShinyDriver2$set("public", "getEventLog", function() {
   })
 
   # Add workerId as first column
-  vecs <- c(workerid = private$shinyWorkerId, vecs)
+  vecs <- c(workerid = private$shiny_worker_id, vecs)
 
   as.data.frame(vecs, stringsAsFactors = FALSE)
 })

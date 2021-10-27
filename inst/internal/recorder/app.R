@@ -15,7 +15,7 @@ add_dont_run_reason <- function(reason) {
   dont_run_reasons <<- c(dont_run_reasons, reason)
 }
 
-if (is.null(target_url) || is.null(app$getPath())) {
+if (is.null(target_url) || is.null(app$get_path())) {
   stop("Test recorder requires the 'shinytest2.recorder.url' and ",
     "'shinytest2.app.dir' options to be set.")
 }
@@ -227,7 +227,7 @@ code_generators <- list(
 
     } else if (event$hasBinding) {
       paste0(
-        "app$setInputs(",
+        "app$set_inputs(",
         quote_name(event$name), " = ",
         process_input_value(event$value, event$inputType),
         args,
@@ -239,7 +239,7 @@ code_generators <- list(
         args <- paste0(args, ", allow_no_input_binding_ = TRUE")
         if (identical(event$priority, "event")) args <- paste0(args, ', priority_ = "event"')
         paste0(
-          "app$setInputs(",
+          "app$set_inputs(",
           quote_name(event$name), " = ",
           process_input_value(event$value, input_type = "default"),
           args,
@@ -272,13 +272,13 @@ code_generators <- list(
 )
 
 app_dir <- function() {
-  app$getPath()
+  app$get_path()
 }
 app_dir_basename <- function() {
   fs::path_file(app_dir())
 }
 app_file_basename <- function() {
-  path <- app$getPath()
+  path <- app$get_path()
   if (dir.exists(path)) return(".")
   basename(path)
 }
@@ -431,7 +431,7 @@ shinyApp(
       n_console_lines <- 0
       observe({
         invalidateLater(500)
-        logs <- app$getDebugLog(debug)
+        logs <- app$get_debug_log(debug)
         n <- nrow(logs)
         if (n > n_console_lines) {
           new_lines <- seq.int(n_console_lines + 1, n)

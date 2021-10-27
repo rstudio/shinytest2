@@ -12,44 +12,106 @@ with a live app.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-expectAppshot}{\code{ShinyDriver2$expectAppshot()}}
-\item \href{#method-getDebugLog}{\code{ShinyDriver2$getDebugLog()}}
-\item \href{#method-enableDebugLogMessages}{\code{ShinyDriver2$enableDebugLogMessages()}}
-\item \href{#method-findElement}{\code{ShinyDriver2$findElement()}}
-\item \href{#method-findElements}{\code{ShinyDriver2$findElements()}}
-\item \href{#method-logEvent}{\code{ShinyDriver2$logEvent()}}
-\item \href{#method-getEventLog}{\code{ShinyDriver2$getEventLog()}}
-\item \href{#method-executeScript}{\code{ShinyDriver2$executeScript()}}
-\item \href{#method-executeScriptCallback}{\code{ShinyDriver2$executeScriptCallback()}}
-\item \href{#method-expectSnapshotJS}{\code{ShinyDriver2$expectSnapshotJS()}}
-\item \href{#method-getAllValues}{\code{ShinyDriver2$getAllValues()}}
+\item \href{#method-get_chromote_session}{\code{ShinyDriver2$get_chromote_session()}}
+\item \href{#method-get_debug_log}{\code{ShinyDriver2$get_debug_log()}}
+\item \href{#method-enable_debug_log_messages}{\code{ShinyDriver2$enable_debug_log_messages()}}
+\item \href{#method-log_event}{\code{ShinyDriver2$log_event()}}
+\item \href{#method-get_event_log}{\code{ShinyDriver2$get_event_log()}}
+\item \href{#method-execute_script}{\code{ShinyDriver2$execute_script()}}
+\item \href{#method-execute_script_callback}{\code{ShinyDriver2$execute_script_callback()}}
+\item \href{#method-expect_appshot}{\code{ShinyDriver2$expect_appshot()}}
+\item \href{#method-expect_js}{\code{ShinyDriver2$expect_js()}}
+\item \href{#method-expect_text}{\code{ShinyDriver2$expect_text()}}
+\item \href{#method-expect_html}{\code{ShinyDriver2$expect_html()}}
+\item \href{#method-get_all_values}{\code{ShinyDriver2$get_all_values()}}
 \item \href{#method-new}{\code{ShinyDriver2$new()}}
-\item \href{#method-setInputs}{\code{ShinyDriver2$setInputs()}}
-\item \href{#method-uploadFile}{\code{ShinyDriver2$uploadFile()}}
-\item \href{#method-getPath}{\code{ShinyDriver2$getPath()}}
-\item \href{#method-takeScreenshot}{\code{ShinyDriver2$takeScreenshot()}}
-\item \href{#method-expectDownload}{\code{ShinyDriver2$expectDownload()}}
+\item \href{#method-set_inputs}{\code{ShinyDriver2$set_inputs()}}
+\item \href{#method-upload_file}{\code{ShinyDriver2$upload_file()}}
+\item \href{#method-get_path}{\code{ShinyDriver2$get_path()}}
+\item \href{#method-take_screenshot}{\code{ShinyDriver2$take_screenshot()}}
+\item \href{#method-expect_download}{\code{ShinyDriver2$expect_download()}}
 \item \href{#method-stop}{\code{ShinyDriver2$stop()}}
-\item \href{#method-waitFor}{\code{ShinyDriver2$waitFor()}}
-\item \href{#method-waitForShiny}{\code{ShinyDriver2$waitForShiny()}}
-\item \href{#method-waitForValue}{\code{ShinyDriver2$waitForValue()}}
-\item \href{#method-findWidget}{\code{ShinyDriver2$findWidget()}}
-\item \href{#method-getValue}{\code{ShinyDriver2$getValue()}}
-\item \href{#method-setValue}{\code{ShinyDriver2$setValue()}}
+\item \href{#method-wait_for_condition}{\code{ShinyDriver2$wait_for_condition()}}
+\item \href{#method-wait_for_idle}{\code{ShinyDriver2$wait_for_idle()}}
+\item \href{#method-wait_for_value}{\code{ShinyDriver2$wait_for_value()}}
+\item \href{#method-get_value}{\code{ShinyDriver2$get_value()}}
+\item \href{#method-set_value}{\code{ShinyDriver2$set_value()}}
 \item \href{#method-click}{\code{ShinyDriver2$click()}}
-\item \href{#method-listWidgets}{\code{ShinyDriver2$listWidgets()}}
-\item \href{#method-checkUniqueWidgetNames}{\code{ShinyDriver2$checkUniqueWidgetNames()}}
-\item \href{#method-setWindowSize}{\code{ShinyDriver2$setWindowSize()}}
-\item \href{#method-getWindowSize}{\code{ShinyDriver2$getWindowSize()}}
+\item \href{#method-list_widgets}{\code{ShinyDriver2$list_widgets()}}
+\item \href{#method-set_window_size}{\code{ShinyDriver2$set_window_size()}}
+\item \href{#method-get_window_size}{\code{ShinyDriver2$get_window_size()}}
 \item \href{#method-clone}{\code{ShinyDriver2$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expectAppshot"></a>}}
-\if{latex}{\out{\hypertarget{method-expectAppshot}{}}}
-\subsection{Method \code{expectAppshot()}}{
+\if{html}{\out{<a id="method-get_chromote_session"></a>}}
+\if{latex}{\out{\hypertarget{method-get_chromote_session}{}}}
+\subsection{Method \code{get_chromote_session()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expectAppshot(
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$get_chromote_session()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_debug_log"></a>}}
+\if{latex}{\out{\hypertarget{method-get_debug_log}{}}}
+\subsection{Method \code{get_debug_log()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$get_debug_log(type = c("all", debug_log_types()))}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-enable_debug_log_messages"></a>}}
+\if{latex}{\out{\hypertarget{method-enable_debug_log_messages}{}}}
+\subsection{Method \code{enable_debug_log_messages()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$enable_debug_log_messages(enable = TRUE)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-log_event"></a>}}
+\if{latex}{\out{\hypertarget{method-log_event}{}}}
+\subsection{Method \code{log_event()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$log_event(event, ...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_event_log"></a>}}
+\if{latex}{\out{\hypertarget{method-get_event_log}{}}}
+\subsection{Method \code{get_event_log()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$get_event_log()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-execute_script"></a>}}
+\if{latex}{\out{\hypertarget{method-execute_script}{}}}
+\subsection{Method \code{execute_script()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$execute_script(script, ...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-execute_script_callback"></a>}}
+\if{latex}{\out{\hypertarget{method-execute_script_callback}{}}}
+\subsection{Method \code{execute_script_callback()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$execute_script_callback(script, ..., timeout_ = 15 * 1000)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-expect_appshot"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_appshot}{}}}
+\subsection{Method \code{expect_appshot()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expect_appshot(
   ...,
   name = NULL,
   items = NULL,
@@ -68,92 +130,38 @@ with a live app.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getDebugLog"></a>}}
-\if{latex}{\out{\hypertarget{method-getDebugLog}{}}}
-\subsection{Method \code{getDebugLog()}}{
+\if{html}{\out{<a id="method-expect_js"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_js}{}}}
+\subsection{Method \code{expect_js()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getDebugLog(type = c("all", debug_log_types()))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expect_js(script, ..., post_fn = NULL, cran = FALSE)}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-enableDebugLogMessages"></a>}}
-\if{latex}{\out{\hypertarget{method-enableDebugLogMessages}{}}}
-\subsection{Method \code{enableDebugLogMessages()}}{
+\if{html}{\out{<a id="method-expect_text"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_text}{}}}
+\subsection{Method \code{expect_text()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$enableDebugLogMessages(enable = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expect_text(selector, ..., cran = FALSE)}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-findElement"></a>}}
-\if{latex}{\out{\hypertarget{method-findElement}{}}}
-\subsection{Method \code{findElement()}}{
+\if{html}{\out{<a id="method-expect_html"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_html}{}}}
+\subsection{Method \code{expect_html()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$findElement(css = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expect_html(selector, ..., outer_html = FALSE, cran = FALSE)}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-findElements"></a>}}
-\if{latex}{\out{\hypertarget{method-findElements}{}}}
-\subsection{Method \code{findElements()}}{
+\if{html}{\out{<a id="method-get_all_values"></a>}}
+\if{latex}{\out{\hypertarget{method-get_all_values}{}}}
+\subsection{Method \code{get_all_values()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$findElements(css = NULL)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-logEvent"></a>}}
-\if{latex}{\out{\hypertarget{method-logEvent}{}}}
-\subsection{Method \code{logEvent()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$logEvent(event, ...)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getEventLog"></a>}}
-\if{latex}{\out{\hypertarget{method-getEventLog}{}}}
-\subsection{Method \code{getEventLog()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getEventLog()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-executeScript"></a>}}
-\if{latex}{\out{\hypertarget{method-executeScript}{}}}
-\subsection{Method \code{executeScript()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$executeScript(script, ...)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-executeScriptCallback"></a>}}
-\if{latex}{\out{\hypertarget{method-executeScriptCallback}{}}}
-\subsection{Method \code{executeScriptCallback()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$executeScriptCallback(script, ..., timeout_ = 15 * 1000)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expectSnapshotJS"></a>}}
-\if{latex}{\out{\hypertarget{method-expectSnapshotJS}{}}}
-\subsection{Method \code{expectSnapshotJS()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expectSnapshotJS(script, ..., post_script = NULL, cran = FALSE)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getAllValues"></a>}}
-\if{latex}{\out{\hypertarget{method-getAllValues}{}}}
-\subsection{Method \code{getAllValues()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getAllValues(input = TRUE, output = TRUE, export = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$get_all_values(input = TRUE, output = TRUE, export = TRUE)}\if{html}{\out{</div>}}
 }
 
 }
@@ -188,11 +196,11 @@ with a live app.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setInputs"></a>}}
-\if{latex}{\out{\hypertarget{method-setInputs}{}}}
-\subsection{Method \code{setInputs()}}{
+\if{html}{\out{<a id="method-set_inputs"></a>}}
+\if{latex}{\out{\hypertarget{method-set_inputs}{}}}
+\subsection{Method \code{set_inputs()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$setInputs(
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$set_inputs(
   ...,
   wait_ = TRUE,
   values_ = TRUE,
@@ -211,11 +219,11 @@ with a live app.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-uploadFile"></a>}}
-\if{latex}{\out{\hypertarget{method-uploadFile}{}}}
-\subsection{Method \code{uploadFile()}}{
+\if{html}{\out{<a id="method-upload_file"></a>}}
+\if{latex}{\out{\hypertarget{method-upload_file}{}}}
+\subsection{Method \code{upload_file()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$uploadFile(..., wait_ = TRUE, values_ = TRUE, timeout_ = 3000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$upload_file(..., wait_ = TRUE, values_ = TRUE, timeout_ = 3000)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -227,20 +235,20 @@ with a live app.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getPath"></a>}}
-\if{latex}{\out{\hypertarget{method-getPath}{}}}
-\subsection{Method \code{getPath()}}{
+\if{html}{\out{<a id="method-get_path"></a>}}
+\if{latex}{\out{\hypertarget{method-get_path}{}}}
+\subsection{Method \code{get_path()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getPath()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$get_path()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-takeScreenshot"></a>}}
-\if{latex}{\out{\hypertarget{method-takeScreenshot}{}}}
-\subsection{Method \code{takeScreenshot()}}{
+\if{html}{\out{<a id="method-take_screenshot"></a>}}
+\if{latex}{\out{\hypertarget{method-take_screenshot}{}}}
+\subsection{Method \code{take_screenshot()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$takeScreenshot(
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$take_screenshot(
   filename = NULL,
   ...,
   screenshot_args = list(),
@@ -259,11 +267,11 @@ with a live app.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expectDownload"></a>}}
-\if{latex}{\out{\hypertarget{method-expectDownload}{}}}
-\subsection{Method \code{expectDownload()}}{
+\if{html}{\out{<a id="method-expect_download"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_download}{}}}
+\subsection{Method \code{expect_download()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expectDownload(id, ..., name = NULL, cran = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expect_download(id, ..., name = NULL, cran = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -284,29 +292,29 @@ with a live app.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-waitFor"></a>}}
-\if{latex}{\out{\hypertarget{method-waitFor}{}}}
-\subsection{Method \code{waitFor()}}{
+\if{html}{\out{<a id="method-wait_for_condition"></a>}}
+\if{latex}{\out{\hypertarget{method-wait_for_condition}{}}}
+\subsection{Method \code{wait_for_condition()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$waitFor(expr, timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$wait_for_condition(expr, timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-waitForShiny"></a>}}
-\if{latex}{\out{\hypertarget{method-waitForShiny}{}}}
-\subsection{Method \code{waitForShiny()}}{
+\if{html}{\out{<a id="method-wait_for_idle"></a>}}
+\if{latex}{\out{\hypertarget{method-wait_for_idle}{}}}
+\subsection{Method \code{wait_for_idle()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$waitForShiny(timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$wait_for_idle(timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-waitForValue"></a>}}
-\if{latex}{\out{\hypertarget{method-waitForValue}{}}}
-\subsection{Method \code{waitForValue()}}{
+\if{html}{\out{<a id="method-wait_for_value"></a>}}
+\if{latex}{\out{\hypertarget{method-wait_for_value}{}}}
+\subsection{Method \code{wait_for_value()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$waitForValue(
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$wait_for_value(
   name,
   ignore = list(NULL, ""),
   iotype = c("input", "output", "export"),
@@ -328,11 +336,11 @@ input and output widget.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-findWidget"></a>}}
-\if{latex}{\out{\hypertarget{method-findWidget}{}}}
-\subsection{Method \code{findWidget()}}{
+\if{html}{\out{<a id="method-get_value"></a>}}
+\if{latex}{\out{\hypertarget{method-get_value}{}}}
+\subsection{Method \code{get_value()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$findWidget(name, iotype = c("auto", "input", "output"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$get_value(name, iotype = c("auto", "input", "output"))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -348,31 +356,11 @@ input and output widget.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getValue"></a>}}
-\if{latex}{\out{\hypertarget{method-getValue}{}}}
-\subsection{Method \code{getValue()}}{
+\if{html}{\out{<a id="method-set_value"></a>}}
+\if{latex}{\out{\hypertarget{method-set_value}{}}}
+\subsection{Method \code{set_value()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getValue(name, iotype = c("auto", "input", "output"))}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{name}}{Name of a shiny widget.}
-
-\item{\code{iotype}}{Type of the Shiny widget. Usually shinytest2 finds the widgets
-by their name, so this is only needed if you use the same name for an
-input and output widget.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setValue"></a>}}
-\if{latex}{\out{\hypertarget{method-setValue}{}}}
-\subsection{Method \code{setValue()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$setValue(name, value, iotype = c("auto", "input", "output"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$set_value(name, value, iotype = c("auto", "input", "output"))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -408,38 +396,29 @@ input and output widget.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-listWidgets"></a>}}
-\if{latex}{\out{\hypertarget{method-listWidgets}{}}}
-\subsection{Method \code{listWidgets()}}{
+\if{html}{\out{<a id="method-list_widgets"></a>}}
+\if{latex}{\out{\hypertarget{method-list_widgets}{}}}
+\subsection{Method \code{list_widgets()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$listWidgets()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$list_widgets()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-checkUniqueWidgetNames"></a>}}
-\if{latex}{\out{\hypertarget{method-checkUniqueWidgetNames}{}}}
-\subsection{Method \code{checkUniqueWidgetNames()}}{
+\if{html}{\out{<a id="method-set_window_size"></a>}}
+\if{latex}{\out{\hypertarget{method-set_window_size}{}}}
+\subsection{Method \code{set_window_size()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$checkUniqueWidgetNames()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$set_window_size(width, height)}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setWindowSize"></a>}}
-\if{latex}{\out{\hypertarget{method-setWindowSize}{}}}
-\subsection{Method \code{setWindowSize()}}{
+\if{html}{\out{<a id="method-get_window_size"></a>}}
+\if{latex}{\out{\hypertarget{method-get_window_size}{}}}
+\subsection{Method \code{get_window_size()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$setWindowSize(width, height)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getWindowSize"></a>}}
-\if{latex}{\out{\hypertarget{method-getWindowSize}{}}}
-\subsection{Method \code{getWindowSize()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getWindowSize()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$get_window_size()}\if{html}{\out{</div>}}
 }
 
 }

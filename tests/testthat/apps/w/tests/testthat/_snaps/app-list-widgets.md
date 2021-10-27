@@ -1,7 +1,7 @@
 # list input & output widgets
 
     Code
-      app$listWidgets()
+      app$list_widgets()
     Output
       $input
        [1] "action"               "bsSwitch"             "checkGroup"          

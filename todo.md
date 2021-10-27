@@ -71,3 +71,7 @@ execut
 #'   you want to compare or update snapshots after testing. In most cases, the
 #'   user is prompted to do these tasks interactively, but there are also times
 #'   where it is useful to call these functions from the console.
+
+
+ShinyDriver$self$waitForShiny -> ShinyDriver2$wait_for_idle
+ShinyDriver$self$findWidget -> ShinyDriver2$private$find_widget

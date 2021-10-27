@@ -12,10 +12,13 @@ Widget2 <- R6Class( # nolint
     # element = NULL,  # HTML element with name as id
     nodeId = NULL,   # nodeId of the element
     type = NULL,     # e.g. selectInput
-    iotype = NULL    # "input" or "output"
+    iotype = NULL,    # "input" or "output"
+    chromote_session = NULL
   ),
   public = list(
-    chromote_session = NULL, # Chromote Session
+    get_chromote_session = function() {
+      private$chromote_session
+    },
 
     #' @description Create new `Widget2`
     #' @param name Name of a Shiny widget.
@@ -30,35 +33,36 @@ Widget2 <- R6Class( # nolint
       private$nodeId <- node_id # nolint
       private$type <- type
       private$iotype <- iotype
-      self$chromote_session <- chromote_session
+      private$chromote_session <- chromote_session
       invisible(self)
     },
 
-    #' @description Control id (i.e. `inputId` or `outputId` that control
-    #'   was created with).
-    getName = function() private$name,
-    #' @description Underlying `nodeId` to be used within the Chromium session
-    getNodeId = function() private$nodeId,
-    #' @description Retrieve the underlying HTML for a widget
-    getHtml = function() {
-      chromote_call_js_on_node(self$chromote_session, private$nodeId, "function() { return this.outerHTML; }")$result$value
-    },
+    # #' @description Control id (i.e. `inputId` or `outputId` that control
+    # #'   was created with).
+    # getName = function() private$name,
+    # #' @description Underlying `nodeId` to be used within the Chromium session
+    # getNodeId = function() private$nodeId,
+    # #' @description Retrieve the underlying HTML for a widget
+    # getHtml = function() {
+    #   chromote_call_js_on_node(self$get_chromote_session(), private$nodeId, "function() { return this.outerHTML; }")$result$value
+    # },
     #' @description Widget2 type, e.g. `textInput`, `selectInput`.
-    getType = function() private$type,
+    get_type = function() private$type,
     #' @description Is this an input or output control?
-    getIoType = function() private$iotype,
-    #' @description Is this an input control?
-    isInput = function() private$iotype == "input",
-    #' @description Is this an output control?
-    isOutput = function() private$iotype == "output",
+    get_iotype = function() private$iotype,
+    # #' @description Is this an input control?
+    # isInput = function() private$iotype == "input",
+    # #' @description Is this an output control?
+    # isOutput = function() private$iotype == "output",
 
     #' @description Get current value of control.
-    getValue = function() {
-      "!DEBUG widget2_getValue `private$name`"
+    # TODO-barret; https://github.com/rstudio/shinytest2/issues/49
+    get_value = function() {
+      "!DEBUG widget2_get_value `private$name`"
 
       if (private$iotype == "input") {
         res <- chromote_call_js_on_node(
-          self$chromote_session,
+          self$get_chromote_session(),
           private$nodeId,
           "function() {
             var el = $(this);
@@ -69,7 +73,7 @@ Widget2 <- R6Class( # nolint
         res <- switch(private$type,
           htmlOutput = {
             chromote_call_js_on_node(
-              self$chromote_session,
+              self$get_chromote_session(),
               private$nodeId,
               "function() { return this.innerHTML; }"
             )$result$value
@@ -77,12 +81,12 @@ Widget2 <- R6Class( # nolint
           verbatimTextOutput = , # nolint
           textOutput = {
             chromote_call_js_on_node(
-              self$chromote_session,
+              self$get_chromote_session(),
               private$nodeId,
               "function() { return this.textContent; }"
             )$result$value
           },
-          abort(paste0("getValue is not implemented for ", private$type))
+          abort(paste0("$get_value() is not implemented for ", private$type))
         )
       }
 
@@ -100,8 +104,8 @@ Widget2 <- R6Class( # nolint
 
     #' @description Set value of control.
     #' @param value Value to set for the widget.
-    setValue = function(value) {
-      "!DEBUG widget2_setValue `private$name`"
+    set_value = function(value) {
+      "!DEBUG widget2_set_value `private$name`"
       if (private$iotype == "output") {
         abort("Cannot set values of output widgets")
       }
@@ -121,7 +125,7 @@ Widget2 <- R6Class( # nolint
           el.trigger('change');
         }
       "
-      chromote_call_js_on_node(self$chromote_session, private$nodeId, set_value_script, arguments = list(value))
+      chromote_call_js_on_node(self$get_chromote_session(), private$nodeId, set_value_script, arguments = list(value))
 
       invisible(self)
     },
@@ -135,7 +139,7 @@ Widget2 <- R6Class( # nolint
           el.click();
         }
       "
-      chromote_call_js_on_node(self$chromote_session, private$nodeId, click_script)
+      chromote_call_js_on_node(self$get_chromote_session(), private$nodeId, click_script)
       invisible(self)
     },
 
@@ -155,15 +159,15 @@ Widget2 <- R6Class( # nolint
     #   if (private$type != "tabsetPanel") {
     #     abort("'listTabs' only works for 'tabsetPanel' Widgets")
     #   }
-    #   tabs <- private$element$findElements("li a")
+    #   tabs <- private$element$find_elements("li a")
     #   vapply(tabs, function(t) t$getData("value"), "")
     # },
 
     #' @description Upload a file to a [shiny::fileInput()].
     #'  It fails for other types of widgets.
     #' @param filename Path to file to upload
-    uploadFile = function(filename) {
-      self$chromote_session$DOM$setFileInputFiles(files = list(fs::path_abs(filename)), nodeId = private$nodeId)
+    upload_file = function(filename) {
+      self$get_chromote_session()$DOM$setFileInputFiles(files = list(fs::path_abs(filename)), nodeId = private$nodeId)
     }
   )
 )
@@ -181,10 +185,14 @@ Widget2 <- R6Class( # nolint
 #' @return A [Widget2].
 #' @importFrom rlang %|%
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "findWidget", function(name, iotype = c("auto", "input", "output")) {
-  "!DEBUG finding a Widget2 `name` (`iotype`)"
+ShinyDriver2$set("private", "find_widget", function(name, iotype = c("auto", "input", "output")) {
 
+  sd2_find_widget(self, private, name, iotype)
+})
+
+sd2_find_widget <- function(self, private, name, iotype = c("auto", "input", "output")) {
   iotype <- match.arg(iotype)
+  "!DEBUG finding a Widget2 `name` (`iotype`)"
 
   css <- if (iotype == "auto") {
     paste0("#", name)
@@ -196,7 +204,7 @@ ShinyDriver2$set("public", "findWidget", function(name, iotype = c("auto", "inpu
     paste0("#", name, ".shiny-bound-output")
   }
 
-  el_node_ids <- chromote_find_elements(self$chromote_session, css)
+  el_node_ids <- chromote_find_elements(self$get_chromote_session(), css)
 
   if (length(el_node_ids) == 0) {
     abort(paste0(
@@ -214,7 +222,7 @@ ShinyDriver2$set("public", "findWidget", function(name, iotype = c("auto", "inpu
   }
 
   node_id <- el_node_ids[[1]]
-  js_ret <- chromote_call_js_on_node(self$chromote_session, node_id, "
+  js_ret <- chromote_call_js_on_node(self$get_chromote_session(), node_id, "
     function() {
       var el = $(this);
       if (el.data('shinyInputBinding') !== undefined) {
@@ -241,11 +249,13 @@ ShinyDriver2$set("public", "findWidget", function(name, iotype = c("auto", "inpu
     "shiny.dateRangeInput"     = "dateRangeInput",
     "shiny.fileInputBinding"   = "fileInput",
     "shiny.numberInput"        = "numericInput",
+    # TODO-barret-rename to `radioInput`
     "shiny.radioInput"         = "radioButtons",
     "shiny.selectInput"        = "selectInput",
     "shiny.sliderInput"        = "sliderInput",
     "shiny.textInput"          = "textInput",
     "shiny.passwordInput"      = "passwordInput",
+    # TODO-barret-rename to `bootstrapTabInput`
     "shiny.bootstrapTabInput"  = "tabsetPanel",
 
     "shiny.textOutput"         = "textOutput",
@@ -260,54 +270,52 @@ ShinyDriver2$set("public", "findWidget", function(name, iotype = c("auto", "inpu
     node_id = el_node_ids[[1]],
     type = unname(widget_names[type[[2]]] %|% type[[2]]),
     iotype = type[[1]],
-    chromote_session = self$chromote_session
+    chromote_session = self$get_chromote_session()
   )
-})
+}
 
 
 
 
 #' @description
-#' Finds a widget and queries its value. See the `getValue()` method of
+#' Finds a widget and queries its value. See the `get_value()` method of
 #' [Widget2] for more details.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "getValue", function(name, iotype = c("auto", "input", "output")) {
-  "!DEBUG ShinyDriver2$getValue `name` (`iotype`)"
-  self$findWidget(name, iotype)$getValue()
+ShinyDriver2$set("public", "get_value", function(name, iotype = c("auto", "input", "output")) {
+  "!DEBUG ShinyDriver2$get_value `name` (`iotype`)"
+  private$find_widget(name, iotype)$get_value()
 })
 
 #' @description
-#' Finds a widget and sets its value. It's a shortcut for `findElement()`
-#' plus `setValue()`; see the [Widget2] documentation for more details.
+#' Finds a Shiny widget and sets its value. See the [Widget2] documentation for more details.
 #'
 #' @param value New value.
 #' @return Self, invisibly.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "setValue", function(name, value, iotype = c("auto", "input", "output")) {
-  "!DEBUG ShinyDriver2$setValue `name`"
-  self$findWidget(name, iotype)$setValue(value)
+ShinyDriver2$set("public", "set_value", function(name, value, iotype = c("auto", "input", "output")) {
+  "!DEBUG ShinyDriver2$set_value `name`"
+  private$find_widget(name, iotype)$set_value(value)
   invisible(self)
 })
 
 #' @description
-#' Find a widget and click it. It's a shortcut for `findElement()`
-#' plus `click()`; see the [Widget2] documentation for more details.
+#' Find a widget and click it. See the [Widget2] documentation for more details.
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "click", function(name, iotype = c("auto", "input", "output")) {
-  self$findWidget(name, iotype)$click()
+  private$find_widget(name, iotype)$click()
 })
 
 # # TODO-future; Not for this release. Comment for now.
 # #' @description
 # #' Sends the specified keys to specific HTML element. Shortcut for
-# #' `findWidget()` plus `sendKeys()`.
+# #' `find_widget()` plus `sendKeys()`.
 # #' @param keys Keys to send to the widget or the app.
 # # ' See [webdriver::key] for how to specific special keys.
 # #' @return Self, invisibly.
 # #' @include shiny-driver.R
 # ShinyDriver2$set("public", "sendKeys", function(name, keys) {
 #   "!DEBUG ShinyDriver2$sendKeys `name`"
-#   self$findWidget(name)$sendKeys(keys)
+#   private$find_widget(name)$sendKeys(keys)
 #   invisible(self)
 # })
 
@@ -316,21 +324,20 @@ ShinyDriver2$set("public", "click", function(name, iotype = c("auto", "input", "
 #' Lists the names of all input and output widgets
 #' @return A list of two character vectors, named `input` and `output`.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "listWidgets", function() {
-  "!DEBUG ShinyDriver2$listWidgets"
-  res <- chromote_eval(self$chromote_session, "shinytest2.listWidgets()")$result$value
+ShinyDriver2$set("public", "list_widgets", function() {
+  "!DEBUG ShinyDriver2$list_widgets"
+  res <- chromote_eval(self$get_chromote_session(), "shinytest2.listWidgets()")$result$value
 
   res$input <- sort_c(unlist(res$input))
   res$output <- sort_c(unlist(res$output))
   res
 })
 
-#' @description
-#' Check if Shiny widget names are unique.
-#' @include shiny-driver.R
-ShinyDriver2$set("public", "checkUniqueWidgetNames", function() {
-  "!DEBUG ShinyDriver2$checkUniqueWidgetNames"
-  widgets <- self$listWidgets()
+# ' @description
+# ' Check if Shiny widget names are unique.
+sd2_check_unique_widget_names <- function(self, private) {
+  "!DEBUG sd2_check_unique_widget_names()"
+  widgets <- self$list_widgets()
   inputs <- widgets$input
   outputs <- widgets$output
 
@@ -357,4 +364,4 @@ ShinyDriver2$set("public", "checkUniqueWidgetNames", function() {
   if (length(outputs) > 0) check("output", outputs)
 
   invisible(self)
-})
+}
