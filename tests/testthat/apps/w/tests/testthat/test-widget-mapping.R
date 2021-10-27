@@ -2,10 +2,10 @@ test_that("input widgets", {
 
   app <- ShinyDriver2$new(test_path("../../."))
   expect_input_widget <- function(name, type) {
-    expect_equal(
-      sd2_find_widget(app, NULL, name)$getType(),
-      type
-    )
+    widget <- sd2_find_widget(app, NULL, name)
+    expect_s3_class(widget, "Widget2")
+    expect_equal(widget$get_type(), type, info = name)
+    expect_equal(widget$get_iotype(), "input", info = name)
   }
 
   expect_input_widget("checkbox",   "checkboxInput")
@@ -26,11 +26,10 @@ test_that("output widgets with the same name", {
 
   app <- ShinyDriver2$new(test_path("../../."))
   expect_output_widget <- function(name, type) {
-    expect_equal(
-      sd2_find_widget(app, NULL, name, iotype = "output")$getType(),
-      type,
-      info = name
-    )
+    widget <- sd2_find_widget(app, NULL, name, iotype = "output")
+    expect_s3_class(widget, "Widget2")
+    expect_equal(widget$get_type(), type, info = name)
+    expect_equal(widget$get_iotype(), "output", info = name)
   }
 
   names <- c(

@@ -46,10 +46,10 @@ Widget2 <- R6Class( # nolint
     # getHtml = function() {
     #   chromote_call_js_on_node(self$get_chromote_session(), private$nodeId, "function() { return this.outerHTML; }")$result$value
     # },
-    # #' @description Widget2 type, e.g. `textInput`, `selectInput`.
-    # getType = function() private$type,
-    # #' @description Is this an input or output control?
-    # getIoType = function() private$iotype,
+    #' @description Widget2 type, e.g. `textInput`, `selectInput`.
+    get_type = function() private$type,
+    #' @description Is this an input or output control?
+    get_iotype = function() private$iotype,
     # #' @description Is this an input control?
     # isInput = function() private$iotype == "input",
     # #' @description Is this an output control?

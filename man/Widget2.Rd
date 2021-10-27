@@ -12,6 +12,8 @@ methods for finer grained interaction.
 \itemize{
 \item \href{#method-get_chromote_session}{\code{Widget2$get_chromote_session()}}
 \item \href{#method-new}{\code{Widget2$new()}}
+\item \href{#method-get_type}{\code{Widget2$get_type()}}
+\item \href{#method-get_iotype}{\code{Widget2$get_iotype()}}
 \item \href{#method-get_value}{\code{Widget2$get_value()}}
 \item \href{#method-set_value}{\code{Widget2$set_value()}}
 \item \href{#method-click}{\code{Widget2$click()}}
@@ -58,6 +60,26 @@ Create new \code{Widget2}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_type"></a>}}
+\if{latex}{\out{\hypertarget{method-get_type}{}}}
+\subsection{Method \code{get_type()}}{
+Widget2 type, e.g. \code{textInput}, \code{selectInput}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Widget2$get_type()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_iotype"></a>}}
+\if{latex}{\out{\hypertarget{method-get_iotype}{}}}
+\subsection{Method \code{get_iotype()}}{
+Is this an input or output control?
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Widget2$get_iotype()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_value"></a>}}
