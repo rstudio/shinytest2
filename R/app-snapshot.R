@@ -54,7 +54,7 @@ sd2_appshot <- function(
   # Take appshot -------------------------------------------------------------
   self$log_event("Taking appshot")
   self$log_event("Gathering input/output/export values")
-  url <- private$getTestSnapshotUrl(items$input, items$output, items$export)
+  url <- sd2_get_shiny_test_snapshot_url(self, private, items$input, items$output, items$export)
   req <- httr_get(url)
 
   # Convert to text, then replace base64-encoded images with hashes of them.
@@ -205,8 +205,8 @@ create_snapshot_dir <- function(dir, count) {
 }
 
 
-#' @include shiny-driver.R
-ShinyDriver2$set("private", "getTestSnapshotUrl", function(
+sd2_get_shiny_test_snapshot_url <- function(
+  self, private,
   input = TRUE,
   output = TRUE,
   export = TRUE,
@@ -229,7 +229,7 @@ ShinyDriver2$set("private", "getTestSnapshotUrl", function(
     "sortC=1",
     sep = "&"
   )
-})
+}
 
 
 # Given a JSON string, find any strings that represent base64-encoded images

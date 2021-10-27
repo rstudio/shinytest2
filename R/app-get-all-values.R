@@ -11,7 +11,7 @@ ShinyDriver2$set("public", "get_all_values", function(input = TRUE, output = TRU
   self$log_event("Getting all values")
   "!DEBUG ShinyDriver2$get_all_values"
 
-  url <- private$getTestSnapshotUrl(input, output, export, format = "rds")
+  url <- sd2_get_shiny_test_snapshot_url(self, private, input, output, export, format = "rds")
   req <- httr_get(url)
 
   tmpfile <- temp_file(".rds")
