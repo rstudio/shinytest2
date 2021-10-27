@@ -31,7 +31,7 @@ with a live app.
 \item \href{#method-stop}{\code{ShinyDriver2$stop()}}
 \item \href{#method-waitFor}{\code{ShinyDriver2$waitFor()}}
 \item \href{#method-wait_for_idle}{\code{ShinyDriver2$wait_for_idle()}}
-\item \href{#method-waitForValue}{\code{ShinyDriver2$waitForValue()}}
+\item \href{#method-wait_for_value}{\code{ShinyDriver2$wait_for_value()}}
 \item \href{#method-findWidget}{\code{ShinyDriver2$findWidget()}}
 \item \href{#method-getValue}{\code{ShinyDriver2$getValue()}}
 \item \href{#method-setValue}{\code{ShinyDriver2$setValue()}}
@@ -292,11 +292,11 @@ with a live app.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-waitForValue"></a>}}
-\if{latex}{\out{\hypertarget{method-waitForValue}{}}}
-\subsection{Method \code{waitForValue()}}{
+\if{html}{\out{<a id="method-wait_for_value"></a>}}
+\if{latex}{\out{\hypertarget{method-wait_for_value}{}}}
+\subsection{Method \code{wait_for_value()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$waitForValue(
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$wait_for_value(
   name,
   ignore = list(NULL, ""),
   iotype = c("input", "output", "export"),

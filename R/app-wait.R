@@ -44,14 +44,14 @@ ShinyDriver2$set("public", "wait_for_idle", function(timeout = 3 * 1000, interva
 #' @param ignore List of possible values to ignore when checking for
 #'   updates.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "waitForValue", function(
+ShinyDriver2$set("public", "wait_for_value", function(
   name,
   ignore = list(NULL, ""),
   iotype = c("input", "output", "export"),
   timeout = 10000,
   check_interval = 400
 ) {
-  "!DEBUG ShinyDriver2$waitForValue"
+  "!DEBUG ShinyDriver2$wait_for_value"
 
   iotype <- match.arg(iotype)
 
