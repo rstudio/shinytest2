@@ -40,8 +40,8 @@ ShinyDriver2$set("public", "set_inputs", function(
     input = paste(names(input_values), collapse = ",")
   )
 
-  private$queueInputs(input_values)
-  res <- private$flushInputs(wait_, timeout_)
+  private$queue_inputs(input_values)
+  res <- private$flush_inputs(wait_, timeout_)
 
   if (isTRUE(res$timedOut)) {
     # Get the text from one call back, like "app$set_inputs(a=1, b=2)"
@@ -69,7 +69,7 @@ ShinyDriver2$set("public", "set_inputs", function(
 
 
 #' @include shiny-driver.R
-ShinyDriver2$set("private", "queueInputs", function(inputs) {
+ShinyDriver2$set("private", "queue_inputs", function(inputs) {
   checkmate::assert_true(rlang::is_named(inputs))
 
   self$execute_script(
@@ -79,7 +79,7 @@ ShinyDriver2$set("private", "queueInputs", function(inputs) {
 })
 
 #' @include shiny-driver.R
-ShinyDriver2$set("private", "flushInputs", function(wait = TRUE, timeout = 1000) {
+ShinyDriver2$set("private", "flush_inputs", function(wait = TRUE, timeout = 1000) {
   self$execute_script_callback(
     "
     var wait = arguments[0];
