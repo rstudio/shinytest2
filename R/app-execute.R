@@ -23,9 +23,9 @@ ShinyDriver2$set("public", "executeScript", function(script, ...) {
 #' @return Self, invisibly.
 #' @include shiny-driver.R
 # TODO-barret; Should this be a `timeout` parameter? (Not `timeout_`) Or should all `timeout` parameters be renamed to `timeout_`?
-ShinyDriver2$set("public", "executeScriptCallback", function(script, ..., timeout_ = 15 * 1000) {
+ShinyDriver2$set("public", "execute_script_callback", function(script, ..., timeout_ = 15 * 1000) {
   # TODO-barret; incorporate `wait_` parameters to not wait for the _tick_ to finish
-  "!DEBUG ShinyDriver2$executeScriptCallback"
+  "!DEBUG ShinyDriver2$execute_script_callback"
   chromote_execute_script_callback(
     self$get_chromote_session(),
     script,

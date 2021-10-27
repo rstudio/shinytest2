@@ -80,7 +80,7 @@ ShinyDriver2$set("private", "queueInputs", function(inputs) {
 
 #' @include shiny-driver.R
 ShinyDriver2$set("private", "flushInputs", function(wait = TRUE, timeout = 1000) {
-  self$executeScriptCallback(
+  self$execute_script_callback(
     "
     var wait = arguments[0];
     var timeout = arguments[1];
@@ -134,7 +134,7 @@ ShinyDriver2$set("public", "uploadFile", function(
   widget <- self$findWidget(names(inputs)[1])
   widget$uploadFile(inputs[[1]])
 
-  self$executeScriptCallback(
+  self$execute_script_callback(
     "var wait = arguments[0];
     var callback = arguments[1];
     shinytest2.outputValuesWaiter.finish(wait, callback);",

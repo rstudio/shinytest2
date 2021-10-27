@@ -19,7 +19,7 @@ with a live app.
 \item \href{#method-log_event}{\code{ShinyDriver2$log_event()}}
 \item \href{#method-get_event_log}{\code{ShinyDriver2$get_event_log()}}
 \item \href{#method-executeScript}{\code{ShinyDriver2$executeScript()}}
-\item \href{#method-executeScriptCallback}{\code{ShinyDriver2$executeScriptCallback()}}
+\item \href{#method-execute_script_callback}{\code{ShinyDriver2$execute_script_callback()}}
 \item \href{#method-expectSnapshotJS}{\code{ShinyDriver2$expectSnapshotJS()}}
 \item \href{#method-getAllValues}{\code{ShinyDriver2$getAllValues()}}
 \item \href{#method-new}{\code{ShinyDriver2$new()}}
@@ -121,11 +121,11 @@ with a live app.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-executeScriptCallback"></a>}}
-\if{latex}{\out{\hypertarget{method-executeScriptCallback}{}}}
-\subsection{Method \code{executeScriptCallback()}}{
+\if{html}{\out{<a id="method-execute_script_callback"></a>}}
+\if{latex}{\out{\hypertarget{method-execute_script_callback}{}}}
+\subsection{Method \code{execute_script_callback()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$executeScriptCallback(script, ..., timeout_ = 15 * 1000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$execute_script_callback(script, ..., timeout_ = 15 * 1000)}\if{html}{\out{</div>}}
 }
 
 }
