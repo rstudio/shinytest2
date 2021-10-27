@@ -21,7 +21,7 @@ ShinyDriver2$set("public", "waitFor", function(expr, timeout = 3 * 1000, interva
 #' before take a screenshot.
 #' @return `TRUE` if done before before timeout; `NA` otherwise.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "waitForShiny", function(timeout = 3 * 1000, interval = 100) {
+ShinyDriver2$set("public", "wait_for_idle", function(timeout = 3 * 1000, interval = 100) {
   # Shiny automatically sets using busy/idle events:
   # https://github.com/rstudio/shiny/blob/e2537d/srcjs/shinyapp.js#L647-L655
   # Details of busy event: https://shiny.rstudio.com/articles/js-events.html
@@ -33,6 +33,7 @@ ShinyDriver2$set("public", "waitForShiny", function(timeout = 3 * 1000, interval
     interval = interval
   )
 })
+# TODO-barret-implement; Add `self$wait_for_stable()`; Remove `self$waitForIdle()`?
 
 #' @description
 #' Waits until the `input` or `output` with name `name` is not one of
