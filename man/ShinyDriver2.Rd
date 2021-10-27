@@ -33,7 +33,7 @@ with a live app.
 \item \href{#method-wait_for_idle}{\code{ShinyDriver2$wait_for_idle()}}
 \item \href{#method-wait_for_value}{\code{ShinyDriver2$wait_for_value()}}
 \item \href{#method-get_value}{\code{ShinyDriver2$get_value()}}
-\item \href{#method-setValue}{\code{ShinyDriver2$setValue()}}
+\item \href{#method-set_value}{\code{ShinyDriver2$set_value()}}
 \item \href{#method-click}{\code{ShinyDriver2$click()}}
 \item \href{#method-listWidgets}{\code{ShinyDriver2$listWidgets()}}
 \item \href{#method-checkUniqueWidgetNames}{\code{ShinyDriver2$checkUniqueWidgetNames()}}
@@ -337,11 +337,11 @@ input and output widget.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setValue"></a>}}
-\if{latex}{\out{\hypertarget{method-setValue}{}}}
-\subsection{Method \code{setValue()}}{
+\if{html}{\out{<a id="method-set_value"></a>}}
+\if{latex}{\out{\hypertarget{method-set_value}{}}}
+\subsection{Method \code{set_value()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$setValue(name, value, iotype = c("auto", "input", "output"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$set_value(name, value, iotype = c("auto", "input", "output"))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

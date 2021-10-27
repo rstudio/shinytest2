@@ -13,7 +13,7 @@ methods for finer grained interaction.
 \item \href{#method-get_chromote_session}{\code{Widget2$get_chromote_session()}}
 \item \href{#method-new}{\code{Widget2$new()}}
 \item \href{#method-get_value}{\code{Widget2$get_value()}}
-\item \href{#method-setValue}{\code{Widget2$setValue()}}
+\item \href{#method-set_value}{\code{Widget2$set_value()}}
 \item \href{#method-click}{\code{Widget2$click()}}
 \item \href{#method-upload_file}{\code{Widget2$upload_file()}}
 \item \href{#method-clone}{\code{Widget2$clone()}}
@@ -70,12 +70,12 @@ Get current value of control.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setValue"></a>}}
-\if{latex}{\out{\hypertarget{method-setValue}{}}}
-\subsection{Method \code{setValue()}}{
+\if{html}{\out{<a id="method-set_value"></a>}}
+\if{latex}{\out{\hypertarget{method-set_value}{}}}
+\subsection{Method \code{set_value()}}{
 Set value of control.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Widget2$setValue(value)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Widget2$set_value(value)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

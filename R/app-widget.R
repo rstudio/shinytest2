@@ -104,8 +104,8 @@ Widget2 <- R6Class( # nolint
 
     #' @description Set value of control.
     #' @param value Value to set for the widget.
-    setValue = function(value) {
-      "!DEBUG widget2_setValue `private$name`"
+    set_value = function(value) {
+      "!DEBUG widget2_set_value `private$name`"
       if (private$iotype == "output") {
         abort("Cannot set values of output widgets")
       }
@@ -292,9 +292,9 @@ ShinyDriver2$set("public", "get_value", function(name, iotype = c("auto", "input
 #' @param value New value.
 #' @return Self, invisibly.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "setValue", function(name, value, iotype = c("auto", "input", "output")) {
-  "!DEBUG ShinyDriver2$setValue `name`"
-  private$find_widget(name, iotype)$setValue(value)
+ShinyDriver2$set("public", "set_value", function(name, value, iotype = c("auto", "input", "output")) {
+  "!DEBUG ShinyDriver2$set_value `name`"
+  private$find_widget(name, iotype)$set_value(value)
   invisible(self)
 })
 
