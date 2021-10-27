@@ -180,7 +180,7 @@ ShinyDriver2$set("public", "initialize", function(
   self$log_event("Shiny app started")
   private$state <- "running"
 
-  private$setupDebugging(debug)
+  # private$setup_debugging(debug)
 
 
   # private$shinyWorkerId <- private$web$executeScript(

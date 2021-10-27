@@ -207,13 +207,13 @@ ShinyDriver2$set("public", "enable_debug_log_messages", function(enable = TRUE) 
 })
 
 
-#' @include shiny-driver.R
-ShinyDriver2$set("private", "setupDebugging", function(debug) {
-  "!DEBUG ShinyDriver2$setupDebugging"
-  debug <- as_debug(debug)
+# #' @include shiny-driver.R
+# ShinyDriver2$set("private", "setup_debugging", function(debug) {
+#   "!DEBUG ShinyDriver2$setup_debugging"
+#   debug <- as_debug(debug)
 
-  if (length(debug)) {
-    ## TODO(-prev): poll the logs
-  }
-  invisible(self)
-})
+#   if (length(debug)) {
+#     ## TODO(-prev): poll the logs?
+#   }
+#   invisible(self)
+# })
