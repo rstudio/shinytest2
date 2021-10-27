@@ -2,7 +2,6 @@
 ShinyDriver2$set("private", "name",    NULL) # character / NULL
 ShinyDriver2$set("private", "variant", NULL) # character / NULL
 ShinyDriver2$set("private", "state", "stopped") # stopped or running
-ShinyDriver2$set("private", "shinyTestUrl", NULL) # URL for shiny's test API
 ShinyDriver2$set("private", "shinyWorkerId", NA_character_)
 
 
@@ -199,7 +198,7 @@ ShinyDriver2$set("public", "initialize", function(
   #   else
   #     return null;'
   # )
-  private$shinyTestUrl <- chromote_eval( # nolint
+  private$shiny_test_url <- chromote_eval( # nolint
     self$get_chromote_session(),
     "Shiny.shinyapp.getTestSnapshotBaseUrl ? Shiny.shinyapp.getTestSnapshotBaseUrl({fullUrl:true}) : null"
   )$result$value

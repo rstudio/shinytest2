@@ -3,6 +3,8 @@
 ShinyDriver2$set("private", "tempAppshotDir", NULL) # Temp folder to store snapshot outputs
 ShinyDriver2$set("private", "snapshotCount", NULL) # Current snapshot count
 ShinyDriver2$set("private", "snapshotScreenshot", TRUE) # Whether to take screenshots for each snapshot
+ShinyDriver2$set("private", "shiny_test_url", NULL) # URL for shiny's test API
+
 
 
 
@@ -219,7 +221,7 @@ ShinyDriver2$set("private", "getTestSnapshotUrl", function(
       ""
   }
   paste(
-    private$shinyTestUrl,
+    private$shiny_test_url,
     q_string("input", input),
     q_string("output", output),
     q_string("export", export),
