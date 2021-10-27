@@ -6,22 +6,22 @@
 #' @param screenshot Take a screenshot? Overrides value set by
 #'   `$snapshotInit()`
 #' @include shiny-driver.R
-#' @importFrom rlang !!!
-ShinyDriver2$set("public", "expect_snapshot_js", function(
+# TODO-barret-rename; `expect_script`?
+ShinyDriver2$set("public", "expect_js", function(
   script,
   ...,
-  post_script = NULL,
+  post_fn = NULL,
   cran = FALSE
 ) {
   ellipsis::check_dots_unnamed()
   arguments <- list2(...)
   testthat::expect_s3_class(self, "ShinyDriver2")
 
-  result <- self$execute_script(script, !!!arguments)
+  result <- self$execute_script(script, ...)
 
-  if (is.function(post_script)) {
-    checkmate::assert_integer(length(formals(post_script)), lower = 1)
-    result <- post_script(result)
+  if (is.function(post_fn)) {
+    checkmate::assert_integer(length(formals(post_fn)), lower = 1)
+    result <- post_fn(result)
   }
 
   testthat_expect_snapshot_output(
@@ -42,28 +42,50 @@ ShinyDriver2$set("public", "expect_snapshot_js", function(
 #' @param script A string containing the JS script to be executed.
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @param arguments A list of arguments to be passed to the script.
-#' @param post_script A function to be called on the result of the script before taking the snapshot.
+#' @param post_fn A function to be called on the result of the script before taking the snapshot.
 #'   [`app_expect_html()`] and [`app_expect_text()`] both use [`unlist()`].
 #' @inheritParams testthat::expect_snapshot_output
 #' @export
+#' @importFrom rlang !!!
 app_expect_js <- function(
   app,
   script,
   ..., # Ignored
   arguments = list2(), # TODO-barret-question; or  make this the `...`?
-  # TODO-barret-answer; Use `arguments` be consistent throughout the package
-  post_script = NULL,
-  # variant = NULL,
+  # TODO-barret-consistency; `...` or `arguments`!
+  # TODO-barret-answer; Use `arguments` or be consistent throughout the package
+  post_fn = NULL,
   cran = FALSE
 ) {
   ellipsis::check_dots_empty()
-  app$expect_snapshot_js(
+  app$expect_js(
     script = script, !!!arguments,
-    # variant = variant,
-    post_script = post_script,
+    post_fn = post_fn,
     cran = cran
   )
 }
+
+
+
+#' @description
+#' @param app A [ShinyDriver2] object.
+#' @param selector A DOM selector to be passed into jQuery
+#' @include shiny-driver.R
+ShinyDriver2$set("public", "expect_text", function(
+  selector,
+  ...,
+  cran = FALSE
+) {
+  ellipsis::check_dots_empty()
+  app_expect_js(
+    app,
+    script = paste0("return Array.from(document.querySelectorAll(\"", selector, "\")).map(function(item, i) { return item.textContent; });"),
+    post_fn = unlist,
+    cran = cran
+  )
+
+  invisible(self)
+})
 
 #' Expect App DOM or text snapshot
 #'
@@ -83,18 +105,51 @@ app_expect_text <- function(
   app,
   selector,
   ...,
-  # variant = NULL,
+  cran = FALSE
+) {
+  app$expect_text(
+    selector = selector,
+    cran = cran,
+    post_fn = NULL,
+    ...
+  )
+}
+
+
+
+
+
+#' @description
+#' @param app A [ShinyDriver2] object.
+#' @param selector A DOM selector to be passed into jQuery
+#' @param outer_html If `TRUE`, the full DOM structure will be returned (`tag.outerHTML`).
+#'   If `FALSE`, the full DOM structure of the child elements will be returned (`tag.innerHTML`).
+#' @include shiny-driver.R
+ShinyDriver2$set("public", "expect_html", function(
+  selector,
+  ...,
+  outer_html = FALSE,
   cran = FALSE
 ) {
   ellipsis::check_dots_empty()
+
+  html_code <-
+    if (isTRUE(outer_html)) {
+      "item.outerHTML"
+    } else {
+      "item.innerHTML"
+    }
+
   app_expect_js(
     app,
-    script = paste0("return Array.from(document.querySelectorAll(\"", selector, "\")).map(function(item, i) { return item.textContent; });"),
-    # variant = variant,
-    post_script = unlist,
+    script = paste0("return Array.from(document.querySelectorAll(\"", selector, "\")).map(function(item, i) { return ", html_code, "; });"),
+    post_fn = unlist,
     cran = cran
   )
-}
+
+  invisible(self)
+})
+
 #' @describeIn app_expect_html This method will extract the relevant DOM structure of all matching elements.
 #'   This method is great for testing the full DOM structure of particular HTML elements.
 #'   It is recommended to only use this method on DOM elements that you have full control over.
@@ -106,22 +161,13 @@ app_expect_html <- function(
   app,
   selector,
   ...,
-  # variant = NULL,
   outer_html = FALSE,
   cran = FALSE
 ) {
-  ellipsis::check_dots_empty()
-  html_code <-
-    if (isTRUE(outer_html)) {
-      "item.outerHTML"
-    } else {
-      "item.innerHTML"
-    }
-  app_expect_js(
-    app,
-    script = paste0("return Array.from(document.querySelectorAll(\"", selector, "\")).map(function(item, i) { return ", html_code, "; });"),
-    # variant = variant,
-    post_script = unlist,
-    cran = cran
+  app$expect_html(
+    selector = selector,
+    outer_html = outer_html,
+    cran = cran,
+    ...
   )
 }

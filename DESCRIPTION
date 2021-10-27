@@ -53,12 +53,12 @@ Config/Needs/website:
 Config/testthat/edition: 3
 Collate:
     'shiny-driver.R'
-    'app-appshot.R'
     'app-chromote.R'
     'app-debug.R'
     'app-event-logging.R'
     'app-execute.R'
-    'app-expect.R'
+    'app-expect-appshot.R'
+    'app-expect-other.R'
     'app-get-all-values.R'
     'app-initialize.R'
     'app-inputs.R'

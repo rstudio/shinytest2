@@ -12,7 +12,6 @@ with a live app.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-expect_appshot}{\code{ShinyDriver2$expect_appshot()}}
 \item \href{#method-get_chromote_session}{\code{ShinyDriver2$get_chromote_session()}}
 \item \href{#method-get_debug_log}{\code{ShinyDriver2$get_debug_log()}}
 \item \href{#method-enable_debug_log_messages}{\code{ShinyDriver2$enable_debug_log_messages()}}
@@ -20,7 +19,10 @@ with a live app.
 \item \href{#method-get_event_log}{\code{ShinyDriver2$get_event_log()}}
 \item \href{#method-execute_script}{\code{ShinyDriver2$execute_script()}}
 \item \href{#method-execute_script_callback}{\code{ShinyDriver2$execute_script_callback()}}
-\item \href{#method-expect_snapshot_js}{\code{ShinyDriver2$expect_snapshot_js()}}
+\item \href{#method-expect_appshot}{\code{ShinyDriver2$expect_appshot()}}
+\item \href{#method-expect_js}{\code{ShinyDriver2$expect_js()}}
+\item \href{#method-expect_text}{\code{ShinyDriver2$expect_text()}}
+\item \href{#method-expect_html}{\code{ShinyDriver2$expect_html()}}
 \item \href{#method-get_all_values}{\code{ShinyDriver2$get_all_values()}}
 \item \href{#method-new}{\code{ShinyDriver2$new()}}
 \item \href{#method-set_inputs}{\code{ShinyDriver2$set_inputs()}}
@@ -39,29 +41,6 @@ with a live app.
 \item \href{#method-set_window_size}{\code{ShinyDriver2$set_window_size()}}
 \item \href{#method-get_window_size}{\code{ShinyDriver2$get_window_size()}}
 \item \href{#method-clone}{\code{ShinyDriver2$clone()}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_appshot"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_appshot}{}}}
-\subsection{Method \code{expect_appshot()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expect_appshot(
-  ...,
-  name = NULL,
-  items = NULL,
-  screenshot = NULL,
-  error = FALSE,
-  cran = FALSE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{name}}{Name of a shiny widget.}
-}
-\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -128,11 +107,52 @@ with a live app.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_snapshot_js"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_snapshot_js}{}}}
-\subsection{Method \code{expect_snapshot_js()}}{
+\if{html}{\out{<a id="method-expect_appshot"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_appshot}{}}}
+\subsection{Method \code{expect_appshot()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expect_snapshot_js(script, ..., post_script = NULL, cran = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expect_appshot(
+  ...,
+  name = NULL,
+  items = NULL,
+  screenshot = NULL,
+  error = FALSE,
+  cran = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{Name of a shiny widget.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-expect_js"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_js}{}}}
+\subsection{Method \code{expect_js()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expect_js(script, ..., post_fn = NULL, cran = FALSE)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-expect_text"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_text}{}}}
+\subsection{Method \code{expect_text()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expect_text(selector, ..., cran = FALSE)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-expect_html"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_html}{}}}
+\subsection{Method \code{expect_html()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expect_html(selector, ..., outer_html = FALSE, cran = FALSE)}\if{html}{\out{</div>}}
 }
 
 }

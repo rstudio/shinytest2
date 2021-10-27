@@ -2,7 +2,6 @@ testthat_expect_snapshot_output <- function( # nolint
   private,
   x,
   cran = FALSE
-  # , variant = NULL
 ) {
   testthat::expect_snapshot_output(
     x,
@@ -16,7 +15,6 @@ testthat_expect_snapshot_file <- function(
   name = fs::path_file(file),
   cran = FALSE,
   compare = testthat::compare_file_binary
-  # , variant = NULL
 ) {
   # Add name prefix to saved snapshot file
   name <-
@@ -53,7 +51,6 @@ app_expect_appshot <- function(
   name = NULL,
   items = NULL,
   screenshot = NULL,
-  # variant = NULL,
   cran = FALSE
 ) {
   app$expect_appshot(
@@ -62,7 +59,6 @@ app_expect_appshot <- function(
     items = items,
     screenshot = screenshot,
     cran = cran
-    # , variant = variant
   )
 
 }
@@ -96,7 +92,6 @@ ShinyDriver2$set("public", "expect_appshot", function(
     appshot_info$json_path,
     cran = cran,
     compare = testthat::compare_file_text
-    # , variant = variant
   )
 
   # compare screenshot
@@ -106,7 +101,6 @@ ShinyDriver2$set("public", "expect_appshot", function(
       appshot_info$screenshot_path,
       cran = cran,
       compare = testthat::compare_file_binary
-      # , variant = variant
     )
   }
 
