@@ -1,6 +1,6 @@
 #' @include shiny-driver.R
 # Directory for temp storing test artifacts
-ShinyDriver2$set("private", "tempAppshotDir", NULL) # Temp folder to store snapshot outputs
+ShinyDriver2$set("private", "appshot_dir", NULL) # Temp folder to store snapshot outputs
 ShinyDriver2$set("private", "snapshotCount", NULL) # Current snapshot count
 ShinyDriver2$set("private", "snapshotScreenshot", TRUE) # Whether to take screenshots for each snapshot
 ShinyDriver2$set("private", "shiny_test_url", NULL) # URL for shiny's test API
@@ -20,7 +20,7 @@ sd2_appshot <- function(
   }
 
   snapshot_count <- private$snapshotCount$increment()
-  temp_save_dir  <- private$tempAppshotDir
+  temp_save_dir  <- private$appshot_dir
 
   # Do not prefix with `self$name` as that is only necessary for the snapshot file name
   # At this point, the temp folder is already unique
@@ -110,7 +110,7 @@ sd2_appshot_download <- function(
   self, private,
   id, name = NULL
 ) {
-  temp_save_dir <- private$tempAppshotDir
+  temp_save_dir <- private$appshot_dir
   snapshot_count <- private$snapshotCount$increment()
 
   if (is.null(name)) {

@@ -56,5 +56,5 @@ ShinyDriver2$set("private", "finalize", function() {
   # Can not remove snapshot files in the same function that they are created,
   #   so it is safer to clean up the files when the app is not needed
   #   (Not that big of a memory leak for a single app)
-  unlink(private$tempAppshotDir, recursive = TRUE)
+  unlink(private$appshot_dir, recursive = TRUE)
 })
