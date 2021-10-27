@@ -68,7 +68,7 @@ sd2_appshot <- function(
   if (isTRUE(screenshot)) {
     # Replace extension with .png
     full_screenshot_path <- fs::path(temp_save_dir, fs::path_ext_set(json_name, "png"))
-    self$takeScreenshot(full_screenshot_path)
+    self$take_screenshot(full_screenshot_path)
   }
 
   list(

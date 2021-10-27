@@ -26,7 +26,7 @@ with a live app.
 \item \href{#method-set_inputs}{\code{ShinyDriver2$set_inputs()}}
 \item \href{#method-upload_file}{\code{ShinyDriver2$upload_file()}}
 \item \href{#method-get_path}{\code{ShinyDriver2$get_path()}}
-\item \href{#method-takeScreenshot}{\code{ShinyDriver2$takeScreenshot()}}
+\item \href{#method-take_screenshot}{\code{ShinyDriver2$take_screenshot()}}
 \item \href{#method-expectDownload}{\code{ShinyDriver2$expectDownload()}}
 \item \href{#method-stop}{\code{ShinyDriver2$stop()}}
 \item \href{#method-waitFor}{\code{ShinyDriver2$waitFor()}}
@@ -226,11 +226,11 @@ with a live app.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-takeScreenshot"></a>}}
-\if{latex}{\out{\hypertarget{method-takeScreenshot}{}}}
-\subsection{Method \code{takeScreenshot()}}{
+\if{html}{\out{<a id="method-take_screenshot"></a>}}
+\if{latex}{\out{\hypertarget{method-take_screenshot}{}}}
+\subsection{Method \code{take_screenshot()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$takeScreenshot(
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$take_screenshot(
   filename = NULL,
   ...,
   screenshot_args = list(),

@@ -14,7 +14,7 @@
 #' @include shiny-driver.R
 # takeScreenshotLegacy = function(file = NULL, id = NULL, parent = FALSE) {
 # TODO-barret; rename to `$screenshot`?
-ShinyDriver2$set("public", "takeScreenshot", function(
+ShinyDriver2$set("public", "take_screenshot", function(
   filename = NULL,
   ..., # ignored? Send to chromote?
   # TODO-barret; Are all of these params needed? "Less is more"
@@ -23,7 +23,7 @@ ShinyDriver2$set("public", "takeScreenshot", function(
   selector = "html",
   wait_ = TRUE
 ) {
-  "!DEBUG sd2_takeScreenshot"
+  "!DEBUG sd2_take_screenshot"
   stopifnot(isTRUE(wait_))
   delay <- delay %||% 0
   checkmate::assert_number(delay, lower = 0, finite = TRUE, null.ok = TRUE)
