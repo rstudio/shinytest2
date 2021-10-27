@@ -165,7 +165,7 @@ Widget2 <- R6Class( # nolint
     #' @description Upload a file to a [shiny::fileInput()].
     #'  It fails for other types of widgets.
     #' @param filename Path to file to upload
-    uploadFile = function(filename) {
+    upload_file = function(filename) {
       self$get_chromote_session()$DOM$setFileInputFiles(files = list(fs::path_abs(filename)), nodeId = private$nodeId)
     }
   )

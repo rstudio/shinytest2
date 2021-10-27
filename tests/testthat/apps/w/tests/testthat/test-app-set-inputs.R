@@ -27,7 +27,7 @@ test_that("set kitchen sink of inputs", {
   tmpfile <- "__tmpfile"
   cat("tmpfile content", file = tmpfile)
   on.exit({unlink(tmpfile)}, add = TRUE)
-  app$uploadFile(file = test_path("test-app-set-inputs.R"))
+  app$upload_file(file = test_path("test-app-set-inputs.R"))
 
   app_expect_appshot(app, screenshot = TRUE)
 

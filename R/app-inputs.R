@@ -101,7 +101,7 @@ ShinyDriver2$set("private", "flushInputs", function(wait = TRUE, timeout = 1000)
 #' `path1` will be uploaded to file input with name `name1`.
 #' @param values_ If `TRUE`, will return final updated values of download
 #'   control.
-ShinyDriver2$set("public", "uploadFile", function(
+ShinyDriver2$set("public", "upload_file", function(
   ...,
   wait_ = TRUE,
   values_ = TRUE,
@@ -132,7 +132,7 @@ ShinyDriver2$set("public", "uploadFile", function(
   self$log_event("Uploading file", input = inputs[[1]])
 
   widget <- self$findWidget(names(inputs)[1])
-  widget$uploadFile(inputs[[1]])
+  widget$upload_file(inputs[[1]])
 
   self$execute_script_callback(
     "var wait = arguments[0];
