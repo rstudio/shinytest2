@@ -73,4 +73,5 @@ execut
 #'   where it is useful to call these functions from the console.
 
 
-ShinyDriver$waitForShiny -> ShinyDriver2$waitForIdle
+ShinyDriver$self$waitForShiny -> ShinyDriver2$wait_for_idle
+ShinyDriver$self$findWidget -> ShinyDriver2$private$find_widget
