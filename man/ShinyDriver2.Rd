@@ -18,7 +18,7 @@ with a live app.
 \item \href{#method-enable_debug_log_messages}{\code{ShinyDriver2$enable_debug_log_messages()}}
 \item \href{#method-log_event}{\code{ShinyDriver2$log_event()}}
 \item \href{#method-get_event_log}{\code{ShinyDriver2$get_event_log()}}
-\item \href{#method-executeScript}{\code{ShinyDriver2$executeScript()}}
+\item \href{#method-execute_script}{\code{ShinyDriver2$execute_script()}}
 \item \href{#method-execute_script_callback}{\code{ShinyDriver2$execute_script_callback()}}
 \item \href{#method-expectSnapshotJS}{\code{ShinyDriver2$expectSnapshotJS()}}
 \item \href{#method-getAllValues}{\code{ShinyDriver2$getAllValues()}}
@@ -112,11 +112,11 @@ with a live app.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-executeScript"></a>}}
-\if{latex}{\out{\hypertarget{method-executeScript}{}}}
-\subsection{Method \code{executeScript()}}{
+\if{html}{\out{<a id="method-execute_script"></a>}}
+\if{latex}{\out{\hypertarget{method-execute_script}{}}}
+\subsection{Method \code{execute_script()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$executeScript(script, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$execute_script(script, ...)}\if{html}{\out{</div>}}
 }
 
 }

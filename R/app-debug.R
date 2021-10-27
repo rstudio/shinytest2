@@ -183,7 +183,7 @@ ShinyDriver2$set("public", "get_debug_log", function(type = c("all", debug_log_t
 
   if ("shinytest2" %in% type) {
     "!DEBUG ShinyDriver2$get_debug_log shinytest2 log"
-    output$shinytest <- make_shinytest2_log(self$executeScript(
+    output$shinytest <- make_shinytest2_log(self$execute_script(
       "if (! window.shinytest2) { return([]) }
       var res = window.shinytest2.log_entries;
       window.shinytest2.log_entries = [];
@@ -199,7 +199,7 @@ ShinyDriver2$set("public", "get_debug_log", function(type = c("all", debug_log_t
 #' @param enable New value.
 #' @include shiny-driver.R
 ShinyDriver2$set("public", "enable_debug_log_messages", function(enable = TRUE) {
-  self$executeScript(
+  self$execute_script(
     "window.shinytest2.log_messages = arguments[0]",
     enable
   )

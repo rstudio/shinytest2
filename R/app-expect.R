@@ -17,7 +17,7 @@ ShinyDriver2$set("public", "expectSnapshotJS", function(
   arguments <- list2(...)
   testthat::expect_s3_class(self, "ShinyDriver2")
 
-  result <- self$executeScript(script, !!!arguments)
+  result <- self$execute_script(script, !!!arguments)
 
   if (is.function(post_script)) {
     checkmate::assert_integer(length(formals(post_script)), lower = 1)

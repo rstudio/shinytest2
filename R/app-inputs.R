@@ -72,7 +72,7 @@ ShinyDriver2$set("public", "setInputs", function(
 ShinyDriver2$set("private", "queueInputs", function(inputs) {
   checkmate::assert_true(rlang::is_named(inputs))
 
-  self$executeScript(
+  self$execute_script(
     "shinytest2.inputQueue.add(arguments[0]);",
     inputs
   )
@@ -123,7 +123,7 @@ ShinyDriver2$set("public", "uploadFile", function(
   # Wait for two messages by calling `.start(timeout, 2)`. This is because
   # uploading a file will result in two messages before the file is successfully
   # uploaded.
-  self$executeScript(
+  self$execute_script(
     "var timeout = arguments[0];
     shinytest2.outputValuesWaiter.start(timeout, 2);",
     timeout_
