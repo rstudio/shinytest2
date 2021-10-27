@@ -49,7 +49,7 @@ ShinyDriver2$set("public", "initialize", function(
 ) {
   ellipsis::check_dots_empty()
 
-  private$snapshotScreenshot <- screenshot # nolint
+  private$should_take_screenshot <- isTRUE(screenshot)
   private$variant <- variant
   private$appshot_dir <- temp_file()
   private$appshot_count <- Count$new()
@@ -226,6 +226,6 @@ ShinyDriver2$set("public", "initialize", function(
 
 #   private$appshot_count <- Count$new()
 #   private$snapshotDir <- path
-#   private$snapshotScreenshot <- screenshot
+#   private$should_take_screenshot <- isTRUE(screenshot)
 #   self
 # })

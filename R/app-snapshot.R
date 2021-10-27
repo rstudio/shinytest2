@@ -2,7 +2,7 @@
 # Directory for temp storing test artifacts
 ShinyDriver2$set("private", "appshot_dir", NULL) # Temp folder to store snapshot outputs
 ShinyDriver2$set("private", "appshot_count", NULL) # Current snapshot count
-ShinyDriver2$set("private", "snapshotScreenshot", TRUE) # Whether to take screenshots for each snapshot
+ShinyDriver2$set("private", "should_take_screenshot", TRUE) # Whether to take screenshots for each snapshot
 ShinyDriver2$set("private", "shiny_test_url", NULL) # URL for shiny's test API
 
 
@@ -26,11 +26,12 @@ sd2_appshot <- function(
   # At this point, the temp folder is already unique
   json_name <- fs::path_ext_set(name %||% sprintf("%03d", snapshot_count), "json")
 
-  # The default is to take a screenshot when the snapshotScreenshot option is
+  # The default is to take a screenshot when the `should_take_screenshot` option is
   # TRUE and the user does not specify specific items to snapshot.
-  if (is.null(screenshot)) {
-    screenshot <- private$snapshotScreenshot && is.null(items)
-  }
+  should_take_screenshot <- isTRUE(
+    screenshot %||%
+    (private$should_take_screenshot && is.null(items))
+  )
 
   # Figure out which items to snapshot ----------------------------------------
   # By default, record all items.
@@ -67,7 +68,7 @@ sd2_appshot <- function(
   write_utf8(content, full_json_path)
 
   full_screenshot_path <- NULL
-  if (isTRUE(screenshot)) {
+  if (should_take_screenshot) {
     # Replace extension with .png
     full_screenshot_path <- fs::path(temp_save_dir, fs::path_ext_set(json_name, "png"))
     self$take_screenshot(full_screenshot_path)
