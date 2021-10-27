@@ -2,7 +2,7 @@
 ShinyDriver2$set("private", "name",    NULL) # character / NULL
 ShinyDriver2$set("private", "variant", NULL) # character / NULL
 ShinyDriver2$set("private", "state", "stopped") # stopped or running
-ShinyDriver2$set("private", "shinyWorkerId", NA_character_)
+ShinyDriver2$set("private", "shiny_worker_id", NA_character_)
 
 
 
@@ -69,7 +69,7 @@ ShinyDriver2$set("public", "initialize", function(
         )
       }
     }
-  private$should_clean_logs <- isTRUE(clean_logs) # nolint
+  private$should_clean_logs <- isTRUE(clean_logs)
   if (is.null(load_timeout)) {
     load_timeout <- if (on_ci()) 10000 else 5000
   }
@@ -183,22 +183,22 @@ ShinyDriver2$set("public", "initialize", function(
   # private$setup_debugging(debug)
 
 
-  # private$shinyWorkerId <- private$web$executeScript(
+  # private$shiny_worker_id <- private$web$executeScript(
   #   'return Shiny.shinyapp.config.workerId'
   # )
-  private$shinyWorkerId <- chromote_eval( # nolint
+  private$shiny_worker_id <- chromote_eval(
     self$get_chromote_session(),
     "Shiny.shinyapp.config.workerId"
   )$result$value
-  if (identical(private$shinyWorkerId, ""))
-    private$shinyWorkerId <- NA_character_ # nolint
+  if (identical(private$shiny_worker_id, ""))
+    private$shiny_worker_id <- NA_character_
   # private$shinyTestSnapshotBaseUrl <- private$web$executeScript(
   #   'if (Shiny.shinyapp.getTestSnapshotBaseUrl)
   #     return Shiny.shinyapp.getTestSnapshotBaseUrl({ fullUrl:true });
   #   else
   #     return null;'
   # )
-  private$shiny_test_url <- chromote_eval( # nolint
+  private$shiny_test_url <- chromote_eval(
     self$get_chromote_session(),
     "Shiny.shinyapp.getTestSnapshotBaseUrl ? Shiny.shinyapp.getTestSnapshotBaseUrl({fullUrl:true}) : null"
   )$result$value

@@ -38,7 +38,7 @@ ShinyDriver2$set("public", "get_event_log", function() {
   })
 
   # Add workerId as first column
-  vecs <- c(workerid = private$shinyWorkerId, vecs)
+  vecs <- c(workerid = private$shiny_worker_id, vecs)
 
   as.data.frame(vecs, stringsAsFactors = FALSE)
 })
