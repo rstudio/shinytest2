@@ -18,7 +18,7 @@ ShinyDriver2$set("public", "wait_for_condition", function(expr, timeout = 3 * 10
 #' @description
 #' Waits until Shiny is not busy, i.e. the reactive graph has finished
 #' updating. This is useful, for example, if you've resized the window with
-#' `setWindowSize()` and want to make sure all plot redrawing is complete
+#' `$set_window_size()` and want to make sure all plot redrawing is complete
 #' before take a screenshot.
 #' @return `TRUE` if done before before timeout; `NA` otherwise.
 #' @include shiny-driver.R

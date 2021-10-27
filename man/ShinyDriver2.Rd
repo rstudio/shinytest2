@@ -36,8 +36,8 @@ with a live app.
 \item \href{#method-set_value}{\code{ShinyDriver2$set_value()}}
 \item \href{#method-click}{\code{ShinyDriver2$click()}}
 \item \href{#method-list_widgets}{\code{ShinyDriver2$list_widgets()}}
-\item \href{#method-setWindowSize}{\code{ShinyDriver2$setWindowSize()}}
-\item \href{#method-getWindowSize}{\code{ShinyDriver2$getWindowSize()}}
+\item \href{#method-set_window_size}{\code{ShinyDriver2$set_window_size()}}
+\item \href{#method-get_window_size}{\code{ShinyDriver2$get_window_size()}}
 \item \href{#method-clone}{\code{ShinyDriver2$clone()}}
 }
 }
@@ -385,20 +385,20 @@ input and output widget.}
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setWindowSize"></a>}}
-\if{latex}{\out{\hypertarget{method-setWindowSize}{}}}
-\subsection{Method \code{setWindowSize()}}{
+\if{html}{\out{<a id="method-set_window_size"></a>}}
+\if{latex}{\out{\hypertarget{method-set_window_size}{}}}
+\subsection{Method \code{set_window_size()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$setWindowSize(width, height)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$set_window_size(width, height)}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getWindowSize"></a>}}
-\if{latex}{\out{\hypertarget{method-getWindowSize}{}}}
-\subsection{Method \code{getWindowSize()}}{
+\if{html}{\out{<a id="method-get_window_size"></a>}}
+\if{latex}{\out{\hypertarget{method-get_window_size}{}}}
+\subsection{Method \code{get_window_size()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$getWindowSize()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$get_window_size()}\if{html}{\out{</div>}}
 }
 
 }
