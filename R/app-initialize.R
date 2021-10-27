@@ -54,6 +54,7 @@ ShinyDriver2$set("public", "initialize", function(
   private$variant <- variant
   private$tempAppshotDir <- temp_file() # nolint
   private$snapshotCount <- Count$new() # nolint
+  private$shiny_url <- Url$new()
   private$name <-
     if (!is.null(name)) {
       name
@@ -89,7 +90,7 @@ ShinyDriver2$set("public", "initialize", function(
   }
 
   if (grepl("^http(s?)://", path)) {
-    private$setShinyUrl(path)
+    private$shiny_url$set(path)
   } else {
     "!DEBUG starting shiny app from path"
     self$log_event("Starting Shiny app")
@@ -115,8 +116,8 @@ ShinyDriver2$set("public", "initialize", function(
 
   "!DEBUG navigate to Shiny app"
   self$log_event("Navigating to Shiny app")
-  # private$web$go(private$getShinyUrl())
-  self$get_chromote_session()$Page$navigate(private$getShinyUrl())
+  # private$web$go(private$shiny_url$get())
+  self$get_chromote_session()$Page$navigate(private$shiny_url$get())
 
   # This feels like it is too late. There is no guarantee that the script will load in time.
   "!DEBUG inject shiny-tracer.js to load before all other scripts"

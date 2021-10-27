@@ -118,13 +118,13 @@ sd2_appshot_download <- function(
   self$log_event("Downloading file")
 
   # Find the URL to download from (the href of the <a> tag)
-  url <- chromote_eval(self$get_chromote_session(), paste0("$('#", id, "').attr('href')"))$result$value
-  if (identical(url, "")) {
+  sub_url <- chromote_eval(self$get_chromote_session(), paste0("$('#", id, "').attr('href')"))$result$value
+  if (identical(sub_url, "")) {
     stop("Download from '#", id, "' failed")
   }
   # Add the base location to the URL
-  url <- paste0(private$getShinyUrl(), url)
-  req <- httr_get(url)
+  full_url <- paste0(private$shiny_url$get(), sub_url)
+  req <- httr_get(full_url)
 
   download_path <- fs::path(temp_save_dir, name)
   create_snapshot_dir(temp_save_dir, snapshot_count)

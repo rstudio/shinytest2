@@ -1,33 +1,37 @@
-#' @include shiny-driver.R
-ShinyDriver2$set("private", "shinyUrl", NULL)
+Url <- R6Class(
+  "Url",
+  private = list(
+    url = NULL
+  ),
+  public = list(
+    get = function() {
+      private$url
+    },
+    set = function(url) {
+      res <- parse_url(url)
 
+      if (nzchar(res$port)) {
+        res$port <- as.integer(res$port)
+        ckm8_assert_single_integer(res$port)
+      } else {
+        res$port <- NULL
+      }
 
-#' @include shiny-driver.R
-ShinyDriver2$set("private", "getShinyUrl", function() {
-  private$shinyUrl
-})
+      res$path <- if (nzchar(res$path)) res$path else "/"
 
-#' @include shiny-driver.R
-ShinyDriver2$set("private", "setShinyUrl", function(url) {
-  res <- parse_url(url)
+      ckm8_assert_single_string(res$host)
+      ckm8_assert_single_url(res$path)
 
-  if (nzchar(res$port)) {
-    res$port <- as.integer(res$port)
-    ckm8_assert_single_integer(res$port)
-  } else {
-    res$port <- NULL
-  }
+      private$url <- paste0( # nolint
+        res$protocol, "://", res$host,
+        if (!is.null(res$port)) paste0(":", res$port),
+        res$path
+      )
 
-  res$path <- if (nzchar(res$path)) res$path else "/"
-
-  ckm8_assert_single_string(res$host)
-  ckm8_assert_single_url(res$path)
-
-  private$shinyUrl <- paste0( # nolint
-    res$protocol, "://", res$host,
-    if (!is.null(res$port)) paste0(":", res$port),
-    res$path
+      invisible(self)
+    }
   )
+)
 
-  invisible(self)
-})
+#' @include shiny-driver.R
+ShinyDriver2$set("private", "shiny_url", "<Url>")

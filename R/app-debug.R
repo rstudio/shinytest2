@@ -64,7 +64,7 @@ ShinyDriver2$set("private", "browser_logs", list())
 sd2_init_browser_debug <- function(self, private) {
   self$get_chromote_session()$Runtime$consoleAPICalled(function(info) {
     # message("Runtime.consoleAPICalled")
-    msg <- console_api_to_msg(info, private$getShinyUrl())
+    msg <- console_api_to_msg(info, private$shiny_url$get())
     # TODO-barret; Should these messages be displayed in realtime?
     # cyan(msg)
     private$browser_logs[[length(private$browser_logs) + 1]] <-
@@ -76,7 +76,7 @@ sd2_init_browser_debug <- function(self, private) {
   })
   self$get_chromote_session()$Runtime$exceptionThrown(function(info) {
     # message("Runtime.exceptionThrown")
-    msg <- exception_thrown_to_msg(info, private$getShinyUrl())
+    msg <- exception_thrown_to_msg(info, private$shiny_url$get())
     # TODO-barret; Should these messages be displayed in realtime?
     # cyan(msg)
     private$browser_logs[[length(private$browser_logs) + 1]] <-

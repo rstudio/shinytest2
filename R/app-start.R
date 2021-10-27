@@ -97,7 +97,7 @@ ShinyDriver2$set("private", "startShiny", function(
   "!DEBUG shiny up and running, `line`"
 
   url <- sub(".*(https?://.*)", "\\1", line)
-  private$setShinyUrl(url)
+  private$shiny_url$set(url)
 
   private$shinyProcess <- p # nolint
 })
