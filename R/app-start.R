@@ -2,7 +2,8 @@
 ShinyDriver2$set("private", "shiny_process", NULL) # `callr::r_bg()` object
 
 #' @include shiny-driver.R
-ShinyDriver2$set("private", "startShiny", function(
+sd2_start_shiny <- function(
+  self, private,
   path,
   seed = NULL,
   load_timeout = 10000,
@@ -100,4 +101,6 @@ ShinyDriver2$set("private", "startShiny", function(
   private$shiny_url$set(url)
 
   private$shiny_process <- p # nolint
-})
+
+  invisible(self)
+}

@@ -93,7 +93,7 @@ ShinyDriver2$set("public", "initialize", function(
   } else {
     "!DEBUG starting shiny app from path"
     self$log_event("Starting Shiny app")
-    private$startShiny(path, seed, load_timeout, shiny_args, render_args, options)
+    sd2_start_shiny(self, private, path, seed, load_timeout, shiny_args, render_args, options)
   }
 
   # Read js content before init'ing chromote to reduce time between
