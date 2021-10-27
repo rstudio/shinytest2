@@ -6,7 +6,7 @@ test_that("set kitchen sink of inputs", {
 
   app_expect_appshot(app, screenshot = TRUE)
 
-  app$setInputs(
+  app$set_inputs(
     "action" = "click",
     "checkbox" = TRUE,
     "checkGroup" = c("2", "3"),
@@ -31,11 +31,11 @@ test_that("set kitchen sink of inputs", {
 
   app_expect_appshot(app, screenshot = TRUE)
 
-  app$setInputs(tabset = "shinyWidgets")
+  app$set_inputs(tabset = "shinyWidgets")
 
   app_expect_appshot(app, screenshot = TRUE)
 
-  app$setInputs(
+  app$set_inputs(
     "bsSwitch" = TRUE,
     "matSwitch" = TRUE,
     "picker" = c("T", "E", "S"),

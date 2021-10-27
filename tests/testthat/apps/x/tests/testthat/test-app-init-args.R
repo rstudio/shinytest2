@@ -3,8 +3,8 @@ test_that("name arg works", {
     test_path("../../."),
     name = "init"
   )
-  app$setInputs(name = "Hadley")
-  app$setInputs(greet = "click")
+  app$set_inputs(name = "Hadley")
+  app$set_inputs(greet = "click")
   app_expect_appshot(app)
   app_expect_appshot(app, items = list(output = "greeting"))
 })

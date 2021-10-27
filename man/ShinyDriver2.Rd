@@ -23,7 +23,7 @@ with a live app.
 \item \href{#method-expectSnapshotJS}{\code{ShinyDriver2$expectSnapshotJS()}}
 \item \href{#method-get_all_values}{\code{ShinyDriver2$get_all_values()}}
 \item \href{#method-new}{\code{ShinyDriver2$new()}}
-\item \href{#method-setInputs}{\code{ShinyDriver2$setInputs()}}
+\item \href{#method-set_inputs}{\code{ShinyDriver2$set_inputs()}}
 \item \href{#method-uploadFile}{\code{ShinyDriver2$uploadFile()}}
 \item \href{#method-get_path}{\code{ShinyDriver2$get_path()}}
 \item \href{#method-takeScreenshot}{\code{ShinyDriver2$takeScreenshot()}}
@@ -178,11 +178,11 @@ with a live app.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setInputs"></a>}}
-\if{latex}{\out{\hypertarget{method-setInputs}{}}}
-\subsection{Method \code{setInputs()}}{
+\if{html}{\out{<a id="method-set_inputs"></a>}}
+\if{latex}{\out{\hypertarget{method-set_inputs}{}}}
+\subsection{Method \code{set_inputs()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$setInputs(
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$set_inputs(
   ...,
   wait_ = TRUE,
   values_ = TRUE,

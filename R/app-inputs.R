@@ -10,7 +10,7 @@
 #' @param values_ If `TRUE`, will return final updated values of inputs.
 #' @return Returns updated values, invisibly.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "setInputs", function(
+ShinyDriver2$set("public", "set_inputs", function(
   ...,
   wait_ = TRUE,
   values_ = TRUE,
@@ -44,12 +44,12 @@ ShinyDriver2$set("public", "setInputs", function(
   res <- private$flushInputs(wait_, timeout_)
 
   if (isTRUE(res$timedOut)) {
-    # Get the text from one call back, like "app$setInputs(a=1, b=2)"
+    # Get the text from one call back, like "app$set_inputs(a=1, b=2)"
     calls <- sys.calls()
     call_text <- deparse(calls[[length(calls) - 1]])
 
     inform_where(paste0(
-      "setInputs(", call_text, "): ",
+      "set_inputs(", call_text, "): ",
       "Server did not update any output values within ",
       format(timeout_ / 1000, digits = 2), " seconds. ",
       "If this is expected, use `wait_=FALSE, values_=FALSE`, or increase the value of timeout_."

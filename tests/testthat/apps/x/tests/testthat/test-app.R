@@ -12,8 +12,8 @@
 # Current shinytest2 code using `app$**()`:
 test_that("basic website example works", {
   app <- ShinyDriver2$new(test_path("../../."))
-  app$setInputs(name = "Hadley")
-  app$setInputs(greet = "click")
+  app$set_inputs(name = "Hadley")
+  app$set_inputs(greet = "click")
 
   # Take picture and record inputs / outputs
   app_expect_appshot(app)

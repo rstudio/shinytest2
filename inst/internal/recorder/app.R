@@ -227,7 +227,7 @@ code_generators <- list(
 
     } else if (event$hasBinding) {
       paste0(
-        "app$setInputs(",
+        "app$set_inputs(",
         quote_name(event$name), " = ",
         process_input_value(event$value, event$inputType),
         args,
@@ -239,7 +239,7 @@ code_generators <- list(
         args <- paste0(args, ", allow_no_input_binding_ = TRUE")
         if (identical(event$priority, "event")) args <- paste0(args, ', priority_ = "event"')
         paste0(
-          "app$setInputs(",
+          "app$set_inputs(",
           quote_name(event$name), " = ",
           process_input_value(event$value, input_type = "default"),
           args,
