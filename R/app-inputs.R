@@ -80,6 +80,9 @@ ShinyDriver2$set("private", "queue_inputs", function(inputs) {
 
 #' @include shiny-driver.R
 ShinyDriver2$set("private", "flush_inputs", function(wait = TRUE, timeout = 1000) {
+  wait <- isTRUE(wait)
+  checkmate::assert_number(timeout, lower = 0, finite = TRUE, null.ok = FALSE)
+
   self$execute_script_callback(
     "
     var wait = arguments[0];
@@ -107,7 +110,6 @@ ShinyDriver2$set("public", "upload_file", function(
   values_ = TRUE,
   timeout_ = 3000
 ) {
-  # TODO-barret; Implement this; https://github.com/rstudio/shinytest2/issues/20
   if (values_ && !wait_) {
     abort(c(
       "values_=TRUE and wait_=FALSE are not compatible.",
