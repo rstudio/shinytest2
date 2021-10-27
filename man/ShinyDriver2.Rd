@@ -20,7 +20,7 @@ with a live app.
 \item \href{#method-get_event_log}{\code{ShinyDriver2$get_event_log()}}
 \item \href{#method-execute_script}{\code{ShinyDriver2$execute_script()}}
 \item \href{#method-execute_script_callback}{\code{ShinyDriver2$execute_script_callback()}}
-\item \href{#method-expectSnapshotJS}{\code{ShinyDriver2$expectSnapshotJS()}}
+\item \href{#method-expect_snapshot_js}{\code{ShinyDriver2$expect_snapshot_js()}}
 \item \href{#method-get_all_values}{\code{ShinyDriver2$get_all_values()}}
 \item \href{#method-new}{\code{ShinyDriver2$new()}}
 \item \href{#method-set_inputs}{\code{ShinyDriver2$set_inputs()}}
@@ -128,11 +128,11 @@ with a live app.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expectSnapshotJS"></a>}}
-\if{latex}{\out{\hypertarget{method-expectSnapshotJS}{}}}
-\subsection{Method \code{expectSnapshotJS()}}{
+\if{html}{\out{<a id="method-expect_snapshot_js"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_snapshot_js}{}}}
+\subsection{Method \code{expect_snapshot_js()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expectSnapshotJS(script, ..., post_script = NULL, cran = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$expect_snapshot_js(script, ..., post_script = NULL, cran = FALSE)}\if{html}{\out{</div>}}
 }
 
 }

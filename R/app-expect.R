@@ -7,7 +7,7 @@
 #'   `$snapshotInit()`
 #' @include shiny-driver.R
 #' @importFrom rlang !!!
-ShinyDriver2$set("public", "expectSnapshotJS", function(
+ShinyDriver2$set("public", "expect_snapshot_js", function(
   script,
   ...,
   post_script = NULL,
@@ -57,7 +57,7 @@ app_expect_js <- function(
   cran = FALSE
 ) {
   ellipsis::check_dots_empty()
-  app$expectSnapshotJS(
+  app$expect_snapshot_js(
     script = script, !!!arguments,
     # variant = variant,
     post_script = post_script,
