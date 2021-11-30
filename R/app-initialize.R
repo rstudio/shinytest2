@@ -18,7 +18,7 @@ ShinyDriver2$set("private", "shiny_worker_id", NA_character_)
 #' @template variant
 #' @param check_names Check if widget names are unique?
 #' @param debug Start the app in debugging mode? In debugging mode debug
-#'   messages are printed to the console.
+#'   messages are printed to the console. See [debug_types()] for more information.
 #' @param seed An optional random seed to use before starting the application.
 #'   For apps that use R's random number generator, this can make their
 #'   behavior repeatable.
@@ -39,7 +39,7 @@ ShinyDriver2$set("public", "initialize", function(
   check_names = TRUE,
   name = NULL,
   variant = getOption("shinytest2.variant", os_name_and_r_version()),
-  debug = c("none", "all", debug_log_types()),
+  debug = c("none", "all", debug_types()),
   # phantomTimeout = 5000,
   seed = NULL,
   clean_logs = TRUE,
@@ -54,6 +54,7 @@ ShinyDriver2$set("public", "initialize", function(
   private$appshot_dir <- temp_file()
   private$appshot_count <- Count$new()
   private$shiny_url <- Url$new()
+  private$debug_types <- as_debug(debug)
   private$name <-
     if (!is.null(name)) {
       name
@@ -105,6 +106,10 @@ ShinyDriver2$set("public", "initialize", function(
   self$log_event("Creating new chromote session")
   # private$web <- Session$new(port = private$phantomPort)
   private$chromote_session <- chromote::ChromoteSession$new()
+
+  if ("chromote_session" %in% private$debug_types) {
+    self$get_chromote_session()$view()
+  }
 
   sd2_init_browser_debug(self, private)
 

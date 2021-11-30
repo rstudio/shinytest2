@@ -57,7 +57,7 @@ with a live app.
 \if{latex}{\out{\hypertarget{method-get_debug_log}{}}}
 \subsection{Method \code{get_debug_log()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$get_debug_log(type = c("all", debug_log_types()))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyDriver2$get_debug_log(type = c("all", debug_types()))}\if{html}{\out{</div>}}
 }
 
 }
@@ -178,7 +178,7 @@ with a live app.
   check_names = TRUE,
   name = NULL,
   variant = getOption("shinytest2.variant", os_name_and_r_version()),
-  debug = c("none", "all", debug_log_types()),
+  debug = c("none", "all", debug_types()),
   seed = NULL,
   clean_logs = TRUE,
   shiny_args = list(),

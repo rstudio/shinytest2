@@ -7,7 +7,7 @@
 testthat_app(
   app_dir = "../",
   env = shiny::loadSupport(app_dir),
-  reporter = default_reporter(),
+  reporter = testthat::default_reporter(),
   ...
 )
 }
