@@ -1,14 +1,26 @@
+#' @include shiny-driver.R
+ShinyDriver2$set("private", "debug_types", NULL)
+ShinyDriver2$set("private", "browser_logs", list())
+
+
 #' Debug log types
 #'
 #' All supported debug log types that are not `"all"` or `"none"`.
 #'
+#' There are a few standard debug types that may be used:
+#' * `"shiny_console"`: Displays the console messages from the Shiny server when `$get_debug_log()` is called.
+#' * `"browser"`: Displays the browser console messages when `$get_debug_log()` is called.
+#' * `"shinytest2"`: Displays the messages saved by the `window.shinytest2` object in the broswer when `$get_debug_log()` is called.
+#' * `"chromote_session"`: Causes the Chromote Session to be opened in an interactive browser tab upon initialization.
+#'
 #' @keywords internal
 #' @export
-debug_log_types <- function() {
+debug_types <- function() {
   c(
     "shiny_console",
     "browser",
-    "shinytest2"
+    "shinytest2",
+    "chromote_session"
   )
 }
 
@@ -16,7 +28,7 @@ debug_log_types <- function() {
 obj_to_string <- function(obj) {
   switch(obj$type,
     "string" = obj$value,
-    # There are other sub types that might be useful, but punting for now
+    # TODO-future; There are other sub types that might be useful, but punting for now
     "object" = "[object Object]",
     {
       message("Unknown `obj_to_string()` type: ", obj$type)
@@ -60,9 +72,6 @@ console_api_to_msg <- function(info, url) {
 }
 
 
-#' @include shiny-driver.R
-ShinyDriver2$set("private", "browser_logs", list())
-
 sd2_init_browser_debug <- function(self, private) {
   self$get_chromote_session()$Runtime$consoleAPICalled(function(info) {
     # message("Runtime.consoleAPICalled")
@@ -95,10 +104,10 @@ sd2_init_browser_debug <- function(self, private) {
 
 as_debug <- function(x) {
   x <- unique(x)
-  checkmate::assert_subset(x, c(debug_log_types(), c("all", "none")), empty.ok = FALSE)
+  checkmate::assert_subset(x, c(debug_types(), c("all", "none")), empty.ok = FALSE)
 
   if ("all" %in% x) {
-    x <- debug_log_types()
+    x <- debug_types()
   } else if ("none" %in% x) {
     x <- character(0)
   }
@@ -163,7 +172,7 @@ filter_log_text <- function(str) {
 #' @param type Log type: `"all"`, `"shiny_console"`, `"browser"`,
 #'   or `"shinytest2"`.
 #' @include shiny-driver.R
-ShinyDriver2$set("public", "get_debug_log", function(type = c("all", debug_log_types())) {
+ShinyDriver2$set("public", "get_debug_log", function(type = c("all", debug_types())) {
 
   type <- as_debug(match.arg(type, several.ok = TRUE))
 
