@@ -106,6 +106,10 @@ ShinyDriver2$set("public", "initialize", function(
   # private$web <- Session$new(port = private$phantomPort)
   private$chromote_session <- chromote::ChromoteSession$new()
 
+  if ("chromote_session" %in% private$debug_types) {
+    self$get_chromote_session()$view()
+  }
+
   sd2_init_browser_debug(self, private)
 
   # ## Set implicit timeout to zero. According to the standard it should
