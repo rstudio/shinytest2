@@ -17,7 +17,7 @@ testthat_app <- function(
   app_dir = "../",
   # Run in the app's environment containing all support methods.
   env = shiny::loadSupport(app_dir),
-  reporter = default_reporter(),
+  reporter = testthat::default_reporter(),
   ...
 ) {
   reporter <- reporter %||% "Progress"
