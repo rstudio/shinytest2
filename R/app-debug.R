@@ -52,7 +52,9 @@ console_api_to_msg <- function(info, url) {
   args <- vapply(info$args, obj_to_string, character(1))
 
   paste0(
-    "console.", info$type, "(\"", paste0(args, collapse = "\", \""), "\")",
+    # "console.", info$type, "(\"", paste0(args, collapse = "\", \""), "\")",
+    # "console.", info$type, " - ", paste0(args, collapse = " "),
+    paste0(args, collapse = " "),
     frames_to_msg(info, url)
   )
 }
