@@ -1,8 +1,5 @@
-#' @include shiny-driver.R
-ShinyDriver2$set("private", "shiny_process", NULL) # `callr::r_bg()` object
 
-#' @include shiny-driver.R
-sd2_start_shiny <- function(
+app_start_shiny <- function(
   self, private,
   path,
   seed = NULL,
@@ -11,6 +8,7 @@ sd2_start_shiny <- function(
   render_args = NULL,
   options = list()
 ) {
+  ckm8_assert_app_driver(self, private)
   ckm8_assert_single_string(path)
 
   private$path <- normalizePath(path)

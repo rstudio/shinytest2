@@ -1,5 +1,20 @@
-#' @include shiny-driver.R
-ShinyDriver2$set("private", "shiny_url", "<Url>")
+
+Count <- R6Class( # nolint
+  "Count",
+  private = list(
+    count = 0
+  ),
+  public = list(
+    increment = function() {
+      private$count <- private$count + 1
+      private$count
+    },
+    get = function() {
+      private$count
+    }
+  )
+)
+
 
 Url <- R6Class( # nolint
   "Url",

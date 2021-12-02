@@ -14,7 +14,7 @@ record_test(
 )
 }
 \arguments{
-\item{app}{A \code{\link[=ShinyDriver2]{ShinyDriver2()}} object, or path to a Shiny
+\item{app}{A \link{AppDriver} object, or path to a Shiny
 application.}
 
 \item{...}{Used for parameter expansion}
@@ -25,11 +25,11 @@ be used in the test script.}
 \item{load_timeout}{Maximum time to wait for the Shiny application to load, in
 milliseconds. If a value is provided, it will be saved in the test script.}
 
-\item{debug}{start the underlying \code{\link[=ShinyDriver2]{ShinyDriver2()}} in \code{debug}
+\item{debug}{start the underlying \link{AppDriver} in \code{debug}
 mode and print those debug logs to the R console once recording is
 finished. The default, \code{'shiny_console'}, captures and prints R
 console output from the recorded R shiny process. Any value that the
-\code{debug} argument in \code{\link[=ShinyDriver2]{ShinyDriver2()}} accepts may be used
+\code{debug} argument in \link{AppDriver} accepts may be used
 (e.g., \code{'none'} may be used to completely suppress the driver logs).}
 
 \item{shiny_args}{A list of options to pass to \code{runApp()}. If a value

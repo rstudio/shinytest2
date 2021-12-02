@@ -1,18 +1,12 @@
-#' @include shiny-driver.R
 
-
-#' @description
-#' Stop the app, the terminate external R process that runs the app and
-#' the phantomjs instance.
-#' @include shiny-driver.R
-ShinyDriver2$set("public", "stop", function() {
-  "!DEBUG ShinyDriver2$stop"
+app_stop <- function(self, private) {
+  "!DEBUG AppDriver$stop"
+  ckm8_assert_app_driver(self, private)
 
   if (private$state == "stopped")
     return(invisible(self))
 
   self$log_event("Closing chromote session")
-  # private$web$delete()
   self$get_chromote_session()$close()
 
   # If the app is being hosted locally, kill the process.
@@ -33,22 +27,22 @@ ShinyDriver2$set("public", "stop", function() {
 
   private$state <- "stopped"
   invisible(self)
-})
+}
 
 
-#' @include shiny-driver.R
-ShinyDriver2$set("private", "should_clean_logs", TRUE) # Whether to clean logs when GC'd
 
 # Function run on garbage collection
-#' @include shiny-driver.R
-ShinyDriver2$set("private", "finalize", function() {
+app_finalize <- function(
+  self, private
+) {
+  ckm8_assert_app_driver(self, private)
 
   # Stop the app
   self$stop()
 
   # Chromote has its own cleanup process on finalize
 
-  if (isTRUE(private$should_clean_logs) && !is.null(private$shiny_process)) {
+  if (isTRUE(private$clean_logs) && !is.null(private$shiny_process)) {
     unlink(private$shiny_process$get_output_file())
     unlink(private$shiny_process$get_error_file())
   }
@@ -57,4 +51,4 @@ ShinyDriver2$set("private", "finalize", function() {
   #   so it is safer to clean up the files when the app is not needed
   #   (Not that big of a memory leak for a single app)
   unlink(private$appshot_dir, recursive = TRUE)
-})
+}

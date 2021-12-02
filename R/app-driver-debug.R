@@ -1,8 +1,3 @@
-#' @include shiny-driver.R
-ShinyDriver2$set("private", "debug_types", NULL)
-ShinyDriver2$set("private", "browser_logs", list())
-
-
 #' Debug log types
 #'
 #' All supported debug log types that are not `"all"` or `"none"`.
@@ -11,7 +6,6 @@ ShinyDriver2$set("private", "browser_logs", list())
 #' * `"shiny_console"`: Displays the console messages from the Shiny server when `$get_debug_log()` is called.
 #' * `"browser"`: Displays the browser console messages when `$get_debug_log()` is called.
 #' * `"shinytest2"`: Displays the messages saved by the `window.shinytest2` object in the broswer when `$get_debug_log()` is called.
-#' * `"chromote_session"`: Causes the Chromote Session to be opened in an interactive browser tab upon initialization.
 #'
 #' @keywords internal
 #' @export
@@ -19,8 +13,7 @@ debug_types <- function() {
   c(
     "shiny_console",
     "browser",
-    "shinytest2",
-    "chromote_session"
+    "shinytest2"
   )
 }
 
@@ -72,7 +65,9 @@ console_api_to_msg <- function(info, url) {
 }
 
 
-sd2_init_browser_debug <- function(self, private) {
+app_init_browser_debug <- function(self, private) {
+  ckm8_assert_app_driver(self, private)
+
   self$get_chromote_session()$Runtime$consoleAPICalled(function(info) {
     # message("Runtime.consoleAPICalled")
     msg <- console_api_to_msg(info, private$shiny_url$get())
@@ -167,12 +162,8 @@ filter_log_text <- function(str) {
 
 
 
-#' @description
-#' Query one or more of the debug logs.
-#' @param type Log type: `"all"`, `"shiny_console"`, `"browser"`,
-#'   or `"shinytest2"`.
-#' @include shiny-driver.R
-ShinyDriver2$set("public", "get_debug_log", function(type = c("all", debug_types())) {
+app_get_debug_log <- function(self, private, type = c("all", debug_types())) {
+  ckm8_assert_app_driver(self, private)
 
   type <- as_debug(match.arg(type, several.ok = TRUE))
 
@@ -181,19 +172,19 @@ ShinyDriver2$set("public", "get_debug_log", function(type = c("all", debug_types
   # It's possible for there not to be a shiny_process object, if we're testing
   # against a remote server (as in shinyloadtest).
   if (!is.null(private$shiny_process) && "shiny_console" %in% type) {
-    "!DEBUG ShinyDriver2$get_debug_log shiny_console"
+    "!DEBUG app_get_debug_log() shiny_console"
     out <- readLines(private$shiny_process$get_output_file(), warn = FALSE)
     err <- readLines(private$shiny_process$get_error_file(), warn = FALSE)
     output$shiny_console <- make_shiny_console_log(out = out, err = err)
   }
 
   if ("browser" %in% type) {
-    "!DEBUG ShinyDriver2$get_debug_log browser"
+    "!DEBUG app_get_debug_log() browser"
     output$browser <- make_browser_log(private$browser_logs)
   }
 
   if ("shinytest2" %in% type) {
-    "!DEBUG ShinyDriver2$get_debug_log shinytest2 log"
+    "!DEBUG app_get_debug_log() shinytest2 log"
     output$shinytest <- make_shinytest2_log(self$execute_script(
       "if (! window.shinytest2) { return([]) }
       var res = window.shinytest2.log_entries;
@@ -203,28 +194,15 @@ ShinyDriver2$set("public", "get_debug_log", function(type = c("all", debug_types
   }
 
   merge_logs(output)
-})
+}
 
-#' @description
-#' Enable/disable debugging messages
-#' @param enable New value.
-#' @include shiny-driver.R
-ShinyDriver2$set("public", "enable_debug_log_messages", function(enable = TRUE) {
+
+app_enable_debug_log_messages <- function(self, private, enable) {
+  ckm8_assert_app_driver(self, private)
+
   self$execute_script(
     "window.shinytest2.log_messages = arguments[0]",
-    enable
+    arguments = list(isTRUE(enable))
   )
   invisible(self)
-})
-
-
-# #' @include shiny-driver.R
-# ShinyDriver2$set("private", "setup_debugging", function(debug) {
-#   "!DEBUG ShinyDriver2$setup_debugging"
-#   debug <- as_debug(debug)
-
-#   if (length(debug)) {
-#     ## TODO(-prev): poll the logs?
-#   }
-#   invisible(self)
-# })
+}

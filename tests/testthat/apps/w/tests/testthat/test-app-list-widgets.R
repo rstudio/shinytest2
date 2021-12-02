@@ -1,4 +1,4 @@
 test_that("list input & output widgets", {
-  app <- ShinyDriver2$new(test_path("../../."))
+  app <- AppDriver$new(test_path("../../."))
   expect_snapshot(app$list_widgets())
 })

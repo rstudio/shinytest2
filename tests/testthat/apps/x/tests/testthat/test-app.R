@@ -11,26 +11,16 @@
 
 # Current shinytest2 code using `app$**()`:
 test_that("basic website example works", {
-  app <- ShinyDriver2$new(test_path("../../."))
+  app <- AppDriver$new(test_path("../../."))
   app$set_inputs(name = "Hadley")
   app$set_inputs(greet = "click")
 
   # Take picture and record inputs / outputs
-  app_expect_appshot(app)
+  app$expect_appshot()
 
   # app$expectDOM("#greet")
   # app$expectHtml()
 
   # Only record `output[c("greenting")]`
-  app_expect_appshot(app, items = list(output = "greeting"))
+  app$expect_appshot(items = list(output = "greeting"))
 })
-
-
-# # Eventual ideal code:
-# test_that("prefix works", {
-#   testing_app("apps/basic") %>%
-#     app_set_inputs(name = "Hadley") %>%
-#     app_set_inputs(greet = "click") %>%
-#     app_expect_appshot() %>%
-#     app_expect_appshot(items = list(output = "greeting"))
-# })

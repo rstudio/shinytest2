@@ -255,7 +255,7 @@ code_generators <- list(
   },
 
   fileDownload = function(event, next_event = NULL, ...) {
-    paste0('app_expect_download("', event$name, '")')
+    paste0('app$expect_download("', event$name, '")')
   },
 
   outputEvent = function(event, next_event = NULL, ...) {
@@ -263,11 +263,11 @@ code_generators <- list(
   },
 
   outputSnapshot = function(event, next_event = NULL, ...) {
-    paste0('app_expect_appshot(app, items = list(output = "', event$name, '"))')
+    paste0('app$expect_appshot(items = list(output = "', event$name, '"))')
   },
 
   snapshot = function(event, next_event = NULL, ...) {
-    "app_expect_appshot(app)"
+    "app$expect_appshot()"
   }
 )
 
@@ -315,7 +315,7 @@ generate_test_code <- function(events, name, seed,
   app_path <- paste("../../", app_file_basename())
   inner_code <- paste(
     paste0(
-      "  app <- ShinyDriver2$new(\n",
+      "  app <- AppDriver$new(\n",
       "    ", paste(c(
         paste0("test_path(\"", app_path, "\")"),
         if (!is.null(seed)) paste0("seed = %s", seed),

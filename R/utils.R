@@ -9,6 +9,10 @@ ckm8_assert_single_integer <- function(x, .var.name = checkmate::vname(x)) {
 ckm8_assert_single_url <- function(x, .var.name = checkmate::vname(x)) {
   checkmate::assert_character(x, pattern = "^/", len = 1, any.missing = FALSE, .var.name = .var.name)
 }
+ckm8_assert_app_driver <- function(self, private, self.var.name = checkmate::vname(self), private.var.name = checkmate::vname(private)) {
+  checkmate::assert_r6(self, "AppDriver", .var.name = self.var.name)
+  checkmate::assert_environment(private, .var.name = private.var.name)
+}
 # nolint end
 
 # Cache a value given output of `fn`

@@ -10,7 +10,6 @@ issue in testthat for keeping snapshots if they are not touched
 automate platform / R version suffix
 
 gha
-  auto commit results
   upload an artifact with updated snapshots
     like fix_all_branches, it must be initiated manually, but _automated_
 
@@ -74,4 +73,35 @@ execut
 
 
 ShinyDriver$self$waitForShiny -> ShinyDriver2$wait_for_idle
-ShinyDriver$self$findWidget -> ShinyDriver2$private$find_widget
+ShinyDriver$self$findWidget -> gone
+
+
+
+
+* move all documentation back to within AppDriver
+* rename shinydriver to AppDriver
+* make test_app()
+
+* remove all external methods such as `app_METHOD()` that are wrappers to `app$METHOD()`
+
+list_widgets -> get_input_names, get_output_names
+... -> arguments
+get_all_values -> get_values
+
+
+get_all_values(input, output, export) -> get_values(input, output, export)
+  why not `get_input_values()`?
+  What about `get_names()`
+  list widgets is a JS method that looks for shiny classes,
+    why not use `get_values()` and
+
+Implement get_names() -> this should give all `input`, `output`, and `export` names via `get_values()`
+
+Requirements for release:
+  * shinytest -> shinytest2 conversion file
+    * cover the good bits, throw on more custom bits
+  * readme
+  * website
+    * vignettes
+Future release:
+  * GHA integration
