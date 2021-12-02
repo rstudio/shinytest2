@@ -459,7 +459,8 @@ controls.}
 \if{html}{\out{<a id="method-get_names"></a>}}
 \if{latex}{\out{\hypertarget{method-get_names}{}}}
 \subsection{Method \code{get_names()}}{
-Returns a set of names for of all inputs, outputs, and exports.
+Returns a set of names for of all inputs, outputs, and exports
+that Shiny is currently aware of.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_names(input = TRUE, output = TRUE, export = TRUE)}\if{html}{\out{</div>}}
 }
