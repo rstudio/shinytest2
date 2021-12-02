@@ -4,7 +4,7 @@ is_windows <- cache_fn_val(function() { .Platform$OS.type == "windows" })
 # is_mac     <- function() Sys.info()[["sysname"]] == "Darwin"
 # is_linux   <- function() Sys.info()[["sysname"]] == "Linux"
 
-#' Get the name of the OS
+#' Operating System and R version values
 #'
 #' Returns the name of the current OS. This can be useful for the `variant` when
 #' running [`testthat::test_dir()`].

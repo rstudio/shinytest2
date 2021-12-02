@@ -4,7 +4,7 @@
 \alias{os_name}
 \alias{r_version}
 \alias{os_name_and_r_version}
-\title{Get the name of the OS}
+\title{Operating System and R version values}
 \usage{
 os_name()
 
