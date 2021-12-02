@@ -14,6 +14,9 @@
 #'        because they often rely on minor details of dependencies.
 #' @param wait_ Wait until all reactive updates have completed?
 #' @param timeout_ Amount of time to wait before giving up (milliseconds).
+#' @param iotype Type of the Shiny component. \pkg{shinytest2} is able to find
+#'   the component by their name, so this is only needed if you use the same name
+#'   for an input and output component.
 #' @importFrom R6 R6Class
 #' @export
 AppDriver <- R6Class(# nolint
@@ -332,7 +335,8 @@ AppDriver <- R6Class(# nolint
       app_get_values(self, private, input, output, export)
     },
     #' @description
-    #' Returns a set of names for of all inputs, outputs, and exports.
+    #' Returns a set of names for of all inputs, outputs, and exports
+    #' that Shiny is currently aware of.
     #'
     #' @param input,output,export Either `TRUE` to return all
     #'   input/output/exported values, or `FALSE` to return no names.
@@ -367,18 +371,8 @@ AppDriver <- R6Class(# nolint
     #' @description
     #' Find a Shiny binding and click it using jQuery
     #' @param id The HTML ID of the element to click
-    #' @param iotype Type of the Shiny widget. \pkg{shinytest2} is able to the widget
-    #'   by their name, so this is only needed if you use the same name for an
-    #'   input and output widget.
     click = function(id, iotype = c("auto", "input", "output")) {
       app_click(self, private, id, iotype)
-    },
-    #' @description
-    #' Lists the names of all input and output widgets
-    #' @return A list of two character vectors, named `input` and `output`.
-    #' TODO-barret; Drop the term widget in favor of UNKNOWN
-    list_widgets = function() {
-      app_list_widgets(self, private)
     },
 
     #' @description
@@ -435,9 +429,6 @@ AppDriver <- R6Class(# nolint
     #' @param id Name of the Shiny binding
     #' @param ignore List of possible values to ignore when checking for
     #'   updates.
-    #' @param iotype Type of the Shiny widget. Usually shinytest2 finds the widgets
-    #'   by their name, so this is only needed if you use the same name for an
-    #'   input and output widget.
     #' @param timeout How often to check for the condition, in ms.
     #' @param interval How often to check for the condition, in ms.
     #' @return Newly found value

@@ -31,7 +31,6 @@ with a live app.
 \item \href{#method-get_names}{\code{AppDriver$get_names()}}
 \item \href{#method-set_inputs}{\code{AppDriver$set_inputs()}}
 \item \href{#method-click}{\code{AppDriver$click()}}
-\item \href{#method-list_widgets}{\code{AppDriver$list_widgets()}}
 \item \href{#method-upload_file}{\code{AppDriver$upload_file()}}
 \item \href{#method-wait_for_condition}{\code{AppDriver$wait_for_condition()}}
 \item \href{#method-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
@@ -529,25 +528,11 @@ Find a Shiny binding and click it using jQuery
 \describe{
 \item{\code{id}}{The HTML ID of the element to click}
 
-\item{\code{iotype}}{Type of the Shiny widget. \pkg{shinytest2} is able to the widget
-by their name, so this is only needed if you use the same name for an
-input and output widget.}
+\item{\code{iotype}}{Type of the Shiny component. \pkg{shinytest2} is able to find
+the component by their name, so this is only needed if you use the same name
+for an input and output component.}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-list_widgets"></a>}}
-\if{latex}{\out{\hypertarget{method-list_widgets}{}}}
-\subsection{Method \code{list_widgets()}}{
-Lists the names of all input and output widgets
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$list_widgets()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-A list of two character vectors, named \code{input} and \code{output}.
-TODO-barret; Drop the term widget in favor of UNKNOWN
 }
 }
 \if{html}{\out{<hr>}}
@@ -663,9 +648,9 @@ has initialized or finished processing a complex reactive situation.
 \item{\code{ignore}}{List of possible values to ignore when checking for
 updates.}
 
-\item{\code{iotype}}{Type of the Shiny widget. Usually shinytest2 finds the widgets
-by their name, so this is only needed if you use the same name for an
-input and output widget.}
+\item{\code{iotype}}{Type of the Shiny component. \pkg{shinytest2} is able to find
+the component by their name, so this is only needed if you use the same name
+for an input and output component.}
 
 \item{\code{timeout}}{How often to check for the condition, in ms.}
 

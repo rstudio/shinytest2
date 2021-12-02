@@ -93,13 +93,11 @@ app_click <- function(self, private, id, iotype = c("auto", "input", "output")) 
 # })
 
 
-# TODO-barret; Rename to `get_input_names()`, `get_output_names()
-# TODO-barret; send in arg to listWidgets to only return needed info
-app_list_widgets <- function(self, private) {
-  "!DEBUG app_list_widgets()"
+app_list_component_names <- function(self, private) {
+  "!DEBUG app_list_component_names()"
   ckm8_assert_app_driver(self, private)
 
-  res <- chromote_eval(self$get_chromote_session(), "shinytest2.listWidgets()")$result$value
+  res <- chromote_eval(self$get_chromote_session(), "shinytest2.listComponents()")$result$value
 
   res$input <- sort_c(unlist(res$input))
   res$output <- sort_c(unlist(res$output))
@@ -110,9 +108,9 @@ app_check_unique_widget_names <- function(self, private) {
   "!DEBUG app_check_unique_widget_names()"
   ckm8_assert_app_driver(self, private)
 
-  widgets <- self$list_widgets()
-  inputs <- widgets$input
-  outputs <- widgets$output
+  names <- app_list_component_names(self, private)
+  inputs <- names$input
+  outputs <- names$output
 
   check <- function(what, ids) {
     if (any(duplicated(ids))) {

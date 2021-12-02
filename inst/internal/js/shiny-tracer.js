@@ -265,7 +265,7 @@ window.shinytest2 = (function() {
     })();
 
 
-    shinytest2.listWidgets = function() {
+    shinytest2.listComponents = function() {
         function getids(els) {
             return els.map(function(){ return $(this).attr("id"); }).get();
         }
