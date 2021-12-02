@@ -200,7 +200,7 @@ AppDriver <- R6Class(# nolint
     #   items = NULL,
     #   name = NULL,
     #   screenshot = NULL
-    # ){
+    # ) {
     #   app_appshot(
     #     self, private,
     #     items = items,

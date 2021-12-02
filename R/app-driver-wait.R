@@ -62,9 +62,15 @@ app_wait_for_value <- function(
   input <- output <- export <- FALSE
   # update the correct value, given the iotype
   switch(iotype,
-    "input"  = {input <- id},
-    "output" = {output <- id},
-    "export" = {export <- id}
+    "input"  = {
+      input <- id
+    },
+    "output" = {
+      output <- id
+    },
+    "export" = {
+      export <- id
+    }
   )
 
   while (TRUE) {
