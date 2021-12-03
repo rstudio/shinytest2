@@ -369,7 +369,7 @@ AppDriver <- R6Class(# nolint
     },
 
     #' @description
-    #' Find a Shiny binding and click it using jQuery
+    #' Find a Shiny binding and click it using `TAG.click()`
     #' @param id The HTML ID of the element to click
     click = function(id, iotype = c("auto", "input", "output")) {
       app_click(self, private, id, iotype)

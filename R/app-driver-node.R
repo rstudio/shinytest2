@@ -45,13 +45,9 @@ app_click <- function(self, private, id, iotype = c("auto", "input", "output")) 
   node_id <- app_find_node_id(self, private, id = id, iotype = iotype)
   click_script <- "
     function() {
-      var el = $(this);
-      el.click();
+      this.click()
     }
   "
-  # TODO-barret; Change to `this.click()`?
-  # TODO-barret; Update the docs to reflect this change.
-  # Ex: document.getElementById("myCheck").click()
 
   chromote_call_js_on_node(self$get_chromote_session(), node_id, click_script)
 
