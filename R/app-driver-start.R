@@ -36,7 +36,7 @@ app_start_shiny <- function(
 
         options <- as.list(options)
         options[["shiny.testmode"]] <- TRUE
-        # TODO-barret-answer; Adjust shiny to add htmldeps to the list of the rendered page
+        # TODO-barret-future; Adjust shiny to add htmldeps to the list of the rendered page
         # options[["shiny-testmode-html-dep"]] <- getTracerDep()
         do.call(base::options, options)
 

@@ -8,7 +8,6 @@ app_appshot <- function(
   items = NULL,
   name = NULL,
   screenshot_args = NULL
-  # TODO-barret: Add screenshot args?
 ) {
   ckm8_assert_app_driver(self, private)
 

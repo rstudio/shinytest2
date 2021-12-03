@@ -9,7 +9,7 @@ app_execute_script <- function(
   ellipsis::check_dots_empty()
 
   # TODO-barret; incorporate `wait_` parameters to not wait for the _tick_ to finish?
-  # TODO-barret; Maybe they should make a promise and return NULL instead?
+  # TODO-barret; Document how they should make a promise and return NULL instead?
   "!DEBUG app_execute_script()"
   chromote_execute_script(
     self$get_chromote_session(),
@@ -31,7 +31,7 @@ app_execute_script_callback <- function(
   ellipsis::check_dots_empty()
 
   # TODO-barret; incorporate `wait_` parameters to not wait for the _tick_ to finish
-  # TODO-barret; Maybe they should make a promise and return NULL instead?
+  # TODO-barret; Document how they should make a promise and return NULL instead?
   "!DEBUG app_execute_script_callback()"
   chromote_execute_script_callback(
     self$get_chromote_session(),

@@ -194,7 +194,6 @@ AppDriver <- R6Class(# nolint
     #'
     #' @param script JS to execute. `resolve` and `reject` arguments are added to the script call. To return control back to the R session, one of these methods must be called.
     #' @return Self, invisibly.
-    # TODO-barret; Should this be a `timeout` parameter? (Not `timeout_`) Or should all `timeout` parameters be renamed to `timeout_`?
     execute_script_callback = function(script, arguments = list(), ..., timeout = 15 * 1000) {
       app_execute_script_callback(
         self, private,
@@ -253,14 +252,14 @@ AppDriver <- R6Class(# nolint
     #' For example, `$expect_text()` and `$expect_html()` are thin wrappers around this function.
     #'
     #' @param script A string containing the JS script to be executed.
-    #' @param post_fn A function to be called on the result of the script before taking the snapshot.
-    #'   [`app_expect_html()`] and [`app_expect_text()`] both use [`unlist()`].
-    expect_script = function(script, arguments = list(), ..., timeout = 15 * 1000, post_fn = unlist, cran = FALSE) {
+    #' @param pre_snapshot A function to be called on the result of the script before taking the snapshot.
+    #'   `$expect_html()` and `$expect_text()` both use [`unlist()`].
+    expect_script = function(script, arguments = list(), ..., timeout = 15 * 1000, pre_snapshot = NULL, cran = FALSE) {
       app_expect_script(
         self, private,
         script = script, arguments = arguments,
         ...,
-        timeout = timeout, post_fn = post_fn, cran = cran
+        timeout = timeout, pre_snapshot = pre_snapshot, cran = cran
       )
     },
 
@@ -378,7 +377,7 @@ AppDriver <- R6Class(# nolint
     #' before take a screenshot.
     #'
     #' While this function may return true, Shiny may not have fully stablized.
-    #' It is best to use `TODO-barret`
+    #' It is best to use `TODO-barret-implement wait for stable`
     #' @param timeout How often to check for the condition, in ms.
     #' @param interval How often to check for the condition, in ms.
     #' @return `TRUE` if done before before timeout; `NA` otherwise.

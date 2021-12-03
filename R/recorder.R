@@ -130,7 +130,6 @@ record_test <- function(
 #' @param processor An input processor function.
 #' @export
 #' @keywords internal
-# # TODO-barret; should this be done by {shiny}?
 register_input_processor <- function(input_type, processor) {
   if (!is.function(processor) || !identical(names(formals(processor)), "value")) {
     abort("`processor` must be a function that takes one parameter, `value`")

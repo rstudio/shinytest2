@@ -4,7 +4,7 @@ app_expect_script <- function(
   arguments = list(),
   ...,
   timeout = 15 * 1000,
-  post_fn = unlist,
+  pre_snapshot = NULL,
   cran = FALSE
 ) {
   ckm8_assert_app_driver(self, private)
@@ -17,9 +17,9 @@ app_expect_script <- function(
     timeout = timeout
   )
 
-  if (is.function(post_fn)) {
-    checkmate::assert_integer(length(formals(post_fn)), lower = 1)
-    result <- post_fn(result)
+  if (is.function(pre_snapshot)) {
+    checkmate::assert_integer(length(formals(pre_snapshot)), lower = 1)
+    result <- pre_snapshot(result)
   }
 
   # Must use _value_ output as _print_ output is unstable
@@ -43,7 +43,7 @@ app_expect_text <- function(
 
   self$expect_script(
     script = paste0("return Array.from(document.querySelectorAll(\"", selector, "\")).map(function(item, i) { return item.textContent; });"),
-    post_fn = unlist,
+    pre_snapshot = unlist,
     cran = cran
   )
 
@@ -70,7 +70,7 @@ app_expect_html <- function(
 
   self$expect_script(
     script = paste0("return Array.from(document.querySelectorAll(\"", selector, "\")).map(function(item, i) { return ", html_code, "; });"),
-    post_fn = unlist,
+    pre_snapshot = unlist,
     cran = cran
   )
 

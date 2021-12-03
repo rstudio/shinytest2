@@ -4,22 +4,20 @@
 \alias{testthat_app}
 \title{Test shiny application with testthat}
 \usage{
-testthat_app(
-  app_dir = "../",
-  env = shiny::loadSupport(app_dir),
-  reporter = testthat::default_reporter(),
-  ...
-)
+testthat_app(app_dir = "../", env = shiny::loadSupport(app_dir), ...)
 }
 \arguments{
 \item{app_dir}{The base directory for the Shiny application}
 
 \item{env}{Use the shiny application's environment after sourcing the R folder}
 
-\item{reporter}{Uses the \code{\link[testthat:default_reporter]{testthat::default_reporter()}} reporter but also includes a \code{fail} reporter to assert there are no errors found while testing}
-
 \item{...}{Parameters passed to \code{\link[testthat:test_dir]{testthat::test_dir()}}}
 }
 \description{
-To be used within the apps \code{./tests} folder
+To be used within \code{./tests/testthat.R}.
+}
+\details{
+Example usage:\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(shinytest2)
+test_app()
+}\if{html}{\out{</div>}}
 }

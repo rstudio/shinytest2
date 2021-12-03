@@ -4,13 +4,11 @@ app_screenshot <- function(
   ...,
   screenshot_args = list(),
   delay = screenshot_args$delay %||% 0,
-  selector = screenshot_args$selector %||% "html",
-  wait_ = TRUE # TODO-barret; remove this variable
+  selector = screenshot_args$selector %||% "html"
 ) {
   "!DEBUG app_screenshot()"
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
-  stopifnot(isTRUE(wait_))
 
   if (!is.list(screenshot_args)) screenshot_args <- list()
   screenshot_args$delay <- delay %||% 0
@@ -32,7 +30,7 @@ app_screenshot <- function(
   if (is.null(filename)) {
     withr::local_par(list(bg = "grey90"))
     png <- png::readPNG(path)
-    plot(as.raster(png))
+    plot(grDevices::as.raster(png))
   } else {
     fs::file_copy(path, filename)
   }

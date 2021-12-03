@@ -370,7 +370,7 @@ For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers a
   arguments = list(),
   ...,
   timeout = 15 * 1000,
-  post_fn = unlist,
+  pre_snapshot = NULL,
   cran = FALSE
 )}\if{html}{\out{</div>}}
 }
@@ -386,8 +386,8 @@ For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers a
 
 \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
 
-\item{\code{post_fn}}{A function to be called on the result of the script before taking the snapshot.
-\code{\link[=app_expect_html]{app_expect_html()}} and \code{\link[=app_expect_text]{app_expect_text()}} both use \code{\link[=unlist]{unlist()}}.}
+\item{\code{pre_snapshot}}{A function to be called on the result of the script before taking the snapshot.
+\verb{$expect_html()} and \verb{$expect_text()} both use \code{\link[=unlist]{unlist()}}.}
 
 \item{\code{cran}}{Should these expectations be verified on CRAN? By default,
 they are not, because snapshot tests tend to be fragile
@@ -619,7 +619,7 @@ updating. This is useful, for example, if you've resized the window with
 before take a screenshot.
 
 While this function may return true, Shiny may not have fully stablized.
-It is best to use \code{TODO-barret}
+It is best to use \verb{TODO-barret-implement wait for stable}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_idle(timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
 }
