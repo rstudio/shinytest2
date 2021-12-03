@@ -12,34 +12,36 @@ app_appshot <- function(
 ) {
   ckm8_assert_app_driver(self, private)
 
-  if (!is.list(items) && !is.null(items)) {
-    abort("'items' must be NULL or a list.")
+  # The default is to take a screenshot when the `default_screenshot_args` option is
+  # NULL and the user does not specify specific items to snapshot.
+  screenshot_args <- screenshot_args %||% private$default_screenshot_args %||% is.null(items)
+  should_take_screenshot <- !identical(screenshot_args, FALSE)
+  has_items <- !identical(items, FALSE)
+
+  if (!has_items) {
+    if (!should_take_screenshot) {
+      abort("Both 'items' and 'screenshot_args' can not be `FALSE` at the same time.")
+    }
   }
 
   snapshot_count <- private$appshot_count$increment()
   temp_save_dir  <- private$appshot_dir
+  create_snapshot_dir(temp_save_dir, snapshot_count)
 
   # Do not prefix with `self$name` as that is only necessary for the snapshot file name
   # At this point, the temp folder is already unique
   json_name <- fs::path_ext_set(name %||% sprintf("%03d", snapshot_count), "json")
 
-  # The default is to take a screenshot when the `default_screenshot_args` option is
-  # != FALSE and the user does not specify specific items to snapshot.
-  screenshot_args <- screenshot_args %||% private$default_screenshot_args %||% is.null(items)
-  should_take_screenshot <- !identical(screenshot_args, FALSE)
-
   full_json_path <- NULL
-  if (identical(items, FALSE)) {
-    if (!should_take_screenshot) {
-      abort("Both 'items' and 'screenshot_args' can not be `FALSE` at the same time.")
-    }
-  } else {
-    # `items` exists
+  if (has_items) {
 
     # Figure out which items to snapshot ----------------------------------------
     # By default, record all items.
-    if (is.null(items)) {
+    if (is.null(items) || isTRUE(items)) {
       items <- list(input = TRUE, output = TRUE, export = TRUE)
+    }
+    if (!is.list(items)) {
+      abort("`items` must be TRUE, FALSE, NULL, or a list.")
     }
 
     extra_names <- setdiff(names(items), c("input", "output", "export"))
@@ -67,7 +69,6 @@ app_appshot <- function(
     content <- hash_snapshot_image_data(content)
     content <- jsonlite::prettify(content, indent = 2)
     full_json_path <- fs::path(temp_save_dir, json_name)
-    create_snapshot_dir(temp_save_dir, snapshot_count)
     write_utf8(content, full_json_path)
   }
 
@@ -76,7 +77,6 @@ app_appshot <- function(
     # Replace extension with .png
     full_screenshot_path <- fs::path(temp_save_dir, fs::path_ext_set(json_name, "png"))
     # Take screenshot
-
     app_screenshot(self, private, filename = full_screenshot_path, screenshot_args = screenshot_args)
   }
 

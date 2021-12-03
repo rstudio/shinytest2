@@ -19,7 +19,7 @@ app_initialize <- function(
   ellipsis::check_dots_empty()
 
   private$default_screenshot_args <- screenshot_args
-  private$variant <- variant
+  private$variant <- if (identical(variant, FALSE)) NULL else variant
   private$appshot_dir <- temp_file()
   private$appshot_count <- Count$new()
   private$shiny_url <- Url$new()

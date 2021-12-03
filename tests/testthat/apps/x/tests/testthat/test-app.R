@@ -18,9 +18,10 @@ test_that("basic website example works", {
   # Take picture and record inputs / outputs
   app$expect_appshot()
 
-  # app$expectDOM("#greet")
-  # app$expectHtml()
+  # Snapshot some text values
+  app$expect_text("#greeting")
+  app$expect_html("#greeting", outer_html = FALSE)
 
-  # Only record `output[c("greenting")]`
+  # Only record `output[c("greeting")]`
   app$expect_appshot(items = list(output = "greeting"))
 })
