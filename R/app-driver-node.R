@@ -39,27 +39,6 @@ app_find_node_id <- function(self, private, id, iotype = c("auto", "input", "out
 }
 
 
-
-
-# TODO-barret; remove code
-# #' @description
-# #' Finds a widget and queries its value. See the `get_value()` method of
-# #' [Widget2] for more details.
-# ShinyDriver2$set("public", "get_value", function(id, iotype = c("auto", "input", "output")) {
-#   "!DEBUG ShinyDriver2$get_value `id` (`iotype`)"
-#   private$find_widget(id, iotype)$get_value()
-# })
-# #' @description
-# #' Finds a Shiny widget and sets its value. See the [Widget2] documentation for more details.
-# #'
-# #' @param value New value.
-# #' @return Self, invisibly.
-# ShinyDriver2$set("public", "set_value", function(id, value, iotype = c("auto", "input", "output")) {
-#   "!DEBUG ShinyDriver2$set_value `id`"
-#   private$find_widget(id, iotype)$set_value(value)
-#   invisible(self)
-# })
-
 app_click <- function(self, private, id, iotype = c("auto", "input", "output")) {
   ckm8_assert_app_driver(self, private)
 
