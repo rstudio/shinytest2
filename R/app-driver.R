@@ -42,7 +42,7 @@ AppDriver <- R6Class(# nolint
 
     path = NULL, # Full path to app (including filename if it's a .Rmd)
     appshot_dir = NULL, # Temp folder to store snapshot outputs
-    should_take_screenshot = TRUE, # Whether to take screenshots for each snapshot
+    default_screenshot_args = NULL, # Default screenshot args to use
     shiny_test_url = NULL, # URL for shiny's test API
 
     finalize = function() {
@@ -59,7 +59,8 @@ AppDriver <- R6Class(# nolint
     #' @param load_timeout How long to wait for the app to load, in ms.
     #'   This includes the time to start R. Defaults to 5s when running
     #'   locally and 10s when running on CI. Maximum value is 10s.
-    #' @param screenshot Take screenshots for each snapshot?
+    #' @param screenshot_args Default set of arguments to pass in to [`chromote::ChromoteSession`]'s
+    #' `$screenshot()` method when taking screnshots within `$expect_appshot()`. To disable screenshots by default, set to `FALSE`.
     # ' @param phantomTimeout How long to wait when connecting to phantomJS
     # '  process, in ms
     #' @template variant
@@ -83,7 +84,7 @@ AppDriver <- R6Class(# nolint
       path = ".",
       ...,
       load_timeout = NULL,
-      screenshot = TRUE,
+      screenshot_args = list(),
       check_names = TRUE,
       name = NULL,
       variant = getOption("shinytest2.variant", os_name_and_r_version()),
@@ -100,7 +101,7 @@ AppDriver <- R6Class(# nolint
         path = path,
         ...,
         load_timeout = load_timeout,
-        screenshot = screenshot,
+        screenshot_args = screenshot_args,
         check_names = check_names,
         name = name,
         variant = variant,
@@ -168,51 +169,6 @@ AppDriver <- R6Class(# nolint
     },
 
 
-    # # TODO-barret; Why should `$screenshot()` be exposed? Same behavior for `$appshot()`
-    # #' @description
-    # #' Takes a screenshot of the current page and writes it to a PNG file or
-    # #' shows on current graphics device.
-    # #' @param file File name to save the screenshot to. If `NULL`, then
-    # #'   it will be shown on the R graphics device.
-    # #' @param id If not-`NULL`, will take a screenshot of element with this id.
-    # #' @param parent If `TRUE`, will take screenshot of parent of `id`; this
-    # #'   is useful if you also want to capture the label attached to a Shiny
-    # #'   control.
-    # #' @param delay The amount of seconds to wait before taking a screenshot
-    # screenshot = function(
-    #   filename = NULL,
-    #   ...,
-    #   # TODO-barret-question; Are all of these params needed? "Less is more"
-    #   screenshot_args = list(), # TODO-barret-answer; Use this instead of `...` / extra args?
-    #   delay = 0,
-    #   selector = "html",
-    #   wait_ = TRUE
-    # ) {
-    #   app_screenshot(
-    #     self, private,
-    #     filename = filename,
-    #     ...,
-    #     screenshot_args = screenshot_args,
-    #     delay = delay,
-    #     selector = selector,
-    #     wait_ = wait_
-    #   )
-    # },
-    # appshot = function(
-    #   self, private,
-    #   items = NULL,
-    #   name = NULL,
-    #   screenshot = NULL
-    # ) {
-    #   app_appshot(
-    #     self, private,
-    #     items = items,
-    #     name = name,
-    #     screenshot = screenshot
-    #   )
-    # },
-
-
     #' @description
     #' Execute JavaScript code in the browser.
     #'
@@ -250,16 +206,28 @@ AppDriver <- R6Class(# nolint
     },
 
     #' @description
-    #' Expect a shinytest2 snapshot
+    #' Take and appshot of the Shiny application
+    #'
+    #' Appshot: Shiny **App**lication Snap**shot**
+    #'
+    #' An appshot currently consists of two snapshot files:
+    #' 1. A screenshot of the Shiny application using the `$screenshot()` function of the [`chromote::ChromoteSession`]
+    #' 2. A JSON snapshot of all Shiny component values
     #'
     #' @param name The prefix name to be used for the snapshot. By default, this uses the name supplied to `app` on initialization.
-    #' @param items Elements to only be included in the snapshot. If supplied, can contain `inputs`, `output`, and `export`. Each value of `items` can either be `TRUE` (for all values) or a character list of names to use.
-    #' @param screenshot A boolean indicating whether to take a screenshot.
-    expect_appshot = function(..., name = NULL, items = NULL, screenshot = NULL, cran = FALSE) {
+    #' @param items Components to only be included in the snapshot. If supplied, can contain `inputs`, `output`, and `export`. Each value of `items` can either be `TRUE` (for all values) or a character list of names to use.
+    #' @param screenshot If the value is `NULL`, then the initalization value of `screenshot_args` will be used. If this value is `NULL`, then `screenshot` will be set to the result of `!is.null(items)`.
+    #'
+    #'   The final value can either be:
+    #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
+    #'   * `FALSE`: No screenshot will be taken
+    #'   * A named list of arguments: Arguments passed directly to [`chromote::ChromoteSession`]'s
+    #' `$screenshot()` method. The selector and delay will default to `"html"` and `0` respectively.
+    expect_appshot = function(..., items = NULL, screenshot = NULL, name = NULL, cran = FALSE) {
       app_expect_appshot(
         self, private,
         ...,
-        name = name, items = items, screenshot = screenshot, cran = cran
+        name = name, items = items, screenshot_args = screenshot, cran = cran
       )
     },
 
@@ -345,8 +313,8 @@ AppDriver <- R6Class(# nolint
     },
 
     #' @description Set input values.
-    #' @param ... Name-value pairs, `name1 = value1, name2 = value2` etc.
-    #'   Input with name `name1` will be assigned value `value1`.
+    #' @param ... Name-value pairs, `component_name_1 = value_1, component_name_2 = value_2` etc.
+    #'   Input with name `component_name_1` will be assigned value `value_1`.
     #' @param allow_input_no_binding_ When setting the value of an input, allow
     #'   it to set the value of an input even if that input does not have
     #'   an input binding.
@@ -377,8 +345,8 @@ AppDriver <- R6Class(# nolint
 
     #' @description
     #' Uploads a file to a file input.
-    #' @param ... Name-path pairs, e.g. `name1 = path1`. The file located at
-    #' `path1` will be uploaded to file input with name `name1`.
+    #' @param ... Name-path pair, e.g. `component_name = file_path`. The file located at
+    #' `file_path` will be uploaded to file input with name `component_name`.
     #' @param values_ If `TRUE`, will return final updated values of download
     #'   control. Otherwise, the return value will be `NULL`.
     upload_file = function(..., wait_ = TRUE, values_ = TRUE, timeout_ = 3 * 1000) {

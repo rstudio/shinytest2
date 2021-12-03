@@ -4,9 +4,10 @@
 
 app_appshot <- function(
   self, private,
+  ...,
   items = NULL,
   name = NULL,
-  screenshot = NULL
+  screenshot_args = NULL
   # TODO-barret: Add screenshot args?
 ) {
   ckm8_assert_app_driver(self, private)
@@ -22,53 +23,61 @@ app_appshot <- function(
   # At this point, the temp folder is already unique
   json_name <- fs::path_ext_set(name %||% sprintf("%03d", snapshot_count), "json")
 
-  # The default is to take a screenshot when the `should_take_screenshot` option is
-  # TRUE and the user does not specify specific items to snapshot.
-  should_take_screenshot <- isTRUE(
-    screenshot %||%
-    (private$should_take_screenshot && is.null(items))
-  )
+  # The default is to take a screenshot when the `default_screenshot_args` option is
+  # != FALSE and the user does not specify specific items to snapshot.
+  screenshot_args <- screenshot_args %||% private$default_screenshot_args %||% is.null(items)
+  should_take_screenshot <- !identical(screenshot_args, FALSE)
 
-  # Figure out which items to snapshot ----------------------------------------
-  # By default, record all items.
-  if (is.null(items)) {
-    items <- list(input = TRUE, output = TRUE, export = TRUE)
+  full_json_path <- NULL
+  if (identical(items, FALSE)) {
+    if (!should_take_screenshot) {
+      abort("Both 'items' and 'screenshot_args' can not be `FALSE` at the same time.")
+    }
+  } else {
+    # `items` exists
+
+    # Figure out which items to snapshot ----------------------------------------
+    # By default, record all items.
+    if (is.null(items)) {
+      items <- list(input = TRUE, output = TRUE, export = TRUE)
+    }
+
+    extra_names <- setdiff(names(items), c("input", "output", "export"))
+    if (length(extra_names) > 0) {
+      abort(paste0(
+        "'items' must be a list containing one or more items named",
+        "'input', 'output' and 'export'. Each of these can be TRUE, FALSE, ",
+        " or a character vector."
+      ))
+    }
+
+    if (is.null(items$input))  items$input  <- FALSE
+    if (is.null(items$output)) items$output <- FALSE
+    if (is.null(items$export)) items$export <- FALSE
+
+    # Take appshot -------------------------------------------------------------
+    self$log_event("Taking appshot")
+    self$log_event("Gathering input/output/export values")
+    url <- app_get_shiny_test_url(self, private, items$input, items$output, items$export)
+    req <- httr_get(url)
+
+    # Convert to text, then replace base64-encoded images with hashes of them.
+    content <- raw_to_utf8(req$content)
+    # original_content <- content
+    content <- hash_snapshot_image_data(content)
+    content <- jsonlite::prettify(content, indent = 2)
+    full_json_path <- fs::path(temp_save_dir, json_name)
+    create_snapshot_dir(temp_save_dir, snapshot_count)
+    write_utf8(content, full_json_path)
   }
-
-  extra_names <- setdiff(names(items), c("input", "output", "export"))
-  if (length(extra_names) > 0) {
-    abort(paste0(
-      "'items' must be a list containing one or more items named",
-      "'input', 'output' and 'export'. Each of these can be TRUE, FALSE, ",
-      " or a character vector."
-    ))
-  }
-
-  if (is.null(items$input))  items$input  <- FALSE
-  if (is.null(items$output)) items$output <- FALSE
-  if (is.null(items$export)) items$export <- FALSE
-
-  # Take appshot -------------------------------------------------------------
-  self$log_event("Taking appshot")
-  self$log_event("Gathering input/output/export values")
-  url <- app_get_shiny_test_url(self, private, items$input, items$output, items$export)
-  req <- httr_get(url)
-
-  # Convert to text, then replace base64-encoded images with hashes of them.
-  content <- raw_to_utf8(req$content)
-  # original_content <- content
-  content <- hash_snapshot_image_data(content)
-  content <- jsonlite::prettify(content, indent = 2)
-  full_json_path <- fs::path(temp_save_dir, json_name)
-  create_snapshot_dir(temp_save_dir, snapshot_count)
-  write_utf8(content, full_json_path)
 
   full_screenshot_path <- NULL
   if (should_take_screenshot) {
     # Replace extension with .png
     full_screenshot_path <- fs::path(temp_save_dir, fs::path_ext_set(json_name, "png"))
     # Take screenshot
-    app_screenshot(self, private, full_screenshot_path)
+
+    app_screenshot(self, private, filename = full_screenshot_path, screenshot_args = screenshot_args)
   }
 
   list(
@@ -77,24 +86,7 @@ app_appshot <- function(
     # json_original_content = original_content,
     # json_content = content
   )
-  # TODO-prior;?; Invisibly return JSON content as a string
-  # invisible(original_content)
 }
-
-
-# TODO-barret; Include these methods? Less is more;
-# AppDirver$set("public", "expectSnapshotReactivity", function(
-#   items = NULL,
-#   name = NULL
-# ) {
-#   app_appshot(self, private, items = items, name = name, screenshot = FALSE)
-# })
-# AppDirver$set("public", "expectSnapshotScreenshot", function(
-#   name = NULL
-# ) {
-#   app_appshot(self, private, items = list(input = FALSE, output = FALSE, export = FALSE), name = name, screenshot = TRUE)
-# })
-
 
 
 create_snapshot_dir <- function(dir, count) {

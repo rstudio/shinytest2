@@ -51,7 +51,7 @@ Initialize the AppDriver
   path = ".",
   ...,
   load_timeout = NULL,
-  screenshot = TRUE,
+  screenshot_args = list(),
   check_names = TRUE,
   name = NULL,
   variant = getOption("shinytest2.variant", os_name_and_r_version()),
@@ -77,7 +77,8 @@ single \code{app.R} file or a \code{server.R}-\code{ui.R} pair.}
 This includes the time to start R. Defaults to 5s when running
 locally and 10s when running on CI. Maximum value is 10s.}
 
-\item{\code{screenshot}}{Take screenshots for each snapshot?}
+\item{\code{screenshot_args}}{Default set of arguments to pass in to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
+\verb{$screenshot()} method when taking screnshots within \verb{$expect_appshot()}. To disable screenshots by default, set to \code{FALSE}.}
 
 \item{\code{check_names}}{Check if widget names are unique?}
 
@@ -280,13 +281,21 @@ Self, invisibly.
 \if{html}{\out{<a id="method-expect_appshot"></a>}}
 \if{latex}{\out{\hypertarget{method-expect_appshot}{}}}
 \subsection{Method \code{expect_appshot()}}{
-Expect a shinytest2 snapshot
+Take and appshot of the Shiny application
+
+Appshot: Shiny \strong{App}lication Snap\strong{shot}
+
+An appshot currently consists of two snapshot files:
+\enumerate{
+\item A screenshot of the Shiny application using the \verb{$screenshot()} function of the \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}
+\item A JSON snapshot of all Shiny component values
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_appshot(
   ...,
-  name = NULL,
   items = NULL,
   screenshot = NULL,
+  name = NULL,
   cran = FALSE
 )}\if{html}{\out{</div>}}
 }
@@ -296,11 +305,19 @@ Expect a shinytest2 snapshot
 \describe{
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
+\item{\code{items}}{Components to only be included in the snapshot. If supplied, can contain \code{inputs}, \code{output}, and \code{export}. Each value of \code{items} can either be \code{TRUE} (for all values) or a character list of names to use.}
+
+\item{\code{screenshot}}{If the value is \code{NULL}, then the initalization value of \code{screenshot_args} will be used. If this value is \code{NULL}, then \code{screenshot} will be set to the result of \code{!is.null(items)}.
+
+The final value can either be:
+\itemize{
+\item \code{TRUE}: A screenshot of the whole page will be taken with no delay
+\item \code{FALSE}: No screenshot will be taken
+\item A named list of arguments: Arguments passed directly to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
+\verb{$screenshot()} method. The selector and delay will default to \code{"html"} and \code{0} respectively.
+}}
+
 \item{\code{name}}{The prefix name to be used for the snapshot. By default, this uses the name supplied to \code{app} on initialization.}
-
-\item{\code{items}}{Elements to only be included in the snapshot. If supplied, can contain \code{inputs}, \code{output}, and \code{export}. Each value of \code{items} can either be \code{TRUE} (for all values) or a character list of names to use.}
-
-\item{\code{screenshot}}{A boolean indicating whether to take a screenshot.}
 
 \item{\code{cran}}{Should these expectations be verified on CRAN? By default,
 they are not, because snapshot tests tend to be fragile
@@ -493,8 +510,8 @@ Set input values.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Name-value pairs, \verb{name1 = value1, name2 = value2} etc.
-Input with name \code{name1} will be assigned value \code{value1}.}
+\item{\code{...}}{Name-value pairs, \verb{component_name_1 = value_1, component_name_2 = value_2} etc.
+Input with name \code{component_name_1} will be assigned value \code{value_1}.}
 
 \item{\code{wait_}}{Wait until all reactive updates have completed?}
 
@@ -548,8 +565,8 @@ Uploads a file to a file input.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Name-path pairs, e.g. \code{name1 = path1}. The file located at
-\code{path1} will be uploaded to file input with name \code{name1}.}
+\item{\code{...}}{Name-path pair, e.g. \code{component_name = file_path}. The file located at
+\code{file_path} will be uploaded to file input with name \code{component_name}.}
 
 \item{\code{wait_}}{Wait until all reactive updates have completed?}
 

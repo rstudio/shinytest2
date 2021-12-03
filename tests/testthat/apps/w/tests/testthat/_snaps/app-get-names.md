@@ -1,4 +1,4 @@
-# list input & output widgets
+# list current input & output component names
 
     Code
       app$get_names()

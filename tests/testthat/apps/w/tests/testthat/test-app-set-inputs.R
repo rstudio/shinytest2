@@ -4,7 +4,7 @@ test_that("set kitchen sink of inputs", {
 
   app <- AppDriver$new(test_path("../../."), variant = os_name_and_r_version())
 
-  app$expect_appshot(screenshot = TRUE)
+  app$expect_appshot()
 
   app$set_inputs(
     "action" = "click",
@@ -29,11 +29,11 @@ test_that("set kitchen sink of inputs", {
   on.exit({unlink(tmpfile)}, add = TRUE)
   app$upload_file(file = test_path("test-app-set-inputs.R"))
 
-  app$expect_appshot(screenshot = TRUE)
+  app$expect_appshot()
 
   app$set_inputs(tabset = "shinyWidgets")
 
-  app$expect_appshot(screenshot = TRUE)
+  app$expect_appshot()
 
   app$set_inputs(
     "bsSwitch" = TRUE,
@@ -48,5 +48,5 @@ test_that("set kitchen sink of inputs", {
   #     "search" = "Test text", # must hit enter to submit
   #     "sliderText" = "Strongly agree",
 
-  app$expect_appshot(screenshot = TRUE)
+  app$expect_appshot()
 })

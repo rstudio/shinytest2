@@ -3,7 +3,7 @@ app_initialize <- function(
   path = ".",
   ...,
   load_timeout = NULL,
-  screenshot = TRUE,
+  screenshot_args = NULL,
   check_names = TRUE,
   name = NULL,
   variant = getOption("shinytest2.variant", os_name_and_r_version()),
@@ -18,7 +18,7 @@ app_initialize <- function(
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
 
-  private$should_take_screenshot <- isTRUE(screenshot)
+  private$default_screenshot_args <- screenshot_args
   private$variant <- variant
   private$appshot_dir <- temp_file()
   private$appshot_count <- Count$new()

@@ -40,21 +40,23 @@ app_expect_appshot <- function(
   ...,
   name = NULL,
   items = NULL,
-  screenshot = NULL,
+  screenshot_args = NULL,
   cran = FALSE
 ) {
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
 
-  appshot_info <- app_appshot(self, private, items = items, name = name, screenshot = screenshot)
+  appshot_info <- app_appshot(self, private, items = items, name = name, screenshot_args = screenshot_args)
 
   # compare json
-  testthat_expect_snapshot_file(
-    private,
-    appshot_info$json_path,
-    cran = cran,
-    compare = testthat::compare_file_text
-  )
+  if (!is.null(appshot_info$json_path)) {
+    testthat_expect_snapshot_file(
+      private,
+      appshot_info$json_path,
+      cran = cran,
+      compare = testthat::compare_file_text
+    )
+  }
 
   # compare screenshot
   if (!is.null(appshot_info$screenshot_path)) {
