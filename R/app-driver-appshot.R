@@ -13,12 +13,13 @@ app_appshot <- function(
 
   # The default is to take a screenshot when the `default_screenshot_args` option is
   # NULL and the user does not specify specific items to snapshot.
-  screenshot_args <- screenshot_args %||% private$default_screenshot_args %||% is.null(items)
+  items_is_false <- identical(items, FALSE)
+  screenshot_args <- screenshot_args %||% private$default_screenshot_args %||% (!is.null(items))
   should_take_screenshot <- !identical(screenshot_args, FALSE)
-  has_items <- !identical(items, FALSE)
 
-  if (!has_items) {
+  if (items_is_false) {
     if (!should_take_screenshot) {
+      if (is.null(private$default_screenshot_args)) browser()
       abort("Both 'items' and 'screenshot_args' can not be `FALSE` at the same time.")
     }
   }
@@ -32,7 +33,7 @@ app_appshot <- function(
   json_name <- fs::path_ext_set(name %||% sprintf("%03d", snapshot_count), "json")
 
   full_json_path <- NULL
-  if (has_items) {
+  if (!items_is_false) {
 
     # Figure out which items to snapshot ----------------------------------------
     # By default, record all items.
