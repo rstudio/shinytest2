@@ -6,7 +6,7 @@ app_initialize <- function(
   screenshot_args = NULL,
   check_names = TRUE,
   name = NULL,
-  variant = getOption("shinytest2.variant", os_name_and_r_version()),
+  variant = getOption("shinytest2.variant", platform_variant()),
   debug = c("none", "all", debug_types()),
   view = FALSE,
   seed = NULL,
