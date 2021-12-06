@@ -48,13 +48,13 @@ with a live app.
 Initialize the AppDriver
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$new(
-  path = ".",
+  path = testthat::test_path("../../"),
   ...,
   load_timeout = NULL,
-  screenshot_args = list(),
+  screenshot_args = NULL,
   check_names = TRUE,
   name = NULL,
-  variant = getOption("shinytest2.variant", os_name_and_r_version()),
+  variant = getOption("shinytest2.variant", platform_variant()),
   debug = c("none", "all", debug_types()),
   view = FALSE,
   seed = NULL,
