@@ -31,7 +31,7 @@ app_screenshot <- function(
   if (is.null(filename)) {
     withr::local_par(list(bg = "grey90"))
     png <- png::readPNG(path)
-    plot(grDevices::as.raster(png))
+    graphics::plot(grDevices::as.raster(png))
   } else {
     fs::file_copy(path, filename)
   }
