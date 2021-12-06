@@ -17,11 +17,7 @@ NULL
 #' @param ... Parameters passed to [`testthat::test_dir()`]
 #' @export
 # Inspiration from https://github.com/rstudio/shiny/blob/a8c14dab9623c984a66fcd4824d8d448afb151e7/inst/app_template/tests/testthat.R
-# TODO-barret; Name ok? `test_app()` Seems too close to "test this app" vs "calling testthat on app"
-# test_shinytest2 <-
-# test_shiny_app <-
-# test_app <-
-testthat_app <- function(
+test_app <- function(
   app_dir = "../",
   # Run in the app's environment containing all support methods.
   env = shiny::loadSupport(app_dir),

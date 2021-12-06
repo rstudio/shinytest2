@@ -80,4 +80,4 @@ Collate:
     'recorder.R'
     'save-app.R'
     'shinytest2_logs.R'
-    'testthat-app.R'
+    'test-app.R'

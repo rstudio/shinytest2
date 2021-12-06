@@ -11,7 +11,7 @@
 
 # Current shinytest2 code using `app$**()`:
 test_that("basic website example works", {
-  app <- AppDriver$new(test_path("../../."))
+  app <- AppDriver$new()
   app$set_inputs(name = "Hadley")
   app$set_inputs(greet = "click")
 
