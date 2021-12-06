@@ -414,7 +414,7 @@ The resulting array of \code{TAG.textContent} values found will be stored in a s
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{selector}}{A DOM selector to be passed into \code{document.querySelectorAll()}}
+\item{\code{selector}}{A DOM CSS selector to be passed into \code{document.querySelectorAll()}}
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
@@ -431,7 +431,7 @@ because they often rely on minor details of dependencies.}
 \subsection{Method \code{expect_html()}}{
 Expect snapshot of UI HTML
 
-\verb{$expect_text()} will extract the full DOM structures of each matching element and store them in a snapshot file.
+\verb{$expect_html()} will extract the full DOM structures of each matching element and store them in a snapshot file.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_html(selector, ..., outer_html = FALSE, cran = FALSE)}\if{html}{\out{</div>}}
 }

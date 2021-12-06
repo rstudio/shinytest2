@@ -274,7 +274,7 @@ AppDriver <- R6Class(# nolint
     #' When possible, use `$expect_text()` over `$expect_html()` to allow package authors room to alter their HTML structures.
     #' The resulting array of `TAG.textContent` values found will be stored in a snapshot file.
     #'
-    #' @param selector A DOM selector to be passed into `document.querySelectorAll()`
+    #' @param selector A DOM CSS selector to be passed into `document.querySelectorAll()`
     expect_text = function(selector, ..., cran = FALSE) {
       app_expect_text(self, private, selector, ..., cran = cran)
     },
@@ -282,7 +282,7 @@ AppDriver <- R6Class(# nolint
 
     #' @description Expect snapshot of UI HTML
     #'
-    #' `$expect_text()` will extract the full DOM structures of each matching element and store them in a snapshot file.
+    #' `$expect_html()` will extract the full DOM structures of each matching element and store them in a snapshot file.
     #'
     #' @param selector A DOM selector to be passed into `document.querySelectorAll()`
     #' @param outer_html If `TRUE`, the full DOM structure will be returned (`TAG.outerHTML`).
