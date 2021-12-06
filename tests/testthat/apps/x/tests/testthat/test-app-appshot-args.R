@@ -19,7 +19,7 @@ test_that("name arg works", {
 })
 
 test_that("items can be many values", {
-  app <- AppDriver$new(test_path("../../."), variant = os_name_and_r_version())
+  app <- AppDriver$new(test_path("../../."), variant = platform_variant())
   app$set_inputs(name = "Hadley")
   app$set_inputs(greet = "click")
   app$expect_appshot(items = FALSE) # no componentsshot
