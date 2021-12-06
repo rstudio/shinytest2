@@ -11,8 +11,6 @@ app_start_shiny <- function(
   ckm8_assert_app_driver(self, private)
   ckm8_assert_single_string(path)
 
-  private$path <- normalizePath(path)
-
   if (is.null(shiny_args$port)) {
     shiny_args$port <- httpuv::randomPort()
   }

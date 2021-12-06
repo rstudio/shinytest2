@@ -81,7 +81,7 @@ AppDriver <- R6Class(# nolint
     #' @importFrom callr process
     #' @importFrom rlang abort
     initialize = function(
-      path = ".",
+      path = testthat::test_path("../../"),
       ...,
       load_timeout = NULL,
       screenshot_args = list(),
@@ -97,7 +97,8 @@ AppDriver <- R6Class(# nolint
       render_args = NULL,
       options = list()
     ) {
-      app_initialize(self, private,
+      app_initialize(
+        self, private,
         path = path,
         ...,
         load_timeout = load_timeout,

@@ -1,6 +1,6 @@
 app_initialize <- function(
   self, private,
-  path = ".",
+  path = testthat::test_path("../../"),
   ...,
   load_timeout = NULL,
   screenshot_args = NULL,
@@ -18,6 +18,7 @@ app_initialize <- function(
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
 
+  private$path <- fs::path_abs(path)
   private$default_screenshot_args <- screenshot_args
   private$variant <- if (identical(variant, FALSE)) NULL else variant
   private$appshot_dir <- temp_file()
