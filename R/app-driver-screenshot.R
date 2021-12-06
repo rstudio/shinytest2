@@ -9,8 +9,9 @@ app_screenshot <- function(
   "!DEBUG app_screenshot()"
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
+  if (is.null(screenshot_args) || isTRUE(screenshot_args)) screenshot_args <- list()
+  checkmate::assert_list(screenshot_args)
 
-  if (!is.list(screenshot_args)) screenshot_args <- list()
   screenshot_args$delay <- delay %||% 0
   screenshot_args$selector <- selector %||% "html"
 

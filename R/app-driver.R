@@ -84,7 +84,7 @@ AppDriver <- R6Class(# nolint
       path = testthat::test_path("../../"),
       ...,
       load_timeout = NULL,
-      screenshot_args = list(),
+      screenshot_args = NULL,
       check_names = TRUE,
       name = NULL,
       variant = getOption("shinytest2.variant", os_name_and_r_version()),
