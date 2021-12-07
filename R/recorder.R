@@ -1,16 +1,16 @@
 #' Launch test event recorder for a Shiny app
 #'
-#' @param app A [ShinyDriver2()] object, or path to a Shiny
+#' @param app A [AppDriver] object, or path to a Shiny
 #'   application.
 #' @param seed A random seed to set before running the app. This seed will also
 #'   be used in the test script.
 #' @param load_timeout Maximum time to wait for the Shiny application to load, in
 #'   milliseconds. If a value is provided, it will be saved in the test script.
-#' @param debug start the underlying [ShinyDriver2()] in `debug`
+#' @param debug start the underlying [AppDriver] in `debug`
 #'   mode and print those debug logs to the R console once recording is
 #'   finished. The default, `'shiny_console'`, captures and prints R
 #'   console output from the recorded R shiny process. Any value that the
-#'   `debug` argument in [ShinyDriver2()] accepts may be used
+#'   `debug` argument in [AppDriver] accepts may be used
 #'   (e.g., `'none'` may be used to completely suppress the driver logs).
 #' @param shiny_args A list of options to pass to `runApp()`. If a value
 #'   is provided, it will be saved in the test script.
@@ -46,20 +46,20 @@ record_test <- function(
       seed <- floor(stats::runif(1, min = 0, max = 1e5))
     }
 
-    app <- ShinyDriver2$new(path, seed = seed, load_timeout = load_timeout, shiny_args = shiny_args)
+    app <- AppDriver$new(path, seed = seed, load_timeout = load_timeout, shiny_args = shiny_args)
     on.exit({
       rm(app)
       gc()
     })
   }
 
-  if (!inherits(app, "ShinyDriver2")) {
-    abort("Unknown object type to record tests for. Must supply a `ShinyDriver2` object or file path")
+  if (!inherits(app, "AppDriver")) {
+    abort("Unknown object type to record tests for. Must supply a `AppDriver` object or file path")
   }
 
   # Get the URL for the app. Depending on what type of object `app` is, it may
   # require starting an app.
-  url <- app$getUrl()
+  url <- app$get_url()
 
   # Are we running in RStudio? If so, we might need to fix up the URL so that
   # it's externally accessible.
@@ -130,7 +130,6 @@ record_test <- function(
 #' @param processor An input processor function.
 #' @export
 #' @keywords internal
-# # TODO-barret; should this be done by {shiny}?
 register_input_processor <- function(input_type, processor) {
   if (!is.function(processor) || !identical(names(formals(processor)), "value")) {
     abort("`processor` must be a function that takes one parameter, `value`")

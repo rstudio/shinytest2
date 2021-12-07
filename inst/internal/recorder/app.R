@@ -255,7 +255,7 @@ code_generators <- list(
   },
 
   fileDownload = function(event, next_event = NULL, ...) {
-    paste0('app_expect_download("', event$name, '")')
+    paste0('app$expect_download("', event$name, '")')
   },
 
   outputEvent = function(event, next_event = NULL, ...) {
@@ -263,11 +263,11 @@ code_generators <- list(
   },
 
   outputSnapshot = function(event, next_event = NULL, ...) {
-    paste0('app_expect_appshot(app, items = list(output = "', event$name, '"))')
+    paste0('app$expect_appshot(items = list(output = "', event$name, '"))')
   },
 
-  snapshot = function(event, next_event = NULL, ...) {
-    "app_expect_appshot(app)"
+  appshot = function(event, next_event = NULL, ...) {
+    "app$expect_appshot()"
   }
 )
 
@@ -277,9 +277,9 @@ app_dir <- function() {
 app_dir_basename <- function() {
   fs::path_file(app_dir())
 }
-app_file_basename <- function() {
+app_test_path <- function() {
   path <- app$get_path()
-  if (dir.exists(path)) return(".")
+  if (dir.exists(path)) return("")
   basename(path)
 }
 
@@ -312,16 +312,15 @@ generate_test_code <- function(events, name, seed,
   }
 
   # From the tests dir, it is up two folders and then the app file
-  app_path <- paste("../../", app_file_basename())
   inner_code <- paste(
     paste0(
-      "  app <- ShinyDriver2$new(\n",
+      "  app <- AppDriver$new(\n",
       "    ", paste(c(
-        paste0("test_path(\"", app_path, "\")"),
+        app_test_path(),
         if (!is.null(seed)) paste0("seed = %s", seed),
         if (!is.null(load_timeout)) paste0("load_timeout = ", load_timeout),
         if (length(shiny_args) > 0) paste0("shiny_args = ", deparse2(shiny_args)),
-        "variant = os_name_and_r_version()"
+        "variant = platform_variant()"
         ),
         collapse = ",\n    "
       ), "\n",
@@ -360,15 +359,15 @@ shinyApp(
       div(class = "shiny-recorder-header", "Test event recorder"),
       div(class = "shiny-recorder-controls",
         span(
-          actionLink("snapshot",
+          actionLink("appshot",
             span(
-              img(src = "snapshot.png", class = "shiny-recorder-icon"),
-              "Take snapshot"
+              img(src = "appshot.png", class = "shiny-recorder-icon"),
+              "Take appshot"
             ),
             style = "display: inline;"
           ),
           tooltip(
-            HTML("You can also Ctrl-click or &#8984;-click on an output to snapshot just that one output.<br> To trigger a snapshot via the keyboard, press Ctrl-shift-S or &#8984;-shift-S"),
+            HTML("You can also Ctrl-click or &#8984;-click on an output to snapshot just that one output.<br> To trigger a appshot via the keyboard, press Ctrl-shift-S or &#8984;-shift-S"),
             placement = "bottom"
           ),
           hr()
@@ -449,7 +448,7 @@ shinyApp(
     # Number of snapshot or fileDownload events in input$testevents
     num_snapshots <- reactive({
       snapshots <- vapply(input$testevents, function(event) {
-        return(event$type %in% c("snapshot", "outputSnapshot", "fileDownload"))
+        return(event$type %in% c("appshot", "outputSnapshot", "fileDownload"))
       }, logical(1))
       sum(snapshots)
     })
@@ -465,8 +464,8 @@ shinyApp(
             NULL
           } else if (type == "outputSnapshot") {
             list(type = "snapshot-output", name = event$name)
-          } else if (type == "snapshot") {
-            list(type = "snapshot", name = "<all>")
+          } else if (type == "appshot") {
+            list(type = "appshot", name = "<all>")
           } else if (type == "input") {
             if (event$inputType == "shiny.fileupload") {
               # File uploads are a special case of inputs
@@ -526,7 +525,7 @@ shinyApp(
           add_library_call <- !any(grepl(readLines(save_file()), "^library\\(shinytest2\\)$"))
         }
         if (add_library_call) {
-          code <- paste0("library(shinytest2)\n", code)
+          code <- paste0("library(shinytest2)\n\n", code)
         }
         cat(code, file = save_file(), append = TRUE)
         message("Saved test code to ", save_file())

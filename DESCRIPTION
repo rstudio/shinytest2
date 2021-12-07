@@ -40,6 +40,7 @@ Imports:
     shiny,
     withr
 Suggests:
+    png,
     plotly,
     rstudioapi,
     shinyWidgets
@@ -52,26 +53,26 @@ Config/Needs/website:
     r-lib/testthat
 Config/testthat/edition: 3
 Collate:
-    'shiny-driver.R'
-    'app-chromote.R'
-    'app-count.R'
-    'app-debug.R'
-    'app-event-logging.R'
-    'app-execute.R'
-    'app-expect-appshot.R'
-    'app-expect-other.R'
-    'app-get-all-values.R'
-    'app-initialize.R'
-    'app-inputs.R'
-    'app-path.R'
-    'app-screenshot.R'
-    'app-snapshot.R'
-    'app-start.R'
-    'app-stop.R'
-    'app-url.R'
-    'app-wait.R'
-    'app-widget.R'
-    'app-window.R'
+    'R6-helper.R'
+    'app-driver-appshot.R'
+    'app-driver-chromote.R'
+    'app-driver-debug.R'
+    'app-driver-event-logging.R'
+    'app-driver-execute.R'
+    'app-driver-expect-appshot.R'
+    'app-driver-expect-download.R'
+    'app-driver-expect-script.R'
+    'app-driver-get-values.R'
+    'app-driver-initialize.R'
+    'app-driver-inputs.R'
+    'app-driver-node.R'
+    'app-driver-screenshot.R'
+    'app-driver-start.R'
+    'app-driver-stop.R'
+    'app-driver-upload-file.R'
+    'app-driver-wait.R'
+    'app-driver-window.R'
+    'app-driver.R'
     'chromote_methods.R'
     'httr.R'
     'utils.R'

@@ -6,3 +6,5 @@ todo.md
 ^\.Rproj\.user$
 ^man-roxygen$
 ^\.lintr$
+
+^docs$
