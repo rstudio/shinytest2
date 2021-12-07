@@ -13,20 +13,12 @@ with a live app.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{AppDriver$new()}}
-\item \href{#method-get_chromote_session}{\code{AppDriver$get_chromote_session()}}
 \item \href{#method-view}{\code{AppDriver$view()}}
-\item \href{#method-get_debug_log}{\code{AppDriver$get_debug_log()}}
-\item \href{#method-enable_debug_log_messages}{\code{AppDriver$enable_debug_log_messages()}}
-\item \href{#method-log_event}{\code{AppDriver$log_event()}}
-\item \href{#method-get_event_log}{\code{AppDriver$get_event_log()}}
-\item \href{#method-get_path}{\code{AppDriver$get_path()}}
-\item \href{#method-execute_script}{\code{AppDriver$execute_script()}}
-\item \href{#method-execute_script_callback}{\code{AppDriver$execute_script_callback()}}
 \item \href{#method-expect_appshot}{\code{AppDriver$expect_appshot()}}
-\item \href{#method-expect_download}{\code{AppDriver$expect_download()}}
-\item \href{#method-expect_script}{\code{AppDriver$expect_script()}}
 \item \href{#method-expect_text}{\code{AppDriver$expect_text()}}
 \item \href{#method-expect_html}{\code{AppDriver$expect_html()}}
+\item \href{#method-expect_script}{\code{AppDriver$expect_script()}}
+\item \href{#method-expect_download}{\code{AppDriver$expect_download()}}
 \item \href{#method-get_values}{\code{AppDriver$get_values()}}
 \item \href{#method-get_names}{\code{AppDriver$get_names()}}
 \item \href{#method-set_inputs}{\code{AppDriver$set_inputs()}}
@@ -35,8 +27,17 @@ with a live app.
 \item \href{#method-wait_for_condition}{\code{AppDriver$wait_for_condition()}}
 \item \href{#method-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
 \item \href{#method-wait_for_value}{\code{AppDriver$wait_for_value()}}
+\item \href{#method-execute_script}{\code{AppDriver$execute_script()}}
+\item \href{#method-execute_script_callback}{\code{AppDriver$execute_script_callback()}}
+\item \href{#method-get_path}{\code{AppDriver$get_path()}}
+\item \href{#method-get_url}{\code{AppDriver$get_url()}}
 \item \href{#method-get_window_size}{\code{AppDriver$get_window_size()}}
 \item \href{#method-set_window_size}{\code{AppDriver$set_window_size()}}
+\item \href{#method-get_chromote_session}{\code{AppDriver$get_chromote_session()}}
+\item \href{#method-get_debug_log}{\code{AppDriver$get_debug_log()}}
+\item \href{#method-enable_debug_log_messages}{\code{AppDriver$enable_debug_log_messages()}}
+\item \href{#method-get_event_log}{\code{AppDriver$get_event_log()}}
+\item \href{#method-log_event}{\code{AppDriver$log_event()}}
 \item \href{#method-stop}{\code{AppDriver$stop()}}
 \item \href{#method-clone}{\code{AppDriver$clone()}}
 }
@@ -117,16 +118,6 @@ process.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_chromote_session"></a>}}
-\if{latex}{\out{\hypertarget{method-get_chromote_session}{}}}
-\subsection{Method \code{get_chromote_session()}}{
-Chromote Session object from the \pkg{chromote} package.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_chromote_session()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-view"></a>}}
 \if{latex}{\out{\hypertarget{method-view}{}}}
 \subsection{Method \code{view()}}{
@@ -135,147 +126,6 @@ Calls \verb{$view()} on the Chromote Session object
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$view()}\if{html}{\out{</div>}}
 }
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_debug_log"></a>}}
-\if{latex}{\out{\hypertarget{method-get_debug_log}{}}}
-\subsection{Method \code{get_debug_log()}}{
-Query one or more of the debug logs.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_debug_log(type = c("all", debug_types()))}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{type}}{Log type: \code{"all"}, \code{"shiny_console"}, \code{"browser"},
-or \code{"shinytest2"}.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-enable_debug_log_messages"></a>}}
-\if{latex}{\out{\hypertarget{method-enable_debug_log_messages}{}}}
-\subsection{Method \code{enable_debug_log_messages()}}{
-Enable/disable debugging messages
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$enable_debug_log_messages(enable = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{enable}}{If \code{TRUE}, all Shiny WebSocket messages are recorded.
-This can be useful for debugging, but can be considered a memory leak in the browser.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-log_event"></a>}}
-\if{latex}{\out{\hypertarget{method-log_event}{}}}
-\subsection{Method \code{log_event()}}{
-Add an event to log.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$log_event(event, ...)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{event}}{Event name}
-
-\item{\code{...}}{Addition data to store for event}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_event_log"></a>}}
-\if{latex}{\out{\hypertarget{method-get_event_log}{}}}
-\subsection{Method \code{get_event_log()}}{
-Retrieve event log.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_event_log()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_path"></a>}}
-\if{latex}{\out{\hypertarget{method-get_path}{}}}
-\subsection{Method \code{get_path()}}{
-Retrieve the Shiny app path
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_path()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-If it's a .Rmd file, it will return the full .Rmd path, otherwise it will return the directory containing the file.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-execute_script"></a>}}
-\if{latex}{\out{\hypertarget{method-execute_script}{}}}
-\subsection{Method \code{execute_script()}}{
-Execute JavaScript code in the browser.
-
-This function will block the local R session until the code has finished executing its \emph{tick} in the browser.
-If a \code{Promise} is returned from the script, \verb{$execute_script()} will wait for the promise to resolve.
-To have JavaScript code execute asynchronously, wrap the code in a Promise object and have the script return an atomic value.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$execute_script(script, arguments = list(), ..., timeout = 15 * 1000)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{script}}{JS to execute. If a JS Promise is returned, \verb{$execute_script()} will wait for the promise to resolve before returning.}
-
-\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Result of the script.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-execute_script_callback"></a>}}
-\if{latex}{\out{\hypertarget{method-execute_script_callback}{}}}
-\subsection{Method \code{execute_script_callback()}}{
-Execute JavaScript code in the browser with an additional \code{resolve} and \code{reject} arguments.
-
-This function will block the local R session until one of the last two arguments (\code{resolve} and \code{reject}) are called.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$execute_script_callback(
-  script,
-  arguments = list(),
-  ...,
-  timeout = 15 * 1000
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{script}}{JS to execute. \code{resolve} and \code{reject} arguments are added to the script call. To return control back to the R session, one of these methods must be called.}
-
-\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Self, invisibly.
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-expect_appshot"></a>}}
@@ -318,76 +168,6 @@ The final value can either be:
 }}
 
 \item{\code{name}}{The prefix name to be used for the snapshot. By default, this uses the name supplied to \code{app} on initialization.}
-
-\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
-they are not, because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_download"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_download}{}}}
-\subsection{Method \code{expect_download()}}{
-Expect a download file action.
-
-Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}} \code{id}, the corresponding
-file will be downloaded and saved as a snapshot file.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_download(id, ..., name = NULL, cran = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{Output id of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{name}}{File name to save file to. The default, \code{NULL},
-generates an ascending sequence of names: \verb{001.download},
-\verb{002.download}, etc.}
-
-\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
-they are not, because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_script"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_script}{}}}
-\subsection{Method \code{expect_script()}}{
-Expect snapshot of JS script output
-
-This is a building block function that should be called by other functions.
-For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers around this function.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_script(
-  script,
-  arguments = list(),
-  ...,
-  timeout = 15 * 1000,
-  pre_snapshot = NULL,
-  cran = FALSE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{script}}{A string containing the JS script to be executed.}
-
-\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
-
-\item{\code{pre_snapshot}}{A function to be called on the result of the script before taking the snapshot.
-\verb{$expect_html()} and \verb{$expect_text()} both use \code{\link[=unlist]{unlist()}}.}
 
 \item{\code{cran}}{Should these expectations be verified on CRAN? By default,
 they are not, because snapshot tests tend to be fragile
@@ -445,6 +225,76 @@ Expect snapshot of UI HTML
 
 \item{\code{outer_html}}{If \code{TRUE}, the full DOM structure will be returned (\code{TAG.outerHTML}).
 If \code{FALSE}, the full DOM structure of the child elements will be returned (\code{TAG.innerHTML}).}
+
+\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
+they are not, because snapshot tests tend to be fragile
+because they often rely on minor details of dependencies.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-expect_script"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_script}{}}}
+\subsection{Method \code{expect_script()}}{
+Expect snapshot of JS script output
+
+This is a building block function that should be called by other functions.
+For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers around this function.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_script(
+  script,
+  arguments = list(),
+  ...,
+  timeout = 15 * 1000,
+  pre_snapshot = NULL,
+  cran = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{script}}{A string containing the JS script to be executed.}
+
+\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
+
+\item{\code{pre_snapshot}}{A function to be called on the result of the script before taking the snapshot.
+\verb{$expect_html()} and \verb{$expect_text()} both use \code{\link[=unlist]{unlist()}}.}
+
+\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
+they are not, because snapshot tests tend to be fragile
+because they often rely on minor details of dependencies.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-expect_download"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_download}{}}}
+\subsection{Method \code{expect_download()}}{
+Expect a download file action.
+
+Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}} \code{id}, the corresponding
+file will be downloaded and saved as a snapshot file.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_download(id, ..., name = NULL, cran = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{Output id of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{name}}{File name to save file to. The default, \code{NULL},
+generates an ascending sequence of names: \verb{001.download},
+\verb{002.download}, etc.}
 
 \item{\code{cran}}{Should these expectations be verified on CRAN? By default,
 they are not, because snapshot tests tend to be fragile
@@ -536,7 +386,7 @@ Returns updated values, invisibly.
 \if{html}{\out{<a id="method-click"></a>}}
 \if{latex}{\out{\hypertarget{method-click}{}}}
 \subsection{Method \code{click()}}{
-Find a Shiny binding and click it using \code{TAG.click()}
+Find a Shiny binding and click it using the DOM method \code{TAG.click()}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$click(id, iotype = c("auto", "input", "output"))}\if{html}{\out{</div>}}
 }
@@ -681,6 +531,95 @@ Newly found value
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-execute_script"></a>}}
+\if{latex}{\out{\hypertarget{method-execute_script}{}}}
+\subsection{Method \code{execute_script()}}{
+Execute JavaScript code in the browser.
+
+This function will block the local R session until the code has finished executing its \emph{tick} in the browser.
+If a \code{Promise} is returned from the script, \verb{$execute_script()} will wait for the promise to resolve.
+To have JavaScript code execute asynchronously, wrap the code in a Promise object and have the script return an atomic value.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$execute_script(script, arguments = list(), ..., timeout = 15 * 1000)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{script}}{JS to execute. If a JS Promise is returned, \verb{$execute_script()} will wait for the promise to resolve before returning.}
+
+\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Result of the script.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-execute_script_callback"></a>}}
+\if{latex}{\out{\hypertarget{method-execute_script_callback}{}}}
+\subsection{Method \code{execute_script_callback()}}{
+Execute JavaScript code in the browser with an additional \code{resolve} and \code{reject} arguments.
+
+This function will block the local R session until one of the last two arguments (\code{resolve} and \code{reject}) are called.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$execute_script_callback(
+  script,
+  arguments = list(),
+  ...,
+  timeout = 15 * 1000
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{script}}{JS to execute. \code{resolve} and \code{reject} arguments are added to the script call. To return control back to the R session, one of these methods must be called.}
+
+\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Self, invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_path"></a>}}
+\if{latex}{\out{\hypertarget{method-get_path}{}}}
+\subsection{Method \code{get_path()}}{
+Retrieve the Shiny app path
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_path()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+If it's a .Rmd file, it will return the full .Rmd path, otherwise it will return the directory containing the file.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_url"></a>}}
+\if{latex}{\out{\hypertarget{method-get_url}{}}}
+\subsection{Method \code{get_url()}}{
+Retrieve the Shiny app URL
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_url()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+URL
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_window_size"></a>}}
 \if{latex}{\out{\hypertarget{method-get_window_size}{}}}
 \subsection{Method \code{get_window_size()}}{
@@ -704,6 +643,81 @@ Sets size of the browser window.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{width, height}}{Height and width of browser, in pixels.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_chromote_session"></a>}}
+\if{latex}{\out{\hypertarget{method-get_chromote_session}{}}}
+\subsection{Method \code{get_chromote_session()}}{
+Chromote Session object from the \pkg{chromote} package.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_chromote_session()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_debug_log"></a>}}
+\if{latex}{\out{\hypertarget{method-get_debug_log}{}}}
+\subsection{Method \code{get_debug_log()}}{
+Query one or more of the debug logs.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_debug_log(type = c("all", debug_types()))}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{type}}{Log type: \code{"all"}, \code{"shiny_console"}, \code{"browser"},
+or \code{"shinytest2"}.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-enable_debug_log_messages"></a>}}
+\if{latex}{\out{\hypertarget{method-enable_debug_log_messages}{}}}
+\subsection{Method \code{enable_debug_log_messages()}}{
+Enable/disable debugging messages
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$enable_debug_log_messages(enable = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{enable}}{If \code{TRUE}, all Shiny WebSocket messages are recorded.
+This can be useful for debugging, but can be considered a memory leak in the browser.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_event_log"></a>}}
+\if{latex}{\out{\hypertarget{method-get_event_log}{}}}
+\subsection{Method \code{get_event_log()}}{
+Retrieve event log.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_event_log()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-log_event"></a>}}
+\if{latex}{\out{\hypertarget{method-log_event}{}}}
+\subsection{Method \code{log_event()}}{
+Add an event to log.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$log_event(event, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{event}}{Event name}
+
+\item{\code{...}}{Addition data to store for event}
 }
 \if{html}{\out{</div>}}
 }

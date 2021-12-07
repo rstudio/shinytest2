@@ -118,99 +118,11 @@ AppDriver <- R6Class(# nolint
 
 
     #' @description
-    #' Chromote Session object from the \pkg{chromote} package.
-    get_chromote_session = function() {
-      app_get_chromote_session(self, private)
-    },
-    #' @description
     #' Calls `$view()` on the Chromote Session object
     view = function() {
       app_view(self, private)
     },
 
-
-    #' @description
-    #' Query one or more of the debug logs.
-    #' @param type Log type: `"all"`, `"shiny_console"`, `"browser"`,
-    #'   or `"shinytest2"`.
-    get_debug_log = function(type = c("all", debug_types())) {
-      app_get_debug_log(self, private, type)
-    },
-
-    #' @description
-    #' Enable/disable debugging messages
-    #' @param enable If `TRUE`, all Shiny WebSocket messages are recorded.
-    #' This can be useful for debugging, but can be considered a memory leak in the browser.
-    enable_debug_log_messages = function(enable = TRUE) {
-      app_enable_debug_log_messages(self, private, enable)
-    },
-
-
-    #' @description
-    #' Add an event to log.
-    #' @param event Event name
-    #' @param ... Addition data to store for event
-    log_event = function(event, ...) {
-      app_log_event(self, private, event, ...)
-    },
-
-    #' @description
-    #' Retrieve event log.
-    # TODO-barret-implement; Test this with a snapshot
-    get_event_log = function() {
-      app_get_event_log(self, private)
-    },
-
-    #' @description
-    #' Retrieve the Shiny app path
-    #'
-    #' @return If it's a .Rmd file, it will return the full .Rmd path, otherwise it will return the directory containing the file.
-    get_path = function() {
-      private$path
-    },
-    #' @description
-    #' Retrieve the Shiny app URL
-    #'
-    #' @return URL
-    get_url = function() {
-      private$shiny_url$get()
-    },
-
-
-    #' @description
-    #' Execute JavaScript code in the browser.
-    #'
-    #' This function will block the local R session until the code has finished executing its _tick_ in the browser.
-    #' If a `Promise` is returned from the script, `$execute_script()` will wait for the promise to resolve.
-    #' To have JavaScript code execute asynchronously, wrap the code in a Promise object and have the script return an atomic value.
-    #' @param script JS to execute. If a JS Promise is returned, `$execute_script()` will wait for the promise to resolve before returning.
-    #' @return Result of the script.
-    execute_script = function(script, arguments = list(), ..., timeout = 15 * 1000) {
-      app_execute_script(
-        self, private,
-        script = script,
-        arguments = arguments,
-        ...,
-        timeout = timeout
-      )
-    },
-
-    #' @description
-    #' Execute JavaScript code in the browser with an additional `resolve` and `reject` arguments.
-    #'
-    #' This function will block the local R session until one of the last two arguments (`resolve` and `reject`) are called.
-    #'
-    #' @param script JS to execute. `resolve` and `reject` arguments are added to the script call. To return control back to the R session, one of these methods must be called.
-    #' @return Self, invisibly.
-    execute_script_callback = function(script, arguments = list(), ..., timeout = 15 * 1000) {
-      app_execute_script_callback(
-        self, private,
-        script = script,
-        arguments = arguments,
-        ...,
-        timeout = timeout
-      )
-    },
 
     #' @description
     #' Take and appshot of the Shiny application
@@ -235,39 +147,6 @@ AppDriver <- R6Class(# nolint
         self, private,
         ...,
         name = name, items = items, screenshot_args = screenshot, cran = cran
-      )
-    },
-
-    #' @description
-    #' Expect a download file action.
-    #'
-    #' Given a [shiny::downloadButton()]/[shiny::downloadLink()] `id`, the corresponding
-    #' file will be downloaded and saved as a snapshot file.
-    #'
-    #' @param id Output id of [shiny::downloadButton()]/[shiny::downloadLink()]
-    #' @param name File name to save file to. The default, `NULL`,
-    #'   generates an ascending sequence of names: `001.download`,
-    #'   `002.download`, etc.
-    expect_download = function(id, ..., name = NULL, cran = FALSE) {
-      app_expect_download(self, private, id = id, ..., name = name, cran = cran)
-    },
-
-
-    #' @description
-    #' Expect snapshot of JS script output
-    #'
-    #' This is a building block function that should be called by other functions.
-    #' For example, `$expect_text()` and `$expect_html()` are thin wrappers around this function.
-    #'
-    #' @param script A string containing the JS script to be executed.
-    #' @param pre_snapshot A function to be called on the result of the script before taking the snapshot.
-    #'   `$expect_html()` and `$expect_text()` both use [`unlist()`].
-    expect_script = function(script, arguments = list(), ..., timeout = 15 * 1000, pre_snapshot = NULL, cran = FALSE) {
-      app_expect_script(
-        self, private,
-        script = script, arguments = arguments,
-        ...,
-        timeout = timeout, pre_snapshot = pre_snapshot, cran = cran
       )
     },
 
@@ -296,6 +175,39 @@ AppDriver <- R6Class(# nolint
     #'   If `FALSE`, the full DOM structure of the child elements will be returned (`TAG.innerHTML`).
     expect_html = function(selector, ..., outer_html = FALSE, cran = FALSE) {
       app_expect_html(self, private, selector, ..., outer_html = outer_html, cran = cran)
+    },
+
+    #' @description
+    #' Expect snapshot of JS script output
+    #'
+    #' This is a building block function that should be called by other functions.
+    #' For example, `$expect_text()` and `$expect_html()` are thin wrappers around this function.
+    #'
+    #' @param script A string containing the JS script to be executed.
+    #' @param pre_snapshot A function to be called on the result of the script before taking the snapshot.
+    #'   `$expect_html()` and `$expect_text()` both use [`unlist()`].
+    expect_script = function(script, arguments = list(), ..., timeout = 15 * 1000, pre_snapshot = NULL, cran = FALSE) {
+      app_expect_script(
+        self, private,
+        script = script, arguments = arguments,
+        ...,
+        timeout = timeout, pre_snapshot = pre_snapshot, cran = cran
+      )
+    },
+
+
+    #' @description
+    #' Expect a download file action.
+    #'
+    #' Given a [shiny::downloadButton()]/[shiny::downloadLink()] `id`, the corresponding
+    #' file will be downloaded and saved as a snapshot file.
+    #'
+    #' @param id Output id of [shiny::downloadButton()]/[shiny::downloadLink()]
+    #' @param name File name to save file to. The default, `NULL`,
+    #'   generates an ascending sequence of names: `001.download`,
+    #'   `002.download`, etc.
+    expect_download = function(id, ..., name = NULL, cran = FALSE) {
+      app_expect_download(self, private, id = id, ..., name = name, cran = cran)
     },
 
 
@@ -344,7 +256,7 @@ AppDriver <- R6Class(# nolint
     },
 
     #' @description
-    #' Find a Shiny binding and click it using `TAG.click()`
+    #' Find a Shiny binding and click it using the DOM method `TAG.click()`
     #' @param id The HTML ID of the element to click
     click = function(id, iotype = c("auto", "input", "output")) {
       app_click(self, private, id, iotype)
@@ -373,6 +285,7 @@ AppDriver <- R6Class(# nolint
     #' @return `TRUE` if expression evaluates to `true` without error, before
     #'   timeout. Otherwise returns `FALSE`.
     # TODO-barret-rename; `self$wait_for_js`? Seems too misleading. `self$wait_for_js_condition` seems too long
+    # TODO-barret-rename; $wait_for_script
     wait_for_condition = function(expr, timeout = 3 * 1000, interval = 100) {
       app_wait_for_condition(self, private, expr = expr, timeout = timeout, interval = interval)
     },
@@ -423,6 +336,57 @@ AppDriver <- R6Class(# nolint
 
 
     #' @description
+    #' Execute JavaScript code in the browser.
+    #'
+    #' This function will block the local R session until the code has finished executing its _tick_ in the browser.
+    #' If a `Promise` is returned from the script, `$execute_script()` will wait for the promise to resolve.
+    #' To have JavaScript code execute asynchronously, wrap the code in a Promise object and have the script return an atomic value.
+    #' @param script JS to execute. If a JS Promise is returned, `$execute_script()` will wait for the promise to resolve before returning.
+    #' @return Result of the script.
+    execute_script = function(script, arguments = list(), ..., timeout = 15 * 1000) {
+      app_execute_script(
+        self, private,
+        script = script,
+        arguments = arguments,
+        ...,
+        timeout = timeout
+      )
+    },
+
+    #' @description
+    #' Execute JavaScript code in the browser with an additional `resolve` and `reject` arguments.
+    #'
+    #' This function will block the local R session until one of the last two arguments (`resolve` and `reject`) are called.
+    #'
+    #' @param script JS to execute. `resolve` and `reject` arguments are added to the script call. To return control back to the R session, one of these methods must be called.
+    #' @return Self, invisibly.
+    execute_script_callback = function(script, arguments = list(), ..., timeout = 15 * 1000) {
+      app_execute_script_callback(
+        self, private,
+        script = script,
+        arguments = arguments,
+        ...,
+        timeout = timeout
+      )
+    },
+
+
+    #' @description
+    #' Retrieve the Shiny app path
+    #'
+    #' @return If it's a .Rmd file, it will return the full .Rmd path, otherwise it will return the directory containing the file.
+    get_path = function() {
+      private$path
+    },
+    #' @description
+    #' Retrieve the Shiny app URL
+    #'
+    #' @return URL
+    get_url = function() {
+      private$shiny_url$get()
+    },
+
+    #' @description
     #' Get current size of the browser window, as list of integer scalars
     #'   named `width` and `height`.
     get_window_size = function() {
@@ -435,6 +399,42 @@ AppDriver <- R6Class(# nolint
       app_set_window_size(self, private, width, height)
     },
 
+    #' @description
+    #' Chromote Session object from the \pkg{chromote} package.
+    get_chromote_session = function() {
+      app_get_chromote_session(self, private)
+    },
+
+    #' @description
+    #' Query one or more of the debug logs.
+    #' @param type Log type: `"all"`, `"shiny_console"`, `"browser"`,
+    #'   or `"shinytest2"`.
+    get_debug_log = function(type = c("all", debug_types())) {
+      app_get_debug_log(self, private, type)
+    },
+
+    #' @description
+    #' Enable/disable debugging messages
+    #' @param enable If `TRUE`, all Shiny WebSocket messages are recorded.
+    #' This can be useful for debugging, but can be considered a memory leak in the browser.
+    enable_debug_log_messages = function(enable = TRUE) {
+      app_enable_debug_log_messages(self, private, enable)
+    },
+
+    #' @description
+    #' Retrieve event log.
+    # TODO-barret-implement; Test this with a snapshot
+    get_event_log = function() {
+      app_get_event_log(self, private)
+    },
+
+    #' @description
+    #' Add an event to log.
+    #' @param event Event name
+    #' @param ... Addition data to store for event
+    log_event = function(event, ...) {
+      app_log_event(self, private, event, ...)
+    },
 
 
     #' @description Stop the Shiny application
