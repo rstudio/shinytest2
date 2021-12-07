@@ -168,6 +168,13 @@ AppDriver <- R6Class(# nolint
     get_path = function() {
       private$path
     },
+    #' @description
+    #' Retrieve the Shiny app URL
+    #'
+    #' @return URL
+    get_url = function() {
+      private$shiny_url$get()
+    },
 
 
     #' @description

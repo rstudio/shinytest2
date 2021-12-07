@@ -59,7 +59,7 @@ record_test <- function(
 
   # Get the URL for the app. Depending on what type of object `app` is, it may
   # require starting an app.
-  url <- app$getUrl()
+  url <- app$get_url()
 
   # Are we running in RStudio? If so, we might need to fix up the URL so that
   # it's externally accessible.
