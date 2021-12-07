@@ -277,9 +277,9 @@ app_dir <- function() {
 app_dir_basename <- function() {
   fs::path_file(app_dir())
 }
-app_file_basename <- function() {
+app_test_path <- function() {
   path <- app$get_path()
-  if (dir.exists(path)) return(".")
+  if (dir.exists(path)) return("")
   basename(path)
 }
 
@@ -312,12 +312,11 @@ generate_test_code <- function(events, name, seed,
   }
 
   # From the tests dir, it is up two folders and then the app file
-  app_path <- paste("../../", app_file_basename())
   inner_code <- paste(
     paste0(
       "  app <- AppDriver$new(\n",
       "    ", paste(c(
-        paste0("test_path(\"", app_path, "\")"),
+        app_test_path(),
         if (!is.null(seed)) paste0("seed = %s", seed),
         if (!is.null(load_timeout)) paste0("load_timeout = ", load_timeout),
         if (length(shiny_args) > 0) paste0("shiny_args = ", deparse2(shiny_args)),
@@ -526,7 +525,7 @@ shinyApp(
           add_library_call <- !any(grepl(readLines(save_file()), "^library\\(shinytest2\\)$"))
         }
         if (add_library_call) {
-          code <- paste0("library(shinytest2)\n", code)
+          code <- paste0("library(shinytest2)\n\n", code)
         }
         cat(code, file = save_file(), append = TRUE)
         message("Saved test code to ", save_file())
