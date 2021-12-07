@@ -75,7 +75,7 @@ html,body {
 
 /* Snapshot button needs no margin on top. Need double qualifier for CSS rule
    to override previous one. */
-#shiny-recorder #snapshot {
+#shiny-recorder #appshot {
   margin-top: 0;
 }
 

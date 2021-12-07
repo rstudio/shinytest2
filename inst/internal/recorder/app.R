@@ -266,7 +266,7 @@ code_generators <- list(
     paste0('app$expect_appshot(items = list(output = "', event$name, '"))')
   },
 
-  snapshot = function(event, next_event = NULL, ...) {
+  appshot = function(event, next_event = NULL, ...) {
     "app$expect_appshot()"
   }
 )
@@ -360,15 +360,15 @@ shinyApp(
       div(class = "shiny-recorder-header", "Test event recorder"),
       div(class = "shiny-recorder-controls",
         span(
-          actionLink("snapshot",
+          actionLink("appshot",
             span(
-              img(src = "snapshot.png", class = "shiny-recorder-icon"),
-              "Take snapshot"
+              img(src = "appshot.png", class = "shiny-recorder-icon"),
+              "Take appshot"
             ),
             style = "display: inline;"
           ),
           tooltip(
-            HTML("You can also Ctrl-click or &#8984;-click on an output to snapshot just that one output.<br> To trigger a snapshot via the keyboard, press Ctrl-shift-S or &#8984;-shift-S"),
+            HTML("You can also Ctrl-click or &#8984;-click on an output to snapshot just that one output.<br> To trigger a appshot via the keyboard, press Ctrl-shift-S or &#8984;-shift-S"),
             placement = "bottom"
           ),
           hr()
@@ -449,7 +449,7 @@ shinyApp(
     # Number of snapshot or fileDownload events in input$testevents
     num_snapshots <- reactive({
       snapshots <- vapply(input$testevents, function(event) {
-        return(event$type %in% c("snapshot", "outputSnapshot", "fileDownload"))
+        return(event$type %in% c("appshot", "outputSnapshot", "fileDownload"))
       }, logical(1))
       sum(snapshots)
     })
@@ -465,8 +465,8 @@ shinyApp(
             NULL
           } else if (type == "outputSnapshot") {
             list(type = "snapshot-output", name = event$name)
-          } else if (type == "snapshot") {
-            list(type = "snapshot", name = "<all>")
+          } else if (type == "appshot") {
+            list(type = "appshot", name = "<all>")
           } else if (type == "input") {
             if (event$inputType == "shiny.fileupload") {
               # File uploads are a special case of inputs

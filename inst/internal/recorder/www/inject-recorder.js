@@ -158,17 +158,17 @@ window.recorder = (function() {
                 Shiny.onInputChange("testevents:shinytest2.testevents", recorder.testEvents);
             }
 
-            if (message.snapshotKeypress) {
-              triggerSnapshot();
+            if (message.appshotKeypress) {
+              triggerAppshot();
             }
 
             (function() { eval(message.code); }).call(status);
         });
 
-        function triggerSnapshot() {
+        function triggerAppshot() {
             recorder.testEvents.push({
-                type: 'snapshot',
-                name: 'snapshotKeypress',
+                type: 'appshot',
+                name: 'appshotKeypress',
                 time: Date.now()
             });
             // Send updated values to server
@@ -184,13 +184,13 @@ window.recorder = (function() {
             if (e.which !== 83)
                 return;
 
-            triggerSnapshot();
+            triggerAppshot();
         });
 
         $(document).on("shiny:inputchanged", function(event) {
-            if (event.name === "snapshot") {
+            if (event.name === "appshot") {
                 recorder.testEvents.push({
-                    type: "snapshot",
+                    type: "appshot",
                     value: event.value,
                     time: Date.now()
                 });
