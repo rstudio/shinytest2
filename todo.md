@@ -98,12 +98,11 @@ get_all_values(input, output, export) -> get_values(input, output, export)
 Implement get_names() -> this should give all `input`, `output`, and `export` names via `get_values()`
 
 Requirements for release:
-  * Fix recorder
+  * √ Fix recorder
     * √ unknown fn
-    * path - remove
-    * test file name: test-NAME.R
-    * spacing after library call
-    *
+    * √ path - remove
+    * √ test file name: test-NAME.R
+    * √ spacing after library call
   * shinytest -> shinytest2 conversion file
     * cover the good bits, throw on more custom bits
   * readme

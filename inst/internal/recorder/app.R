@@ -442,7 +442,7 @@ shinyApp(
     }
 
     save_file <- reactive({
-      file.path(app_dir(), "tests", "testthat", paste0(input$testname, ".R"))
+      file.path(app_dir(), "tests", "testthat", paste0("test-", input$testname, ".R"))
     })
 
     # Number of snapshot or fileDownload events in input$testevents
