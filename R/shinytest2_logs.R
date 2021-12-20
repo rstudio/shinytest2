@@ -1,4 +1,10 @@
 #' @export
+print.shinytest2_log <- function(x, ...) {
+  cat(format(x), ...)
+  invisible(x)
+}
+
+#' @export
 #' @importFrom crayon blue magenta cyan green red silver make_style
 format.shinytest2_log <- function(x, ...) {
 
@@ -10,7 +16,7 @@ format.shinytest2_log <- function(x, ...) {
     )
   }
 
-  types <- c(
+  location_name <- c(
     chromote = "{chromote}",
     shinytest2 = "{shinytest2}",
     shiny = "{shiny}"
@@ -21,34 +27,31 @@ format.shinytest2_log <- function(x, ...) {
     shiny = "R"
   )
 
-  x[[".type"]] <- types[x$location]
-  x[[".language"]] <- language[x$location]
-  x[[".msg"]] <- Map(x$message, Map(x$location, x$level, f = get_color), f = function(msg, color) {
-    color(msg)
-  })
+  x_name <- location_name[x$location]
+  x_language <- language[x$location]
+  x_identifier <- paste0(format(x_name), " ", format(x_language), " ", format(x$level))
+  x_timestamp <- ifelse(is.na(x$timestamp), "-----------", format(timestamp, "%H:%M:%OS2"))
 
-  x[[".timestamp"]] <- vapply(x$timestamp, function(timestamp) {
-    if (is.na(timestamp)) "-----------"
-    else format(timestamp, "%H:%M:%OS2")
-  }, character(1))
+  x_msg <-
+    Map(
+      x$message,
+      # get color functions
+      Map(x$location, x$level, f = get_color),
+      f = function(msg, color) {
+        color(msg)
+      }
+    )
 
-  x[[".identifier"]] <- paste0(format(x[[".type"]]), " ", format(x[[".language"]]), " ", format(x$level))
-
-  first_msg <- paste0(
-    x[[".identifier"]], " ", x[[".timestamp"]], " "
+  first_part <- paste0(
+    x_identifier, " ", x_timestamp, " "
   )
-  first_msg_char_len <- nchar(first_msg[1])
-  first_spaces <- paste0("\n", paste0(rep(" ", first_msg_char_len), collapse = ""))
-  msg <- gsub("\n", first_spaces, x[[".msg"]], fixed = TRUE)
+  first_part_char_len <- nchar(first_part[1])
+  first_spaces <- paste0("\n", paste0(rep(" ", first_part_char_len), collapse = ""))
+  # Replace all new lines with heavily indented new lines to align msg output
+  x_msg2 <- gsub("\n", first_spaces, x_msg, fixed = TRUE)
 
   paste0(
-    first_msg, msg,
+    first_part, x_msg2,
     collapse = "\n"
   )
-}
-
-#' @export
-print.shinytest2_log <- function(x, ...) {
-  cat(format(x), ...)
-  invisible(x)
 }
