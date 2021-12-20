@@ -9,8 +9,7 @@ ui <- fluidPage(
   tags$div(
     id = "custom_div",
     style = "width: 100px;height: 100px;"
-  ),
-  tags$script("console.log('Hello Carson')")
+  )
 )
 server <- function(input, output, session) {
   output$greeting <- renderText({
@@ -18,8 +17,5 @@ server <- function(input, output, session) {
     paste0("Hello ", shiny::isolate(input$name), "!")
   })
 }
-
-cat("Carson!\n")
-message("Displayed as error!\n")
 
 shinyApp(ui, server)

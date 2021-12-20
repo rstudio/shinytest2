@@ -27,7 +27,13 @@ obj_to_string <- function(obj) {
   switch(obj$type,
     "string" = obj$value,
     # TODO-future; There are other sub types that might be useful, but punting for now
-    "object" = "[object Object]",
+    "object" = {
+      if (obj$subtype == "error") {
+        obj$description
+      } else {
+        "[object Object]"
+      }
+    },
     {
       message("Unknown `obj_to_string()` type: ", obj$type)
       utils::str(obj)

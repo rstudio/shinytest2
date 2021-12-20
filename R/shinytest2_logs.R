@@ -5,7 +5,7 @@ format.shinytest2_log <- function(x, ...) {
   get_color <- function(location, level) {
     switch(location,
       shiny = switch(level, error = magenta, force),
-      chromote = switch(level, throw = , exception = , error = red, cyan),
+      chromote = switch(level, throw = , error = red, cyan),
       shinytest2 = switch(level, green)
     )
   }

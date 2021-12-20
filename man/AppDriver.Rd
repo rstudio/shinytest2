@@ -93,7 +93,7 @@ version, or version of key dependency.}
 
 \item{\code{name}}{Prefix name to use when saving testthat snapshot files}
 
-\item{\code{debug}}{All standard debug messages are recorded by default and can be viewed using \verb{$get_debug_logs()}.
+\item{\code{debug}}{All standard debug messages are recorded by default and can be viewed using \verb{$get_debug_log()}.
 See \code{\link[=debug_types]{debug_types()}} for more information about the standard debug messages.
 If \code{TRUE}, all Shiny WebSocket messages will also be recorded. While useful, this can be considered a memory leak.
 If \code{TRUE}, all browser console messages will be displayed in real time.}
@@ -663,17 +663,9 @@ Chromote Session object from the \pkg{chromote} package.
 \subsection{Method \code{get_debug_log()}}{
 Query one or more of the debug logs.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_debug_log(type = c("all", debug_types()))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_debug_log()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{type}}{Log type: \code{"all"}, \code{"shiny_console"}, \code{"browser"},
-or \code{"shinytest2"}.}
-}
-\if{html}{\out{</div>}}
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-log_message"></a>}}

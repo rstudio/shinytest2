@@ -401,10 +401,3 @@ window.shinytest2 = (function() {
 
     return shinytest2;
 })();
-
-setTimeout(function() {
-  console.error("some bad log")
-}, 100)
-setTimeout(function() {
-  throw "some bad error"
-}, 200)
