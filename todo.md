@@ -103,6 +103,12 @@ Requirements for release:
     * √ path - remove
     * √ test file name: test-NAME.R
     * √ spacing after library call
+  * Expectations:
+    * Have all expect methods return the `x` value used in the `expect_equal(x, y)`
+    * Add `expect_values(input = missing_arg(), output = missing_arg(), export = missing_arg(), ..., cran = TRUE)`, and maybe `expect_input()`, `expect_output()`, `expect_export()`
+    * Add `expect_screenshot()`
+      * make `variant` a `missing_arg()` and have it throw on `expect_screenshot()` if not supplied.
+    * Remove `expect_appshot()`
   * shinytest -> shinytest2 conversion file
     * cover the good bits, throw on more custom bits
   * readme
@@ -118,9 +124,9 @@ Future release:
 * Which do I need and why do I need them?
 * Explain testing robustness
   * Robust to flakey; Sensitivity to external updates
-    * `$expect_names(key)` - TODO- add this method; save outputs to snapshots if no key is provided
-      * `$expect_appshot(items = value, screenshot = FALSE)`
-    * `$expect_value(value)` - TODO- add this method; save outputs to snapshots
+    <!-- * `$expect_names(key)` - TODO- add this method; save outputs to snapshots if no key is provided
+      * `$expect_appshot(items = value, screenshot = FALSE)` -->
+    * `$expect_values(input, output, export)` - TODO- add this method; save outputs to snapshots
       * `$expect_appshot(items = value, screenshot = FALSE)`
     * `$expect_text()`
       * Text wont really change
@@ -142,3 +148,73 @@ Future release:
   * Drop `$get_names()`, `$get_values()`
   * Rename `$wait_for_condition(expr=)` to `$wait_for_script(script=)`
   * Remove `$wait_for_value()` in favor of `$wait_for_stable()`
+
+
+
+
+execute_script_callback should not exist
+  they can write a promise and await promise
+
+add getter methods for all expectations
+add $get_variant()
+
+## TODO; addd
+app$expect_screenshot(selector) # assert screenshot equals
+app$take_screenshot(selector) # screenshot helper file
+app$get_screenshot(selector, file) # save to file
+
+app$expect_screenshot() # document that this is just equal to the next line
+expect_snapshot_file(app$get_screenshot(), variant = app$get_variant(), compare = testthat::compare_file_binary)
+
+app$expect_values()
+expect_snapshot_value(app$get_values(), variant = app$get_variant(), compare = testthat::compare_file_text)
+
+
+
+
+app <- AppDriver$new(appDir)
+
+app$click(id = "foo")
+app$set_inputs(foo = "click")
+
+app$click(id = "foo")
+app$click(id = "foo2")
+app$set_inputs(foo = "click", Z = "click")
+
+
+app$uploadFile(myFileInput = "filePath")
+app$click("Z")
+
+app$set_inputs(Z = "click")
+
+app$set_inputs(myFileInput = "filePath", Z = "click")
+
+
+
+
+
+app$expect_snapshot() # `shinytest`
+
+app$expect_appshot()
+  app$take_screenshot(selector) # screenshot helper file
+  app$expect_values()
+
+app$expect_values()
+# json values
+
+app$expect_screenshot(selector)
+app$take_screenshot(selector)
+# screenshot value
+
+## TODO; addd
+app$expect_screenshot(selector) # assert screenshot equals
+app$take_screenshot(selector) # screenshot helper file
+app$get_screenshot(selector, file) # save to file
+
+
+
+
+
+app$expect_appshot(id = "winston")
+  app$expect_values(auto = "winston")
+  app$expect_screenshot(selector = find_container("winston"))
