@@ -5,6 +5,13 @@ test_that("App captures known debug messages", {
   app <- AppDriver$new(test_path("../../."))
 
   log_df <- app$get_debug_log()
+
+  expect_s3_class(log_df, "shinytest2_log")
+  checkmate::assert_names(
+    names(log_df),
+    identical.to = c("workerid", "timestamp", "location", "level", "message")
+  )
+
   log <- strsplit(format(log_df), "\n")[[1]]
   # > print(log)
   #  [1] "{shinytest2} R  info  15:08:43.50 Start AppDriver initialization"
