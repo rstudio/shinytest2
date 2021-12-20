@@ -210,8 +210,7 @@ filter_log_text <- function(str) {
 
 
 app_get_debug_log <- function(
-  self, private,
-  group = TRUE
+  self, private
 ) {
   ckm8_assert_app_driver(self, private)
 
@@ -223,14 +222,6 @@ app_get_debug_log <- function(
   ))
 
   log <- log[order(log$timestamp), ]
-  class(log) <- c(
-    "shinytest2_log",
-    if (isTRUE(group)) {
-      "shinytest2_log_grouped"
-    } else {
-      "shinytest2_log_ungrouped"
-    },
-    class(log)
-  )
+  class(log) <- c("shinytest2_log", class(log))
   log
 }
