@@ -28,10 +28,14 @@ AppDriver <- R6Class(# nolint
     appshot_count = "<Count>",
     shiny_url = "<Url>",
 
-    debug_types = NULL,
-    browser_logs = list(),
+    debug = FALSE, # Logical which determines if extra debugging is done
+    debug_log = list(), # List of all debug messages
+    # find_shiny_output
 
+    debug_types = NULL,
+    browser_log = list(),
     event_log = list(),
+    # find_shiny_output
 
     clean_logs = TRUE, # Whether to clean logs when GC'd
 
@@ -66,8 +70,10 @@ AppDriver <- R6Class(# nolint
     #' @template variant
     #' @param name Prefix name to use when saving testthat snapshot files
     #' @param check_names Check if widget names are unique?
-    #' @param debug Start the app in debugging mode? In debugging mode debug
-    #'   messages are printed to the console. See [debug_types()] for more information.
+    #' @param debug All standard debug messages are recorded by default and can be viewed using `$get_debug_log()`.
+    #'   See [debug_types()] for more information about the standard debug messages.
+    #'   If `TRUE`, all Shiny WebSocket messages will also be recorded. While useful, this can be considered a memory leak.
+    #'   If `TRUE`, all browser console messages will be displayed in real time.
     #' @param view Opens the Chromote Session  in an interactive browser tab once initialization.
     #' @param seed An optional random seed to use before starting the application.
     #'   For apps that use R's random number generator, this can make their
@@ -84,13 +90,12 @@ AppDriver <- R6Class(# nolint
       path = testthat::test_path("../../"),
       ...,
       load_timeout = NULL,
+      variant = getOption("shinytest2.variant", platform_variant()),
       screenshot_args = NULL,
       check_names = TRUE,
       name = NULL,
-      variant = getOption("shinytest2.variant", platform_variant()),
-      debug = c("none", "all", debug_types()),
+      debug = FALSE,
       view = FALSE,
-      # phantomTimeout = 5000,
       seed = NULL,
       clean_logs = TRUE,
       shiny_args = list(),
@@ -407,33 +412,16 @@ AppDriver <- R6Class(# nolint
 
     #' @description
     #' Query one or more of the debug logs.
-    #' @param type Log type: `"all"`, `"shiny_console"`, `"browser"`,
-    #'   or `"shinytest2"`.
-    get_debug_log = function(type = c("all", debug_types())) {
-      app_get_debug_log(self, private, type)
+    # TODO-barret; show example of filtering output on type
+    get_debug_log = function() {
+      app_get_debug_log(self, private)
     },
 
     #' @description
-    #' Enable/disable debugging messages
-    #' @param enable If `TRUE`, all Shiny WebSocket messages are recorded.
-    #' This can be useful for debugging, but can be considered a memory leak in the browser.
-    enable_debug_log_messages = function(enable = TRUE) {
-      app_enable_debug_log_messages(self, private, enable)
-    },
-
-    #' @description
-    #' Retrieve event log.
-    # TODO-barret-implement; Test this with a snapshot
-    get_event_log = function() {
-      app_get_event_log(self, private)
-    },
-
-    #' @description
-    #' Add an event to log.
+    #' Add an message to log.
     #' @param event Event name
-    #' @param ... Addition data to store for event
-    log_event = function(event, ...) {
-      app_log_event(self, private, event, ...)
+    log_message = function(message) {
+      app_log_message(self, private, message)
     },
 
 

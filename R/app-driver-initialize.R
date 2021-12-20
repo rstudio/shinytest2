@@ -7,7 +7,7 @@ app_initialize <- function(
   check_names = TRUE,
   name = NULL,
   variant = getOption("shinytest2.variant", platform_variant()),
-  debug = c("none", "all", debug_types()),
+  debug = FALSE,
   view = FALSE,
   seed = NULL,
   clean_logs = TRUE,
@@ -24,7 +24,7 @@ app_initialize <- function(
   private$appshot_dir <- temp_file()
   private$appshot_count <- Count$new()
   private$shiny_url <- Url$new()
-  private$debug_types <- as_debug(debug)
+  private$debug <- isTRUE(as.logical(debug))
   private$name <-
     if (!is.null(name)) {
       name
@@ -45,14 +45,14 @@ app_initialize <- function(
     load_timeout <- if (on_ci()) 10000 else 5000
   }
 
-  self$log_event("Start AppDriver initialization")
+  self$log_message("Start AppDriver initialization")
 
   # if (is.null(find_phantom())) {
   #   abort("PhantomJS not found.")
   # }
 
   # "!DEBUG get phantom port (starts phantom if not running)"
-  # self$log_event("Getting PhantomJS port")
+  # self$log_message("Getting PhantomJS port")
   # private$phantomPort <- get_phantomPort(timeout = phantomTimeout)
 
   if (shiny::is.shiny.appobj(path)) {
@@ -63,7 +63,7 @@ app_initialize <- function(
     private$shiny_url$set(path)
   } else {
     "!DEBUG starting shiny app from path"
-    self$log_event("Starting Shiny app")
+    self$log_message("Starting Shiny app")
     app_start_shiny(self, private, path, seed, load_timeout, shiny_args, render_args, options)
   }
 
@@ -73,7 +73,7 @@ app_initialize <- function(
 
 
   "!DEBUG create new phantomjs session"
-  self$log_event("Creating new chromote session")
+  self$log_message("Creating new chromote session")
   # private$web <- Session$new(port = private$phantomPort)
   private$chromote_session <- chromote::ChromoteSession$new()
 
@@ -89,13 +89,13 @@ app_initialize <- function(
 
 
   "!DEBUG navigate to Shiny app"
-  self$log_event("Navigating to Shiny app")
+  self$log_message("Navigating to Shiny app")
   # private$web$go(private$shiny_url$get())
   self$get_chromote_session()$Page$navigate(private$shiny_url$get())
 
   # This feels like it is too late. There is no guarantee that the script will load in time.
   "!DEBUG inject shiny-tracer.js to load before all other scripts"
-  self$log_event("Injecting shiny-tracer.js")
+  self$log_message("Injecting shiny-tracer.js")
   # private$web$executeScript(js_content)
   # js_id <- self$get_chromote_session()$Page$addScriptToEvaluateOnNewDocument(js_file)
   # js_id <- self$get_chromote_session()$Page$addScriptToEvaluateOnNewDocument("https://cdnjs.cloudflare.com/ajax/libs/react-is/18.0.0-alpha-fd5e01c2e-20210913/umd/react-is.production.min.js")
@@ -124,7 +124,7 @@ app_initialize <- function(
 
 
   "!DEBUG wait until Shiny starts"
-  self$log_event("Waiting until Shiny app starts")
+  self$log_message("Waiting until Shiny app starts")
   # load_ok <- private$web$waitFor(
   #   'window.shinytest2 && window.shinytest2.ready === true',
   #   timeout = load_timeout
@@ -151,7 +151,7 @@ app_initialize <- function(
   }
 
   "!DEBUG shiny started"
-  self$log_event("Shiny app started")
+  self$log_message("Shiny app started")
   private$state <- "running"
 
   # private$setup_debugging(debug)

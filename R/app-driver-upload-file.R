@@ -28,7 +28,7 @@ app_upload_file <- function(
     arguments = list(timeout_)
   )
 
-  self$log_event("Uploading file", input = inputs[[1]])
+  self$log_message("Uploading file", input = inputs[[1]])
 
   node_id <- app_find_node_id(self, private, id = names(inputs)[1], iotype = "input")
   filename <- inputs[[1]]
@@ -48,7 +48,7 @@ app_upload_file <- function(
   # transition is 0.6s, so this will ensure that it's done.
   Sys.sleep(0.6)
 
-  self$log_event("Finished uploading file")
+  self$log_message("Finished uploading file")
 
   if (values_)
     invisible(self$get_values())

@@ -6,12 +6,12 @@ app_stop <- function(self, private) {
   if (private$state == "stopped")
     return(invisible(self))
 
-  self$log_event("Closing chromote session")
+  self$log_message("Closing chromote session")
   self$get_chromote_session()$close()
 
   # If the app is being hosted locally, kill the process.
   if (!is.null(private$shiny_process)) {
-    self$log_event("Ending Shiny process")
+    self$log_message("Ending Shiny process")
 
     # Attempt soft-kill before hard-kill. This is a workaround for
     # https://github.com/r-lib/processx/issues/95

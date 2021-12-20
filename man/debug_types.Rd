@@ -4,7 +4,7 @@
 \alias{debug_types}
 \title{Debug log types}
 \usage{
-debug_types()
+debug_types(shiny_console = TRUE, browser = TRUE, shinytest2 = TRUE)
 }
 \description{
 All supported debug log types that are not \code{"all"} or \code{"none"}.
@@ -14,7 +14,8 @@ There are a few standard debug types that may be used:
 \itemize{
 \item \code{"shiny_console"}: Displays the console messages from the Shiny server when \verb{$get_debug_log()} is called.
 \item \code{"browser"}: Displays the browser console messages when \verb{$get_debug_log()} is called.
-\item \code{"shinytest2"}: Displays the messages saved by the \code{window.shinytest2} object in the broswer when \verb{$get_debug_log()} is called.
+\item \code{"shinytest2"}: Displays the messages saved by the \code{window.shinytest2} object in the browser when \verb{$get_debug_log()} is called.
+\item \code{"ws_messages"}: Saves all messages sent by Shiny to the
 }
 }
 \keyword{internal}

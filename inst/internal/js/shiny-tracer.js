@@ -10,10 +10,8 @@ window.shinytest2 = (function() {
     };
 
     shinytest2.log = function(message) {
-        shinytest2.log_entries.push({
-            timestamp: new Date().toISOString(),
-            message: message
-        });
+        // Captured by chromote
+        console.info("shinytest2:", message);
     };
     shinytest2.log("window.shinytest2 loaded");
 
@@ -106,7 +104,7 @@ window.shinytest2 = (function() {
                 if (typeof(value) === "string" &&
                     /\d\d\d\d-\d\d-\d\d/.test(value))
                 {
-                    shinytest2.log(new Date(value).getTime() );
+                    shinytest2.log(new Date(value).getTime());
                     return new Date(value).getTime();
                 } else {
                     return value;
@@ -403,3 +401,10 @@ window.shinytest2 = (function() {
 
     return shinytest2;
 })();
+
+setTimeout(function() {
+  console.error("some bad log")
+}, 100)
+setTimeout(function() {
+  throw "some bad error"
+}, 200)

@@ -35,9 +35,7 @@ with a live app.
 \item \href{#method-set_window_size}{\code{AppDriver$set_window_size()}}
 \item \href{#method-get_chromote_session}{\code{AppDriver$get_chromote_session()}}
 \item \href{#method-get_debug_log}{\code{AppDriver$get_debug_log()}}
-\item \href{#method-enable_debug_log_messages}{\code{AppDriver$enable_debug_log_messages()}}
-\item \href{#method-get_event_log}{\code{AppDriver$get_event_log()}}
-\item \href{#method-log_event}{\code{AppDriver$log_event()}}
+\item \href{#method-log_message}{\code{AppDriver$log_message()}}
 \item \href{#method-stop}{\code{AppDriver$stop()}}
 \item \href{#method-clone}{\code{AppDriver$clone()}}
 }
@@ -52,11 +50,11 @@ Initialize the AppDriver
   path = testthat::test_path("../../"),
   ...,
   load_timeout = NULL,
+  variant = getOption("shinytest2.variant", platform_variant()),
   screenshot_args = NULL,
   check_names = TRUE,
   name = NULL,
-  variant = getOption("shinytest2.variant", platform_variant()),
-  debug = c("none", "all", debug_types()),
+  debug = FALSE,
   view = FALSE,
   seed = NULL,
   clean_logs = TRUE,
@@ -78,13 +76,6 @@ single \code{app.R} file or a \code{server.R}-\code{ui.R} pair.}
 This includes the time to start R. Defaults to 5s when running
 locally and 10s when running on CI. Maximum value is 10s.}
 
-\item{\code{screenshot_args}}{Default set of arguments to pass in to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
-\verb{$screenshot()} method when taking screnshots within \verb{$expect_appshot()}. To disable screenshots by default, set to \code{FALSE}.}
-
-\item{\code{check_names}}{Check if widget names are unique?}
-
-\item{\code{name}}{Prefix name to use when saving testthat snapshot files}
-
 \item{\code{variant}}{If not-\code{NULL}, results will be saved in
 _snaps/{variant}/{test.md}\verb{, so }variant` must be a single
 string of alphanumeric characters suitable for use as a
@@ -95,8 +86,17 @@ varies and you want to capture and test the variations.
 Common use cases include variations for operating system, R
 version, or version of key dependency.}
 
-\item{\code{debug}}{Start the app in debugging mode? In debugging mode debug
-messages are printed to the console. See \code{\link[=debug_types]{debug_types()}} for more information.}
+\item{\code{screenshot_args}}{Default set of arguments to pass in to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
+\verb{$screenshot()} method when taking screnshots within \verb{$expect_appshot()}. To disable screenshots by default, set to \code{FALSE}.}
+
+\item{\code{check_names}}{Check if widget names are unique?}
+
+\item{\code{name}}{Prefix name to use when saving testthat snapshot files}
+
+\item{\code{debug}}{All standard debug messages are recorded by default and can be viewed using \verb{$get_debug_logs()}.
+See \code{\link[=debug_types]{debug_types()}} for more information about the standard debug messages.
+If \code{TRUE}, all Shiny WebSocket messages will also be recorded. While useful, this can be considered a memory leak.
+If \code{TRUE}, all browser console messages will be displayed in real time.}
 
 \item{\code{view}}{Opens the Chromote Session  in an interactive browser tab once initialization.}
 
@@ -676,48 +676,18 @@ or \code{"shinytest2"}.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-enable_debug_log_messages"></a>}}
-\if{latex}{\out{\hypertarget{method-enable_debug_log_messages}{}}}
-\subsection{Method \code{enable_debug_log_messages()}}{
-Enable/disable debugging messages
+\if{html}{\out{<a id="method-log_message"></a>}}
+\if{latex}{\out{\hypertarget{method-log_message}{}}}
+\subsection{Method \code{log_message()}}{
+Add an message to log.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$enable_debug_log_messages(enable = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{enable}}{If \code{TRUE}, all Shiny WebSocket messages are recorded.
-This can be useful for debugging, but can be considered a memory leak in the browser.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_event_log"></a>}}
-\if{latex}{\out{\hypertarget{method-get_event_log}{}}}
-\subsection{Method \code{get_event_log()}}{
-Retrieve event log.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_event_log()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-log_event"></a>}}
-\if{latex}{\out{\hypertarget{method-log_event}{}}}
-\subsection{Method \code{log_event()}}{
-Add an event to log.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$log_event(event, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$log_message(message)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{event}}{Event name}
-
-\item{\code{...}}{Addition data to store for event}
 }
 \if{html}{\out{</div>}}
 }
