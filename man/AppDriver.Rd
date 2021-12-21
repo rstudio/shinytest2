@@ -9,6 +9,108 @@ headless browser that can be used to simulate user actions. This provides
 a full simulation of a Shiny app so that you can test user interactions
 with a live app.
 }
+\examples{
+
+## ------------------------------------------------
+## Method `AppDriver$get_log`
+## ------------------------------------------------
+
+\dontrun{
+app <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
+app$get_log()
+# \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
+# \{shinytest2\} R  info  11:15:20.11 Starting Shiny app
+# \{shinytest2\} R  info  11:15:20.99 Creating new chromote session
+# \{shinytest2\} R  info  11:15:21.14 Navigating to Shiny app
+# \{shinytest2\} R  info  11:15:21.27 Injecting shiny-tracer.js
+# \{chromote\}   JS info  11:15:21.28 shinytest2; jQuery not found
+# \{chromote\}   JS info  11:15:21.28 shinytest2; Loaded
+# \{shinytest2\} R  info  11:15:21.28 Waiting until Shiny app starts
+# \{chromote\}   JS info  11:15:21.35 shinytest2; jQuery found
+# \{chromote\}   JS info  11:15:21.35 shinytest2; Waiting for shiny session to connect
+# \{chromote\}   JS info  11:15:21.57 shinytest2; Connected
+# \{chromote\}   JS info  11:15:21.57 shinytest2; Ready
+# \{chromote\}   JS info  11:15:21.65 shinytest2; shiny:busy
+# \{shinytest2\} R  info  11:15:21.65 Shiny app started
+# \{chromote\}   JS info  11:15:21.88 shinytest2; shiny:idle
+# \{chromote\}   JS info  11:15:21.88 shinytest2; shiny:value distPlot
+# \{shiny\}      R  error ----------- Loading required package: shiny
+# \{shiny\}      R  error ----------- Running application in test mode.
+# \{shiny\}      R  error -----------
+# \{shiny\}      R  error ----------- Listening on http://127.0.0.1:42558
+
+
+# To capture all websocket traffic, set `options = list(shiny.trace = TRUE)`
+app <- AppDriver$new(
+  system.file("examples/01_hello", package = "shiny"),
+  options = list(shiny.trace = TRUE)
+)
+app$get_log() # (long output lines have been truncated)
+# \{shinytest2\} R  info      11:09:57.43 Start AppDriver initialization
+# \{shinytest2\} R  info      11:09:57.43 Starting Shiny app
+# \{shinytest2\} R  info      11:09:58.27 Creating new chromote session
+# \{shinytest2\} R  info      11:09:58.40 Navigating to Shiny app
+# \{shinytest2\} R  info      11:09:58.53 Injecting shiny-tracer.js
+# \{chromote\}   JS info      11:09:58.53 shinytest2; jQuery not found
+# \{chromote\}   JS info      11:09:58.53 shinytest2; Loaded
+# \{shinytest2\} R  info      11:09:58.54 Waiting until Shiny app starts
+# \{chromote\}   JS info      11:09:58.61 shinytest2; jQuery found
+# \{chromote\}   JS info      11:09:58.61 shinytest2; Waiting for shiny session to connect
+# \{chromote\}   JS websocket 11:09:58.73 send \{"method":"init","data":\{"bins":30,|truncated
+# \{chromote\}   JS websocket 11:09:58.78 recv \{"config":\{"workerId":"","sessionId":|truncated
+# \{chromote\}   JS info      11:09:58.78 shinytest2; Connected
+# \{chromote\}   JS info      11:09:58.78 shinytest2; Ready
+# \{chromote\}   JS websocket 11:09:58.85 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
+# \{chromote\}   JS websocket 11:09:58.85 recv \{"busy":"busy"\}
+# \{chromote\}   JS info      11:09:58.85 shinytest2; shiny:busy
+# \{chromote\}   JS websocket 11:09:58.86 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
+# \{chromote\}   JS websocket 11:09:58.86 recv \{"recalculating":\{"name":"distPlot",|truncated
+# \{shinytest2\} R  info      11:09:58.87 Shiny app started
+# \{shinytest2\} R  info      11:09:59.07 Setting inputs: 'bins'
+# \{chromote\}   JS websocket 11:09:59.08 recv \{"recalculating":\{"name":"distPlot",|truncated
+# \{chromote\}   JS websocket 11:09:59.08 recv \{"busy":"idle"\}
+# \{chromote\}   JS info      11:09:59.08 shinytest2; shiny:idle
+# \{chromote\}   JS websocket 11:09:59.08 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{chromote\}   JS info      11:09:59.08 shinytest2; shiny:value distPlot
+# \{chromote\}   JS info      11:09:59.08 shinytest2; inputQueue: adding bins
+# \{chromote\}   JS info      11:09:59.09 shinytest2; inputQueue: flushing bins
+# \{chromote\}   JS websocket 11:09:59.10 send \{"method":"update","data":\{"bins":20\}\}
+# \{chromote\}   JS websocket 11:09:59.11 recv \{"progress":\{"type":"binding",|truncated
+# \{chromote\}   JS websocket 11:09:59.11 recv \{"busy":"busy"\}
+# \{chromote\}   JS info      11:09:59.11 shinytest2; shiny:busy
+# \{chromote\}   JS websocket 11:09:59.12 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
+# \{chromote\}   JS websocket 11:09:59.14 recv \{"recalculating":\{"name":"distPlot",|truncated
+# \{chromote\}   JS websocket 11:09:59.18 recv \{"recalculating":\{"name":"distPlot",|truncated
+# \{chromote\}   JS websocket 11:09:59.19 recv \{"busy":"idle"\}
+# \{chromote\}   JS info      11:09:59.19 shinytest2; shiny:idle
+# \{chromote\}   JS websocket 11:09:59.21 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{chromote\}   JS info      11:09:59.21 shinytest2; shiny:value distPlot
+# \{shinytest2\} R  info      11:09:59.21 Finished setting inputs. Timedout: FALSE
+# \{shinytest2\} R  info      11:09:59.21 Getting all values
+# \{shiny\}      R  error     ----------- Loading required package: shiny
+# \{shiny\}      R  error     ----------- Running application in test mode.
+# \{shiny\}      R  error     -----------
+# \{shiny\}      R  error     ----------- Listening on http://127.0.0.1:1505
+# \{shiny\}      R  error     ----------- SEND \{"config":\{"workerId":"","sessionId":|truncated
+# \{shiny\}      R  error     ----------- RECV \{"method":"init","data":\{"bins":30,|truncated
+# \{shiny\}      R  error     ----------- SEND \{"custom":\{"showcase-src":\{"srcref"|truncated
+# \{shiny\}      R  error     ----------- SEND \{"busy":"busy"\}
+# \{shiny\}      R  error     ----------- SEND \{"custom":\{"showcase-src":\{"srcref"|truncated
+# \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
+# \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
+# \{shiny\}      R  error     ----------- SEND \{"busy":"idle"\}
+# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{shiny\}      R  error     ----------- RECV \{"method":"update","data":\{"bins":20\}\}
+# \{shiny\}      R  error     ----------- SEND \{"progress":\{"type":"binding",|truncated
+# \{shiny\}      R  error     ----------- SEND \{"busy":"busy"\}
+# \{shiny\}      R  error     ----------- SEND \{"custom":\{"showcase-src":\{"srcref":|truncated
+# \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
+# \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
+# \{shiny\}      R  error     ----------- SEND \{"busy":"idle"\}
+# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
+
+}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -106,7 +208,9 @@ Shiny process object is garbage collected.}
 \item{\code{render_args}}{Passed to \code{rmarkdown::run()} for interactive \code{.Rmd}s.}
 
 \item{\code{options}}{A list of \code{\link[base:options]{base::options()}} to set in the driver's child
-process.}
+process. See \code{\link[shiny:shinyOptions]{shiny::shinyOptions()}} for inspiration. If \code{shiny.trace}
+is set to \code{TRUE}, then all WebSocket traffic will be captured by \code{chromote}
+as to have access to the when the message was received by the browser.}
 }
 \if{html}{\out{</div>}}
 }
@@ -656,8 +760,136 @@ Chromote Session object from the \pkg{chromote} package.
 \if{latex}{\out{\hypertarget{method-get_log}{}}}
 \subsection{Method \code{get_log()}}{
 Query one or more of the debug logs.
+There are a few standard debug types that may be used:
+\itemize{
+\item \code{"shiny_console"}: Displays the console messages from the Shiny server when \verb{$get_log()} is called.
+\item \code{"browser"}: Displays the browser console messages when \verb{$get_log()} is called.
+\item \code{"shinytest2"}: Displays the messages saved by the \code{window.shinytest2} object in the browser when \verb{$get_log()} is called.
+\item \code{"ws_messages"}: Saves all messages sent by Shiny to the
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_log()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A data.frame with the following columns:
+\itemize{
+\item \code{workerid}: The shiny worker ID found within the browser
+\item \code{timestamp}: POSIXct timestamp of the message
+\item \code{location}: The location of the message was found. One of three values:
+\itemize{
+\item \code{shinytest2}: Occurs when \verb{$log_message()} is called
+\item \code{shiny}: Stdin and stdout messages from the Shiny server. Note \code{message()} output is sent to stdout.
+\item \code{chromote}: Captured by the \pkg{chromote} event handlers. See
+\href{https://chromedevtools.github.io/devtools-protocol/1-3/Runtime/#event-consoleAPICalled}{console API},
+\href{https://chromedevtools.github.io/devtools-protocol/1-3/Runtime/#event-exceptionThrown}{exception thrown},
+\href{https://chromedevtools.github.io/devtools-protocol/1-3/Network/#event-webSocketFrameSent}{websocket sent}, and
+\href{https://chromedevtools.github.io/devtools-protocol/1-3/Network/#event-webSocketFrameReceived}{websocket received}
+for more details
+}
+\item \code{level}:
+}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+app <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
+app$get_log()
+# \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
+# \{shinytest2\} R  info  11:15:20.11 Starting Shiny app
+# \{shinytest2\} R  info  11:15:20.99 Creating new chromote session
+# \{shinytest2\} R  info  11:15:21.14 Navigating to Shiny app
+# \{shinytest2\} R  info  11:15:21.27 Injecting shiny-tracer.js
+# \{chromote\}   JS info  11:15:21.28 shinytest2; jQuery not found
+# \{chromote\}   JS info  11:15:21.28 shinytest2; Loaded
+# \{shinytest2\} R  info  11:15:21.28 Waiting until Shiny app starts
+# \{chromote\}   JS info  11:15:21.35 shinytest2; jQuery found
+# \{chromote\}   JS info  11:15:21.35 shinytest2; Waiting for shiny session to connect
+# \{chromote\}   JS info  11:15:21.57 shinytest2; Connected
+# \{chromote\}   JS info  11:15:21.57 shinytest2; Ready
+# \{chromote\}   JS info  11:15:21.65 shinytest2; shiny:busy
+# \{shinytest2\} R  info  11:15:21.65 Shiny app started
+# \{chromote\}   JS info  11:15:21.88 shinytest2; shiny:idle
+# \{chromote\}   JS info  11:15:21.88 shinytest2; shiny:value distPlot
+# \{shiny\}      R  error ----------- Loading required package: shiny
+# \{shiny\}      R  error ----------- Running application in test mode.
+# \{shiny\}      R  error -----------
+# \{shiny\}      R  error ----------- Listening on http://127.0.0.1:42558
+
+
+# To capture all websocket traffic, set `options = list(shiny.trace = TRUE)`
+app <- AppDriver$new(
+  system.file("examples/01_hello", package = "shiny"),
+  options = list(shiny.trace = TRUE)
+)
+app$get_log() # (long output lines have been truncated)
+# \{shinytest2\} R  info      11:09:57.43 Start AppDriver initialization
+# \{shinytest2\} R  info      11:09:57.43 Starting Shiny app
+# \{shinytest2\} R  info      11:09:58.27 Creating new chromote session
+# \{shinytest2\} R  info      11:09:58.40 Navigating to Shiny app
+# \{shinytest2\} R  info      11:09:58.53 Injecting shiny-tracer.js
+# \{chromote\}   JS info      11:09:58.53 shinytest2; jQuery not found
+# \{chromote\}   JS info      11:09:58.53 shinytest2; Loaded
+# \{shinytest2\} R  info      11:09:58.54 Waiting until Shiny app starts
+# \{chromote\}   JS info      11:09:58.61 shinytest2; jQuery found
+# \{chromote\}   JS info      11:09:58.61 shinytest2; Waiting for shiny session to connect
+# \{chromote\}   JS websocket 11:09:58.73 send \{"method":"init","data":\{"bins":30,|truncated
+# \{chromote\}   JS websocket 11:09:58.78 recv \{"config":\{"workerId":"","sessionId":|truncated
+# \{chromote\}   JS info      11:09:58.78 shinytest2; Connected
+# \{chromote\}   JS info      11:09:58.78 shinytest2; Ready
+# \{chromote\}   JS websocket 11:09:58.85 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
+# \{chromote\}   JS websocket 11:09:58.85 recv \{"busy":"busy"\}
+# \{chromote\}   JS info      11:09:58.85 shinytest2; shiny:busy
+# \{chromote\}   JS websocket 11:09:58.86 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
+# \{chromote\}   JS websocket 11:09:58.86 recv \{"recalculating":\{"name":"distPlot",|truncated
+# \{shinytest2\} R  info      11:09:58.87 Shiny app started
+# \{shinytest2\} R  info      11:09:59.07 Setting inputs: 'bins'
+# \{chromote\}   JS websocket 11:09:59.08 recv \{"recalculating":\{"name":"distPlot",|truncated
+# \{chromote\}   JS websocket 11:09:59.08 recv \{"busy":"idle"\}
+# \{chromote\}   JS info      11:09:59.08 shinytest2; shiny:idle
+# \{chromote\}   JS websocket 11:09:59.08 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{chromote\}   JS info      11:09:59.08 shinytest2; shiny:value distPlot
+# \{chromote\}   JS info      11:09:59.08 shinytest2; inputQueue: adding bins
+# \{chromote\}   JS info      11:09:59.09 shinytest2; inputQueue: flushing bins
+# \{chromote\}   JS websocket 11:09:59.10 send \{"method":"update","data":\{"bins":20\}\}
+# \{chromote\}   JS websocket 11:09:59.11 recv \{"progress":\{"type":"binding",|truncated
+# \{chromote\}   JS websocket 11:09:59.11 recv \{"busy":"busy"\}
+# \{chromote\}   JS info      11:09:59.11 shinytest2; shiny:busy
+# \{chromote\}   JS websocket 11:09:59.12 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
+# \{chromote\}   JS websocket 11:09:59.14 recv \{"recalculating":\{"name":"distPlot",|truncated
+# \{chromote\}   JS websocket 11:09:59.18 recv \{"recalculating":\{"name":"distPlot",|truncated
+# \{chromote\}   JS websocket 11:09:59.19 recv \{"busy":"idle"\}
+# \{chromote\}   JS info      11:09:59.19 shinytest2; shiny:idle
+# \{chromote\}   JS websocket 11:09:59.21 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{chromote\}   JS info      11:09:59.21 shinytest2; shiny:value distPlot
+# \{shinytest2\} R  info      11:09:59.21 Finished setting inputs. Timedout: FALSE
+# \{shinytest2\} R  info      11:09:59.21 Getting all values
+# \{shiny\}      R  error     ----------- Loading required package: shiny
+# \{shiny\}      R  error     ----------- Running application in test mode.
+# \{shiny\}      R  error     -----------
+# \{shiny\}      R  error     ----------- Listening on http://127.0.0.1:1505
+# \{shiny\}      R  error     ----------- SEND \{"config":\{"workerId":"","sessionId":|truncated
+# \{shiny\}      R  error     ----------- RECV \{"method":"init","data":\{"bins":30,|truncated
+# \{shiny\}      R  error     ----------- SEND \{"custom":\{"showcase-src":\{"srcref"|truncated
+# \{shiny\}      R  error     ----------- SEND \{"busy":"busy"\}
+# \{shiny\}      R  error     ----------- SEND \{"custom":\{"showcase-src":\{"srcref"|truncated
+# \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
+# \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
+# \{shiny\}      R  error     ----------- SEND \{"busy":"idle"\}
+# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{shiny\}      R  error     ----------- RECV \{"method":"update","data":\{"bins":20\}\}
+# \{shiny\}      R  error     ----------- SEND \{"progress":\{"type":"binding",|truncated
+# \{shiny\}      R  error     ----------- SEND \{"busy":"busy"\}
+# \{shiny\}      R  error     ----------- SEND \{"custom":\{"showcase-src":\{"srcref":|truncated
+# \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
+# \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
+# \{shiny\}      R  error     ----------- SEND \{"busy":"idle"\}
+# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
+
+}
+}
+\if{html}{\out{</div>}}
+
 }
 
 }

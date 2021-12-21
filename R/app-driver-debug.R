@@ -1,26 +1,3 @@
-#' Debug log types
-#'
-#' All supported debug log types that are not `"all"` or `"none"`.
-#'
-#' There are a few standard debug types that may be used:
-#' * `"shiny_console"`: Displays the console messages from the Shiny server when `$get_log()` is called.
-#' * `"browser"`: Displays the browser console messages when `$get_log()` is called.
-#' * `"shinytest2"`: Displays the messages saved by the `window.shinytest2` object in the browser when `$get_log()` is called.
-#' * `"ws_messages"`: Saves all messages sent by Shiny to the
-#'
-#' @keywords internal
-#' @export
-debug_types <- function(shiny_console = TRUE, browser = TRUE, shinytest2 = TRUE) {
-  if (all(!shiny_console, !browser, !shinytest2)) {
-    abort("At least one debug type must be specified.")
-  }
-
-  c(
-    if (shiny_console) "shiny_console",
-    if (browser) "browser",
-    if (shinytest2) "shinytest2"
-  )
-}
 
 
 obj_to_string <- function(obj) {
@@ -45,6 +22,13 @@ frames_to_msg <- function(details, url) {
   call_frames <- details$stackTrace$callFrames
   if (length(call_frames) == 0) return("")
 
+  if (details$type == "info") {
+    first_fn_name <- call_frames[[1]]$functionName
+    if (first_fn_name == "window.shinytest2.shinytest2.log") {
+      return("")
+    }
+  }
+
   frames <- do.call(rbind, lapply(call_frames, as.data.frame))
   # Give anonymous functions a name
   frames$functionName[frames$functionName == ""] <- "(anonymous)" # nolint
@@ -66,14 +50,14 @@ exception_thrown_to_msg <- function(info, url) {
     frames_to_msg(exception_details, url)
   )
 }
-console_api_to_msg <- function(info, url, frames = TRUE) {
+console_api_to_msg <- function(info, url) {
   args <- vapply(info$args, obj_to_string, character(1))
 
   paste0(
     # "console.", info$type, "(\"", paste0(args, collapse = "\", \""), "\")",
     # "console.", info$type, " - ", paste0(args, collapse = " "),
     paste0(args, collapse = " "),
-    if (frames) frames_to_msg(info, url)
+    frames_to_msg(info, url)
   )
 }
 
@@ -84,18 +68,7 @@ app_init_browser_debug <- function(self, private, options) {
   self$get_chromote_session()$Runtime$consoleAPICalled(function(info) {
     # message("Runtime.consoleAPICalled")
 
-    is_shinytest2_log <- function(type, fn_name) {
-      info$type == type &&
-      length((call_frames <- info$stackTrace$callFrames)) > 0 &&
-      !is.null((first_fn_name <- call_frames[[1]]$functionName)) &&
-      first_fn_name == fn_name
-    }
-
-    should_hide_frames <-
-      is_shinytest2_log("info", "window.shinytest2.shinytest2.log") ||
-      is_shinytest2_log("trace", "window.shinytest2.shinytest2.log_shiny_message")
-
-    msg <- console_api_to_msg(info, private$shiny_url$get(), frames = !should_hide_frames)
+    msg <- console_api_to_msg(info, private$shiny_url$get())
 
     app_add_debug_log_entry(
       self,
@@ -128,6 +101,16 @@ app_init_browser_debug <- function(self, private, options) {
 
   # Only display websocket traffic if `options = list(shiny.trace = TRUE)` is supplied on init
   if (isTRUE(options$shiny.trace)) {
+      # Shorten all base64 encoded strings to `[base64 data]`
+      # https://github.com/rstudio/shiny/blob/b52b9e4520ad8d1e976299d5dec5e4ba3096bd04/R/shiny.R#L400
+    paste_and_shorten_base64 <- function(method, txt) {
+      txt <- gsub(
+        '(?m)base64,[a-zA-Z0-9+/=]+','[base64 data]',
+        txt,
+        perl = TRUE
+      )
+      paste0(method, " ", txt)
+    }
     self$get_chromote_session()$Network$webSocketFrameSent(function(info) {
       # >str(info)
       # List of 3
@@ -142,9 +125,7 @@ app_init_browser_debug <- function(self, private, options) {
         self, private,
         location = "chromote",
         level = "websocket",
-        message = paste0(
-          "send ", info$response$payloadData
-        )
+        message = paste_and_shorten_base64("send", info$response$payloadData)
       )
     })
     self$get_chromote_session()$Network$webSocketFrameReceived(function(info) {
@@ -161,9 +142,7 @@ app_init_browser_debug <- function(self, private, options) {
         self, private,
         location = "chromote",
         level = "websocket",
-        message = paste0(
-          "recv ", info$response$payloadData
-        )
+        message = paste_and_shorten_base64("recv", info$response$payloadData)
       )
     })
   }
@@ -172,19 +151,6 @@ app_init_browser_debug <- function(self, private, options) {
 
 
 
-
-# as_debug <- function(x) {
-#   x <- unique(x)
-#   checkmate::assert_subset(x, c(debug_types(), c("all", "none")), empty.ok = FALSE)
-
-#   if ("all" %in% x) {
-#     x <- debug_types()
-#   } else if ("none" %in% x) {
-#     x <- character(0)
-#   }
-
-#   x
-# }
 
 app_make_shiny_log <- function(self, private, out, err) {
   out <- readLines(private$shiny_process$get_output_file(), warn = FALSE)

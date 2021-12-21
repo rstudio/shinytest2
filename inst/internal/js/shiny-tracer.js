@@ -11,12 +11,12 @@ window.shinytest2 = (function() {
 
     shinytest2.log = function(message) {
         // Captured by chromote
-        console.info("shinytest2:", message);
+        console.info("shinytest2;", message);
     };
-    shinytest2.log_shiny_message = function(message) {
-        // Captured by chromote
-        console.trace("shiny message:", message);
-    };
+    // shinytest2.log_shiny_message = function(message) {
+    //     // Captured by chromote
+    //     console.trace("shiny message:", message);
+    // };
 
     shinytest2.inputQueue = (function() {
         var inputqueue = {};
@@ -58,7 +58,7 @@ window.shinytest2 = (function() {
                         Shiny.setInputValue(item.name, item.value, priority);
                     } else {
                         var msg = "Unable to find input binding for element with id " + item.name;
-                        shinytest2.log("  " + msg);
+                        shinytest2.log(msg);
                         throw msg;
                     }
                 }
@@ -233,7 +233,7 @@ window.shinytest2 = (function() {
             function checkMessage(e) {
                 if (e.message && e.message.values) {
                     found++;
-                    shinytest2.log("Found message with values field.");
+                    // shinytest2.log("Found message with values field.");
 
                     if (foundEnough()) {
                         $(document).off("shiny:message", checkMessage);
@@ -302,12 +302,13 @@ window.shinytest2 = (function() {
         // rest of the stuff in this function.
         if (typeof window.jQuery === "undefined") {
             if (!jquery_message_shown) {
-                shinytest2.log("jQuery not loaded yet");
+                shinytest2.log("jQuery not found");
                 jquery_message_shown = true;
             }
             setTimeout(waitForReady, 50);
             return;
         }
+        shinytest2.log("jQuery found");
 
         shimCssChanges()
 
@@ -319,13 +320,13 @@ window.shinytest2 = (function() {
         if (typeof Shiny !== "undefined" && Shiny.shinyapp &&
             Shiny.shinyapp.config && Shiny.shinyapp.config.sessionId)
         {
-            shinytest2.log("already connected");
+            shinytest2.log("Already connected");
             waitForHtmlOutput();
 
         } else {
-            shinytest2.log("waiting for shiny session to connect");
+            shinytest2.log("Waiting for shiny session to connect");
             $(document).one("shiny:sessioninitialized", function(e) {
-                shinytest2.log("connected");
+                shinytest2.log("Connected");
                 waitForHtmlOutput();
             });
         }
@@ -338,14 +339,14 @@ window.shinytest2 = (function() {
                 .bindingNames['shiny.htmlOutput'].binding.find(document);
 
             if (htmlOutputBindings.length > 0) {
-                shinytest2.log("waiting for first output");
+                shinytest2.log("Waiting for first output");
                 shinytest2.outputValuesWaiter.start(5000);
                 shinytest2.outputValuesWaiter.finish(true, function() {
                     shinytest2.ready = true;
                 });
             }
             else {
-                shinytest2.log("ready");
+                shinytest2.log("Ready");
                 shinytest2.ready = true;
             }
         }
@@ -370,21 +371,22 @@ window.shinytest2 = (function() {
     function createShinyEventHandlers() {
         $(document).on("shiny:busy", function(e) {
             shinytest2.busy = true;
-            shinytest2.log("busy");
+            shinytest2.log("shiny:busy");
         });
 
         $(document).on("shiny:idle", function(e) {
             shinytest2.busy = false;
-            shinytest2.log("idle");
+            shinytest2.log("shiny:idle");
         });
 
-        $(document).on("shiny:message", function(e) {
-            if (shinytest2.log_messages)
-                shinytest2.log_shiny_message(JSON.stringify(e.message));
-        });
+        // // Do not record messages. Instead enable WS traffic logging via `shiny.trace` option
+        // $(document).on("shiny:message", function(e) {
+        //     if (shinytest2.log_messages)
+        //         shinytest2.log_shiny_message(JSON.stringify(e.message));
+        // });
 
         $(document).on("shiny:value", function(e) {
-            shinytest2.log("value " + e.name);
+            shinytest2.log("shiny:value " + e.name);
 
             // Clear up updates
             var idx = shinytest2.updating.indexOf(e.name);

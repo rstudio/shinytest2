@@ -3,7 +3,6 @@
 S3method(format,shinytest2_log)
 S3method(print,shinytest2_log)
 export(AppDriver)
-export(debug_types)
 export(get_input_processors)
 export(platform_variant)
 export(record_test)
