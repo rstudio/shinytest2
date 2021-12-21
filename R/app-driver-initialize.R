@@ -78,14 +78,14 @@ app_initialize <- function(
     self$view()
   }
 
-  app_init_browser_debug(self, private, options = options)
+  app_init_browser_log(self, private, options = options)
 
   "!DEBUG navigate to Shiny app"
   self$log_message("Navigating to Shiny app")
   # private$web$go(private$shiny_url$get())
   self$get_chromote_session()$Page$navigate(private$shiny_url$get())
 
-  # TODO-future; This feels like it is too late. There is no guarantee that the script will load in time.
+  # TODO-future; This feels like it is being loaded too late. There is no guarantee that the script will load in time.
   "!DEBUG inject shiny-tracer.js to load before all other scripts"
   self$log_message("Injecting shiny-tracer.js")
   utils::capture.output({
@@ -94,16 +94,6 @@ app_initialize <- function(
       js_content
     )
   })
-
-  # if (isTRUE(options[["shiny.trace"]])) {
-  #   # enable WS messages to be recorded by chromote
-  #   chromote_eval(
-  #     self$get_chromote_session(),
-  #     "shinytest2.log_messages = true"
-  #   )
-  # }
-
-
 
   "!DEBUG wait until Shiny starts"
   self$log_message("Waiting until Shiny app starts")

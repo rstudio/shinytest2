@@ -1,11 +1,11 @@
 
 app_log_message <- function(self, private, message) {
-  app_add_debug_log_entry(self, private, location = "shinytest2", level = "info", message = message)
+  app_add_log_entry(self, private, location = "shinytest2", level = "info", message = message)
 }
 
 
 
-app_debug_log_entry <- function(
+app_log_entry <- function(
   self,
   private,
   location = c("chromote", "shiny", "shinytest2"),
@@ -30,7 +30,7 @@ app_debug_log_entry <- function(
   # str(entry)
   entry
 }
-app_add_debug_log_entry <- function(
+app_add_log_entry <- function(
   self,
   private,
   location,
@@ -41,7 +41,7 @@ app_add_debug_log_entry <- function(
   ckm8_assert_app_driver(self, private)
 
 
-  entry <- app_debug_log_entry(
+  entry <- app_log_entry(
     self, private,
     location = location,
     level = level,

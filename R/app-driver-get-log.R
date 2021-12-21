@@ -20,9 +20,10 @@ obj_to_string <- function(obj) {
 }
 frames_to_msg <- function(details, url) {
   call_frames <- details$stackTrace$callFrames
-  if (length(call_frames) == 0) return("")
-
-  if (details$type == "info") {
+  if (length(call_frames) == 0) {
+    return("")
+  }
+  if (length(details$type) == 1 && details$type == "info") {
     first_fn_name <- call_frames[[1]]$functionName
     if (first_fn_name == "window.shinytest2.shinytest2.log") {
       return("")
@@ -62,7 +63,7 @@ console_api_to_msg <- function(info, url) {
 }
 
 
-app_init_browser_debug <- function(self, private, options) {
+app_init_browser_log <- function(self, private, options) {
   ckm8_assert_app_driver(self, private)
 
   self$get_chromote_session()$Runtime$consoleAPICalled(function(info) {
@@ -70,7 +71,7 @@ app_init_browser_debug <- function(self, private, options) {
 
     msg <- console_api_to_msg(info, private$shiny_url$get())
 
-    app_add_debug_log_entry(
+    app_add_log_entry(
       self,
       private,
       location = "chromote",
@@ -84,8 +85,9 @@ app_init_browser_debug <- function(self, private, options) {
   })
   self$get_chromote_session()$Runtime$exceptionThrown(function(info) {
     # message("Runtime.exceptionThrown")
+
     msg <- exception_thrown_to_msg(info, private$shiny_url$get())
-    app_add_debug_log_entry(
+    app_add_log_entry(
       self,
       private,
       location = "chromote",
@@ -121,7 +123,7 @@ app_init_browser_debug <- function(self, private, options) {
       #   ..$ mask       : logi TRUE
       #   ..$ payloadData: chr "{\"method\":\"init\",\"data| __truncated__
 
-      app_add_debug_log_entry(
+      app_add_log_entry(
         self, private,
         location = "chromote",
         level = "websocket",
@@ -138,7 +140,7 @@ app_init_browser_debug <- function(self, private, options) {
       #   ..$ mask       : logi TRUE
       #   ..$ payloadData: chr "{\"method\":\"init\",\"data| __truncated__
 
-      app_add_debug_log_entry(
+      app_add_log_entry(
         self, private,
         location = "chromote",
         level = "websocket",
@@ -158,7 +160,7 @@ app_make_shiny_log <- function(self, private, out, err) {
 
   c(
     lapply(out, function(out_val) {
-      app_debug_log_entry(
+      app_log_entry(
         self,
         private,
         location = "shiny",
@@ -168,7 +170,7 @@ app_make_shiny_log <- function(self, private, out, err) {
       )
     }),
     lapply(err, function(err_val) {
-      app_debug_log_entry(
+      app_log_entry(
         self,
         private,
         location = "shiny",

@@ -19,6 +19,7 @@ app_appshot <- function(
 
   if (items_is_false) {
     if (!should_take_screenshot) {
+      # TODO-barret; Fix this
       if (is.null(private$default_screenshot_args)) browser()
       abort("Both 'items' and 'screenshot_args' can not be `FALSE` at the same time.")
     }

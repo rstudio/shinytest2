@@ -16,6 +16,7 @@ with a live app.
 ## ------------------------------------------------
 
 \dontrun{
+
 app <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
 app$get_log()
 # \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
@@ -793,6 +794,7 @@ for more details
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
+
 app <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
 app$get_log()
 # \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization

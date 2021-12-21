@@ -2,26 +2,19 @@
 #'
 #' @param app A [AppDriver] object, or path to a Shiny
 #'   application.
+#' @param ... Used for parameter expansion
 #' @param seed A random seed to set before running the app. This seed will also
 #'   be used in the test script.
 #' @param load_timeout Maximum time to wait for the Shiny application to load, in
 #'   milliseconds. If a value is provided, it will be saved in the test script.
-#' @param debug start the underlying [AppDriver] in `debug`
-#'   mode and print those debug logs to the R console once recording is
-#'   finished. The default, `'shiny_console'`, captures and prints R
-#'   console output from the recorded R shiny process. Any value that the
-#'   `debug` argument in [AppDriver] accepts may be used
-#'   (e.g., `'none'` may be used to completely suppress the driver logs).
 #' @param shiny_args A list of options to pass to `runApp()`. If a value
 #'   is provided, it will be saved in the test script.
-#' @param ... Used for parameter expansion
 #' @export
 record_test <- function(
   app = ".",
   ...,
   seed = NULL,
   load_timeout = 10000,
-  debug = "shiny_console",
   shiny_args = list()
 ) {
   ellipsis::check_dots_empty()
@@ -80,7 +73,6 @@ record_test <- function(
     list(
       shinytest2.recorder.url = url,
       shinytest2.app          = app,
-      shinytest2.debug        = debug,
       shinytest2.load.timeout = if (!missing(load_timeout)) load_timeout,
       shinytest2.seed         = seed,
       shinytest2.shiny.args   = shiny_args
