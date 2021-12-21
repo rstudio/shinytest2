@@ -30,7 +30,7 @@ format.shinytest2_log <- function(x, ...) {
   x_name <- location_name[x$location]
   x_language <- language[x$location]
   x_identifier <- paste0(format(x_name), " ", format(x_language), " ", format(x$level))
-  x_timestamp <- ifelse(is.na(x$timestamp), "-----------", format(timestamp, "%H:%M:%OS2"))
+  x_timestamp <- ifelse(is.na(x$timestamp), "-----------", format(x$timestamp, "%H:%M:%OS2"))
 
   x_msg <-
     Map(
@@ -45,13 +45,14 @@ format.shinytest2_log <- function(x, ...) {
   first_part <- paste0(
     x_identifier, " ", x_timestamp, " "
   )
+
   first_part_char_len <- nchar(first_part[1])
   first_spaces <- paste0("\n", paste0(rep(" ", first_part_char_len), collapse = ""))
   # Replace all new lines with heavily indented new lines to align msg output
-  x_msg2 <- gsub("\n", first_spaces, x_msg, fixed = TRUE)
+  x_msg_w_spaces <- gsub("\n", first_spaces, x_msg, fixed = TRUE)
 
   paste0(
-    first_part, x_msg2,
+    first_part, x_msg_w_spaces,
     collapse = "\n"
   )
 }

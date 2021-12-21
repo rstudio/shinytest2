@@ -13,8 +13,10 @@ window.shinytest2 = (function() {
         // Captured by chromote
         console.info("shinytest2:", message);
     };
-    shinytest2.log("window.shinytest2 loaded");
-
+    shinytest2.log_shiny_message = function(message) {
+        // Captured by chromote
+        console.trace("shiny message:", message);
+    };
 
     shinytest2.inputQueue = (function() {
         var inputqueue = {};
@@ -104,7 +106,6 @@ window.shinytest2 = (function() {
                 if (typeof(value) === "string" &&
                     /\d\d\d\d-\d\d-\d\d/.test(value))
                 {
-                    shinytest2.log(new Date(value).getTime());
                     return new Date(value).getTime();
                 } else {
                     return value;
@@ -379,7 +380,7 @@ window.shinytest2 = (function() {
 
         $(document).on("shiny:message", function(e) {
             if (shinytest2.log_messages)
-                shinytest2.log("message: " + JSON.stringify(e.message));
+                shinytest2.log_shiny_message(JSON.stringify(e.message));
         });
 
         $(document).on("shiny:value", function(e) {
@@ -399,5 +400,6 @@ window.shinytest2 = (function() {
         return s.replace(/([!"#$%&'()*+,-./:;<=>?@\[\\\]^`{|}~])/g, "\\$1");
     }
 
+    shinytest2.log("Loaded");
     return shinytest2;
 })();

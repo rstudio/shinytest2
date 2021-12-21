@@ -34,7 +34,7 @@ with a live app.
 \item \href{#method-get_window_size}{\code{AppDriver$get_window_size()}}
 \item \href{#method-set_window_size}{\code{AppDriver$set_window_size()}}
 \item \href{#method-get_chromote_session}{\code{AppDriver$get_chromote_session()}}
-\item \href{#method-get_debug_log}{\code{AppDriver$get_debug_log()}}
+\item \href{#method-get_log}{\code{AppDriver$get_log()}}
 \item \href{#method-log_message}{\code{AppDriver$log_message()}}
 \item \href{#method-stop}{\code{AppDriver$stop()}}
 \item \href{#method-clone}{\code{AppDriver$clone()}}
@@ -54,7 +54,6 @@ Initialize the AppDriver
   screenshot_args = NULL,
   check_names = TRUE,
   name = NULL,
-  debug = FALSE,
   view = FALSE,
   seed = NULL,
   clean_logs = TRUE,
@@ -92,11 +91,6 @@ version, or version of key dependency.}
 \item{\code{check_names}}{Check if widget names are unique?}
 
 \item{\code{name}}{Prefix name to use when saving testthat snapshot files}
-
-\item{\code{debug}}{All standard debug messages are recorded by default and can be viewed using \verb{$get_debug_log()}.
-See \code{\link[=debug_types]{debug_types()}} for more information about the standard debug messages.
-If \code{TRUE}, all Shiny WebSocket messages will also be recorded. While useful, this can be considered a memory leak.
-If \code{TRUE}, all browser console messages will be displayed in real time.}
 
 \item{\code{view}}{Opens the Chromote Session  in an interactive browser tab once initialization.}
 
@@ -658,12 +652,12 @@ Chromote Session object from the \pkg{chromote} package.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_debug_log"></a>}}
-\if{latex}{\out{\hypertarget{method-get_debug_log}{}}}
-\subsection{Method \code{get_debug_log()}}{
+\if{html}{\out{<a id="method-get_log"></a>}}
+\if{latex}{\out{\hypertarget{method-get_log}{}}}
+\subsection{Method \code{get_log()}}{
 Query one or more of the debug logs.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_debug_log()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_log()}\if{html}{\out{</div>}}
 }
 
 }
@@ -679,7 +673,7 @@ Add an message to log.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{event}}{Event name}
+\item{\code{message}}{Single message to store in log}
 }
 \if{html}{\out{</div>}}
 }

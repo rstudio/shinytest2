@@ -3,9 +3,9 @@
 #' All supported debug log types that are not `"all"` or `"none"`.
 #'
 #' There are a few standard debug types that may be used:
-#' * `"shiny_console"`: Displays the console messages from the Shiny server when `$get_debug_log()` is called.
-#' * `"browser"`: Displays the browser console messages when `$get_debug_log()` is called.
-#' * `"shinytest2"`: Displays the messages saved by the `window.shinytest2` object in the browser when `$get_debug_log()` is called.
+#' * `"shiny_console"`: Displays the console messages from the Shiny server when `$get_log()` is called.
+#' * `"browser"`: Displays the browser console messages when `$get_log()` is called.
+#' * `"shinytest2"`: Displays the messages saved by the `window.shinytest2` object in the browser when `$get_log()` is called.
 #' * `"ws_messages"`: Saves all messages sent by Shiny to the
 #'
 #' @keywords internal
@@ -44,14 +44,6 @@ obj_to_string <- function(obj) {
 frames_to_msg <- function(details, url) {
   call_frames <- details$stackTrace$callFrames
   if (length(call_frames) == 0) return("")
-  first_fn_name <- call_frames[[1]]$functionName
-  if (
-    details$type == "info" &&
-    !is.null(first_fn_name) &&
-    first_fn_name == "window.shinytest2.shinytest2.log"
-  ) {
-    return("")
-  }
 
   frames <- do.call(rbind, lapply(call_frames, as.data.frame))
   # Give anonymous functions a name
@@ -74,50 +66,108 @@ exception_thrown_to_msg <- function(info, url) {
     frames_to_msg(exception_details, url)
   )
 }
-console_api_to_msg <- function(info, url) {
+console_api_to_msg <- function(info, url, frames = TRUE) {
   args <- vapply(info$args, obj_to_string, character(1))
 
   paste0(
     # "console.", info$type, "(\"", paste0(args, collapse = "\", \""), "\")",
     # "console.", info$type, " - ", paste0(args, collapse = " "),
     paste0(args, collapse = " "),
-    frames_to_msg(info, url)
+    if (frames) frames_to_msg(info, url)
   )
 }
 
 
-app_init_browser_debug <- function(self, private) {
+app_init_browser_debug <- function(self, private, options) {
   ckm8_assert_app_driver(self, private)
 
   self$get_chromote_session()$Runtime$consoleAPICalled(function(info) {
     # message("Runtime.consoleAPICalled")
-    msg <- console_api_to_msg(info, private$shiny_url$get())
 
-    entry <- app_add_debug_log_entry(
+    is_shinytest2_log <- function(type, fn_name) {
+      info$type == type &&
+      length((call_frames <- info$stackTrace$callFrames)) > 0 &&
+      !is.null((first_fn_name <- call_frames[[1]]$functionName)) &&
+      first_fn_name == fn_name
+    }
+
+    should_hide_frames <-
+      is_shinytest2_log("info", "window.shinytest2.shinytest2.log") ||
+      is_shinytest2_log("trace", "window.shinytest2.shinytest2.log_shiny_message")
+
+    msg <- console_api_to_msg(info, private$shiny_url$get(), frames = !should_hide_frames)
+
+    app_add_debug_log_entry(
       self,
       private,
       location = "chromote",
       level = info$type,
       message = msg
     )
-    if (private$debug) {
-      print.shinytest2_log(entry)
-    }
+    # # Display logs in realtime
+    # if (private$debug_flag) {
+    #   print.shinytest2_log(entry)
+    # }
   })
   self$get_chromote_session()$Runtime$exceptionThrown(function(info) {
     # message("Runtime.exceptionThrown")
     msg <- exception_thrown_to_msg(info, private$shiny_url$get())
-    entry <- app_add_debug_log_entry(
+    app_add_debug_log_entry(
       self,
       private,
       location = "chromote",
       level = "throw",
       message = msg
     )
-    if (private$debug) {
-      print.shinytest2_log(entry)
-    }
+    # # Display logs in realtime
+    # if (private$debug_flag) {
+    #   print.shinytest2_log(entry)
+    # }
   })
+
+
+  # Only display websocket traffic if `options = list(shiny.trace = TRUE)` is supplied on init
+  if (isTRUE(options$shiny.trace)) {
+    self$get_chromote_session()$Network$webSocketFrameSent(function(info) {
+      # >str(info)
+      # List of 3
+      # $ requestId: chr "34121.21"
+      # $ timestamp: num 307537
+      # $ response :List of 3
+      #   ..$ opcode     : int 1
+      #   ..$ mask       : logi TRUE
+      #   ..$ payloadData: chr "{\"method\":\"init\",\"data| __truncated__
+
+      app_add_debug_log_entry(
+        self, private,
+        location = "chromote",
+        level = "websocket",
+        message = paste0(
+          "send ", info$response$payloadData
+        )
+      )
+    })
+    self$get_chromote_session()$Network$webSocketFrameReceived(function(info) {
+      # >str(info)
+      # List of 3
+      # $ requestId: chr "34121.21"
+      # $ timestamp: num 307537
+      # $ response :List of 3
+      #   ..$ opcode     : int 1
+      #   ..$ mask       : logi TRUE
+      #   ..$ payloadData: chr "{\"method\":\"init\",\"data| __truncated__
+
+      app_add_debug_log_entry(
+        self, private,
+        location = "chromote",
+        level = "websocket",
+        message = paste0(
+          "recv ", info$response$payloadData
+        )
+      )
+    })
+  }
+
 }
 
 
@@ -163,50 +213,6 @@ app_make_shiny_log <- function(self, private, out, err) {
     })
   )
 }
-
-# app_make_browser_log <- function(self, private) {
-#   chm8_assert_app_driver(self, private)
-
-#   log <- private$browser_log
-#   if (length(log) == 0) return(NULL)
-#   log <- do.call(rbind, lapply(log, as.data.frame))
-#   log$type <- "browser"
-#   log[, c("level", "timestamp", "message", "type")]
-#   app_debug_log_entry
-# }
-
-# app_make_shinytest2_log <- function(self, private, entries) {
-#   ckm8_assert_app_driver(self, private)
-
-#   entries <-
-#     self$execute_script(
-#       "if (! window.shinytest2) { return([]) }
-#       var res = window.shinytest2.log_entries;
-#       // window.shinytest2.log_entries = [];
-#       return res;"
-#     )
-
-#   # data.frame(
-#   #   stringsAsFactors = FALSE,
-#   #   level = if (length(entries)) "INFO" else character(),
-#   #   timestamp = parsedate::parse_date(vapply(entries, "[[", "", "timestamp")),
-#   #   message = vapply(entries, "[[", "", "message"),
-#   #   type = if (length(entries)) "shinytest2" else character()
-#   # )
-#   lapply(entries, function(entry) {
-#     app_debug_log_entry(
-#       self, private,
-#       location = "shinytest2",
-#       level = "info",
-#       message = entry$message,
-#       timestamp = parsedate::parse_date(entry$time),
-#       data = NULL
-#     )
-#   })
-# }
-
-
-
 # Remove problem characters from log text. Currently just "\f", which clears the
 # console in RStudio.
 filter_log_text <- function(str) {
@@ -215,14 +221,14 @@ filter_log_text <- function(str) {
 
 
 
-app_get_debug_log <- function(
+app_get_log <- function(
   self, private
 ) {
   ckm8_assert_app_driver(self, private)
 
   log <- do.call(rbind, c(
     # browser console / shinytest2 + manual entries
-    private$debug_log,
+    private$log,
     # shiny console
     app_make_shiny_log(self, private)
   ))

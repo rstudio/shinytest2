@@ -28,14 +28,7 @@ AppDriver <- R6Class(# nolint
     appshot_count = "<Count>",
     shiny_url = "<Url>",
 
-    debug = FALSE, # Logical which determines if extra debugging is done
-    debug_log = list(), # List of all debug messages
-    # find_shiny_output
-
-    debug_types = NULL,
-    browser_log = list(),
-    event_log = list(),
-    # find_shiny_output
+    log = list(), # List of all log messages added via `$log_message()`
 
     clean_logs = TRUE, # Whether to clean logs when GC'd
 
@@ -70,10 +63,6 @@ AppDriver <- R6Class(# nolint
     #' @template variant
     #' @param name Prefix name to use when saving testthat snapshot files
     #' @param check_names Check if widget names are unique?
-    #' @param debug All standard debug messages are recorded by default and can be viewed using `$get_debug_log()`.
-    #'   See [debug_types()] for more information about the standard debug messages.
-    #'   If `TRUE`, all Shiny WebSocket messages will also be recorded. While useful, this can be considered a memory leak.
-    #'   If `TRUE`, all browser console messages will be displayed in real time.
     #' @param view Opens the Chromote Session  in an interactive browser tab once initialization.
     #' @param seed An optional random seed to use before starting the application.
     #'   For apps that use R's random number generator, this can make their
@@ -83,7 +72,9 @@ AppDriver <- R6Class(# nolint
     #' @param shiny_args A list of options to pass to [shiny::runApp()].
     #' @param render_args Passed to `rmarkdown::run()` for interactive `.Rmd`s.
     #' @param options A list of [base::options()] to set in the driver's child
-    #'   process.
+    #'   process. See [`shiny::shinyOptions()`] for inspiration. If `shiny.trace`
+    #'   is set to `TRUE`, then all WebSocket traffic will be captured by `chromote`
+    #'   as to have access to the when the message was received by the browser.
     #' @importFrom callr process
     #' @importFrom rlang abort
     initialize = function(
@@ -94,7 +85,6 @@ AppDriver <- R6Class(# nolint
       screenshot_args = NULL,
       check_names = TRUE,
       name = NULL,
-      debug = FALSE,
       view = FALSE,
       seed = NULL,
       clean_logs = TRUE,
@@ -111,7 +101,6 @@ AppDriver <- R6Class(# nolint
         check_names = check_names,
         name = name,
         variant = variant,
-        debug = debug,
         view = view,
         seed = seed,
         clean_logs = clean_logs,
@@ -413,15 +402,15 @@ AppDriver <- R6Class(# nolint
     #' @description
     #' Query one or more of the debug logs.
     # TODO-barret; show example of filtering output on type
-    get_debug_log = function() {
-      app_get_debug_log(self, private)
+    get_log = function() {
+      app_get_log(self, private)
     },
 
     #' @description
     #' Add an message to log.
-    #' @param event Event name
+    #' @param message Single message to store in log
     log_message = function(message) {
-      app_log_message(self, private, message)
+      app_log_message(self, private, message = message)
     },
 
 
