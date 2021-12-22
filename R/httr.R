@@ -11,7 +11,7 @@ httr_get <- function(url) {
     stop("Shiny app is no longer running")
   }
 
-  tryCatch(
+  withCallingHandlers(
     {
       req <- httr::GET(url)
     },

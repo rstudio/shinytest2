@@ -14,7 +14,7 @@ record_test <- function(
   app = ".",
   ...,
   seed = NULL,
-  load_timeout = 10000,
+  load_timeout = 10 * 1000,
   shiny_args = list()
 ) {
   ellipsis::check_dots_empty()

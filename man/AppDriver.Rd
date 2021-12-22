@@ -127,11 +127,10 @@ app$get_log() # (long output lines have been truncated)
 \item \href{#method-set_inputs}{\code{AppDriver$set_inputs()}}
 \item \href{#method-click}{\code{AppDriver$click()}}
 \item \href{#method-upload_file}{\code{AppDriver$upload_file()}}
-\item \href{#method-wait_for_condition}{\code{AppDriver$wait_for_condition()}}
+\item \href{#method-wait_for_script}{\code{AppDriver$wait_for_script()}}
 \item \href{#method-wait_for_stable}{\code{AppDriver$wait_for_stable()}}
 \item \href{#method-wait_for_value}{\code{AppDriver$wait_for_value()}}
 \item \href{#method-execute_script}{\code{AppDriver$execute_script()}}
-\item \href{#method-execute_script_callback}{\code{AppDriver$execute_script_callback()}}
 \item \href{#method-get_path}{\code{AppDriver$get_path()}}
 \item \href{#method-get_url}{\code{AppDriver$get_url()}}
 \item \href{#method-get_window_size}{\code{AppDriver$get_window_size()}}
@@ -175,8 +174,8 @@ single \code{app.R} file or a \code{server.R}-\code{ui.R} pair.}
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
 \item{\code{load_timeout}}{How long to wait for the app to load, in ms.
-This includes the time to start R. Defaults to 5s when running
-locally and 10s when running on CI. Maximum value is 10s.}
+This includes the time to start R. Defaults to 10s when running
+locally and 20s when running on CI.}
 
 \item{\code{variant}}{If not-\code{NULL}, results will be saved in
 _snaps/{variant}/{test.md}\verb{, so }variant` must be a single
@@ -528,21 +527,21 @@ control. Otherwise, the return value will be \code{NULL}.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-wait_for_condition"></a>}}
-\if{latex}{\out{\hypertarget{method-wait_for_condition}{}}}
-\subsection{Method \code{wait_for_condition()}}{
+\if{html}{\out{<a id="method-wait_for_script"></a>}}
+\if{latex}{\out{\hypertarget{method-wait_for_script}{}}}
+\subsection{Method \code{wait_for_script()}}{
 Wait for a JavaScript expression to be true
 
 Waits until a JavaScript \code{expr}ession evaluates to \code{true} or the
 \code{timeout} is exceeded.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_condition(expr, timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_script(script, timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{expr}}{A string containing JavaScript code. Will wait until the
+\item{\code{script}}{A string containing JavaScript code. Will wait until the
 condition returns \code{true}.}
 
 \item{\code{timeout}}{How often to check for the condition, in ms.}
@@ -552,8 +551,8 @@ condition returns \code{true}.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{TRUE} if expression evaluates to \code{true} without error, before
-timeout. Otherwise returns \code{FALSE}.
+\code{invisible(self)} if expression evaluates to \code{true} without error within the timeout.
+Otherwise an error will be thrown
 }
 }
 \if{html}{\out{<hr>}}
@@ -580,7 +579,7 @@ plot redrawing is complete before take a screenshot.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{TRUE} if done before before timeout; \code{NA} otherwise.
+\code{invisible(self)} if Shiny stablizes within the timeout. Otherwise an error will be thrown
 }
 }
 \if{html}{\out{<hr>}}
@@ -654,39 +653,6 @@ To have JavaScript code execute asynchronously, wrap the code in a Promise objec
 }
 \subsection{Returns}{
 Result of the script.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-execute_script_callback"></a>}}
-\if{latex}{\out{\hypertarget{method-execute_script_callback}{}}}
-\subsection{Method \code{execute_script_callback()}}{
-Execute JavaScript code in the browser with an additional \code{resolve} and \code{reject} arguments.
-
-This function will block the local R session until one of the last two arguments (\code{resolve} and \code{reject}) are called.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$execute_script_callback(
-  script,
-  arguments = list(),
-  ...,
-  timeout = 15 * 1000
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{script}}{JS to execute. \code{resolve} and \code{reject} arguments are added to the script call. To return control back to the R session, one of these methods must be called.}
-
-\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Self, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

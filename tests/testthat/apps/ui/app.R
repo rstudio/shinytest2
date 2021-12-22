@@ -11,15 +11,15 @@ server <- function(input, output, session) {
   # If the logic is to "wait for stable", it would return after sitting idle for a set amount of time. Ex 1500ms
 
 
-  timeout <- n # Found in `./R/n.R`
+  timeout <- n # Found in `./R/n.R` # nolint
 
-  firstFlag <- FALSE
-  secondFlag <- FALSE
-  thirdFlag <- FALSE
+  first_flag <- FALSE
+  second_flag <- FALSE
+  third_flag <- FALSE
 
   output$first <- renderUI({
-    if (!firstFlag) {
-      firstFlag <<- TRUE
+    if (!first_flag) {
+      first_flag <<- TRUE
       invalidateLater(timeout)
       return(
         h3("(waiting on first)")
@@ -33,8 +33,8 @@ server <- function(input, output, session) {
     )
   })
   output$second <- renderUI({
-    if (!secondFlag) {
-      secondFlag <<- TRUE
+    if (!second_flag) {
+      second_flag <<- TRUE
       invalidateLater(timeout)
       return(
         h3("(waiting on second)")
@@ -48,8 +48,8 @@ server <- function(input, output, session) {
     )
   })
   output$third <- renderUI({
-    if (!thirdFlag) {
-      thirdFlag <<- TRUE
+    if (!third_flag) {
+      third_flag <<- TRUE
       invalidateLater(timeout)
       return(
         h3("(waiting on third)")
@@ -59,10 +59,10 @@ server <- function(input, output, session) {
     list(
       h3("third"),
       sliderInput("slider3", "Slider3", 0, 10, 3),
-      uiOutput("verbatimTxt")
+      uiOutput("verbatim_txt")
     )
   })
-  output$verbatimTxt <- renderUI({
+  output$verbatim_txt <- renderUI({
     verbatimTextOutput("txt")
   })
   output$txt <- renderText({

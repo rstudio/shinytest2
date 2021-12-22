@@ -37,10 +37,12 @@ app_upload_file <- function(
     nodeId = node_id
   )
 
-  self$execute_script_callback(
-    "var wait = arguments[0];
-    var resolve = arguments[1];
-    shinytest2.outputValuesWaiter.finish(wait, resolve);",
+  self$execute_script(
+    "
+    return new Promise((resolve, reject) => {
+      var wait = arguments[0];
+      shinytest2.outputValuesWaiter.finish(wait, resolve);
+    });",
     arguments = list(wait_)
   )
 

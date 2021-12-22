@@ -54,8 +54,8 @@ AppDriver <- R6Class(# nolint
     #' @param path Path to a directory containing a Shiny app, i.e. a
     #'   single `app.R` file or a `server.R`-`ui.R` pair.
     #' @param load_timeout How long to wait for the app to load, in ms.
-    #'   This includes the time to start R. Defaults to 5s when running
-    #'   locally and 10s when running on CI. Maximum value is 10s.
+    #'   This includes the time to start R. Defaults to 10s when running
+    #'   locally and 20s when running on CI.
     #' @param screenshot_args Default set of arguments to pass in to [`chromote::ChromoteSession`]'s
     #' `$screenshot()` method when taking screnshots within `$expect_appshot()`. To disable screenshots by default, set to `FALSE`.
     # ' @param phantomTimeout How long to wait when connecting to phantomJS
@@ -272,16 +272,16 @@ AppDriver <- R6Class(# nolint
     #'
     #' Waits until a JavaScript `expr`ession evaluates to `true` or the
     #' `timeout` is exceeded.
-    #' @param expr A string containing JavaScript code. Will wait until the
+    #' @param script A string containing JavaScript code. Will wait until the
     #'   condition returns `true`.
     #' @param timeout How often to check for the condition, in ms.
     #' @param interval How often to check for the condition, in ms.
-    #' @return `TRUE` if expression evaluates to `true` without error, before
-    #'   timeout. Otherwise returns `FALSE`.
+    #' @return `invisible(self)` if expression evaluates to `true` without error within the timeout.
+    #'   Otherwise an error will be thrown
     # TODO-barret-rename; `self$wait_for_js`? Seems too misleading. `self$wait_for_js_condition` seems too long
     # TODO-barret-rename; $wait_for_script
-    wait_for_condition = function(expr, timeout = 3 * 1000, interval = 100) {
-      app_wait_for_condition(self, private, expr = expr, timeout = timeout, interval = interval)
+    wait_for_script = function(script, timeout = 3 * 1000, interval = 100) {
+      app_wait_for_script(self, private, script = script, timeout = timeout, interval = interval)
     },
 
     #' @description Wait for Shiny to not be busy for a set amount of time
@@ -292,7 +292,7 @@ AppDriver <- R6Class(# nolint
     #' plot redrawing is complete before take a screenshot.
     #' @param duration How long Shiny must be idle (in ms) before unblocking the R session.
     #' @param timeout How often to check for the condition, in ms.
-    #' @return `TRUE` if done before before timeout; `NA` otherwise.
+    #' @return `invisible(self)` if Shiny stablizes within the timeout. Otherwise an error will be thrown
     wait_for_stable = function(duration = 500, timeout = 30 * 1000) {
       app_wait_for_stable(self, private, duration = duration, timeout = timeout)
     },
@@ -333,6 +333,9 @@ AppDriver <- R6Class(# nolint
     #' To have JavaScript code execute asynchronously, wrap the code in a Promise object and have the script return an atomic value.
     #' @param script JS to execute. If a JS Promise is returned, `$execute_script()` will wait for the promise to resolve before returning.
     #' @return Result of the script.
+    # TODO-barret; incorporate `wait_` parameters to not wait for the _tick_ to finish
+    # TODO-barret-answer; Document how they should make a promise and return NULL instead?
+    # @param script JS to execute. `resolve` and `reject` arguments are added to the script call. To return control back to the R session, one of these methods must be called.
     execute_script = function(script, arguments = list(), ..., timeout = 15 * 1000) {
       app_execute_script(
         self, private,
@@ -342,24 +345,6 @@ AppDriver <- R6Class(# nolint
         timeout = timeout
       )
     },
-
-    #' @description
-    #' Execute JavaScript code in the browser with an additional `resolve` and `reject` arguments.
-    #'
-    #' This function will block the local R session until one of the last two arguments (`resolve` and `reject`) are called.
-    #'
-    #' @param script JS to execute. `resolve` and `reject` arguments are added to the script call. To return control back to the R session, one of these methods must be called.
-    #' @return Self, invisibly.
-    execute_script_callback = function(script, arguments = list(), ..., timeout = 15 * 1000) {
-      app_execute_script_callback(
-        self, private,
-        script = script,
-        arguments = arguments,
-        ...,
-        timeout = timeout
-      )
-    },
-
 
     #' @description
     #' Retrieve the Shiny app path

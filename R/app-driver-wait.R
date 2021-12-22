@@ -1,20 +1,22 @@
 
 
-app_wait_for_condition <- function(
+app_wait_for_script <- function(
   self, private,
-  expr,
+  script,
   timeout = 3 * 1000,
   interval = 100
 ) {
-  "!DEBUG app_wait_for_condition()"
+  "!DEBUG app_wait_for_script()"
   ckm8_assert_app_driver(self, private)
 
+  # Will throw error if timeout is exceeded
   chromote_wait_for_condition(
     self$get_chromote_session(),
-    expr,
+    script,
     timeout = timeout,
     interval = interval
   )
+  invisible(self)
 }
 
 app_wait_for_stable <- function(self, private, duration = 500, timeout = 3 * 1000) {
@@ -40,7 +42,7 @@ app_wait_for_stable <- function(self, private, duration = 500, timeout = 3 * 100
 
     let timeoutId = setTimeout(() => {
       cleanup();
-      reject('timeout')
+      reject('Shiny did not become stable within ' + timeout + 'ms');
     }, +timeout); // make sure timeout is number
 
     let idleId = null;
@@ -53,6 +55,7 @@ app_wait_for_stable <- function(self, private, duration = 500, timeout = 3 * 100
         // Made it through the required duration
         // Remove event listeners
         cleanup();
+        window.shinytest2.log('Shiny has been idle for ' + duration + 'ms');
         // Resolve the promise
         resolve();
       };
@@ -66,7 +69,7 @@ app_wait_for_stable <- function(self, private, duration = 500, timeout = 3 * 100
     $(document).on('shiny:idle', idleFn);
 
     // if already idle, call `idleFn` to kick things off.
-    if (window.shinytest2.busy === true) {
+    if (window.shinytest2.busy !== true) {
       idleFn();
     }
   })
@@ -80,15 +83,14 @@ app_wait_for_stable <- function(self, private, duration = 500, timeout = 3 * 100
       timeout
     ),
     ## Supply a large "wall time" to chrome devtools protocol. The manual logic should be hit first
-    timeout_ = timeout * 2
+    timeout = timeout * 2
   )
 
   if (identical(ret$result$subtype, "error") || length(ret$exceptionDetails) > 0) {
     abort("An error occurred while waiting for Shiny to be stable")
   }
 
-  invisible(TRUE)
-
+  invisible(self)
 }
 
 app_wait_for_value <- function(
