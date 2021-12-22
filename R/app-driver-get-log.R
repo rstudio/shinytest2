@@ -107,7 +107,8 @@ app_init_browser_log <- function(self, private, options) {
       # https://github.com/rstudio/shiny/blob/b52b9e4520ad8d1e976299d5dec5e4ba3096bd04/R/shiny.R#L400
     paste_and_shorten_base64 <- function(method, txt) {
       txt <- gsub(
-        '(?m)base64,[a-zA-Z0-9+/=]+','[base64 data]',
+        "(?m)base64,[a-zA-Z0-9+/=]+",
+        "[base64 data]",
         txt,
         perl = TRUE
       )

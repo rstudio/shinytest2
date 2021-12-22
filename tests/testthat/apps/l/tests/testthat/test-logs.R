@@ -1,3 +1,4 @@
+library(testthat)
 
 expect_log_tests <- function(log) {
   # print(log)

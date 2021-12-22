@@ -12,7 +12,7 @@ server <- function(input, output, session) {
   message("Message msg!")
 
   output$time <- renderText({
-    invalidateLater(3 * 1000)
+    shiny::invalidateLater(3 * 1000)
     Sys.time()
   })
 }
