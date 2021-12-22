@@ -3,7 +3,6 @@ library(promises)
 
 target_url    <- getOption("shinytest2.recorder.url")
 app           <- getOption("shinytest2.app")
-debug         <- getOption("shinytest2.debug")
 load_timeout  <- getOption("shinytest2.load.timeout")
 start_seed    <- getOption("shinytest2.seed")
 shiny_args    <- getOption("shinytest2.shiny.args")
@@ -279,7 +278,7 @@ app_dir_basename <- function() {
 }
 app_test_path <- function() {
   path <- app$get_path()
-  if (dir.exists(path)) return("")
+  if (dir.exists(path)) return(NULL)
   basename(path)
 }
 
@@ -426,20 +425,20 @@ shinyApp(
     outputOptions(output, "recorder_js", suspendWhenHidden = FALSE)
 
     # echo console output from the driver object (in real-time)
-    if (!identical(debug, "none")) {
-      n_console_lines <- 0
-      observe({
-        invalidateLater(500)
-        logs <- app$get_debug_log(debug)
-        n <- nrow(logs)
-        if (n > n_console_lines) {
-          new_lines <- seq.int(n_console_lines + 1, n)
-          print(logs[new_lines, ], short = TRUE)
-          cat("\n")
-        }
-        n_console_lines <<- n
-      })
-    }
+    n_console_lines <- 0
+    observe({
+      invalidateLater(500)
+      logs <- subset(app$get_log(), location == "shiny")
+      # print(logs)
+      n <- nrow(logs)
+      if (n > n_console_lines) {
+        new_lines <- seq.int(n_console_lines + 1, n)
+        cat("\n\n")
+        print(logs[new_lines, ])
+        cat("\n")
+      }
+      n_console_lines <<- n
+    })
 
     save_file <- reactive({
       file.path(app_dir(), "tests", "testthat", paste0("test-", input$testname, ".R"))
