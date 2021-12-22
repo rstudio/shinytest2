@@ -95,16 +95,17 @@ app_wait_for_stable <- function(self, private, duration = 500, timeout = 3 * 100
 
 app_wait_for_value <- function(
   self, private,
-  id,
+  input = missing_arg(),
+  output = missing_arg(),
+  export = missing_arg(),
+  ...,
   ignore = list(NULL, ""),
-  iotype = c("input", "output", "export"),
   timeout = 10 * 1000,
   interval = 400
 ) {
   "!DEBUG app_wait_for_value()"
   ckm8_assert_app_driver(self, private)
-
-  iotype <- match.arg(iotype)
+  ellipsis::check_dots_empty()
 
   checkmate::assert_number(timeout, lower = 0, finite = FALSE, na.ok = FALSE)
   checkmate::assert_number(interval, lower = 0, finite = FALSE, na.ok = FALSE)
@@ -118,20 +119,19 @@ app_wait_for_value <- function(
 
   end_time <- now() + timeoute_sec
 
+  input_provided <- !rlang::is_missing(input)
+  output_provided <- !rlang::is_missing(output)
+  export_provided <- !rlang::is_missing(export)
+  if (sum(input_provided, output_provided, export_provided) != 1) {
+    abort("You must specify either `input`, `output`, or `export`")
+  }
+  if (input_provided) ckm8_assert_single_string(input)
+  if (output_provided) ckm8_assert_single_string(output)
+  if (export_provided) ckm8_assert_single_string(export)
   # by default, do not retrieve anything
-  input <- output <- export <- FALSE
-  # update the correct value, given the iotype
-  switch(iotype,
-    "input"  = {
-      input <- id
-    },
-    "output" = {
-      output <- id
-    },
-    "export" = {
-      export <- id
-    }
-  )
+  input <- rlang::maybe_missing(input, FALSE)
+  output <- rlang::maybe_missing(output, FALSE)
+  export <- rlang::maybe_missing(export, FALSE)
 
   while (TRUE) {
     value <- try({

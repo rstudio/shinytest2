@@ -1,35 +1,40 @@
 
 
-app_find_node_id <- function(self, private, id, iotype = c("auto", "input", "output")) {
+app_find_node_id <- function(self, private, input = missing_arg(), output = missing_arg()) {
   ckm8_assert_app_driver(self, private)
 
-  iotype <- match.arg(iotype)
-  "!DEBUG finding a nodeID by `id` and `iotype`"
+  "!DEBUG finding a nodeID"
 
-  css <- if (iotype == "auto") {
-    paste0("#", id)
-
-  } else if (iotype == "input") {
-    paste0("#", id, ".shiny-bound-input")
-
-  } else if (iotype == "output") {
-    paste0("#", id, ".shiny-bound-output")
+  input_provided <- !rlang::is_missing(input)
+  output_provided <- !rlang::is_missing(output)
+  if (
+    # both missing
+    (!input_provided && !output_provided) ||
+    # both provided
+    (input_provided && output_provided)
+  ) {
+    abort("Must specify either `input` or `output`")
   }
+
+  css <-
+    if (input_provided) {
+      ckm8_assert_single_string(input)
+      paste0("#", input, ".shiny-bound-input")
+    } else if (output_provided) {
+      ckm8_assert_single_string(output)
+      paste0("#", output, ".shiny-bound-output")
+    }
 
   el_node_ids <- chromote_find_elements(self$get_chromote_session(), css)
 
   if (length(el_node_ids) == 0) {
     abort(paste0(
-      "Cannot find ",
-      if (iotype != "auto") paste0(iotype, " "),
-      "HTML element ", id
+      "Cannot find HTML element with selector ", css
     ))
 
   } else if (length(el_node_ids) > 1) {
     warning(
-      "Multiple ",
-      if (iotype != "auto") paste0(iotype, " "),
-      "HTML elements with id ", id
+      "Multiple HTML elements found with selector ", css
     )
   }
 
@@ -39,10 +44,10 @@ app_find_node_id <- function(self, private, id, iotype = c("auto", "input", "out
 }
 
 
-app_click <- function(self, private, id, iotype = c("auto", "input", "output")) {
+app_click <- function(self, private, input = missing_arg(), output = missing_arg()) {
   ckm8_assert_app_driver(self, private)
 
-  node_id <- app_find_node_id(self, private, id = id, iotype = iotype)
+  node_id <- app_find_node_id(self, private, input = input, output = output)
   click_script <- "
     function() {
       this.click()

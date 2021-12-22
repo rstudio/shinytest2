@@ -17,7 +17,7 @@ app_download <- function(
   # Find the URL to download from (the href of the <a> tag)
   sub_url <- chromote_eval(self$get_chromote_session(), paste0("$('#", id, "').attr('href')"))$result$value
   if (identical(sub_url, "")) {
-    stop("Download from '#", id, "' failed")
+    abort(paste0("Download from '#", id, "' failed"))
   }
   # Add the base location to the URL
   full_url <- paste0(private$shiny_url$get(), sub_url)

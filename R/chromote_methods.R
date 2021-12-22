@@ -124,13 +124,12 @@ chromote_execute_script <- function(
 
 assert_wait_is_true <- function(wait_, fn_name, redirect_fn_name = NULL) {
   if (!isTRUE(wait_)) {
-    stop(paste0(
+    abort(paste0(
       "`", fn_name, "(wait_=) must be `TRUE`.",
       if (!is.null(redirect_fn_name)) {
         paste0(" If `wait_` needs to be `FALSE`, use `", redirect_fn_name, "()`")
       }
     ))
-    stop()
   }
 
 }

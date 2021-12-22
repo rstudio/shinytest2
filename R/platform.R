@@ -40,7 +40,7 @@ os_name <- cache_fn_val(function() {
       switch(.Platform$OS.type,
         "windows" = "windows",
         "unix" = "unix",
-        stop("Unknown OS")
+        abort("Unknown OS")
       )
     }
   )

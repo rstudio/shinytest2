@@ -15,8 +15,8 @@ add_dont_run_reason <- function(reason) {
 }
 
 if (is.null(target_url) || is.null(app$get_path())) {
-  stop("Test recorder requires the 'shinytest2.recorder.url' and ",
-    "'shinytest2.app.dir' options to be set.")
+  abort(paste0("Test recorder requires the 'shinytest2.recorder.url' and ",
+    "'shinytest2.app.dir' options to be set."))
 }
 
 # Can't register more than once, so remove existing one just in case.
@@ -92,7 +92,7 @@ any_unnamed <- function(x) {
 # duplicated names in a or b, only the last one with that name is kept.
 merge_vectors <- function(a, b) {
   if (any_unnamed(a) || any_unnamed(b)) {
-    stop("Vectors must be either NULL or have names for all elements")
+    abort("Vectors must be either NULL or have names for all elements")
   }
 
   x <- c(a, b)

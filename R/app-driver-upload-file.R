@@ -8,10 +8,10 @@ app_upload_file <- function(
   ckm8_assert_app_driver(self, private)
 
   if (values_ && !wait_) {
-    abort(c(
+    abort(paste0(c(
       "values_=TRUE and wait_=FALSE are not compatible.",
       "Can't return all values without waiting for update."
-    ))
+    )))
   }
 
   inputs <- list2(...)
@@ -30,7 +30,7 @@ app_upload_file <- function(
 
   self$log_message("Uploading file", input = inputs[[1]])
 
-  node_id <- app_find_node_id(self, private, id = names(inputs)[1], iotype = "input")
+  node_id <- app_find_node_id(self, private, input = names(inputs)[1])
   filename <- inputs[[1]]
   self$get_chromote_session()$DOM$setFileInputFiles(
     files = list(fs::path_abs(filename)),

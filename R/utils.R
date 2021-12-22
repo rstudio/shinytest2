@@ -1,7 +1,7 @@
 
 # nolint start
 ckm8_assert_single_string <- function(x, .var.name = checkmate::vname(x)) {
-  checkmate::assert_character(x, len = 1, any.missing = FALSE, .var.name = .var.name)
+  checkmate::assert_character(x, len = 1, any.missing = FALSE, .var.name = .var.name, null.ok = FALSE)
 }
 ckm8_assert_single_integer <- function(x, .var.name = checkmate::vname(x)) {
   checkmate::assert_integer(x, len = 1, any.missing = FALSE, .var.name = .var.name)
@@ -101,7 +101,7 @@ is_app <- function(path) {
 app_path <- function(path, arg = "path") {
   # must also check for dir (windows trailing '/')
   if (!(file.exists(path) || dir.exists(path))) {
-    stop(paste0("'", path, "' doesn't exist"), call. = FALSE)
+    abort(paste0("'", path, "' doesn't exist"))
   }
 
   if (is_app(path)) {

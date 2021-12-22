@@ -14,8 +14,8 @@ app_log_entry <- function(
   timestamp = Sys.time()
 ) {
   ckm8_assert_app_driver(self, private)
-  checkmate::assert_character(level, len = 1, null.ok = FALSE, any.missing = FALSE)
-  checkmate::assert_character(message, len = 1, null.ok = FALSE, any.missing = FALSE)
+  ckm8_assert_single_string(level)
+  ckm8_assert_single_string(message)
   checkmate::assert_posixct(timestamp)
 
   entry <- data.frame(

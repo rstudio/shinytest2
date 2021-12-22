@@ -1,3 +1,6 @@
+#' @importFrom rlang missing_arg
+NULL
+
 #' Remote control a Shiny app running in a headless browser
 #'
 #' @description
@@ -14,9 +17,6 @@
 #'        because they often rely on minor details of dependencies.
 #' @param wait_ Wait until all reactive updates have completed?
 #' @param timeout_ Amount of time to wait before giving up (milliseconds).
-#' @param iotype Type of the Shiny component. \pkg{shinytest2} is able to find
-#'   the component by their name, so this is only needed if you use the same name
-#'   for an input and output component.
 #' @importFrom R6 R6Class
 #' @export
 AppDriver <- R6Class(# nolint
@@ -251,9 +251,9 @@ AppDriver <- R6Class(# nolint
 
     #' @description
     #' Find a Shiny binding and click it using the DOM method `TAG.click()`
-    #' @param id The HTML ID of the element to click
-    click = function(id, iotype = c("auto", "input", "output")) {
-      app_click(self, private, id, iotype)
+    #' @param input,output A name of an input or output value. Only one of these may be used.
+    click = function(input = missing_arg(), output = missing_arg()) {
+      app_click(self, private, input = input, output = output)
     },
 
     #' @description
@@ -299,27 +299,33 @@ AppDriver <- R6Class(# nolint
 
     #' @description Wait for a new Shiny value
     #'
-    #' Waits until the `input` or `output` with name `name` is not one of
+    #' Waits until `input`, `output`, or `export`ed shiny value is not one of
     #' `ignore`d values, or the timeout is reached.
     #'
+    #' Only a single `input`, `output`, or `export` value may be used.
+    #'
     #' This function can be useful in helping determine if an application
-    #' has initialized or finished processing a complex reactive situation.
-    #' @param id Name of the Shiny binding
+    #' has finished processing a complex reactive situation.
+    #' @param input,output,export A name of an input, output, or export value. Only one of these may be used.
     #' @param ignore List of possible values to ignore when checking for
     #'   updates.
-    #' @param timeout How often to check for the condition, in ms.
+    #' @param timeout How long we can wait (in ms) before throwing an error.
     #' @param interval How often to check for the condition, in ms.
     #' @return Newly found value
     wait_for_value = function(
-      id,
+      input = missing_arg(),
+      output = missing_arg(),
+      export = missing_arg(),
+      ...,
       ignore = list(NULL, ""),
-      iotype = c("input", "output", "export"),
-      timeout = 10 * 1000,
+      timeout = 15 * 1000,
       interval = 400
     ) {
       app_wait_for_value(
         self, private,
-        id = id, ignore = ignore, iotype = iotype,
+        input = input, output = output, export = export,
+        ...,
+        ignore = ignore,
         timeout = timeout, interval = interval
       )
     },

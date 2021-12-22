@@ -486,17 +486,13 @@ Returns updated values, invisibly.
 \subsection{Method \code{click()}}{
 Find a Shiny binding and click it using the DOM method \code{TAG.click()}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$click(id, iotype = c("auto", "input", "output"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$click(input = missing_arg(), output = missing_arg())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{The HTML ID of the element to click}
-
-\item{\code{iotype}}{Type of the Shiny component. \pkg{shinytest2} is able to find
-the component by their name, so this is only needed if you use the same name
-for an input and output component.}
+\item{\code{input, output}}{A name of an input or output value. Only one of these may be used.}
 }
 \if{html}{\out{</div>}}
 }
@@ -588,17 +584,21 @@ plot redrawing is complete before take a screenshot.
 \subsection{Method \code{wait_for_value()}}{
 Wait for a new Shiny value
 
-Waits until the \code{input} or \code{output} with name \code{name} is not one of
+Waits until \code{input}, \code{output}, or \code{export}ed shiny value is not one of
 \code{ignore}d values, or the timeout is reached.
 
+Only a single \code{input}, \code{output}, or \code{export} value may be used.
+
 This function can be useful in helping determine if an application
-has initialized or finished processing a complex reactive situation.
+has finished processing a complex reactive situation.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_value(
-  id,
+  input = missing_arg(),
+  output = missing_arg(),
+  export = missing_arg(),
+  ...,
   ignore = list(NULL, ""),
-  iotype = c("input", "output", "export"),
-  timeout = 10 * 1000,
+  timeout = 15 * 1000,
   interval = 400
 )}\if{html}{\out{</div>}}
 }
@@ -606,16 +606,14 @@ has initialized or finished processing a complex reactive situation.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{Name of the Shiny binding}
+\item{\code{input, output, export}}{A name of an input, output, or export value. Only one of these may be used.}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
 \item{\code{ignore}}{List of possible values to ignore when checking for
 updates.}
 
-\item{\code{iotype}}{Type of the Shiny component. \pkg{shinytest2} is able to find
-the component by their name, so this is only needed if you use the same name
-for an input and output component.}
-
-\item{\code{timeout}}{How often to check for the condition, in ms.}
+\item{\code{timeout}}{How long we can wait (in ms) before throwing an error.}
 
 \item{\code{interval}}{How often to check for the condition, in ms.}
 }
