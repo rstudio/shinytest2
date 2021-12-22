@@ -1,4 +1,5 @@
-library(testthat)
+## Trouble finding `testthat::expect_match()
+# nolint start
 
 expect_log_tests <- function(log) {
   # print(log)
@@ -188,3 +189,5 @@ test_that("App captures known debug messages", {
   expect_match(log, "\\{chromote\\}   JS websocket \\d\\d:\\d\\d:\\d\\d.\\d\\d recv \\{\"busy\":\"busy\"\\}", all = FALSE)
 
 })
+
+# nolint end
