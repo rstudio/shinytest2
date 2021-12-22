@@ -284,21 +284,17 @@ AppDriver <- R6Class(# nolint
       app_wait_for_condition(self, private, expr = expr, timeout = timeout, interval = interval)
     },
 
-    #' @description Wait for Shiny to not be busy
+    #' @description Wait for Shiny to not be busy for a set amount of time
     #'
-    #' Waits until Shiny is not busy, i.e. the reactive graph has finished
-    #' updating. This is useful, for example, if you've resized the window with
-    #' `$set_window_size()` and want to make sure all plot redrawing is complete
-    #' before take a screenshot.
-    #'
-    #' While this function may return true, Shiny may not have fully stablized.
-    #' It is best to use `TODO-barret-implement wait for stable`
+    #' Waits until Shiny has not been busy for a set duration of time, i.e. no reactivity is updating or has occured.
+    #' This is useful, for example, when waiting for your application to initialize or
+    #' if you've resized the window with `$set_window_size()` and want to make sure all
+    #' plot redrawing is complete before take a screenshot.
+    #' @param duration How long Shiny must be idle (in ms) before unblocking the R session.
     #' @param timeout How often to check for the condition, in ms.
-    #' @param interval How often to check for the condition, in ms.
     #' @return `TRUE` if done before before timeout; `NA` otherwise.
-    # TODO-barret-implement; Add `self$wait_for_stable()`; Remove `self$waitForIdle()`?
-    wait_for_idle = function(timeout = 3 * 1000, interval = 100) {
-      app_wait_for_idle(self, private, timeout = timeout, interval = interval)
+    wait_for_stable = function(duration = 500, timeout = 30 * 1000) {
+      app_wait_for_stable(self, private, duration = duration, timeout = timeout)
     },
 
     #' @description Wait for a new Shiny value

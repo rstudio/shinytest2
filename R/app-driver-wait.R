@@ -17,20 +17,78 @@ app_wait_for_condition <- function(
   )
 }
 
-# TODO-barret-implement; Add `self$wait_for_stable()`; Remove `self$waitForIdle()`?
-app_wait_for_idle <- function(self, private, timeout = 3 * 1000, interval = 100) {
+app_wait_for_stable <- function(self, private, duration = 500, timeout = 3 * 1000) {
   ckm8_assert_app_driver(self, private)
 
-  # Shiny automatically sets using busy/idle events:
-  # https://github.com/rstudio/shiny/blob/e2537d/srcjs/shinyapp.js#L647-L655
-  # Details of busy event: https://shiny.rstudio.com/articles/js-events.html
-  # private$web$waitFor()
-  chromote_wait_for_condition(
+  checkmate::assert_number(duration, lower = 0, finite = TRUE)
+  checkmate::assert_number(timeout, lower = 0, finite = TRUE)
+
+  stable_js <- "
+  let duration = arguments[0]; // time needed to be idle
+  let timeout = arguments[1]; // max total time
+
+  return new Promise((resolve, reject) => {
+
+    window.shinytest2.log('Waiting for Shiny to be stable');
+
+    const cleanup = () => {
+      $(document).off('shiny:busy', busyFn);
+      $(document).off('shiny:idle', idleFn);
+      clearTimeout(timeoutId);
+      clearTimeout(idleId);
+    }
+
+    let timeoutId = setTimeout(() => {
+      cleanup();
+      reject('timeout')
+    }, +timeout); // make sure timeout is number
+
+    let idleId = null;
+    const busyFn = () => {
+      // clear timeout. Calling with `null` is ok.
+      clearTimeout(idleId);
+    };
+    const idleFn = () => {
+      const fn = () => {
+        // Made it through the required duration
+        // Remove event listeners
+        cleanup();
+        // Resolve the promise
+        resolve();
+      };
+
+      // delay the callback wrapper function
+      idleId = setTimeout(fn, +duration);
+    };
+
+    // set up individual listeners for this function.
+    $(document).on('shiny:busy', busyFn);
+    $(document).on('shiny:idle', idleFn);
+
+    // if already idle, call `idleFn` to kick things off.
+    if (window.shinytest2.busy === true) {
+      idleFn();
+    }
+  })
+  "
+
+  ret <- chromote_execute_script(
     self$get_chromote_session(),
-    "!$('html').first().hasClass('shiny-busy')",
-    timeout = 3 * 1000,
-    interval = interval
+    stable_js,
+    arguments = list(
+      duration,
+      timeout
+    ),
+    ## Supply a large "wall time" to chrome devtools protocol. The manual logic should be hit first
+    timeout_ = timeout * 2
   )
+
+  if (identical(ret$result$subtype, "error") || length(ret$exceptionDetails) > 0) {
+    abort("An error occurred while waiting for Shiny to be stable")
+  }
+
+  invisible(TRUE)
+
 }
 
 app_wait_for_value <- function(

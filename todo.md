@@ -72,7 +72,7 @@ execut
 #'   where it is useful to call these functions from the console.
 
 
-ShinyDriver$self$waitForShiny -> ShinyDriver2$wait_for_idle
+√ ShinyDriver$self$waitForShiny -> ShinyDriver2$wait_for_idle
 ShinyDriver$self$findWidget -> gone
 
 
