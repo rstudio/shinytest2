@@ -27,8 +27,8 @@ app_set_inputs <- function(
     )
   })
 
-  self$log_event("Setting inputs",
-    input = paste(names(input_values), collapse = ",")
+  self$log_message(
+    paste0("Setting inputs: ", paste0("'", names(input_values), "'", collapse = "', '"))
   )
 
   app_queue_inputs(self, private, input_values)
@@ -47,7 +47,7 @@ app_set_inputs <- function(
     ))
   }
 
-  self$log_event("Finished setting inputs", timedout = res$timedOut)
+  self$log_message(paste0("Finished setting inputs. Timedout: ", isTRUE(res$timedOut)))
 
   values <- NULL
   if (values_) {

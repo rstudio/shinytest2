@@ -19,6 +19,7 @@ app_appshot <- function(
 
   if (items_is_false) {
     if (!should_take_screenshot) {
+      # TODO-barret; Fix this
       if (is.null(private$default_screenshot_args)) browser()
       abort("Both 'items' and 'screenshot_args' can not be `FALSE` at the same time.")
     }
@@ -58,8 +59,8 @@ app_appshot <- function(
     if (is.null(items$export)) items$export <- FALSE
 
     # Take appshot -------------------------------------------------------------
-    self$log_event("Taking appshot")
-    self$log_event("Gathering input/output/export values")
+    self$log_message("Taking appshot")
+    self$log_message("Gathering input/output/export values")
     url <- app_get_shiny_test_url(self, private, items$input, items$output, items$export)
     req <- httr_get(url)
 

@@ -17,4 +17,5 @@ server <- function(input, output, session) {
     paste0("Hello ", shiny::isolate(input$name), "!")
   })
 }
+
 shinyApp(ui, server)

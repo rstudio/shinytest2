@@ -17,7 +17,7 @@ app_screenshot <- function(
 
   checkmate::assert_number(screenshot_args$delay, lower = 0, finite = TRUE, null.ok = TRUE)
 
-  self$log_event("Taking screenshot")
+  self$log_message("Taking screenshot")
   path <- temp_file(".png")
   screenshot_args$filename <- path
 

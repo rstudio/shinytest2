@@ -9,7 +9,6 @@ record_test(
   ...,
   seed = NULL,
   load_timeout = 10000,
-  debug = "shiny_console",
   shiny_args = list()
 )
 }
@@ -24,13 +23,6 @@ be used in the test script.}
 
 \item{load_timeout}{Maximum time to wait for the Shiny application to load, in
 milliseconds. If a value is provided, it will be saved in the test script.}
-
-\item{debug}{start the underlying \link{AppDriver} in \code{debug}
-mode and print those debug logs to the R console once recording is
-finished. The default, \code{'shiny_console'}, captures and prints R
-console output from the recorded R shiny process. Any value that the
-\code{debug} argument in \link{AppDriver} accepts may be used
-(e.g., \code{'none'} may be used to completely suppress the driver logs).}
 
 \item{shiny_args}{A list of options to pass to \code{runApp()}. If a value
 is provided, it will be saved in the test script.}

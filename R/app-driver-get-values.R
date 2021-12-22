@@ -7,7 +7,7 @@ app_get_values <- function(
   ckm8_assert_app_driver(self, private)
   # Note: This queries method the Shiny server
 
-  self$log_event("Getting all values")
+  self$log_message("Getting all values")
   "!DEBUG app_get_values()"
 
   url <- app_get_shiny_test_url(self, private, input, output, export, format = "rds")
