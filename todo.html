@@ -74,20 +74,17 @@
 </ul><p>list_widgets -&gt; get_input_names, get_output_names … -&gt; arguments get_all_values -&gt; get_values</p>
 <p>get_all_values(input, output, export) -&gt; get_values(input, output, export) why not <code>get_input_values()</code>? What about <code>get_names()</code> list widgets is a JS method that looks for shiny classes, why not use <code>get_values()</code> and</p>
 <p>Implement get_names() -&gt; this should give all <code>input</code>, <code>output</code>, and <code>export</code> names via <code>get_values()</code></p>
-<p>Requirements for release: * Fix recorder * √ unknown fn * path - remove * test file name: test-NAME.R * spacing after library call <em> </em> shinytest -&gt; shinytest2 conversion file * cover the good bits, throw on more custom bits * readme * website * vignettes Future release: * GHA integration</p>
+<p>Requirements for release: * √ Fix recorder * √ unknown fn * √ path - remove * √ test file name: test-NAME.R * √ spacing after library call * Expectations: * Have all expect methods return the <code>x</code> value used in the <code>expect_equal(x, y)</code> * Add <code>expect_values(input = missing_arg(), output = missing_arg(), export = missing_arg(), ..., cran = TRUE)</code>, and maybe <code>expect_input()</code>, <code>expect_output()</code>, <code>expect_export()</code> * Add <code>expect_screenshot()</code> * make <code>variant</code> a <code>missing_arg()</code> and have it throw on <code>expect_screenshot()</code> if not supplied. * Remove <code>expect_appshot()</code> * shinytest -&gt; shinytest2 conversion file * cover the good bits, throw on more custom bits * readme * website * vignettes Future release: * GHA integration</p>
 <div id="documentation" class="section level1">
 
 <div class="section level3">
 <h3 id="vignettes">Vignettes:<a class="anchor" aria-label="anchor" href="#vignettes"></a></h3>
 <ul><li>Which do I need and why do I need them?</li>
 <li>Explain testing robustness
-<ul><li>Robust to flakey; Sensitivity to external updates
+<ul><li>Robust to flakey; Sensitivity to external updates <!-- * `$expect_names(key)` - TODO- add this method; save outputs to snapshots if no key is provided
+    * `$expect_appshot(items = value, screenshot = FALSE)` -->
 <ul><li>
-<code>$expect_names(key)</code> - TODO- add this method; save outputs to snapshots if no key is provided
-<ul><li><code>$expect_appshot(items = value, screenshot = FALSE)</code></li>
-</ul></li>
-<li>
-<code>$expect_value(value)</code> - TODO- add this method; save outputs to snapshots
+<code>$expect_values(input, output, export)</code> - TODO- add this method; save outputs to snapshots
 <ul><li><code>$expect_appshot(items = value, screenshot = FALSE)</code></li>
 </ul></li>
 <li>
@@ -124,7 +121,30 @@
 </li>
 <li>Remove <code>$wait_for_value()</code> in favor of <code>$wait_for_stable()</code>
 </li>
-</ul></div>
+</ul><p>execute_script_callback should not exist they can write a promise and await promise</p>
+<p>add getter methods for all expectations add $get_variant()</p>
+</div>
+<div class="section level2">
+<h2 id="todo-addd">TODO; addd<a class="anchor" aria-label="anchor" href="#todo-addd"></a></h2>
+<p>app<span class="math inline">$expect_screenshot(selector) # assert screenshot equals app$</span>take_screenshot(selector) # screenshot helper file app$get_screenshot(selector, file) # save to file</p>
+<p>app<span class="math inline">$expect_screenshot() # document that this is just equal to the next line expect_snapshot_file(app$</span>get_screenshot(), variant = app$get_variant(), compare = testthat::compare_file_binary)</p>
+<p>app<span class="math inline"><em>e</em><em>x</em><em>p</em><em>e</em><em>c</em><em>t</em><sub><em>v</em></sub><em>a</em><em>l</em><em>u</em><em>e</em><em>s</em>()<em>e</em><em>x</em><em>p</em><em>e</em><em>c</em><em>t</em><sub><em>s</em></sub><em>n</em><em>a</em><em>p</em><em>s</em><em>h</em><em>o</em><em>t</em><sub><em>v</em></sub><em>a</em><em>l</em><em>u</em><em>e</em>(<em>a</em><em>p</em><em>p</em></span>get_values(), variant = app$get_variant(), compare = testthat::compare_file_text)</p>
+<p>app &lt;- AppDriver$new(appDir)</p>
+<p>app<span class="math inline">$click(id = "foo") app$</span>set_inputs(foo = “click”)</p>
+<p>app<span class="math inline">$click(id = "foo") app$</span>click(id = “foo2”) app$set_inputs(foo = “click”, Z = “click”)</p>
+<p>app<span class="math inline">$uploadFile(myFileInput = "filePath") app$</span>click(“Z”)</p>
+<p>app$set_inputs(Z = “click”)</p>
+<p>app$set_inputs(myFileInput = “filePath”, Z = “click”)</p>
+<p>app$expect_snapshot() # <code>shinytest</code></p>
+<p>app<span class="math inline"><em>e</em><em>x</em><em>p</em><em>e</em><em>c</em><em>t</em><sub><em>a</em></sub><em>p</em><em>p</em><em>s</em><em>h</em><em>o</em><em>t</em>()<em>a</em><em>p</em><em>p</em></span>take_screenshot(selector) # screenshot helper file app$expect_values()</p>
+<p>app$expect_values() # json values</p>
+<p>app<span class="math inline"><em>e</em><em>x</em><em>p</em><em>e</em><em>c</em><em>t</em><sub><em>s</em></sub><em>c</em><em>r</em><em>e</em><em>e</em><em>n</em><em>s</em><em>h</em><em>o</em><em>t</em>(<em>s</em><em>e</em><em>l</em><em>e</em><em>c</em><em>t</em><em>o</em><em>r</em>)<em>a</em><em>p</em><em>p</em></span>take_screenshot(selector) # screenshot value</p>
+</div>
+<div class="section level2">
+<h2 id="todo-addd-1">TODO; addd<a class="anchor" aria-label="anchor" href="#todo-addd-1"></a></h2>
+<p>app<span class="math inline">$expect_screenshot(selector) # assert screenshot equals app$</span>take_screenshot(selector) # screenshot helper file app$get_screenshot(selector, file) # save to file</p>
+<p>app<span class="math inline">$expect_appshot(id = "winston")  app$</span>expect_values(auto = “winston”) app$expect_screenshot(selector = find_container(“winston”))</p>
+</div>
 </div>
 
 
