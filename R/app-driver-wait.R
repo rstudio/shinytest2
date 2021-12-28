@@ -150,7 +150,17 @@ app_wait_for_value <- function(
 
     # if too much time has elapsed... throw
     if (now() > end_time) {
-      abort(paste0("timeout reached when waiting for value: ", id))
+      group <-
+        if (input_provided) "input"
+        else if (output_provided) "output"
+        else if (export_provided) "export"
+        else abort("unknown group")
+      id <-
+        if (input_provided) input
+        else if (output_provided) output
+        else if (export_provided) export
+        else abort("unknown group")
+      abort(paste0("timeout reached when waiting for ", group, ": ", id))
     }
 
     # wait a little bit for shiny to do some work

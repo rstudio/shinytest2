@@ -20,7 +20,7 @@ server <- function(input, output, session) {
   output$first <- renderUI({
     if (!first_flag) {
       first_flag <<- TRUE
-      invalidateLater(timeout)
+      shiny::invalidateLater(timeout)
       return(
         h3("(waiting on first)")
       )
@@ -35,7 +35,7 @@ server <- function(input, output, session) {
   output$second <- renderUI({
     if (!second_flag) {
       second_flag <<- TRUE
-      invalidateLater(timeout)
+      shiny::invalidateLater(timeout)
       return(
         h3("(waiting on second)")
       )
@@ -50,7 +50,7 @@ server <- function(input, output, session) {
   output$third <- renderUI({
     if (!third_flag) {
       third_flag <<- TRUE
-      invalidateLater(timeout)
+      shiny::invalidateLater(timeout)
       return(
         h3("(waiting on third)")
       )
@@ -63,7 +63,7 @@ server <- function(input, output, session) {
     )
   })
   output$verbatim_txt <- renderUI({
-    verbatimTextOutput("txt")
+    shiny::verbatimTextOutput("txt")
   })
   output$txt <- renderText({
     paste(input$slider1, input$slider2, input$slider3, sep = " ")
