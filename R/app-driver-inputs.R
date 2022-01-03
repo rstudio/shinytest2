@@ -10,10 +10,10 @@ app_set_inputs <- function(
   ckm8_assert_app_driver(self, private)
 
   if (values_ && !wait_) {
-    abort(c(
+    abort(paste0(c(
       "values_=TRUE and wait_=FALSE are not compatible.",
       "Can't return all values without waiting for update."
-    ))
+    )))
   }
 
   priority_ <- match.arg(priority_)
@@ -72,14 +72,15 @@ app_flush_inputs <- function(self, private, wait = TRUE, timeout = 1000) {
   wait <- isTRUE(wait)
   checkmate::assert_number(timeout, lower = 0, finite = TRUE, null.ok = FALSE)
 
-  self$execute_script_callback(
+  self$execute_script(
     "
-    var wait = arguments[0];
-    var timeout = arguments[1];
-    var resolve = arguments[2];
-    shinytest2.outputValuesWaiter.start(timeout);
-    shinytest2.inputQueue.flush();
-    shinytest2.outputValuesWaiter.finish(wait, resolve);
+    return new Promise((resolve, reject) => {
+      var wait = arguments[0];
+      var timeout = arguments[1];
+      shinytest2.outputValuesWaiter.start(timeout);
+      shinytest2.inputQueue.flush();
+      shinytest2.outputValuesWaiter.finish(wait, resolve);
+    });
     ",
     arguments = list(wait, timeout)
   )

@@ -127,11 +127,10 @@ app$get_log() # (long output lines have been truncated)
 \item \href{#method-set_inputs}{\code{AppDriver$set_inputs()}}
 \item \href{#method-click}{\code{AppDriver$click()}}
 \item \href{#method-upload_file}{\code{AppDriver$upload_file()}}
-\item \href{#method-wait_for_condition}{\code{AppDriver$wait_for_condition()}}
-\item \href{#method-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
+\item \href{#method-wait_for_script}{\code{AppDriver$wait_for_script()}}
+\item \href{#method-wait_for_stable}{\code{AppDriver$wait_for_stable()}}
 \item \href{#method-wait_for_value}{\code{AppDriver$wait_for_value()}}
 \item \href{#method-execute_script}{\code{AppDriver$execute_script()}}
-\item \href{#method-execute_script_callback}{\code{AppDriver$execute_script_callback()}}
 \item \href{#method-get_path}{\code{AppDriver$get_path()}}
 \item \href{#method-get_url}{\code{AppDriver$get_url()}}
 \item \href{#method-get_window_size}{\code{AppDriver$get_window_size()}}
@@ -175,8 +174,8 @@ single \code{app.R} file or a \code{server.R}-\code{ui.R} pair.}
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
 \item{\code{load_timeout}}{How long to wait for the app to load, in ms.
-This includes the time to start R. Defaults to 5s when running
-locally and 10s when running on CI. Maximum value is 10s.}
+This includes the time to start R. Defaults to 10s when running
+locally and 20s when running on CI.}
 
 \item{\code{variant}}{If not-\code{NULL}, results will be saved in
 _snaps/{variant}/{test.md}\verb{, so }variant` must be a single
@@ -487,17 +486,13 @@ Returns updated values, invisibly.
 \subsection{Method \code{click()}}{
 Find a Shiny binding and click it using the DOM method \code{TAG.click()}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$click(id, iotype = c("auto", "input", "output"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$click(input = missing_arg(), output = missing_arg())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{The HTML ID of the element to click}
-
-\item{\code{iotype}}{Type of the Shiny component. \pkg{shinytest2} is able to find
-the component by their name, so this is only needed if you use the same name
-for an input and output component.}
+\item{\code{input, output}}{A name of an input or output value. Only one of these may be used.}
 }
 \if{html}{\out{</div>}}
 }
@@ -528,21 +523,21 @@ control. Otherwise, the return value will be \code{NULL}.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-wait_for_condition"></a>}}
-\if{latex}{\out{\hypertarget{method-wait_for_condition}{}}}
-\subsection{Method \code{wait_for_condition()}}{
+\if{html}{\out{<a id="method-wait_for_script"></a>}}
+\if{latex}{\out{\hypertarget{method-wait_for_script}{}}}
+\subsection{Method \code{wait_for_script()}}{
 Wait for a JavaScript expression to be true
 
 Waits until a JavaScript \code{expr}ession evaluates to \code{true} or the
 \code{timeout} is exceeded.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_condition(expr, timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_script(script, timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{expr}}{A string containing JavaScript code. Will wait until the
+\item{\code{script}}{A string containing JavaScript code. Will wait until the
 condition returns \code{true}.}
 
 \item{\code{timeout}}{How often to check for the condition, in ms.}
@@ -552,38 +547,35 @@ condition returns \code{true}.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{TRUE} if expression evaluates to \code{true} without error, before
-timeout. Otherwise returns \code{FALSE}.
+\code{invisible(self)} if expression evaluates to \code{true} without error within the timeout.
+Otherwise an error will be thrown
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-wait_for_idle"></a>}}
-\if{latex}{\out{\hypertarget{method-wait_for_idle}{}}}
-\subsection{Method \code{wait_for_idle()}}{
-Wait for Shiny to not be busy
+\if{html}{\out{<a id="method-wait_for_stable"></a>}}
+\if{latex}{\out{\hypertarget{method-wait_for_stable}{}}}
+\subsection{Method \code{wait_for_stable()}}{
+Wait for Shiny to not be busy for a set amount of time
 
-Waits until Shiny is not busy, i.e. the reactive graph has finished
-updating. This is useful, for example, if you've resized the window with
-\verb{$set_window_size()} and want to make sure all plot redrawing is complete
-before take a screenshot.
-
-While this function may return true, Shiny may not have fully stablized.
-It is best to use \verb{TODO-barret-implement wait for stable}
+Waits until Shiny has not been busy for a set duration of time, i.e. no reactivity is updating or has occured.
+This is useful, for example, when waiting for your application to initialize or
+if you've resized the window with \verb{$set_window_size()} and want to make sure all
+plot redrawing is complete before take a screenshot.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_idle(timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_stable(duration = 500, timeout = 30 * 1000)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{timeout}}{How often to check for the condition, in ms.}
+\item{\code{duration}}{How long Shiny must be idle (in ms) before unblocking the R session.}
 
-\item{\code{interval}}{How often to check for the condition, in ms.}
+\item{\code{timeout}}{How often to check for the condition, in ms.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{TRUE} if done before before timeout; \code{NA} otherwise.
+\code{invisible(self)} if Shiny stablizes within the timeout. Otherwise an error will be thrown
 }
 }
 \if{html}{\out{<hr>}}
@@ -592,17 +584,21 @@ It is best to use \verb{TODO-barret-implement wait for stable}
 \subsection{Method \code{wait_for_value()}}{
 Wait for a new Shiny value
 
-Waits until the \code{input} or \code{output} with name \code{name} is not one of
+Waits until \code{input}, \code{output}, or \code{export}ed shiny value is not one of
 \code{ignore}d values, or the timeout is reached.
 
+Only a single \code{input}, \code{output}, or \code{export} value may be used.
+
 This function can be useful in helping determine if an application
-has initialized or finished processing a complex reactive situation.
+has finished processing a complex reactive situation.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_value(
-  id,
+  input = missing_arg(),
+  output = missing_arg(),
+  export = missing_arg(),
+  ...,
   ignore = list(NULL, ""),
-  iotype = c("input", "output", "export"),
-  timeout = 10 * 1000,
+  timeout = 15 * 1000,
   interval = 400
 )}\if{html}{\out{</div>}}
 }
@@ -610,16 +606,14 @@ has initialized or finished processing a complex reactive situation.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{Name of the Shiny binding}
+\item{\code{input, output, export}}{A name of an input, output, or export value. Only one of these may be used.}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
 \item{\code{ignore}}{List of possible values to ignore when checking for
 updates.}
 
-\item{\code{iotype}}{Type of the Shiny component. \pkg{shinytest2} is able to find
-the component by their name, so this is only needed if you use the same name
-for an input and output component.}
-
-\item{\code{timeout}}{How often to check for the condition, in ms.}
+\item{\code{timeout}}{How long we can wait (in ms) before throwing an error.}
 
 \item{\code{interval}}{How often to check for the condition, in ms.}
 }
@@ -657,39 +651,6 @@ To have JavaScript code execute asynchronously, wrap the code in a Promise objec
 }
 \subsection{Returns}{
 Result of the script.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-execute_script_callback"></a>}}
-\if{latex}{\out{\hypertarget{method-execute_script_callback}{}}}
-\subsection{Method \code{execute_script_callback()}}{
-Execute JavaScript code in the browser with an additional \code{resolve} and \code{reject} arguments.
-
-This function will block the local R session until one of the last two arguments (\code{resolve} and \code{reject}) are called.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$execute_script_callback(
-  script,
-  arguments = list(),
-  ...,
-  timeout = 15 * 1000
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{script}}{JS to execute. \code{resolve} and \code{reject} arguments are added to the script call. To return control back to the R session, one of these methods must be called.}
-
-\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Self, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

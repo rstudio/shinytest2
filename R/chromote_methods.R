@@ -14,6 +14,8 @@ chromote_eval <- function(
   chromote_session,
   js,
   ...,
+  timeout = 10 * 1000, # milliseconds for chrome devtools protocol
+  timeout_ = timeout * 2 / 1000, # seconds for chromote to timeout; Default to double wall time
   returnByValue = TRUE, # nolint
   wait_ = TRUE
 ) {
@@ -29,7 +31,7 @@ chromote_eval <- function(
         # https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#method-evaluate
         chromote_session$
           Runtime$
-          evaluate(js, ..., returnByValue = returnByValue)
+          evaluate(js, ..., returnByValue = returnByValue, timeout = timeout, timeout_ = timeout_)
       },
       error = function(e) {
         # Return something similar to a timeout object
@@ -89,8 +91,8 @@ chromote_execute_script <- function(
   # TODO-barret-answer; `...` should be empty. Use `eval_args()` instead.
   ..., # Passed to chromote_session$Runtime$evaluate(...)
   arguments = list(),
-  awaitPromise = wait_, # nolint # TODO-barret; should this be `await_promise`? No; It needs to be `...` compatible
   timeout = 10 * 1000,
+  awaitPromise = wait_, # nolint # TODO-barret; should this be `await_promise`? No; It needs to be `...` compatible
   wait_ = TRUE
 ) {
   assert_chromote_session(chromote_session)
@@ -122,54 +124,53 @@ chromote_execute_script <- function(
 
 assert_wait_is_true <- function(wait_, fn_name, redirect_fn_name = NULL) {
   if (!isTRUE(wait_)) {
-    stop(paste0(
+    abort(paste0(
       "`", fn_name, "(wait_=) must be `TRUE`.",
       if (!is.null(redirect_fn_name)) {
         paste0(" If `wait_` needs to be `FALSE`, use `", redirect_fn_name, "()`")
       }
     ))
-    stop()
   }
 
 }
-#' @describeIn chromote_execute_script Executes the supplied JavaScript script (`script`) within a function. The function has the `window` context and access to `arguments` supplied. An extra argument (`resolve(val)`) is added to the `arguments` list. If `wait_ = TRUE`, then `chromote_execute_script_callback()` will block the main R session until `resolve()` has been called.
-#' @importFrom rlang list2
-#' @noRd
-chromote_execute_script_callback <- function( # nolint
-  chromote_session,
-  script,
-  ...,
-  arguments = list2(),
-  timeout = 15 * 1000,
-  wait_ = TRUE
-) {
-  assert_wait_is_true(wait_, "chromote_execute_script_callback", "chromote_execute_script")
-  if ("awaitPromise" %in% rlang::names2(list2(...))) {
-    stop("`awaitPromise` can not be supplied to chromote_execute_script_callback()")
-  }
-  checkmate::assert_character(script, any.missing = FALSE, len = 1)
+# #' @describeIn chromote_execute_script Executes the supplied JavaScript script (`script`) within a function. The function has the `window` context and access to `arguments` supplied. An extra argument (`resolve(val)`) is added to the `arguments` list. If `wait_ = TRUE`, then `chromote_execute_script_callback()` will block the main R session until `resolve()` has been called.
+# #' @noRd
+# chromote_execute_script_callback <- function( # nolint
+#   chromote_session,
+#   script,
+#   ...,
+#   arguments = list2(),
+#   timeout = 15 * 1000,
+#   wait_ = TRUE
+# ) {
+#   stop("this should not be called!")
+#   assert_wait_is_true(wait_, "chromote_execute_script_callback", "chromote_execute_script")
+#   if ("awaitPromise" %in% rlang::names2(list2(...))) {
+#     stop("`awaitPromise` can not be supplied to chromote_execute_script_callback()")
+#   }
+#   checkmate::assert_character(script, any.missing = FALSE, len = 1)
 
-  # 1. Pass in user args (via `chromote_execute_script()`)
-  # 2. Append the resolve function to args
-  #   * We MUST wrap user code in a `function()` as arrow functions `=>` do not support `arguments`
-  #   * By having the wrapping `Promise` contain an arrow function, then `arguments` does not get a new binding
-  #     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions#no_binding_of_arguments
-  # 3. Call fn w/ user args and resolve function.
-  #   * The fn contents should be the user script and have `window` as the context
-  #   * This allows for the user to be none the wiser about where `callback` comes from.
-  #   * `callback` is a function that only takes a `value` argument.
-  #   * There is no ability to `reject()`.
+#   # 1. Pass in user args (via `chromote_execute_script()`)
+#   # 2. Append the resolve function to args
+#   #   * We MUST wrap user code in a `function()` as arrow functions `=>` do not support `arguments`
+#   #   * By having the wrapping `Promise` contain an arrow function, then `arguments` does not get a new binding
+#   #     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions#no_binding_of_arguments
+#   # 3. Call fn w/ user args and resolve function.
+#   #   * The fn contents should be the user script and have `window` as the context
+#   #   * This allows for the user to be none the wiser about where `callback` comes from.
+#   #   * `callback` is a function that only takes a `value` argument.
+#   #   * There is no ability to `reject()`.
 
-  script <- paste0(
-"return new Promise((resolve, reject) => {\n",
-"  (function() {\n",
-    script, "\n",
-# Call fn w/ user arguments and resolve function using the `window` context
-"  }).apply(null, [...arguments, resolve, reject]);
-});"
-  )
-  chromote_execute_script(chromote_session, script, ..., awaitPromise = wait_, arguments = arguments, timeout = timeout, wait_ = wait_)
-}
+#   script <- paste0(
+# "return new Promise((resolve, reject) => {\n",
+# "  (function() {\n",
+#     script, "\n",
+# # Call fn w/ user arguments and resolve function using the `window` context
+# "  }).apply(null, [...arguments, resolve, reject]);
+# });"
+#   )
+#   chromote_execute_script(chromote_session, script, ..., awaitPromise = wait_, arguments = arguments, timeout = timeout, wait_ = wait_)
+# }
 
 
 
@@ -177,10 +178,11 @@ chromote_execute_script_callback <- function( # nolint
 #'
 #' @param condition_js A piece of JavaScript code that should eventually evaluate to a [`true`thy value](https://developer.mozilla.org/en-US/docs/Glossary/Truthy).
 #' @param interval How long (milliseconds) Chrome should wait between checking `condition_js`
-#' @return `TRUE` if expression evaluates to `TRUE` without error, before
-#'   timeout. Otherwise returns `FALSE`.
+#' @return `invisible(chromote_session)` if expression evaluates to `TRUE` without error, before
+#'   timeout. Otherwise an error is thrown.
 #' @noRd
-chromote_wait_for_condition <- function(chromote_session, condition_js, ..., timeout = 15 * 1000, interval = 100, wait_ = TRUE) {
+#' @importFrom rlang list2
+chromote_wait_for_condition <- function(chromote_session, condition_js, ..., arguments = list2(), timeout = 15 * 1000, interval = 100, wait_ = TRUE) {
   assert_wait_is_true(wait_, "chromote_wait_for_condition", NULL)
   ellipsis::check_dots_empty()
   checkmate::assert_character(condition_js, any.missing = FALSE, len = 1)
@@ -191,38 +193,39 @@ chromote_wait_for_condition <- function(chromote_session, condition_js, ..., tim
   # way to cancel the `setTimeout` that has already been submitted. (Which will never stop resubmitting)
   script <- paste0(
 # `callback` provided by chromote_execute_script_callback()
-"let resolve = arguments[0];
-let reject = arguments[1];
-let start = new Date();
-function condition() {
-  return ", condition_js, ";
-};\n",
-# Use `chromote_wait_for_condition` as the error message matches the R method
-"function chromote_wait_for_condition() {
-  let diffTime = new Date() - (+start + ", timeout, ");
-  if (diffTime > 0) {
-    return reject('Timeout waiting for condition');
+"return new Promise((resolve, reject) => {
+  let start = Date.now();
+  const condition = () => {
+    return ", condition_js, ";
+  };\n",
+  # Use `chromote_wait_for_condition` as the error message matches the R method
+  "chromote_wait_for_condition = () => {
+    let diffTime = new Date() - (+start + ", timeout, ");
+    if (diffTime > 0) {
+      return reject('Timeout waiting for condition');
+    }
+    if (condition()) {
+      return resolve();
+    }
+    setTimeout(chromote_wait_for_condition, ", interval, ");
   }
-  if (condition()) {
-    return resolve();
-  }
-  setTimeout(chromote_wait_for_condition, ", interval, ");
-}
-chromote_wait_for_condition();"
+  chromote_wait_for_condition();
+  });"
   )
-  ret <- chromote_execute_script_callback(
+  ret <- chromote_execute_script(
     chromote_session,
     script,
+    awaitPromise = TRUE,
     ## Supply a large "wall time" to chrome devtools protocol. The manual logic should be hit first
-    timeout_ = timeout * 2,
+    timeout = timeout * 2,
     wait_ = wait_
   )
 
   if (identical(ret$result$subtype, "error") || length(ret$exceptionDetails) > 0) {
-    return(FALSE)
+    abort("Timeout waiting for condition")
   }
 
-  TRUE
+  invisible(chromote_session)
 }
 
 

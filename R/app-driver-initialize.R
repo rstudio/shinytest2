@@ -40,7 +40,7 @@ app_initialize <- function(
     }
   private$clean_logs <- isTRUE(clean_logs)
   if (is.null(load_timeout)) {
-    load_timeout <- if (on_ci()) 10000 else 5000
+    load_timeout <- if (on_ci()) 20 * 1000 else 10 * 1000
   }
 
   self$log_message("Start AppDriver initialization")
@@ -95,19 +95,27 @@ app_initialize <- function(
     )
   })
 
-  "!DEBUG wait until Shiny starts"
-  self$log_message("Waiting until Shiny app starts")
+  "!DEBUG waiting for Shiny to become stable"
+  self$log_message("Waiting until Shiny is stable")
 
-  if (!isTRUE(chromote_wait_for_condition(
-    self$get_chromote_session(),
-    "window.shinytest2 && window.shinytest2.ready === true",
-    timeout = load_timeout
-  ))) {
-    abort(paste0(
-      "Shiny app did not load in ", load_timeout, "ms.\nApp logs:\n",
-      format(self$get_log())
-    ))
-  }
+  withCallingHandlers(
+    {
+      chromote_wait_for_condition(
+        self$get_chromote_session(),
+        "window.shinytest2 && window.shinytest2.ready === true",
+        timeout = load_timeout
+      )
+      self$wait_for_stable(timeout = load_timeout)
+    },
+    error = function(e) {
+      abort(paste0(
+        "Shiny app did not become stable in ", load_timeout, "ms.\n",
+        "Error:\n", conditionMessage(e), "\n",
+        "App logs:\n", format(self$get_log())
+      ))
+    }
+  )
+
 
   "!DEBUG shiny started"
   self$log_message("Shiny app started")

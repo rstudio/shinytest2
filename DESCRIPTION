@@ -56,7 +56,7 @@ Collate:
     'R6-helper.R'
     'app-driver-appshot.R'
     'app-driver-chromote.R'
-    'app-driver-execute.R'
+    'app-driver-execute-script.R'
     'app-driver-expect-appshot.R'
     'app-driver-expect-download.R'
     'app-driver-expect-script.R'

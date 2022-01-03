@@ -8,20 +8,20 @@ httr_get <- function(url) {
   # ))
 
   if (!pingr::is_up(pieces$hostname, pieces$port)) {
-    stop("Shiny app is no longer running")
+    abort("Shiny app is no longer running")
   }
 
-  tryCatch(
+  withCallingHandlers(
     {
       req <- httr::GET(url)
     },
     # Attempt to capture empty reply error and provide better message
     error = function(e) {
       if (grepl("Empty reply from server", as.character(e), fixed = TRUE)) {
-        stop("Shiny app is no longer running")
+        abort("Shiny app is no longer running")
       }
       # Unknown error, rethrow
-      stop(e)
+      abort(e)
     }
   )
 
@@ -33,5 +33,5 @@ httr_get <- function(url) {
   cat("Query failed (", status, ")----------------------\n", sep = "")
   cat(httr::content(req, "text"), "\n")
   cat("----------------------------------------\n")
-  stop("Unable request data from server")
+  abort("Unable request data from server")
 }
