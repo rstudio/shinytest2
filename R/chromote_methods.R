@@ -202,7 +202,7 @@ chromote_wait_for_condition <- function(chromote_session, condition_js, ..., arg
   "chromote_wait_for_condition = () => {
     let diffTime = new Date() - (+start + ", timeout, ");
     if (diffTime > 0) {
-      return reject('Timeout waiting for condition');
+      return reject('Timeout waiting for JS condition to be `true`');
     }
     if (condition()) {
       return resolve();
