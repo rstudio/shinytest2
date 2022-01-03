@@ -77,11 +77,10 @@ with a live app.</p>
 <li><p><a href="#method-set_inputs"><code>AppDriver$set_inputs()</code></a></p></li>
 <li><p><a href="#method-click"><code>AppDriver$click()</code></a></p></li>
 <li><p><a href="#method-upload_file"><code>AppDriver$upload_file()</code></a></p></li>
-<li><p><a href="#method-wait_for_condition"><code>AppDriver$wait_for_condition()</code></a></p></li>
-<li><p><a href="#method-wait_for_idle"><code>AppDriver$wait_for_idle()</code></a></p></li>
+<li><p><a href="#method-wait_for_script"><code>AppDriver$wait_for_script()</code></a></p></li>
+<li><p><a href="#method-wait_for_stable"><code>AppDriver$wait_for_stable()</code></a></p></li>
 <li><p><a href="#method-wait_for_value"><code>AppDriver$wait_for_value()</code></a></p></li>
 <li><p><a href="#method-execute_script"><code>AppDriver$execute_script()</code></a></p></li>
-<li><p><a href="#method-execute_script_callback"><code>AppDriver$execute_script_callback()</code></a></p></li>
 <li><p><a href="#method-get_path"><code>AppDriver$get_path()</code></a></p></li>
 <li><p><a href="#method-get_url"><code>AppDriver$get_url()</code></a></p></li>
 <li><p><a href="#method-get_window_size"><code>AppDriver$get_window_size()</code></a></p></li>
@@ -125,8 +124,8 @@ single <code>app.R</code> file or a <code>server.R</code>-<code>ui.R</code> pair
 
 <dt><code>load_timeout</code></dt>
 <dd><p>How long to wait for the app to load, in ms.
-This includes the time to start R. Defaults to 5s when running
-locally and 10s when running on CI. Maximum value is 10s.</p></dd>
+This includes the time to start R. Defaults to 10s when running
+locally and 20s when running on CI.</p></dd>
 
 
 <dt><code>variant</code></dt>
@@ -478,19 +477,13 @@ an input binding.</p></dd>
 <h3 id="method-click-">Method <code>click()</code><a class="anchor" aria-label="anchor" href="#method-click-"></a></h3>
 <p>Find a Shiny binding and click it using the DOM method <code>TAG.click()</code></p><div class="section">
 <h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="va">id</span>, iotype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"input"</span>, <span class="st">"output"</span><span class="op">)</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span>input <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>, output <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>The HTML ID of the element to click</p></dd>
-
-
-<dt><code>iotype</code></dt>
-<dd><p>Type of the Shiny component. <span class="pkg">shinytest2</span> is able to find
-the component by their name, so this is only needed if you use the same name
-for an input and output component.</p></dd>
+<p></p><div class="arguments"><dl><dt><code>input, output</code></dt>
+<dd><p>A name of an input or output value. Only one of these may be used.</p></dd>
 
 
 </dl><p></p></div>
@@ -526,18 +519,18 @@ control. Otherwise, the return value will be <code>NULL</code>.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-wait_for_condition"></a><div class="section">
-<h3 id="method-wait-for-condition-">Method <code>wait_for_condition()</code><a class="anchor" aria-label="anchor" href="#method-wait-for-condition-"></a></h3>
+</div><p></p><hr><a id="method-wait_for_script"></a><div class="section">
+<h3 id="method-wait-for-script-">Method <code>wait_for_script()</code><a class="anchor" aria-label="anchor" href="#method-wait-for-script-"></a></h3>
 <p>Wait for a JavaScript expression to be true</p>
 <p>Waits until a JavaScript <code>expr</code>ession evaluates to <code>true</code> or the
 <code>timeout</code> is exceeded.</p><div class="section">
 <h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_condition</span><span class="op">(</span><span class="va">expr</span>, timeout <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">1000</span>, interval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_script</span><span class="op">(</span><span class="va">script</span>, timeout <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">1000</span>, interval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>expr</code></dt>
+<p></p><div class="arguments"><dl><dt><code>script</code></dt>
 <dd><p>A string containing JavaScript code. Will wait until the
 condition returns <code>true</code>.</p></dd>
 
@@ -554,30 +547,28 @@ condition returns <code>true</code>.</p></dd>
 </div>
 <div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
-<p><code>TRUE</code> if expression evaluates to <code>true</code> without error, before
-timeout. Otherwise returns <code>FALSE</code>.</p>
+<p><code>invisible(self)</code> if expression evaluates to <code>true</code> without error within the timeout.
+Otherwise an error will be thrown</p>
 </div>
 
-</div><p></p><hr><a id="method-wait_for_idle"></a><div class="section">
-<h3 id="method-wait-for-idle-">Method <code>wait_for_idle()</code><a class="anchor" aria-label="anchor" href="#method-wait-for-idle-"></a></h3>
-<p>Wait for Shiny to not be busy</p>
-<p>Waits until Shiny is not busy, i.e. the reactive graph has finished
-updating. This is useful, for example, if you've resized the window with
-<code>$set_window_size()</code> and want to make sure all plot redrawing is complete
-before take a screenshot.</p>
-<p>While this function may return true, Shiny may not have fully stablized.
-It is best to use <code>TODO-barret-implement wait for stable</code></p><div class="section">
+</div><p></p><hr><a id="method-wait_for_stable"></a><div class="section">
+<h3 id="method-wait-for-stable-">Method <code>wait_for_stable()</code><a class="anchor" aria-label="anchor" href="#method-wait-for-stable-"></a></h3>
+<p>Wait for Shiny to not be busy for a set amount of time</p>
+<p>Waits until Shiny has not been busy for a set duration of time, i.e. no reactivity is updating or has occured.
+This is useful, for example, when waiting for your application to initialize or
+if you've resized the window with <code>$set_window_size()</code> and want to make sure all
+plot redrawing is complete before take a screenshot.</p><div class="section">
 <h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_idle</span><span class="op">(</span>timeout <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">1000</span>, interval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_stable</span><span class="op">(</span>duration <span class="op">=</span> <span class="fl">500</span>, timeout <span class="op">=</span> <span class="fl">30</span> <span class="op">*</span> <span class="fl">1000</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-12">Arguments<a class="anchor" aria-label="anchor" href="#arguments-12"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>timeout</code></dt>
-<dd><p>How often to check for the condition, in ms.</p></dd>
+<p></p><div class="arguments"><dl><dt><code>duration</code></dt>
+<dd><p>How long Shiny must be idle (in ms) before unblocking the R session.</p></dd>
 
 
-<dt><code>interval</code></dt>
+<dt><code>timeout</code></dt>
 <dd><p>How often to check for the condition, in ms.</p></dd>
 
 
@@ -585,30 +576,37 @@ It is best to use <code>TODO-barret-implement wait for stable</code></p><div cla
 </div>
 <div class="section">
 <h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
-<p><code>TRUE</code> if done before before timeout; <code>NA</code> otherwise.</p>
+<p><code>invisible(self)</code> if Shiny stablizes within the timeout. Otherwise an error will be thrown</p>
 </div>
 
 </div><p></p><hr><a id="method-wait_for_value"></a><div class="section">
 <h3 id="method-wait-for-value-">Method <code>wait_for_value()</code><a class="anchor" aria-label="anchor" href="#method-wait-for-value-"></a></h3>
 <p>Wait for a new Shiny value</p>
-<p>Waits until the <code>input</code> or <code>output</code> with name <code>name</code> is not one of
+<p>Waits until <code>input</code>, <code>output</code>, or <code>export</code>ed shiny value is not one of
 <code>ignore</code>d values, or the timeout is reached.</p>
+<p>Only a single <code>input</code>, <code>output</code>, or <code>export</code> value may be used.</p>
 <p>This function can be useful in helping determine if an application
-has initialized or finished processing a complex reactive situation.</p><div class="section">
+has finished processing a complex reactive situation.</p><div class="section">
 <h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_value</span><span class="op">(</span>
-  <span class="va">id</span>,
+  input <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
+  output <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
+  export <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">...</span>,
   ignore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="st">""</span><span class="op">)</span>,
-  iotype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"input"</span>, <span class="st">"output"</span>, <span class="st">"export"</span><span class="op">)</span>,
-  timeout <span class="op">=</span> <span class="fl">10</span> <span class="op">*</span> <span class="fl">1000</span>,
+  timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span>,
   interval <span class="op">=</span> <span class="fl">400</span>
 <span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-13">Arguments<a class="anchor" aria-label="anchor" href="#arguments-13"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>Name of the Shiny binding</p></dd>
+<p></p><div class="arguments"><dl><dt><code>input, output, export</code></dt>
+<dd><p>A name of an input, output, or export value. Only one of these may be used.</p></dd>
+
+
+<dt><code>...</code></dt>
+<dd><p>Must be empty. Allows for parameter expansion.</p></dd>
 
 
 <dt><code>ignore</code></dt>
@@ -616,14 +614,8 @@ has initialized or finished processing a complex reactive situation.</p><div cla
 updates.</p></dd>
 
 
-<dt><code>iotype</code></dt>
-<dd><p>Type of the Shiny component. <span class="pkg">shinytest2</span> is able to find
-the component by their name, so this is only needed if you use the same name
-for an input and output component.</p></dd>
-
-
 <dt><code>timeout</code></dt>
-<dd><p>How often to check for the condition, in ms.</p></dd>
+<dd><p>How long we can wait (in ms) before throwing an error.</p></dd>
 
 
 <dt><code>interval</code></dt>
@@ -672,65 +664,27 @@ To have JavaScript code execute asynchronously, wrap the code in a Promise objec
 <p>Result of the script.</p>
 </div>
 
-</div><p></p><hr><a id="method-execute_script_callback"></a><div class="section">
-<h3 id="method-execute-script-callback-">Method <code>execute_script_callback()</code><a class="anchor" aria-label="anchor" href="#method-execute-script-callback-"></a></h3>
-<p>Execute JavaScript code in the browser with an additional <code>resolve</code> and <code>reject</code> arguments.</p>
-<p>This function will block the local R session until one of the last two arguments (<code>resolve</code> and <code>reject</code>) are called.</p><div class="section">
-<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">execute_script_callback</span><span class="op">(</span>
-  <span class="va">script</span>,
-  arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  <span class="va">...</span>,
-  timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span>
-<span class="op">)</span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-15">Arguments<a class="anchor" aria-label="anchor" href="#arguments-15"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>script</code></dt>
-<dd><p>JS to execute. <code>resolve</code> and <code>reject</code> arguments are added to the script call. To return control back to the R session, one of these methods must be called.</p></dd>
-
-
-<dt><code>arguments</code></dt>
-<dd><p>A list of unnamed arguments to send to the script.</p></dd>
-
-
-<dt><code>...</code></dt>
-<dd><p>Must be empty. Allows for parameter expansion.</p></dd>
-
-
-<dt><code>timeout</code></dt>
-<dd><p>Amount of time to wait before giving up (milliseconds).</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
-<p>Self, invisibly.</p>
-</div>
-
 </div><p></p><hr><a id="method-get_path"></a><div class="section">
 <h3 id="method-get-path-">Method <code>get_path()</code><a class="anchor" aria-label="anchor" href="#method-get-path-"></a></h3>
 <p>Retrieve the Shiny app path</p><div class="section">
-<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
+<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_path</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
+<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
 <p>If it's a .Rmd file, it will return the full .Rmd path, otherwise it will return the directory containing the file.</p>
 </div>
 
 </div><p></p><hr><a id="method-get_url"></a><div class="section">
 <h3 id="method-get-url-">Method <code>get_url()</code><a class="anchor" aria-label="anchor" href="#method-get-url-"></a></h3>
 <p>Retrieve the Shiny app URL</p><div class="section">
-<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
+<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_url</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
+<h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
 <p>URL</p>
 </div>
 
@@ -738,7 +692,7 @@ To have JavaScript code execute asynchronously, wrap the code in a Promise objec
 <h3 id="method-get-window-size-">Method <code>get_window_size()</code><a class="anchor" aria-label="anchor" href="#method-get-window-size-"></a></h3>
 <p>Get current size of the browser window, as list of integer scalars
 named <code>width</code> and <code>height</code>.</p><div class="section">
-<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
+<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_window_size</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -746,12 +700,12 @@ named <code>width</code> and <code>height</code>.</p><div class="section">
 </div><p></p><hr><a id="method-set_window_size"></a><div class="section">
 <h3 id="method-set-window-size-">Method <code>set_window_size()</code><a class="anchor" aria-label="anchor" href="#method-set-window-size-"></a></h3>
 <p>Sets size of the browser window.</p><div class="section">
-<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
+<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">set_window_size</span><span class="op">(</span><span class="va">width</span>, <span class="va">height</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-16">Arguments<a class="anchor" aria-label="anchor" href="#arguments-16"></a></h4>
+<h4 id="arguments-15">Arguments<a class="anchor" aria-label="anchor" href="#arguments-15"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>width, height</code></dt>
 <dd><p>Height and width of browser, in pixels.</p></dd>
 
@@ -762,7 +716,7 @@ named <code>width</code> and <code>height</code>.</p><div class="section">
 </div><p></p><hr><a id="method-get_chromote_session"></a><div class="section">
 <h3 id="method-get-chromote-session-">Method <code>get_chromote_session()</code><a class="anchor" aria-label="anchor" href="#method-get-chromote-session-"></a></h3>
 <p>Chromote Session object from the <span class="pkg">chromote</span> package.</p><div class="section">
-<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
+<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_chromote_session</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -775,12 +729,12 @@ There are a few standard debug types that may be used:</p><ul><li><p><code>"shin
 <li><p><code>"shinytest2"</code>: Displays the messages saved by the <code>window.shinytest2</code> object in the browser when <code>$get_log()</code> is called.</p></li>
 <li><p><code>"ws_messages"</code>: Saves all messages sent by Shiny to the</p></li>
 </ul><div class="section">
-<h4 id="usage-22">Usage<a class="anchor" aria-label="anchor" href="#usage-22"></a></h4>
+<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_log</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-8">Returns<a class="anchor" aria-label="anchor" href="#returns-8"></a></h4>
+<h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
 <p>A data.frame with the following columns:</p><ul><li><p><code>workerid</code>: The shiny worker ID found within the browser</p></li>
 <li><p><code>timestamp</code>: POSIXct timestamp of the message</p></li>
 <li><p><code>location</code>: The location of the message was found. One of three values:</p><ul><li><p><code>shinytest2</code>: Occurs when <code>$log_message()</code> is called</p></li>
@@ -899,12 +853,12 @@ app$get_log() # (long output lines have been truncated)
 </div><p></p><hr><a id="method-log_message"></a><div class="section">
 <h3 id="method-log-message-">Method <code>log_message()</code><a class="anchor" aria-label="anchor" href="#method-log-message-"></a></h3>
 <p>Add an message to log.</p><div class="section">
-<h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
+<h4 id="usage-22">Usage<a class="anchor" aria-label="anchor" href="#usage-22"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">log_message</span><span class="op">(</span><span class="va">message</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-17">Arguments<a class="anchor" aria-label="anchor" href="#arguments-17"></a></h4>
+<h4 id="arguments-16">Arguments<a class="anchor" aria-label="anchor" href="#arguments-16"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>message</code></dt>
 <dd><p>Single message to store in log</p></dd>
 
@@ -917,7 +871,7 @@ app$get_log() # (long output lines have been truncated)
 <p>Stop the Shiny application
 Stop the app, the terminate external R process that runs the app and
 the Chromote Session instance.</p><div class="section">
-<h4 id="usage-24">Usage<a class="anchor" aria-label="anchor" href="#usage-24"></a></h4>
+<h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="kw">stop</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -925,12 +879,12 @@ the Chromote Session instance.</p><div class="section">
 </div><p></p><hr><a id="method-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-25">Usage<a class="anchor" aria-label="anchor" href="#usage-25"></a></h4>
+<h4 id="usage-24">Usage<a class="anchor" aria-label="anchor" href="#usage-24"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-18">Arguments<a class="anchor" aria-label="anchor" href="#arguments-18"></a></h4>
+<h4 id="arguments-17">Arguments<a class="anchor" aria-label="anchor" href="#arguments-17"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
