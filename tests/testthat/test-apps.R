@@ -1,3 +1,5 @@
+skip_on_cran()
+
 
 dirs <- dir(test_path("apps"), full.names = TRUE)
 lapply(dirs, function(shiny_app_dir) {
