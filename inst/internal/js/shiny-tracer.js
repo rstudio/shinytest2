@@ -335,7 +335,7 @@ window.shinytest2 = (function() {
         // receive one message with output values. If there are no HTML
         // outputs, just say we're ready now.
         function waitForHtmlOutput() {
-            // Since we are using `$wait_for_stable()`,
+            // Since we are using `$wait_for_idle(duration = 500)`,
             // no need for the following logic with a fixed time.
             shinytest2.ready = true;
             return;

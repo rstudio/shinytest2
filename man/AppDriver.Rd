@@ -137,7 +137,7 @@ app$get_log() # (long output lines have been truncated)
 \item \href{#method-click}{\code{AppDriver$click()}}
 \item \href{#method-upload_file}{\code{AppDriver$upload_file()}}
 \item \href{#method-wait_for_script}{\code{AppDriver$wait_for_script()}}
-\item \href{#method-wait_for_stable}{\code{AppDriver$wait_for_stable()}}
+\item \href{#method-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
 \item \href{#method-wait_for_value}{\code{AppDriver$wait_for_value()}}
 \item \href{#method-execute_script}{\code{AppDriver$execute_script()}}
 \item \href{#method-get_path}{\code{AppDriver$get_path()}}
@@ -563,17 +563,17 @@ Otherwise an error will be thrown
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-wait_for_stable"></a>}}
-\if{latex}{\out{\hypertarget{method-wait_for_stable}{}}}
-\subsection{Method \code{wait_for_stable()}}{
-Wait for Shiny to not be busy for a set amount of time
+\if{html}{\out{<a id="method-wait_for_idle"></a>}}
+\if{latex}{\out{\hypertarget{method-wait_for_idle}{}}}
+\subsection{Method \code{wait_for_idle()}}{
+Wait for Shiny to not be busy (idle) for a set amount of time
 
 Waits until Shiny has not been busy for a set duration of time, i.e. no reactivity is updating or has occured.
 This is useful, for example, when waiting for your application to initialize or
 if you've resized the window with \verb{$set_window_size()} and want to make sure all
 plot redrawing is complete before take a screenshot.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_stable(duration = 500, timeout = 30 * 1000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_idle(duration = 500, timeout = 30 * 1000)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
