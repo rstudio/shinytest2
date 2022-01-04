@@ -152,7 +152,7 @@ app_initialize <- function(self, private, ...) {
   rlang::with_handlers(
     app_initialize_(self, private, ...),
     error = function(e) {
-      self$log_message(paste0("Error while initializing AppDriver:\n",conditionMessage(e)))
+      self$log_message(paste0("Error while initializing AppDriver:\n", conditionMessage(e)))
 
       # Open chromote session if it is not already open and `view != FALSE`
       # `view` defaults to `rlang::missing_arg()`
