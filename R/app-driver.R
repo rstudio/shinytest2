@@ -250,10 +250,10 @@ AppDriver <- R6Class(# nolint
     },
 
     #' @description
-    #' Find a Shiny binding and click it using the DOM method `TAG.click()`
-    #' @param input,output A name of an input or output value. Only one of these may be used.
-    click = function(input = missing_arg(), output = missing_arg()) {
-      app_click(self, private, input = input, output = output)
+    #' Find a Shiny input/output value or DOM CSS selector and click it using the DOM method `TAG.click()`
+    #' @param input,output,selector A name of an Shiny input/output value or a DOM CSS selector. Only one of these may be used.
+    click = function(input = missing_arg(), output = missing_arg(), selector = missing_arg()) {
+      app_click(self, private, input = input, output = output, selector = selector)
     },
 
     #' @description

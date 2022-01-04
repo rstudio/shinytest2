@@ -484,15 +484,19 @@ Returns updated values, invisibly.
 \if{html}{\out{<a id="method-click"></a>}}
 \if{latex}{\out{\hypertarget{method-click}{}}}
 \subsection{Method \code{click()}}{
-Find a Shiny binding and click it using the DOM method \code{TAG.click()}
+Find a Shiny input/output value or DOM CSS selector and click it using the DOM method \code{TAG.click()}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$click(input = missing_arg(), output = missing_arg())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$click(
+  input = missing_arg(),
+  output = missing_arg(),
+  selector = missing_arg()
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{input, output}}{A name of an input or output value. Only one of these may be used.}
+\item{\code{input, output, selector}}{A name of an Shiny input/output value or a DOM CSS selector. Only one of these may be used.}
 }
 \if{html}{\out{</div>}}
 }
