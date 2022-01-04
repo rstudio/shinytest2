@@ -13,9 +13,9 @@ app_appshot <- function(
 
   # The default is to take a screenshot when the `default_screenshot_args` option is
   # NULL and the user does not specify specific items to snapshot.
-  items_is_false <- identical(items, FALSE)
+  items_is_false <- is_false(items)
   screenshot_args <- screenshot_args %||% private$default_screenshot_args %||% (!is.null(items))
-  should_take_screenshot <- !identical(screenshot_args, FALSE)
+  should_take_screenshot <- !is_false(screenshot_args)
 
   if (items_is_false) {
     if (!should_take_screenshot) {
