@@ -152,16 +152,28 @@ app_initialize <- function(self, private, ...) {
   rlang::with_handlers(
     app_initialize_(self, private, ...),
     error = function(e) {
-      self$log_message(paste0("Error while initializing AppDriver:\n", conditionMessage(e)))
+      rlang::with_handlers(
+        self$log_message(paste0("Error while initializing AppDriver:\n", conditionMessage(e))),
+        error = function(ee) {
+          message("Could not log error message. Error: ", conditionMessage(ee))
+        }
+      )
 
       # Open chromote session if it is not already open and `view != FALSE`
       # `view` defaults to `rlang::missing_arg()`
-      view_val <- list(...)$view
-      if (rlang::is_interactive() && !isTRUE(view_val) && !is_false(view_val)) {
-        message("`$view()`ing chromote session for debugging purposes")
-        self$log_message("Viewing chromote session for debugging purposes")
-        self$view()
-      }
+      rlang::with_handlers(
+        {
+          view_val <- list(...)$view
+          if (rlang::is_interactive() && !isTRUE(view_val) && !is_false(view_val)) {
+            message("`$view()`ing chromote session for debugging purposes")
+            self$log_message("Viewing chromote session for debugging purposes")
+            self$view()
+          }
+        },
+        error = function(ee) {
+          message("Could not open chromote session. Error: ", conditionMessage(ee))
+        }
+      )
 
       logs <- rlang::with_handlers(
         format(self$get_log()),
@@ -169,12 +181,12 @@ app_initialize <- function(self, private, ...) {
       )
 
       abort(
-        paste0(
-          conditionMessage(e), "\n",
+        c(
+          conditionMessage(e),
           "\n",
-          "App logs:\n", logs, "\n",
-          "\n",
-          "Retrieve the AppDriver object via `rlang::last_error()$app`"
+          i = crayon::silver("You can inspect the failed AppDriver object via `rlang::last_error()$app`"),
+          i = paste0("AppDriver logs:\n", logs),
+          "\n"
         ),
         app = self,
         parent = e
