@@ -17,6 +17,11 @@ app_initialize_ <- function(
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
 
+  # This will kill any existing Shiny processes launched by shinytest,
+  # in case they're using some of the same resources.
+  # https://github.com/rstudio/shinytest2/issues/19#issuecomment-954095837
+  gc()
+
   private$path <- fs::path_abs(path)
   private$default_screenshot_args <- screenshot_args
   private$variant <- if (identical(variant, FALSE)) NULL else variant
