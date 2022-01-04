@@ -3,6 +3,7 @@ shinyApp(
 
   ui = shinyUI(pageWithSidebar(
     headerPanel("Testing Conflicting Widget IDs"),
+    # Input ID matches output ID; App still loads
     sidebarPanel(
       selectInput("widget", "Just a selector", c("p", "h2"))
     ),

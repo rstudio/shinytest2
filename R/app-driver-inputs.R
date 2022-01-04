@@ -10,10 +10,10 @@ app_set_inputs <- function(
   ckm8_assert_app_driver(self, private)
 
   if (values_ && !wait_) {
-    abort(paste0(c(
+    abort(paste0(
       "values_=TRUE and wait_=FALSE are not compatible.",
       "Can't return all values without waiting for update."
-    )))
+    ), app = self)
   }
 
   priority_ <- match.arg(priority_)

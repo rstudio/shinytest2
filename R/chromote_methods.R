@@ -26,7 +26,7 @@ chromote_eval <- function(
   # cat("\n", js, "\n")
 
   result <-
-    withCallingHandlers(
+    rlang::with_handlers(
       {
         # https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#method-evaluate
         chromote_session$
@@ -202,7 +202,7 @@ chromote_wait_for_condition <- function(chromote_session, condition_js, ..., arg
   "chromote_wait_for_condition = () => {
     let diffTime = new Date() - (+start + ", timeout, ");
     if (diffTime > 0) {
-      return reject('Timeout waiting for condition');
+      return reject('Timeout waiting for JS condition to be `true`');
     }
     if (condition()) {
       return resolve();
@@ -222,7 +222,7 @@ chromote_wait_for_condition <- function(chromote_session, condition_js, ..., arg
   )
 
   if (identical(ret$result$subtype, "error") || length(ret$exceptionDetails) > 0) {
-    abort("Timeout waiting for condition")
+    abort("Timeout waiting for JavaScript condition to be `true`")
   }
 
   invisible(chromote_session)

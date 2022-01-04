@@ -11,14 +11,14 @@ httr_get <- function(url) {
     abort("Shiny app is no longer running")
   }
 
-  withCallingHandlers(
+  rlang::with_handlers(
     {
       req <- httr::GET(url)
     },
     # Attempt to capture empty reply error and provide better message
     error = function(e) {
       if (grepl("Empty reply from server", as.character(e), fixed = TRUE)) {
-        abort("Shiny app is no longer running")
+        abort("Shiny app is no longer running", parent = e)
       }
       # Unknown error, rethrow
       abort(e)

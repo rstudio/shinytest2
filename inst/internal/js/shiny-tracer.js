@@ -335,20 +335,27 @@ window.shinytest2 = (function() {
         // receive one message with output values. If there are no HTML
         // outputs, just say we're ready now.
         function waitForHtmlOutput() {
-            var htmlOutputBindings = Shiny.outputBindings
-                .bindingNames['shiny.htmlOutput'].binding.find(document);
+            // Since we are using `$wait_for_idle(duration = 500)`,
+            // no need for the following logic with a fixed time.
+            shinytest2.ready = true;
+            return;
 
-            if (htmlOutputBindings.length > 0) {
-                shinytest2.log("Waiting for first output");
-                shinytest2.outputValuesWaiter.start(5000);
-                shinytest2.outputValuesWaiter.finish(true, function() {
-                    shinytest2.ready = true;
-                });
-            }
-            else {
-                shinytest2.log("Ready");
-                shinytest2.ready = true;
-            }
+            // // Old code kept for future reference
+
+            // var htmlOutputBindings = Shiny.outputBindings
+            //     .bindingNames['shiny.htmlOutput'].binding.find(document);
+
+            // if (htmlOutputBindings.length > 0) {
+            //     shinytest2.log("Waiting for first output");
+            //     shinytest2.outputValuesWaiter.start(5000);
+            //     shinytest2.outputValuesWaiter.finish(true, function() {
+            //         shinytest2.ready = true;
+            //     });
+            // }
+            // else {
+            //     shinytest2.log("Ready");
+            //     shinytest2.ready = true;
+            // }
         }
     }
     waitForReady();

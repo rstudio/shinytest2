@@ -9,6 +9,7 @@ app_screenshot <- function(
   "!DEBUG app_screenshot()"
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
+
   if (is.null(screenshot_args) || isTRUE(screenshot_args)) screenshot_args <- list()
   checkmate::assert_list(screenshot_args)
 
@@ -17,7 +18,11 @@ app_screenshot <- function(
 
   checkmate::assert_number(screenshot_args$delay, lower = 0, finite = TRUE, null.ok = TRUE)
 
-  self$log_message("Taking screenshot")
+  if (is.null(filename)) {
+    self$log_message("Taking screenshot")
+  } else {
+    self$log_message(paste0("Taking screenshot: ", filename))
+  }
   path <- temp_file(".png")
   screenshot_args$filename <- path
 

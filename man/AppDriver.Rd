@@ -9,6 +9,15 @@ headless browser that can be used to simulate user actions. This provides
 a full simulation of a Shiny app so that you can test user interactions
 with a live app.
 }
+\section{Startup failure}{
+
+
+If the app throws an error during initialization, the AppDriver will
+will be stored in \code{rlang::last_error()$app}. This allows for the "failure
+to initialize" to be signaled while also allowing for the \code{app} to be
+retrieved after any initialization error has been thrown.
+}
+
 \examples{
 
 ## ------------------------------------------------
@@ -128,7 +137,7 @@ app$get_log() # (long output lines have been truncated)
 \item \href{#method-click}{\code{AppDriver$click()}}
 \item \href{#method-upload_file}{\code{AppDriver$upload_file()}}
 \item \href{#method-wait_for_script}{\code{AppDriver$wait_for_script()}}
-\item \href{#method-wait_for_stable}{\code{AppDriver$wait_for_stable()}}
+\item \href{#method-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
 \item \href{#method-wait_for_value}{\code{AppDriver$wait_for_value()}}
 \item \href{#method-execute_script}{\code{AppDriver$execute_script()}}
 \item \href{#method-get_path}{\code{AppDriver$get_path()}}
@@ -156,7 +165,7 @@ Initialize the AppDriver
   screenshot_args = NULL,
   check_names = TRUE,
   name = NULL,
-  view = FALSE,
+  view = missing_arg(),
   seed = NULL,
   clean_logs = TRUE,
   shiny_args = list(),
@@ -194,7 +203,7 @@ version, or version of key dependency.}
 
 \item{\code{name}}{Prefix name to use when saving testthat snapshot files}
 
-\item{\code{view}}{Opens the Chromote Session  in an interactive browser tab once initialization.}
+\item{\code{view}}{Opens the Chromote Session in an interactive browser tab once initialization. Defaults to \code{FALSE}.}
 
 \item{\code{seed}}{An optional random seed to use before starting the application.
 For apps that use R's random number generator, this can make their
@@ -362,7 +371,9 @@ For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers a
 \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
 
 \item{\code{pre_snapshot}}{A function to be called on the result of the script before taking the snapshot.
-\verb{$expect_html()} and \verb{$expect_text()} both use \code{\link[=unlist]{unlist()}}.}
+\verb{$expect_html()} and \verb{$expect_text()} both use \code{\link[=unlist]{unlist()}}.
+TODO-barret-implement; $expect_js(script="TEXT")
+TODO-barret-implement; $expect_js(file = "file_path")}
 
 \item{\code{cran}}{Should these expectations be verified on CRAN? By default,
 they are not, because snapshot tests tend to be fragile
@@ -556,17 +567,17 @@ Otherwise an error will be thrown
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-wait_for_stable"></a>}}
-\if{latex}{\out{\hypertarget{method-wait_for_stable}{}}}
-\subsection{Method \code{wait_for_stable()}}{
-Wait for Shiny to not be busy for a set amount of time
+\if{html}{\out{<a id="method-wait_for_idle"></a>}}
+\if{latex}{\out{\hypertarget{method-wait_for_idle}{}}}
+\subsection{Method \code{wait_for_idle()}}{
+Wait for Shiny to not be busy (idle) for a set amount of time
 
 Waits until Shiny has not been busy for a set duration of time, i.e. no reactivity is updating or has occured.
 This is useful, for example, when waiting for your application to initialize or
 if you've resized the window with \verb{$set_window_size()} and want to make sure all
 plot redrawing is complete before take a screenshot.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_stable(duration = 500, timeout = 30 * 1000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_idle(duration = 500, timeout = 30 * 1000)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

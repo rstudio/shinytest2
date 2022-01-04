@@ -1,4 +1,4 @@
-app_initialize <- function(
+app_initialize_ <- function(
   self, private,
   path = testthat::test_path("../../"),
   ...,
@@ -7,7 +7,7 @@ app_initialize <- function(
   check_names = TRUE,
   name = NULL,
   variant = getOption("shinytest2.variant", platform_variant()),
-  view = FALSE,
+  view = missing_arg(),
   seed = NULL,
   clean_logs = TRUE,
   shiny_args = list(),
@@ -16,6 +16,11 @@ app_initialize <- function(
 ) {
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
+
+  # This will kill any existing Shiny processes launched by shinytest,
+  # in case they're using some of the same resources.
+  # https://github.com/rstudio/shinytest2/issues/19#issuecomment-954095837
+  gc()
 
   private$path <- fs::path_abs(path)
   private$default_screenshot_args <- screenshot_args
@@ -48,6 +53,8 @@ app_initialize <- function(
   if (shiny::is.shiny.appobj(path)) {
     path <- app_save(path)
   }
+
+  private$state <- "initialize"
 
   if (grepl("^http(s?)://", path)) {
     private$shiny_url$set(path)
@@ -96,26 +103,28 @@ app_initialize <- function(
   })
 
   "!DEBUG waiting for Shiny to become stable"
-  self$log_message("Waiting until Shiny is stable")
+  self$log_message("Waiting for Shiny to become ready")
 
-  withCallingHandlers(
+  rlang::with_handlers(
     {
       chromote_wait_for_condition(
         self$get_chromote_session(),
         "window.shinytest2 && window.shinytest2.ready === true",
         timeout = load_timeout
       )
-      self$wait_for_stable(timeout = load_timeout)
+      self$wait_for_idle(duration = 500, timeout = load_timeout)
     },
     error = function(e) {
-      abort(paste0(
-        "Shiny app did not become stable in ", load_timeout, "ms.\n",
-        "Error:\n", conditionMessage(e), "\n",
-        "App logs:\n", format(self$get_log())
-      ))
+      abort(
+        paste0(
+          "Shiny app did not become stable in ", load_timeout, "ms.\n",
+          "Message: ", conditionMessage(e)
+        ),
+        app = self,
+        parent = e
+      )
     }
   )
-
 
   "!DEBUG shiny started"
   self$log_message("Shiny app started")
@@ -139,4 +148,54 @@ app_initialize <- function(
   }
 
   invisible(self)
+}
+
+
+app_initialize <- function(self, private, ...) {
+  ckm8_assert_app_driver(self, private)
+
+  rlang::with_handlers(
+    app_initialize_(self, private, ...),
+    error = function(e) {
+      rlang::with_handlers(
+        self$log_message(paste0("Error while initializing AppDriver:\n", conditionMessage(e))),
+        error = function(ee) {
+          message("Could not log error message. Error: ", conditionMessage(ee))
+        }
+      )
+
+      # Open chromote session if it is not already open and `view != FALSE`
+      # `view` defaults to `rlang::missing_arg()`
+      rlang::with_handlers(
+        {
+          view_val <- list(...)$view
+          if (rlang::is_interactive() && !isTRUE(view_val) && !is_false(view_val)) {
+            message("`$view()`ing chromote session for debugging purposes")
+            self$log_message("Viewing chromote session for debugging purposes")
+            self$view()
+          }
+        },
+        error = function(ee) {
+          message("Could not open chromote session. Error: ", conditionMessage(ee))
+        }
+      )
+
+      logs <- rlang::with_handlers(
+        format(self$get_log()),
+        error = function(e) "(Error retrieving logs)"
+      )
+
+      abort(
+        c(
+          conditionMessage(e),
+          "\n",
+          i = crayon::silver("You can inspect the failed AppDriver object via `rlang::last_error()$app`"),
+          i = paste0("AppDriver logs:\n", logs),
+          "\n"
+        ),
+        app = self,
+        parent = e
+      )
+    }
+  )
 }

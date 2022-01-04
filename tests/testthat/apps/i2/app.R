@@ -7,6 +7,7 @@ shinyApp(
       selectInput("select", "Just a selector", c("p", "h2"))
     ),
     mainPanel(
+      # Duplicate output IDs causes failure to load application
       wellPanel(htmlOutput("html")),
       wellPanel(textOutput("html"))
     )

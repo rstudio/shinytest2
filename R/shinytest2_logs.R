@@ -38,7 +38,20 @@ format.shinytest2_log <- function(x, ...) {
       # get color functions
       Map(x$location, x$level, f = get_color),
       f = function(msg, color) {
-        color(msg)
+        if (grepl("\n", msg, fixed = TRUE)) {
+          # Multiline messages should have color start/end on each line
+          # Split by `\n`, color, then join with `\n`
+          paste0(
+            vapply(
+              strsplit(msg, "\n", fixed = TRUE)[[1]],
+              color,
+              character(1)
+            ),
+            collapse = "\n"
+          )
+        } else {
+          color(msg)
+        }
       }
     )
 
