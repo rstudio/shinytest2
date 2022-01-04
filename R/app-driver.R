@@ -188,6 +188,8 @@ AppDriver <- R6Class(# nolint
     #' @param script A string containing the JS script to be executed.
     #' @param pre_snapshot A function to be called on the result of the script before taking the snapshot.
     #'   `$expect_html()` and `$expect_text()` both use [`unlist()`].
+    #' TODO-barret-implement; $expect_js(script="TEXT")
+    #' TODO-barret-implement; $expect_js(file = "file_path")
     expect_script = function(script, arguments = list(), ..., timeout = 15 * 1000, pre_snapshot = NULL, cran = FALSE) {
       app_expect_script(
         self, private,
@@ -286,8 +288,7 @@ AppDriver <- R6Class(# nolint
     #' @param interval How often to check for the condition, in ms.
     #' @return `invisible(self)` if expression evaluates to `true` without error within the timeout.
     #'   Otherwise an error will be thrown
-    # TODO-barret-rename; `self$wait_for_js`? Seems too misleading. `self$wait_for_js_condition` seems too long
-    # TODO-barret-rename; $wait_for_script
+    # TODO-barret-implement; $wait_for_js(script = , {local}file = )
     wait_for_script = function(script, timeout = 3 * 1000, interval = 100) {
       app_wait_for_script(self, private, script = script, timeout = timeout, interval = interval)
     },
@@ -301,6 +302,7 @@ AppDriver <- R6Class(# nolint
     #' @param duration How long Shiny must be idle (in ms) before unblocking the R session.
     #' @param timeout How often to check for the condition, in ms.
     #' @return `invisible(self)` if Shiny stablizes within the timeout. Otherwise an error will be thrown
+    # TODO-barret-implement; $wait_for_idle(duration = , timeout = )
     wait_for_stable = function(duration = 500, timeout = 30 * 1000) {
       app_wait_for_stable(self, private, duration = duration, timeout = timeout)
     },
@@ -350,6 +352,7 @@ AppDriver <- R6Class(# nolint
     # TODO-barret; incorporate `wait_` parameters to not wait for the _tick_ to finish
     # TODO-barret-answer; Document how they should make a promise and return NULL instead?
     # @param script JS to execute. `resolve` and `reject` arguments are added to the script call. To return control back to the R session, one of these methods must be called.
+    # TODO-barret-implement; execute_js(script = , {local}file = )
     execute_script = function(script, arguments = list(), ..., timeout = 15 * 1000) {
       app_execute_script(
         self, private,
