@@ -176,7 +176,7 @@ hash_snapshot_image_data <- function(data) {
 
   # Hash the images
   image_hashes <- vapply(image_data, FUN.VALUE = "", function(dat) {
-    withCallingHandlers({
+    rlang::with_handlers({
       image_data <- jsonlite::base64_dec(dat)
       rlang::hash(
         image_data

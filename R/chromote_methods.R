@@ -26,7 +26,7 @@ chromote_eval <- function(
   # cat("\n", js, "\n")
 
   result <-
-    withCallingHandlers(
+    rlang::with_handlers(
       {
         # https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#method-evaluate
         chromote_session$

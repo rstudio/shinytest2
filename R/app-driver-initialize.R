@@ -98,7 +98,7 @@ app_initialize <- function(
   "!DEBUG waiting for Shiny to become stable"
   self$log_message("Waiting for Shiny to become ready")
 
-  withCallingHandlers(
+  rlang::with_handlers(
     {
       chromote_wait_for_condition(
         self$get_chromote_session(),
@@ -108,14 +108,15 @@ app_initialize <- function(
       self$wait_for_stable(timeout = load_timeout)
     },
     error = function(e) {
-      abort(paste0(
-        "Shiny app did not become stable in ", load_timeout, "ms.\n",
-        "Error:\n", conditionMessage(e), "\n",
-        "App logs:\n", format(self$get_log())
-      ))
+      abort(
+        paste0(
+          "Shiny app did not become stable in ", load_timeout, "ms.\n",
+          "Message: ", conditionMessage(e)
+        ),
+        parent = e
+      )
     }
   )
-
 
   "!DEBUG shiny started"
   self$log_message("Shiny app started")
