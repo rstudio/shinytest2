@@ -9,6 +9,15 @@ headless browser that can be used to simulate user actions. This provides
 a full simulation of a Shiny app so that you can test user interactions
 with a live app.
 }
+\section{Startup failure}{
+
+
+If the app throws an error during initialization, the AppDriver will
+will be stored in \code{rlang::last_error()$app}. This allows for the "failure
+to initialize" to be signaled while also allowing for the \code{app} to be
+retrieved after any initialization error has been thrown.
+}
+
 \examples{
 
 ## ------------------------------------------------
@@ -156,7 +165,7 @@ Initialize the AppDriver
   screenshot_args = NULL,
   check_names = TRUE,
   name = NULL,
-  view = FALSE,
+  view = missing_arg(),
   seed = NULL,
   clean_logs = TRUE,
   shiny_args = list(),
@@ -194,7 +203,7 @@ version, or version of key dependency.}
 
 \item{\code{name}}{Prefix name to use when saving testthat snapshot files}
 
-\item{\code{view}}{Opens the Chromote Session  in an interactive browser tab once initialization.}
+\item{\code{view}}{Opens the Chromote Session in an interactive browser tab once initialization. Defaults to \code{FALSE}.}
 
 \item{\code{seed}}{An optional random seed to use before starting the application.
 For apps that use R's random number generator, this can make their
