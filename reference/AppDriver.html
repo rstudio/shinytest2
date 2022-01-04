@@ -59,6 +59,16 @@ with a live app.</p>
     </div>
 
 
+    <div id="startup-failure">
+    <h2>Startup failure</h2>
+    
+
+
+<p>If the app throws an error during initialization, the AppDriver will
+will be stored in <code>rlang::last_error()$app</code>. This allows for the "failure
+to initialize" to be signaled while also allowing for the <code>app</code> to be
+retrieved after any initialization error has been thrown.</p>
+    </div>
     <div id="methods">
     <h2>Methods</h2>
     
@@ -102,7 +112,7 @@ with a live app.</p>
   screenshot_args <span class="op">=</span> <span class="cn">NULL</span>,
   check_names <span class="op">=</span> <span class="cn">TRUE</span>,
   name <span class="op">=</span> <span class="cn">NULL</span>,
-  view <span class="op">=</span> <span class="cn">FALSE</span>,
+  view <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   seed <span class="op">=</span> <span class="cn">NULL</span>,
   clean_logs <span class="op">=</span> <span class="cn">TRUE</span>,
   shiny_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
@@ -153,7 +163,7 @@ version, or version of key dependency.</p></dd>
 
 
 <dt><code>view</code></dt>
-<dd><p>Opens the Chromote Session  in an interactive browser tab once initialization.</p></dd>
+<dd><p>Opens the Chromote Session in an interactive browser tab once initialization. Defaults to <code>FALSE</code>.</p></dd>
 
 
 <dt><code>seed</code></dt>
@@ -340,7 +350,9 @@ For example, <code>$expect_text()</code> and <code>$expect_html()</code> are thi
 
 <dt><code>pre_snapshot</code></dt>
 <dd><p>A function to be called on the result of the script before taking the snapshot.
-<code>$expect_html()</code> and <code>$expect_text()</code> both use <code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist()</a></code>.</p></dd>
+<code>$expect_html()</code> and <code>$expect_text()</code> both use <code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist()</a></code>.
+TODO-barret-implement; $expect_js(script="TEXT")
+TODO-barret-implement; $expect_js(file = "file_path")</p></dd>
 
 
 <dt><code>cran</code></dt>

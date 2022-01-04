@@ -144,6 +144,104 @@
 <h2 id="todo-addd-1">TODO; addd<a class="anchor" aria-label="anchor" href="#todo-addd-1"></a></h2>
 <p>app<span class="math inline">$expect_screenshot(selector) # assert screenshot equals app$</span>take_screenshot(selector) # screenshot helper file app$get_screenshot(selector, file) # save to file</p>
 <p>app<span class="math inline">$expect_appshot(id = "winston")  app$</span>expect_values(auto = “winston”) app$expect_screenshot(selector = find_container(“winston”))</p>
+<hr><ul><li>
+<code>$expect_values()</code>
+<ul><li>expects values only</li>
+<li>
+<code>$expect_values(screenshot = self$values_screenshot)</code>; <code>AppDriver$new(values_screenshot = getOption("shinytest2.values_screenshot", TRUE))</code>
+</li>
+<li>
+<code>if (values_screenshot == TRUE)</code>
+<ul><li>saves screenshot into <code>_snaps</code> folder and “annouce”s the file to avoid deletion
+<ul><li>Should create a “new” image that diffviewer can view. But should NOT throw an error when the images are different</li>
+<li>Creates too many commits for unnecessary changes
+<ul><li>values-002-FLAG.png</li>
+<li>.gitignore <code>-FLAG.png</code>
+</li>
+</ul></li>
+<li>Allows for “logging” prior screenshot knowledge
+<ul><li>NOT an expectation</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>$expect_screenshot()
+<ul><li>expects screenshot only</li>
+</ul></li>
+</ul></div>
+</div>
+<div class="section level1">
+<h1 id="todo-1">TODO<a class="anchor" aria-label="anchor" href="#todo-1"></a></h1>
+<div class="section level2">
+<h2 id="week-1">Week 1<a class="anchor" aria-label="anchor" href="#week-1"></a></h2>
+<ul><li>Add <code>$get_values()</code>
+<ul><li>And all other “get” methods</li>
+</ul></li>
+<li>wait_for_stable(duration = 500) -&gt; wait_for_idle(duration = 500)</li>
+<li>Remove <code>wait_</code> from API</li>
+<li>Transport chromote methods to {chromote}</li>
+</ul></div>
+<div class="section level2">
+<h2 id="make-public-on-github">Make <em>public</em> on GitHub<a class="anchor" aria-label="anchor" href="#make-public-on-github"></a></h2>
+<ul><li>Notify Eric and David</li>
+</ul></div>
+<div class="section level2">
+<h2 id="week-2-pray">Week 2 (pray)<a class="anchor" aria-label="anchor" href="#week-2-pray"></a></h2>
+<ul><li>Script for migrating from {shinytest} to {shinytest2}
+<ul><li>AST
+<ul><li>lose comments and formatting</li>
+</ul></li>
+<li>grep
+<ul><li>harder in long run</li>
+</ul></li>
+<li>hybrid
+<ul><li>Check out wch/staticdocs, r-lib/styler (or even r-lib/lintr)</li>
+<li>maybe extract comments and reinsert after AST conversion</li>
+</ul></li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="week-3-4-document">Week 3-4 (document)<a class="anchor" aria-label="anchor" href="#week-3-4-document"></a></h2>
+<div class="section level3">
+<h3 id="vignettes-1">Vignettes:<a class="anchor" aria-label="anchor" href="#vignettes-1"></a></h3>
+<ul><li>Which do I need and why do I need them?</li>
+<li>Explain testing robustness
+<ul><li>Robust to flakey; Sensitivity to external updates <!-- * `$expect_names(key)` - TODO- add this method; save outputs to snapshots if no key is provided
+    * `$expect_appshot(items = value, screenshot = FALSE)` -->
+<ul><li>
+<code>$expect_values(input, output, export)</code> - TODO- add this method; save outputs to snapshots
+<ul><li><code>$expect_appshot(items = value, screenshot = FALSE)</code></li>
+</ul></li>
+<li>
+<code>$expect_text()</code>
+<ul><li>Text wont really change</li>
+</ul></li>
+<li>
+<code>$expect_html()</code>
+<ul><li>Classes could be added by external packages</li>
+</ul></li>
+<li>
+<code>$expect_appshot()</code>
+<ul><li>images are not reliable</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Pull over vignettes from {shinytest} where appropriate</li>
+</ul></div>
+<div class="section level3">
+<h3 id="docs-1">Docs:<a class="anchor" aria-label="anchor" href="#docs-1"></a></h3>
+<ul><li>What are the conditions that I need this function?</li>
+<li>Priority sort the App docs methods
+<ul><li>Tell docs that they are sorted for a reason</li>
+</ul></li>
+<li>Add some description about how often we guess people will use the method.
+<ul><li>$execute_script_callback(): rare; Only if your JS requires a callback; Otherwise use $execute_script()</li>
+</ul></li>
+<li>Migration guide from shinytest -&gt; shinytest2</li>
+</ul></div>
+</div>
+<div class="section level2">
+<h2 id="release">Release<a class="anchor" aria-label="anchor" href="#release"></a></h2>
 </div>
 </div>
 
