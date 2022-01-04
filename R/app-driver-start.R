@@ -60,12 +60,14 @@ app_start_shiny <- function(
       supervise = TRUE
     )
   )
+  private$shiny_process <- p # nolint
+
   "!DEBUG waiting for shiny to start"
   if (! p$is_alive()) {
     abort(paste0(
-      "Failed to start shiny. Error: ",
+      "Failed to start shiny. Error:\n",
       strwrap(readLines(p$get_error_file()))
-    ))
+    ), app = self)
   }
 
   "!DEBUG finding shiny port"
@@ -76,8 +78,9 @@ app_start_shiny <- function(
 
     if (!p$is_alive()) {
       abort(paste0(
-        "Error starting application:\n", paste(err_lines, collapse = "\n")
-      ))
+        "Error starting shiny application:\n",
+        paste(err_lines, collapse = "\n")
+      ), app = self)
     }
     if (any(grepl("Listening on http", err_lines))) break
 
@@ -85,8 +88,9 @@ app_start_shiny <- function(
 
     if (i == max_i) {
       abort(paste0(
-        "Cannot find shiny port number. Error:\n", paste(err_lines, collapse = "\n")
-      ))
+        "Cannot find shiny port number. Error:\n",
+        paste(err_lines, collapse = "\n")
+      ), app = self)
     }
   }
 
@@ -95,8 +99,6 @@ app_start_shiny <- function(
 
   url <- sub(".*(https?://.*)", "\\1", line)
   private$shiny_url$set(url)
-
-  private$shiny_process <- p # nolint
 
   invisible(self)
 }

@@ -13,15 +13,15 @@ app_appshot <- function(
 
   # The default is to take a screenshot when the `default_screenshot_args` option is
   # NULL and the user does not specify specific items to snapshot.
-  items_is_false <- identical(items, FALSE)
+  items_is_false <- is_false(items)
   screenshot_args <- screenshot_args %||% private$default_screenshot_args %||% (!is.null(items))
-  should_take_screenshot <- !identical(screenshot_args, FALSE)
+  should_take_screenshot <- !is_false(screenshot_args)
 
   if (items_is_false) {
     if (!should_take_screenshot) {
       # TODO-barret; Fix this
       if (is.null(private$default_screenshot_args)) browser()
-      abort("Both 'items' and 'screenshot_args' can not be `FALSE` at the same time.")
+      abort("Both 'items' and 'screenshot_args' can not be `FALSE` at the same time.", app = self)
     }
   }
 
@@ -42,7 +42,7 @@ app_appshot <- function(
       items <- list(input = TRUE, output = TRUE, export = TRUE)
     }
     if (!is.list(items)) {
-      abort("`items` must be TRUE, FALSE, NULL, or a list.")
+      abort("`items` must be TRUE, FALSE, NULL, or a list.", app = self)
     }
 
     extra_names <- setdiff(names(items), c("input", "output", "export"))
@@ -51,7 +51,7 @@ app_appshot <- function(
         "'items' must be a list containing one or more items named",
         "'input', 'output' and 'export'. Each of these can be TRUE, FALSE, ",
         " or a character vector."
-      ))
+      ), app = self)
     }
 
     if (is.null(items$input))  items$input  <- FALSE
@@ -176,7 +176,7 @@ hash_snapshot_image_data <- function(data) {
 
   # Hash the images
   image_hashes <- vapply(image_data, FUN.VALUE = "", function(dat) {
-    withCallingHandlers({
+    rlang::with_handlers({
       image_data <- jsonlite::base64_dec(dat)
       rlang::hash(
         image_data

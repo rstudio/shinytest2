@@ -25,6 +25,8 @@ app_wait_for_stable <- function(self, private, duration = 500, timeout = 3 * 100
   checkmate::assert_number(duration, lower = 0, finite = TRUE)
   checkmate::assert_number(timeout, lower = 0, finite = TRUE)
 
+  self$log_message(paste0("Waiting for Shiny to become idle for ", duration, "ms within ", timeout, "ms"))
+
   stable_js <- "
   let duration = arguments[0]; // time needed to be idle
   let timeout = arguments[1]; // max total time
@@ -87,7 +89,7 @@ app_wait_for_stable <- function(self, private, duration = 500, timeout = 3 * 100
   )
 
   if (identical(ret$result$subtype, "error") || length(ret$exceptionDetails) > 0) {
-    abort("An error occurred while waiting for Shiny to be stable")
+    abort("An error occurred while waiting for Shiny to be stable", app = self)
   }
 
   invisible(self)
@@ -123,7 +125,7 @@ app_wait_for_value <- function(
   output_provided <- !rlang::is_missing(output)
   export_provided <- !rlang::is_missing(export)
   if (sum(input_provided, output_provided, export_provided) != 1) {
-    abort("You must specify either `input`, `output`, or `export`")
+    abort("You must specify either `input`, `output`, or `export`", app = self)
   }
   if (input_provided) ckm8_assert_single_string(input)
   if (output_provided) ckm8_assert_single_string(output)
@@ -154,13 +156,13 @@ app_wait_for_value <- function(
         if (input_provided) "input"
         else if (output_provided) "output"
         else if (export_provided) "export"
-        else abort("unknown group")
+        else abort("unknown group") # internal
       id <-
         if (input_provided) input
         else if (output_provided) output
         else if (export_provided) export
-        else abort("unknown group")
-      abort(paste0("timeout reached when waiting for ", group, ": ", id))
+        else abort("unknown group") # internal
+      abort(paste0("timeout reached when waiting for ", group, ": ", id), app = self)
     }
 
     # wait a little bit for shiny to do some work

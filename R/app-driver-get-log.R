@@ -156,6 +156,8 @@ app_init_browser_log <- function(self, private, options) {
 
 
 app_make_shiny_log <- function(self, private, out, err) {
+  if (is.null(private$shiny_process)) return(NULL)
+
   out <- readLines(private$shiny_process$get_output_file(), warn = FALSE)
   err <- readLines(private$shiny_process$get_error_file(), warn = FALSE)
 

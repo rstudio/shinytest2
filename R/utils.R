@@ -211,3 +211,8 @@ sort_c <- function(x) {
 temp_file <- function(fileext = "", pattern = "") {
   tempfile(pattern = paste0("st2-", pattern), fileext = fileext)
 }
+
+
+is_false <- function(x) {
+  is.logical(x) && length(x) == 1L && !is.na(x) && !x
+}
