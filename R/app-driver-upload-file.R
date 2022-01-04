@@ -28,7 +28,7 @@ app_upload_file <- function(
     arguments = list(timeout_)
   )
 
-  self$log_message("Uploading file", input = inputs[[1]])
+  self$log_message(paste0("Uploading file", input = inputs[[1]]))
 
   node_id <- app_find_node_id(self, private, input = names(inputs)[1])
   filename <- inputs[[1]]
