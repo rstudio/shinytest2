@@ -112,7 +112,7 @@ app_initialize_ <- function(
         "window.shinytest2 && window.shinytest2.ready === true",
         timeout = load_timeout
       )
-      self$wait_for_stable(timeout = load_timeout)
+      self$wait_for_idle(duration = 500, timeout = load_timeout)
     },
     error = function(e) {
       abort(

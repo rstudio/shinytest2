@@ -19,7 +19,7 @@ app_wait_for_script <- function(
   invisible(self)
 }
 
-app_wait_for_stable <- function(self, private, duration = 500, timeout = 3 * 1000) {
+app_wait_for_idle <- function(self, private, duration = 500, timeout = 3 * 1000) {
   ckm8_assert_app_driver(self, private)
 
   checkmate::assert_number(duration, lower = 0, finite = TRUE)

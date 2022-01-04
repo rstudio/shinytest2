@@ -255,7 +255,7 @@ app$expect_appshot(id = "winston")
 ## Week 1
 * Add `$get_values()`
   * And all other "get" methods
-* wait_for_stable(duration = 500) -> wait_for_idle(duration = 500)
+* √ wait_for_stable(duration = 500) -> wait_for_idle(duration = 500)
 * Remove `wait_` from API
 * Transport chromote methods to {chromote}
 

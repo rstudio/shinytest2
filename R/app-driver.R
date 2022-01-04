@@ -293,7 +293,7 @@ AppDriver <- R6Class(# nolint
       app_wait_for_script(self, private, script = script, timeout = timeout, interval = interval)
     },
 
-    #' @description Wait for Shiny to not be busy for a set amount of time
+    #' @description Wait for Shiny to not be busy (idle) for a set amount of time
     #'
     #' Waits until Shiny has not been busy for a set duration of time, i.e. no reactivity is updating or has occured.
     #' This is useful, for example, when waiting for your application to initialize or
@@ -302,9 +302,8 @@ AppDriver <- R6Class(# nolint
     #' @param duration How long Shiny must be idle (in ms) before unblocking the R session.
     #' @param timeout How often to check for the condition, in ms.
     #' @return `invisible(self)` if Shiny stablizes within the timeout. Otherwise an error will be thrown
-    # TODO-barret-implement; $wait_for_idle(duration = , timeout = )
-    wait_for_stable = function(duration = 500, timeout = 30 * 1000) {
-      app_wait_for_stable(self, private, duration = duration, timeout = timeout)
+    wait_for_idle = function(duration = 500, timeout = 30 * 1000) {
+      app_wait_for_idle(self, private, duration = duration, timeout = timeout)
     },
 
     #' @description Wait for a new Shiny value
