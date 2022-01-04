@@ -21,7 +21,7 @@ app_appshot <- function(
     if (!should_take_screenshot) {
       # TODO-barret; Fix this
       if (is.null(private$default_screenshot_args)) browser()
-      abort("Both 'items' and 'screenshot_args' can not be `FALSE` at the same time.")
+      abort("Both 'items' and 'screenshot_args' can not be `FALSE` at the same time.", app = self)
     }
   }
 
@@ -42,7 +42,7 @@ app_appshot <- function(
       items <- list(input = TRUE, output = TRUE, export = TRUE)
     }
     if (!is.list(items)) {
-      abort("`items` must be TRUE, FALSE, NULL, or a list.")
+      abort("`items` must be TRUE, FALSE, NULL, or a list.", app = self)
     }
 
     extra_names <- setdiff(names(items), c("input", "output", "export"))
@@ -51,7 +51,7 @@ app_appshot <- function(
         "'items' must be a list containing one or more items named",
         "'input', 'output' and 'export'. Each of these can be TRUE, FALSE, ",
         " or a character vector."
-      ))
+      ), app = self)
     }
 
     if (is.null(items$input))  items$input  <- FALSE

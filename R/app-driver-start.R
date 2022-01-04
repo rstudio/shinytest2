@@ -67,7 +67,7 @@ app_start_shiny <- function(
     abort(paste0(
       "Failed to start shiny. Error:\n",
       strwrap(readLines(p$get_error_file()))
-    ))
+    ), app = self)
   }
 
   "!DEBUG finding shiny port"
@@ -80,7 +80,7 @@ app_start_shiny <- function(
       abort(paste0(
         "Error starting shiny application:\n",
         paste(err_lines, collapse = "\n")
-      ))
+      ), app = self)
     }
     if (any(grepl("Listening on http", err_lines))) break
 
@@ -90,7 +90,7 @@ app_start_shiny <- function(
       abort(paste0(
         "Cannot find shiny port number. Error:\n",
         paste(err_lines, collapse = "\n")
-      ))
+      ), app = self)
     }
   }
 

@@ -1,4 +1,4 @@
-app_initialize <- function(
+app_initialize_ <- function(
   self, private,
   path = testthat::test_path("../../"),
   ...,
@@ -7,7 +7,7 @@ app_initialize <- function(
   check_names = TRUE,
   name = NULL,
   variant = getOption("shinytest2.variant", platform_variant()),
-  view = FALSE,
+  view = missing_arg(),
   seed = NULL,
   clean_logs = TRUE,
   shiny_args = list(),
@@ -48,6 +48,8 @@ app_initialize <- function(
   if (shiny::is.shiny.appobj(path)) {
     path <- app_save(path)
   }
+
+  private$state <- "initialize"
 
   if (grepl("^http(s?)://", path)) {
     private$shiny_url$set(path)
@@ -113,6 +115,7 @@ app_initialize <- function(
           "Shiny app did not become stable in ", load_timeout, "ms.\n",
           "Message: ", conditionMessage(e)
         ),
+        app = self,
         parent = e
       )
     }
@@ -140,4 +143,42 @@ app_initialize <- function(
   }
 
   invisible(self)
+}
+
+
+app_initialize <- function(self, private, ...) {
+  ckm8_assert_app_driver(self, private)
+
+  rlang::with_handlers(
+    app_initialize_(self, private, ...),
+    error = function(e) {
+      self$log_message(paste0("Error while initializing AppDriver:\n",conditionMessage(e)))
+
+      # Open chromote session if it is not already open and `view != FALSE`
+      # `view` defaults to `rlang::missing_arg()`
+      view_val <- list(...)$view
+      if (rlang::is_interactive() && !isTRUE(view_val) && !is_false(view_val)) {
+        message("`$view()`ing chromote session for debugging purposes")
+        self$log_message("Viewing chromote session for debugging purposes")
+        self$view()
+      }
+
+      logs <- rlang::with_handlers(
+        format(self$get_log()),
+        error = function(e) "(Error retrieving logs)"
+      )
+
+      abort(
+        paste0(
+          conditionMessage(e), "\n",
+          "\n",
+          "App logs:\n", logs, "\n",
+          "\n",
+          "Retrieve the AppDriver object via `rlang::last_error()$app`"
+        ),
+        app = self,
+        parent = e
+      )
+    }
+  )
 }

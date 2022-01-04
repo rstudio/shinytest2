@@ -51,6 +51,14 @@ AppDriver <- R6Class(# nolint
 
     #' @description
     #' Initialize the AppDriver
+    #'
+    #' @section Startup failure:
+    #'
+    #' If the app throws an error during initialization, the AppDriver will
+    #' will be stored in `rlang::last_error()$app`. This allows for the "failure
+    #' to initialize" to be signaled while also allowing for the `app` to be
+    #' retrieved after any initialization error has been thrown.
+    #'
     #' @param path Path to a directory containing a Shiny app, i.e. a
     #'   single `app.R` file or a `server.R`-`ui.R` pair.
     #' @param load_timeout How long to wait for the app to load, in ms.
@@ -63,7 +71,7 @@ AppDriver <- R6Class(# nolint
     #' @template variant
     #' @param name Prefix name to use when saving testthat snapshot files
     #' @param check_names Check if widget names are unique?
-    #' @param view Opens the Chromote Session  in an interactive browser tab once initialization.
+    #' @param view Opens the Chromote Session in an interactive browser tab once initialization. Defaults to `FALSE`.
     #' @param seed An optional random seed to use before starting the application.
     #'   For apps that use R's random number generator, this can make their
     #'   behavior repeatable.
@@ -85,7 +93,7 @@ AppDriver <- R6Class(# nolint
       screenshot_args = NULL,
       check_names = TRUE,
       name = NULL,
-      view = FALSE,
+      view = missing_arg(),
       seed = NULL,
       clean_logs = TRUE,
       shiny_args = list(),
