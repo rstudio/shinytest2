@@ -2,6 +2,10 @@ app_set_window_size <- function(self, private, width, height) {
   "!DEBUG app_set_window_size() `width`x`height`"
   ckm8_assert_app_driver(self, private)
 
+  self$log_message(paste0(
+    "Setting window size to `", width, "`x`", height, "`"
+  ))
+
   chromote_set_window_size(self$get_chromote_session(), width = width, height = height)
   invisible(self)
 }

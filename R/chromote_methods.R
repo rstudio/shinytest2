@@ -222,7 +222,7 @@ chromote_wait_for_condition <- function(chromote_session, condition_js, ..., arg
   )
 
   if (identical(ret$result$subtype, "error") || length(ret$exceptionDetails) > 0) {
-    abort("Timeout waiting for condition")
+    abort("Timeout waiting for JavaScript condition to be `true`")
   }
 
   invisible(chromote_session)

@@ -25,6 +25,8 @@ app_wait_for_stable <- function(self, private, duration = 500, timeout = 3 * 100
   checkmate::assert_number(duration, lower = 0, finite = TRUE)
   checkmate::assert_number(timeout, lower = 0, finite = TRUE)
 
+  self$log_message(paste0("Waiting for Shiny to become idle for ", duration, "ms within ", timeout, "ms"))
+
   stable_js <- "
   let duration = arguments[0]; // time needed to be idle
   let timeout = arguments[1]; // max total time

@@ -96,7 +96,7 @@ app_initialize <- function(
   })
 
   "!DEBUG waiting for Shiny to become stable"
-  self$log_message("Waiting until Shiny is stable")
+  self$log_message("Waiting for Shiny to become ready")
 
   withCallingHandlers(
     {
