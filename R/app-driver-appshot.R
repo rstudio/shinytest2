@@ -10,10 +10,10 @@ app_appshot <- function(
   screenshot_args = NULL
 ) {
   ckm8_assert_app_driver(self, private)
-
   # The default is to take a screenshot when the `default_screenshot_args` option is
   # NULL and the user does not specify specific items to snapshot.
   items_is_false <- is_false(items)
+  # TODO-barret; Fix this
   screenshot_args <- screenshot_args %||% private$default_screenshot_args %||% (!is.null(items))
   should_take_screenshot <- !is_false(screenshot_args)
 
