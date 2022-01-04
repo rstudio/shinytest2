@@ -371,7 +371,9 @@ For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers a
 \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
 
 \item{\code{pre_snapshot}}{A function to be called on the result of the script before taking the snapshot.
-\verb{$expect_html()} and \verb{$expect_text()} both use \code{\link[=unlist]{unlist()}}.}
+\verb{$expect_html()} and \verb{$expect_text()} both use \code{\link[=unlist]{unlist()}}.
+TODO-barret-implement; $expect_js(script="TEXT")
+TODO-barret-implement; $expect_js(file = "file_path")}
 
 \item{\code{cran}}{Should these expectations be verified on CRAN? By default,
 they are not, because snapshot tests tend to be fragile
