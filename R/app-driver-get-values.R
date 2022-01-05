@@ -18,20 +18,3 @@ app_get_values <- function(
   writeBin(req$content, tmpfile)
   readRDS(tmpfile)
 }
-
-app_get_names <- function(
-  self, private,
-  input = TRUE,
-  output = TRUE,
-  export = TRUE
-) {
-  ckm8_assert_app_driver(self, private)
-
-  vals <- app_get_values(
-    self, private,
-    input = isTRUE(input),
-    output = isTRUE(output),
-    export = isTRUE(export)
-  )
-  lapply(vals, names)
-}

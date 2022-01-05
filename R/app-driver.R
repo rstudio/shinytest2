@@ -225,15 +225,6 @@ AppDriver <- R6Class(# nolint
     get_values = function(input = TRUE, output = TRUE, export = TRUE) {
       app_get_values(self, private, input, output, export)
     },
-    #' @description
-    #' Returns a set of names for of all inputs, outputs, and exports
-    #' that Shiny is currently aware of.
-    #'
-    #' @param input,output,export Either `TRUE` to return all
-    #'   input/output/exported values, or `FALSE` to return no names.
-    get_names = function(input = TRUE, output = TRUE, export = TRUE) {
-      app_get_names(self, private, input, output, export)
-    },
 
     #' @description Set input values.
     #' @param ... Name-value pairs, `component_name_1 = value_1, component_name_2 = value_2` etc.
