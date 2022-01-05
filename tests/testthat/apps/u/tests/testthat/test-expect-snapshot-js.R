@@ -1,4 +1,4 @@
-test_that("basic text and dom outputs are captured", {
+test_that("basic text and dom outputs are expected", {
   app <- AppDriver$new(test_path("../../."), variant = NULL)
   app$set_inputs(val = "<div id='custom'><p>My Custom Output</p></div>")
 
@@ -7,4 +7,27 @@ test_that("basic text and dom outputs are captured", {
 
   app$expect_html("#custom", outer_html = FALSE)
   app$expect_html("#custom", outer_html = TRUE)
+})
+
+test_that("basic text and dom outputs are captured", {
+  app <- AppDriver$new(test_path("../../."), variant = NULL)
+  app$set_inputs(val = "<div id='custom'><p>My Custom Output</p></div>")
+
+  expect_equal(
+    app$get_text("#text"),
+    "<div id='custom'><p>My Custom Output</p></div>"
+  )
+  expect_equal(
+    app$get_text("#custom"),
+    "My Custom Output"
+  )
+
+  expect_equal(
+    app$get_html("#custom", outer_html = FALSE),
+    "<p>My Custom Output</p>"
+  )
+  expect_equal(
+    app$get_html("#custom", outer_html = TRUE),
+    "<div id=\"custom\"><p>My Custom Output</p></div>"
+  )
 })

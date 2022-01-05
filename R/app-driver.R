@@ -166,6 +166,10 @@ AppDriver <- R6Class(# nolint
     expect_text = function(selector, ..., cran = FALSE) {
       app_expect_text(self, private, selector, ..., cran = cran)
     },
+    #' @param selector A DOM CSS selector to be passed into `document.querySelectorAll()`
+    get_text = function(selector) {
+      app_get_text(self, private, selector = selector)
+    },
 
 
     #' @description Expect snapshot of UI HTML
@@ -177,6 +181,12 @@ AppDriver <- R6Class(# nolint
     #'   If `FALSE`, the full DOM structure of the child elements will be returned (`TAG.innerHTML`).
     expect_html = function(selector, ..., outer_html = FALSE, cran = FALSE) {
       app_expect_html(self, private, selector, ..., outer_html = outer_html, cran = cran)
+    },
+    #' @param selector A DOM selector to be passed into `document.querySelectorAll()`
+    #' @param outer_html If `TRUE`, the full DOM structure will be returned (`TAG.outerHTML`).
+    #'   If `FALSE`, the full DOM structure of the child elements will be returned (`TAG.innerHTML`).
+    get_html = function(selector, ..., outer_html = FALSE) {
+      app_get_html(self, private, selector, ..., outer_html = outer_html)
     },
 
     #' @description

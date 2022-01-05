@@ -8,8 +8,6 @@ app_execute_script <- function(
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
 
-  # TODO-barret; incorporate `wait_` parameters to not wait for the _tick_ to finish?
-  # TODO-barret; Document how they should make a promise and return NULL instead?
   "!DEBUG app_execute_script()"
   chromote_execute_script(
     self$get_chromote_session(),
@@ -19,7 +17,6 @@ app_execute_script <- function(
     timeout = timeout
   )$result$value
 }
-
 
 
 app_expect_script <- function(
@@ -56,6 +53,26 @@ app_expect_script <- function(
 }
 
 
+get_text_js <- function() {
+  paste0(
+    "const selector = arguments[0];\n",
+    "let arr = Array.from(document.querySelectorAll(selector));\n",
+    "return arr.map((item, i) => item.textContent);"
+  )
+}
+app_get_text <- function(
+  self, private,
+  selector
+) {
+  ckm8_assert_app_driver(self, private)
+  # ellipsis::check_dots_empty()
+
+  ret <- self$execute_script(
+    script = get_text_js(),
+    arguments = list(selector)
+  )
+  unlist(ret)
+}
 app_expect_text <- function(
   self, private,
   selector,
@@ -66,7 +83,8 @@ app_expect_text <- function(
   ellipsis::check_dots_empty()
 
   self$expect_script(
-    script = paste0("return Array.from(document.querySelectorAll(\"", selector, "\")).map(function(item, i) { return item.textContent; });"),
+    script = get_text_js(),
+    arguments = list(selector),
     pre_snapshot = unlist,
     cran = cran
   )
@@ -75,6 +93,29 @@ app_expect_text <- function(
 }
 
 
+get_html_js <- function() {
+  paste0(
+    "let selector = arguments[0];\n",
+    "let outer_html = arguments[1];\n",
+    "let map_fn = outer_html ? (item, i) => item.outerHTML : (item, i) => item.innerHTML;\n",
+    "let arr = Array.from(document.querySelectorAll(selector));\n",
+    "return arr.map(map_fn);")
+}
+app_get_html <- function(
+  self, private,
+  selector,
+  ...,
+  outer_html = FALSE
+) {
+  ckm8_assert_app_driver(self, private)
+  ellipsis::check_dots_empty()
+
+  ret <- self$execute_script(
+    script = get_html_js(),
+    arguments = list(selector, isTRUE(outer_html))
+  )
+  unlist(ret)
+}
 app_expect_html <- function(
   self, private,
   selector,
@@ -85,15 +126,9 @@ app_expect_html <- function(
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
 
-  html_code <-
-    if (isTRUE(outer_html)) {
-      "item.outerHTML"
-    } else {
-      "item.innerHTML"
-    }
-
   self$expect_script(
-    script = paste0("return Array.from(document.querySelectorAll(\"", selector, "\")).map(function(item, i) { return ", html_code, "; });"),
+    script = get_html_js(),
+    arguments = list(selector, isTRUE(outer_html)),
     pre_snapshot = unlist,
     cran = cran
   )
