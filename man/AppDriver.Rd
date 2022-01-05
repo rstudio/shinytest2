@@ -128,11 +128,12 @@ app$get_log() # (long output lines have been truncated)
 \item \href{#method-view}{\code{AppDriver$view()}}
 \item \href{#method-expect_appshot}{\code{AppDriver$expect_appshot()}}
 \item \href{#method-expect_text}{\code{AppDriver$expect_text()}}
+\item \href{#method-get_text}{\code{AppDriver$get_text()}}
 \item \href{#method-expect_html}{\code{AppDriver$expect_html()}}
+\item \href{#method-get_html}{\code{AppDriver$get_html()}}
 \item \href{#method-expect_script}{\code{AppDriver$expect_script()}}
 \item \href{#method-expect_download}{\code{AppDriver$expect_download()}}
 \item \href{#method-get_values}{\code{AppDriver$get_values()}}
-\item \href{#method-get_names}{\code{AppDriver$get_names()}}
 \item \href{#method-set_inputs}{\code{AppDriver$set_inputs()}}
 \item \href{#method-click}{\code{AppDriver$click()}}
 \item \href{#method-upload_file}{\code{AppDriver$upload_file()}}
@@ -313,6 +314,22 @@ because they often rely on minor details of dependencies.}
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_text"></a>}}
+\if{latex}{\out{\hypertarget{method-get_text}{}}}
+\subsection{Method \code{get_text()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_text(selector)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{selector}}{A DOM CSS selector to be passed into \code{document.querySelectorAll()}}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-expect_html"></a>}}
 \if{latex}{\out{\hypertarget{method-expect_html}{}}}
 \subsection{Method \code{expect_html()}}{
@@ -336,6 +353,27 @@ If \code{FALSE}, the full DOM structure of the child elements will be returned (
 \item{\code{cran}}{Should these expectations be verified on CRAN? By default,
 they are not, because snapshot tests tend to be fragile
 because they often rely on minor details of dependencies.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_html"></a>}}
+\if{latex}{\out{\hypertarget{method-get_html}{}}}
+\subsection{Method \code{get_html()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_html(selector, ..., outer_html = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{selector}}{A DOM selector to be passed into \code{document.querySelectorAll()}}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{outer_html}}{If \code{TRUE}, the full DOM structure will be returned (\code{TAG.outerHTML}).
+If \code{FALSE}, the full DOM structure of the child elements will be returned (\code{TAG.innerHTML}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -427,25 +465,6 @@ Returns a named list of all inputs, outputs, and export values.
 \item{\code{input, output, export}}{Either \code{TRUE} to return all
 input/output/exported values, or a character vector of specific
 controls.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_names"></a>}}
-\if{latex}{\out{\hypertarget{method-get_names}{}}}
-\subsection{Method \code{get_names()}}{
-Returns a set of names for of all inputs, outputs, and exports
-that Shiny is currently aware of.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_names(input = TRUE, output = TRUE, export = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{input, output, export}}{Either \code{TRUE} to return all
-input/output/exported values, or \code{FALSE} to return no names.}
 }
 \if{html}{\out{</div>}}
 }
