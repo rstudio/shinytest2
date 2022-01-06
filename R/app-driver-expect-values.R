@@ -1,13 +1,18 @@
-# TODO-barret; use rds. Add note about complex objects may have serialization issues.
-# TODO-barret; look into using a `file()` to read `req$content` and not use a `rawConnection()` as it is "slow"
+# TODO-barret; Add note about complex objects may have serialization issues.
+
+# Note:
+# `app_expect_values()` retrieves the JSON text format of the shiny values.
+#   * All images are hashed within the text content.
+# `app_get_values()` retrieves the RDS format of the shiny values.
+#   * If `hash_images` is TRUE, then it recurses over the RDS object and hashes all images.
 
 
 # Note: This queries method the Shiny server
 app_get_values <- function(
   self, private,
-  input = TRUE,
-  output = TRUE,
-  export = TRUE,
+  input = missing_arg(),
+  output = missing_arg(),
+  export = missing_arg(),
   ...,
   hash_images = FALSE
 ) {
@@ -18,21 +23,8 @@ app_get_values <- function(
   self$log_message("Getting all values")
   "!DEBUG app_get_values()"
 
-  input_is_missing <- rlang::is_missing(input)
-  output_is_missing <- rlang::is_missing(output)
-  export_is_missing <- rlang::is_missing(export)
-  if (sum(input_is_missing, output_is_missing, export_is_missing) == 3) {
-    # If nothing is supplied, use all values
-    input <- output <- export <- TRUE
-  } else {
-    # If something is supplied, disable all other values
-    input <- rlang::maybe_missing(input, FALSE)
-    output <- rlang::maybe_missing(output, FALSE)
-    export <- rlang::maybe_missing(export, FALSE)
-  }
-
   url <- app_get_shiny_test_url(self, private, input, output, export, format = "rds")
-  # Ask shiny for info
+  # Ask Shiny for info
   req <- httr_get(url)
 
   ## Writing to memory is 2x faster than disk and produces the same result
@@ -64,13 +56,10 @@ app_get_values <- function(
   # 1 mem        433.46µs 462.21µs     1989.  143.47KB     2.04   977     1      491ms <named list [3]> <Rprof… <benc… <tib…
   # 2 disk         1.06ms   1.37ms      727.    1.32KB     0      364     0      501ms <named list [3]> <Rprof… <benc… <tib…
 
-  raw_conn <- gzcon(rawConnection(req$content))
-  on.exit({
-    if (isOpen(raw_conn)) {
-      close(raw_conn)
-    }
-  }, add = TRUE)
-  values <- readRDS(raw_conn)
+  tmpfile <- tempfile()
+  on.exit(unlink(tmpfile), add = TRUE)
+  writeBin(req$content, tmpfile)
+  values <- readRDS(tmpfile)
 
   if (hash_images) {
     values <- hash_obj_images(values)
@@ -87,7 +76,6 @@ app_expect_values <- function(
   export = missing_arg(),
   name = NULL,
   screenshot = missing_arg(),
-  hash_images = TRUE,
   cran = FALSE
 ) {
   ckm8_assert_app_driver(self, private)
@@ -102,25 +90,35 @@ app_expect_values <- function(
   screenshot_is_missing <- rlang::is_missing(screenshot)
   screenshot <- rlang::maybe_missing(screenshot, self$values_screenshot)
 
-  # Do not prefix with `self$name` as that is only necessary for the snapshot file name
-  # At this point, the temp folder is already unique
-  # Only increment the counter if counter is used
   json_path <- app_next_temp_snapshot_path(self, private, name, "json")
 
-  # Capture values
-  values <- self$get_values(
-    input = input,
-    output = output,
-    export = export,
-    hash_images = hash_images
-  )
+  url <- app_get_shiny_test_url(self, private, input, output, export, format = "json")
+  # Ask Shiny for info
+  req <- httr_get(url)
+
+  # Convert to text, then replace base64-encoded images with hashes.
+  content <- raw_to_utf8(req$content)
+  # original_content <- content
+  content <- hash_snapshot_image_data(content, is_json_file = TRUE)
+  # Adjust the text to _pretty_ print
+  content <- jsonlite::prettify(content, indent = 2)
+
+  # # Capture values
+  # values <- app_get_values(
+  #   self, private,
+  #   format = "json",
+  #   input = input,
+  #   output = output,
+  #   export = export,
+  #   hash_images = hash_images
+  # )
 
   # Take a screenshot for debugging purposes
   # TODO-barret; handle screenshot arg;
   if (TRUE || should_take_screenshot) {
     withCallingHandlers(
       {
-        # `NAME.json` -> `NAME_.png`
+        # `NAME.json` -> `NAME_.png`; `NAME_.new.png`
         png_path <-
           fs::path_ext_set(
             paste0(fs::path_ext_remove(json_path), "_"),
@@ -141,11 +139,10 @@ app_expect_values <- function(
         invokeRestart("continue_test")
       }
     )
-
   }
 
   # Write the json file
-  write_json(values, json_path)
+  write_utf8(content, json_path)
   # Assert json file contents
   testthat_expect_snapshot_file(
     private,
@@ -154,7 +151,7 @@ app_expect_values <- function(
     compare = testthat::compare_file_text
   )
 
-  invisible(values)
+  invisible(content)
 }
 
 
@@ -165,6 +162,7 @@ app_appshot <- function(
   name = NULL,
   screenshot_args = NULL
 ) {
+  stop("remove me")
   ckm8_assert_app_driver(self, private)
   # The default is to take a screenshot when the `default_screenshot_args` option is
   # NULL and the user does not specify specific items to snapshot.
@@ -221,7 +219,7 @@ app_appshot <- function(
     # Convert to text, then replace base64-encoded images with hashes of them.
     content <- raw_to_utf8(req$content)
     # original_content <- content
-    content <- hash_snapshot_image_data(content)
+    content <- hash_snapshot_image_data(content, is_json_file = TRUE)
     content <- jsonlite::prettify(content, indent = 2)
     full_json_path <- fs::path(private$save_dir, json_name)
     write_utf8(content, full_json_path)
@@ -247,12 +245,25 @@ app_appshot <- function(
 
 app_get_shiny_test_url <- function(
   self, private,
-  input = TRUE,
-  output = TRUE,
-  export = TRUE,
+  input = missing_arg(),
+  output = missing_arg(),
+  export = missing_arg(),
   format = "json"
 ) {
   ckm8_assert_app_driver(self, private)
+
+  input_is_missing <- rlang::is_missing(input)
+  output_is_missing <- rlang::is_missing(output)
+  export_is_missing <- rlang::is_missing(export)
+  if (sum(input_is_missing, output_is_missing, export_is_missing) == 3) {
+    # If nothing is supplied, use all values
+    input <- output <- export <- TRUE
+  } else {
+    # If something is supplied, disable all other values
+    input <- rlang::maybe_missing(input, FALSE)
+    output <- rlang::maybe_missing(output, FALSE)
+    export <- rlang::maybe_missing(export, FALSE)
+  }
 
   q_string <- function(group, value) {
     if (isTRUE(value))
@@ -278,17 +289,22 @@ app_get_shiny_test_url <- function(
 # and replace them with a hash of the value. The image is base64-decoded and
 # then hashed with SHA1. The resulting hash value is the same as if the image
 # were saved to a file on disk and then hashed.
-hash_snapshot_image_data <- function(data) {
-
+hash_snapshot_image_data <- function(
+  data,
+  is_json_file = TRUE
+) {
   # Search for base64-encoded image data. There are two named groups:
-  # - data_url is the entire data URL, including the leading quote,
-  #   "data:image/png;base64,", the base64-encoded data, and the trailing quote.
+  # - data_url is the entire data URL: "data:image/png;base64," and the base64-encoded data
   # - img_data is just the base64-encoded data.
-  image_offsets <- gregexpr(
-    '\\n\\s*"[^"]*"\\s*:\\s*(?<data_url>"data:image/[^;]+;base64,(?<img_data>[^"]+)")',
-    data,
-    perl = TRUE
-  )[[1]]
+  pattern <-
+    if (is_json_file) {
+      # Trailing quotes are added back at the end of the function.
+      '\\n\\s*"[^"]*"\\s*:\\s*"(?<data_url>data:image/[^;]+;base64,(?<img_data>[^"]+))"'
+    } else {
+      '^(?<data_url>data:image/[^;]+;base64,(?<img_data>[^"]+))$'
+    }
+
+  image_offsets <- gregexpr(pattern, data, perl = TRUE )[[1]]
 
   # No image data found
   if (length(image_offsets) == 1 && image_offsets == -1) {
@@ -318,7 +334,6 @@ hash_snapshot_image_data <- function(data) {
   # Get the strings representing image data, and all the other stuff
   image_data <- substring(data, image_start_idx, image_stop_idx)
   text_data  <- substring(data, text_start_idx,  text_stop_idx)
-
   # Hash the images
   image_hashes <- vapply(image_data, FUN.VALUE = "", function(dat) {
     withCallingHandlers({
@@ -331,7 +346,7 @@ hash_snapshot_image_data <- function(data) {
     })
   })
 
-  image_hashes <- paste0('"[image data sha1: ', image_hashes, ']"')
+  image_hashes <- paste0('[image data hash: ', image_hashes, ']')
 
   # There's one fewer image hash than text elements. We need to add a blank
   # so that we can properly interleave them.
@@ -345,63 +360,16 @@ hash_snapshot_image_data <- function(data) {
 }
 
 
-## Given a JSON string, find any strings that represent base64-encoded images
-## and replace them with a hash of the value. The image is base64-decoded and
-## then hashed with SHA1. The resulting hash value is the same as if the image
-## were saved to a file on disk and then hashed.
-hash_base64_image <- function(txt) {
-  if (!is.character(txt)) return(txt)
-  if (nchar(txt) < 20) return(txt)
-  first_txt <- substr(txt, 0, 15)
-  # if not a data:image string, return early
-  if (!grep("data:image/", first_txt, fixed = TRUE)) return(txt)
-
-  # Search for base64-encoded image data. There are is a named group:
-  # - img_data is just the base64-encoded data.
-  img_offset <- regexpr(
-    'data:image/[^;]+;base64,(?<img_data>[^"]+)',
-    txt,
-    perl = TRUE
-  )
-
-  # No image data found
-  if (length(img_offset) == 1 && img_offset == -1) {
-    return(txt)
-  }
-
-  attr2 <- function(x, name) {
-    attr(x, name, exact = TRUE)
-  }
-
-  # Image data indices
-  image_start_idx <- as.integer(attr2(img_offset, "capture.start")[, "img_data"])
-  image_stop_idx <- image_start_idx +
-    as.integer(attr2(img_offset, "capture.length")[, "img_data"]) - 1
-
-  # Text (non-image) data indices
-  text_start_idx <- 0
-  text_stop_idx <- image_start_idx - 1
-
-  # Get the strings representing image data, and all the other stuff
-  image_data <- substr(txt, image_start_idx, image_stop_idx)
-  text_data  <- substr(txt, text_start_idx,  text_stop_idx)
-
-  # Hash the image
-  image_hash <-
-    withCallingHandlers({
-      rlang::hash(
-        jsonlite::base64_dec(image_data)
-      )
-    }, error = function(e) {
-      "Error hashing image data"
-    })
-
-  paste0(text_data, '"[image data sha1: ', image_hash, ']"')
-}
-# Recursive function to iterate over a list to hash all base-64 images found
 hash_obj_images <- function(obj) {
-  if (length(obj) == 0) return(obj)
-  if (is.character(obj)) return(hash_base64_image(obj))
-  if (is.list(obj)) return(lapply(obj, hash_obj_images))
+  if (length(obj) == 0) {
+    return(obj)
+  }
+  # if (is.character(obj)) return(hash_base64_image(obj))
+  if (is.character(obj)) {
+    return(hash_snapshot_image_data(obj, is_json_file = FALSE))
+  }
+  if (is.list(obj)) {
+    return(lapply(obj, hash_obj_images))
+  }
   obj
 }
