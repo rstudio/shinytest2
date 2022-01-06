@@ -1,12 +1,14 @@
 testthat_expect_snapshot_value <- function( # nolint
   private,
   x,
-  cran = FALSE
+  cran = FALSE,
+  ...
 ) {
   testthat::expect_snapshot_value(
     x,
     cran = cran,
-    variant = private$variant
+    variant = private$variant,
+    ...
   )
 }
 testthat_expect_snapshot_file <- function(
