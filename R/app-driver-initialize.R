@@ -3,6 +3,7 @@ app_initialize_ <- function(
   path = testthat::test_path("../../"),
   ...,
   load_timeout = NULL,
+  values_screenshot = values_screenshot,
   screenshot_args = NULL,
   check_names = TRUE,
   name = NULL,
@@ -23,11 +24,19 @@ app_initialize_ <- function(
   gc()
 
   private$path <- fs::path_abs(path)
+  private$values_screenshot <- values_screenshot
   private$default_screenshot_args <- screenshot_args
   private$variant <- if (identical(variant, FALSE)) NULL else variant
-  private$appshot_dir <- temp_file()
-  private$appshot_count <- Count$new()
+  private$counter <- Count$new()
   private$shiny_url <- Url$new()
+
+  private$save_dir <- temp_file()
+  # Clear out any prior files
+  if (fs::dir_exists(private$save_dir)) {
+    unlink(private$save_dir, recursive = TRUE)
+  }
+  dir.create(private$save_dir, recursive = TRUE)
+
   private$name <-
     if (!is.null(name)) {
       name
@@ -105,7 +114,7 @@ app_initialize_ <- function(
   "!DEBUG waiting for Shiny to become stable"
   self$log_message("Waiting for Shiny to become ready")
 
-  rlang::with_handlers(
+  withCallingHandlers(
     {
       chromote_wait_for_condition(
         self$get_chromote_session(),
@@ -154,10 +163,10 @@ app_initialize_ <- function(
 app_initialize <- function(self, private, ...) {
   ckm8_assert_app_driver(self, private)
 
-  rlang::with_handlers(
+  withCallingHandlers(
     app_initialize_(self, private, ...),
     error = function(e) {
-      rlang::with_handlers(
+      withCallingHandlers(
         self$log_message(paste0("Error while initializing AppDriver:\n", conditionMessage(e))),
         error = function(ee) {
           message("Could not log error message. Error: ", conditionMessage(ee))
@@ -166,7 +175,7 @@ app_initialize <- function(self, private, ...) {
 
       # Open chromote session if it is not already open and `view != FALSE`
       # `view` defaults to `rlang::missing_arg()`
-      rlang::with_handlers(
+      withCallingHandlers(
         {
           view_val <- list(...)$view
           if (rlang::is_interactive() && !isTRUE(view_val) && !is_false(view_val)) {
@@ -180,7 +189,7 @@ app_initialize <- function(self, private, ...) {
         }
       )
 
-      logs <- rlang::with_handlers(
+      logs <- withCallingHandlers(
         format(self$get_log()),
         error = function(e) "(Error retrieving logs)"
       )

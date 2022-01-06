@@ -15,6 +15,26 @@ Count <- R6Class( # nolint
   )
 )
 
+app_next_temp_snapshot_path <- function(
+  self, private,
+  name, # full path or filename
+  ext = "json"
+) {
+  ckm8_assert_app_driver(self, private)
+
+  fs::path(
+    private$save_dir,
+    # set the file extension
+    fs::path_ext_set(
+      # take file name only
+      fs::path_file(
+        name %||% sprintf("%03d", private$counter$increment())
+      ),
+      ext
+    )
+  )
+}
+
 
 Url <- R6Class( # nolint
   "Url",

@@ -50,5 +50,5 @@ app_finalize <- function(
   # Can not remove snapshot files in the same function that they are created,
   #   so it is safer to clean up the files when the app is not needed
   #   (Not that big of a memory leak for a single app)
-  unlink(private$appshot_dir, recursive = TRUE)
+  unlink(private$save_dir, recursive = TRUE)
 }

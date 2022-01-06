@@ -5,11 +5,8 @@ app_download <- function(
 ) {
   ckm8_assert_app_driver(self, private)
 
-  temp_save_dir <- private$appshot_dir
-  snapshot_count <- private$appshot_count$increment()
-
   if (is.null(name)) {
-    name <- sprintf("%03d.download", snapshot_count)
+    name <- sprintf("%03d.download", private$counter$increment())
   }
 
   self$log_message(paste0("Downloading file: ", name))
@@ -23,8 +20,7 @@ app_download <- function(
   full_url <- paste0(private$shiny_url$get(), sub_url)
   req <- httr_get(full_url)
 
-  download_path <- fs::path(temp_save_dir, name)
-  create_snapshot_dir(temp_save_dir, snapshot_count)
+  download_path <- fs::path(private$save_dir, name)
   writeBin(req$content, download_path)
 
   list(

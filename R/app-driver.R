@@ -25,7 +25,7 @@ AppDriver <- R6Class(# nolint
     chromote_session = "<chromote::ChromoteSession>",
     shiny_process = NULL, # `callr::r_bg()` object
 
-    appshot_count = "<Count>",
+    counter = "<Count>",
     shiny_url = "<Url>",
 
     log = list(), # List of all log messages added via `$log_message()`
@@ -38,8 +38,9 @@ AppDriver <- R6Class(# nolint
     shiny_worker_id = NA_character_,
 
     path = NULL, # Full path to app (including filename if it's a .Rmd)
-    appshot_dir = NULL, # Temp folder to store snapshot outputs
+    save_dir = NULL, # Temp folder to store snapshot outputs
     default_screenshot_args = NULL, # Default screenshot args to use
+    values_screenshot = TRUE, # Should `$expect_values()` expect a non-failing screenshot?
     shiny_test_url = NULL, # URL for shiny's test API
 
     finalize = function() {
@@ -90,6 +91,7 @@ AppDriver <- R6Class(# nolint
       ...,
       load_timeout = NULL,
       variant = getOption("shinytest2.variant", platform_variant()),
+      values_screenshot = TRUE,
       screenshot_args = NULL,
       check_names = TRUE,
       name = NULL,
@@ -105,6 +107,7 @@ AppDriver <- R6Class(# nolint
         path = path,
         ...,
         load_timeout = load_timeout,
+        values_screenshot = values_screenshot,
         screenshot_args = screenshot_args,
         check_names = check_names,
         name = name,
@@ -232,8 +235,33 @@ AppDriver <- R6Class(# nolint
     #' @param input,output,export Either `TRUE` to return all
     #'   input/output/exported values, or a character vector of specific
     #'   controls.
-    get_values = function(input = TRUE, output = TRUE, export = TRUE) {
-      app_get_values(self, private, input, output, export)
+    get_values = function(
+      input = missing_arg(), output = missing_arg(), export = missing_arg(),
+      ...,
+      hash_images = FALSE
+    ) {
+      app_get_values(
+        self, private,
+        input = input, output = output, export = export,
+        ...,
+        hash_images = hash_images
+      )
+    },
+    expect_values = function(
+      input = missing_arg(), output = missing_arg(), export = missing_arg(),
+      ...,
+      screenshot = NULL,
+      name = NULL,
+      cran = FALSE
+      ) {
+      app_expect_values(
+        self, private,
+        input = input, output = output, export = export,
+        ...,
+        screenshot = screenshot,
+        name = name,
+        cran = cran
+      )
     },
 
     #' @description Set input values.
