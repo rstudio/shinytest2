@@ -4,12 +4,6 @@ test_that("set kitchen sink of inputs", {
 
   app <- AppDriver$new(test_path("../../."), variant = platform_variant())
 
-  # TODO-barret; variant should be missing by default?
-  # app <- AppDriver$new(test_path("../../."), variant = rlang::missing_arg())
-
-  # app$expect_values()
-  # app$expect_screenshot() # throws error about missing variant
-
   app$expect_values()
 
   app$set_inputs(

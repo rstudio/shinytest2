@@ -33,13 +33,13 @@ AppDriver <- R6Class(# nolint
     clean_logs = TRUE, # Whether to clean logs when GC'd
 
     name = NULL, # character / NULL
-    variant = NULL, # character / NULL
+    variant = "missing_value()", # character / NULL
     state = "stopped", # "stopped" or "running"
     shiny_worker_id = NA_character_,
 
     path = NULL, # Full path to app (including filename if it's a .Rmd)
     save_dir = NULL, # Temp folder to store snapshot outputs
-    default_screenshot_args = "missing_arg()", # Default screenshot args to use
+    default_screenshot_args = "missing_value()", # Default screenshot args to use
     default_expect_values_screenshot_args = TRUE, # Should `$expect_values()` expect a non-failing screenshot?
     shiny_test_url = NULL, # URL for shiny's test API
 
@@ -90,7 +90,7 @@ AppDriver <- R6Class(# nolint
       path = testthat::test_path("../../"),
       ...,
       load_timeout = NULL,
-      variant = getOption("shinytest2.variant", platform_variant()),
+      variant = getOption("shinytest2.variant", missing_arg()),
       expect_values_screenshot_args = TRUE,
       screenshot_args = missing_arg(),
       check_names = TRUE,
@@ -238,6 +238,7 @@ AppDriver <- R6Class(# nolint
     #'   * `FALSE`: No screenshot will be taken
     #'   * A named list of arguments: Arguments passed directly to [`chromote::ChromoteSession`]'s
     #' `$screenshot()` method. The selector and delay will default to `"html"` and `0` respectively.
+    # TODO-barret; document methods!
     expect_values = function(
       input = missing_arg(), output = missing_arg(), export = missing_arg(),
       ...,
@@ -278,7 +279,7 @@ AppDriver <- R6Class(# nolint
       name = NULL,
       cran = FALSE
     ) {
-      app_expect_screenshot(
+      app_expect_screenshot_and_variant(
         self, private,
         ...,
         screenshot_args = screenshot_args,
@@ -448,6 +449,11 @@ AppDriver <- R6Class(# nolint
     #' Chromote Session object from the \pkg{chromote} package.
     get_chromote_session = function() {
       app_get_chromote_session(self, private)
+    },
+    #' @description
+    #' Get the variant supplied at initialization
+    get_variant = function() {
+      app_get_variant(self, private)
     },
 
     #' @description

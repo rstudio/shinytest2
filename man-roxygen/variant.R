@@ -7,4 +7,5 @@
 #'   You can variants to deal with cases where the snapshot output
 #'   varies and you want to capture and test the variations.
 #'   Common use cases include variations for operating system, R
-#'   version, or version of key dependency.
+#'   version, or version of key dependency. For example usage,
+#'   see [`platform_variant()`].

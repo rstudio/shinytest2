@@ -148,6 +148,7 @@ app$get_log() # (long output lines have been truncated)
 \item \href{#method-get_window_size}{\code{AppDriver$get_window_size()}}
 \item \href{#method-set_window_size}{\code{AppDriver$set_window_size()}}
 \item \href{#method-get_chromote_session}{\code{AppDriver$get_chromote_session()}}
+\item \href{#method-get_variant}{\code{AppDriver$get_variant()}}
 \item \href{#method-get_log}{\code{AppDriver$get_log()}}
 \item \href{#method-log_message}{\code{AppDriver$log_message()}}
 \item \href{#method-stop}{\code{AppDriver$stop()}}
@@ -164,7 +165,7 @@ Initialize the AppDriver
   path = testthat::test_path("../../"),
   ...,
   load_timeout = NULL,
-  variant = getOption("shinytest2.variant", platform_variant()),
+  variant = getOption("shinytest2.variant", missing_arg()),
   expect_values_screenshot_args = TRUE,
   screenshot_args = missing_arg(),
   check_names = TRUE,
@@ -198,7 +199,8 @@ directory name.
 You can variants to deal with cases where the snapshot output
 varies and you want to capture and test the variations.
 Common use cases include variations for operating system, R
-version, or version of key dependency.}
+version, or version of key dependency. For example usage,
+see \code{\link[=platform_variant]{platform_variant()}}.}
 
 \item{\code{screenshot_args}}{Default set of arguments to pass in to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
 \verb{$screenshot()} method when taking screnshots within \verb{$expect_screenshot()}. To disable screenshots by default, set to \code{FALSE}.}
@@ -810,6 +812,16 @@ Sets size of the browser window.
 Chromote Session object from the \pkg{chromote} package.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_chromote_session()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_variant"></a>}}
+\if{latex}{\out{\hypertarget{method-get_variant}{}}}
+\subsection{Method \code{get_variant()}}{
+Get the variant supplied at initialization
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_variant()}\if{html}{\out{</div>}}
 }
 
 }

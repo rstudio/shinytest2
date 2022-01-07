@@ -5,3 +5,14 @@ test_that("testthat is a depends package", {
   depends <- as.list(read.dcf(system.file("DESCRIPTION", package = "shinytest2"))[1, ])$Depends
   expect_match(depends, "testthat")
 })
+
+
+
+test_that("AppDriver can print while working with `missing_arg()` values", {
+  expect_error(
+    capture.output({
+      print(AppDriver$new(test_path("apps/x")))
+    }),
+    NA
+  )
+})

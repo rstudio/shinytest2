@@ -8,7 +8,7 @@ app__expect_snapshot_value <- function( # nolint
   testthat::expect_snapshot_value(
     x,
     cran = cran,
-    variant = private$variant,
+    variant = self$get_variant(),
     ...
   )
 }
@@ -35,6 +35,6 @@ app__expect_snapshot_file <- function(
     name = name,
     cran = cran,
     compare = compare,
-    variant = private$variant
+    variant = self$get_variant()
   )
 }

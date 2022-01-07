@@ -1,5 +1,5 @@
 default_screenshot_args <- function(screenshot_args) {
-  if (rlang::is_missing(screenshot_args) || is.null(screenshot_args) || isTRUE(screenshot_args)) {
+  if (is_missing_value(screenshot_args) || is.null(screenshot_args) || isTRUE(screenshot_args)) {
     screenshot_args <- list()
   }
   screenshot_args
@@ -18,7 +18,7 @@ app_screenshot <- function(
   ellipsis::check_dots_empty()
 
   screenshot_args <- default_screenshot_args(
-    rlang::maybe_missing(screenshot_args, private$default_screenshot_args)
+    maybe_missing_value(screenshot_args, private$default_screenshot_args)
   )
   if (is_false(screenshot_args)) {
     warning("`screenshot_args` can not be `FALSE` when calling `app$screenshot()`. Setting to `list()`")
@@ -26,8 +26,8 @@ app_screenshot <- function(
   }
   checkmate::assert_list(screenshot_args)
 
-  screenshot_args$delay <- rlang::maybe_missing(delay, screenshot_args$delay) %||% 0
-  screenshot_args$selector <- rlang::maybe_missing(selector, screenshot_args$selector) %||% "html"
+  screenshot_args$delay <- maybe_missing_value(delay, screenshot_args$delay) %||% 0
+  screenshot_args$selector <- maybe_missing_value(selector, screenshot_args$selector) %||% "html"
 
   checkmate::assert_number(screenshot_args$delay, lower = 0, finite = TRUE, null.ok = TRUE)
 
@@ -88,4 +88,19 @@ app_expect_screenshot <- function(
     cran = cran,
     compare = testthat::compare_file_binary
   )
+}
+
+app_expect_screenshot_and_variant <- function( # nolint
+  self, private,
+  ...
+) {
+  if (app_is_missing_variant(self, private)) {
+    abort(c(
+      "This `AppDriver` object can not call `$expect_screenshot()` without a `variant` initialized. Please supply a `variant` value when creating your `AppDriver` object, like `AppDriver(variant = <value>)`",
+      i = "`variant = platform_variant()` is the suggested value",
+      i = "`variant = NULL` can work, but screenshots are known to cause conflicts when changing R version or platform."
+    ))
+  }
+  # Expect screenshot
+  app_expect_screenshot(self, private, ...)
 }

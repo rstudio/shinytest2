@@ -18,7 +18,7 @@
         "test-app-set-inputs.R"
       ],
       "size": [
-        1428
+        1203
       ],
       "type": [
         ""
@@ -51,7 +51,7 @@
     "checkbox_out": "[1] TRUE",
     "date_out": "[1] \"2015-01-01\"",
     "dates_out": "[1] \"2015-01-01\" \"2015-02-20\"",
-    "file_out": "                   name size type      datapath\n1 test-app-set-inputs.R 1428      <tempdir>/0.R",
+    "file_out": "                   name size type      datapath\n1 test-app-set-inputs.R 1203      <tempdir>/0.R",
     "num_out": "[1] 100",
     "radio_out": "[1] \"2\"",
     "select_out": "[1] \"2\"",
