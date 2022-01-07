@@ -253,11 +253,13 @@ app$expect_appshot(id = "winston")
 
 # TODO
 ## Week 1
-* Add `$get_values()`
-  * And all other "get" methods
+* √ `$expect_values(screenshot = self$values_screenshot)` and `$expect_screenshot()` only. No appshot
+* √ Add `$get_values()`
+  * √ And all other "get" methods
 * √ wait_for_stable(duration = 500) -> wait_for_idle(duration = 500)
-* Remove `wait_` from API
-* Transport chromote methods to {chromote}
+* Make `variant` off by default. Must opt-in for `$expect_screenshot()` (which can be `NULL`)
+* Remove `wait_` from `{shinytest2}` API
+* Transport `chromote_eval()` to `{chromote}`
 
 ## Make *public* on GitHub
 * Notify Eric and David

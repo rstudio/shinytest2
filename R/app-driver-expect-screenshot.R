@@ -1,0 +1,91 @@
+default_screenshot_args <- function(screenshot_args) {
+  if (rlang::is_missing(screenshot_args) || is.null(screenshot_args) || isTRUE(screenshot_args)) {
+    screenshot_args <- list()
+  }
+  screenshot_args
+}
+
+app_screenshot <- function(
+  self, private,
+  filename = NULL,
+  ...,
+  screenshot_args = missing_arg(),
+  delay = missing_arg(),
+  selector = missing_arg()
+) {
+  "!DEBUG app_screenshot()"
+  ckm8_assert_app_driver(self, private)
+  ellipsis::check_dots_empty()
+
+  screenshot_args <- default_screenshot_args(
+    rlang::maybe_missing(screenshot_args, private$default_screenshot_args)
+  )
+  if (is_false(screenshot_args)) {
+    warning("`screenshot_args` can not be `FALSE` when calling `app$screenshot()`. Setting to `list()`")
+    screenshot_args <- list()
+  }
+  checkmate::assert_list(screenshot_args)
+
+  screenshot_args$delay <- rlang::maybe_missing(delay, screenshot_args$delay) %||% 0
+  screenshot_args$selector <- rlang::maybe_missing(selector, screenshot_args$selector) %||% "html"
+
+  checkmate::assert_number(screenshot_args$delay, lower = 0, finite = TRUE, null.ok = TRUE)
+
+  if (is.null(filename)) {
+    self$log_message("Taking screenshot")
+  } else {
+    self$log_message(paste0("Taking screenshot: ", filename))
+  }
+  path <- temp_file(".png")
+  screenshot_args$filename <- path
+
+  do.call(self$get_chromote_session()$screenshot, screenshot_args)
+
+  # Fix up the PNG resolution header on windows
+  if (is_windows()) {
+    normalize_png_res_header(path)
+  }
+
+  if (is.null(filename)) {
+    withr::local_par(list(bg = "grey90"))
+    png <- png::readPNG(path)
+    graphics::plot(grDevices::as.raster(png))
+  } else {
+    fs::file_copy(path, filename)
+  }
+
+  invisible(self)
+}
+
+
+app_expect_screenshot <- function(
+  self, private,
+  ...,
+  name = NULL,
+  screenshot_args = missing_arg(),
+  delay = missing_arg(),
+  selector = missing_arg(),
+  cran = FALSE
+) {
+  "!DEBUG app_screenshot()"
+  ckm8_assert_app_driver(self, private)
+  ellipsis::check_dots_empty()
+
+  filename <- app_next_temp_snapshot_path(self, private, name, "png")
+
+  # Take screenshot
+  self$screenshot(
+    filename = filename,
+    screenshot_args = screenshot_args,
+    delay = delay,
+    selector = selector
+  )
+
+  # Assert screenshot value
+  app__expect_snapshot_file(
+    self, private,
+    filename,
+    cran = cran,
+    compare = testthat::compare_file_binary
+  )
+}

@@ -4,7 +4,13 @@ test_that("set kitchen sink of inputs", {
 
   app <- AppDriver$new(test_path("../../."), variant = platform_variant())
 
-  app$expect_appshot()
+  # TODO-barret; variant should be missing by default?
+  # app <- AppDriver$new(test_path("../../."), variant = rlang::missing_arg())
+
+  # app$expect_values()
+  # app$expect_screenshot() # throws error about missing variant
+
+  app$expect_values()
 
   app$set_inputs(
     "action" = "click",
@@ -29,11 +35,11 @@ test_that("set kitchen sink of inputs", {
   on.exit({unlink(tmpfile)}, add = TRUE)
   app$upload_file(file = test_path("test-app-set-inputs.R"))
 
-  app$expect_appshot()
+  app$expect_values()
 
   app$set_inputs(tabset = "shinyWidgets")
 
-  app$expect_appshot()
+  app$expect_values()
 
   app$set_inputs(
     "bsSwitch" = TRUE,
@@ -48,5 +54,5 @@ test_that("set kitchen sink of inputs", {
   #     "search" = "Test text", # must hit enter to submit
   #     "sliderText" = "Strongly agree",
 
-  app$expect_appshot()
+  app$expect_values()
 })

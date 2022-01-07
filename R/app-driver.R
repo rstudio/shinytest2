@@ -25,7 +25,7 @@ AppDriver <- R6Class(# nolint
     chromote_session = "<chromote::ChromoteSession>",
     shiny_process = NULL, # `callr::r_bg()` object
 
-    appshot_count = "<Count>",
+    counter = "<Count>",
     shiny_url = "<Url>",
 
     log = list(), # List of all log messages added via `$log_message()`
@@ -38,8 +38,9 @@ AppDriver <- R6Class(# nolint
     shiny_worker_id = NA_character_,
 
     path = NULL, # Full path to app (including filename if it's a .Rmd)
-    appshot_dir = NULL, # Temp folder to store snapshot outputs
-    default_screenshot_args = NULL, # Default screenshot args to use
+    save_dir = NULL, # Temp folder to store snapshot outputs
+    default_screenshot_args = "missing_arg()", # Default screenshot args to use
+    default_expect_values_screenshot_args = TRUE, # Should `$expect_values()` expect a non-failing screenshot?
     shiny_test_url = NULL, # URL for shiny's test API
 
     finalize = function() {
@@ -65,7 +66,7 @@ AppDriver <- R6Class(# nolint
     #'   This includes the time to start R. Defaults to 10s when running
     #'   locally and 20s when running on CI.
     #' @param screenshot_args Default set of arguments to pass in to [`chromote::ChromoteSession`]'s
-    #' `$screenshot()` method when taking screnshots within `$expect_appshot()`. To disable screenshots by default, set to `FALSE`.
+    #' `$screenshot()` method when taking screnshots within `$expect_screenshot()`. To disable screenshots by default, set to `FALSE`.
     # ' @param phantomTimeout How long to wait when connecting to phantomJS
     # '  process, in ms
     #' @template variant
@@ -90,7 +91,8 @@ AppDriver <- R6Class(# nolint
       ...,
       load_timeout = NULL,
       variant = getOption("shinytest2.variant", platform_variant()),
-      screenshot_args = NULL,
+      expect_values_screenshot_args = TRUE,
+      screenshot_args = missing_arg(),
       check_names = TRUE,
       name = NULL,
       view = missing_arg(),
@@ -105,6 +107,7 @@ AppDriver <- R6Class(# nolint
         path = path,
         ...,
         load_timeout = load_timeout,
+        expect_values_screenshot_args = expect_values_screenshot_args,
         screenshot_args = screenshot_args,
         check_names = check_names,
         name = name,
@@ -127,33 +130,6 @@ AppDriver <- R6Class(# nolint
 
 
     #' @description
-    #' Take and appshot of the Shiny application
-    #'
-    #' Appshot: Shiny **App**lication Snap**shot**
-    #'
-    #' An appshot currently consists of two snapshot files:
-    #' 1. A screenshot of the Shiny application using the `$screenshot()` function of the [`chromote::ChromoteSession`]
-    #' 2. A JSON snapshot of all Shiny component values
-    #'
-    #' @param name The prefix name to be used for the snapshot. By default, this uses the name supplied to `app` on initialization.
-    #' @param items Components to only be included in the snapshot. If supplied, can contain `inputs`, `output`, and `export`. Each value of `items` can either be `TRUE` (for all values) or a character list of names to use.
-    #' @param screenshot If the value is `NULL`, then the initalization value of `screenshot_args` will be used. If this value is `NULL`, then `screenshot` will be set to the result of `!is.null(items)`.
-    #'
-    #'   The final value can either be:
-    #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
-    #'   * `FALSE`: No screenshot will be taken
-    #'   * A named list of arguments: Arguments passed directly to [`chromote::ChromoteSession`]'s
-    #' `$screenshot()` method. The selector and delay will default to `"html"` and `0` respectively.
-    expect_appshot = function(..., items = NULL, screenshot = NULL, name = NULL, cran = FALSE) {
-      app_expect_appshot(
-        self, private,
-        ...,
-        name = name, items = items, screenshot_args = screenshot, cran = cran
-      )
-    },
-
-
-    #' @description
     #' Expect snapshot of UI text
     #'
     #' `$expect_text()` will extract the text value of all matching elements via `TAG.textContent` and store them in a snapshot file.
@@ -166,6 +142,10 @@ AppDriver <- R6Class(# nolint
     expect_text = function(selector, ..., cran = FALSE) {
       app_expect_text(self, private, selector, ..., cran = cran)
     },
+    #' @param selector A DOM CSS selector to be passed into `document.querySelectorAll()`
+    get_text = function(selector) {
+      app_get_text(self, private, selector = selector)
+    },
 
 
     #' @description Expect snapshot of UI HTML
@@ -177,6 +157,12 @@ AppDriver <- R6Class(# nolint
     #'   If `FALSE`, the full DOM structure of the child elements will be returned (`TAG.innerHTML`).
     expect_html = function(selector, ..., outer_html = FALSE, cran = FALSE) {
       app_expect_html(self, private, selector, ..., outer_html = outer_html, cran = cran)
+    },
+    #' @param selector A DOM selector to be passed into `document.querySelectorAll()`
+    #' @param outer_html If `TRUE`, the full DOM structure will be returned (`TAG.outerHTML`).
+    #'   If `FALSE`, the full DOM structure of the child elements will be returned (`TAG.innerHTML`).
+    get_html = function(selector, ..., outer_html = FALSE) {
+      app_get_html(self, private, selector, ..., outer_html = outer_html)
     },
 
     #' @description
@@ -222,17 +208,85 @@ AppDriver <- R6Class(# nolint
     #' @param input,output,export Either `TRUE` to return all
     #'   input/output/exported values, or a character vector of specific
     #'   controls.
-    get_values = function(input = TRUE, output = TRUE, export = TRUE) {
-      app_get_values(self, private, input, output, export)
+    get_values = function(
+      input = missing_arg(), output = missing_arg(), export = missing_arg(),
+      ...,
+      hash_images = FALSE
+    ) {
+      app_get_values(
+        self, private,
+        input = input, output = output, export = export,
+        ...,
+        hash_images = hash_images
+      )
     },
     #' @description
-    #' Returns a set of names for of all inputs, outputs, and exports
-    #' that Shiny is currently aware of.
+    #' Take and appshot of the Shiny application
     #'
-    #' @param input,output,export Either `TRUE` to return all
-    #'   input/output/exported values, or `FALSE` to return no names.
-    get_names = function(input = TRUE, output = TRUE, export = TRUE) {
-      app_get_names(self, private, input, output, export)
+    #' Appshot: Shiny **App**lication Snap**shot**
+    #'
+    #' An appshot currently consists of two snapshot files:
+    #' 1. A screenshot of the Shiny application using the `$screenshot()` function of the [`chromote::ChromoteSession`]
+    #' 2. A JSON snapshot of all Shiny component values
+    #'
+    #' @param name The prefix name to be used for the snapshot. By default, this uses the name supplied to `app` on initialization.
+    #' @param items Components to only be included in the snapshot. If supplied, can contain `inputs`, `output`, and `export`. Each value of `items` can either be `TRUE` (for all values) or a character list of names to use.
+    #' @param screenshot If the value is `NULL`, then the initalization value of `screenshot_args` will be used. If this value is `NULL`, then `screenshot` will be set to the result of `!is.null(items)`.
+    #'
+    #'   The final value can either be:
+    #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
+    #'   * `FALSE`: No screenshot will be taken
+    #'   * A named list of arguments: Arguments passed directly to [`chromote::ChromoteSession`]'s
+    #' `$screenshot()` method. The selector and delay will default to `"html"` and `0` respectively.
+    expect_values = function(
+      input = missing_arg(), output = missing_arg(), export = missing_arg(),
+      ...,
+      screenshot_args = missing_arg(),
+      name = NULL,
+      cran = FALSE
+      ) {
+      app_expect_values(
+        self, private,
+        input = input, output = output, export = export,
+        ...,
+        screenshot_args = screenshot_args,
+        name = name,
+        cran = cran
+      )
+    },
+    screenshot = function(
+      filename = NULL,
+      ...,
+      screenshot_args = missing_arg(),
+      delay = missing_arg(),
+      selector = missing_arg()
+    ) {
+      app_screenshot(
+        self, private,
+        filename = filename,
+        ...,
+        screenshot_args = screenshot_args,
+        delay = delay,
+        selector = selector
+      )
+    },
+    expect_screenshot = function(
+      ...,
+      screenshot_args = missing_arg(),
+      delay = missing_arg(),
+      selector = missing_arg(),
+      name = NULL,
+      cran = FALSE
+    ) {
+      app_expect_screenshot(
+        self, private,
+        ...,
+        screenshot_args = screenshot_args,
+        delay = delay,
+        selector = selector,
+        name = name,
+        cran = cran
+      )
     },
 
     #' @description Set input values.

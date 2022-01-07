@@ -1,4 +1,4 @@
-# basic text and dom outputs are captured
+# basic text and dom outputs are expected
 
     "<div id='custom'><p>My Custom Output<\/p><\/div>"
 

@@ -126,13 +126,16 @@ app$get_log() # (long output lines have been truncated)
 \itemize{
 \item \href{#method-new}{\code{AppDriver$new()}}
 \item \href{#method-view}{\code{AppDriver$view()}}
-\item \href{#method-expect_appshot}{\code{AppDriver$expect_appshot()}}
 \item \href{#method-expect_text}{\code{AppDriver$expect_text()}}
+\item \href{#method-get_text}{\code{AppDriver$get_text()}}
 \item \href{#method-expect_html}{\code{AppDriver$expect_html()}}
+\item \href{#method-get_html}{\code{AppDriver$get_html()}}
 \item \href{#method-expect_script}{\code{AppDriver$expect_script()}}
 \item \href{#method-expect_download}{\code{AppDriver$expect_download()}}
 \item \href{#method-get_values}{\code{AppDriver$get_values()}}
-\item \href{#method-get_names}{\code{AppDriver$get_names()}}
+\item \href{#method-expect_values}{\code{AppDriver$expect_values()}}
+\item \href{#method-screenshot}{\code{AppDriver$screenshot()}}
+\item \href{#method-expect_screenshot}{\code{AppDriver$expect_screenshot()}}
 \item \href{#method-set_inputs}{\code{AppDriver$set_inputs()}}
 \item \href{#method-click}{\code{AppDriver$click()}}
 \item \href{#method-upload_file}{\code{AppDriver$upload_file()}}
@@ -162,7 +165,8 @@ Initialize the AppDriver
   ...,
   load_timeout = NULL,
   variant = getOption("shinytest2.variant", platform_variant()),
-  screenshot_args = NULL,
+  expect_values_screenshot_args = TRUE,
+  screenshot_args = missing_arg(),
   check_names = TRUE,
   name = NULL,
   view = missing_arg(),
@@ -197,7 +201,7 @@ Common use cases include variations for operating system, R
 version, or version of key dependency.}
 
 \item{\code{screenshot_args}}{Default set of arguments to pass in to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
-\verb{$screenshot()} method when taking screnshots within \verb{$expect_appshot()}. To disable screenshots by default, set to \code{FALSE}.}
+\verb{$screenshot()} method when taking screnshots within \verb{$expect_screenshot()}. To disable screenshots by default, set to \code{FALSE}.}
 
 \item{\code{check_names}}{Check if widget names are unique?}
 
@@ -235,55 +239,6 @@ Calls \verb{$view()} on the Chromote Session object
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_appshot"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_appshot}{}}}
-\subsection{Method \code{expect_appshot()}}{
-Take and appshot of the Shiny application
-
-Appshot: Shiny \strong{App}lication Snap\strong{shot}
-
-An appshot currently consists of two snapshot files:
-\enumerate{
-\item A screenshot of the Shiny application using the \verb{$screenshot()} function of the \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}
-\item A JSON snapshot of all Shiny component values
-}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_appshot(
-  ...,
-  items = NULL,
-  screenshot = NULL,
-  name = NULL,
-  cran = FALSE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{items}}{Components to only be included in the snapshot. If supplied, can contain \code{inputs}, \code{output}, and \code{export}. Each value of \code{items} can either be \code{TRUE} (for all values) or a character list of names to use.}
-
-\item{\code{screenshot}}{If the value is \code{NULL}, then the initalization value of \code{screenshot_args} will be used. If this value is \code{NULL}, then \code{screenshot} will be set to the result of \code{!is.null(items)}.
-
-The final value can either be:
-\itemize{
-\item \code{TRUE}: A screenshot of the whole page will be taken with no delay
-\item \code{FALSE}: No screenshot will be taken
-\item A named list of arguments: Arguments passed directly to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
-\verb{$screenshot()} method. The selector and delay will default to \code{"html"} and \code{0} respectively.
-}}
-
-\item{\code{name}}{The prefix name to be used for the snapshot. By default, this uses the name supplied to \code{app} on initialization.}
-
-\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
-they are not, because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-expect_text"></a>}}
 \if{latex}{\out{\hypertarget{method-expect_text}{}}}
 \subsection{Method \code{expect_text()}}{
@@ -313,6 +268,22 @@ because they often rely on minor details of dependencies.}
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_text"></a>}}
+\if{latex}{\out{\hypertarget{method-get_text}{}}}
+\subsection{Method \code{get_text()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_text(selector)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{selector}}{A DOM CSS selector to be passed into \code{document.querySelectorAll()}}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-expect_html"></a>}}
 \if{latex}{\out{\hypertarget{method-expect_html}{}}}
 \subsection{Method \code{expect_html()}}{
@@ -336,6 +307,27 @@ If \code{FALSE}, the full DOM structure of the child elements will be returned (
 \item{\code{cran}}{Should these expectations be verified on CRAN? By default,
 they are not, because snapshot tests tend to be fragile
 because they often rely on minor details of dependencies.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_html"></a>}}
+\if{latex}{\out{\hypertarget{method-get_html}{}}}
+\subsection{Method \code{get_html()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_html(selector, ..., outer_html = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{selector}}{A DOM selector to be passed into \code{document.querySelectorAll()}}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{outer_html}}{If \code{TRUE}, the full DOM structure will be returned (\code{TAG.outerHTML}).
+If \code{FALSE}, the full DOM structure of the child elements will be returned (\code{TAG.innerHTML}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -418,7 +410,13 @@ because they often rely on minor details of dependencies.}
 \subsection{Method \code{get_values()}}{
 Returns a named list of all inputs, outputs, and export values.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_values(input = TRUE, output = TRUE, export = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_values(
+  input = missing_arg(),
+  output = missing_arg(),
+  export = missing_arg(),
+  ...,
+  hash_images = FALSE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -427,25 +425,108 @@ Returns a named list of all inputs, outputs, and export values.
 \item{\code{input, output, export}}{Either \code{TRUE} to return all
 input/output/exported values, or a character vector of specific
 controls.}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
 }
 \if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_names"></a>}}
-\if{latex}{\out{\hypertarget{method-get_names}{}}}
-\subsection{Method \code{get_names()}}{
-Returns a set of names for of all inputs, outputs, and exports
-that Shiny is currently aware of.
+\if{html}{\out{<a id="method-expect_values"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_values}{}}}
+\subsection{Method \code{expect_values()}}{
+Take and appshot of the Shiny application
+
+Appshot: Shiny \strong{App}lication Snap\strong{shot}
+
+An appshot currently consists of two snapshot files:
+\enumerate{
+\item A screenshot of the Shiny application using the \verb{$screenshot()} function of the \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}
+\item A JSON snapshot of all Shiny component values
+}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_names(input = TRUE, output = TRUE, export = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_values(
+  input = missing_arg(),
+  output = missing_arg(),
+  export = missing_arg(),
+  ...,
+  screenshot_args = missing_arg(),
+  name = NULL,
+  cran = FALSE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{input, output, export}}{Either \code{TRUE} to return all
-input/output/exported values, or \code{FALSE} to return no names.}
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{name}}{The prefix name to be used for the snapshot. By default, this uses the name supplied to \code{app} on initialization.}
+
+\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
+they are not, because snapshot tests tend to be fragile
+because they often rely on minor details of dependencies.}
+
+\item{\code{items}}{Components to only be included in the snapshot. If supplied, can contain \code{inputs}, \code{output}, and \code{export}. Each value of \code{items} can either be \code{TRUE} (for all values) or a character list of names to use.}
+
+\item{\code{screenshot}}{If the value is \code{NULL}, then the initalization value of \code{screenshot_args} will be used. If this value is \code{NULL}, then \code{screenshot} will be set to the result of \code{!is.null(items)}.
+
+The final value can either be:
+\itemize{
+\item \code{TRUE}: A screenshot of the whole page will be taken with no delay
+\item \code{FALSE}: No screenshot will be taken
+\item A named list of arguments: Arguments passed directly to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
+\verb{$screenshot()} method. The selector and delay will default to \code{"html"} and \code{0} respectively.
+}}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-screenshot"></a>}}
+\if{latex}{\out{\hypertarget{method-screenshot}{}}}
+\subsection{Method \code{screenshot()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$screenshot(
+  filename = NULL,
+  ...,
+  screenshot_args = missing_arg(),
+  delay = missing_arg(),
+  selector = missing_arg()
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-expect_screenshot"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_screenshot}{}}}
+\subsection{Method \code{expect_screenshot()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_screenshot(
+  ...,
+  screenshot_args = missing_arg(),
+  delay = missing_arg(),
+  selector = missing_arg(),
+  name = NULL,
+  cran = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
+they are not, because snapshot tests tend to be fragile
+because they often rely on minor details of dependencies.}
 }
 \if{html}{\out{</div>}}
 }

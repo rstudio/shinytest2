@@ -1,0 +1,18 @@
+{
+  "input": {
+    "rawr": 0
+  },
+  "output": {
+    "img": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    }
+  },
+  "export": {
+
+  }
+}
