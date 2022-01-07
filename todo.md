@@ -258,6 +258,7 @@ app$expect_appshot(id = "winston")
   * √ And all other "get" methods
 * √ wait_for_stable(duration = 500) -> wait_for_idle(duration = 500)
 * Make `variant` off by default. Must opt-in for `$expect_screenshot()` (which can be `NULL`)
+  * √ Add `$get_variant()`
 * Remove `wait_` from `{shinytest2}` API
 * Transport `chromote_eval()` to `{chromote}`
 

@@ -7,7 +7,7 @@ app_initialize_ <- function(
   screenshot_args = missing_arg(),
   check_names = TRUE,
   name = NULL,
-  variant = getOption("shinytest2.variant", platform_variant()),
+  variant = getOption("shinytest2.variant", missing_arg()),
   view = missing_arg(),
   seed = NULL,
   clean_logs = TRUE,
@@ -24,9 +24,12 @@ app_initialize_ <- function(
   gc()
 
   private$path <- fs::path_abs(path)
-  private$default_expect_values_screenshot_args <- expect_values_screenshot_args # nolint
-  private$default_screenshot_args <- screenshot_args
-  private$variant <- if (identical(variant, FALSE)) NULL else variant
+
+  # Convert `rlang::missing_arg()` to `missing_value()` to allow for R6 printing
+  private$default_expect_values_screenshot_args <- maybe_missing_value(expect_values_screenshot_args, missing_value()) # nolint
+  private$default_screenshot_args <- maybe_missing_value(screenshot_args, missing_value())
+  app_set_variant(self, private, variant)
+
   private$counter <- Count$new()
   private$shiny_url <- Url$new()
 

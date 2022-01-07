@@ -87,7 +87,7 @@ app_expect_values <- function(
   "!DEBUG app_expect_values()"
 
   screenshot_args_ <- default_screenshot_args(
-    rlang::maybe_missing(screenshot_args, private$default_expect_values_screenshot_args)
+    maybe_missing_value(screenshot_args, private$default_expect_values_screenshot_args)
   )
 
   json_path <- app_next_temp_snapshot_path(self, private, name, "json")
@@ -125,8 +125,10 @@ app_expect_values <- function(
             "png"
           )
         # Take screenshot using snapshot expectation.
+        # Skip the variant check in `$expect_snapshot()`
         # Leverage testthat snapshot logic, but muffle any expectation output
-        self$expect_screenshot(
+        app_expect_screenshot(
+          self, private,
           name = png_path,
           screenshot_args = screenshot_args_
         )
