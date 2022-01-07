@@ -174,12 +174,15 @@
 <h1 id="todo-1">TODO<a class="anchor" aria-label="anchor" href="#todo-1"></a></h1>
 <div class="section level2">
 <h2 id="week-1">Week 1<a class="anchor" aria-label="anchor" href="#week-1"></a></h2>
-<ul><li>Add <code>$get_values()</code>
-<ul><li>And all other “get” methods</li>
+<ul><li>√ <code>$expect_values(screenshot = self$values_screenshot)</code> and <code>$expect_screenshot()</code> only. No appshot</li>
+<li>√ Add <code>$get_values()</code>
+<ul><li>√ And all other “get” methods</li>
 </ul></li>
 <li>√ wait_for_stable(duration = 500) -&gt; wait_for_idle(duration = 500)</li>
-<li>Remove <code>wait_</code> from API</li>
-<li>Transport chromote methods to {chromote}</li>
+<li>Make <code>variant</code> off by default. Must opt-in for <code>$expect_screenshot()</code> (which can be <code>NULL</code>)</li>
+<li>Remove <code>wait_</code> from <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> API</li>
+<li>Transport <code>chromote_eval()</code> to <a href="https://github.com/rstudio/chromote" class="external-link">chromote</a>
+</li>
 </ul></div>
 <div class="section level2">
 <h2 id="make-public-on-github">Make <em>public</em> on GitHub<a class="anchor" aria-label="anchor" href="#make-public-on-github"></a></h2>
