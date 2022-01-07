@@ -1,10 +1,10 @@
 # TODO-barret; Add note about complex objects may have serialization issues.
 
 # Note:
-# `app_expect_values()` retrieves the JSON text format of the shiny values.
-#   * All images are hashed within the text content.
 # `app_get_values()` retrieves the RDS format of the shiny values.
 #   * If `hash_images` is TRUE, then it recurses over the RDS object and hashes all images.
+# `app_expect_values()` retrieves the JSON text format of the shiny values.
+#   * All images are hashed within the text content.
 
 
 # Note: This queries method the Shiny server
@@ -29,6 +29,7 @@ app_get_values <- function(
 
   ## Writing to memory is 2x faster than disk and produces the same result
   ## However, the `disk` approach is tried and tested in `{shinytest}`
+  ## `rawConnection()` duplicates the memory and may be bad for large files
   # > bench::mark(
   # + mem = {
   # +   local({
@@ -68,6 +69,7 @@ app_get_values <- function(
   values
 }
 
+
 app_expect_values <- function(
   self, private,
   ...,
@@ -75,7 +77,7 @@ app_expect_values <- function(
   output = missing_arg(),
   export = missing_arg(),
   name = NULL,
-  screenshot = missing_arg(),
+  screenshot_args = missing_arg(),
   cran = FALSE
 ) {
   ckm8_assert_app_driver(self, private)
@@ -84,11 +86,9 @@ app_expect_values <- function(
   self$log_message("Expecting values")
   "!DEBUG app_expect_values()"
 
-  # TODO-barret; handle if a screenshot should be taken
-  # TODO-barret; handle what screenshot args should be used? `screenshot` -> `self$default_screenshot_args` -> list()
-  # TODO-barret; Should the screenshot "zoom" if an single output is used? Should this functionality be used in `app$expect_screenshot()?
-  screenshot_is_missing <- rlang::is_missing(screenshot)
-  screenshot <- rlang::maybe_missing(screenshot, self$values_screenshot)
+  screenshot_args_ <- default_screenshot_args(
+    rlang::maybe_missing(screenshot_args, private$default_expect_values_screenshot_args)
+  )
 
   json_path <- app_next_temp_snapshot_path(self, private, name, "json")
 
@@ -103,19 +103,19 @@ app_expect_values <- function(
   # Adjust the text to _pretty_ print
   content <- jsonlite::prettify(content, indent = 2)
 
-  # # Capture values
-  # values <- app_get_values(
-  #   self, private,
-  #   format = "json",
-  #   input = input,
-  #   output = output,
-  #   export = export,
-  #   hash_images = hash_images
-  # )
-
   # Take a screenshot for debugging purposes
-  # TODO-barret; handle screenshot arg;
-  if (TRUE || should_take_screenshot) {
+  # If `screenshot_args_` is anything other than `FALSE`...
+  if (!is_false(screenshot_args_)) {
+
+    # If a single output is used, then zoom in on the output
+    # TODO-future; Should we do this for `inputs` as well! Works nicely for `outputs`!
+    if (length(output) == 1 && is.character(output)) {
+      # Define the default selector value, but let the user override this with their `screenshot_args`
+      screenshot_args_ <- utils::modifyList(
+        list(selector = paste0("#", output, ".shiny-bound-output")),
+        screenshot_args_
+      )
+    }
     withCallingHandlers(
       {
         # `NAME.json` -> `NAME_.png`; `NAME_.new.png`
@@ -129,10 +129,10 @@ app_expect_values <- function(
         app_expect_screenshot( # TODO convert to self fn
           self, private,
           name = png_path,
-          screenshot_args = rlang::maybe_missing(screenshot, list())
+          screenshot_args = screenshot_args_
         )
       },
-      # Muffle any expectation
+      # Muffle any expectation (good or bad) thrown by testthat
       expectation = function(ex) {
         # Continue, skipping the signaling of the condition
         # https://github.com/r-lib/testthat/blob/38c087d3bb5ec3c098c181f1e58a55c687268fba/R/expectation.R#L32-L34
@@ -141,8 +141,9 @@ app_expect_values <- function(
     )
   }
 
-  # Write the json file
+  # Write the json file for comparison purposes
   write_utf8(content, json_path)
+  on.exit(unlink(json_path), add = TRUE)
   # Assert json file contents
   testthat_expect_snapshot_file(
     private,

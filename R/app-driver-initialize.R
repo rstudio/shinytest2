@@ -3,8 +3,8 @@ app_initialize_ <- function(
   path = testthat::test_path("../../"),
   ...,
   load_timeout = NULL,
-  values_screenshot = values_screenshot,
-  screenshot_args = NULL,
+  expect_values_screenshot_args = expect_values_screenshot_args,
+  screenshot_args = missing_arg(),
   check_names = TRUE,
   name = NULL,
   variant = getOption("shinytest2.variant", platform_variant()),
@@ -24,7 +24,7 @@ app_initialize_ <- function(
   gc()
 
   private$path <- fs::path_abs(path)
-  private$values_screenshot <- values_screenshot
+  private$default_expect_values_screenshot_args <- expect_values_screenshot_args
   private$default_screenshot_args <- screenshot_args
   private$variant <- if (identical(variant, FALSE)) NULL else variant
   private$counter <- Count$new()

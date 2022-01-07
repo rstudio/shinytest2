@@ -39,8 +39,8 @@ AppDriver <- R6Class(# nolint
 
     path = NULL, # Full path to app (including filename if it's a .Rmd)
     save_dir = NULL, # Temp folder to store snapshot outputs
-    default_screenshot_args = NULL, # Default screenshot args to use
-    values_screenshot = TRUE, # Should `$expect_values()` expect a non-failing screenshot?
+    default_screenshot_args = "missing_arg()", # Default screenshot args to use
+    default_expect_values_screenshot_args = TRUE, # Should `$expect_values()` expect a non-failing screenshot?
     shiny_test_url = NULL, # URL for shiny's test API
 
     finalize = function() {
@@ -91,8 +91,8 @@ AppDriver <- R6Class(# nolint
       ...,
       load_timeout = NULL,
       variant = getOption("shinytest2.variant", platform_variant()),
-      values_screenshot = TRUE,
-      screenshot_args = NULL,
+      expect_values_screenshot_args = TRUE,
+      screenshot_args = missing_arg(),
       check_names = TRUE,
       name = NULL,
       view = missing_arg(),
@@ -107,7 +107,7 @@ AppDriver <- R6Class(# nolint
         path = path,
         ...,
         load_timeout = load_timeout,
-        values_screenshot = values_screenshot,
+        expect_values_screenshot_args = expect_values_screenshot_args,
         screenshot_args = screenshot_args,
         check_names = check_names,
         name = name,
@@ -250,7 +250,7 @@ AppDriver <- R6Class(# nolint
     expect_values = function(
       input = missing_arg(), output = missing_arg(), export = missing_arg(),
       ...,
-      screenshot = NULL,
+      screenshot_args = missing_arg(),
       name = NULL,
       cran = FALSE
       ) {
@@ -258,7 +258,41 @@ AppDriver <- R6Class(# nolint
         self, private,
         input = input, output = output, export = export,
         ...,
-        screenshot = screenshot,
+        screenshot_args = screenshot_args,
+        name = name,
+        cran = cran
+      )
+    },
+    screenshot = function(
+      filename = NULL,
+      ...,
+      screenshot_args = missing_arg(),
+      delay = missing_arg(),
+      selector = missing_arg()
+    ) {
+      app_screenshot(
+        self, private,
+        filename = filename,
+        ...,
+        screenshot_args = screenshot_args,
+        delay = delay,
+        selector = selector
+      )
+    },
+    expect_screenshot = function(
+      ...,
+      screenshot_args = missing_arg(),
+      delay = missing_arg(),
+      selector = missing_arg(),
+      name = NULL,
+      cran = FALSE
+    ) {
+      app_expect_screenshot(
+        self, private,
+        ...,
+        screenshot_args = screenshot_args,
+        delay = delay,
+        selector = selector,
         name = name,
         cran = cran
       )

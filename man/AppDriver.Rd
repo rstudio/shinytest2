@@ -134,6 +134,9 @@ app$get_log() # (long output lines have been truncated)
 \item \href{#method-expect_script}{\code{AppDriver$expect_script()}}
 \item \href{#method-expect_download}{\code{AppDriver$expect_download()}}
 \item \href{#method-get_values}{\code{AppDriver$get_values()}}
+\item \href{#method-expect_values}{\code{AppDriver$expect_values()}}
+\item \href{#method-screenshot}{\code{AppDriver$screenshot()}}
+\item \href{#method-expect_screenshot}{\code{AppDriver$expect_screenshot()}}
 \item \href{#method-set_inputs}{\code{AppDriver$set_inputs()}}
 \item \href{#method-click}{\code{AppDriver$click()}}
 \item \href{#method-upload_file}{\code{AppDriver$upload_file()}}
@@ -163,7 +166,8 @@ Initialize the AppDriver
   ...,
   load_timeout = NULL,
   variant = getOption("shinytest2.variant", platform_variant()),
-  screenshot_args = NULL,
+  expect_values_screenshot_args = TRUE,
+  screenshot_args = missing_arg(),
   check_names = TRUE,
   name = NULL,
   view = missing_arg(),
@@ -456,7 +460,13 @@ because they often rely on minor details of dependencies.}
 \subsection{Method \code{get_values()}}{
 Returns a named list of all inputs, outputs, and export values.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_values(input = TRUE, output = TRUE, export = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_values(
+  input = missing_arg(),
+  output = missing_arg(),
+  export = missing_arg(),
+  ...,
+  hash_images = FALSE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -465,6 +475,85 @@ Returns a named list of all inputs, outputs, and export values.
 \item{\code{input, output, export}}{Either \code{TRUE} to return all
 input/output/exported values, or a character vector of specific
 controls.}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-expect_values"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_values}{}}}
+\subsection{Method \code{expect_values()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_values(
+  input = missing_arg(),
+  output = missing_arg(),
+  export = missing_arg(),
+  ...,
+  screenshot_args = missing_arg(),
+  name = NULL,
+  cran = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
+they are not, because snapshot tests tend to be fragile
+because they often rely on minor details of dependencies.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-screenshot"></a>}}
+\if{latex}{\out{\hypertarget{method-screenshot}{}}}
+\subsection{Method \code{screenshot()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$screenshot(
+  filename = NULL,
+  ...,
+  screenshot_args = missing_arg(),
+  delay = missing_arg(),
+  selector = missing_arg()
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-expect_screenshot"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_screenshot}{}}}
+\subsection{Method \code{expect_screenshot()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_screenshot(
+  ...,
+  screenshot_args = missing_arg(),
+  delay = missing_arg(),
+  selector = missing_arg(),
+  name = NULL,
+  cran = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
+they are not, because snapshot tests tend to be fragile
+because they often rely on minor details of dependencies.}
 }
 \if{html}{\out{</div>}}
 }

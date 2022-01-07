@@ -1,20 +1,33 @@
+default_screenshot_args <- function(screenshot_args) {
+  if (rlang::is_missing(screenshot_args) || is.null(screenshot_args) || isTRUE(screenshot_args)) {
+    screenshot_args <- list()
+  }
+  screenshot_args
+}
+
 app_screenshot <- function(
   self, private,
   filename = NULL,
   ...,
-  screenshot_args = list(),
-  delay = screenshot_args$delay %||% 0,
-  selector = screenshot_args$selector %||% "html"
+  screenshot_args = missing_arg(),
+  delay = missing_arg(),
+  selector = missing_arg()
 ) {
   "!DEBUG app_screenshot()"
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
 
-  if (is.null(screenshot_args) || isTRUE(screenshot_args)) screenshot_args <- list()
+  screenshot_args <- default_screenshot_args(
+    rlang::maybe_missing(screenshot_args, private$default_screenshot_args)
+  )
+  if (is_false(screenshot_args)) {
+    warning("`screenshot_args` can not be `FALSE` when calling `app$screenshot()`. Setting to `list()`")
+    screenshot_args <- list()
+  }
   checkmate::assert_list(screenshot_args)
 
-  screenshot_args$delay <- delay %||% 0
-  screenshot_args$selector <- selector %||% "html"
+  screenshot_args$delay <- rlang::maybe_missing(delay, screenshot_args$delay) %||% 0
+  screenshot_args$selector <- rlang::maybe_missing(selector, screenshot_args$selector) %||% "html"
 
   checkmate::assert_number(screenshot_args$delay, lower = 0, finite = TRUE, null.ok = TRUE)
 
@@ -42,4 +55,38 @@ app_screenshot <- function(
   }
 
   invisible(self)
+}
+
+
+app_expect_screenshot <- function(
+  self, private,
+  ...,
+  name = NULL,
+  screenshot_args = missing_arg(),
+  delay = missing_arg(),
+  selector = missing_arg(),
+  cran = FALSE
+) {
+  "!DEBUG app_screenshot()"
+  ckm8_assert_app_driver(self, private)
+  ellipsis::check_dots_empty()
+
+  filename <- app_next_temp_snapshot_path(self, private, name, "png")
+
+  # Take screenshot
+  app_screenshot( # TODO convert to self fn
+    self, private,
+    filename = filename,
+    screenshot_args = screenshot_args,
+    delay = delay,
+    selector = selector
+  )
+
+  # Assert screenshot value
+  testthat_expect_snapshot_file(
+    private,
+    filename,
+    cran = cran,
+    compare = testthat::compare_file_binary
+  )
 }
