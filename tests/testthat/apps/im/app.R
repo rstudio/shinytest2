@@ -17,7 +17,7 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   output$img <- renderImage({
-    req(input$rawr)
+    shiny::req(input$rawr)
 
     list(src = "bear.png")
   }, deleteFile = FALSE)
