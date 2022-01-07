@@ -43,8 +43,8 @@ app_expect_download <- function(
   snapshot_info <- app_download(self, private, id = id, name = name)
 
   # compare download_file
-  testthat_expect_snapshot_file(
-    private,
+  app__expect_snapshot_file(
+    self, private,
     snapshot_info$download_path,
     cran = cran,
     compare = testthat::compare_file_text

@@ -24,7 +24,7 @@ app_initialize_ <- function(
   gc()
 
   private$path <- fs::path_abs(path)
-  private$default_expect_values_screenshot_args <- expect_values_screenshot_args
+  private$default_expect_values_screenshot_args <- expect_values_screenshot_args # nolint
   private$default_screenshot_args <- screenshot_args
   private$variant <- if (identical(variant, FALSE)) NULL else variant
   private$counter <- Count$new()

@@ -4,3 +4,5 @@
 .Ruserdata
 
 docs
+# ignore all new snapshots for $expect_values()
+*_.new.png

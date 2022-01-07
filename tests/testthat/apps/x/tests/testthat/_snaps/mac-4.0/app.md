@@ -1,4 +1,4 @@
-# basic website example works
+# basic website example works using shinytest
 
     "Hello Hadley!"
 

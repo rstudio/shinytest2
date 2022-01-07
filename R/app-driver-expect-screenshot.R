@@ -74,8 +74,7 @@ app_expect_screenshot <- function(
   filename <- app_next_temp_snapshot_path(self, private, name, "png")
 
   # Take screenshot
-  app_screenshot( # TODO convert to self fn
-    self, private,
+  self$screenshot(
     filename = filename,
     screenshot_args = screenshot_args,
     delay = delay,
@@ -83,8 +82,8 @@ app_expect_screenshot <- function(
   )
 
   # Assert screenshot value
-  testthat_expect_snapshot_file(
-    private,
+  app__expect_snapshot_file(
+    self, private,
     filename,
     cran = cran,
     compare = testthat::compare_file_binary

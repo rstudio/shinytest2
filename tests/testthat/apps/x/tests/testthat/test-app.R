@@ -9,19 +9,46 @@
 # })
 
 
-# Current shinytest2 code using `app$**()`:
-test_that("basic website example works", {
-  app <- AppDriver$new(variant = platform_variant())
+# shinytest2 code using `app$**()`:
+test_that("basic website example works using shinytest", {
+  app <- AppDriver$new(variant = platform_variant(), name = "st2")
   app$set_inputs(name = "Hadley")
   app$set_inputs(greet = "click")
 
   # Take picture and record inputs / outputs
-  app$expect_appshot()
+  app$expect_screenshot()
+  app$expect_values()
 
   # Snapshot some text values
   app$expect_text("#greeting")
   app$expect_html("#greeting", outer_html = FALSE)
 
   # Only record `output[c("greeting")]`
-  app$expect_appshot(items = list(output = "greeting"))
+  app$expect_values(output = "greeting")
+})
+
+# shinytest2 code using `app$**()`:
+test_that("basic website example works using testthat", {
+  app <- AppDriver$new(variant = platform_variant(), name = "testthat")
+  app$set_inputs(name = "Hadley")
+  app$set_inputs(greet = "click")
+
+  # Take picture and record inputs / outputs
+  tmpfile <- tempfile()
+  app$screenshot(tmpfile)
+  expect_snapshot_file(tmpfile, name = "manual-screenshot.png")
+
+  values <- app$get_values()
+  expect_equal(values$output$greeting, "Hello Hadley!")
+
+  # Snapshot some text values
+  expect_equal(
+    app$get_text("#greeting"),
+    "Hello Hadley!"
+  )
+
+  expect_equal(
+    app$get_html("#greeting", outer_html = TRUE),
+    "<div id=\"greeting\" class=\"shiny-text-output shiny-bound-output\" aria-live=\"polite\">Hello Hadley!</div>"
+  )
 })

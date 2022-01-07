@@ -66,7 +66,7 @@ AppDriver <- R6Class(# nolint
     #'   This includes the time to start R. Defaults to 10s when running
     #'   locally and 20s when running on CI.
     #' @param screenshot_args Default set of arguments to pass in to [`chromote::ChromoteSession`]'s
-    #' `$screenshot()` method when taking screnshots within `$expect_appshot()`. To disable screenshots by default, set to `FALSE`.
+    #' `$screenshot()` method when taking screnshots within `$expect_screenshot()`. To disable screenshots by default, set to `FALSE`.
     # ' @param phantomTimeout How long to wait when connecting to phantomJS
     # '  process, in ms
     #' @template variant
@@ -126,33 +126,6 @@ AppDriver <- R6Class(# nolint
     #' Calls `$view()` on the Chromote Session object
     view = function() {
       app_view(self, private)
-    },
-
-
-    #' @description
-    #' Take and appshot of the Shiny application
-    #'
-    #' Appshot: Shiny **App**lication Snap**shot**
-    #'
-    #' An appshot currently consists of two snapshot files:
-    #' 1. A screenshot of the Shiny application using the `$screenshot()` function of the [`chromote::ChromoteSession`]
-    #' 2. A JSON snapshot of all Shiny component values
-    #'
-    #' @param name The prefix name to be used for the snapshot. By default, this uses the name supplied to `app` on initialization.
-    #' @param items Components to only be included in the snapshot. If supplied, can contain `inputs`, `output`, and `export`. Each value of `items` can either be `TRUE` (for all values) or a character list of names to use.
-    #' @param screenshot If the value is `NULL`, then the initalization value of `screenshot_args` will be used. If this value is `NULL`, then `screenshot` will be set to the result of `!is.null(items)`.
-    #'
-    #'   The final value can either be:
-    #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
-    #'   * `FALSE`: No screenshot will be taken
-    #'   * A named list of arguments: Arguments passed directly to [`chromote::ChromoteSession`]'s
-    #' `$screenshot()` method. The selector and delay will default to `"html"` and `0` respectively.
-    expect_appshot = function(..., items = NULL, screenshot = NULL, name = NULL, cran = FALSE) {
-      app_expect_appshot(
-        self, private,
-        ...,
-        name = name, items = items, screenshot_args = screenshot, cran = cran
-      )
     },
 
 
@@ -247,6 +220,24 @@ AppDriver <- R6Class(# nolint
         hash_images = hash_images
       )
     },
+    #' @description
+    #' Take and appshot of the Shiny application
+    #'
+    #' Appshot: Shiny **App**lication Snap**shot**
+    #'
+    #' An appshot currently consists of two snapshot files:
+    #' 1. A screenshot of the Shiny application using the `$screenshot()` function of the [`chromote::ChromoteSession`]
+    #' 2. A JSON snapshot of all Shiny component values
+    #'
+    #' @param name The prefix name to be used for the snapshot. By default, this uses the name supplied to `app` on initialization.
+    #' @param items Components to only be included in the snapshot. If supplied, can contain `inputs`, `output`, and `export`. Each value of `items` can either be `TRUE` (for all values) or a character list of names to use.
+    #' @param screenshot If the value is `NULL`, then the initalization value of `screenshot_args` will be used. If this value is `NULL`, then `screenshot` will be set to the result of `!is.null(items)`.
+    #'
+    #'   The final value can either be:
+    #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
+    #'   * `FALSE`: No screenshot will be taken
+    #'   * A named list of arguments: Arguments passed directly to [`chromote::ChromoteSession`]'s
+    #' `$screenshot()` method. The selector and delay will default to `"html"` and `0` respectively.
     expect_values = function(
       input = missing_arg(), output = missing_arg(), export = missing_arg(),
       ...,

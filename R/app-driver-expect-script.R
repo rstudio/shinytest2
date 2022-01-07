@@ -45,8 +45,8 @@ app_expect_script <- function(
 
   # Must use _value_ output as _print_ output is unstable
   # over different R versions and locales
-  testthat_expect_snapshot_value(
-    private,
+  app__expect_snapshot_value(
+    self, private,
     result,
     cran = cran
   )
