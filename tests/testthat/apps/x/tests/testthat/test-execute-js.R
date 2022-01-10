@@ -29,4 +29,8 @@ test_that("JS can take a file or script", {
     app$wait_for_js("1 +"),
     "Error found while waiting for JavaScript script to"
   )
+  expect_error(
+    app$wait_for_js("'not returned'", timeout = 100, interval = 0),
+    "Timed out waiting for JavaScript"
+  )
 })

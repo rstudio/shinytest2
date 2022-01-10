@@ -9,7 +9,6 @@ assert_chromote_session <- function(chromote_session) {
 #   node$nodeId
 # }
 
-# TODO-barret-actual; implement wait_ logic using all promises and `chromote_session$waitFor(p)`
 chromote_eval <- function(
   chromote_session,
   js,
@@ -173,6 +172,13 @@ chromote_wait_for_condition <- function(
   checkmate::assert_number(timeout, lower = 0)
   checkmate::assert_number(interval, lower = 0)
 
+  condition_txt <- if (grepl("return", condition_js, fixed = TRUE)) {
+    ""
+  } else {
+    # No `return` found in script
+    ". Did you forget to `return` your value?"
+  }
+
   # Must use manual calulation of timeout, as `chromote_session` does not have a
   # way to cancel the `setTimeout` that has already been submitted. (Which will never stop resubmitting)
   script <- paste0(
@@ -180,13 +186,13 @@ chromote_wait_for_condition <- function(
 "return new Promise((resolve, reject) => {
   let start = Date.now();
   const condition = () => {
-    return ", condition_js, ";
+    ", condition_js, ";
   };\n",
   # Use `chromote_wait_for_condition` as the error message matches the R method
   "chromote_wait_for_condition = () => {
     let diffTime = new Date() - (+start + ", timeout, ");
     if (diffTime > 0) {
-      return reject('Timeout waiting for JS condition to be `true`');
+      return reject('Timed out waiting for JavaScript script to return `true`", condition_txt, "');
     }
     if (condition()) {
       return resolve();
@@ -194,7 +200,7 @@ chromote_wait_for_condition <- function(
     setTimeout(chromote_wait_for_condition, ", interval, ");
   }
   chromote_wait_for_condition();
-  });"
+});"
   )
   ret <- chromote_execute_script(
     chromote_session,
@@ -204,8 +210,53 @@ chromote_wait_for_condition <- function(
     timeout = timeout * 2
   )
 
-  if (identical(ret$result$subtype, "error") || length(ret$exceptionDetails) > 0) {
-    abort("Timeout waiting for JavaScript condition to be `true`")
+  if (length(ret$exceptionDetails) > 0) {
+    # Must match JS txt above!
+    if (isTRUE(grepl("Timed out waiting for JavaScript script", ret$exceptionDetails$exception$description, fixed = TRUE))) {
+      ## Example `ret`:
+      # List of 2
+      #  $ result          :List of 2
+      #   ..$ type : chr "string"
+      #   ..$ value: chr "Timeout waiting for JS condition to be `true`"
+      #  $ exceptionDetails:List of 5
+      #   ..$ exceptionId : int 2
+      #   ..$ text        : chr "Uncaught (in promise)"
+      #   ..$ lineNumber  : int 0
+      #   ..$ columnNumber: int 0
+      #   ..$ exception   :List of 2
+      #   .. ..$ type : chr "string"
+      #   .. ..$ value: chr "Timeout waiting for JS condition to be `true`"
+      abort(c(
+        "Timed out waiting for JavaScript script to return `true`",
+        "*" = paste0("Script:\n", condition_js)
+      ))
+    }
+
+    ## Example `ret`:
+    # List of 2
+    #  $ result          :List of 5
+    #   ..$ type       : chr "object"
+    #   ..$ subtype    : chr "error"
+    #   ..$ className  : chr "SyntaxError"
+    #   ..$ description: chr "SyntaxError: Unexpected token ';'"
+    #   ..$ objectId   : chr "7228422962995412097.4.1"
+    #  $ exceptionDetails:List of 6
+    #   ..$ exceptionId : int 1
+    #   ..$ text        : chr "Uncaught"
+    #   ..$ lineNumber  : int 3
+    #   ..$ columnNumber: int 7
+    #   ..$ scriptId    : chr "24"
+    #   ..$ exception   :List of 5
+    #   .. ..$ type       : chr "object"
+    #   .. ..$ subtype    : chr "error"
+    #   .. ..$ className  : chr "SyntaxError"
+    #   .. ..$ description: chr "SyntaxError: Unexpected token ';'"
+    #   .. ..$ objectId   : chr "7228422962995412097.4.2"
+    abort(c(
+      "Error found while waiting for JavaScript script to return `true`.",
+      "*" = paste0("Script:\n", condition_js),
+      "*" = paste0("Exception:\n", obj_to_string(ret$exceptionDetails$exception))
+    ))
   }
 
   invisible(chromote_session)
