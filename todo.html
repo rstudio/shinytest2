@@ -179,12 +179,12 @@
 <ul><li>√ And all other “get” methods</li>
 </ul></li>
 <li>√ wait_for_stable(duration = 500) -&gt; wait_for_idle(duration = 500)</li>
-<li>Make <code>variant</code> off by default. Must opt-in for <code>$expect_screenshot()</code> (which can be <code>NULL</code>)
+<li>√ Make <code>variant</code> off by default. Must opt-in for <code>$expect_screenshot()</code> (which can be <code>NULL</code>)
 <ul><li>√ Add <code>$get_variant()</code>
 </li>
 </ul></li>
-<li>Remove <code>wait_</code> from <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> API</li>
-<li>Transport <code>chromote_eval()</code> to <a href="https://github.com/rstudio/chromote" class="external-link">chromote</a>
+<li>√ Remove <code>wait_</code> from <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> API</li>
+<li>√ Transport <code>chromote_eval()</code> to <a href="https://github.com/rstudio/chromote" class="external-link">chromote</a>
 </li>
 </ul></div>
 <div class="section level2">
@@ -212,9 +212,9 @@
 <h3 id="vignettes-1">Vignettes:<a class="anchor" aria-label="anchor" href="#vignettes-1"></a></h3>
 <ul><li>Which do I need and why do I need them?</li>
 <li>Explain testing robustness
-<ul><li>Robust to flakey; Sensitivity to external updates <!-- * `$expect_names(key)` - TODO- add this method; save outputs to snapshots if no key is provided
-    * `$expect_appshot(items = value, screenshot = FALSE)` -->
-<ul><li>
+<ul><li>Robust to flakey; Sensitivity to external updates
+<ul><li>Export internal values</li>
+<li>
 <code>$expect_values(input, output, export)</code> - TODO- add this method; save outputs to snapshots
 <ul><li><code>$expect_appshot(items = value, screenshot = FALSE)</code></li>
 </ul></li>

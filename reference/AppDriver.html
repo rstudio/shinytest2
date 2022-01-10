@@ -81,7 +81,7 @@ retrieved after any initialization error has been thrown.</p>
 <li><p><a href="#method-get_text"><code>AppDriver$get_text()</code></a></p></li>
 <li><p><a href="#method-expect_html"><code>AppDriver$expect_html()</code></a></p></li>
 <li><p><a href="#method-get_html"><code>AppDriver$get_html()</code></a></p></li>
-<li><p><a href="#method-expect_script"><code>AppDriver$expect_script()</code></a></p></li>
+<li><p><a href="#method-expect_js"><code>AppDriver$expect_js()</code></a></p></li>
 <li><p><a href="#method-expect_download"><code>AppDriver$expect_download()</code></a></p></li>
 <li><p><a href="#method-get_values"><code>AppDriver$get_values()</code></a></p></li>
 <li><p><a href="#method-expect_values"><code>AppDriver$expect_values()</code></a></p></li>
@@ -90,10 +90,10 @@ retrieved after any initialization error has been thrown.</p>
 <li><p><a href="#method-set_inputs"><code>AppDriver$set_inputs()</code></a></p></li>
 <li><p><a href="#method-click"><code>AppDriver$click()</code></a></p></li>
 <li><p><a href="#method-upload_file"><code>AppDriver$upload_file()</code></a></p></li>
-<li><p><a href="#method-wait_for_script"><code>AppDriver$wait_for_script()</code></a></p></li>
+<li><p><a href="#method-wait_for_js"><code>AppDriver$wait_for_js()</code></a></p></li>
 <li><p><a href="#method-wait_for_idle"><code>AppDriver$wait_for_idle()</code></a></p></li>
 <li><p><a href="#method-wait_for_value"><code>AppDriver$wait_for_value()</code></a></p></li>
-<li><p><a href="#method-execute_script"><code>AppDriver$execute_script()</code></a></p></li>
+<li><p><a href="#method-execute_js"><code>AppDriver$execute_js()</code></a></p></li>
 <li><p><a href="#method-get_path"><code>AppDriver$get_path()</code></a></p></li>
 <li><p><a href="#method-get_url"><code>AppDriver$get_url()</code></a></p></li>
 <li><p><a href="#method-get_window_size"><code>AppDriver$get_window_size()</code></a></p></li>
@@ -314,16 +314,17 @@ If <code>FALSE</code>, the full DOM structure of the child elements will be retu
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-expect_script"></a><div class="section">
-<h3 id="method-expect-script-">Method <code>expect_script()</code><a class="anchor" aria-label="anchor" href="#method-expect-script-"></a></h3>
+</div><p></p><hr><a id="method-expect_js"></a><div class="section">
+<h3 id="method-expect-js-">Method <code>expect_js()</code><a class="anchor" aria-label="anchor" href="#method-expect-js-"></a></h3>
 <p>Expect snapshot of JS script output</p>
 <p>This is a building block function that should be called by other functions.
 For example, <code>$expect_text()</code> and <code>$expect_html()</code> are thin wrappers around this function.</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">expect_script</span><span class="op">(</span>
-  <span class="va">script</span>,
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">expect_js</span><span class="op">(</span>
+  script <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
   <span class="va">...</span>,
+  file <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span>,
   pre_snapshot <span class="op">=</span> <span class="cn">NULL</span>,
   cran <span class="op">=</span> <span class="cn">FALSE</span>
@@ -344,15 +345,17 @@ For example, <code>$expect_text()</code> and <code>$expect_html()</code> are thi
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
 
 
+<dt><code>file</code></dt>
+<dd><p>A file containing JavaScript code to be read and used as the <code>script</code>. Only one of <code>script</code> or <code>file</code> can be specified.</p></dd>
+
+
 <dt><code>timeout</code></dt>
 <dd><p>Amount of time to wait before giving up (milliseconds).</p></dd>
 
 
 <dt><code>pre_snapshot</code></dt>
 <dd><p>A function to be called on the result of the script before taking the snapshot.
-<code>$expect_html()</code> and <code>$expect_text()</code> both use <code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist()</a></code>.
-TODO-barret-implement; $expect_js(script="TEXT")
-TODO-barret-implement; $expect_js(file = "file_path")</p></dd>
+<code>$expect_html()</code> and <code>$expect_text()</code> both use <code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist()</a></code>.</p></dd>
 
 
 <dt><code>cran</code></dt>
@@ -483,7 +486,7 @@ because they often rely on minor details of dependencies.</p></dd>
 <div class="section">
 <h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span>
-  filename <span class="op">=</span> <span class="cn">NULL</span>,
+  file <span class="op">=</span> <span class="cn">NULL</span>,
   <span class="va">...</span>,
   screenshot_args <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   delay <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
@@ -631,24 +634,23 @@ control. Otherwise, the return value will be <code>NULL</code>.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-wait_for_script"></a><div class="section">
-<h3 id="method-wait-for-script-">Method <code>wait_for_script()</code><a class="anchor" aria-label="anchor" href="#method-wait-for-script-"></a></h3>
+</div><p></p><hr><a id="method-wait_for_js"></a><div class="section">
+<h3 id="method-wait-for-js-">Method <code>wait_for_js()</code><a class="anchor" aria-label="anchor" href="#method-wait-for-js-"></a></h3>
 <p>Wait for a JavaScript expression to be true</p>
 <p>Waits until a JavaScript <code>expr</code>ession evaluates to <code>true</code> or the
 <code>timeout</code> is exceeded.</p><div class="section">
 <h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_script</span><span class="op">(</span><span class="va">script</span>, timeout <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">1000</span>, interval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_js</span><span class="op">(</span><span class="va">script</span>, timeout <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">1000</span>, interval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-14">Arguments<a class="anchor" aria-label="anchor" href="#arguments-14"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>script</code></dt>
-<dd><p>A string containing JavaScript code. Will wait until the
-condition returns <code>true</code>.</p></dd>
+<dd><p>A string containing JavaScript code. This code must eventually return a <code>true</code>thy value or a <code>timeout</code> error will be thrown.</p></dd>
 
 
 <dt><code>timeout</code></dt>
-<dd><p>How often to check for the condition, in ms.</p></dd>
+<dd><p>How long the script has to return a <code>true</code>thy value, in ms.</p></dd>
 
 
 <dt><code>interval</code></dt>
@@ -741,20 +743,26 @@ updates.</p></dd>
 <p>Newly found value</p>
 </div>
 
-</div><p></p><hr><a id="method-execute_script"></a><div class="section">
-<h3 id="method-execute-script-">Method <code>execute_script()</code><a class="anchor" aria-label="anchor" href="#method-execute-script-"></a></h3>
+</div><p></p><hr><a id="method-execute_js"></a><div class="section">
+<h3 id="method-execute-js-">Method <code>execute_js()</code><a class="anchor" aria-label="anchor" href="#method-execute-js-"></a></h3>
 <p>Execute JavaScript code in the browser.</p>
 <p>This function will block the local R session until the code has finished executing its <em>tick</em> in the browser.
-If a <code>Promise</code> is returned from the script, <code>$execute_script()</code> will wait for the promise to resolve.
+If a <code>Promise</code> is returned from the script, <code>$execute_js()</code> will wait for the promise to resolve.
 To have JavaScript code execute asynchronously, wrap the code in a Promise object and have the script return an atomic value.</p><div class="section">
 <h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">execute_script</span><span class="op">(</span><span class="va">script</span>, arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span>, timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span>
+  script <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
+  arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">...</span>,
+  file <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
+  timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span>
+<span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-17">Arguments<a class="anchor" aria-label="anchor" href="#arguments-17"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>script</code></dt>
-<dd><p>JS to execute. If a JS Promise is returned, <code>$execute_script()</code> will wait for the promise to resolve before returning.</p></dd>
+<dd><p>JS to execute. If a JS Promise is returned, the R session will block until the promise has been resolved and return the value.</p></dd>
 
 
 <dt><code>arguments</code></dt>
@@ -765,6 +773,10 @@ To have JavaScript code execute asynchronously, wrap the code in a Promise objec
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
 
 
+<dt><code>file</code></dt>
+<dd><p>A (local) file containing JavaScript code to be read and used as the <code>script</code>. Only one of <code>script</code> or <code>file</code> can be specified.</p></dd>
+
+
 <dt><code>timeout</code></dt>
 <dd><p>Amount of time to wait before giving up (milliseconds).</p></dd>
 
@@ -773,7 +785,7 @@ To have JavaScript code execute asynchronously, wrap the code in a Promise objec
 </div>
 <div class="section">
 <h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
-<p>Result of the script.</p>
+<p>Result of the <code>script</code> (or <code>file</code> contents)</p>
 </div>
 
 </div><p></p><hr><a id="method-get_path"></a><div class="section">
