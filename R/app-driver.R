@@ -303,7 +303,7 @@ AppDriver <- R6Class(# nolint
     set_inputs = function(
       ...,
       wait_ = TRUE,
-      values_ = TRUE,
+      values_ = FALSE,
       timeout_ = 3 * 1000,
       allow_input_no_binding_ = FALSE,
       priority_ = c("input", "event")
@@ -327,7 +327,7 @@ AppDriver <- R6Class(# nolint
     #' `file_path` will be uploaded to file input with name `component_name`.
     #' @param values_ If `TRUE`, will return final updated values of download
     #'   control. Otherwise, the return value will be `NULL`.
-    upload_file = function(..., wait_ = TRUE, values_ = TRUE, timeout_ = 3 * 1000) {
+    upload_file = function(..., wait_ = TRUE, values_ = FALSE, timeout_ = 3 * 1000) {
       app_upload_file(self, private, ..., wait_ = wait_, values_ = values_, timeout_ = timeout_)
     },
 

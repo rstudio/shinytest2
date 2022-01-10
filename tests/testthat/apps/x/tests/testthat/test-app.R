@@ -21,7 +21,7 @@ test_that("basic website example works using shinytest", {
 
   # Snapshot some text values
   app$expect_text("#greeting")
-  app$expect_html("#greeting", outer_html = FALSE)
+  app$expect_html("#greeting", outer_html = TRUE)
 
   # Only record `output[c("greeting")]`
   app$expect_values(output = "greeting")
