@@ -59,7 +59,7 @@ app_queue_inputs <- function(self, private, inputs) {
   ckm8_assert_app_driver(self, private)
   checkmate::assert_true(rlang::is_named(inputs))
 
-  self$execute_script(
+  self$execute_js(
     "shinytest2.inputQueue.add(arguments[0]);",
     arguments = list(inputs)
   )
@@ -69,7 +69,7 @@ app_flush_inputs <- function(self, private, wait = TRUE, timeout = 1000) {
   wait <- isTRUE(wait)
   checkmate::assert_number(timeout, lower = 0, finite = TRUE, null.ok = FALSE)
 
-  self$execute_script(
+  self$execute_js(
     "
     return new Promise((resolve, reject) => {
       var wait = arguments[0];

@@ -7,7 +7,7 @@ default_screenshot_args <- function(screenshot_args) {
 
 app_screenshot <- function(
   self, private,
-  filename = NULL,
+  file = NULL,
   ...,
   screenshot_args = missing_arg(),
   delay = missing_arg(),
@@ -31,10 +31,10 @@ app_screenshot <- function(
 
   checkmate::assert_number(screenshot_args$delay, lower = 0, finite = TRUE, null.ok = TRUE)
 
-  if (is.null(filename)) {
+  if (is.null(file)) {
     self$log_message("Taking screenshot")
   } else {
-    self$log_message(paste0("Taking screenshot: ", filename))
+    self$log_message(paste0("Taking screenshot: ", file))
   }
   path <- temp_file(".png")
   screenshot_args$filename <- path
@@ -46,12 +46,12 @@ app_screenshot <- function(
     normalize_png_res_header(path)
   }
 
-  if (is.null(filename)) {
+  if (is.null(file)) {
     withr::local_par(list(bg = "grey90"))
     png <- png::readPNG(path)
     graphics::plot(grDevices::as.raster(png))
   } else {
-    fs::file_copy(path, filename)
+    fs::file_copy(path, file)
   }
 
   invisible(self)
@@ -75,7 +75,7 @@ app_expect_screenshot <- function(
 
   # Take screenshot
   self$screenshot(
-    filename = filename,
+    file = filename,
     screenshot_args = screenshot_args,
     delay = delay,
     selector = selector

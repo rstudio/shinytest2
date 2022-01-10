@@ -257,10 +257,11 @@ app$expect_appshot(id = "winston")
 * √ Add `$get_values()`
   * √ And all other "get" methods
 * √ wait_for_stable(duration = 500) -> wait_for_idle(duration = 500)
-* Make `variant` off by default. Must opt-in for `$expect_screenshot()` (which can be `NULL`)
+* √ Make `variant` off by default. Must opt-in for `$expect_screenshot()` (which can be `NULL`)
   * √ Add `$get_variant()`
-* Remove `wait_` from `{shinytest2}` API
-* Transport `chromote_eval()` to `{chromote}`
+* √ Remove `wait_` from `{shinytest2}` API
+* √ Transport `chromote_eval()` to `{chromote}`
+
 
 ## Make *public* on GitHub
 * Notify Eric and David
@@ -283,8 +284,7 @@ app$expect_appshot(id = "winston")
 * Which do I need and why do I need them?
 * Explain testing robustness
   * Robust to flakey; Sensitivity to external updates
-    <!-- * `$expect_names(key)` - TODO- add this method; save outputs to snapshots if no key is provided
-      * `$expect_appshot(items = value, screenshot = FALSE)` -->
+    * Export internal values
     * `$expect_values(input, output, export)` - TODO- add this method; save outputs to snapshots
       * `$expect_appshot(items = value, screenshot = FALSE)`
     * `$expect_text()`

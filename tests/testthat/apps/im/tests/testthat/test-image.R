@@ -10,7 +10,7 @@ test_that("images are captured via expect_values", {
   app$expect_values()
 
   # Add something that will always produce a new image
-  app$execute_script('
+  app$execute_js('
     $("body").append("<div>" + new Date() + "</div>")
   ')
 

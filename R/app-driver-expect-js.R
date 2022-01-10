@@ -1,28 +1,39 @@
-app_execute_script <- function(
+js_script_helper <- function(script = missing_arg(), file = missing_arg()) {
+  if (rlang::is_missing(file)) return(script)
+
+  if (!rlang::is_missing(script)) {
+    warning("Both `file` and `script` are specified. `script` will be ignored.")
+  }
+  read_utf8(file)
+}
+
+app_execute_js <- function(
   self, private,
   script,
   arguments = list(),
   ...,
+  file = missing_arg(),
   timeout = 15 * 1000
 ) {
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
 
-  "!DEBUG app_execute_script()"
+  "!DEBUG app_execute_js()"
   chromote_execute_script(
     self$get_chromote_session(),
-    script,
+    js_script_helper(script, file),
     arguments = arguments,
     timeout = timeout
   )$result$value
 }
 
 
-app_expect_script <- function(
+app_expect_js <- function(
   self, private,
   script,
   arguments = list(),
   ...,
+  file = missing_arg(),
   timeout = 15 * 1000,
   pre_snapshot = NULL,
   cran = FALSE
@@ -31,9 +42,10 @@ app_expect_script <- function(
   ellipsis::check_dots_empty()
   arguments <- as.list(arguments)
 
-  result <- self$execute_script(
+  result <- self$execute_js(
     script = script,
     arguments = arguments,
+    file = file,
     timeout = timeout
   )
 
@@ -66,7 +78,7 @@ app_get_text <- function(
   ckm8_assert_app_driver(self, private)
   # ellipsis::check_dots_empty()
 
-  ret <- self$execute_script(
+  ret <- self$execute_js(
     script = get_text_js(),
     arguments = list(selector)
   )
@@ -81,7 +93,7 @@ app_expect_text <- function(
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
 
-  self$expect_script(
+  self$expect_js(
     script = get_text_js(),
     arguments = list(selector),
     pre_snapshot = unlist,
@@ -109,7 +121,7 @@ app_get_html <- function(
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
 
-  ret <- self$execute_script(
+  ret <- self$execute_js(
     script = get_html_js(),
     arguments = list(selector, isTRUE(outer_html))
   )
@@ -125,7 +137,7 @@ app_expect_html <- function(
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
 
-  self$expect_script(
+  self$expect_js(
     script = get_html_js(),
     arguments = list(selector, isTRUE(outer_html)),
     pre_snapshot = unlist,

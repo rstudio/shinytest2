@@ -1,12 +1,12 @@
 
 
-app_wait_for_script <- function(
+app_wait_for_js <- function(
   self, private,
   script,
   timeout = 3 * 1000,
   interval = 100
 ) {
-  "!DEBUG app_wait_for_script()"
+  "!DEBUG app_wait_for_js()"
   ckm8_assert_app_driver(self, private)
 
   # Will throw error if timeout is exceeded

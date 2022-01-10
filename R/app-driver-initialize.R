@@ -119,9 +119,8 @@ app_initialize_ <- function(
 
   withCallingHandlers(
     {
-      chromote_wait_for_condition(
-        self$get_chromote_session(),
-        "window.shinytest2 && window.shinytest2.ready === true",
+      self$wait_for_js(
+        "return window.shinytest2 && window.shinytest2.ready === true",
         timeout = load_timeout
       )
       self$wait_for_idle(duration = 500, timeout = load_timeout)
