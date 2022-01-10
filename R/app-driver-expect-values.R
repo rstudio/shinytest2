@@ -1,5 +1,3 @@
-# TODO-barret; Add note about complex objects may have serialization issues.
-
 # Note:
 # `app_get_values()` retrieves the RDS format of the shiny values.
 #   * If `hash_images` is TRUE, then it recurses over the RDS object and hashes all images.

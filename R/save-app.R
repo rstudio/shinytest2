@@ -1,4 +1,4 @@
-# TODO-barret-implement; Test!
+# TODO-barret-test; Test feeding a shiny app obj to `AppDriver$new(path = app)`
 app_save <- function(app, path = temp_file(), env = parent.frame()) {
   if (!rlang::is_installed("globals")) {
     abort(c(

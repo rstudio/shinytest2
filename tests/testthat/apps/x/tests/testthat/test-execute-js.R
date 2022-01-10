@@ -21,7 +21,12 @@ test_that("JS can take a file or script", {
   app$expect_js(file = test_path("js/expect-js.js"))
 
   expect_warning(
-    app$execute_js("1 + 1", file = test_path("js/one-plus-one.js")),
+    app$execute_js("return 1 + 1", file = test_path("js/one-plus-one.js")),
     "Both `file` and `script` are specified", fixed = TRUE
+  )
+
+  expect_error(
+    app$wait_for_js("1 +"),
+    "Error found while waiting for JavaScript script to"
   )
 })

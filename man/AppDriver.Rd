@@ -139,7 +139,7 @@ app$get_log() # (long output lines have been truncated)
 \item \href{#method-set_inputs}{\code{AppDriver$set_inputs()}}
 \item \href{#method-click}{\code{AppDriver$click()}}
 \item \href{#method-upload_file}{\code{AppDriver$upload_file()}}
-\item \href{#method-wait_for_script}{\code{AppDriver$wait_for_script()}}
+\item \href{#method-wait_for_js}{\code{AppDriver$wait_for_js()}}
 \item \href{#method-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
 \item \href{#method-wait_for_value}{\code{AppDriver$wait_for_value()}}
 \item \href{#method-execute_js}{\code{AppDriver$execute_js()}}
@@ -622,24 +622,23 @@ control. Otherwise, the return value will be \code{NULL}.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-wait_for_script"></a>}}
-\if{latex}{\out{\hypertarget{method-wait_for_script}{}}}
-\subsection{Method \code{wait_for_script()}}{
+\if{html}{\out{<a id="method-wait_for_js"></a>}}
+\if{latex}{\out{\hypertarget{method-wait_for_js}{}}}
+\subsection{Method \code{wait_for_js()}}{
 Wait for a JavaScript expression to be true
 
 Waits until a JavaScript \code{expr}ession evaluates to \code{true} or the
 \code{timeout} is exceeded.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_script(script, timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_js(script, timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{script}}{A string containing JavaScript code. Will wait until the
-condition returns \code{true}.}
+\item{\code{script}}{A string containing JavaScript code. This code must eventually return a \code{true}thy value or a \code{timeout} error will be thrown.}
 
-\item{\code{timeout}}{How often to check for the condition, in ms.}
+\item{\code{timeout}}{How long the script has to return a \code{true}thy value, in ms.}
 
 \item{\code{interval}}{How often to check for the condition, in ms.}
 }

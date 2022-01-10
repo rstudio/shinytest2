@@ -215,6 +215,7 @@ AppDriver <- R6Class(# nolint
     #' @param input,output,export Either `TRUE` to return all
     #'   input/output/exported values, or a character vector of specific
     #'   controls.
+    # TODO-barret-docs; Add note about complex objects may have serialization issues.
     get_values = function(
       input = missing_arg(), output = missing_arg(), export = missing_arg(),
       ...,
@@ -245,7 +246,7 @@ AppDriver <- R6Class(# nolint
     #'   * `FALSE`: No screenshot will be taken
     #'   * A named list of arguments: Arguments passed directly to [`chromote::ChromoteSession`]'s
     #' `$screenshot()` method. The selector and delay will default to `"html"` and `0` respectively.
-    # TODO-barret; document methods!
+    # TODO-barret-docs; document methods!
     expect_values = function(
       input = missing_arg(), output = missing_arg(), export = missing_arg(),
       ...,
@@ -344,15 +345,15 @@ AppDriver <- R6Class(# nolint
     #'
     #' Waits until a JavaScript `expr`ession evaluates to `true` or the
     #' `timeout` is exceeded.
-    #' @param script A string containing JavaScript code. Will wait until the
-    #'   condition returns `true`.
-    #' @param timeout How often to check for the condition, in ms.
+    #'
+    #' @param script A string containing JavaScript code. This code must eventually return a `true`thy value or a `timeout` error will be thrown.
+    #' @param timeout How long the script has to return a `true`thy value, in ms.
     #' @param interval How often to check for the condition, in ms.
     #' @return `invisible(self)` if expression evaluates to `true` without error within the timeout.
     #'   Otherwise an error will be thrown
-    # TODO-barret-implement; $wait_for_js(script = , {local}file = )
-    wait_for_script = function(script, timeout = 3 * 1000, interval = 100) {
-      app_wait_for_script(self, private, script = script, timeout = timeout, interval = interval)
+    # TODO-barret-docs; Document $execute_js(file = "complicated_file.js"); $wait_for_js("return complicated_condition()")
+    wait_for_js = function(script, timeout = 3 * 1000, interval = 100) {
+      app_wait_for_js(self, private, script = script, timeout = timeout, interval = interval)
     },
 
     #' @description Wait for Shiny to not be busy (idle) for a set amount of time
@@ -411,7 +412,7 @@ AppDriver <- R6Class(# nolint
     #' @param script JS to execute. If a JS Promise is returned, the R session will block until the promise has been resolved and return the value.
     #' @param file A (local) file containing JavaScript code to be read and used as the `script`. Only one of `script` or `file` can be specified.
     #' @return Result of the `script` (or `file` contents)
-    # TODO-barret-answer; Document how they should make a promise and return NULL instead?
+    # TODO-barret-docs; Document how they should make a promise and return NULL instead?
     execute_js = function(script = missing_arg(), arguments = list(), ..., file = missing_arg(), timeout = 15 * 1000) {
       app_execute_js(
         self, private,
@@ -464,7 +465,7 @@ AppDriver <- R6Class(# nolint
 
     #' @description
     #' Query one or more of the debug logs.
-    # TODO-barret; show example of filtering output on type
+    # TODO-barret-docs; show example of filtering output on type
     #' There are a few standard debug types that may be used:
     #' * `"shiny_console"`: Displays the console messages from the Shiny server when `$get_log()` is called.
     #' * `"browser"`: Displays the browser console messages when `$get_log()` is called.
