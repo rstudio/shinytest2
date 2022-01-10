@@ -3,7 +3,6 @@
 obj_to_string <- function(obj) {
   switch(obj$type,
     "string" = obj$value,
-    # TODO-future; There are other sub types that might be useful, but punting for now
     "object" = {
       if (obj$subtype == "error") {
         obj$description
@@ -12,8 +11,20 @@ obj_to_string <- function(obj) {
       }
     },
     {
-      message("Unknown `obj_to_string()` type: ", obj$type)
-      utils::str(obj)
+
+      structure <- paste0(
+        # Try to caputre some, but not all output
+        utils::capture.output(utils::str(obj, max.level = 4)),
+        collapse = "\n"
+      )
+      rlang::inform(
+        c(
+          "!" = paste0("Unknown JavaScript return type: ", obj$type),
+          "*" = paste0("Structure:\n", structure),
+          ">" = "Please report this new type with an example structure on https://github.com/rstudio/shinytest2/issues/new"
+        ),
+        .frequency = "once"
+      )
       "(unknown)"
     }
   )
