@@ -28,7 +28,7 @@ Imports:
     callr,
     crayon,
     parsedate (>= 1.2.0),
-    rlang,
+    rlang (>= 0.3.0),
     checkmate,
     ellipsis,
     globals,
