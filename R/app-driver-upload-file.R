@@ -22,7 +22,7 @@ app_upload_file <- function(
   # Wait for two messages by calling `.start(timeout, 2)`. This is because
   # uploading a file will result in two messages before the file is successfully
   # uploaded.
-  self$execute_script(
+  self$execute_js(
     "var timeout = arguments[0];
     shinytest2.outputValuesWaiter.start(timeout, 2);",
     arguments = list(timeout_)
@@ -37,7 +37,7 @@ app_upload_file <- function(
     nodeId = node_id
   )
 
-  self$execute_script(
+  self$execute_js(
     "
     return new Promise((resolve, reject) => {
       var wait = arguments[0];

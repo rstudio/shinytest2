@@ -130,7 +130,7 @@ app$get_log() # (long output lines have been truncated)
 \item \href{#method-get_text}{\code{AppDriver$get_text()}}
 \item \href{#method-expect_html}{\code{AppDriver$expect_html()}}
 \item \href{#method-get_html}{\code{AppDriver$get_html()}}
-\item \href{#method-expect_script}{\code{AppDriver$expect_script()}}
+\item \href{#method-expect_js}{\code{AppDriver$expect_js()}}
 \item \href{#method-expect_download}{\code{AppDriver$expect_download()}}
 \item \href{#method-get_values}{\code{AppDriver$get_values()}}
 \item \href{#method-expect_values}{\code{AppDriver$expect_values()}}
@@ -142,7 +142,7 @@ app$get_log() # (long output lines have been truncated)
 \item \href{#method-wait_for_script}{\code{AppDriver$wait_for_script()}}
 \item \href{#method-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
 \item \href{#method-wait_for_value}{\code{AppDriver$wait_for_value()}}
-\item \href{#method-execute_script}{\code{AppDriver$execute_script()}}
+\item \href{#method-execute_js}{\code{AppDriver$execute_js()}}
 \item \href{#method-get_path}{\code{AppDriver$get_path()}}
 \item \href{#method-get_url}{\code{AppDriver$get_url()}}
 \item \href{#method-get_window_size}{\code{AppDriver$get_window_size()}}
@@ -335,18 +335,19 @@ If \code{FALSE}, the full DOM structure of the child elements will be returned (
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_script"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_script}{}}}
-\subsection{Method \code{expect_script()}}{
+\if{html}{\out{<a id="method-expect_js"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_js}{}}}
+\subsection{Method \code{expect_js()}}{
 Expect snapshot of JS script output
 
 This is a building block function that should be called by other functions.
 For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers around this function.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_script(
-  script,
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_js(
+  script = missing_arg(),
   arguments = list(),
   ...,
+  file = missing_arg(),
   timeout = 15 * 1000,
   pre_snapshot = NULL,
   cran = FALSE
@@ -362,12 +363,12 @@ For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers a
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
+\item{\code{file}}{A file containing JavaScript code to be read and used as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
+
 \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
 
 \item{\code{pre_snapshot}}{A function to be called on the result of the script before taking the snapshot.
-\verb{$expect_html()} and \verb{$expect_text()} both use \code{\link[=unlist]{unlist()}}.
-TODO-barret-implement; $expect_js(script="TEXT")
-TODO-barret-implement; $expect_js(file = "file_path")}
+\verb{$expect_html()} and \verb{$expect_text()} both use \code{\link[=unlist]{unlist()}}.}
 
 \item{\code{cran}}{Should these expectations be verified on CRAN? By default,
 they are not, because snapshot tests tend to be fragile
@@ -490,7 +491,7 @@ The final value can either be:
 \subsection{Method \code{screenshot()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$screenshot(
-  filename = NULL,
+  file = NULL,
   ...,
   screenshot_args = missing_arg(),
   delay = missing_arg(),
@@ -722,33 +723,41 @@ Newly found value
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-execute_script"></a>}}
-\if{latex}{\out{\hypertarget{method-execute_script}{}}}
-\subsection{Method \code{execute_script()}}{
+\if{html}{\out{<a id="method-execute_js"></a>}}
+\if{latex}{\out{\hypertarget{method-execute_js}{}}}
+\subsection{Method \code{execute_js()}}{
 Execute JavaScript code in the browser.
 
 This function will block the local R session until the code has finished executing its \emph{tick} in the browser.
-If a \code{Promise} is returned from the script, \verb{$execute_script()} will wait for the promise to resolve.
+If a \code{Promise} is returned from the script, \verb{$execute_js()} will wait for the promise to resolve.
 To have JavaScript code execute asynchronously, wrap the code in a Promise object and have the script return an atomic value.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$execute_script(script, arguments = list(), ..., timeout = 15 * 1000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$execute_js(
+  script = missing_arg(),
+  arguments = list(),
+  ...,
+  file = missing_arg(),
+  timeout = 15 * 1000
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{script}}{JS to execute. If a JS Promise is returned, \verb{$execute_script()} will wait for the promise to resolve before returning.}
+\item{\code{script}}{JS to execute. If a JS Promise is returned, the R session will block until the promise has been resolved and return the value.}
 
 \item{\code{arguments}}{A list of unnamed arguments to send to the script.}
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{file}}{A (local) file containing JavaScript code to be read and used as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
 
 \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Result of the script.
+Result of the \code{script} (or \code{file} contents)
 }
 }
 \if{html}{\out{<hr>}}

@@ -172,16 +172,23 @@ AppDriver <- R6Class(# nolint
     #' For example, `$expect_text()` and `$expect_html()` are thin wrappers around this function.
     #'
     #' @param script A string containing the JS script to be executed.
+    #' @param file A file containing JavaScript code to be read and used as the `script`. Only one of `script` or `file` can be specified.
     #' @param pre_snapshot A function to be called on the result of the script before taking the snapshot.
     #'   `$expect_html()` and `$expect_text()` both use [`unlist()`].
-    #' TODO-barret-implement; $expect_js(script="TEXT")
-    #' TODO-barret-implement; $expect_js(file = "file_path")
-    expect_script = function(script, arguments = list(), ..., timeout = 15 * 1000, pre_snapshot = NULL, cran = FALSE) {
-      app_expect_script(
+    expect_js = function(
+      script = missing_arg(),
+      arguments = list(),
+      ...,
+      file = missing_arg(),
+      timeout = 15 * 1000,
+      pre_snapshot = NULL,
+      cran = FALSE
+    ) {
+      app_expect_js(
         self, private,
         script = script, arguments = arguments,
         ...,
-        timeout = timeout, pre_snapshot = pre_snapshot, cran = cran
+        file = file, timeout = timeout, pre_snapshot = pre_snapshot, cran = cran
       )
     },
 
@@ -256,7 +263,7 @@ AppDriver <- R6Class(# nolint
       )
     },
     screenshot = function(
-      filename = NULL,
+      file = NULL,
       ...,
       screenshot_args = missing_arg(),
       delay = missing_arg(),
@@ -264,7 +271,7 @@ AppDriver <- R6Class(# nolint
     ) {
       app_screenshot(
         self, private,
-        filename = filename,
+        file = file,
         ...,
         screenshot_args = screenshot_args,
         delay = delay,
@@ -399,20 +406,19 @@ AppDriver <- R6Class(# nolint
     #' Execute JavaScript code in the browser.
     #'
     #' This function will block the local R session until the code has finished executing its _tick_ in the browser.
-    #' If a `Promise` is returned from the script, `$execute_script()` will wait for the promise to resolve.
+    #' If a `Promise` is returned from the script, `$execute_js()` will wait for the promise to resolve.
     #' To have JavaScript code execute asynchronously, wrap the code in a Promise object and have the script return an atomic value.
-    #' @param script JS to execute. If a JS Promise is returned, `$execute_script()` will wait for the promise to resolve before returning.
-    #' @return Result of the script.
-    # TODO-barret; incorporate `wait_` parameters to not wait for the _tick_ to finish
+    #' @param script JS to execute. If a JS Promise is returned, the R session will block until the promise has been resolved and return the value.
+    #' @param file A (local) file containing JavaScript code to be read and used as the `script`. Only one of `script` or `file` can be specified.
+    #' @return Result of the `script` (or `file` contents)
     # TODO-barret-answer; Document how they should make a promise and return NULL instead?
-    # @param script JS to execute. `resolve` and `reject` arguments are added to the script call. To return control back to the R session, one of these methods must be called.
-    # TODO-barret-implement; execute_js(script = , {local}file = )
-    execute_script = function(script, arguments = list(), ..., timeout = 15 * 1000) {
-      app_execute_script(
+    execute_js = function(script = missing_arg(), arguments = list(), ..., file = missing_arg(), timeout = 15 * 1000) {
+      app_execute_js(
         self, private,
         script = script,
         arguments = arguments,
         ...,
+        file = file,
         timeout = timeout
       )
     },
