@@ -12,7 +12,6 @@ app_execute_script <- function(
   chromote_execute_script(
     self$get_chromote_session(),
     script,
-    awaitPromise = TRUE,
     arguments = arguments,
     timeout = timeout
   )$result$value
