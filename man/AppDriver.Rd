@@ -542,7 +542,7 @@ Set input values.
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_inputs(
   ...,
   wait_ = TRUE,
-  values_ = TRUE,
+  values_ = FALSE,
   timeout_ = 3 * 1000,
   allow_input_no_binding_ = FALSE,
   priority_ = c("input", "event")
@@ -601,7 +601,7 @@ Find a Shiny input/output value or DOM CSS selector and click it using the DOM m
 \subsection{Method \code{upload_file()}}{
 Uploads a file to a file input.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$upload_file(..., wait_ = TRUE, values_ = TRUE, timeout_ = 3 * 1000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$upload_file(..., wait_ = TRUE, values_ = FALSE, timeout_ = 3 * 1000)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
