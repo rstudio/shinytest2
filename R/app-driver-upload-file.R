@@ -43,7 +43,8 @@ app_upload_file <- function(
       var wait = arguments[0];
       shinytest2.outputValuesWaiter.finish(wait, resolve);
     });",
-    arguments = list(wait_)
+    arguments = list(wait_),
+    timeout = 2 * timeout_ # Don't let chromote timeout before we do
   )
 
   # Need to wait for the progress bar's CSS transition to complete. The

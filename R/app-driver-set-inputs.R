@@ -49,13 +49,10 @@ app_set_inputs <- function(
 
   self$log_message(paste0("Finished setting inputs. Timedout: ", isTRUE(res$timedOut)))
 
-  values <- NULL
-  if (values_) {
-    values <- self$get_values()
-  }
-
-
-  invisible(values)
+  if (values_)
+    invisible(self$get_values())
+  else
+    invisible()
 }
 
 app_queue_inputs <- function(self, private, inputs) {
@@ -82,6 +79,7 @@ app_flush_inputs <- function(self, private, wait = TRUE, timeout = 1000) {
       shinytest2.outputValuesWaiter.finish(wait, resolve);
     });
     ",
-    arguments = list(wait, timeout)
+    arguments = list(wait, timeout),
+    timeout = 2 * timeout # Don't let chromote timeout before we do
   )
 }
