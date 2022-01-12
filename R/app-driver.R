@@ -21,6 +21,7 @@ NULL
 #' @export
 AppDriver <- R6Class(# nolint
   "AppDriver",
+  cloneable = FALSE,
   private = list(
     chromote_session = "<chromote::ChromoteSession>",
     shiny_process = NULL, # `callr::r_bg()` object
