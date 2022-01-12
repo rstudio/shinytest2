@@ -2,19 +2,11 @@ app_set_inputs <- function(
   self, private,
   ...,
   wait_ = TRUE,
-  values_ = TRUE,
   timeout_ = 3 * 1000,
   allow_input_no_binding_ = FALSE,
   priority_ = c("input", "event")
 ) {
   ckm8_assert_app_driver(self, private)
-
-  if (values_ && !wait_) {
-    abort(paste0(
-      "values_=TRUE and wait_=FALSE are not compatible.",
-      "Can't return all values without waiting for update."
-    ), app = self)
-  }
 
   priority_ <- match.arg(priority_)
 
@@ -43,16 +35,13 @@ app_set_inputs <- function(
       "set_inputs(", call_text, "): ",
       "Server did not update any output values within ",
       format(timeout_ / 1000, digits = 2), " seconds. ",
-      "If this is expected, use `wait_=FALSE, values_=FALSE`, or increase the value of timeout_."
+      "If this is expected, use `wait_ = FALSE` or increase the value of `timeout_`."
     ))
   }
 
   self$log_message(paste0("Finished setting inputs. Timedout: ", isTRUE(res$timedOut)))
 
-  if (values_)
-    invisible(self$get_values())
-  else
-    invisible()
+  invisible()
 }
 
 app_queue_inputs <- function(self, private, inputs) {

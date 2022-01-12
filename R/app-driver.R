@@ -306,18 +306,16 @@ AppDriver <- R6Class(# nolint
     #'   an input binding.
     #' @param priority_ Sets the event priority. For expert use only: see
     #'   <https://shiny.rstudio.com/articles/communicating-with-js.html#values-vs-events> for details.
-    #' @param values_ If `TRUE`, will return final updated values of inputs.
     #' @return Returns updated values, invisibly.
     set_inputs = function(
       ...,
       wait_ = TRUE,
-      values_ = FALSE,
       timeout_ = 3 * 1000,
       allow_input_no_binding_ = FALSE,
       priority_ = c("input", "event")
     ) {
       app_set_inputs(
-        self, private, ..., wait_ = wait_, values_ = values_, timeout_ = timeout_,
+        self, private, ..., wait_ = wait_, timeout_ = timeout_,
         allow_input_no_binding_ = allow_input_no_binding_, priority_ = priority_
       )
     },
@@ -333,12 +331,9 @@ AppDriver <- R6Class(# nolint
     #' Uploads a file to a file input.
     #' @param ... Name-path pair, e.g. `component_name = file_path`. The file located at
     #' `file_path` will be uploaded to file input with name `component_name`.
-    #' @param values_ If `TRUE`, will return final updated values of download
-    #'   control. Otherwise, the return value will be `NULL`.
-    upload_file = function(..., wait_ = TRUE, values_ = FALSE, timeout_ = 3 * 1000) {
-      app_upload_file(self, private, ..., wait_ = wait_, values_ = values_, timeout_ = timeout_)
+    upload_file = function(..., wait_ = TRUE, timeout_ = 3 * 1000) {
+      app_upload_file(self, private, ..., wait_ = wait_, timeout_ = timeout_)
     },
-
 
 
     #' @description Wait for a JavaScript expression to be true
