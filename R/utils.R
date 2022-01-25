@@ -126,7 +126,7 @@ app_path <- function(path, arg = "path") {
     }
   }
 
-  list(app = app, dir = dir)
+  list(app = app, dir = dir, is_rmd = is_rmd(path))
 }
 
 

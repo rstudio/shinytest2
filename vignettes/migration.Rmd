@@ -37,12 +37,12 @@ This section is a comprehensive guide to migrate your `{shinytest}` testing code
 ## Old
 old$click("mybutton")
 old$click("clickcount", iotype = "output")
-old$click(".custom-selector", iotype = "auto")
+old$click("my_id", iotype = "auto")
 
 ## New
 new$click("mybutton"); new$click(input = "mybutton")
 new$click(output = "clickcount")
-new$click(selector = ".custom-selector")
+new$click(selector = "#my_id")
 ```
 
 * `old$executeScript(script, ...)`: The `...` must now be supplied to `arguments`. This allows for extra parameters such as `file` which can contain your `script` content or `timeout` which will throw an error if the `timeout` (in milliseconds) is reached before the script returns. Note, all `script`s now require a `return` statement and are executed within a function to be able to access `arguments`. If a promise is returned from the `script` then the `resolve`d value will be sent back to the R session.
@@ -129,7 +129,7 @@ new$get_url()
 getValuesResult <- old$setInputs(life = 42)
 
 ## New
-new$set_values(life = 42)
+new$set_inputs(life = 42)
 get_values_result <- new$get_values()
 ```
 
@@ -316,7 +316,7 @@ new$screenshot("myscreenshot.png")
 * `old$getSnapshotDir()`: This method has been removed as `{testthat}` uses the `./_snaps` directory to store snapshot outputs.
 
 
-* `old$expectUpdate(output)`: This method is no longer supported. While knowing that an output value has been updated, it is very uncertain as to what the new value is. Equivalent code has been provided below.
+* `old$expectUpdate(output)`: This method is no longer supported. While knowing that an output value has been updated, it is very uncertain as to what the new value is. While possibly useful, it is not robust. Other testing methods should be explored. Equivalent code has been provided below.
 
 ```r
 ## Old
@@ -324,7 +324,7 @@ old$expectUpdate("myoutput", myinput = 42)
 
 ## New (equivalent code)
 myoutput_prior <- new$get_values(output = "myoutput")
-new$set_values(myinput = 42)
+new$set_inputs(myinput = 42)
 testthat::expect_failure(
   testthat::expect_equal(
     new$get_values(output = "myoutput"),
@@ -368,7 +368,17 @@ new$get_log()
 
 ## Other removed methods
 
-* `old$getValue(name, iotype)` and `old$setValue(name, value, iotype)`: These methods have been removed as they were not generic and similar behavior achieved via `new$get_values(input = name)$input` and `new$set_values(name = value)`.
+* `old$getValue(name, iotype)` and `old$setValue(name, value, iotype)`: These methods have been removed as they were not generic and similar behavior achieved via `new$get_values(input = name)[["input"]][[name]]` and `new$set_inputs(name = value)`.
+
+```r
+## Old
+old$getValue("myinput")
+old$setValue("myinput", 42)
+
+## New
+new$get_values(input = "myinput")[["input"]][["myinput"]]
+new$set_inputs(myinput = 42)
+```
 
 * `old$listWidgets()`: This method has been removed and can be achieved by getting the names of the existing values: `new$get_values()`.
 
@@ -380,10 +390,10 @@ old$listWidgets()
 lapply(new$get_values(), names)
 ```
 
-TODO-barret; Should we export this method? No?
 * `old$checkUniqueWidgetNames()`: Automatically performed on startup in `{shinytest2}`.
+TODO-barret; `AppDriver$expect_unique_names()`
 
-* `old$clone()`: `AppDriver` does not support cloning. (The underlying `ChromoteSession` does not support cloning, so `AppDriver` does not support cloning.)
+* `old$clone()`: `AppDriver` does not support cloning. (The underlying `ChromoteSession` does not support cloning, so `AppDriver` can not support cloning.)
 
 * `old$goBack()`, `old$refresh()`: These method have been removed and can be achieved with `new$execute_js(script)`.
 
@@ -403,14 +413,15 @@ new$execute_js("window.location.reload();")
 
 ```r
 ## Old
+old$isRmd()
 old$getAppDir()
 old$getAppFilename()
-old$isRmd()
 
 ## New
 path <- new$get_path()
-filename <- if (fs::dir_exists(path)) "" else basename(path)
 is_rmd <- fs::path_ext(path) == ".Rmd"
+app_dir <- if (is_rmd) fs::path_dir(path) else path
+filename <- if (is_rmd) basename(path) else NULL
 ```
 
 * `old$sendKeys(name, keys)`: This method has been removed and there is currently no easy alternative. If you are familiar with the [key code values](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode#value_of_keycode), you can trigger then with `new$execute_js(script)`.

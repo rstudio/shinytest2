@@ -152,7 +152,6 @@ app$get_log() # (long output lines have been truncated)
 \item \href{#method-get_log}{\code{AppDriver$get_log()}}
 \item \href{#method-log_message}{\code{AppDriver$log_message()}}
 \item \href{#method-stop}{\code{AppDriver$stop()}}
-\item \href{#method-clone}{\code{AppDriver$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -543,7 +542,6 @@ Set input values.
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_inputs(
   ...,
   wait_ = TRUE,
-  values_ = FALSE,
   timeout_ = 3 * 1000,
   allow_input_no_binding_ = FALSE,
   priority_ = c("input", "event")
@@ -557,8 +555,6 @@ Set input values.
 Input with name \code{component_name_1} will be assigned value \code{value_1}.}
 
 \item{\code{wait_}}{Wait until all reactive updates have completed?}
-
-\item{\code{values_}}{If \code{TRUE}, will return final updated values of inputs.}
 
 \item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).}
 
@@ -602,7 +598,7 @@ Find a Shiny input/output value or DOM CSS selector and click it using the DOM m
 \subsection{Method \code{upload_file()}}{
 Uploads a file to a file input.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$upload_file(..., wait_ = TRUE, values_ = FALSE, timeout_ = 3 * 1000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$upload_file(..., wait_ = TRUE, timeout_ = 3 * 1000)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -612,9 +608,6 @@ Uploads a file to a file input.
 \code{file_path} will be uploaded to file input with name \code{component_name}.}
 
 \item{\code{wait_}}{Wait until all reactive updates have completed?}
-
-\item{\code{values_}}{If \code{TRUE}, will return final updated values of download
-control. Otherwise, the return value will be \code{NULL}.}
 
 \item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).}
 }
@@ -1000,22 +993,5 @@ the Chromote Session instance.
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$stop()}\if{html}{\out{</div>}}
 }
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$clone(deep = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
 }
 }

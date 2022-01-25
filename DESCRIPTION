@@ -74,6 +74,7 @@ Collate:
     'chromote_methods.R'
     'expect-snapshot.R'
     'httr.R'
+    'migrate.R'
     'missing-value.R'
     'utils.R'
     'platform.R'
