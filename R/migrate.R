@@ -408,7 +408,6 @@ migrate__shinytest_lang <- function(expr, info_env) {
 
 match_shinytest_expr <- function(expr_list, info_env) {
   # message("Found expr!:")
-  barret <<- expr_list
   expr_fn <- expr_list[[1]]
   app_fn_sym <- expr_fn[[3]]
   expr_args <- expr_list[-1]

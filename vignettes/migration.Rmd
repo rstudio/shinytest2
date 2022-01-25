@@ -1,8 +1,8 @@
 ---
-title: "`{shinytest}` Migration Guide"
+title: "{shinytest} migration guide"
 output: rmarkdown::html_vignette
-NOT_A_vignette: >
-  %\VignetteIndexEntry{migration}
+vignette: >
+  %\VignetteIndexEntry{\{shinytest\} migration guide}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
