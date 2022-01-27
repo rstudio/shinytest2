@@ -1,3 +1,7 @@
+# TOOD-barret-implement: new$get_value(input = "myinput") # validate that `key` length is 1
+
+
+
 migrate <- function(path, quiet = FALSE) {
 
   path_info <- app_path(path, "path")
@@ -58,6 +62,7 @@ migrate__extract_runner_info <- function(app_info_env) {
     # Is `testApp` function!
 
     # Get standardised arguments
+    stop("use rlang::call_match()!")
     test_call <- rlang::call_standardise(expr)
     test_call_app_dir <- test_call$appDir
     if (fs::path_rel(test_call_app_dir) != "..") {
@@ -69,7 +74,12 @@ migrate__extract_runner_info <- function(app_info_env) {
     # Store knowledge
     app_info_env$test_names <-
       shinytest___find_tests("tests/shinytest", test_call$testnames %||% NULL)
-    app_info_env$suffix <- test_call$suffix %||% NULL
+    app_info_env$suffix <-
+      if ("suffix" %in% names(test_call)) {
+        test_call$suffix
+      } else {
+        missing_arg()
+      }
     app_info_env$compare_images <- test_call$compareImages %||% TRUE
     app_info_env$call <- test_call
 
@@ -101,7 +111,7 @@ migrate__parse_test_files <- function(app_info_env) {
   # compare_images <- app_info_env$compare_images
   # call <- app_info_env$call
   if (app_info_env$verbose) {
-    rlang::inform(c("i" = paste0("`suffix` found: ", app_info_env$suffix)))
+    rlang::inform(c("i" = paste0("`suffix` found: ", rlang::maybe_missing(app_info_env$suffix, ""))))
     rlang::inform(c("i" = paste0("`testnames` found: ", paste0(app_info_env$test_names, collapse = ", "))))
   }
 
@@ -117,16 +127,16 @@ migrate__parse_test_file <- function(test_path, app_info_env) {
     rlang::inform(c("i" = paste0("Migrating test", test_path)))
   }
 
-  info_env <- new.env(parent = app_info_env)
+  # copy the env to not have one file bleed into the other
+  info_env <- as.environment(as.list(app_info_env))
   info_env$test_path <- test_path
   info_env$save_path <- fs::path("tests", "testthat", paste0("test-", fs::path_file(test_path)))
 
-  test_exprs <- parse(file = test_path)
   test_text <- read_utf8(test_path)
-  test_lines <- strsplit(test_text, "\n")[[1]]
+  text <- migrate__parse_test_text(test_text, info_env)
 
-
-  if (length(test_lines) == 0) {
+  if (length(text) == 0) {
+    # TODO-barret; test this; does it work?
     if (app_info_env$verbose) {
       rlang::inform(paste0("No test content found in `{test_path}`"))
       rlang::inform(paste0("Creating: ", info_env$save_path))
@@ -135,64 +145,132 @@ migrate__parse_test_file <- function(test_path, app_info_env) {
     return()
   }
 
+  if (app_info_env$verbose) {
+    rlang::inform(paste0("Writing: ", info_env$save_path))
+  }
+  write_utf8(test_text, info_env$save_path)
+
+  abort("TODO")
+
+  c(as.list(info_env), list(test_lines))
+
+}
+
+migrate__parse_test_text <- function(test_text, info_env) {
+  test_lines <- strsplit(test_text, "\n")[[1]]
+
+  if (length(test_lines) == 0) {
+    return(character(0))
+  }
+
   init_line_pos <- which(grepl("ShinyDriver$new(", test_lines, fixed = TRUE))
   if (length(init_line_pos) == 0) abort(paste0("Can not find `ShinyDriver$new` in test file: ", test_path))
-  # TODO-barret; split the code into parts and recurse
+  # TODO-future; split the code into parts and recurse
   if (length(init_line_pos) > 1) abort(paste0("Can not migrate file that contains multiple calls to `ShinyDriver$new`: ", test_path))
-  test_text <- sub("ShinyDriver$new(", "ShinyDriver$public_methods$initialize(", test_text, fixed = TRUE)
-  # cat(test_text, "\n")
 
   # Extract the app variable name
-  matches <- regexpr('(^|\\n)\\s*(?<app>[^\\s]+)\\s*(=|<-)\\s*ShinyDriver\\$public_methods\\$initialize', test_text, perl = TRUE)
+  # TODO-barret; use regex? Or use a parser?
+  # TODO-barret-answer; Use regex to help with line suppor
+  matches <- regexpr('(^|\\n)\\s*(?<app>[^\\s]+)\\s*(=|<-)\\s*ShinyDriver\\$new', test_text, perl = TRUE)
   app_txt_start <- attr(matches, "capture.start")[1, "app"]
   app_txt_len <- attr(matches, "capture.length")[1, "app"]
   app_var <- substr(test_text, app_txt_start, app_txt_start + app_txt_len - 1)
   info_env$app_var <- app_var
 
   # TODO-barret;
-  # * Extract the ShinyDriver information
-  # * Convert the text to possibly hit the `snapshotInit()` information
-  # * Find the ShinyDriver$new() again
+  # * √ Extract the external ShinyDriver information
+  # * √ Convert the text to possibly hit the `snapshotInit()` information
+  # * √ Find the ShinyDriver$new() again
+  # * Extract the ShinyDriver args
   # * Convert the ShinyDriver$new() -> AppDriver$new()
 
 
+  # At this point, we know the variable being used and can use that information to very quickly update the content
+  # Ex: `app$setInputs(foo = app$getValues())` -> `app$set_inputs(new_foo = app$get_values())`
+  migrated_text <- migrate__algo_2(test_text, info_env)
+  migrated_lines <- strsplit(migrated_text, "\n")[[1]]
+  init_line <- which(grepl("ShinyDriver$new", migrated_lines, fixed = TRUE))
+  parsed_info <- parse_next_expr(migrated_lines[seq(from = init_line, to = length(migrated_lines))])
 
-  ## Would be great to have control over how many lines are being sent.
-  ## At this point, we know the variable being used and can use that information to very quickly update the content
-  ## `app$setInputs(foo = app$getValues())` -> `app$set_inputs(new_foo = app$get_values())`
-
-  # Extract the app variable name
-  # For each known {shinytest} function call,
-  #   Search for the function call: `APPVAR$FUNCTION(`
-  #   Search for the closing parenthesis: `)`. See https://stackoverflow.com/questions/524548/regular-expression-to-detect-semi-colon-terminated-c-for-while-loops/524624#524624
-  #     Will need to "tokenize" the line to find the closing parenthesis!
-  #   For each match found (starting from the last match to the first match),
-  #     Standardise the call to extract the arguments by replacing `APPVAR$FUNCTION` with `ShinyDriver$public_methods$FUNCTION`
-  #     Replace the known text with the updated call: `APPVAR$NEW_FUNCTION(foo2=bar)`
-  # Write the updated text
-
-  # ## Will kinda keep comments; Will remove "within function" comments
-  # While lines exist in the test lines queue...
-  #   If comment / blank line,
-  #     Write line; Pop line from queue
-  #   else
-  #    Feed in lines until it can successfully parse; Pop those lines from queue
-  #    For each parsed value,
-  #      Recurse over every parse value;
-  #      For each parsed value,
-  #        Match it against regexp info
-  #        Standardise the call to extract the arguments
-  #        Replace it with updated call
-  #      Write the updated line
-
-  migrate__algo_2(test_text, info_env)
-
-  if (app_info_env$verbose) {
-    rlang::inform(paste0("Writing: ", info_env$save_path))
+  local_ret <- NULL
+  for (expr in parsed_info$exprs) {
+    expr <- migrate__driver_init(expr, info_env)
+    local_ret <- append(
+      local_ret,
+      if (is.character(expr)) expr
+      else gsub("\\s*\n    ", "\n  ", st2_expr_text(expr))
+    )
   }
-  write_utf8(test_text, info_env$save_path)
+  # Remove the previous init code
+  migrated_lines <- migrated_lines[-1 * seq(from = init_line, by = 1, length.out = parsed_info$n)]
+  # Add the new init code
+  migrated_lines <- append(migrated_lines, local_ret, after = init_line - 1)
 
-  c(as.list(info_env), list(test_exprs, test_lines))
+  # Return a large string
+  paste0(migrated_lines, collapse = "\n")
+}
+
+migrate__driver_init <- function(expr, info_env) {
+  expr_list <- as.list(expr)
+  complete <- force
+  if (as.character(expr_list[[1]]) %in% c("<-", "=")) {
+    expr_name <- expr_list[[2]]
+    complete <- function(ex) {
+      rlang::call2("<-", expr_name, ex)
+    }
+    expr_list <- as.list(expr_list[[3]])
+  }
+
+  if (st2_expr_text(expr_list[[1]]) != "ShinyDriver$new") {
+    return(expr)
+  }
+  expr_args <-
+    rlang::call_args(rlang::call_match(
+      as.call(expr_list),
+      shinytest::ShinyDriver$public_methods$initialize,
+      defaults = FALSE
+    ))
+  expr_args_names <- names(expr_args)
+
+  init_args <- list()
+  if ("path" %in% expr_args_names) {
+    if (fs::path_rel(expr_args$path) != "../..")
+    init_args[[1]] <- expr_args$path
+  }
+  init_args$variant <- rlang::maybe_missing(info_env$suffix, NULL)
+  if (!is.null(info_env$name)) {
+    init_args$name <- info_env$name
+  }
+  # if (!is.null(info_env$screenshot)) {
+  #   if (is_false(info_env$screenshot)) {
+  #     init_args$screenshot_args <- FALSE
+  #   }
+  # }
+  for (name_info in list(
+    list(from = "loadTimeout", to = "load_timeout"),
+    list(from = "checkNames", to = "check_names"),
+    list(from = "seed", to = "seed"),
+    list(from = "cleanLogs", to = "clean_logs"),
+    list(from = "shinyOptions", to = "shiny_args"),
+    list(from = "renderArgs", to = "render_args"),
+    list(from = "options", to = "options")
+  )) {
+    if (name_info$from %in% expr_args_names) {
+      init_args[[name_info$to]] <- expr_args[[name_info$from]]
+    }
+  }
+  if ("debug" %in% expr_args_names) {
+    rlang::inform("`ShinyDriver$new(debug=)` is not supported by `AppDriver`. All debugging messages are always recorded.")
+  }
+  if ("phantomTimeout" %in% expr_args_names) {
+    rlang::inform("`ShinyDriver$new(phantomTimeout=)` is not supported by `AppDriver`. `{chromote}` does not have a timeout parameter.")
+  }
+
+  ret_expr <- rlang::call2(
+    rlang::expr(AppDriver$new),
+    !!!init_args
+  )
+  complete(ret_expr)
 }
 
 
@@ -213,64 +291,48 @@ shinytest___find_tests <- function (tests_dir, testnames = NULL){
 }
 
 
-find_text_until_closing_paren <- function(txt) {
-  arr <- strsplit(txt, "")[[1]]
-  arr_len <- length(arr)
+# Starting with the first line (first element of `texts`),
+# keep adding lines to parse until a successful parse is found.
+# Return
+# * Number of lines parsed
+# * The raw text
+# * The parsed expr
+parse_next_expr <- function(texts) {
+  texts_len <- length(texts)
+  start <- 1
+  end <- start
+  lines <- NULL
+  exprs <- NULL
 
-  cur_pos <- 1
-  paren_count <- 0
-  find_next_gen <- function(val, look_for_slash = FALSE) {
-    function() {
-      while (cur_pos <= arr_len) {
-        char <- arr[cur_pos]
-        if (char == val) {
-          if (look_for_slash && cur_pos > 1) {
-            if (arr[cur_pos - 1] == "\\") {
-              # Lead by `\`; Continue like normal
-            } else {
-              # Not lead by a `\`, found the closer!
-              return()
-            }
-          } else {
-            # Found it!
-            return()
-          }
-        }
-        cur_pos <<- cur_pos + 1
-      }
-      abort(paste0("Could not find closing character: ", val))
+  while (TRUE) {
+    lines <- texts[start:end]
+    exprs <- try(
+      parse(
+        # Works with vectors of text as one big expression
+        text = lines
+      ),
+      silent = TRUE
+    )
+    if (!inherits(exprs, "try-error")) {
+      # We found the set of lines that can be parsed. Yay!
+      break
+    }
+    end <- end + 1
+    if (end > texts_len) {
+      rlang::abort(paste0("Can not parse texts:\n", paste0(texts, collapse = "\n")))
     }
   }
-  # find_closing_paren <- find_next_gen(")")
-  find_closing_double_quote <- find_next_gen("\"", TRUE)
-  find_closing_single_quote <- find_next_gen("'", TRUE)
 
-  while (cur_pos <= arr_len) {
-    char <- arr[cur_pos]
-    switch(char,
-      "'" = { find_closing_single_quote() },
-      "\"" = { find_closing_double_quote() },
-      "(" = {paren_count <- paren_count + 1},
-      ")" = {
-        paren_count <- paren_count - 1
-        if (paren_count == 0) {
-          return(paste0(arr[seq_len(cur_pos)], collapse = ""))
-        }
-      },
-      default = {
-        # do nothing
-      }
-    )
-
-    cur_pos <- cur_pos + 1
-  }
-
-  abort(paste0("Could not find closing parenthesis in text: ", txt))
+  return(list(
+    n = end,
+    lines = lines,
+    exprs = exprs
+  ))
 }
 
 
 
-# ## Will kinda keep comments; Will remove "within function" comments
+# ## Will remove "within function" comments; Will preserve comments outside of R code
 # While lines exist in the test lines queue...
 #   If comment / blank line,
 #     Write line; Pop line from queue
@@ -287,62 +349,41 @@ migrate__algo_2 <- function(test_text, info_env) {
   test_lines <- strsplit(test_text, "\n")[[1]]
   test_lines_len <- length(test_lines)
   ret <- NULL
-  cur_line <- 1
-  while (cur_line <= test_lines_len) {
-    line <- test_lines[cur_line]
+  # cur_line <- 1
+  while (length(test_lines) > 0) {
+    parsed_info <- parse_next_expr(test_lines)
+    # `parse()` returns a list of expression values
+    exprs <- parsed_info$exprs
+    lines <- parsed_info$lines
+    n <- parsed_info$n
 
-    parsed_line <- try(parse(text = line), silent = TRUE)
-    if (length(parsed_line) == 0) {
-      # this is a comment or blank line, so just keep it as is
-      ret[length(ret) + 1] <- line
-      cur_line <- cur_line + 1
-      next
-    }
-
-    start_line <- cur_line
-    end_line <- cur_line
-    exprs <- parsed_line
-    if (inherits(parsed_line, "try-error")) {
-      # This is a line that can not be parsed.
-      # Keep trying to grab the next line until success
-      next_line <- cur_line + 1
-      if (next_line > test_lines_len) {
-        abort(paste0("Can not parse final line of code starting at line: ", cur_line))
-      }
-      while (next_line <= test_lines_len) {
-        parsed_lines <- try(
-          parse(
-            text = paste0(
-              test_lines[cur_line: next_line],
-              collapse = "\n"
-            )
-          ),
-          silent = TRUE
-        )
-        if (!inherits(parsed_lines, "try-error")) {
-          # We found the set of lines that can be parsed
-          break
+    if (length(exprs) == 0) {
+      # This is a comment or blank line, so just keep it as is
+      ret[length(ret) + 1] <- lines
+    } else {
+      info_env$match_found <- FALSE
+      local_ret <- NULL
+      for (expr in exprs) {
+        # Use a flag to declare if a match is found in the parsed line
+        ret_expr <- migrate__shinytest_lang(expr, info_env)
+        if (!is.null(ret_expr)) {
+          local_ret <- append(
+            local_ret,
+            if (is.character(ret_expr)) ret_expr
+            else st2_expr_text(ret_expr)
+          )
         }
-        next_line <- next_line + 1
       }
-      end_line <- next_line
-      exprs <- parsed_lines
+      # If no match is found, return the original text
+      ret <- append(
+        ret,
+        if (is_false(info_env$match_found)) lines
+        else local_ret
+      )
     }
 
-    for (expr in exprs) {
-      ret_expr <- migrate__shinytest_lang(expr, info_env)
-      if (!is.null(ret_expr)) {
-        ret <- append(
-          ret,
-          if (is.character(ret_expr))
-            ret_expr
-          else
-            rlang::expr_text(ret_expr, width = 500L)
-        )
-      }
-    }
-    # Update cur_line pointer
-    cur_line <- end_line + 1
+    # Remove lines
+    test_lines <- test_lines[-1 * seq_len(n)]
   }
 
   paste0(ret, collapse = "\n")
@@ -376,26 +417,21 @@ migrate__shinytest_lang <- function(expr, info_env) {
     return(expr)
   }
   for (i in seq_len(length(expr_list))) {
-    i_val <- migrate__shinytest_lang(expr_list[[i]], info_env)
-    # if (!is.list(i_val)) {
-    #   str(i_val)
-    #   return(paste0("Could not parse the (", i, ")th part of: ", rlang::expr_text(expr)))
-    # }
-    expr_list[[i]] <- i_val
+    expr_list[[i]] <-
+      migrate__shinytest_lang(expr_list[[i]], info_env)
   }
 
   # By being after the for-loop, it alters from the leaf to the trunk
   if (shinytest_lang_is_fn(expr_list)) {
+    info_env$match_found <- TRUE
     # match against known function names in expr[[3]]
     expr_list <- match_shinytest_expr(expr_list, info_env)
-    if (!is.list(expr_list)) {
-      return(expr_list)
-    }
+    # Pass through NULL values
+    if (!is.list(expr_list)) return(expr_list)
   }
 
   # Reconstruct language call
   rlang::call2(expr_list[[1]], !!!expr_list[-1])
-
 }
 
 # TODO-barret; test for no values_ values
@@ -570,10 +606,12 @@ match_shinytest_expr <- function(expr_list, info_env) {
     },
 
     "getAllValues" = {
-      matched_args <- match_shinytest_args("getAllValues")
-      matched_args$hash_images = FALSE
+      # Make sure the missing `TRUE` values are added
+      matched_args <- match_shinytest_args("getAllValues", defaults = TRUE)
+      # # Do not include this by default
+      # matched_args$hash_images = FALSE
       return(
-        shinytest2_expr_list("get_values", matched_args)
+        shinytest2_expr_list("get_values", match_shinytest_args("getAllValues"))
       )
 
     },
@@ -812,7 +850,10 @@ match_shinytest_expr <- function(expr_list, info_env) {
         values_args <- items_list[-1]
       }
 
-      take_screenshot <- matched_args$screenshot %||% TRUE
+      take_screenshot <-
+        isTRUE(info_env$compare_images) &&
+        isTRUE(info_env$screenshot %||% TRUE) &&
+        (matched_args$screenshot %||% TRUE)
       if (isTRUE(take_screenshot)) {
         if (!is.null(matched_args$filename)) {
           pic_args$name <- matched_args$filename
@@ -823,11 +864,12 @@ match_shinytest_expr <- function(expr_list, info_env) {
       new_expr <-
         if (take_screenshot) {
           # take a screenshot and values
+          # browser()
           rlang::inject(rlang::expr(
-            local({
+            {
               (!!app_var)$expect_values(!!!values_args)
               (!!app_var)$expect_screenshot(!!!pic_args)
-            })
+            }
           ))
         } else {
           # No screenshot, only values
@@ -943,4 +985,9 @@ match_shinytest_expr <- function(expr_list, info_env) {
 
   # Reconstruct call list
   rlang::list2(expr_fn, !!!expr_args)
+}
+
+
+st2_expr_text <- function(expr) {
+  gsub("\\s*\n    ", "\n  ", rlang::expr_text(expr, width = 60L))
 }

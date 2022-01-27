@@ -16,7 +16,7 @@ expect_migration <- function(
   message = NA,
   ...,
   fixed = TRUE,
-  info_env = as.environment(list(app_var = "app"))
+  info_env = make_info_env()
 ) {
   expect_msg_helper(
     migrated_expr <-
@@ -42,7 +42,7 @@ expect_migration_error <- function(
   message = NA,
   ...,
   fixed = TRUE,
-  info_env = as.environment(list(app_var = "app"))
+  info_env = make_info_env()
 ) {
   shinytest_expr <- rlang::enexpr(original_expr)
   expect_msg_helper(
@@ -172,15 +172,15 @@ test_that("deprecated methods are covered", {
 test_that("getAllValues is converted", {
   expect_migration(
     app$getAllValues(),
-    app$get_values(hash_images = FALSE)
+    app$get_values()
   )
   expect_migration(
     app$getAllValues("myinput"),
-    app$get_values(input = "myinput", hash_images = FALSE)
+    app$get_values(input = "myinput")
   )
   expect_migration(
     app$getAllValues(output = "myoutput", "myinput", "myexport"),
-    app$get_values(input = "myinput", output = "myoutput", export = "myexport", hash_images = FALSE)
+    app$get_values(input = "myinput", output = "myoutput", export = "myexport")
   )
 })
 
@@ -510,31 +510,43 @@ test_that("snapshotInit is converted", {
 
 
 test_that("snapshot is converted", {
+  # Typical
   expect_migration(
     app$snapshot(),
-    local({
+    {
       app$expect_values()
       app$expect_screenshot()
-    })
+    }
   )
+  # Use a char
   expect_migration(
     app$snapshot(items = list(output = "myoutput")),
-    local({
+    {
       app$expect_values(output = "myoutput")
       app$expect_screenshot()
-    })
+    }
   )
+  # Respect language
   expect_migration(
     app$snapshot(items = list(output = myoutputvar)),
-    local({
+    {
       app$expect_values(output = myoutputvar)
       app$expect_screenshot()
-    })
+    }
   )
+  # Turn off expect_screenshot if compare_images is false
+  expect_migration(
+    app$snapshot(items = list(output = myoutputvar)),
+    app$expect_values(output = myoutputvar),
+    info_env = make_info_env(compare_images = FALSE)
+  )
+  # Turn off expect_values if compare_images is TRUE
   expect_migration(
     app$snapshot(screenshot = FALSE),
-    app$expect_values()
+    app$expect_values(),
+    info_env = make_info_env(compare_images = TRUE)
   )
+
   expect_migration_error(
     app$snapshot(items = a),
     "Variables may not be used"
