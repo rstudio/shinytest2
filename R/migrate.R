@@ -1,26 +1,25 @@
 # TOOD-barret-implement: new$get_value(input = "myinput") # validate that `key` length is 1
-# TODO-barret; remove {} around new app$snapshot()
+# TODO-barret; Make test app using allowInputNoBinding = TRUE
 
 
-# Make screenshot behavior an argument
-#   * if missing,
-#     * If interactive: ask the user
-#       * Ex: We suggest to no expect screenshots due to the volitility of the output....
-#       * Are you suuuuure?
-#     * If not interactive: yell
-#   * if true, keep `$expect_screenshot()`
 
-# Preference value:
-# 1. Line value
-# 2. Use if FALSE; snapshotInit value
-# 3. Use if FALSE; compareImages value
-# 4. User prompt value
-
-migrate <- function(path, quiet = FALSE) {
+#' Migrate shinytest tests
+#'
+#' This function will migrate standard shinytest test files to the new \pkg{shinytest2} + \pkg{testthat} ed 3 snapshot format.
+#'
+#' \pkg{shinytest} file contents will be traversed and converted to the new \pkg{shinytest2} format. If the \pkg{shinytest} code can not be directly seen in the code, then it will not be converted.
+#'
+#' @param path Path to the test directory or Shiny Rmd file
+#' @param ... Must be empty. Allows for parameter expansion.
+#' @param include_expected_screenshot If `TRUE`, `ShinyDriver$snapshot()` will turn into both `AppDriver$expect_values()` and `AppDriver$expect_screenshot()`. If `FALSE`, `ShinyDriver$snapshot()` will only turn into `AppDriver$expect_values()`. If missing, `include_expected_screenshot` will behave as `FALSE` if `shinytest::testApp(compareImages = FALSE)` or `ShinyDriver$snapshotInit(screenshot = FALSE)` is called.
+#' @return
+migrate <- function(path, ..., include_expect_screenshot = missing_arg(), quiet = FALSE) {
+  ellipsis::check_dots_empty()
 
   path_info <- app_path(path, "path")
 
   if (TRUE) {
+    # TODO-barret; Remove this code
     new_path <- fs::path(fs::path_dir(path_info$dir), paste0(fs::path_file(path_info$dir), "-tmp"))
     rlang::inform(paste0("temp copying over path: ", new_path))
     if (fs::dir_exists(new_path)) fs::dir_delete(new_path)
@@ -31,6 +30,7 @@ migrate <- function(path, quiet = FALSE) {
   # Use an environment to avoid having to return many function levels to merge info and then send back many function levels
   app_info_env <- as.environment(path_info)
   app_info_env$verbose <- !isTRUE(quiet)
+  app_info_env$include_expect_screenshot <- include_expect_screenshot
 
   rlang::inform(c(i = paste0("Temp working directory: ", path_info$dir)))
   withr::with_dir(path_info$dir, {
@@ -132,13 +132,29 @@ migrate__parse_test_files <- function(app_info_env) {
 
 }
 
+migrate__reset_info_env <- function(app_info_env) {
+  rm(
+    c(
+      "test_path",
+      "save_path",
+      "app_var",
+      "name",
+      "screenshot_snapshot_init",
+      "match_found"
+      # Not `take_screenshot`; We want this value to persist
+    ),
+    envir = app_info_env
+  )
+  app_info_env
+}
+
 migrate__parse_test_file <- function(test_path, app_info_env) {
   if (app_info_env$verbose) {
     rlang::inform(c("i" = paste0("Migrating test", test_path)))
   }
 
-  # copy the env to not have one file bleed into the other
-  info_env <- as.environment(as.list(app_info_env))
+  # Reset the environment for the next file by removing flags / prior file knowledge
+  info_env <- migrate__reset_info_env(app_info_env)
   info_env$test_path <- test_path
   info_env$save_path <- fs::path("tests", "testthat", paste0("test-", fs::path_file(test_path)))
 
@@ -148,7 +164,7 @@ migrate__parse_test_file <- function(test_path, app_info_env) {
   if (length(migrated_text) == 0) {
     # TODO-barret; test this; does it work?
     abort("Needs testing")
-    if (app_info_env$verbose) {
+    if (info_env$verbose) {
       rlang::inform(paste0("No test content found in `{test_path}`"))
       rlang::inform(paste0("Creating: ", info_env$save_path))
     }
@@ -181,33 +197,30 @@ migrate__parse_test_text <- function(test_text, test_path, info_env) {
   app_var <- substr(test_text, app_txt_start, app_txt_start + app_txt_len - 1)
   info_env$app_var <- app_var
 
-  # TODO-barret;
-  # * √ Extract the external ShinyDriver information
-  # * √ Convert the text to possibly hit the `snapshotInit()` information
-  # * √ Find the ShinyDriver$new() again
-  # * √ Extract the ShinyDriver args
-  # * √ Convert the ShinyDriver$new() -> AppDriver$new()
+  ## Depending on the methods called (ex: $snapshotInit()),
+  ## AppDriver$new will have different arg values
+  # * Extract the external ShinyDriver information
+  # * Convert the text to possibly hit the `snapshotInit()` information
+  # * Find the ShinyDriver$new() again
+  # * Extract the ShinyDriver args
+  # * Convert the ShinyDriver$new() -> AppDriver$new()
 
-
-  # At this point, we know the variable being used and can use that information to very quickly update the content
+  # At this point, we know the variable name being used and
+  # can use that information to very quickly update the content
   # Ex: `app$setInputs(foo = app$getValues())` -> `app$set_inputs(new_foo = app$get_values())`
   migrated_text <- migrate__algo_2(test_text, info_env)
   migrated_lines <- strsplit(migrated_text, "\n")[[1]]
   init_line <- which(grepl("^[^#]*ShinyDriver\\$new\\s*\\(", migrated_lines, fixed = FALSE))
   parsed_info <- parse_next_expr(migrated_lines[seq(from = init_line, to = length(migrated_lines))])
 
-  local_ret <- NULL
-  for (expr in parsed_info$exprs) {
-    expr <- migrate__driver_init(expr, info_env)
-    local_ret <- append(
-      local_ret,
-      st2_expr_text(expr)
-    )
-  }
+  parsed_expr_text <- get_each_expr_text(
+    parsed_info$exprs,
+    migrate__driver_init, info_env
+  )
   # Remove the previous init code
   migrated_lines <- migrated_lines[-1 * seq(from = init_line, by = 1, length.out = parsed_info$n)]
   # Add the new init code
-  migrated_lines <- append(migrated_lines, local_ret, after = init_line - 1)
+  migrated_lines <- append(migrated_lines, parsed_expr_text, after = init_line - 1)
 
   # Return a large string
   paste0(migrated_lines, collapse = "\n")
@@ -365,20 +378,18 @@ migrate__algo_2 <- function(test_text, info_env) {
       ret[length(ret) + 1] <- lines
     } else {
       info_env$match_found <- FALSE
-      local_ret <- NULL
-      for (expr in exprs) {
+      expr_texts <- get_each_expr_text(
+        exprs,
+        migrate__shinytest_lang,
+        info_env,
         # Use a flag to declare if a match is found in the parsed line
-        ret_expr <- migrate__shinytest_lang(expr, info_env, is_top_level = TRUE)
-        local_ret <- append(
-          local_ret,
-          st2_expr_text(ret_expr)
-        )
-      }
+        is_top_level = TRUE
+      )
       # If no match is found, return the original text
       ret <- append(
         ret,
         if (is_false(info_env$match_found)) lines
-        else local_ret
+        else expr_texts
       )
     }
 
@@ -793,7 +804,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       name <- matched_args$path
       abort_if_not_character(name, "snapshotInit", "path")
       info_env$name <- name
-      info_env$screenshot <- matched_args$screenshot
+      info_env$screenshot_snapshot_init <- matched_args$screenshot
 
       # No replacement code
       NULL
@@ -825,10 +836,66 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
         values_args <- items_list[-1]
       }
 
-      take_screenshot <-
-        isTRUE(info_env$compare_images) &&
-        isTRUE(info_env$screenshot %||% TRUE) &&
-        (matched_args$screenshot %||% TRUE)
+      # Preference value:
+      # 0. If exists, User preference value
+      # 0. If exists, Prior user prompt value
+      # 1. FALSE if compareImages == FALSE
+      # 2. FALSE if args$screenshot == FALSE
+      # 3. FALSE if snapshotInitArgs$screenshot == FALSE
+      # 4. User prompt value
+      take_screenshot <- local({
+        if (!is.null(
+          rlang::maybe_missing(info_env$include_expect_screenshot, NULL)
+        )) {
+          return(info_env$include_expect_screenshot)
+        }
+
+        if (!is.null(info_env$take_screenshot)) {
+          return(info_env$take_screenshot)
+        }
+
+        if (
+          is_false(info_env$compare_images) ||
+          is_false(matched_args$screenshot) ||
+          is_false(info_env$screenshot_snapshot_init)
+        ) {
+          return(FALSE)
+        }
+
+        if (
+          isTRUE(matched_args$screenshot) ||
+          isTRUE(info_env$screenshot_snapshot_init)
+          ## Do not use as this is default behavior we want to avoid
+          # isTRUE(info_env$compare_images)
+        ) {
+          return(TRUE)
+        }
+
+        if (!rlang::is_interactive()) {
+          rlang::abort(c(
+            "`ShinyDriver$snapshot()` needs instructions on whether to take a screenshot.",
+            x = "Please set `include_expect_screenshot` to `TRUE` or `FALSE`."
+          ))
+        }
+        ans <- utils::menu(
+          graphics = FALSE,
+          title = "TITLE!!!",
+          choices = c(
+            "No `AppDriver$expect_screenshot()` (recommended)",
+            "Include `AppDriver$expect_screenshot()` (My tests will be brittle)"
+          )
+        )
+        if (ans == 0) {
+          rlang::inform(c(i = "Menu cancelled. No `AppDriver$expect_screenshot()` will be provided."))
+          ans <- 1
+        }
+        info_env$take_screenshot <- ans != 2
+        info_env$take_screenshot
+      })
+      # take_screenshot <-
+      #   isTRUE(info_env$compare_images) &&
+      #   isTRUE(info_env$screenshot %||% TRUE) &&
+      #   (matched_args$screenshot %||% TRUE)
       if (isTRUE(take_screenshot)) {
         if (!is.null(matched_args$filename)) {
           pic_args$name <- matched_args$filename
@@ -949,4 +1016,9 @@ st2_expr_text <- function(expr) {
     "\n  ",
     rlang::expr_text(expr, width = 60L)
   )
+}
+get_each_expr_text <- function(exprs, fn, ...) {
+  unlist(lapply(exprs, function(expr) {
+    st2_expr_text(fn(expr, ...))
+  }))
 }

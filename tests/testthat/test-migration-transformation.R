@@ -504,7 +504,7 @@ test_that("snapshotInit is converted", {
       "`ShinyDriver$snapshotInit()` is not implemented in `AppDriver`"
     )
   expect_equal(info_env$name, "mytest")
-  expect_equal(info_env$screenshot, TRUE)
+  expect_equal(info_env$screenshot_snapshot_init, TRUE)
 
   suppressMessages({
     expect_migration_error(
@@ -517,7 +517,13 @@ test_that("snapshotInit is converted", {
 
 test_that("snapshot is converted", {
   # Typical
-  expect_migration(
+  expect_snapshot_migration <- function(
+    ...,
+    info_env = make_info_env(include_expect_screenshot = TRUE)
+  ) {
+    expect_migration(..., info_env = info_env)
+  }
+  expect_snapshot_migration(
     app$snapshot(),
     rlang::exprs(
       app$expect_values(),
@@ -525,7 +531,7 @@ test_that("snapshot is converted", {
     ), enexpr_new_expr = FALSE
   )
   # Use a char
-  expect_migration(
+  expect_snapshot_migration(
     app$snapshot(items = list(output = "myoutput")),
     rlang::exprs(
       app$expect_values(output = "myoutput"),
@@ -533,7 +539,7 @@ test_that("snapshot is converted", {
     ), enexpr_new_expr = FALSE
   )
   # Respect language
-  expect_migration(
+  expect_snapshot_migration(
     app$snapshot(items = list(output = myoutputvar)),
     rlang::exprs(
       app$expect_values(output = myoutputvar),
@@ -541,13 +547,13 @@ test_that("snapshot is converted", {
     ), enexpr_new_expr = FALSE
   )
   # Turn off expect_screenshot if compare_images is false
-  expect_migration(
+  expect_snapshot_migration(
     app$snapshot(items = list(output = myoutputvar)),
     app$expect_values(output = myoutputvar),
     info_env = make_info_env(compare_images = FALSE)
   )
   # Turn off expect_values if compare_images is TRUE
-  expect_migration(
+  expect_snapshot_migration(
     app$snapshot(screenshot = FALSE),
     app$expect_values(),
     info_env = make_info_env(compare_images = TRUE)
