@@ -2,7 +2,7 @@
 expect_text_migration <- function(original_txt, new_txt, ...) {
   info_env <- make_info_env(..., app_var = NULL)
   suppressMessages({
-    converted_text <- migrate__parse_test_text(original_txt, info_env)
+    converted_text <- migrate__parse_test_text(original_txt, "test-migration-file", info_env)
   })
   expect_equal(converted_text, new_txt)
   info_env
@@ -60,7 +60,7 @@ test_that("`$expect_screenshot()` only shows up when `compareImages == TRUE` and
   # No suffix, compare_images = TRUE
   expect_text_migration(
     'app <- ShinyDriver$new("../.."); app$snapshotInit("mytest"); app$snapshot()',
-    'app <- AppDriver$new(name = "mytest")\n{\n  app$expect_values()\n  app$expect_screenshot()\n}'
+    'app <- AppDriver$new(name = "mytest")\napp$expect_values()\napp$expect_screenshot()'
   )
 
   # No suffix, compare_images = TRUE w/ screenshot = FALSE; screenshot wins

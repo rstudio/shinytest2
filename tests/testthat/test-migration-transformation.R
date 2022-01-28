@@ -16,6 +16,7 @@ expect_migration <- function(
   message = NA,
   ...,
   fixed = TRUE,
+  enexpr_new_expr = TRUE,
   info_env = make_info_env()
 ) {
   expect_msg_helper(
@@ -30,7 +31,12 @@ expect_migration <- function(
     ...
   )
 
-  shinytest2_expr <- rlang::enexpr(new_expr)
+  shinytest2_expr <-
+    if (enexpr_new_expr) {
+      rlang::enexpr(new_expr)
+    } else {
+      new_expr
+    }
   expect_equal(migrated_expr, shinytest2_expr)
 
   # Return the environment as that may have been altered
@@ -513,26 +519,26 @@ test_that("snapshot is converted", {
   # Typical
   expect_migration(
     app$snapshot(),
-    {
-      app$expect_values()
+    rlang::exprs(
+      app$expect_values(),
       app$expect_screenshot()
-    }
+    ), enexpr_new_expr = FALSE
   )
   # Use a char
   expect_migration(
     app$snapshot(items = list(output = "myoutput")),
-    {
-      app$expect_values(output = "myoutput")
+    rlang::exprs(
+      app$expect_values(output = "myoutput"),
       app$expect_screenshot()
-    }
+    ), enexpr_new_expr = FALSE
   )
   # Respect language
   expect_migration(
     app$snapshot(items = list(output = myoutputvar)),
-    {
-      app$expect_values(output = myoutputvar)
+    rlang::exprs(
+      app$expect_values(output = myoutputvar),
       app$expect_screenshot()
-    }
+    ), enexpr_new_expr = FALSE
   )
   # Turn off expect_screenshot if compare_images is false
   expect_migration(
