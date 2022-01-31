@@ -40,21 +40,8 @@ app_initialize_ <- function(
   }
   dir.create(private$save_dir, recursive = TRUE)
 
-  private$name <-
-    if (!is.null(name)) {
-      name
-    } else {
-      full_path <- fs::path_abs(path)
-      if (fs::dir_exists(full_path)) {
-        # get folder name
-        fs::path_file(full_path)
-      } else {
-        # get parent folder name
-        fs::path_file(
-          fs::path_dir(full_path)
-        )
-      }
-    }
+  # NULL values are ok! (default)
+  private$name <- name
   private$clean_logs <- isTRUE(clean_logs)
   if (is.null(load_timeout)) {
     load_timeout <- if (on_ci()) 20 * 1000 else 10 * 1000

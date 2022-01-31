@@ -9,6 +9,7 @@ make_info_env <- function(
     suffix = suffix,
     compare_images = compare_images,
     app_var = app_var,
+    verbose = verbose,
     include_expect_screenshot = include_expect_screenshot
   ))
 }
