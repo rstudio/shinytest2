@@ -112,6 +112,19 @@ new$get_values(input = TRUE)
 new$get_values(output = "clickcount")
 ```
 
+* `old$getValue(name, iotype)`: `ShinyDriver$getValue()` has been renamed to `AppDriver$get_value()` and had its parameters spread out into `input` and `output` while adding support `export`.
+
+```r
+## Old
+old$getValue("myinput")
+
+## New
+new$get_value(input = "myinput")
+# Equivalent to
+new$get_values(input = "myinput")$input$myinput
+```
+
+
 * `old$getUrl()`: This method has been renamed to `new$get_url()`.
 ```r
 ## Old
@@ -368,15 +381,13 @@ new$get_log()
 
 ## Other removed methods
 
-* `old$getValue(name, iotype)` and `old$setValue(name, value, iotype)`: These methods have been removed as they were not generic and similar behavior achieved via `new$get_values(input = name)[["input"]][[name]]` and `new$set_inputs(name = value)`.
+* `old$setValue(name, value, iotype)`: To set an output value, it must be perfomed by setting an input value and having your render methods set the output value. To set an input value, use `AppDriver$set_inputs()`.
 
 ```r
 ## Old
-old$getValue("myinput")
 old$setValue("myinput", 42)
 
 ## New
-new$get_values(input = "myinput")[["input"]][["myinput"]]
 new$set_inputs(myinput = 42)
 ```
 
