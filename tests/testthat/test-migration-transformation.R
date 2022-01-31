@@ -145,9 +145,9 @@ test_that("expectUpdate is converted", {
   expect_migration(
     app$expectUpdate("myoutput", myinput = 42),
     local({
-      prior_output_value <- app$get_values(output = "myoutput")
+      prior_output_value <- app$get_value(output = "myoutput")
       app$set_inputs(myinput = 42, timeout_ = 3000)
-      new_output_value <- app$get_values(output = "myoutput")
+      new_output_value <- app$get_value(output = "myoutput")
       testthat::expect_failure(
         testthat::expect_equal(
           new_output_value,
@@ -289,25 +289,23 @@ test_that("getValue is converted", {
     )
     expect_migration(
       app$getValue("myoutput", iotype = "output"),
-      app$get_values(output = "myoutput")[["output"]][["myoutput"]],
-      "`ShinyDriver$getValue()` is not implemented"
+      app$get_value(output = "myoutput")
     )
     expect_migration(
       app$getValue("myoutput", iotype = "auto"),
-      app$get_values(output = "myoutput")[["output"]][["myoutput"]],
+      app$get_value(output = "myoutput"),
       "Using `output` as a guess."
     )
     expect_migration(
       app$getValue("myoutput"),
-      app$get_values(output = "myoutput")[["output"]][["myoutput"]],
+      app$get_value(output = "myoutput"),
       "Using `output` as a guess."
     )
   })
 
   expect_migration(
     app$getValue("myinput", iotype = "input"),
-    app$get_values(input = "myinput")[["input"]][["myinput"]],
-    "`ShinyDriver$getValue()` is not implemented"
+    app$get_value(input = "myinput")
   )
 })
 

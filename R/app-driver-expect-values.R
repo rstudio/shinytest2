@@ -5,13 +5,78 @@
 #   * All images are hashed within the text content.
 
 
+app_get_single_ioe <- function(
+  self, private,
+  ...,
+  input = missing_arg(),
+  output = missing_arg(),
+  export = missing_arg()
+) {
+  ckm8_assert_app_driver(self, private)
+  ellipsis::check_dots_empty()
+
+  # input <- rlang::maybe_missing(input, FALSE)
+  # output <- rlang::maybe_missing(output, FALSE)
+  # export <- rlang::maybe_missing(export, FALSE)
+  input_is_provided <- !rlang::is_missing(input)
+  output_is_provided <- !rlang::is_missing(output)
+  export_is_provided <- !rlang::is_missing(export)
+
+  if (sum(input_is_provided, output_is_provided, export_is_provided) != 1) {
+    rlang::abort("Must specify only one of `input`, `output`, `export`")
+  }
+
+  if (input_is_provided) ckm8_assert_single_string(input)
+  else if (output_is_provided) ckm8_assert_single_string(output)
+  else if (export_is_provided) ckm8_assert_single_string(export)
+
+  type <-
+    if (input_is_provided) "input"
+    else if (output_is_provided) "output"
+    else if (export_is_provided) "export"
+    else abort("unknown type") # internal
+  name <-
+    if (input_is_provided) input
+    else if (output_is_provided) output
+    else if (export_is_provided) export
+    else abort("unknown type") # internal
+
+  list(
+    input = input,
+    output = output,
+    export = export,
+    type = type,
+    name = name
+  )
+}
+
+app_get_value <- function(
+  self, private,
+  ...,
+  input = missing_arg(), output = missing_arg(), export = missing_arg(),
+  hash_images = FALSE
+) {
+  ioe <- app_get_single_ioe(
+    self, private,
+    input = input, output = output, export = export
+  )
+
+  # Call `app_get_values()` to get the RDS format of the shiny values.
+  ret <- self$get_values(
+    input = ioe$input, output = ioe$output, export = ioe$export,
+    hash_images = hash_images
+  )
+
+  # Extract the single value
+  ret[[ioe$type]][[ioe$name]]
+}
+
+
 # Note: This queries method the Shiny server
 app_get_values <- function(
   self, private,
-  input = missing_arg(),
-  output = missing_arg(),
-  export = missing_arg(),
   ...,
+  input = missing_arg(), output = missing_arg(), export = missing_arg(),
   hash_images = FALSE
 ) {
   ckm8_assert_app_driver(self, private)

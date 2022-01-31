@@ -178,8 +178,8 @@ AppDriver <- R6Class(# nolint
     #'   `$expect_html()` and `$expect_text()` both use [`unlist()`].
     expect_js = function(
       script = missing_arg(),
-      arguments = list(),
       ...,
+      arguments = list(),
       file = missing_arg(),
       timeout = 15 * 1000,
       pre_snapshot = NULL,
@@ -213,13 +213,29 @@ AppDriver <- R6Class(# nolint
     #' @description
     #' Returns a named list of all inputs, outputs, and export values.
     #'
+    #' @param input,output,export One of these variable should contain a single string value. If more than one value is specified or no values are specified, an error will be thrown.
+    get_value = function(
+      ...,
+      input = missing_arg(), output = missing_arg(), export = missing_arg(),
+      hash_images = FALSE
+    ) {
+      app_get_value(
+        self, private,
+        ...,
+        input = input, output = output, export = export,
+        hash_images = hash_images
+      )
+    },
+    #' @description
+    #' Returns a named list of all inputs, outputs, and export values.
+    #'
     #' @param input,output,export Either `TRUE` to return all
     #'   input/output/exported values, or a character vector of specific
     #'   controls.
     # TODO-barret-docs; Add note about complex objects may have serialization issues.
     get_values = function(
-      input = missing_arg(), output = missing_arg(), export = missing_arg(),
       ...,
+      input = missing_arg(), output = missing_arg(), export = missing_arg(),
       hash_images = FALSE
     ) {
       app_get_values(
@@ -249,16 +265,16 @@ AppDriver <- R6Class(# nolint
     #' `$screenshot()` method. The selector and delay will default to `"html"` and `0` respectively.
     # TODO-barret-docs; document methods!
     expect_values = function(
-      input = missing_arg(), output = missing_arg(), export = missing_arg(),
       ...,
+      input = missing_arg(), output = missing_arg(), export = missing_arg(),
       screenshot_args = missing_arg(),
       name = NULL,
       cran = FALSE
       ) {
       app_expect_values(
         self, private,
-        input = input, output = output, export = export,
         ...,
+        input = input, output = output, export = export,
         screenshot_args = screenshot_args,
         name = name,
         cran = cran
@@ -374,17 +390,17 @@ AppDriver <- R6Class(# nolint
     #'
     #' This function can be useful in helping determine if an application
     #' has finished processing a complex reactive situation.
-    #' @param input,output,export A name of an input, output, or export value. Only one of these may be used.
+    #' @param input,output,export A name of an input, output, or export value. Only one of these parameters may be used.
     #' @param ignore List of possible values to ignore when checking for
     #'   updates.
     #' @param timeout How long we can wait (in ms) before throwing an error.
     #' @param interval How often to check for the condition, in ms.
     #' @return Newly found value
     wait_for_value = function(
+      ...,
       input = missing_arg(),
       output = missing_arg(),
       export = missing_arg(),
-      ...,
       ignore = list(NULL, ""),
       timeout = 15 * 1000,
       interval = 400
@@ -409,12 +425,18 @@ AppDriver <- R6Class(# nolint
     #' @param file A (local) file containing JavaScript code to be read and used as the `script`. Only one of `script` or `file` can be specified.
     #' @return Result of the `script` (or `file` contents)
     # TODO-barret-docs; Document how they should make a promise and return NULL instead?
-    execute_js = function(script = missing_arg(), arguments = list(), ..., file = missing_arg(), timeout = 15 * 1000) {
+    execute_js = function(
+      script = missing_arg(),
+      ...,
+      arguments = list(),
+      file = missing_arg(),
+      timeout = 15 * 1000
+    ) {
       app_execute_js(
         self, private,
         script = script,
-        arguments = arguments,
         ...,
+        arguments = arguments,
         file = file,
         timeout = timeout
       )

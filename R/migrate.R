@@ -1,5 +1,4 @@
 # TODO-test `migrate()`
-# TOOD-barret-implement: new$get_value(input = "myinput") # validate that `key` length is 1
 # TODO-barret; Make test app using allowInputNoBinding = TRUE
 
 
@@ -803,9 +802,9 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       # Use two different expressions depending on the type
       new_expr <- rlang::expr(
         local({
-          prior_output_value <- (!!app_val)$get_values(output = (!!output_val))
+          prior_output_value <- (!!app_val)$get_value(output = (!!output_val))
           (!!app_val)$set_inputs(!!!input_vals, timeout_ = !!timeout_val)
-          new_output_value <- (!!app_val)$get_values(output = (!!output_val))
+          new_output_value <- (!!app_val)$get_value(output = (!!output_val))
           testthat::expect_failure(
             testthat::expect_equal(
               new_output_value,
@@ -907,11 +906,6 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     },
 
     "getValue" = {
-      if (info_env$verbose) rlang::inform(c(
-        i = "`ShinyDriver$getValue()` is not implemented in `AppDriver`. It relied on invasive Shiny logic.",
-        "!" = "Replacing this with a generic call to `AppDriver$get_values()`"
-      ))
-
       matched_args <- match_shinytest_args("getValue")
       iotype <- iotype_arg(matched_args, "getValue")
       if (iotype == "auto") {
@@ -923,9 +917,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       fn_args <- list()
       fn_args[[iotype]] <- matched_args$name
       app_val <- rlang::sym(info_env$app_var)
-      rlang::expr(
-        (!!app_val)$get_values(!!!fn_args)[[!!iotype]][[(!!matched_args$name)]]
-      )
+      shinytest2_expr("get_value", fn_args)
     },
     "setValue" = {
 
