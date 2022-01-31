@@ -1,3 +1,4 @@
+# TODO-test `migrate()`
 # TOOD-barret-implement: new$get_value(input = "myinput") # validate that `key` length is 1
 # TODO-barret; Make test app using allowInputNoBinding = TRUE
 
@@ -13,34 +14,50 @@
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @param include_expected_screenshot If `TRUE`, `ShinyDriver$snapshot()` will turn into both `AppDriver$expect_values()` and `AppDriver$expect_screenshot()`. If `FALSE`, `ShinyDriver$snapshot()` will only turn into `AppDriver$expect_values()`. If missing, `include_expected_screenshot` will behave as `FALSE` if `shinytest::testApp(compareImages = FALSE)` or `ShinyDriver$snapshotInit(screenshot = FALSE)` is called.
 #' @return
-migrate <- function(path, ..., include_expect_screenshot = missing_arg(), quiet = FALSE) {
+migrate <- function(
+  path,
+  ...,
+  clean = TRUE,
+  include_expect_screenshot = missing_arg(),
+  quiet = FALSE
+) {
   ellipsis::check_dots_empty()
 
   path_info <- app_path(path, "path")
 
-  if (TRUE) {
-    # TODO-barret; Remove this code
-    new_path <- fs::path(fs::path_dir(path_info$dir), paste0(fs::path_file(path_info$dir), "-tmp"))
-    rlang::inform(paste0("temp copying over path: ", new_path))
-    if (fs::dir_exists(new_path)) fs::dir_delete(new_path)
-    fs::dir_copy(path_info$dir, new_path)
-    path_info <- app_path(new_path, "path")
-  }
-
   # Use an environment to avoid having to return many function levels to merge info and then send back many function levels
   app_info_env <- as.environment(path_info)
-  app_info_env$verbose <- !isTRUE(quiet)
+  app_info_env$verbose <- is_false(quiet)
   app_info_env$include_expect_screenshot <- include_expect_screenshot
 
-  rlang::inform(c(i = paste0("Temp working directory: ", path_info$dir)))
+  if (app_info_env$verbose) rlang::inform(c(i = paste0("Temp working directory: ", path_info$dir)))
   withr::with_dir(path_info$dir, {
     migrate__extract_runner_info(app_info_env)
     migrate__write_shinytest2_runner(app_info_env)
-
-    invisible(
-      migrate__parse_test_files(app_info_env)
-    )
+    migrate__parse_test_files(app_info_env)
+    if (isTRUE(clean)) migrate__remove_shinytest_files(app_info_env)
   })
+
+  invisible(TRUE)
+}
+
+migrate__remove_shinytest_files <- function(app_info_env) {
+
+  files_to_remove <- c(
+    app_info_env$shinytest_runner_file,
+    if (fs::dir_exists("tests/shinytest")) dir("tests/shinytest", full.names = TRUE, recursive = TRUE)
+  )
+  if (app_info_env$verbose) {
+    rlang::inform(c(
+      i = "Removing shinytest files: ",
+      stats::setNames(files_to_remove, rep("*", length(files_to_remove)))
+    ))
+  }
+
+  fs::file_delete(app_info_env$shinytest_runner_file)
+  if (fs::dir_exists("tests/shinytest")) {
+    fs::dir_delete("tests/shinytest")
+  }
 }
 
 # Make sure all folders exist as expected
@@ -57,45 +74,120 @@ migrate__validate_shinytest_exists <- function() {
 }
 
 
+migrate__find_shinytest_testapp <- function(exprs, info_env) {
+  is_test_app <- function(expr_list) {
+    length(expr_list) >= 1 &&
+      is.language(expr_list[[1]]) &&
+      st2_expr_text(expr_list[[1]]) %in% c(
+        "testApp",
+        "shinytest::testApp",
+        "shinytest:::testApp"
+      )
+  }
+  args <- NULL
+  post_fn <- function(expr_list, is_top_level) {
+    if (is_test_app(expr_list)) {
+      testapp_expr <- expr_list[[3]]
+      if (!is.null(args)) {
+        if (info_env$verbose) rlang::inform(c(
+          "!" = "Multiple shinytest::testApp() calls found. Only the first one will be used."
+        ))
+      } else {
+        args <<- rlang::call_args(
+          rlang::call_match(
+            as.call(testapp_expr),
+            shinytest::testApp,
+            defaults = TRUE
+          )
+        )
+      }
+    }
+    # Don't alter the expr_list, just return it
+    as.call(expr_list)
+  }
+  # For all exprs, find a single shinytest::testApp()
+  lapply(exprs, function(expr) {
+    migrate__recurse_expr(expr, post_fn = post_fn)
+  })
+
+  args
+}
+
+is_driver_init <- function(expr_list) {
+  length(expr_list) >= 1 &&
+    is.language(expr_list[[1]]) &&
+    st2_expr_text(expr_list[[1]]) %in% c(
+      "ShinyDriver$new",
+      "shinytest::ShinyDriver$new",
+      "shinytest:::ShinyDriver$new"
+    )
+}
+migrate__find_shinydriver_new <- function(exprs, info_env) {
+  is_shinydriver_new_assignment <- function(expr_list) {
+    length(expr_list) >= 3 &&
+    is.language(expr_list[[1]]) &&
+    st2_expr_text(expr_list[[1]]) %in% c("`<-`", "`=`", "`<<-`") &&
+    is_driver_init(expr_list[[3]])
+  }
+
+  ret <- list()
+  post_fn <- function(expr_list, is_top_level) {
+    if (is_shinydriver_new_assignment(expr_list)) {
+      app_var <<- expr_list[[2]]
+      new_expr_list <- expr_list[[3]]
+      new_args <<- rlang::call_args(
+        rlang::call_match(
+          as.call(expr_list),
+          shinytest::ShinyDriver$public_methods$initialize,
+          defaults = TRUE
+        )
+      )
+      ret <<- append(ret, list(list(app_var = app_var, args = args)))
+    }
+    # Don't alter the expr_list, just return it
+    as.call(expr_list)
+  }
+  # For all exprs, find a single shinytest::testApp()
+  lapply(exprs, function(expr) {
+    migrate__recurse_expr(expr, post_fn = post_fn)
+  })
+
+  ret
+}
+
+
 # Extract the runner information, such as `suffix` and a fully populated `testnames`
 migrate__extract_runner_info <- function(app_info_env) {
   shinytest_file <- migrate__validate_shinytest_exists()
+  app_info_env$shinytest_runner_file <- shinytest_file
   exprs <- parse(file = shinytest_file)
-  file_env <- new.env(parent = globalenv())
 
-  # TODO-future; Make this recursive and quit once we find the first `shinytest::testApp`
-  for (expr in exprs) {
-    expr_fn <- as.character(expr[[1]])
-    if (expr_fn == "expect_pass") {
-      expr <- expr[[2]]
-      expr_fn <- as.character(expr[[1]])
-    }
-    if (expr_fn[[1]] %in% c("::", ":::")) {
-      if (expr_fn[[2]] != "shinytest") next
-      expr_fn <- expr_fn[[3]]
-    }
-    if (expr_fn != "testApp") next
-
-    # Is `testApp` function!
-
-    # Get standardised arguments
-    test_call_args <- rlang::call_args(rlang::call_match(expr, shinytest::testApp))
-    if (fs::path_rel(test_call_args$appDir) != "..") {
-      abort(paste0(
-        "shinytest::testApp() must be called on the parent directory.\n",
-        "{shinytest2} does not know how to automatically migrate this app."
-      ))
-    }
-    # Store knowledge
-    app_info_env$test_names <-
-      shinytest___find_tests("tests/shinytest", test_call_args$testnames)
-    # Eventually always set the variant to the suffix to allow for $expect_screenshot() to work
-    app_info_env$suffix <- test_call_args$suffix
-    app_info_env$compare_images <- test_call_args$compareImages %||% TRUE
-
-    # Nothing else to find. Quit early
-    return()
+  testapp_args <- migrate__find_shinytest_testapp(exprs, app_info_env)
+  if (is.null(testapp_args)) {
+    rlang::abort(c(
+      paste0("No `shinytest::testApp()` call found in file: ", shinytest_file)
+    ))
   }
+  if (fs::path_rel(testapp_args$appDir) != ".") {
+    abort(paste0(
+      "shinytest::testApp() must be called on the parent App directory (`appDir = \"..\"`).\n",
+      "{shinytest2} does not know how to automatically migrate this app."
+    ))
+  }
+  # Store knowledge
+  tryCatch(
+    testnames <- eval(testapp_args$testnames, envir = globalenv()),
+    error = function(e) {
+      rlang::abort("Could not use variables for `testnames` in `shinytest::testApp()`. Only atomic values are supported.")
+    }
+  )
+  app_info_env$testnames <-
+    shinytest___find_tests("tests/shinytest", testnames)
+  # Eventually always set the variant to the suffix
+  # to allow for $expect_screenshot() to work
+  app_info_env$suffix <- testapp_args$suffix
+  app_info_env$compare_images <- testapp_args$compareImages %||% TRUE
+  invisible()
 }
 
 # Save a new shinytest2 runner file
@@ -116,47 +208,128 @@ migrate__write_shinytest2_runner <- function(app_info_env) {
 
 
 migrate__parse_test_files <- function(app_info_env) {
-  # test_names <- app_info_env$test_names
-  # suffix <- app_info_env$suffix
-  # compare_images <- app_info_env$compare_images
-  # call <- app_info_env$call
   if (app_info_env$verbose) {
-    rlang::inform(c("i" = paste0("`suffix` found: ", rlang::maybe_missing(app_info_env$suffix, ""))))
-    rlang::inform(c("i" = paste0("`testnames` found: ", paste0(app_info_env$test_names, collapse = ", "))))
+    rlang::inform(c(
+      "i" = paste0("`suffix`: '", app_info_env$suffix, "'"),
+      "i" = paste0("`compareImages`: ", app_info_env$compare_images),
+      "i" = paste0("`testnames`: ", paste0(app_info_env$testnames, collapse = ", "))
+    ))
   }
 
-  lapply(app_info_env$test_names, function(test_name) {
-    test_path <- file.path("tests/shinytest", test_name)
-    migrate__parse_test_file(test_path, app_info_env)
-  })
+  lapply(app_info_env$testnames, function(testname) {
+    test_path <- file.path("tests/shinytest", testname)
+    # Reset the environment for the next file by removing flags / prior file knowledge
+    info_env <- migrate__reset_info_env(app_info_env)
 
+    migrate__parse_test_file(test_path, info_env)
+    migrate__expected_files(test_path, info_env)
+  })
 }
 
 migrate__reset_info_env <- function(app_info_env) {
-  rm(
-    c(
-      "test_path",
-      "save_path",
-      "app_var",
-      "name",
-      "screenshot_snapshot_init",
-      "match_found"
-      # Not `take_screenshot`; We want this value to persist
-    ),
-    envir = app_info_env
-  )
+  for (key in c(
+    "test_path",
+    "save_path",
+    "app_var",
+    "name",
+    "screenshot_snapshot_init",
+    "match_found",
+    # Not `take_screenshot`; We want this value to persist
+    NULL
+  )) {
+    if (exists(key, envir = app_info_env, inherits = FALSE)) {
+      rm(list = key, envir = app_info_env, inherits = FALSE)
+    }
+  }
   app_info_env
 }
 
-migrate__parse_test_file <- function(test_path, app_info_env) {
-  if (app_info_env$verbose) {
-    rlang::inform(c("i" = paste0("Migrating test", test_path)))
+migrate__testthat_chunk <- function(title, body_txts) {
+
+  # TODO-future; better regex! to add indents and trim blank lines
+  indented_body_texts <-
+    gsub("(^|\n)", "\\1  ", body_txts)
+  # Remove tailing whitespace that was just added
+  # odd pairs
+  indented_body_texts <-
+    gsub("\n  \n", "\n\n", indented_body_texts)
+  # even pairs
+  indented_body_texts <-
+    gsub("\n  \n", "\n\n", indented_body_texts)
+
+  paste0(
+    "library(shinytest2)\n",
+    "\n",
+    "test_that(\"", title, "\", {\n",
+      paste0(indented_body_texts, collapse = "\n"), "\n",
+    "}\n"
+  )
+}
+
+
+# `info_env$name` is name of output folder
+# `info_env$suffix` is variant used in output folder name
+migrate__expected_files <- function(test_path, info_env) {
+
+  # IDK if EXTRA should be replaced or prepended
+
+  # Find all expected folders in shinytest folder with matching `name` prefix
+  # Copy contents
+  # * from `tests/shinytest/NAME-expected[-SUFFIX]/XXX.json`
+  # * to   `tests/testthat/_snaps/[SUFFIX/]NAME/XXX.json`
+
+  shinytest_dirs <- list.dirs(
+    "tests/shinytest",
+    full.names = TRUE,
+    recursive = FALSE
+  )
+  shinytest_dirs <- shinytest_dirs[grepl("-expected", fs::path_file(shinytest_dirs), fixed = TRUE)]
+  if (info_env$verbose) {
+    rlang::inform(c(
+      i = "Migrating expected files from `tests/shinytest` to `tests/testthat`"
+    ))
   }
 
-  # Reset the environment for the next file by removing flags / prior file knowledge
-  info_env <- migrate__reset_info_env(app_info_env)
+  lapply(shinytest_dirs, function(shinytest_dir) {
+    if (info_env$verbose) rlang::inform(c("*" = shinytest_dir))
+    shinytest_folder <- fs::path_file(shinytest_dir)
+
+    testthat_path <- fs::path("tests", "testthat", "_snaps")
+    if (grepl("-expected-", shinytest_folder)) {
+      suffix_path <- strsplit(shinytest_folder, "-expected-")[[1]][[2]]
+      testthat_path <- fs::path(testthat_path, suffix_path)
+    }
+    test_name <- strsplit(shinytest_folder, "-expected")[[1]][[1]]
+    testthat_path <- fs::path(testthat_path, test_name)
+    # Make sure destination exists
+    fs::dir_create(testthat_path)
+
+    shinytest_files <- dir(shinytest_dir, full.names = TRUE)
+    fs::file_copy(
+      # `tests/shinytest/NAME-expected[-SUFFIX]/XXX.json`
+      shinytest_files,
+      # `tests/testthat/_snaps/[SUFFIX/]NAME/XXX.json`
+      fs::path(
+        testthat_path,
+        fs::path_file(shinytest_files)
+      ),
+      overwrite = TRUE
+    )
+  })
+}
+
+
+
+
+migrate__parse_test_file <- function(test_path, info_env) {
+  if (info_env$verbose) {
+    rlang::inform(c("i" = paste0("Migrating test: ", test_path)))
+  }
+
   info_env$test_path <- test_path
-  info_env$save_path <- fs::path("tests", "testthat", paste0("test-", fs::path_file(test_path)))
+  info_env$from_file <- fs::path_file(test_path)
+  info_env$save_path <-
+    fs::path("tests", "testthat", paste0("test-", info_env$from_file))
 
   test_text <- read_utf8(test_path)
   migrated_text <- migrate__parse_test_text(test_text, test_path, info_env)
@@ -172,10 +345,15 @@ migrate__parse_test_file <- function(test_path, app_info_env) {
     return()
   }
 
-  if (app_info_env$verbose) {
+  if (info_env$verbose) {
     rlang::inform(c(i = paste0("Writing: ", info_env$save_path)))
   }
-  write_utf8(migrated_text, info_env$save_path)
+  testthat_text <- migrate__testthat_chunk(
+    title = paste0("Migrated shinytest test: ", info_env$from_file),
+    body_txts = migrated_text
+  )
+  fs::dir_create(fs::path_dir(info_env$save_path))
+  write_utf8(testthat_text, info_env$save_path)
 }
 
 migrate__parse_test_text <- function(test_text, test_path, info_env) {
@@ -185,17 +363,13 @@ migrate__parse_test_text <- function(test_text, test_path, info_env) {
     return(character(0))
   }
 
-  # Extract the app variable name
-  # TODO-barret; use regex? Or use a parser?
-  # TODO-barret-answer; Use regex to help with line support
-  matches <- gregexpr('(^|\\n)\\s*(?<app>[^\\s]+)\\s*(=|<-)\\s*ShinyDriver\\$new', test_text, perl = TRUE)[[1]]
-  if (length(matches) == 0) abort(paste0("Can not find `ShinyDriver$new` in test file: ", test_path))
+  init_infos <- migrate__find_shinydriver_new(parse(text = test_text), info_env)
+  if (length(init_infos) == 0) abort(paste0("Can not find `ShinyDriver$new` in test file: ", test_path))
   # TODO-future; split the code into parts and recurse
-  if (length(matches) > 1) abort(paste0("Can not migrate file that contains multiple calls to `ShinyDriver$new`: ", test_path))
-  app_txt_start <- attr(matches, "capture.start")[1, "app"]
-  app_txt_len <- attr(matches, "capture.length")[1, "app"]
-  app_var <- substr(test_text, app_txt_start, app_txt_start + app_txt_len - 1)
-  info_env$app_var <- app_var
+  if (length(init_infos) > 1) abort(paste0("Can not migrate file that contains multiple calls to `ShinyDriver$new`: ", test_path))
+  info_env$app_var <- init_infos[[1]]$app_var
+  info_env$init_args <- init_infos[[1]]$args
+
 
   ## Depending on the methods called (ex: $snapshotInit()),
   ## AppDriver$new will have different arg values
@@ -208,14 +382,22 @@ migrate__parse_test_text <- function(test_text, test_path, info_env) {
   # At this point, we know the variable name being used and
   # can use that information to very quickly update the content
   # Ex: `app$setInputs(foo = app$getValues())` -> `app$set_inputs(new_foo = app$get_values())`
-  migrated_text <- migrate__algo_2(test_text, info_env)
-  migrated_lines <- strsplit(migrated_text, "\n")[[1]]
+  migrated_text <- migrate__algo_2(test_text, migrate__shinytest_lang, info_env)
+  # migrated_lines <- strsplit(migrated_text, "\n")[[1]]
+
+  txt <- migrate__algo_2(migrated_text, migrate__driver_new, info_env)
+  return(txt)
+
+
+
+  # TODO-barret; parse this code rather than using grep
   init_line <- which(grepl("^[^#]*ShinyDriver\\$new\\s*\\(", migrated_lines, fixed = FALSE))
   parsed_info <- parse_next_expr(migrated_lines[seq(from = init_line, to = length(migrated_lines))])
 
-  parsed_expr_text <- get_each_expr_text(
+  parsed_expr_text <- for_each_expr_text(
     parsed_info$exprs,
-    migrate__driver_init, info_env
+    migrate__driver_init,
+    info_env
   )
   # Remove the previous init code
   migrated_lines <- migrated_lines[-1 * seq(from = init_line, by = 1, length.out = parsed_info$n)]
@@ -226,70 +408,59 @@ migrate__parse_test_text <- function(test_text, test_path, info_env) {
   paste0(migrated_lines, collapse = "\n")
 }
 
-migrate__driver_init <- function(expr, info_env) {
-  expr_list <- as.list(expr)
-  complete <- force
-  if (as.character(expr_list[[1]]) %in% c("<-", "=")) {
-    expr_name <- expr_list[[2]]
-    complete <- function(ex) {
-      rlang::call2("<-", expr_name, ex)
+migrate__driver_new <- function(expr, info_env) {
+
+  post_fn <- function(expr_list, ...) {
+    if (!is_driver_init(expr_list)) {
+      return(as.call(expr_list))
     }
-    expr_list <- as.list(expr_list[[3]])
-  }
+    expr_args <-
+      rlang::call_args(rlang::call_match(
+        as.call(expr_list),
+        shinytest::ShinyDriver$public_methods$initialize,
+        defaults = FALSE
+      ))
+    expr_args_names <- names(expr_args)
 
-  if (st2_expr_text(expr_list[[1]]) != "ShinyDriver$new") {
-    return(expr)
-  }
-  expr_args <-
-    rlang::call_args(rlang::call_match(
-      as.call(expr_list),
-      shinytest::ShinyDriver$public_methods$initialize,
-      defaults = FALSE
-    ))
-  expr_args_names <- names(expr_args)
-
-  init_args <- list()
-  if ("path" %in% expr_args_names) {
-    if (fs::path_rel(expr_args$path) != "../..")
-    init_args[[1]] <- expr_args$path
-  }
-  init_args$variant <- rlang::maybe_missing(info_env$suffix, NULL)
-  if (!is.null(info_env$name)) {
-    init_args$name <- info_env$name
-  }
-  # if (!is.null(info_env$screenshot)) {
-  #   if (is_false(info_env$screenshot)) {
-  #     init_args$screenshot_args <- FALSE
-  #   }
-  # }
-  for (name_info in list(
-    list(from = "loadTimeout", to = "load_timeout"),
-    list(from = "checkNames", to = "check_names"),
-    list(from = "seed", to = "seed"),
-    list(from = "cleanLogs", to = "clean_logs"),
-    list(from = "shinyOptions", to = "shiny_args"),
-    list(from = "renderArgs", to = "render_args"),
-    list(from = "options", to = "options")
-  )) {
-    if (name_info$from %in% expr_args_names) {
-      init_args[[name_info$to]] <- expr_args[[name_info$from]]
+    init_args <- list()
+    if ("path" %in% expr_args_names) {
+      if (fs::path_rel(expr_args$path) != "../..")
+      init_args[[1]] <- expr_args$path
     }
-  }
-  if ("debug" %in% expr_args_names) {
-    rlang::inform("`ShinyDriver$new(debug=)` is not supported by `AppDriver`. All debugging messages are always recorded.")
-  }
-  if ("phantomTimeout" %in% expr_args_names) {
-    rlang::inform("`ShinyDriver$new(phantomTimeout=)` is not supported by `AppDriver`. `{chromote}` does not have a timeout parameter.")
+    init_args$variant <- rlang::maybe_missing(info_env$suffix, NULL)
+    for (name_info in list(
+      list(from = "loadTimeout", to = "load_timeout"),
+      list(from = "checkNames", to = "check_names"),
+      list(from = "seed", to = "seed"),
+      list(from = "cleanLogs", to = "clean_logs"),
+      list(from = "shinyOptions", to = "shiny_args"),
+      list(from = "renderArgs", to = "render_args"),
+      list(from = "options", to = "options")
+    )) {
+      if (name_info$from %in% expr_args_names) {
+        init_args[[name_info$to]] <- expr_args[[name_info$from]]
+      }
+    }
+    if ("debug" %in% expr_args_names) {
+      if (info_env$verbose) rlang::inform("`ShinyDriver$new(debug=)` is not supported by `AppDriver`. All debugging messages are always recorded.")
+    }
+    if ("phantomTimeout" %in% expr_args_names) {
+      if (info_env$verbose) rlang::inform("`ShinyDriver$new(phantomTimeout=)` is not supported by `AppDriver`. `{chromote}` does not have a timeout parameter.")
+    }
+
+    ret_expr <- rlang::call2(
+      rlang::expr(AppDriver$new),
+      !!!init_args
+    )
+
+    # Signify that a match was found for migrate__recurse_expr
+    info_env$match_found <- TRUE
+    # Return upgraded expr
+    ret_expr
   }
 
-  ret_expr <- rlang::call2(
-    rlang::expr(AppDriver$new),
-    !!!init_args
-  )
-  complete(ret_expr)
+  migrate__recurse_expr(expr, post_fn = post_fn)
 }
-
-
 
 # Copy over code to avoid being hosed down the road
 shinytest___find_tests <- function (tests_dir, testnames = NULL){
@@ -361,7 +532,7 @@ parse_next_expr <- function(texts) {
 #        Standardise the call to extract the arguments
 #        Replace it with updated call
 #      Write the updated line
-migrate__algo_2 <- function(test_text, info_env) {
+migrate__algo_2 <- function(test_text, expr_fn, info_env) {
   test_lines <- strsplit(test_text, "\n")[[1]]
   test_lines_len <- length(test_lines)
   ret <- NULL
@@ -378,12 +549,10 @@ migrate__algo_2 <- function(test_text, info_env) {
       ret[length(ret) + 1] <- lines
     } else {
       info_env$match_found <- FALSE
-      expr_texts <- get_each_expr_text(
+      expr_texts <- for_each_expr_text(
         exprs,
-        migrate__shinytest_lang,
-        info_env,
-        # Use a flag to declare if a match is found in the parsed line
-        is_top_level = TRUE
+        expr_fn,
+        info_env
       )
       # If no match is found, return the original text
       ret <- append(
@@ -402,7 +571,59 @@ migrate__algo_2 <- function(test_text, info_env) {
 
 
 
-migrate__shinytest_lang <- function(expr, info_env, is_top_level = FALSE) {
+# migrate__shinytest_lang <- function(expr, info_env, is_top_level = FALSE) {
+#   shinytest_lang_is_fn <- function(expr_list) {
+#     expr_fn <- expr_list[[1]]
+
+#     is.language(expr_fn) &&
+#       length(expr_fn) >= 3 &&
+#       expr_fn[[1]] == "$" &&
+#       expr_fn[[2]] == info_env$app_var
+#   }
+
+#   if (!is.language(expr)) {
+#     return(expr)
+#   }
+#   expr_list <- as.list(expr)
+
+#   if (
+#     # Return early if it is a single item
+#     length(expr_list) == 1 &&
+#     # Make sure not something like `app$getAllValues()`
+#     is.language(expr_list[[1]]) &&
+#     length(expr_list[[1]]) == 1
+#   ) {
+#     return(expr)
+#   }
+#   # # Some methods return a list of values
+#   # new_expr_list <- list()
+#   # for (expr_list_item in expr_list) {
+#   #   new_expr_list <- append(
+#   #     new_expr_list,
+#   #     migrate__shinytest_lang(expr_list[[i]], info_env, is_top_level = FALSE)
+#   #   )
+#   # }
+#   for (i in seq_len(length(expr_list))) {
+#     expr_list[[i]] <-
+#       migrate__shinytest_lang(expr_list[[i]], info_env, is_top_level = FALSE)
+#   }
+
+#   if (!shinytest_lang_is_fn(expr_list)) {
+#     return(
+#       # Reconstruct language call
+#       rlang::call2(expr_list[[1]], !!!expr_list[-1])
+#     )
+#   }
+
+#   # By being after the for-loop, it alters from the leaf to the trunk
+#   # Mark that a match was found
+#   info_env$match_found <- TRUE
+#   # Match against known function names in expr_list[[3]]
+#   matched_expr <- match_shinytest_expr(expr_list, is_top_level, info_env)
+#   matched_expr
+# }
+
+migrate__shinytest_lang <- function(expr, info_env) {
   shinytest_lang_is_fn <- function(expr_list) {
     expr_fn <- expr_list[[1]]
 
@@ -412,47 +633,55 @@ migrate__shinytest_lang <- function(expr, info_env, is_top_level = FALSE) {
       expr_fn[[2]] == info_env$app_var
   }
 
-  if (!is.language(expr)) {
-    return(expr)
-  }
-  expr_list <- as.list(expr)
+  post_fn <- function(expr_list, is_top_level) {
+    if (!shinytest_lang_is_fn(expr_list)) {
+      return(
+        # Reconstruct language call
+        rlang::call2(expr_list[[1]], !!!expr_list[-1])
+      )
+    }
 
-  if (
-    # Return early if it is a single item
-    length(expr_list) == 1 &&
-    # Make sure not something like `app$getAllValues()`
-    is.language(expr_list[[1]]) &&
-    length(expr_list[[1]]) == 1
-  ) {
-    return(expr)
+    # Mark that a match was found
+    info_env$match_found <- TRUE
+    # Match against known function names in expr_list[[3]]
+    matched_expr <- match_shinytest_expr(expr_list, is_top_level, info_env)
+    matched_expr
   }
-  # # Some methods return a list of values
-  # new_expr_list <- list()
-  # for (expr_list_item in expr_list) {
-  #   new_expr_list <- append(
-  #     new_expr_list,
-  #     migrate__shinytest_lang(expr_list[[i]], info_env, is_top_level = FALSE)
-  #   )
-  # }
-  for (i in seq_len(length(expr_list))) {
-    expr_list[[i]] <-
-      migrate__shinytest_lang(expr_list[[i]], info_env, is_top_level = FALSE)
-  }
-
-  if (!shinytest_lang_is_fn(expr_list)) {
-    return(
-      # Reconstruct language call
-      rlang::call2(expr_list[[1]], !!!expr_list[-1])
-    )
-  }
-
-  # By being after the for-loop, it alters from the leaf to the trunk
-  # Mark that a match was found
-  info_env$match_found <- TRUE
-  # Match against known function names in expr_list[[3]]
-  matched_expr <- match_shinytest_expr(expr_list, is_top_level, info_env)
-  matched_expr
+  migrate__recurse_expr(expr, post_fn = post_fn)
 }
+
+
+migrate__recurse_expr <- function(expr, post_fn) {
+  migrate__recurse_expr_ <- function(expr, post_fn, is_top_level = FALSE) {
+    if (!is.language(expr)) {
+      return(expr)
+    }
+    expr_list <- as.list(expr)
+
+    if (
+      # Return early if it is a single item
+      length(expr_list) == 1 &&
+      # Make sure not something like `app$getAllValues()`
+      is.language(expr_list[[1]]) &&
+      length(expr_list[[1]]) == 1
+    ) {
+      return(expr)
+    }
+    for (i in seq_len(length(expr_list))) {
+      expr_list[[i]] <-
+        migrate__recurse_expr_(expr_list[[i]], post_fn, is_top_level = FALSE)
+    }
+
+    # By being after the for-loop, it alters from the leaf to the trunk
+    post_fn(expr_list, is_top_level)
+  }
+  # Shim `is_top_level = TRUE`
+  migrate__recurse_expr_(expr = expr, post_fn = post_fn, is_top_level = TRUE)
+}
+
+
+
+
 
 
 match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
@@ -506,8 +735,8 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     abort_if_not_character(iotype, fn_name, "iotype")
     match.arg(iotype, types)
   }
-  inform_js <- function(fn_name, arg_name) {
-    rlang::inform(c(
+  inform_js <- function(fn_name, arg_name, info_env) {
+    if (info_env$verbose) rlang::inform(c(
       i = paste0("`ShinyDriver$", fn_name, "(", arg_name, "=)` would automatically return the last value. `AppDriver`'s `ChromoteSession` does not auto return the last value.",
       "x" = "Please add JavaScript `return` statements appropriately.")
     ))
@@ -520,11 +749,11 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       if ("allowInputNoBinding_" %in% matched_args_names) {
         names(matched_args)[matched_args_names == "allowInputNoBinding_"] <- "allow_input_no_binding_"
       }
-      if (!is_top_level) {
-        # Yell about removed functionality
-        if (!is_false(matched_args[["values_"]] %||% TRUE)) {
-          rlang::abort("`ShinyDriver$setInputs(values_=)` is no longer supported. Use `AppDriver$get_values()` directly. (This message was thrown because `ShinyDriver$setInputs()`'s result is possibly used.)")
-        }
+      # Yell about removed functionality
+      if (
+        !is_top_level || isTRUE(matched_args[["values_"]])
+      ) {
+        rlang::abort("`ShinyDriver$setInputs(values_=)` is no longer supported. Use `AppDriver$get_values()` directly. (This message was thrown because `ShinyDriver$setInputs()`'s result is possibly used.)")
       }
       matched_args$values_ <- NULL
 
@@ -547,7 +776,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       shinytest2_expr("click", fn_args)
     },
     "executeScript" = {
-      inform_js("executeScript", "script")
+      inform_js("executeScript", "script", info_env)
 
       matched_args <- match_shinytest_args("executeScript")
       script <- matched_args$script
@@ -577,7 +806,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
         ))
       }
       if (iotype == "auto") {
-        rlang::inform(c(
+        if (info_env$verbose) rlang::inform(c(
           "!" = "`ShinyDriver$expectUpdate(iotype=)` is set to `\"auto\"`; Using `iotype = \"input\"`."
         ))
         iotype <- "input"
@@ -661,7 +890,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     },
 
     "enableDebugLogMessages" = {
-      rlang::inform(c(
+      if (info_env$verbose) rlang::inform(c(
         i = "`ShinyDriver$enableDebugLogMessages()` is not implemented in `AppDriver`. All debug messages are always recorded in {shinytest2}.",
         "!" = "Removing call to `ShinyDriver$enableDebugLogMessages()`"
       ))
@@ -697,7 +926,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     },
 
     "getValue" = {
-      rlang::inform(c(
+      if (info_env$verbose) rlang::inform(c(
         i = "`ShinyDriver$getValue()` is not implemented in `AppDriver`. It relied on invasive Shiny logic.",
         "!" = "Replacing this with a generic call to `AppDriver$get_values()`"
       ))
@@ -705,7 +934,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       matched_args <- match_shinytest_args("getValue")
       iotype <- iotype_arg(matched_args, "getValue")
       if (iotype == "auto") {
-        rlang::inform(c(
+        if (info_env$verbose) rlang::inform(c(
           "!" = "`ShinyDriver$getValue(iotype=)` is set to `\"auto\"`; Using `output` as a guess."
         ))
         iotype <- "output"
@@ -726,12 +955,12 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
           "`ShinyDriver$setValue(iotype=)` is set to `\"output\"`; {shinytest2} does not support setting output values directly."
         )
       }
-      rlang::inform(c(
+      if (info_env$verbose) rlang::inform(c(
         i = "`ShinyDriver$setValue()` is not implemented in `AppDriver`. It relied on invasive Shiny logic.",
         "!" = "Replacing this with a call to `AppDriver$set_inputs()`"
       ))
       if (iotype == "auto") {
-        rlang::inform(c(
+        if (info_env$verbose) rlang::inform(c(
           "!" = "`ShinyDriver$setValue(iotype=)` is set to `\"auto\"`; Using `input` as a guess."
         ))
         iotype <- "input"
@@ -794,8 +1023,8 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     },
 
     "snapshotInit" = {
-      rlang::inform(c(
-        i = "`ShinyDriver$snapshotInit()` is not implemented in `AppDriver`.",
+      if (info_env$verbose) rlang::inform(c(
+        "*" = "`ShinyDriver$snapshotInit()` is not implemented in `AppDriver`.",
         "*" = "`ShinyDriver$snapshotInit(path=)` will become `AppDriver$initialize(name=)`",
         "*" = "`ShinyDriver$snapshotInit(screenshot=)` will help determine if `AppDriver$expect_screenshot()` will be provided alongside `AppDriver$expect_values()` when replacing `ShinyDriver$snapshot()`"
       ))
@@ -837,39 +1066,27 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       }
 
       # Preference value:
-      # 0. If exists, User preference value
+      # -1. If exists, User preference value
       # 0. If exists, Prior user prompt value
-      # 1. FALSE if compareImages == FALSE
-      # 2. FALSE if args$screenshot == FALSE
-      # 3. FALSE if snapshotInitArgs$screenshot == FALSE
+      # 1. FALSE, if `compareImages == FALSE``
+      # 2. If exists, `old$snapshot(screenshot=)`
+      # 3. If exists, `old$snapshotInit(screenshot=)`
       # 4. User prompt value
       take_screenshot <- local({
+        # -1. If exists, User preference value
         if (!is.null(
           rlang::maybe_missing(info_env$include_expect_screenshot, NULL)
         )) {
           return(info_env$include_expect_screenshot)
         }
 
-        if (!is.null(info_env$take_screenshot)) {
-          return(info_env$take_screenshot)
-        }
+        # 0. If exists, Prior user prompt value
+        if (!is.null(info_env$take_screenshot)) return(info_env$take_screenshot)
 
-        if (
-          is_false(info_env$compare_images) ||
-          is_false(matched_args$screenshot) ||
-          is_false(info_env$screenshot_snapshot_init)
-        ) {
-          return(FALSE)
-        }
-
-        if (
-          isTRUE(matched_args$screenshot) ||
-          isTRUE(info_env$screenshot_snapshot_init)
-          ## Do not use as this is default behavior we want to avoid
-          # isTRUE(info_env$compare_images)
-        ) {
-          return(TRUE)
-        }
+        if (is_false(info_env$compare_images)) return(FALSE)
+        if (!is.null(matched_args$screenshot)) return(isTRUE(matched_args$screenshot))
+        # Could be NULL, FALSE, or TRUE
+        if (!is.null(info_env$screenshot_snapshot_init)) return(info_env$screenshot_snapshot_init)
 
         if (!rlang::is_interactive()) {
           rlang::abort(c(
@@ -960,11 +1177,11 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       # upload_file
       matched_args <- match_shinytest_args("uploadFile")
 
-      if (!is_top_level) {
-        # Yell about removed functionality
-        if (!is_false(matched_args[["values_"]] %||% TRUE)) {
-          rlang::abort("`ShinyDriver$uploadFile(values_=)` is no longer supported. Use `AppDriver$get_values()` directly. (This message was thrown because `ShinyDriver$uploadFile()`'s result is possibly used.)")
-        }
+      # Yell about removed functionality
+      if (
+        !is_top_level || isTRUE(matched_args[["values_"]])
+      ) {
+        rlang::abort("`ShinyDriver$uploadFile(values_=)` is no longer supported. Use `AppDriver$get_values()` directly. (This message was thrown because `ShinyDriver$uploadFile()`'s result is possibly used.)")
       }
       matched_args[["values_"]] <- NULL
 
@@ -973,7 +1190,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
 
     "waitFor" = {
       # wait_for_js
-      inform_js("waitFor", "expr")
+      inform_js("waitFor", "expr", info_env)
       matched_args <- match_shinytest_args("waitForShiny", defaults = TRUE)
 
       fn_args <- list(
@@ -1017,8 +1234,8 @@ st2_expr_text <- function(expr) {
     rlang::expr_text(expr, width = 60L)
   )
 }
-get_each_expr_text <- function(exprs, fn, ...) {
+for_each_expr_text <- function(exprs, expr_fn, ...) {
   unlist(lapply(exprs, function(expr) {
-    st2_expr_text(fn(expr, ...))
+    st2_expr_text(expr_fn(expr, ...))
   }))
 }

@@ -38,10 +38,10 @@ test_that("file contents are converted", {
     1+ 1; 1 +1; 1+1;
 
     # Comment after blank line
-app <- AppDriver$new(variant = paste0("my", "suffix"), name = "mytest",
-  load_timeout = 10 * 1000, check_names = FALSE, seed = 100,
-  clean_logs = TRUE, shiny_args = list(launch.browser = FALSE),
-  render_args = list(quiet = FALSE), options = list(shiny.trace = TRUE))
+app <- AppDriver$new(variant = paste0("my", "suffix"), load_timeout = 10 *
+  1000, check_names = FALSE, seed = 100, clean_logs = TRUE,
+  shiny_args = list(launch.browser = FALSE), render_args = list(quiet = FALSE),
+  options = list(shiny.trace = TRUE))
 
     # Another comment
 app$set_inputs(bins = 8)
@@ -60,13 +60,19 @@ test_that("`$expect_screenshot()` only shows up when `compareImages == TRUE` and
   # No suffix, compare_images = TRUE
   expect_text_migration(
     'app <- ShinyDriver$new("../.."); app$snapshotInit("mytest"); app$snapshot()',
-    'app <- AppDriver$new(name = "mytest")\napp$expect_values()\napp$expect_screenshot()'
+    'app <- AppDriver$new()\napp$expect_values()\napp$expect_screenshot()'
   )
 
   # No suffix, compare_images = TRUE w/ screenshot = FALSE; screenshot wins
   expect_text_migration(
     'app <- ShinyDriver$new("../.."); app$snapshotInit("mytest", screenshot = FALSE); app$snapshot()',
-    'app <- AppDriver$new(name = "mytest")\napp$expect_values()'
+    'app <- AppDriver$new()\napp$expect_values()'
+  )
+
+  # No suffix, compare_images = TRUE w/ screenshot = FALSE; screenshot wins
+  expect_text_migration(
+    'app <- ShinyDriver$new("../.."); app$snapshotInit("mytest", screenshot = FALSE); app$snapshot(screenshot = TRUE)',
+    'app <- AppDriver$new()\napp$expect_values()\napp$expect_screenshot()'
   )
 
   # Custom path, compare_images = FALSE
@@ -79,7 +85,7 @@ test_that("`$expect_screenshot()` only shows up when `compareImages == TRUE` and
   # compare_images = FALSE w/ screenshot = TRUE; compare_images wins
   expect_text_migration(
     'app <- ShinyDriver$new("../.."); app$snapshotInit("mytest", screenshot = TRUE); app$snapshot()',
-    'app <- AppDriver$new(name = "mytest")\napp$expect_values()',
+    'app <- AppDriver$new()\napp$expect_values()',
     suffix = NULL, compare_images = FALSE
   )
 })

@@ -17,7 +17,7 @@ expect_migration <- function(
   ...,
   fixed = TRUE,
   enexpr_new_expr = TRUE,
-  info_env = make_info_env()
+  info_env = make_info_env(verbose = !is.na(message))
 ) {
   expect_msg_helper(
     migrated_expr <-
@@ -73,14 +73,17 @@ test_that("setInputs is converted", {
   #   app$set_inputs(x = 1, y = 2, allow_input_no_binding_ = TRUE)
   # )
   expect_migration_error(
-    app$setInputs(x = 1, allowInputNoBinding_ = TRUE, y = 2),
+    app <- app$setInputs(x = 1, allowInputNoBinding_ = TRUE, y = 2),
+    "Use `AppDriver$get_values()` directly."
+  )
+  expect_migration_error(
+    local({app$setInputs(x = 1, allowInputNoBinding_ = TRUE, y = 2)}),
     "Use `AppDriver$get_values()` directly."
   )
 
   expect_migration_error(
     app$setInputs(x = 1),
-    # NA
-    "Use `AppDriver$get_values()` directly."
+    NA
   )
   expect_migration_error(
     app$setInputs(x = 1, values_ = FALSE),
@@ -449,10 +452,18 @@ test_that("takeScreenshot is converted", {
 
 test_that("takeScreenshot is converted", {
   expect_migration_error(
-    app$uploadFile(myid = "file.png"),
-    # app$upload_file(myid = "file.png")
+    app <- app$uploadFile(myid = "file.png"),
     "Use `AppDriver$get_values()` directly"
   )
+  expect_migration_error(
+    local({app$uploadFile(myid = "file.png")}),
+    "Use `AppDriver$get_values()` directly"
+  )
+  expect_migration(
+    app$uploadFile(myid = "file.png"),
+    app$upload_file(myid = "file.png")
+  )
+
   expect_migration(
     app$uploadFile(timeout_ = 2, myid = "file.png", wait_ = FALSE, values_ = FALSE),
     app$upload_file(myid = "file.png", wait_ = FALSE, timeout_ = 2)
