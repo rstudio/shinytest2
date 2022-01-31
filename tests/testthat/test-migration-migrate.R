@@ -1,3 +1,7 @@
+# Too many possibilities for tests to randomly fail (e.g. file paths on windows, etc.)
+# The other test files cover this fairly well. CI is good enough
+skip_on_cran()
+
 
 expect_migration <- function(test_app_folder, ...) {
   original_path <- testthat::test_path(test_app_folder)
