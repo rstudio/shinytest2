@@ -19,4 +19,4 @@ test_that("Migrated shinytest test: barret.R", {
   app$set_inputs(bins = 5)
   app$set_inputs(bins = 22)
   app$expect_values()
-}
+})

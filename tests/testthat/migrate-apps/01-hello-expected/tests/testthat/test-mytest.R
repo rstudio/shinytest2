@@ -20,4 +20,4 @@ test_that("Migrated shinytest test: mytest.R", {
   app$set_inputs(bins = 22)
   # Only values
   app$expect_values()
-}
+})

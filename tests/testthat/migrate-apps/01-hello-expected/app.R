@@ -27,7 +27,7 @@ ui <- fluidPage(
     mainPanel(
 
       # Output: Histogram ----
-      plotOutput(outputId = "distPlot")
+      plotOutput(outputId = "dist")
 
     )
   )
@@ -42,7 +42,7 @@ server <- function(input, output, session) {
     seq(min(x), max(x), length.out = input$bins + 1)
   })
 
-  output$distPlot <- renderPlot({
+  output$dist <- renderPlot({
 
     hist(x, breaks = bins(), col = "#75AADB", border = "white",
          xlab = "Waiting time to next eruption (in mins)",

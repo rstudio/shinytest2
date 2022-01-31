@@ -12,8 +12,10 @@
 #'
 #' @param path Path to the test directory or Shiny Rmd file
 #' @param ... Must be empty. Allows for parameter expansion.
-#' @param include_expected_screenshot If `TRUE`, `ShinyDriver$snapshot()` will turn into both `AppDriver$expect_values()` and `AppDriver$expect_screenshot()`. If `FALSE`, `ShinyDriver$snapshot()` will only turn into `AppDriver$expect_values()`. If missing, `include_expected_screenshot` will behave as `FALSE` if `shinytest::testApp(compareImages = FALSE)` or `ShinyDriver$snapshotInit(screenshot = FALSE)` is called.
-#' @return
+#' @param clean If TRUE, then the shinytest test directory and runner will be deleted after the migration to use \pkg{shinytest2}.
+#' @param include_expect_screenshot If `TRUE`, `ShinyDriver$snapshot()` will turn into both `AppDriver$expect_values()` and `AppDriver$expect_screenshot()`. If `FALSE`, `ShinyDriver$snapshot()` will only turn into `AppDriver$expect_values()`. If missing, `include_expect_screenshot` will behave as `FALSE` if `shinytest::testApp(compareImages = FALSE)` or `ShinyDriver$snapshotInit(screenshot = FALSE)` is called.
+#' @param quiet Logical that determines if migration information and steps should be printed to the console.
+#' @return Invisible `TRUE`
 migrate <- function(
   path,
   ...,
@@ -32,16 +34,16 @@ migrate <- function(
 
   if (app_info_env$verbose) rlang::inform(c(i = paste0("Temp working directory: ", path_info$dir)))
   withr::with_dir(path_info$dir, {
-    migrate__extract_runner_info(app_info_env)
-    migrate__write_shinytest2_runner(app_info_env)
-    migrate__parse_test_files(app_info_env)
-    if (isTRUE(clean)) migrate__remove_shinytest_files(app_info_env)
+    m__extract_runner_info(app_info_env)
+    m__write_shinytest2_runner(app_info_env)
+    m__parse_test_files(app_info_env)
+    if (isTRUE(clean)) m__remove_shinytest_files(app_info_env)
   })
 
   invisible(TRUE)
 }
 
-migrate__remove_shinytest_files <- function(app_info_env) {
+m__remove_shinytest_files <- function(app_info_env) {
 
   files_to_remove <- c(
     app_info_env$shinytest_runner_file,
@@ -62,7 +64,7 @@ migrate__remove_shinytest_files <- function(app_info_env) {
 
 # Make sure all folders exist as expected
 # @return shinytest runner file location
-migrate__validate_shinytest_exists <- function() {
+m__validate_shinytest_exists <- function() {
   if (!fs::dir_exists("tests")) abort("No ./tests directory found")
   shinytest_file <- fs::dir_ls("tests", regexp = "shinytest\\.[rR]$", type = "file")
   if (length(shinytest_file) == 0) abort("No ./tests/shinytest.R file found")
@@ -74,7 +76,7 @@ migrate__validate_shinytest_exists <- function() {
 }
 
 
-migrate__find_shinytest_testapp <- function(exprs, info_env) {
+m__find_shinytest_testapp <- function(exprs, info_env) {
   is_test_app <- function(expr_list) {
     length(expr_list) >= 1 &&
       is.language(expr_list[[1]]) &&
@@ -107,7 +109,7 @@ migrate__find_shinytest_testapp <- function(exprs, info_env) {
   }
   # For all exprs, find a single shinytest::testApp()
   lapply(exprs, function(expr) {
-    migrate__recurse_expr(expr, post_fn = post_fn)
+    m__recurse_expr(expr, post_fn = post_fn)
   })
 
   args
@@ -122,7 +124,7 @@ is_driver_init <- function(expr_list) {
       "shinytest:::ShinyDriver$new"
     )
 }
-migrate__find_shinydriver_new <- function(exprs, info_env) {
+m__find_shinydriver_new <- function(exprs, info_env) {
   is_shinydriver_new_assignment <- function(expr_list) {
     length(expr_list) >= 3 &&
     is.language(expr_list[[1]]) &&
@@ -133,9 +135,8 @@ migrate__find_shinydriver_new <- function(exprs, info_env) {
   ret <- list()
   post_fn <- function(expr_list, is_top_level) {
     if (is_shinydriver_new_assignment(expr_list)) {
-      app_var <<- expr_list[[2]]
-      new_expr_list <- expr_list[[3]]
-      new_args <<- rlang::call_args(
+      app_var <- expr_list[[2]]
+      new_args <- rlang::call_args(
         rlang::call_match(
           as.call(expr_list),
           shinytest::ShinyDriver$public_methods$initialize,
@@ -149,7 +150,7 @@ migrate__find_shinydriver_new <- function(exprs, info_env) {
   }
   # For all exprs, find a single shinytest::testApp()
   lapply(exprs, function(expr) {
-    migrate__recurse_expr(expr, post_fn = post_fn)
+    m__recurse_expr(expr, post_fn = post_fn)
   })
 
   ret
@@ -157,12 +158,12 @@ migrate__find_shinydriver_new <- function(exprs, info_env) {
 
 
 # Extract the runner information, such as `suffix` and a fully populated `testnames`
-migrate__extract_runner_info <- function(app_info_env) {
-  shinytest_file <- migrate__validate_shinytest_exists()
+m__extract_runner_info <- function(app_info_env) {
+  shinytest_file <- m__validate_shinytest_exists()
   app_info_env$shinytest_runner_file <- shinytest_file
   exprs <- parse(file = shinytest_file)
 
-  testapp_args <- migrate__find_shinytest_testapp(exprs, app_info_env)
+  testapp_args <- m__find_shinytest_testapp(exprs, app_info_env)
   if (is.null(testapp_args)) {
     rlang::abort(c(
       paste0("No `shinytest::testApp()` call found in file: ", shinytest_file)
@@ -191,7 +192,7 @@ migrate__extract_runner_info <- function(app_info_env) {
 }
 
 # Save a new shinytest2 runner file
-migrate__write_shinytest2_runner <- function(app_info_env) {
+m__write_shinytest2_runner <- function(app_info_env) {
   if (app_info_env$verbose) {
     if (file.exists("tests/testthat.R")) {
       rlang::inform(c("!" = "Overwriting `tests/testthat.R` with a {shinytest2} test runner"))
@@ -207,7 +208,7 @@ migrate__write_shinytest2_runner <- function(app_info_env) {
 }
 
 
-migrate__parse_test_files <- function(app_info_env) {
+m__parse_test_files <- function(app_info_env) {
   if (app_info_env$verbose) {
     rlang::inform(c(
       "i" = paste0("`suffix`: '", app_info_env$suffix, "'"),
@@ -219,14 +220,14 @@ migrate__parse_test_files <- function(app_info_env) {
   lapply(app_info_env$testnames, function(testname) {
     test_path <- file.path("tests/shinytest", testname)
     # Reset the environment for the next file by removing flags / prior file knowledge
-    info_env <- migrate__reset_info_env(app_info_env)
+    info_env <- m__reset_info_env(app_info_env)
 
-    migrate__parse_test_file(test_path, info_env)
-    migrate__expected_files(test_path, info_env)
+    m__parse_test_file(test_path, info_env)
+    m__expected_files(test_path, info_env)
   })
 }
 
-migrate__reset_info_env <- function(app_info_env) {
+m__reset_info_env <- function(app_info_env) {
   for (key in c(
     "test_path",
     "save_path",
@@ -244,7 +245,7 @@ migrate__reset_info_env <- function(app_info_env) {
   app_info_env
 }
 
-migrate__testthat_chunk <- function(title, body_txts) {
+m__testthat_chunk <- function(title, body_txts) {
 
   # TODO-future; better regex! to add indents and trim blank lines
   indented_body_texts <-
@@ -262,14 +263,14 @@ migrate__testthat_chunk <- function(title, body_txts) {
     "\n",
     "test_that(\"", title, "\", {\n",
       paste0(indented_body_texts, collapse = "\n"), "\n",
-    "}\n"
+    "})\n"
   )
 }
 
 
 # `info_env$name` is name of output folder
 # `info_env$suffix` is variant used in output folder name
-migrate__expected_files <- function(test_path, info_env) {
+m__expected_files <- function(test_path, info_env) {
 
   # IDK if EXTRA should be replaced or prepended
 
@@ -321,7 +322,7 @@ migrate__expected_files <- function(test_path, info_env) {
 
 
 
-migrate__parse_test_file <- function(test_path, info_env) {
+m__parse_test_file <- function(test_path, info_env) {
   if (info_env$verbose) {
     rlang::inform(c("i" = paste0("Migrating test: ", test_path)))
   }
@@ -332,7 +333,7 @@ migrate__parse_test_file <- function(test_path, info_env) {
     fs::path("tests", "testthat", paste0("test-", info_env$from_file))
 
   test_text <- read_utf8(test_path)
-  migrated_text <- migrate__parse_test_text(test_text, test_path, info_env)
+  migrated_text <- m__parse_test_text(test_text, test_path, info_env)
 
   if (length(migrated_text) == 0) {
     # TODO-barret; test this; does it work?
@@ -348,7 +349,7 @@ migrate__parse_test_file <- function(test_path, info_env) {
   if (info_env$verbose) {
     rlang::inform(c(i = paste0("Writing: ", info_env$save_path)))
   }
-  testthat_text <- migrate__testthat_chunk(
+  testthat_text <- m__testthat_chunk(
     title = paste0("Migrated shinytest test: ", info_env$from_file),
     body_txts = migrated_text
   )
@@ -356,14 +357,14 @@ migrate__parse_test_file <- function(test_path, info_env) {
   write_utf8(testthat_text, info_env$save_path)
 }
 
-migrate__parse_test_text <- function(test_text, test_path, info_env) {
+m__parse_test_text <- function(test_text, test_path, info_env) {
   test_lines <- strsplit(test_text, "\n")[[1]]
 
   if (length(test_lines) == 0) {
     return(character(0))
   }
 
-  init_infos <- migrate__find_shinydriver_new(parse(text = test_text), info_env)
+  init_infos <- m__find_shinydriver_new(parse(text = test_text), info_env)
   if (length(init_infos) == 0) abort(paste0("Can not find `ShinyDriver$new` in test file: ", test_path))
   # TODO-future; split the code into parts and recurse
   if (length(init_infos) > 1) abort(paste0("Can not migrate file that contains multiple calls to `ShinyDriver$new`: ", test_path))
@@ -382,33 +383,15 @@ migrate__parse_test_text <- function(test_text, test_path, info_env) {
   # At this point, we know the variable name being used and
   # can use that information to very quickly update the content
   # Ex: `app$setInputs(foo = app$getValues())` -> `app$set_inputs(new_foo = app$get_values())`
-  migrated_text <- migrate__algo_2(test_text, migrate__shinytest_lang, info_env)
+  migrated_text <- m__algo_2(test_text, m__shinytest_lang, info_env)
   # migrated_lines <- strsplit(migrated_text, "\n")[[1]]
 
-  txt <- migrate__algo_2(migrated_text, migrate__driver_new, info_env)
+  # Do a second pass to add back the AppDriver$new() calls.
+  txt <- m__algo_2(migrated_text, m__driver_new, info_env)
   return(txt)
-
-
-
-  # TODO-barret; parse this code rather than using grep
-  init_line <- which(grepl("^[^#]*ShinyDriver\\$new\\s*\\(", migrated_lines, fixed = FALSE))
-  parsed_info <- parse_next_expr(migrated_lines[seq(from = init_line, to = length(migrated_lines))])
-
-  parsed_expr_text <- for_each_expr_text(
-    parsed_info$exprs,
-    migrate__driver_init,
-    info_env
-  )
-  # Remove the previous init code
-  migrated_lines <- migrated_lines[-1 * seq(from = init_line, by = 1, length.out = parsed_info$n)]
-  # Add the new init code
-  migrated_lines <- append(migrated_lines, parsed_expr_text, after = init_line - 1)
-
-  # Return a large string
-  paste0(migrated_lines, collapse = "\n")
 }
 
-migrate__driver_new <- function(expr, info_env) {
+m__driver_new <- function(expr, info_env) {
 
   post_fn <- function(expr_list, ...) {
     if (!is_driver_init(expr_list)) {
@@ -453,17 +436,17 @@ migrate__driver_new <- function(expr, info_env) {
       !!!init_args
     )
 
-    # Signify that a match was found for migrate__recurse_expr
+    # Signify that a match was found for m__recurse_expr
     info_env$match_found <- TRUE
     # Return upgraded expr
     ret_expr
   }
 
-  migrate__recurse_expr(expr, post_fn = post_fn)
+  m__recurse_expr(expr, post_fn = post_fn)
 }
 
 # Copy over code to avoid being hosed down the road
-shinytest___find_tests <- function (tests_dir, testnames = NULL){
+shinytest___find_tests <- function(tests_dir, testnames = NULL) {
   found_testnames <- list.files(tests_dir, pattern = "\\.[rR]$")
   found_testnames_no_ext <- sub("\\.[rR]$", "", found_testnames)
   if (!is.null(testnames)) {
@@ -532,9 +515,8 @@ parse_next_expr <- function(texts) {
 #        Standardise the call to extract the arguments
 #        Replace it with updated call
 #      Write the updated line
-migrate__algo_2 <- function(test_text, expr_fn, info_env) {
+m__algo_2 <- function(test_text, expr_fn, info_env) {
   test_lines <- strsplit(test_text, "\n")[[1]]
-  test_lines_len <- length(test_lines)
   ret <- NULL
   # cur_line <- 1
   while (length(test_lines) > 0) {
@@ -571,7 +553,7 @@ migrate__algo_2 <- function(test_text, expr_fn, info_env) {
 
 
 
-# migrate__shinytest_lang <- function(expr, info_env, is_top_level = FALSE) {
+# m__shinytest_lang <- function(expr, info_env, is_top_level = FALSE) {
 #   shinytest_lang_is_fn <- function(expr_list) {
 #     expr_fn <- expr_list[[1]]
 
@@ -600,12 +582,12 @@ migrate__algo_2 <- function(test_text, expr_fn, info_env) {
 #   # for (expr_list_item in expr_list) {
 #   #   new_expr_list <- append(
 #   #     new_expr_list,
-#   #     migrate__shinytest_lang(expr_list[[i]], info_env, is_top_level = FALSE)
+#   #     m__shinytest_lang(expr_list[[i]], info_env, is_top_level = FALSE)
 #   #   )
 #   # }
 #   for (i in seq_len(length(expr_list))) {
 #     expr_list[[i]] <-
-#       migrate__shinytest_lang(expr_list[[i]], info_env, is_top_level = FALSE)
+#       m__shinytest_lang(expr_list[[i]], info_env, is_top_level = FALSE)
 #   }
 
 #   if (!shinytest_lang_is_fn(expr_list)) {
@@ -623,7 +605,7 @@ migrate__algo_2 <- function(test_text, expr_fn, info_env) {
 #   matched_expr
 # }
 
-migrate__shinytest_lang <- function(expr, info_env) {
+m__shinytest_lang <- function(expr, info_env) {
   shinytest_lang_is_fn <- function(expr_list) {
     expr_fn <- expr_list[[1]]
 
@@ -647,12 +629,12 @@ migrate__shinytest_lang <- function(expr, info_env) {
     matched_expr <- match_shinytest_expr(expr_list, is_top_level, info_env)
     matched_expr
   }
-  migrate__recurse_expr(expr, post_fn = post_fn)
+  m__recurse_expr(expr, post_fn = post_fn)
 }
 
 
-migrate__recurse_expr <- function(expr, post_fn) {
-  migrate__recurse_expr_ <- function(expr, post_fn, is_top_level = FALSE) {
+m__recurse_expr <- function(expr, post_fn) {
+  m__recurse_expr_ <- function(expr, post_fn, is_top_level = FALSE) {
     if (!is.language(expr)) {
       return(expr)
     }
@@ -669,14 +651,14 @@ migrate__recurse_expr <- function(expr, post_fn) {
     }
     for (i in seq_len(length(expr_list))) {
       expr_list[[i]] <-
-        migrate__recurse_expr_(expr_list[[i]], post_fn, is_top_level = FALSE)
+        m__recurse_expr_(expr_list[[i]], post_fn, is_top_level = FALSE)
     }
 
     # By being after the for-loop, it alters from the leaf to the trunk
     post_fn(expr_list, is_top_level)
   }
   # Shim `is_top_level = TRUE`
-  migrate__recurse_expr_(expr = expr, post_fn = post_fn, is_top_level = TRUE)
+  m__recurse_expr_(expr = expr, post_fn = post_fn, is_top_level = TRUE)
 }
 
 
@@ -688,7 +670,6 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
   # message("Found expr!:")
   expr_fn <- expr_list[[1]]
   app_fn_sym <- expr_fn[[3]]
-  expr_args <- expr_list[-1]
 
   # message("expr_fn:"); str(expr_fn)
   # message("expr_args:"); str(expr_args)
@@ -836,8 +817,8 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       # Return full _complicated_ subroutine
       new_expr
     },
-    "findElement" = ,
-    "findElements" = ,
+    "findElement" = , # nolint
+    "findElements" = , # nolint
     "findWidget" = {
       abort(paste0("Please see the `shinytest-migration` vignette for an example on how to convert your `ShinyDriver$", as.character(app_fn_sym), "()` to be {shinytest2} friendly."))
     },
@@ -896,7 +877,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       ))
       NULL
     },
-    "getDebugLog" = ,
+    "getDebugLog" = , # nolint
     "getEventLog" = {
       rlang::inform(c(
         i = paste0("`ShinyDriver$", as.character(app_fn_sym), "()` is not implemented in `AppDriver`."),
@@ -906,8 +887,8 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       shinytest2_expr("get_log", list())
     },
 
-    "getSnapshotDir" = ,
-    "getRelativePathToApp" = ,
+    "getSnapshotDir" = , # nolint
+    "getRelativePathToApp" = , # nolint
     "getTestsDir" = {
       rlang::abort(c(
         i = paste0("`ShinyDriver$", as.character(app_fn_sym), "()` is not implemented in `AppDriver`. {shinytest2} is integrated with {testthat} and `AppDriver` does not support non-standard test file locations."),

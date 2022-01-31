@@ -21,7 +21,7 @@ expect_migration <- function(
 ) {
   expect_msg_helper(
     migrated_expr <-
-      migrate__shinytest_lang(
+      m__shinytest_lang(
         rlang::enexpr(original_expr),
         info_env
       ),
@@ -50,10 +50,9 @@ expect_migration_error <- function(
   fixed = TRUE,
   info_env = make_info_env()
 ) {
-  shinytest_expr <- rlang::enexpr(original_expr)
   expect_msg_helper(
     migrated_expr <-
-      migrate__shinytest_lang(
+      m__shinytest_lang(
         rlang::enexpr(original_expr),
         info_env
       ),

@@ -2,7 +2,7 @@
 #'
 #' @param app A [AppDriver] object, or path to a Shiny
 #'   application.
-#' @param ... Used for parameter expansion
+#' @param ... Must be empty. Allows for parameter expansion.
 #' @param seed A random seed to set before running the app. This seed will also
 #'   be used in the test script.
 #' @param load_timeout Maximum time to wait for the Shiny application to load, in
