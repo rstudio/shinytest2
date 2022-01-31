@@ -2,17 +2,9 @@ app_upload_file <- function(
   self, private,
   ...,
   wait_ = TRUE,
-  values_ = TRUE,
   timeout_ = 3000
 ) {
   ckm8_assert_app_driver(self, private)
-
-  if (values_ && !wait_) {
-    abort(paste0(
-      "values_=TRUE and wait_=FALSE are not compatible.",
-      "Can't return all values without waiting for update."
-    ), app = self)
-  }
 
   inputs <- list2(...)
   if (length(inputs) != 1 || !rlang::is_named(inputs)) {
@@ -53,8 +45,5 @@ app_upload_file <- function(
 
   self$log_message("Finished uploading file")
 
-  if (values_)
-    invisible(self$get_values())
-  else
-    invisible()
+  invisible()
 }

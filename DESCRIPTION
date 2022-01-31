@@ -43,7 +43,9 @@ Suggests:
     png,
     plotly,
     rstudioapi,
-    shinyWidgets
+    shinyWidgets,
+    shinytest,
+    knitr
 Remotes:
     rstudio/chromote,
     r-lib/testthat,
@@ -74,6 +76,7 @@ Collate:
     'chromote_methods.R'
     'expect-snapshot.R'
     'httr.R'
+    'migrate.R'
     'missing-value.R'
     'utils.R'
     'platform.R'
@@ -81,3 +84,4 @@ Collate:
     'save-app.R'
     'shinytest2_logs.R'
     'test-app.R'
+VignetteBuilder: knitr

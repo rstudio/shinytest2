@@ -1,8 +1,7 @@
 test_that("name arg works", {
   app <- AppDriver$new(
     test_path("../../."),
-    variant = NULL,
-    name = "init"
+    variant = NULL
   )
   app$set_inputs(name = "Hadley")
   app$set_inputs(greet = "click")

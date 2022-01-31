@@ -2,8 +2,8 @@ library(shinytest2)
 
 test_that("images are captured via expect_values", {
   app <- AppDriver$new(
-    variant = platform_variant(),
-    name = "values-image"
+    variant = platform_variant()
+    # name = "values-image"
   )
 
   app$click("rawr")

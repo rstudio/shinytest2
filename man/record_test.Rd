@@ -16,7 +16,7 @@ record_test(
 \item{app}{A \link{AppDriver} object, or path to a Shiny
 application.}
 
-\item{...}{Used for parameter expansion}
+\item{...}{Must be empty. Allows for parameter expansion.}
 
 \item{seed}{A random seed to set before running the app. This seed will also
 be used in the test script.}

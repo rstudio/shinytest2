@@ -78,7 +78,7 @@ chromote_eval <- function(
 #'
 #' @param chromote_session A ChromoteSession object
 #' @param script A string containing the script to be evaluated
-#' @param ... Should be empty
+#' @param ... Must be empty. Allows for parameter expansion.
 #' @param eval_args Arguments passed to `chromote_session$Runtime$evaluate`
 #' @param arguments An unnamed list of arguments to be passed into the `script`
 #' @param timeout The maximum time (milliseconds) `chromote_session` will wait for the `script` to resolved

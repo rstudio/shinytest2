@@ -1,0 +1,435 @@
+---
+title: "{shinytest} migration guide"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{\{shinytest\} migration guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(shinytest2)
+```
+
+
+# `{shinytest}` Migration Guide
+
+
+
+
+
+# Code
+
+This section is a comprehensive guide to migrate your `{shinytest}` testing code to the new `{shinytest2}` testing code.
+
+## Methods
+
+* `old$click(name, iotype = c("auto", "input", "output"))`: The parameters have been separated out to be clearer in their intended use: `new$click(input, output, ..., selector)`.
+
+```r
+## Old
+old$click("mybutton")
+old$click("clickcount", iotype = "output")
+old$click("my_id", iotype = "auto")
+
+## New
+new$click("mybutton"); new$click(input = "mybutton")
+new$click(output = "clickcount")
+new$click(selector = "#my_id")
+```
+
+* `old$executeScript(script, ...)`: The `...` must now be supplied to `arguments`. This allows for extra parameters such as `file` which can contain your `script` content or `timeout` which will throw an error if the `timeout` (in milliseconds) is reached before the script returns. Note, all `script`s now require a `return` statement and are executed within a function to be able to access `arguments`. If a promise is returned from the `script` then the `resolve`d value will be sent back to the R session.
+
+```r
+## Old
+old$executeScript("1 + 1;")
+old$executeScript("var life = arguments[0]; life;", 42)
+
+## New
+new$execute_js("return 1 + 1;")
+new$execute_js("let life = arguments[0]; return life;", arguments = list(42))
+# If a promise is returned, the resolved value will be sent back to the R session
+new$execute_js(
+  "
+  let life = arguments[0];
+  return new Promise((resolve, reject) => resolve(life));
+  ",
+  arguments = list(42)
+)
+```
+* `old$executeScriptAsync(script, ...)`: This method magically added a `callback` argument and would block the R session until `callback` was called within `script`. In `shinytest2`, your script will need to be updated to use a JavaScript Promise. The Promise's `resolve` method should be your callback that you used previously. You should also provide a maximum `timeout` (in milliseconds) that you are willing to wait before an error is thrown. Ex:
+```r
+## Old
+# Wait until a button is clicked
+old$executeScriptAsync(
+  '
+  var selector = arguments[0];
+  var callback = arguments[1];
+  $( selector ).one( "click", function() {
+    callback();
+  });
+  ',
+  "#mybutton"
+)
+
+# New
+# Wait until a button is clicked
+new$execute_js(
+  '
+  let selector = arguments[0];
+  return new Promise((resolve, reject) => {
+    $( selector ).one( "click", function() {
+      resolve();
+    });
+  });
+  ',
+  arguments = list("#mybutton"),
+  timeout = 15 * 1000
+)
+```
+* `old$getAllValues(input = TRUE, output = TRUE, export = TRUE)`: This method has been renamed to `new$get_values(input, output, export)`. The new method has a slightly different behavior if a some of the `input`, `output` or `export` are provided. If `input`, `output` or `export` are provided, then the method will return the values for the provided `input`, `output` or `export` only. If no `input`, `output` or `export` are provided, then the method will return all values, similar to setting `input = TRUE, output = TRUE, export = TRUE`.
+
+```r
+## Old
+old$getAllValues()
+# All input values
+old$getAllValues(input = TRUE, output = FALSE, export = FALSE)
+# Only `clickcount` output value
+old$getAllValues(input = FALSE, output = "clickcount", export = FALSE)
+
+## New
+new$get_values()
+# All input values
+new$get_values(input = TRUE)
+# Only `clickcount` output value
+new$get_values(output = "clickcount")
+```
+
+* `old$getUrl()`: This method has been renamed to `new$get_url()`.
+```r
+## Old
+old$getUrl()
+
+## New
+new$get_url()
+```
+
+
+* `old$setInputs(..., wait_ = TRUE, values_ = TRUE, timeout_ = 3 * 1000, allowInputNoBinding_ = FALSE, priority_ = c("input", "event"))`: The method name has been renamed and the parameters have been `snake_case`'ed. `value_` has been removed, but the same functionality can be achieved via a call to `new$get_values()` afterwards.
+
+```r
+## Old
+getValuesResult <- old$setInputs(life = 42)
+
+## New
+new$set_inputs(life = 42)
+get_values_result <- new$get_values()
+```
+
+* `old$getWindowSize()`, `old$setWindowSize(width, height)`: These methods have bee renamed to `new$get_window_size()` and `new$set_window_size(width, height)`.
+
+```r
+## Old
+old$getWindowSize()
+old$setWindowSize(width = 1024, height = 768)
+
+## New
+new$get_window_size()
+new$set_window_size(width = 1024, height = 768)
+```
+
+## Snapshots
+
+Snapshots are now handled by `{testthat}`. To leverage this, use the `new$expect_*()` methods to assert the value is consistent over many testing executions given the variant supplied at initialization.
+
+* `old$snapshotInit(path, screenshot)`: This method has been moved to the parameters: `AppDriver$new(name = path)`. By default, `name` is set to the Shiny application's directory name. Screenshots that may be tested are not allowed until some `AppDriver$new(variant=)` value is provided, similar to `suffix` value in `ShinyDriver$new(suffix=)`.
+
+```r
+## Old
+old$snapshotInit("mytest")
+
+## New
+new <- AppDriver$new(name = "mytest", variant = NULL)
+# Suggested
+new <- AppDriver$new(name = "mytest", variant = platform_variant())
+```
+
+* `old$snapshot(items, filename, screenshot)`: This method would take both expect a screenshot and expect all values to be consistent. This method no longer exists in `{shinytest2}` and has been broken up into two explicitly called methods: `new$expect_screenshot()` and `new$expect_values()`. `new$expect_values()` will (by default) take a _debug_ screenshot that will never fail in an expectation. This allows for a historical record (version control) of what the app looked like while not having to constantly battle with false-positive screenshot failures. If an single `output` value is supplied to `new$expect_values()`, then the _debug_ screenshot is zoomed in on the output value.
+
+```r
+## Old
+old$snapshot()
+old$snapshot(items = list(output = "clickcount"))
+
+## New
+# Must supply `variant=` to be able to call `new$expect_screenshot()`
+new <- AppDriver$new(path_to_app, variant = NULL)
+new$expect_screenshot(); new$expect_values()
+new$expect_screenshot(); new$expect_values(output = "clickcount")
+
+# Suggested;
+new <- AppDriver$new(path_to_app)
+new$expect_values()
+```
+
+* `old$takeScreenshot(file, id, parent)`: This method has been renamed to `new$screenshot(file)`, and the `id` and `parent` parameters have been removed. To use a selector, set `new$screenshot(myfile, selector = ".custom-selector")` or `screenshot_args` directly.
+
+```r
+## Old
+old$takeScreenshot("myfile1.png")
+old$takeScreenshot("myfile2.png", id = "myid")
+
+## New
+new$screenshot("myfile1.png")
+new$screenshot("myfile2.png", selector = "#myid")
+new$screenshot("myfile2.png", screenshot_args = list(selector = "#myid"))
+```
+
+* `old$snapshotDownload(id, filename)`: This method has been renamed to `new$expect_download(id, filename)`.
+```r
+## Old
+old$snapshotDownload("mylinkid")
+
+## New
+new$expect_download("mylinkid")
+```
+
+* `old$stop()`: Stayed the same! 🥳. In `{shinytest2}`, this will stop your chromote instance and clean up any temporary files.
+
+* `old$uploadFile(..., wait_ = TRUE, timeout_ = 3 * 1000)`: This method has been renamed to `new$upload_file(...)` and the `values_` parameter has been removed.
+
+```r
+## Old
+old$uploadFile(myFileInput = "myfile.txt")
+
+## New
+new$upload_file(myFileInput = "myfile.txt")
+```
+
+* `old$waitFor(expr, checkInterval, timeout)`: This method has been renamed and had its parameters reordered to end up at `new$wait_for_js(script, timeout, interval)`. Like other JavaScript methods in `{shinytest2}`, `script` needs to explicity return a value.
+
+```r
+## Old
+old$waitFor("$('#myid').length > 0")
+
+## New
+new$wait_for_js("return $('#myid').length > 0");
+```
+
+* `old$waitForShiny()`: This method has been upgraded to `new$wait_for_idle(duration = 500, timeout = 30 * 1000)`. The `old$waitForShiny()` method only waited until a single snapshot in time stated that Shiny was no longer busy. The new method will wait until Shiny is "idle" for a set duration. It is useful to wait until Shiny has been idle for a set duration to avoid situations where dynamic UI needs to calculate new outputs given new input information. The old method might pre-emptively declare Shiny as idle, but the new method will wait until Shiny has stablized for the set duration.
+
+```r
+## Old
+old$waitForShiny()
+
+## New
+# Equivalent
+new$wait_for_idle(duration = 0, timeout = 3 * 1000)
+# Suggested (Shiny must become continuously idle for at least 500ms within 30s
+new$wait_for_idle()
+```
+
+* `old$waitForValue(name, ignore, iotype, timeout, checkInterval)`: This (underutilized) method has had the `name`/`iotype` spread out into separate `input`, `output`, `export` parameters. Only one `input`/`output`/`export` value may be supplied in an `AppDriver` object. The `timeout` has been increased to 15 seconds. Both methods still poll the Shiny application at a set `interval` for the corresponding value to be something not in the `ignore` set of values.
+
+```r
+## Old
+old$waitForValue("myslider")
+old$waitForValue("mydynamicplot", iotype = "output")
+
+## New
+new$wait_for_value("myslider"); new$wait_for_value(input = "myslider")
+new$wait_for_value(output = "mydynamicplot")
+```
+
+
+
+## Elements / Widgets
+
+Direct element or Widget support for `{shinytest2}` has been drastically reduced. With the ability to execute any JavaScript function via `$execute_js(script)`, it is now possible to reproduce many of the methods that were provided in `{shinytest}`.
+
+* `old$findElement()`, `old$findElements()`, `old$findWidget()`: These methods have been removed. It is suggested to use JavaScript code directly or use newer helper methods.
+
+```r
+## Old
+old$findElement("#mybutton")$click()
+old$findElement("#mybutton")$getText()
+old$findElement("#mybutton")$getCssValue("color")
+
+## New
+new$get_text(selector = "#mybutton")
+new$click(selector = "#mybutton")
+# No direct equivalent method. Using JavaScript instead
+new$execute_js('$("#mybutton").css("color")')
+```
+
+* `old$getSource()`, `old$getTitle()`: These methods can be achieved using JavaScript.
+
+```r
+# Old
+old$getSource()
+old$getTitle()
+
+# New
+new$get_html("html", outer_html = TRUE)
+new$execute_js("return window.document.title;")
+```
+
+
+## `{testthat}` method updates
+
+`{shinytest2}` is heavily integrated with the `{testthat}` testing framework. Similar to `{shinytest}`, snapshots are recorded but are recorded via `{testthat}`. For more information on the robustness of different testing approaches, please see the [Testing Robustness](./testing-robustness.html) vignette.
+
+* `ShinyDriver$new(suffix=)`: Please use `AppDriver$new(variant=)`.
+```r
+## Old
+old <- ShinyDriver$new(path_to_app, suffix = "macos-4.1")
+
+## New
+new <- AppDriver$new(path_to_app, variant = "macos-4.1")
+```
+
+* `new$expect_screenshot()`, `new$screenshot(TODO)`: This method is a wrapper around `testthat::expect_snapshot_file()` with `variant = new$get_variant()`. This method has been separated from `old$snapshot()` and is not explicitly called.
+
+```r
+## New
+new$expect_screenshot()
+new$screenshot("myscreenshot.png")
+```
+
+* `new$expect_values(TODO)`, `new$get_values(TODO)`
+
+
+
+* `new$expect_text(TODO)`, `new$get_text(TODO)`
+* `new$expect_html(TODO)`, `new$get_html(TODO)`
+
+
+* `old$getRelativePathToApp()`, `old$getTestsDir()`: These methods have been removed as they are no longer needed given execution `{shinytest2}` testing is always done within the `{testthat}` testing framework.
+
+* `old$getSnapshotDir()`: This method has been removed as `{testthat}` uses the `./_snaps` directory to store snapshot outputs.
+
+
+* `old$expectUpdate(output)`: This method is no longer supported. While knowing that an output value has been updated, it is very uncertain as to what the new value is. While possibly useful, it is not robust. Other testing methods should be explored. Equivalent code has been provided below.
+
+```r
+## Old
+old$expectUpdate("myoutput", myinput = 42)
+
+## New (equivalent code)
+myoutput_prior <- new$get_values(output = "myoutput")
+new$set_inputs(myinput = 42)
+testthat::expect_failure(
+  testthat::expect_equal(
+    new$get_values(output = "myoutput"),
+    myoutput_prior
+  )
+)
+```
+
+
+## Debugging
+
+Debugging in `{shinytest2}` has been unified and enabled at all times. The `{shinytest}` debugging methods have been removed in favor of `new$get_log()` which returns a similarly shaped `tibble` as `old$getDebugLog()`'s `data.frame`. The columns have been altered to be more generic where `type` has been broken into two columns: `location` and `level`.
+
+
+* `old$getDebugLog()`, `old$getEventLog()`: Now use `new$get_log()`.
+* `old$enableDebugLogMessages(enable = TRUE)`: No longer used. *All* messages are now recorded.
+* `old$logEvent(event, ...)`: Messages can still be recorded using `new$log_message(text)`, but `...` values are no longer supported.
+
+```r
+## Old
+old$getDebugLog(); old$getEventLog()
+old$logEvent("Creating report")
+
+## New
+new$get_log()
+old$log_message("Creating report")
+```
+
+If `options = list(shiny.trace = TRUE)` is set when initializing a `AppDriver` object, then all WebSocket traffic will be recorded.
+
+```r
+## New
+# Record all websocket traffic. Very verbose!
+new <- AppDriver$new(path_to_app, options = list(shiny.trace = TRUE))
+new$get_log()
+```
+
+
+
+
+
+## Other removed methods
+
+* `old$getValue(name, iotype)` and `old$setValue(name, value, iotype)`: These methods have been removed as they were not generic and similar behavior achieved via `new$get_values(input = name)[["input"]][[name]]` and `new$set_inputs(name = value)`.
+
+```r
+## Old
+old$getValue("myinput")
+old$setValue("myinput", 42)
+
+## New
+new$get_values(input = "myinput")[["input"]][["myinput"]]
+new$set_inputs(myinput = 42)
+```
+
+* `old$listWidgets()`: This method has been removed and can be achieved by getting the names of the existing values: `new$get_values()`.
+
+```r
+## Old
+old$listWidgets()
+
+## New
+lapply(new$get_values(), names)
+```
+
+* `old$checkUniqueWidgetNames()`: Automatically performed on startup in `{shinytest2}`.
+TODO-barret; `AppDriver$expect_unique_names()`
+
+* `old$clone()`: `AppDriver` does not support cloning. (The underlying `ChromoteSession` does not support cloning, so `AppDriver` can not support cloning.)
+
+* `old$goBack()`, `old$refresh()`: These method have been removed and can be achieved with `new$execute_js(script)`.
+
+```r
+## Old
+old$goBack()
+old$refresh()
+
+## New
+# Go back
+new$execute_js("window.history.back();")
+# Refresh page
+new$execute_js("window.location.reload();")
+```
+
+* `old$getAppDir()`, `old$getAppFilename()`, `old$isRmd()`: These methods have been removed in favor of `new$get_path()`. All of the same information can be accessed via `new$get_path()`.
+
+```r
+## Old
+old$isRmd()
+old$getAppDir()
+old$getAppFilename()
+
+## New
+path <- new$get_path()
+is_rmd <- fs::path_ext(path) == ".Rmd"
+app_dir <- if (is_rmd) fs::path_dir(path) else path
+filename <- if (is_rmd) basename(path) else NULL
+```
+
+* `old$sendKeys(name, keys)`: This method has been removed and there is currently no easy alternative. If you are familiar with the [key code values](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode#value_of_keycode), you can trigger then with `new$execute_js(script)`.
+
+```r
+## Old
+old$sendKeys("myinput", webdriver::keys$enter)
+
+## New
+new$execute_js("$('#myinput').trigger({type: 'keypress', which: 13, keyCode: 13});")
+```
