@@ -1,10 +1,9 @@
-
 expect_text_migration <- function(original_txt, new_txt, ...) {
   info_env <- make_info_env(..., app_var = NULL) # nolint
   suppressMessages({
     converted_text <- m__parse_test_text(original_txt, "test-migration-file", info_env)
   })
-  expect_equal(converted_text, new_txt)
+  testthat::expect_equal(converted_text, new_txt)
   info_env
 }
 

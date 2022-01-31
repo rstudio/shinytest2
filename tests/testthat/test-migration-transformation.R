@@ -3,7 +3,7 @@ expect_msg_helper <- function(expr, message, fixed, expect_fn, ...) {
     if (interactive()) {
       force(expr)
     } else {
-      expect_silent(expr)
+      testthat::expect_silent(expr)
     }
   } else {
     expect_fn(expr, regexp = message, fixed = fixed, ...)
@@ -27,7 +27,7 @@ expect_migration <- function(
       ),
     message = message,
     fixed = fixed,
-    expect_fn = expect_message,
+    expect_fn = testthat::expect_message,
     ...
   )
 
@@ -37,7 +37,7 @@ expect_migration <- function(
     } else {
       new_expr
     }
-  expect_equal(migrated_expr, shinytest2_expr)
+  testthat::expect_equal(migrated_expr, shinytest2_expr)
 
   # Return the environment as that may have been altered
   invisible(info_env)
@@ -58,7 +58,7 @@ expect_migration_error <- function(
       ),
     message = message,
     fixed = fixed,
-    expect_fn = expect_error
+    expect_fn = testthat::expect_error
   )
 
   invisible(info_env)

@@ -37,7 +37,7 @@ expect_migration <- function(test_app_folder, ...) {
         testthat::compare_file_binary(new_file_path, expected_file_path),
         label = label
       ),
-      expect_equal(
+      testthat::expect_equal(
         strsplit(read_utf8(new_file_path), "\n")[[1]],
         strsplit(read_utf8(expected_file_path), "\n")[[1]],
         label = x_arg,
