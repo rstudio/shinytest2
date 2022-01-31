@@ -1,4 +1,4 @@
-# TODO-test `migrate()`
+# TODO-barret; Add more tests around `migrate()`
 # TODO-barret; Make test app using allowInputNoBinding = TRUE
 
 
