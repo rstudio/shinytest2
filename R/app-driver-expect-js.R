@@ -10,8 +10,8 @@ js_script_helper <- function(script = missing_arg(), file = missing_arg()) {
 app_execute_js <- function(
   self, private,
   script,
-  arguments = list(),
   ...,
+  arguments = list(),
   file = missing_arg(),
   timeout = 15 * 1000
 ) {
@@ -31,8 +31,8 @@ app_execute_js <- function(
 app_expect_js <- function(
   self, private,
   script,
-  arguments = list(),
   ...,
+  arguments = list(),
   file = missing_arg(),
   timeout = 15 * 1000,
   pre_snapshot = NULL,

@@ -121,23 +121,13 @@ app_wait_for_value <- function(
 
   end_time <- now() + timeoute_sec
 
-  input_provided <- !rlang::is_missing(input)
-  output_provided <- !rlang::is_missing(output)
-  export_provided <- !rlang::is_missing(export)
-  if (sum(input_provided, output_provided, export_provided) != 1) {
-    abort("You must specify either `input`, `output`, or `export`", app = self)
-  }
-  if (input_provided) ckm8_assert_single_string(input)
-  if (output_provided) ckm8_assert_single_string(output)
-  if (export_provided) ckm8_assert_single_string(export)
-  # by default, do not retrieve anything
-  input <- rlang::maybe_missing(input, FALSE)
-  output <- rlang::maybe_missing(output, FALSE)
-  export <- rlang::maybe_missing(export, FALSE)
-
+  ioe <- app_get_single_ioe(
+    self, private,
+    input = input, output = output, export = export
+  )
   while (TRUE) {
     value <- try({
-      self$get_values(input = input, output = output, export = export)
+      self$get_value(input = ioe$input, output = ioe$output, export = ioe$export)
     }, silent = TRUE)
 
     # if no error when trying to retrieve the value..
@@ -152,17 +142,7 @@ app_wait_for_value <- function(
 
     # if too much time has elapsed... throw
     if (now() > end_time) {
-      group <-
-        if (input_provided) "input"
-        else if (output_provided) "output"
-        else if (export_provided) "export"
-        else abort("unknown group") # internal
-      id <-
-        if (input_provided) input
-        else if (output_provided) output
-        else if (export_provided) export
-        else abort("unknown group") # internal
-      abort(paste0("timeout reached when waiting for ", group, ": ", id), app = self)
+      abort(paste0("timeout reached when waiting for ", ioe$type, ": ", ioe$name), app = self)
     }
 
     # wait a little bit for shiny to do some work

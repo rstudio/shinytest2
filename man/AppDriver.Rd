@@ -132,6 +132,7 @@ app$get_log() # (long output lines have been truncated)
 \item \href{#method-get_html}{\code{AppDriver$get_html()}}
 \item \href{#method-expect_js}{\code{AppDriver$expect_js()}}
 \item \href{#method-expect_download}{\code{AppDriver$expect_download()}}
+\item \href{#method-get_value}{\code{AppDriver$get_value()}}
 \item \href{#method-get_values}{\code{AppDriver$get_values()}}
 \item \href{#method-expect_values}{\code{AppDriver$expect_values()}}
 \item \href{#method-screenshot}{\code{AppDriver$screenshot()}}
@@ -344,8 +345,8 @@ For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers a
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_js(
   script = missing_arg(),
-  arguments = list(),
   ...,
+  arguments = list(),
   file = missing_arg(),
   timeout = 15 * 1000,
   pre_snapshot = NULL,
@@ -358,9 +359,9 @@ For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers a
 \describe{
 \item{\code{script}}{A string containing the JS script to be executed.}
 
-\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
-
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
 
 \item{\code{file}}{A file containing JavaScript code to be read and used as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
 
@@ -407,16 +408,16 @@ because they often rely on minor details of dependencies.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_values"></a>}}
-\if{latex}{\out{\hypertarget{method-get_values}{}}}
-\subsection{Method \code{get_values()}}{
+\if{html}{\out{<a id="method-get_value"></a>}}
+\if{latex}{\out{\hypertarget{method-get_value}{}}}
+\subsection{Method \code{get_value()}}{
 Returns a named list of all inputs, outputs, and export values.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_values(
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_value(
+  ...,
   input = missing_arg(),
   output = missing_arg(),
   export = missing_arg(),
-  ...,
   hash_images = FALSE
 )}\if{html}{\out{</div>}}
 }
@@ -424,11 +425,36 @@ Returns a named list of all inputs, outputs, and export values.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{input, output, export}}{One of these variable should contain a single string value. If more than one value is specified or no values are specified, an error will be thrown.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_values"></a>}}
+\if{latex}{\out{\hypertarget{method-get_values}{}}}
+\subsection{Method \code{get_values()}}{
+Returns a named list of all inputs, outputs, and export values.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_values(
+  ...,
+  input = missing_arg(),
+  output = missing_arg(),
+  export = missing_arg(),
+  hash_images = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
 \item{\code{input, output, export}}{Either \code{TRUE} to return all
 input/output/exported values, or a character vector of specific
 controls.}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
 }
 \if{html}{\out{</div>}}
 }
@@ -448,10 +474,10 @@ An appshot currently consists of two snapshot files:
 }
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_values(
+  ...,
   input = missing_arg(),
   output = missing_arg(),
   export = missing_arg(),
-  ...,
   screenshot_args = missing_arg(),
   name = NULL,
   cran = FALSE
@@ -684,10 +710,10 @@ This function can be useful in helping determine if an application
 has finished processing a complex reactive situation.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_value(
+  ...,
   input = missing_arg(),
   output = missing_arg(),
   export = missing_arg(),
-  ...,
   ignore = list(NULL, ""),
   timeout = 15 * 1000,
   interval = 400
@@ -697,9 +723,9 @@ has finished processing a complex reactive situation.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{input, output, export}}{A name of an input, output, or export value. Only one of these may be used.}
-
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{input, output, export}}{A name of an input, output, or export value. Only one of these parameters may be used.}
 
 \item{\code{ignore}}{List of possible values to ignore when checking for
 updates.}
@@ -726,8 +752,8 @@ To have JavaScript code execute asynchronously, wrap the code in a Promise objec
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$execute_js(
   script = missing_arg(),
-  arguments = list(),
   ...,
+  arguments = list(),
   file = missing_arg(),
   timeout = 15 * 1000
 )}\if{html}{\out{</div>}}
@@ -738,9 +764,9 @@ To have JavaScript code execute asynchronously, wrap the code in a Promise objec
 \describe{
 \item{\code{script}}{JS to execute. If a JS Promise is returned, the R session will block until the promise has been resolved and return the value.}
 
-\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
-
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
 
 \item{\code{file}}{A (local) file containing JavaScript code to be read and used as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
 

@@ -4,7 +4,7 @@ test_that("plotly webgl works", {
   # TODO-future; Good candidate for fuzzy picture matching
 
   app <- AppDriver$new(test_path("../../."), variant = NULL);
-  app$wait_for_value("p", ignore = list(NULL))
+  app$wait_for_value(output = "p", ignore = list(NULL))
 
   app$expect_values(output = "p", screenshot_args = FALSE)
 })
