@@ -93,6 +93,7 @@ retrieved after any initialization error has been thrown.</p>
 <li><p><a href="#method-get_html"><code>AppDriver$get_html()</code></a></p></li>
 <li><p><a href="#method-expect_js"><code>AppDriver$expect_js()</code></a></p></li>
 <li><p><a href="#method-expect_download"><code>AppDriver$expect_download()</code></a></p></li>
+<li><p><a href="#method-get_value"><code>AppDriver$get_value()</code></a></p></li>
 <li><p><a href="#method-get_values"><code>AppDriver$get_values()</code></a></p></li>
 <li><p><a href="#method-expect_values"><code>AppDriver$expect_values()</code></a></p></li>
 <li><p><a href="#method-screenshot"><code>AppDriver$screenshot()</code></a></p></li>
@@ -331,8 +332,8 @@ For example, <code>$expect_text()</code> and <code>$expect_html()</code> are thi
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">expect_js</span><span class="op">(</span>
   script <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
-  arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
   <span class="va">...</span>,
+  arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
   file <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span>,
   pre_snapshot <span class="op">=</span> <span class="cn">NULL</span>,
@@ -346,12 +347,12 @@ For example, <code>$expect_text()</code> and <code>$expect_html()</code> are thi
 <dd><p>A string containing the JS script to be executed.</p></dd>
 
 
-<dt><code>arguments</code></dt>
-<dd><p>A list of unnamed arguments to send to the script.</p></dd>
-
-
 <dt><code>...</code></dt>
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
+
+
+<dt><code>arguments</code></dt>
+<dd><p>A list of unnamed arguments to send to the script.</p></dd>
 
 
 <dt><code>file</code></dt>
@@ -410,29 +411,55 @@ because they often rely on minor details of dependencies.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-get_values"></a><div class="section">
-<h3 id="method-get-values-">Method <code>get_values()</code><a class="anchor" aria-label="anchor" href="#method-get-values-"></a></h3>
+</div><p></p><hr><a id="method-get_value"></a><div class="section">
+<h3 id="method-get-value-">Method <code>get_value()</code><a class="anchor" aria-label="anchor" href="#method-get-value-"></a></h3>
 <p>Returns a named list of all inputs, outputs, and export values.</p><div class="section">
 <h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_values</span><span class="op">(</span>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_value</span><span class="op">(</span>
+  <span class="va">...</span>,
   input <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   output <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   export <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
-  <span class="va">...</span>,
   hash_images <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>input, output, export</code></dt>
+<p></p><div class="arguments"><dl><dt><code>...</code></dt>
+<dd><p>Must be empty. Allows for parameter expansion.</p></dd>
+
+
+<dt><code>input, output, export</code></dt>
+<dd><p>One of these variable should contain a single string value. If more than one value is specified or no values are specified, an error will be thrown.</p></dd>
+
+
+</dl><p></p></div>
+</div>
+
+</div><p></p><hr><a id="method-get_values"></a><div class="section">
+<h3 id="method-get-values-">Method <code>get_values()</code><a class="anchor" aria-label="anchor" href="#method-get-values-"></a></h3>
+<p>Returns a named list of all inputs, outputs, and export values.</p><div class="section">
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_values</span><span class="op">(</span>
+  <span class="va">...</span>,
+  input <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
+  output <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
+  export <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
+  hash_images <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>...</code></dt>
+<dd><p>Must be empty. Allows for parameter expansion.</p></dd>
+
+
+<dt><code>input, output, export</code></dt>
 <dd><p>Either <code>TRUE</code> to return all
 input/output/exported values, or a character vector of specific
 controls.</p></dd>
-
-
-<dt><code>...</code></dt>
-<dd><p>Must be empty. Allows for parameter expansion.</p></dd>
 
 
 </dl><p></p></div>
@@ -445,12 +472,12 @@ controls.</p></dd>
 <p>An appshot currently consists of two snapshot files:</p><ol><li><p>A screenshot of the Shiny application using the <code>$screenshot()</code> function of the <code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code></p></li>
 <li><p>A JSON snapshot of all Shiny component values</p></li>
 </ol><div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span>
+  <span class="va">...</span>,
   input <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   output <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   export <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
-  <span class="va">...</span>,
   screenshot_args <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   name <span class="op">=</span> <span class="cn">NULL</span>,
   cran <span class="op">=</span> <span class="cn">FALSE</span>
@@ -458,7 +485,7 @@ controls.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
+<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
 
@@ -493,7 +520,7 @@ because they often rely on minor details of dependencies.</p></dd>
 <h3 id="method-screenshot-">Method <code>screenshot()</code><a class="anchor" aria-label="anchor" href="#method-screenshot-"></a></h3>
 
 <div class="section">
-<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span>
   file <span class="op">=</span> <span class="cn">NULL</span>,
   <span class="va">...</span>,
@@ -504,7 +531,7 @@ because they often rely on minor details of dependencies.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
+<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
 
@@ -516,7 +543,7 @@ because they often rely on minor details of dependencies.</p></dd>
 <h3 id="method-expect-screenshot-">Method <code>expect_screenshot()</code><a class="anchor" aria-label="anchor" href="#method-expect-screenshot-"></a></h3>
 
 <div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">expect_screenshot</span><span class="op">(</span>
   <span class="va">...</span>,
   screenshot_args <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
@@ -528,7 +555,7 @@ because they often rely on minor details of dependencies.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
+<h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
 
@@ -545,7 +572,7 @@ because they often rely on minor details of dependencies.</p></dd>
 </div><p></p><hr><a id="method-set_inputs"></a><div class="section">
 <h3 id="method-set-inputs-">Method <code>set_inputs()</code><a class="anchor" aria-label="anchor" href="#method-set-inputs-"></a></h3>
 <p>Set input values.</p><div class="section">
-<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
+<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>
   <span class="va">...</span>,
   wait_ <span class="op">=</span> <span class="cn">TRUE</span>,
@@ -556,7 +583,7 @@ because they often rely on minor details of dependencies.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
+<h4 id="arguments-12">Arguments<a class="anchor" aria-label="anchor" href="#arguments-12"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>Name-value pairs, <code>component_name_1 = value_1, component_name_2 = value_2</code> etc.
 Input with name <code>component_name_1</code> will be assigned value <code>value_1</code>.</p></dd>
@@ -591,7 +618,7 @@ an input binding.</p></dd>
 </div><p></p><hr><a id="method-click"></a><div class="section">
 <h3 id="method-click-">Method <code>click()</code><a class="anchor" aria-label="anchor" href="#method-click-"></a></h3>
 <p>Find a Shiny input/output value or DOM CSS selector and click it using the DOM method <code>TAG.click()</code></p><div class="section">
-<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
+<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span>
   input <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   output <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
@@ -600,7 +627,7 @@ an input binding.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-12">Arguments<a class="anchor" aria-label="anchor" href="#arguments-12"></a></h4>
+<h4 id="arguments-13">Arguments<a class="anchor" aria-label="anchor" href="#arguments-13"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>input, output, selector</code></dt>
 <dd><p>A name of an Shiny input/output value or a DOM CSS selector. Only one of these may be used.</p></dd>
 
@@ -611,12 +638,12 @@ an input binding.</p></dd>
 </div><p></p><hr><a id="method-upload_file"></a><div class="section">
 <h3 id="method-upload-file-">Method <code>upload_file()</code><a class="anchor" aria-label="anchor" href="#method-upload-file-"></a></h3>
 <p>Uploads a file to a file input.</p><div class="section">
-<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
+<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">upload_file</span><span class="op">(</span><span class="va">...</span>, wait_ <span class="op">=</span> <span class="cn">TRUE</span>, timeout_ <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">1000</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-13">Arguments<a class="anchor" aria-label="anchor" href="#arguments-13"></a></h4>
+<h4 id="arguments-14">Arguments<a class="anchor" aria-label="anchor" href="#arguments-14"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>Name-path pair, e.g. <code>component_name = file_path</code>. The file located at
 <code>file_path</code> will be uploaded to file input with name <code>component_name</code>.</p></dd>
@@ -638,12 +665,12 @@ an input binding.</p></dd>
 <p>Wait for a JavaScript expression to be true</p>
 <p>Waits until a JavaScript <code>expr</code>ession evaluates to <code>true</code> or the
 <code>timeout</code> is exceeded.</p><div class="section">
-<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
+<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_js</span><span class="op">(</span><span class="va">script</span>, timeout <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">1000</span>, interval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-14">Arguments<a class="anchor" aria-label="anchor" href="#arguments-14"></a></h4>
+<h4 id="arguments-15">Arguments<a class="anchor" aria-label="anchor" href="#arguments-15"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>script</code></dt>
 <dd><p>A string containing JavaScript code. This code must eventually return a <code>true</code>thy value or a <code>timeout</code> error will be thrown.</p></dd>
 
@@ -671,12 +698,12 @@ Otherwise an error will be thrown</p>
 This is useful, for example, when waiting for your application to initialize or
 if you've resized the window with <code>$set_window_size()</code> and want to make sure all
 plot redrawing is complete before take a screenshot.</p><div class="section">
-<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
+<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_idle</span><span class="op">(</span>duration <span class="op">=</span> <span class="fl">500</span>, timeout <span class="op">=</span> <span class="fl">30</span> <span class="op">*</span> <span class="fl">1000</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-15">Arguments<a class="anchor" aria-label="anchor" href="#arguments-15"></a></h4>
+<h4 id="arguments-16">Arguments<a class="anchor" aria-label="anchor" href="#arguments-16"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>duration</code></dt>
 <dd><p>How long Shiny must be idle (in ms) before unblocking the R session.</p></dd>
 
@@ -700,12 +727,12 @@ plot redrawing is complete before take a screenshot.</p><div class="section">
 <p>Only a single <code>input</code>, <code>output</code>, or <code>export</code> value may be used.</p>
 <p>This function can be useful in helping determine if an application
 has finished processing a complex reactive situation.</p><div class="section">
-<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
+<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_value</span><span class="op">(</span>
+  <span class="va">...</span>,
   input <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   output <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   export <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
-  <span class="va">...</span>,
   ignore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="st">""</span><span class="op">)</span>,
   timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span>,
   interval <span class="op">=</span> <span class="fl">400</span>
@@ -713,13 +740,13 @@ has finished processing a complex reactive situation.</p><div class="section">
 </div>
 
 <div class="section">
-<h4 id="arguments-16">Arguments<a class="anchor" aria-label="anchor" href="#arguments-16"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>input, output, export</code></dt>
-<dd><p>A name of an input, output, or export value. Only one of these may be used.</p></dd>
-
-
-<dt><code>...</code></dt>
+<h4 id="arguments-17">Arguments<a class="anchor" aria-label="anchor" href="#arguments-17"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
+
+
+<dt><code>input, output, export</code></dt>
+<dd><p>A name of an input, output, or export value. Only one of these parameters may be used.</p></dd>
 
 
 <dt><code>ignore</code></dt>
@@ -748,28 +775,28 @@ updates.</p></dd>
 <p>This function will block the local R session until the code has finished executing its <em>tick</em> in the browser.
 If a <code>Promise</code> is returned from the script, <code>$execute_js()</code> will wait for the promise to resolve.
 To have JavaScript code execute asynchronously, wrap the code in a Promise object and have the script return an atomic value.</p><div class="section">
-<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
+<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span>
   script <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
-  arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
   <span class="va">...</span>,
+  arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
   file <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span>
 <span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-17">Arguments<a class="anchor" aria-label="anchor" href="#arguments-17"></a></h4>
+<h4 id="arguments-18">Arguments<a class="anchor" aria-label="anchor" href="#arguments-18"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>script</code></dt>
 <dd><p>JS to execute. If a JS Promise is returned, the R session will block until the promise has been resolved and return the value.</p></dd>
 
 
-<dt><code>arguments</code></dt>
-<dd><p>A list of unnamed arguments to send to the script.</p></dd>
-
-
 <dt><code>...</code></dt>
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
+
+
+<dt><code>arguments</code></dt>
+<dd><p>A list of unnamed arguments to send to the script.</p></dd>
 
 
 <dt><code>file</code></dt>
@@ -790,7 +817,7 @@ To have JavaScript code execute asynchronously, wrap the code in a Promise objec
 </div><p></p><hr><a id="method-get_path"></a><div class="section">
 <h3 id="method-get-path-">Method <code>get_path()</code><a class="anchor" aria-label="anchor" href="#method-get-path-"></a></h3>
 <p>Retrieve the Shiny app path</p><div class="section">
-<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
+<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_path</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -802,7 +829,7 @@ To have JavaScript code execute asynchronously, wrap the code in a Promise objec
 </div><p></p><hr><a id="method-get_url"></a><div class="section">
 <h3 id="method-get-url-">Method <code>get_url()</code><a class="anchor" aria-label="anchor" href="#method-get-url-"></a></h3>
 <p>Retrieve the Shiny app URL</p><div class="section">
-<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
+<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_url</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -815,7 +842,7 @@ To have JavaScript code execute asynchronously, wrap the code in a Promise objec
 <h3 id="method-get-window-size-">Method <code>get_window_size()</code><a class="anchor" aria-label="anchor" href="#method-get-window-size-"></a></h3>
 <p>Get current size of the browser window, as list of integer scalars
 named <code>width</code> and <code>height</code>.</p><div class="section">
-<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
+<h4 id="usage-22">Usage<a class="anchor" aria-label="anchor" href="#usage-22"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_window_size</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -823,12 +850,12 @@ named <code>width</code> and <code>height</code>.</p><div class="section">
 </div><p></p><hr><a id="method-set_window_size"></a><div class="section">
 <h3 id="method-set-window-size-">Method <code>set_window_size()</code><a class="anchor" aria-label="anchor" href="#method-set-window-size-"></a></h3>
 <p>Sets size of the browser window.</p><div class="section">
-<h4 id="usage-22">Usage<a class="anchor" aria-label="anchor" href="#usage-22"></a></h4>
+<h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">set_window_size</span><span class="op">(</span><span class="va">width</span>, <span class="va">height</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-18">Arguments<a class="anchor" aria-label="anchor" href="#arguments-18"></a></h4>
+<h4 id="arguments-19">Arguments<a class="anchor" aria-label="anchor" href="#arguments-19"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>width, height</code></dt>
 <dd><p>Height and width of browser, in pixels.</p></dd>
 
@@ -839,7 +866,7 @@ named <code>width</code> and <code>height</code>.</p><div class="section">
 </div><p></p><hr><a id="method-get_chromote_session"></a><div class="section">
 <h3 id="method-get-chromote-session-">Method <code>get_chromote_session()</code><a class="anchor" aria-label="anchor" href="#method-get-chromote-session-"></a></h3>
 <p>Chromote Session object from the <span class="pkg">chromote</span> package.</p><div class="section">
-<h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
+<h4 id="usage-24">Usage<a class="anchor" aria-label="anchor" href="#usage-24"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_chromote_session</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -847,7 +874,7 @@ named <code>width</code> and <code>height</code>.</p><div class="section">
 </div><p></p><hr><a id="method-get_variant"></a><div class="section">
 <h3 id="method-get-variant-">Method <code>get_variant()</code><a class="anchor" aria-label="anchor" href="#method-get-variant-"></a></h3>
 <p>Get the variant supplied at initialization</p><div class="section">
-<h4 id="usage-24">Usage<a class="anchor" aria-label="anchor" href="#usage-24"></a></h4>
+<h4 id="usage-25">Usage<a class="anchor" aria-label="anchor" href="#usage-25"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_variant</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -860,7 +887,7 @@ There are a few standard debug types that may be used:</p><ul><li><p><code>"shin
 <li><p><code>"shinytest2"</code>: Displays the messages saved by the <code>window.shinytest2</code> object in the browser when <code>$get_log()</code> is called.</p></li>
 <li><p><code>"ws_messages"</code>: Saves all messages sent by Shiny to the</p></li>
 </ul><div class="section">
-<h4 id="usage-25">Usage<a class="anchor" aria-label="anchor" href="#usage-25"></a></h4>
+<h4 id="usage-26">Usage<a class="anchor" aria-label="anchor" href="#usage-26"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_log</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -984,12 +1011,12 @@ app$get_log() # (long output lines have been truncated)
 </div><p></p><hr><a id="method-log_message"></a><div class="section">
 <h3 id="method-log-message-">Method <code>log_message()</code><a class="anchor" aria-label="anchor" href="#method-log-message-"></a></h3>
 <p>Add an message to log.</p><div class="section">
-<h4 id="usage-26">Usage<a class="anchor" aria-label="anchor" href="#usage-26"></a></h4>
+<h4 id="usage-27">Usage<a class="anchor" aria-label="anchor" href="#usage-27"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">log_message</span><span class="op">(</span><span class="va">message</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-19">Arguments<a class="anchor" aria-label="anchor" href="#arguments-19"></a></h4>
+<h4 id="arguments-20">Arguments<a class="anchor" aria-label="anchor" href="#arguments-20"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>message</code></dt>
 <dd><p>Single message to store in log</p></dd>
 
@@ -1002,7 +1029,7 @@ app$get_log() # (long output lines have been truncated)
 <p>Stop the Shiny application
 Stop the app, the terminate external R process that runs the app and
 the Chromote Session instance.</p><div class="section">
-<h4 id="usage-27">Usage<a class="anchor" aria-label="anchor" href="#usage-27"></a></h4>
+<h4 id="usage-28">Usage<a class="anchor" aria-label="anchor" href="#usage-28"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="kw">stop</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
