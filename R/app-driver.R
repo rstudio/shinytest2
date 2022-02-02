@@ -364,7 +364,7 @@ AppDriver <- R6Class(# nolint
     #' @return `invisible(self)` if expression evaluates to `true` without error within the timeout.
     #'   Otherwise an error will be thrown
     # TODO-barret-docs; Document $execute_js(file = "complicated_file.js"); $wait_for_js("return complicated_condition()")
-    wait_for_js = function(script, timeout = 3 * 1000, interval = 100) {
+    wait_for_js = function(script, timeout = 30 * 1000, interval = 100) {
       app_wait_for_js(self, private, script = script, timeout = timeout, interval = interval)
     },
 

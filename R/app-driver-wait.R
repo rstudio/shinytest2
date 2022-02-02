@@ -3,7 +3,7 @@
 app_wait_for_js <- function(
   self, private,
   script,
-  timeout = 3 * 1000,
+  timeout = 30 * 1000,
   interval = 100
 ) {
   "!DEBUG app_wait_for_js()"
@@ -19,7 +19,7 @@ app_wait_for_js <- function(
   invisible(self)
 }
 
-app_wait_for_idle <- function(self, private, duration = 500, timeout = 3 * 1000) {
+app_wait_for_idle <- function(self, private, duration = 500, timeout = 30 * 1000) {
   ckm8_assert_app_driver(self, private)
 
   checkmate::assert_number(duration, lower = 0, finite = TRUE)

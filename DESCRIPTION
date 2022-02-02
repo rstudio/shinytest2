@@ -80,7 +80,7 @@ Collate:
     'missing-value.R'
     'utils.R'
     'platform.R'
-    'recorder.R'
+    'record_test.R'
     'save-app.R'
     'shinytest2_logs.R'
     'test-app.R'

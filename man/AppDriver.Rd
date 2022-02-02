@@ -649,7 +649,7 @@ Wait for a JavaScript expression to be true
 Waits until a JavaScript \code{expr}ession evaluates to \code{true} or the
 \code{timeout} is exceeded.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_js(script, timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_js(script, timeout = 30 * 1000, interval = 100)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -821,13 +821,16 @@ named \code{width} and \code{height}.
 \subsection{Method \code{set_window_size()}}{
 Sets size of the browser window.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_window_size(width, height)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_window_size(width, height, wait = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{width, height}}{Height and width of browser, in pixels.}
+
+\item{\code{wait}}{If \code{TRUE}, \verb{$wait_for_idle()} will be called after setting the window size.
+This will allow for any width specific items (such as plots) to be rerendered.}
 }
 \if{html}{\out{</div>}}
 }
