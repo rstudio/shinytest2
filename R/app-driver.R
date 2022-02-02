@@ -466,8 +466,10 @@ AppDriver <- R6Class(# nolint
     #' @description
     #' Sets size of the browser window.
     #' @param width,height Height and width of browser, in pixels.
-    set_window_size = function(width, height) {
-      app_set_window_size(self, private, width, height)
+    #' @param wait If `TRUE`, `$wait_for_idle()` will be called after setting the window size.
+    #'   This will allow for any width specific items (such as plots) to be rerendered.
+    set_window_size = function(width, height, wait = TRUE) {
+      app_set_window_size(self, private, width = width, height = height, wait = wait)
     },
 
     #' @description
