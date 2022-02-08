@@ -10,12 +10,18 @@
 #' @param shiny_args A list of options to pass to `runApp()`. If a value
 #'   is provided, it will be saved in the test script.
 #' @export
+# TODO-future; can we force the user to view the app in Chrome?
 record_test <- function(
   app = ".",
   ...,
   seed = NULL,
-  load_timeout = 10 * 1000,
-  shiny_args = list()
+  load_timeout = NULL,
+  shiny_args = list(),
+  test_file = "test-shinytest2.R",
+  edit_test = rlang::is_interactive() && rstudioapi::isAvailable(),
+  allow_input_no_binding = FALSE, # current,
+  allow_no_input_binding = FALSE, # TODO-barret; change to _this variable_ throughout package
+  run_test = TRUE # TODO-barret; handle this
 ) {
   ellipsis::check_dots_empty()
 
@@ -32,14 +38,17 @@ record_test <- function(
       abort("Recording tests for remote apps is not yet supported.")
     }
 
-    path <- app_path(app, "app")$app
+    app_path_info <- app_path(app, "app")
+    app_dir <- app_path_info$dir
+    app_path <- app_path_info$app
+    is_rmd <- app_path_info$is_rmd
 
     # Rmds need a random seed
-    if (is_rmd(path) && is.null(seed)) {
+    if (is_rmd && is.null(seed)) {
       seed <- floor(stats::runif(1, min = 0, max = 1e5))
     }
 
-    app <- AppDriver$new(path, seed = seed, load_timeout = load_timeout, shiny_args = shiny_args)
+    app <- AppDriver$new(app_path, seed = seed, load_timeout = load_timeout, shiny_args = shiny_args)
     on.exit({
       rm(app)
       gc()
@@ -73,34 +82,40 @@ record_test <- function(
     list(
       shinytest2.recorder.url = url,
       shinytest2.app          = app,
-      shinytest2.load.timeout = if (!missing(load_timeout)) load_timeout,
+      shinytest2.load.timeout = if (!is.null(load_timeout)) load_timeout,
       shinytest2.seed         = seed,
-      shinytest2.shiny.args   = shiny_args
+      shinytest2.shiny.args   = shiny_args,
+      shinytest2.test_file    = test_file,
+      shinytest2.allow_input_no_binding = allow_input_no_binding
     ),
     res <- shiny::runApp(system.file("internal", "recorder", package = "shinytest2"))
   )
 
-  test_file_ <- function() {
-    testthat::test_file(path = res$test_file)
-  }
 
-  if (is.null(res$test_file)) {
-    # Quit without saving
+  if (rlang::has_name(res, "run")) {
 
-  } else if (isTRUE(res$run)) {
-
-    # Run the test script
-    test_file_()
-
-  } else {
-    if (length(res$dont_run_reasons) > 0) {
-      rlang::inform(c("Not running test script because", res$dont_run_reasons))
+    if (isTRUE(edit_test)) {
+      file.edit(save_file)
     }
 
-    rlang::inform(sprintf(
-      'After making changes to the test script, run it with:\n  testthat::test_file("%s")',
-      test_file_()
-    ))
+    test_filter <- sub("^test-", "", fs::path_ext_remove(test_file))
+    if (isTRUE(res$run)) {
+      # Run the test script
+      test_app(app_path, filter = test_filter)
+    } else {
+      if (length(res$dont_run_reasons) > 0) {
+        rlang::inform(c("Not running test script because", res$dont_run_reasons))
+      }
+
+      rlang::inform(paste0(
+        "After making changes to the test script, run it with:\n",
+        "  shinytest::test_app(\"", app_path, "\", filter = \"", test_filter, "\")\n",
+        "Or run all tests generically with:\n",
+        "  shiny::runTests(\"", app_path, "\")\n",
+        "Or run all {testthat} tests using edition 3:\n",
+        "  shinytest::test_app(\"", app_path, "\")"
+      ))
+    }
   }
 
   invisible(res$test_file)

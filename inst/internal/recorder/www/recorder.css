@@ -1,9 +1,13 @@
 html,body {
+  /* Comment the font-size to revert text to be same height as checkboxes */
   font-size: 12px;
   width: 100%;
   height:100%;
   font-family: "Lucida Sans", "DejaVu Sans", "Lucida Grande", "Segoe UI",
                Verdana, Helvetica, sans-serif;
+}
+#shiny-recorder .btn {
+  font-size: 12px;
 }
 
 #app-iframe-container {
@@ -42,17 +46,71 @@ html,body {
   color: #000;
   background: #d6dadd;
   font-weight: bold;
-  padding: 5px 10px;
+  padding: 5px 0.7em;
 }
 
 #shiny-recorder .shiny-recorder-controls {
   -webkit-flex: 0 0 auto; /* Needed for QT webkit and old versions of Safari */
-  padding: 10px;
+  padding: 0.4em 0.7em;
   background: #f6f7f9;
+}
+#shiny-recorder .shiny-recorder-controls .btn {
+  margin: 0.2em 0;
+}
+
+#shiny-recorder #save-and-quit {
+  background: #f6f7f9;
+  padding: 0.7em;
+  padding-top: 0;
+}
+
+#shiny-recorder #save-and-quit #exit_save {
+  background-color: #e7fee7;
+  float:right;
+}
+#shiny-recorder #save-and-quit #exit_save:hover {
+  background-color: #d2f1d2;
+}
+
+#shiny-recorder #save-and-quit #exit_nosave {
+  background-color: #ffebeb;
+  float:left;
+}
+#shiny-recorder #save-and-quit #exit_nosave:hover {
+  background-color: #f3dbdb;
+}
+
+#shiny-recorder .btn {
+  margin: 0 0 0 0;
+  height: 32px;
+  padding: 6px;
+}
+#shiny-recorder #values img {
+  margin-top: -2.5px;
+}
+/* #shiny-recorder #values {
+  margin: 0.8em 0;
+} */
+
+/* #shiny-recorder .shiny-recorder-controls .inline-input-container {
+  display: inline-block;
+} */
+#shiny-recorder #save-and-quit .inline-input-container * {
+  display: inline-block;
+}
+#shiny-recorder #save-and-quit .inline-input-container input[type="text"] {
+  /* display: inline-block; */
+  /* width: calc(100% - 90px); */
+  width: 188px;
+}
+#shiny-recorder #save-and-quit .inline-input-container input[type="number"] {
+  /* display: inline-block; */
+  /* width: calc(100% - 90px); */
+  width: 170px;
 }
 
 #shiny-recorder hr {
-  margin: 12px 0;
+  margin: 0.8em 0;
   border-top: 1px solid #b6babc;
 }
 
@@ -67,7 +125,7 @@ html,body {
 #shiny-recorder a.action-button:visited,
 #shiny-recorder a.action-button:hover {
   display: block;
-  margin: 10px 0;
+  margin: 0.7em 0;
   text-decoration:  none;
   color: #000;
   height: 18px;
@@ -80,7 +138,7 @@ html,body {
 }
 
 #shiny-recorder .form-group {
-  margin: 10px 0;
+  margin: 0.7em 0;
 }
 
 #shiny-recorder .form-group label {
@@ -109,10 +167,12 @@ html,body {
 }
 
 
-#recorded-events {
+#shiny-recorder #recorded_events {
+  background-color: #f6f7f9;
   -webkit-flex-grow: 1;
   flex-grow: 1;
   overflow-y: scroll;
+  height: 100%;
 }
 
 #shiny-recorder .table {
@@ -123,7 +183,7 @@ html,body {
 }
 
 #shiny-recorder .table thead > tr > th {
-  padding-left: 10px;
+  padding-left: 0.7em;
   font-weight: normal;
   background: #eeeff1;
   border-top:    1px solid #f7f8f9;
@@ -146,4 +206,65 @@ html,body {
   padding-top: 3px;
   padding-bottom: 3px;
   border-top: none;
+}
+
+
+#shiny-recorder #recorded_events pre {
+  /* counter-reset: line; */
+  background-color: white;
+  height: 100%;
+  font-size: 85%;
+}
+
+#shiny-recorder #recorded_events code:not(.no-select-code):before {
+  -webkit-user-select: none;
+}
+#shiny-recorder #recorded_events.no-select-code {
+  -webkit-user-select: none;
+}
+#shiny-recorder #recorded_events .slant-code {
+  color: #ddd;
+  font-style: italic;
+}
+
+
+
+#shiny-recorder #recorded_events pre {
+  padding-bottom: 5px;
+  padding-top: 5px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+#shiny-recorder #recorded_events pre>div {
+  counter-reset: line 0;
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  /* grid-auto-rows: 1em; */
+  /* row-gap: 0.1em; */
+  column-gap: 0.3em;
+  padding: 0;
+}
+
+#shiny-recorder #recorded_events pre .line-number {
+  text-align: right;
+}
+
+#shiny-recorder #recorded_events pre .line-number::before {
+  counter-increment: line;
+  content: counter(line);
+  white-space: pre;
+  color: #888;
+  /* padding: 0 .5em; */
+  padding-right: .5em;
+  border-right: 1px solid #ddd;
+}
+
+
+#shiny-recorder span[data-toggle="tooltip"] {
+  cursor: help;
+  color: #337ab7;
+}
+#shiny-recorder span[data-toggle="tooltip"]:hover {
+  color: #23527c;
 }

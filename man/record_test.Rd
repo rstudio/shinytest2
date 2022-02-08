@@ -8,8 +8,13 @@ record_test(
   app = ".",
   ...,
   seed = NULL,
-  load_timeout = 10 * 1000,
-  shiny_args = list()
+  load_timeout = NULL,
+  shiny_args = list(),
+  test_file = "test-shinytest2.R",
+  edit_test = rlang::is_interactive() && rstudioapi::isAvailable(),
+  allow_input_no_binding = FALSE,
+  allow_no_input_binding = FALSE,
+  run_test = TRUE
 )
 }
 \arguments{
