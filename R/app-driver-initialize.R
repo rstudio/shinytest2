@@ -166,8 +166,16 @@ app_initialize <- function(self, private, ...) {
       # `view` defaults to `rlang::missing_arg()`
       withCallingHandlers(
         {
-          view_val <- list(...)$view
-          if (rlang::is_interactive() && !isTRUE(view_val) && !is_false(view_val)) {
+          view_val <- rlang::maybe_missing(list(...)$view, NULL)
+          if (
+            rlang::is_interactive() &&
+            # If no chromote session object exists, then we can't view it
+            inherits(self$get_chromote_session(), "ChromoteSession") &&
+            # If view_val == TRUE, ChromoteSession was opened earlier when possible. Do not open again.
+            !isTRUE(view_val) &&
+            # If view_val == FALSE, user asked to not open chromote session. Do not open
+            !is_false(view_val)
+          ) {
             message("`$view()`ing chromote session for debugging purposes")
             self$log_message("Viewing chromote session for debugging purposes")
             self$view()
