@@ -1,6 +1,6 @@
 # TODO-barret; fix saving code
 # TODO-barret; auto-opt in to saving all values with no input binding
-# TODO-barret; delete unused code
+# TODO-barret; ?? Add a `use_shinytest2_test` function to build the scaffolding for the test files
 # TODO-barret; record many many tests
 
 
@@ -68,10 +68,7 @@ numeric_input <- function(..., placeholder = NULL) {
 # Create a question mark icon that displays a tooltip when hovered over.
 tooltip <- function(text, placement = "top") {
   span(
-    # href = "#",
     `data-toggle` = "tooltip",
-    # style="color: #0000EE;",
-    # style="color: #1a0dab;",
     title = text,
     icon("question-sign", lib = "glyphicon"),
     `data-placement` = placement,
@@ -201,89 +198,6 @@ quote_name <- function(name) {
   }
 }
 
-# code_generators <- list(
-#   # initialize = function(event, next_event = NULL, ...) {
-#   #   NA_character_
-#   # },
-
-#   input = function(event, next_event = NULL, allow_input_no_binding = FALSE, ...) {
-#     # Extra arguments when using times
-#     args <- ""
-
-#     if (event$inputType == "shiny.fileupload") {
-#       filename <- process_input_value(event$value, event$inputType)
-
-#       code <- paste0(
-#         "app$uploadFile(",
-#         quote_name(event$name), " = ", filename,
-#         args,
-#         ")"
-#       )
-
-#       # Get unescaped filenames in a char vector, with full path
-#       filepaths <- vapply(event$value, `[[`, "name", FUN.VALUE = "")
-#       filepaths <- file.path(app$getTestsDir(), filepaths)
-
-#       # Check that all files exist. If not, add a message and don't run test
-#       # automatically on exit.
-#       if (!all(file.exists(filepaths))) {
-#         add_dont_run_reason("An uploadFile() must be updated: use the correct path relative to the app's tests/shinytest directory, or copy the file to the app's tests/shinytest directory.")
-#         code <- paste0(code,
-#           " # <-- This should be the path to the file, relative to the app's tests/shinytest directory"
-#         )
-#       }
-
-#       code
-
-#     } else if (event$hasBinding) {
-#       paste0(
-#         "app$set_inputs(",
-#         quote_name(event$name), " = ",
-#         process_input_value(event$value, event$inputType),
-#         args,
-#         ")"
-#       )
-
-#     } else {
-#       if (isTRUE(allow_input_no_binding)) {
-#         args <- paste0(args, ", allow_input_no_binding_ = TRUE")
-#         if (identical(event$priority, "event")) args <- paste0(args, ', priority_ = "event"')
-#         paste0(
-#           "app$set_inputs(",
-#           quote_name(event$name), " = ",
-#           process_input_value(event$value, input_type = "default"),
-#           args,
-#           ")"
-#         )
-#       } else {
-#         paste0(
-#           "# Input '", quote_name(event$name),
-#           "' was set, but doesn't have an input binding."
-#         )
-#       }
-#     }
-#   }
-
-#   # fileDownload = function(event, next_event = NULL, ...) {
-#   #   paste0('app$expect_download("', event$name, '")')
-#   # },
-
-#   # outputEvent = function(event, next_event = NULL, ...) {
-#   #    NA_character_
-#   # },
-
-#   # inputSnapshot = function(event, next_event = NULL, ...) {
-#   #   paste0('app$expect_values(input = "', event$name, '"))')
-#   # },
-
-#   # outputSnapshot = function(event, next_event = NULL, ...) {
-#   #   paste0('app$expect_values(output = "', event$name, '"))')
-#   # },
-
-#   # appshot = function(event, next_event = NULL, ...) {
-#   #   "app$expect_appshot()"
-#   # }
-# )
 
 app_dir <- function() {
   app$get_path()
@@ -316,21 +230,6 @@ generate_test_code <- function(events, name, seed
   event_code <- unlist(lapply(events, `[[`, app_code)) # remove NULLs
   event_code <- paste0("    ", event_code, collapse = "\n")
 
-
-  # # Find the indices of the initialize event and output events. The code lines
-  # # and (optional) Sys.sleep() calls for these events will be removed later.
-  # # We need the output events for now in order to calculate times.
-  # remove_events <- vapply(events, function(event) {
-  #   event$type %in% c("initialize", "outputEvent")
-  # }, logical(1))
-
-  # if (length(event_code) != 0) {
-  #   # Remove unwanted events
-  #   event_code  <- event_code[!remove_events]
-
-  #   event_code <- paste0("  ", event_code, collapse = "\n")
-  # }
-
   has_expect_screenshot <- any(unlist(lapply(events, `[[`, type)) == "expectScreenshot")
 
   # From the tests dir, it is up two folders and then the app file
@@ -339,6 +238,7 @@ generate_test_code <- function(events, name, seed
       "  app <- AppDriver$new(\n",
       "    ", paste(c(
         app_test_path(),
+        # TODO-barret; Should this value be a parameter?
         if (has_expect_screenshot) "variant = platform_variant()",
         if (!is.null(name)) paste0("name = ", deparse2(name)),
         if (!is.null(seed)) paste0("seed = ", seed),
@@ -349,8 +249,6 @@ generate_test_code <- function(events, name, seed
       ), "\n",
       "  )"
     ),
-    # paste0('app$snapshotInit("', name, '")'),
-    # '',
     event_code,
     sep = "\n"
   )
@@ -361,6 +259,7 @@ generate_test_code <- function(events, name, seed
     "})\n"
   )
 
+  # TODO-barret; remove
   cat(ret)
 
   ret
@@ -406,80 +305,15 @@ shinyApp(
           HTML("To trigger a screenshot via the keyboard, press Ctrl-shift-S or &#8984;-shift-S"),
           placement = "bottom"
         ),
-        # actionLink("values",
-        #   span(
-        #     img(src="shiny.png", class = "shiny-recorder-icon", style="height: 23px;vertical-align: middle;"),
-        #     "Capture Shiny values",
-        #     tooltip(
-        #       HTML("To capture all Shiny values via the keyboard, press Ctrl-shift-V or or &#8984;-shift-V.<br/>You can also Ctrl-click or &#8984;-click on an input/output to capture just that one input/output."),
-        #       placement = "bottom"
-        #     )
-        #   )
-        # ),
-        # # br(style="display:block; margin-bottom: 10em;"),
-        # actionLink("screenshot",
-        #   span(
-        #     img(src="snapshot.png", class = "shiny-recorder-icon"),
-        #     "Take screenshot",
-        #     tooltip(
-        #       HTML("To trigger a screenshot via the keyboard, press Ctrl-shift-S or &#8984;-shift-S"),
-        #       placement = "bottom"
-        #     )
-        #     , style = "display: inline;"
-        #   )
-        # ),
-        # hr(),
-
-        # checkboxInput(
-        #   "includeVariant",
-        #   tagList(
-        #     "Save variant information",
-        #     tooltip(tagList(
-        #       "Setting the", tags$code("variant"), "is required when calling",
-        #       tags$code("app$expect_screenshot()"), ". Screenshots between different operating systems and R versions are not stable."
-        #     ))
-        #   ),
-        #   value = FALSE
-        # ),
-        # checkboxInput(
-        #   "allow_input_no_binding",
-        #   # tagList("Save inputs that do not have a binding",
-        #   tagList("Save inputs without a binding",
-        #     tooltip(
-        #       paste(
-        #         "This enables recording inputs that do not have a binding, which is common in htmlwidgets",
-        #         "like DT and plotly. Note that playback support is limited: shinytest will set the input",
-        #         "value so that R gets the input value, but the htmlwidget itself will not be aware of the value."
-        #       ),
-        #       placement = "bottom"
-        #     )
-        #   ),
-        #   value = FALSE
-        # )
       ),
       div(class = "shiny-recorder-header", "Code"),
       uiOutput("recorded_events"),
-      # div(id = "save-and-quit",
-      #   actionLink("exit_save",
-      #     span(
-      #       img(src = "exit-save.png", class = "shiny-recorder-icon"),
-      #       "Save test and exit recorder"
-      #     )
-      #   ),
-      #   actionLink("exit_nosave",
-      #     span(
-      #       img(src = "exit-nosave.png", class = "shiny-recorder-icon"),
-      #       "Quit without saving"
-      #     )
-      #   )
-      # ),
       div(class = "shiny-recorder-header", "Save"),
       div(id = "save-and-quit",
         tagAppendChild(
           tagAppendAttributes(
             textInput("testname", label = "Test name:", value = app_dir_basename()),
             class = "inline-input-container",
-            # style = "padding-top: 0.5em;"
           ),
           tooltip("The name of the test should describe what the set of expectations are trying to confirm."),
         ),
@@ -538,73 +372,43 @@ shinyApp(
       n_console_lines <<- n
     })
 
-    # save_file <- reactive({
-    #   testname <- input$testname
-    #   if (!grepl("^test-", testname)) {
-    #     testname <- paste0("test-", testname)
-    #   }
-    #   if (!grepl("\\.[rR]$", testname)) {
-    #     testname <- paste0(testname, ".R")
-    #   } else {
-    #     sub("\\.r$", ".R", testname)
-    #   }
-    #   file.path(app_dir(), "tests", "testthat", testname)
-    # })
-
-
     trim_testevents <- reactive({
       events <- input$testevents
 
-      trim_occurred <- TRUE
-      while (trim_occurred) {
-        trim_occurred <- FALSE
-
-        to_remove <- c()
-        for (i in seq_along(events)) {
-          if (i == 1) next
-          prev_event <- events[[i - 1]]
-          curr_event <- events[[i]]
-          should_remove <- FALSE
-          if (prev_event$type == curr_event$type) {
-            switch(curr_event$type,
-              # "expectValues" = {
-              #   should_remove <-
-              #     identical(prev_event$key, curr_event$key) &&
-              #     identical(prev_event$value, curr_event$value)
-              # },
-              "outputEvent" = ,
-              # "expectScreenshot" = ,
-              # "waitForIdle" = ,
-              "setWindowSize" = {should_remove <- TRUE}
-              # inputEvent? No!
-              # This could have unexpected behavior compared to recording.
-              # The user can remove the extra lines
-            )
-          } else if (
-            i >= 3 &&
-            curr_event$type == "setWindowSize" &&
-            prev_event$type == "outputEvent" &&
-            events[[i - 2]]$type == "setWindowSize"
-          ) {
-            should_remove <- TRUE
-          }
-          if (should_remove) {
-            to_remove[length(to_remove) + 1] <- i - 1
-          }
+      to_remove <- c()
+      for (i in seq_along(events)) {
+        if (i == 1) next
+        prev_event <- events[[i - 1]]
+        curr_event <- events[[i]]
+        if (prev_event$type == curr_event$type) {
+          switch(curr_event$type,
+            "outputEvent" = ,
+            "waitForIdle" = ,
+            "setWindowSize" = {
+              # Remove previous event
+              to_remove[length(to_remove) + 1] <- i - 1
+            }
+          )
+        } else if (
+          i >= 3 &&
+          curr_event$type == "setWindowSize" &&
+          prev_event$type == "outputEvent" &&
+          events[[i - 2]]$type == "setWindowSize"
+        ) {
+          # If two setWindowSize events sandwich an outputEvent,
+          # remove the first setWindowSize
+          to_remove[length(to_remove) + 1] <- i - 2
         }
+      }
 
-        if (length(to_remove)) {
-          trim_occurred <- TRUE
-          events <- events[-to_remove]
-        }
+      if (length(to_remove)) {
+        events <- events[-to_remove]
       }
 
       events <- lapply(events, function(event) {
         event$app_code <-
           switch(event$type,
             "initialize" = NULL,
-            # "output" = list(type = "snapshot-output", name = event$name),
-            # "appshot" = list(type = "appshot", name = "<all>"),
             "waitForIdle" = "app$wait_for_idle()",
             "setWindowSize" = paste0("app$set_window_size(width = ", event$width, ", height = ", event$height, ")"),
             "expectDownload" = paste0("app$expect_download(\"", event$name, "\")"),

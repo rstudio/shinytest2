@@ -88,52 +88,29 @@ window.shinyRecorder = (function() {
         setTimeout(function() { delete updatedInputs[inputId]; }, 0);
     });
 
-    // Ctrl-click or Cmd-click (Mac) to record an input value
-    $(document).on("click", ".shiny-bound-input", function(e) {
-        if (!(e.ctrlKey || e.metaKey))
-            return;
-
-        var $el = $(e.target).closest(".shiny-bound-input");
-        if ($el.length == 0)
-            return;
-
-        sendInputSnapshotToParent($el[0].id);
-    });
-    // Ctrl-click or Cmd-click (Mac) to record an output value
     $(document).on("click", ".shiny-bound-output", function(e) {
         if (!(e.ctrlKey || e.metaKey))
-            return;
+        return;
 
-        var $el = $(e.target).closest(".shiny-bound-output");
-        if ($el.length == 0)
-            return;
+        // Ctrl-click or Cmd-click (Mac) to record an output value
+        var $elOutput = $(e.target).closest(".shiny-bound-output");
+        if ($elOutput.length > 0) sendOutputSnapshotToParent($elOutput[0].id);
 
-        sendOutputSnapshotToParent($el[0].id);
+        // Ctrl-click or Cmd-click (Mac) to record an input value
+        var $elInput = $(e.target).closest(".shiny-bound-input");
+        if ($elInput.length > 0) sendInputSnapshotToParent($elInput[0].id);
     });
 
-    // Trigger a snapshot on Ctrl-shift-S or Cmd-shift-S (Mac)
     $(document).keydown(function(e) {
         if (!(e.ctrlKey || e.metaKey)) return;
         if (!e.shiftKey) return;
-        // S
-        if (e.which !== 83) return;
-        sendSreenshotSnapshotToParent();
-    });
-    // Trigger a snapshot on Ctrl-shift-V or Cmd-shift-V (Mac)
-    $(document).keydown(function(e) {
-        if (!(e.ctrlKey || e.metaKey)) return;
-        if (!e.shiftKey) return;
-        // V
-        if (e.which !== 86) return;
-        sendValuesSnapshotToParent();
-    });
-    // Trigger a snapshot on Ctrl-shift-I or Cmd-shift-I (Mac)
-    $(document).keydown(function(e) {
-        if (!(e.ctrlKey || e.metaKey)) return;
-        if (!e.shiftKey) return;
-        // V
-        if (e.which !== 73) return;
-        sendWaitForIdleToParent();
+
+        // Trigger a snapshot on Ctrl-shift-S or Cmd-shift-S (Mac)
+        if (e.which === 83) sendSreenshotSnapshotToParent();
+        // Trigger a snapshot on Ctrl-shift-V or Cmd-shift-V (Mac)
+        if (e.which === 86) sendValuesSnapshotToParent();
+        // Trigger a wait for idle on Ctrl-shift-I or Cmd-shift-I (Mac)
+        if (e.which === 73) sendWaitForIdleToParent();
     });
 
     function debounce(f, delay) {
