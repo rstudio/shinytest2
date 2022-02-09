@@ -606,7 +606,8 @@ Find a Shiny input/output value or DOM CSS selector and click it using the DOM m
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$click(
   input = missing_arg(),
   output = missing_arg(),
-  selector = missing_arg()
+  selector = missing_arg(),
+  ...
 )}\if{html}{\out{</div>}}
 }
 
@@ -614,6 +615,8 @@ Find a Shiny input/output value or DOM CSS selector and click it using the DOM m
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{input, output, selector}}{A name of an Shiny input/output value or a DOM CSS selector. Only one of these may be used.}
+
+\item{\code{...}}{If \code{input} is used, all extra arguments are passed to \verb{$set_inputs(!!input := "click", ...)}. By default, this means that the AppDriver will wait until an output has been updated within the specified \code{timeout_}.}
 }
 \if{html}{\out{</div>}}
 }
