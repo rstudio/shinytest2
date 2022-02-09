@@ -271,6 +271,11 @@ has_inputs_without_binding <- function(events) {
   }, TRUE))
 }
 
+
+n_console_err_lines <- 0
+n_console_std_lines <- 0
+
+
 shinyApp(
   ui = fluidPage(
     tags$head(
@@ -357,19 +362,28 @@ shinyApp(
 
 
     # echo console output from the driver object (in real-time)
-    n_console_lines <- 0
     observe({
-      # invalidateLater(500)
+      invalidateLater(500)
       logs <- subset(app$get_log(), location == "shiny")
-      # print(logs)
-      n <- nrow(logs)
-      if (n > n_console_lines) {
-        new_lines <- seq.int(n_console_lines + 1, n)
-        cat("\n\n")
-        print(logs[new_lines, ])
+
+      logs_err <- subset(logs, level == "error")
+      logs_std <- subset(logs, level != "error")
+
+      n_err <- nrow(logs_err)
+      n_std <- nrow(logs_std)
+
+      if (n_err > n_console_err_lines) {
+        # cat("\n\n")
+        print(logs_err[seq.int(n_console_err_lines + 1, n_err), ])
         cat("\n")
       }
-      n_console_lines <<- n
+      if (n_std > n_console_std_lines) {
+        # cat("\n\n")
+        print(logs_std[seq.int(n_console_std_lines + 1, n_std), ])
+        cat("\n")
+      }
+      n_console_err_lines <<- n_err
+      n_console_std_lines <<- n_std
     })
 
     trim_testevents <- reactive({
