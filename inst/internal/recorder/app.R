@@ -366,24 +366,18 @@ shinyApp(
       invalidateLater(500)
       logs <- subset(app$get_log(), location == "shiny")
 
-      logs_err <- subset(logs, level == "error")
-      logs_std <- subset(logs, level != "error")
-
-      n_err <- nrow(logs_err)
-      n_std <- nrow(logs_std)
-
-      if (n_err > n_console_err_lines) {
-        # cat("\n\n")
-        print(logs_err[seq.int(n_console_err_lines + 1, n_err), ])
-        cat("\n")
+      print_logs <- function(..., n) {
+        logs_sub <- subset(logs, ...)
+        n_sub <- nrow(logs_sub)
+        if (n_sub > n) {
+          print(logs_sub[seq.int(n + 1, n_sub), ])
+          cat("\n")
+        }
+        n_sub
       }
-      if (n_std > n_console_std_lines) {
-        # cat("\n\n")
-        print(logs_std[seq.int(n_console_std_lines + 1, n_std), ])
-        cat("\n")
-      }
-      n_console_err_lines <<- n_err
-      n_console_std_lines <<- n_std
+
+      n_console_err_lines <<- print_logs(level == "error", n = n_console_err_lines)
+      n_console_std_lines <<- print_logs(level != "error", n = n_console_std_lines)
     })
 
     trim_testevents <- reactive({
