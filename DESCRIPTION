@@ -20,7 +20,7 @@ URL: https://github.com/rstudio/shinytest2
 BugReports: https://github.com/rstudio/shinytest2/issues
 SystemRequirements: Google Chrome
 Depends:
-    testthat (>= 3.0.0)
+    testthat (>= 3.1.2)
 Imports:
     R6 (>= 2.4.0),
     chromote,
@@ -37,7 +37,7 @@ Imports:
     jsonlite,
     pingr,
     rmarkdown,
-    shiny,
+    shiny (>= 1.7.1.9003),
     withr
 Suggests:
     png,
@@ -48,11 +48,9 @@ Suggests:
     knitr
 Remotes:
     rstudio/chromote,
-    r-lib/testthat,
-    rstudio/shiny#3515
+    rstudio/shiny
 Config/Needs/website:
-    pkgdown,
-    r-lib/testthat
+    pkgdown
 Config/testthat/edition: 3
 Collate:
     'R6-helper.R'
