@@ -251,8 +251,8 @@ generate_test_code <- function(events, name, seed) {
   # From the tests dir, it is up two folders and then the app file
   inner_code <- paste(
     paste0(
-      "  app <- AppDriver$new(\n",
-      "    ", paste(c(
+      "app <- AppDriver$new(\n",
+      "  ", paste(c(
         app_test_path(),
         # TODO-barret; Should this value be a parameter?
         if (has_expect_screenshot) "variant = platform_variant()",
@@ -264,13 +264,20 @@ generate_test_code <- function(events, name, seed) {
         if (length(shiny_args) > 0) paste0("shiny_args = ", deparse2(shiny_args)),
         NULL # used for trailing comma
         ),
-        collapse = ",\n    "
+        collapse = ",\n  "
       ), "\n",
-      "  )"
+      ")"
     ),
     event_code,
     sep = "\n"
   )
+  # Use R's default formatter to wrap the code
+  inner_code <-
+    paste0(
+      lapply(parse(text = inner_code), rlang::expr_text, width = 78L),
+      collapse = "\n"
+    )
+  inner_code <- gsub("\n", "\n  ", paste0("  ", inner_code))
 
   ret <- paste0(
     "test_that(\"shinytest2 recording: ", name, "\", {\n",
