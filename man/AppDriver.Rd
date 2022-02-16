@@ -171,6 +171,8 @@ Initialize the AppDriver
   check_names = TRUE,
   name = NULL,
   view = missing_arg(),
+  height = NULL,
+  width = NULL,
   seed = NULL,
   clean_logs = TRUE,
   shiny_args = list(),
@@ -210,6 +212,8 @@ see \code{\link[=platform_variant]{platform_variant()}}.}
 \item{\code{name}}{Prefix name to use when saving testthat snapshot files}
 
 \item{\code{view}}{Opens the Chromote Session in an interactive browser tab once initialization. Defaults to \code{FALSE}.}
+
+\item{\code{height, width}}{Window size to use when opening the Chromote Session. These values will only be used if both \code{height} and \code{width} are not \code{NULL}.}
 
 \item{\code{seed}}{An optional random seed to use before starting the application.
 For apps that use R's random number generator, this can make their

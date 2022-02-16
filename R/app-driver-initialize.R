@@ -9,6 +9,8 @@ app_initialize_ <- function(
   name = NULL,
   variant = getOption("shinytest2.variant", missing_arg()),
   view = missing_arg(),
+  height = NULL,
+  width = NULL,
   seed = NULL,
   clean_logs = TRUE,
   shiny_args = list(),
@@ -87,6 +89,10 @@ app_initialize_ <- function(
   app_init_browser_log(self, private, options = options)
 
   "!DEBUG navigate to Shiny app"
+  if (!is.null(height) && !is.null(width)) {
+    self$log_message(paste0("Setting window size: ", height, "x", width))
+    self$set_window_size(width, height, wait = FALSE)
+  }
   self$log_message("Navigating to Shiny app")
   # private$web$go(private$shiny_url$get())
   self$get_chromote_session()$Page$navigate(private$shiny_url$get())

@@ -74,6 +74,7 @@ AppDriver <- R6Class(# nolint
     #' @param name Prefix name to use when saving testthat snapshot files
     #' @param check_names Check if widget names are unique?
     #' @param view Opens the Chromote Session in an interactive browser tab once initialization. Defaults to `FALSE`.
+    #' @param height,width Window size to use when opening the Chromote Session. These values will only be used if both `height` and `width` are not `NULL`.
     #' @param seed An optional random seed to use before starting the application.
     #'   For apps that use R's random number generator, this can make their
     #'   behavior repeatable.
@@ -101,6 +102,8 @@ AppDriver <- R6Class(# nolint
       check_names = TRUE,
       name = NULL,
       view = missing_arg(),
+      height = NULL,
+      width = NULL,
       seed = NULL,
       clean_logs = TRUE,
       shiny_args = list(),
@@ -118,6 +121,8 @@ AppDriver <- R6Class(# nolint
         name = name,
         variant = variant,
         view = view,
+        height = height,
+        width = width,
         seed = seed,
         clean_logs = clean_logs,
         shiny_args = shiny_args,
