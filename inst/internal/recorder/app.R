@@ -244,7 +244,7 @@ generate_test_code <- function(events, name, seed) {
       event$app_code
     )
   })) # Unlist to remove `NULL`s
-  event_code <- paste0("  ", event_code, collapse = "\n")
+  event_code <- paste0(event_code, collapse = "\n")
 
   has_expect_screenshot <- any(unlist(lapply(events, `[[`, "type")) == "expectScreenshot")
 
@@ -254,9 +254,11 @@ generate_test_code <- function(events, name, seed) {
       "app <- AppDriver$new(\n",
       "  ", paste(c(
         app_test_path(),
-        # TODO-barret; Should this value be a parameter?
+        # TODO-future; Should this value be a parameter?
+        # Going with "no" for now as it is difficult to capture the expression
+        # when nothing else is an expression
         if (has_expect_screenshot) "variant = platform_variant()",
-        if (!is.null(name)) paste0("name = ", deparse2(name)),
+        if (!is.null(name)) paste0("name = ", deparse2(fs::path_sanitize(name, "_"))),
         if (!is.null(seed)) paste0("seed = ", seed),
         if (!is.null(height)) paste0("height = ", height),
         if (!is.null(width)) paste0("width = ", width),
@@ -311,7 +313,7 @@ shinyApp(
       tags$iframe(id = "app-iframe", src = target_url)
     ),
     div(id = "shiny-recorder",
-      div(class = "shiny-recorder-header", tags$code("{shinytest2}"), "actions"),
+      div(class = "shiny-recorder-header", tags$code("{shinytest2}"), "expections"),
       div(class = "shiny-recorder-controls",
         actionButton("values",
           span(
@@ -344,7 +346,7 @@ shinyApp(
             textInput("testname", label = "Test name:", value = app_name),
             class = "inline-input-container",
           ),
-          tooltip("The name of the test should describe what the set of expectations are trying to confirm."),
+          tooltip("The name of the test should be short, unique, and path-friendly way to describe what the set of expectations are trying to confirm."),
         ),
         tagAppendChild(
           tagAppendAttributes(
@@ -367,7 +369,9 @@ shinyApp(
           span(
             img(src = "exit-save.png", class = "shiny-recorder-icon"),
             "Save test and exit"
-          )
+          ),
+          class = "disabled",
+          title = "Perform an \"Expectation\" to enable \"Save test and exit\" button"
         )
       ),
       enable_tooltip_script()
@@ -501,10 +505,8 @@ shinyApp(
                 code
               } else {
                 if (!event$hasBinding && !isTRUE(allow_input_no_binding_react())) {
-                  # TODO-barret; test
                   structure(
                     paste0(
-                      # "# Update unbound `input$", quote_name(event$name), "`"
                       "# Update unbound `input` value"
                     ),
                     class = c("st2_comment", "character")
@@ -538,6 +540,26 @@ shinyApp(
       })
 
       events
+    })
+
+    # Use reactiveVal dedupe feature
+    save_enabled <- reactiveVal(FALSE)
+    save_enable_obs <- observeEvent(trim_testevents(), {
+      for (event in trim_testevents()) {
+        switch(event$type,
+          "expectValues" = ,
+          "expectScreenshot" = ,
+          "expectDownload" = {
+            save_enabled(TRUE)
+            session$sendCustomMessage(
+              "enable_save_button",
+              "1"
+            )
+            save_enable_obs$destroy()
+            return()
+          }
+        )
+      }
     })
 
     # If an unbound input value is updated, ask the user if the event should be recorded
@@ -624,7 +646,10 @@ shinyApp(
       )
     })
 
+
     observeEvent(input$exit_save, {
+      req(save_enabled())
+
       stopApp({
         seed <- as.integer(input$seed)
         if (is.null(seed) || is.na(seed)) {

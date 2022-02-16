@@ -144,6 +144,12 @@ window.recorder = (function() {
             if (event.name === "values") triggerTestEvent({type: "expectValues"});
             if (event.name === "screenshot") triggerTestEvent({type: "expectScreenshot"});
         });
+
+        // Enable save button when there is an expectation
+        Shiny.addCustomMessageHandler("enable_save_button", function(message) {
+            $("#exit_save").removeClass("disabled");
+        });
+
     });
 
 

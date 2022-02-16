@@ -68,8 +68,8 @@ html,body {
   background-color: #e7fee7;
   float:right;
 }
-#shiny-recorder #save-and-quit #exit_save:hover {
-  background-color: #d2f1d2;
+#shiny-recorder #save-and-quit #exit_save:not(.disabled):hover {
+  background-color: #d9f8d9;
 }
 
 #shiny-recorder #save-and-quit #exit_nosave {
