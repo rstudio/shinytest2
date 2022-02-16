@@ -141,7 +141,6 @@ window.recorder = (function() {
         });
 
         $(document).on("shiny:inputchanged", function(event) {
-            console.log("shiny:inputchanged", "Event:", event);
             if (event.name === "values") triggerTestEvent({type: "expectValues"});
             if (event.name === "screenshot") triggerTestEvent({type: "expectScreenshot"});
         });

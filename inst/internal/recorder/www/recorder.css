@@ -261,10 +261,15 @@ html,body {
 }
 
 
-#shiny-recorder span[data-toggle="tooltip"] {
+/* Do not namespace with `#shiny-recorder` to allow modals to work */
+span[data-toggle="tooltip"] {
   cursor: help;
   color: #337ab7;
 }
-#shiny-recorder span[data-toggle="tooltip"]:hover {
+span[data-toggle="tooltip"]:hover {
   color: #23527c;
+}
+.tooltip-inner {
+  max-width: 100% !important;
+  text-align: left;
 }

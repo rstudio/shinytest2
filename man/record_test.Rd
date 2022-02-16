@@ -7,21 +7,24 @@
 record_test(
   app = ".",
   ...,
+  name = NULL,
   seed = NULL,
   load_timeout = NULL,
   shiny_args = list(),
   test_file = "test-shinytest2.R",
   edit_test = rlang::is_interactive() && rstudioapi::isAvailable(),
-  allow_input_no_binding = FALSE,
+  allow_input_no_binding = NULL,
   allow_no_input_binding = FALSE,
   run_test = TRUE
 )
 }
 \arguments{
-\item{app}{A \link{AppDriver} object, or path to a Shiny
+\item{app}{A \code{\link{AppDriver}} object, or path to a Shiny
 application.}
 
 \item{...}{Must be empty. Allows for parameter expansion.}
+
+\item{name}{Name provided to \code{\link{AppDriver}}. This value should be unique between all tests within a test file. If it is not unique, different expect methods may overwrite each other.}
 
 \item{seed}{A random seed to set before running the app. This seed will also
 be used in the test script.}
@@ -31,7 +34,22 @@ milliseconds. If a value is provided, it will be saved in the test script.}
 
 \item{shiny_args}{A list of options to pass to \code{runApp()}. If a value
 is provided, it will be saved in the test script.}
+
+\item{test_file}{Base file name of the \pkg{testthat} test file.}
+
+\item{allow_input_no_binding}{This value controls if events without input
+bindings are recorded.
+\itemize{
+\item If \code{TRUE}, events without input bindings are recorded.
+\item If \code{FALSE}, events without input bindings are not recorded.
+\item If \code{NULL} (default), if an updated input does not have a corresponding input, a modal dialog will be shown asking if unbound input events should be recorded.
+See \code{\link{AppDriver}}\verb{$set_inputs()} for more information.
+}}
+
+\item{run_test}{If \code{TRUE}, \code{test_file} will be executed after saving the recording.}
+
+\item{edit_test_file}{If \code{TRUE}, the test file will be opened in an editor via \code{\link[=file.edit]{file.edit()}} before executing.}
 }
 \description{
-Launch test event recorder for a Shiny app
+Once a recording is completed, it will create or append a new \pkg{shinytest2} test to the \pkg{testthat} \code{test_file}.
 }
