@@ -1,7 +1,5 @@
-# TODO-barret; fix saving code
-# TODO-barret; auto-opt in to saving all values with no input binding
-# TODO-barret; ?? Add a `use_shinytest2_test` function to build the scaffolding for the test files
 # TODO-barret; record many many tests
+# TODO-barret; find all names of existing appdriver new names; If match is found, use `name-X` where `X` is a number that gets inc larger.
 
 
 library(shiny)
@@ -282,7 +280,7 @@ generate_test_code <- function(events, name, seed) {
   inner_code <- gsub("\n", "\n  ", paste0("  ", inner_code))
 
   ret <- paste0(
-    "test_that(\"shinytest2 recording: ", name, "\", {\n",
+    "test_that(\"{shinytest2} recording: ", name, "\", {\n",
     inner_code, "\n",
     "})\n"
   )
@@ -684,7 +682,7 @@ shinyApp(
         overwrite_test_runner <-
           if (fs::file_exists(test_runner_file)) {
             if (!any(grepl("test_app(", readLines(test_runner_file), fixed = TRUE))) {
-              rlang::warning(paste0("Overwriting test runner ", test_runner_file, " with `shinytest2::test_app()` call to ensure proper a testing environment."))
+              rlang::warn(paste0("Overwriting test runner ", fs::path_rel(test_runner_file, app$get_path()), " with `shinytest2::test_app()` call to ensure proper a testing environment."))
               # Runner exists. Overwrite existing contents
               TRUE
             } else {
@@ -696,7 +694,8 @@ shinyApp(
             TRUE
           }
         if (overwrite_test_runner) {
-          rlang::inform(paste0("Saving test runner: ", test_runner_file))
+          # TODO-barret; make relative file path
+          rlang::inform(paste0("Saving test runner: ", fs::path_rel(test_runner_file, app$get_path())))
           fs::file_copy(
             system.file("internal/template/testthat.R", package = "shinytest2"),
             test_runner_file,
