@@ -315,7 +315,7 @@ shinyApp(
       div(class = "shiny-recorder-controls",
         actionButton("values",
           span(
-            img(src="shiny.png", class = "shiny-recorder-icon", style="height: 23px;vertical-align: middle;"),
+            img(src = "shiny.png", class = "shiny-recorder-icon", style = "height: 23px;vertical-align: middle;"),
             "Expect Shiny values"
           )
         ),
@@ -325,7 +325,7 @@ shinyApp(
         ),
         actionButton("screenshot",
           span(
-            img(src="snapshot.png", class = "shiny-recorder-icon"),
+            img(src = "snapshot.png", class = "shiny-recorder-icon"),
             "Expect screenshot",
             style = "display: inline;"
           )
@@ -418,8 +418,8 @@ shinyApp(
         curr_event <- events[[i]]
         if (prev_event$type == curr_event$type) {
           switch(curr_event$type,
-            "outputEvent" = ,
-            "waitForIdle" = ,
+            "outputEvent" = , # nolint
+            "waitForIdle" = , # nolint
             "setWindowSize" = {
               # Remove previous event
               to_remove[length(to_remove) + 1] <- i - 1
@@ -545,8 +545,8 @@ shinyApp(
     save_enable_obs <- observeEvent(trim_testevents(), {
       for (event in trim_testevents()) {
         switch(event$type,
-          "expectValues" = ,
-          "expectScreenshot" = ,
+          "expectValues" = , # nolint
+          "expectScreenshot" = , # nolint
           "expectDownload" = {
             save_enabled(TRUE)
             session$sendCustomMessage(
@@ -561,12 +561,12 @@ shinyApp(
     })
 
     # If an unbound input value is updated, ask the user if the event should be recorded
-    allow_input_no_binding_obs_to_destroy <- list()
-    allow_input_no_binding_obs_to_destroy[[1]] <- observeEvent(trim_testevents(), {
+    no_binding_obs <- list()
+    no_binding_obs[[1]] <- observeEvent(trim_testevents(), {
       if (!is.null(allow_input_no_binding_react())) {
         # Cancel the observers and return
-        lapply(allow_input_no_binding_obs_to_destroy, function(ob) { ob$destroy() })
-        allow_input_no_binding_obs_to_destroy <<- list()
+        lapply(no_binding_obs, function(ob) { ob$destroy() })
+        no_binding_obs <<- list()
         return();
       }
 
@@ -575,7 +575,7 @@ shinyApp(
         return()
       }
 
-      allow_input_no_binding_obs_to_destroy[[2]] <<-
+      no_binding_obs[[2]] <<-
         observeEvent(
           input$inputs_no_binding_ignore,
           {
@@ -583,7 +583,7 @@ shinyApp(
           },
           ignoreInit = TRUE
         )
-      allow_input_no_binding_obs_to_destroy[[3]] <<-
+      no_binding_obs[[3]] <<-
         observeEvent(
           input$inputs_no_binding_save,
           {
@@ -608,7 +608,7 @@ shinyApp(
             tooltip(tagList(
               "To prevent this modal from being displayed, set the parameter", tags$br(),
               tags$ul(
-                tags$li(tags$code("record_test(allow_input_no_binding = TRUE)"), "to", tags$strong("record") ,"these events."),
+                tags$li(tags$code("record_test(allow_input_no_binding = TRUE)"), "to", tags$strong("record"), "these events."),
                 tags$li(tags$code("record_test(allow_input_no_binding = FALSE)"), "to", tags$strong("ignore"), "these events.")
               )
             ), placement = "left"),

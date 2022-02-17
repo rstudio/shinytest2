@@ -53,7 +53,6 @@ record_test <- function(
     }
 
     app_path_info <- app_path(app, "app")
-    app_dir <- app_path_info$dir
     app_path <- app_path_info$app
     is_rmd <- app_path_info$is_rmd
 
