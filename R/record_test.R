@@ -13,7 +13,7 @@
 #' @param shiny_args A list of options to pass to `runApp()`. If a value
 #'   is provided, it will be saved in the test script.
 #' @param test_file Base file name of the \pkg{testthat} test file.
-#' @param edit_test_file If `TRUE`, the test file will be opened in an editor via [`file.edit()`] before executing.
+#' @param edit_test If `TRUE`, the test file will be opened in an editor via [`file.edit()`] before executing.
 #' @param allow_input_no_binding This value controls if events without input
 #' bindings are recorded.
 #'   * If `TRUE`, events without input bindings are recorded.
@@ -33,7 +33,8 @@ record_test <- function(
   test_file = "test-shinytest2.R",
   edit_test = rlang::is_interactive() && rstudioapi::isAvailable(),
   allow_input_no_binding = NULL, # new,
-  allow_no_input_binding = FALSE, # TODO-barret; change to _this variable_ throughout package
+  # TODO-barret; change to _this variable_ throughout package
+  # allow_no_input_binding = FALSE,
   run_test = TRUE
 ) {
   ellipsis::check_dots_empty()
@@ -122,19 +123,19 @@ record_test <- function(
   }
 
   if (isTRUE(edit_test)) {
-    file.edit(saved_test_file)
+    utils::file.edit(saved_test_file)
   }
 
   app_path <- app$get_path()
   test_filter <- sub("^test-", "", fs::path_ext_remove(fs::path_file(saved_test_file)))
   if (length(res$dont_run_reasons) == 0) {
     # Run the test script
-    message("Running recorded test: ", fs::path_rel(saved_test_file, app_path))
+    rlang::inform("Running recorded test: ", fs::path_rel(saved_test_file, app_path))
     test_app(app_path, filter = test_filter)
   } else {
     # TODO-barret; Test code
     rlang::inform(
-      setNames(
+      stats::setNames(
         c("Not running test script because", res$dont_run_reasons),
         c("", rep("*", length(res$dont_run_reasons)))
       )

@@ -71,6 +71,7 @@ app_find_node_id <- function(
 }
 
 
+#' @importFrom rlang :=
 app_click <- function(
   self, private,
   input = missing_arg(),

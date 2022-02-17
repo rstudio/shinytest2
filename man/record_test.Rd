@@ -14,7 +14,6 @@ record_test(
   test_file = "test-shinytest2.R",
   edit_test = rlang::is_interactive() && rstudioapi::isAvailable(),
   allow_input_no_binding = NULL,
-  allow_no_input_binding = FALSE,
   run_test = TRUE
 )
 }
@@ -37,6 +36,8 @@ is provided, it will be saved in the test script.}
 
 \item{test_file}{Base file name of the \pkg{testthat} test file.}
 
+\item{edit_test}{If \code{TRUE}, the test file will be opened in an editor via \code{\link[=file.edit]{file.edit()}} before executing.}
+
 \item{allow_input_no_binding}{This value controls if events without input
 bindings are recorded.
 \itemize{
@@ -47,8 +48,6 @@ See \code{\link{AppDriver}}\verb{$set_inputs()} for more information.
 }}
 
 \item{run_test}{If \code{TRUE}, \code{test_file} will be executed after saving the recording.}
-
-\item{edit_test_file}{If \code{TRUE}, the test file will be opened in an editor via \code{\link[=file.edit]{file.edit()}} before executing.}
 }
 \description{
 Once a recording is completed, it will create or append a new \pkg{shinytest2} test to the \pkg{testthat} \code{test_file}.
