@@ -258,7 +258,7 @@ generate_test_code <- function(events, name, seed) {
         # Going with "no" for now as it is difficult to capture the expression
         # when nothing else is an expression
         if (has_expect_screenshot) "variant = platform_variant()",
-        if (!is.null(name)) paste0("name = ", deparse2(fs::path_sanitize(name, "_"))),
+        if (!is.null(name)) paste0("name = ", deparse2(name)),
         if (!is.null(seed)) paste0("seed = ", seed),
         if (!is.null(height)) paste0("height = ", height),
         if (!is.null(width)) paste0("width = ", width),
