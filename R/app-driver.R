@@ -17,6 +17,19 @@ NULL
 #'        because they often rely on minor details of dependencies.
 #' @param wait_ Wait until all reactive updates have completed?
 #' @param timeout_ Amount of time to wait before giving up (milliseconds).
+#' @param hash_images If `TRUE`, images will be hashed before being returned. Otherwise, all images will return their full data64 encoded value.
+#' @param screenshot_args This named list of arguments is passed along to [`chromote::ChromoteSession`]'s `$screenshot()` method.
+#'   If missing, the value will default to `$initialize(screenshot_args=)`.
+#'
+#' If the value is:
+#'   * `TRUE`: A screenshot of the whole page will be taken with no delay
+#'   * A named list of arguments: Arguments passed directly to [`chromote::ChromoteSession`]'s
+#' `$screenshot()` method. The selector and delay will default to `"html"` and `0` respectively.
+#'
+#' If a `FALSE` value is provided, the parameter will be ignored and a screenshot will be taken with default behavior.
+#' @param delay The number of milliseconds to wait before taking the screenshot. This value can either be supplied as `delay` or `screenshot_args`'s delay slot. The `delay` parameter will have preference.
+#' @param selector The selector is a CSS selector that will be used to select a portion of the page to be captured. This value can either be supplied as `selector` or `screenshot_args`'s selector slot. The `selector` parameter will have preference.
+#' The default value is to take a picture of the whole page.
 #' @importFrom R6 R6Class
 #' @export
 AppDriver <- R6Class(# nolint
@@ -63,29 +76,27 @@ AppDriver <- R6Class(# nolint
     #'
     #' @param path Path to a directory containing a Shiny app, i.e. a
     #'   single `app.R` file or a `server.R`-`ui.R` pair.
+    #' @param name Prefix name to use when saving testthat snapshot files
+    #' @template variant
+    #' @param seed An optional random seed to use before starting the application.
+    #'   For apps that use R's random number generator, this can make their
+    #'   behavior repeatable.
     #' @param load_timeout How long to wait for the app to load, in ms.
     #'   This includes the time to start R. Defaults to 10s when running
     #'   locally and 20s when running on CI.
     #' @param screenshot_args Default set of arguments to pass in to [`chromote::ChromoteSession`]'s
     #' `$screenshot()` method when taking screnshots within `$expect_screenshot()`. To disable screenshots by default, set to `FALSE`.
-    # ' @param phantomTimeout How long to wait when connecting to phantomJS
-    # '  process, in ms
-    #' @template variant
-    #' @param name Prefix name to use when saving testthat snapshot files
-    #' @param check_names Check if widget names are unique?
+    #' @param expect_values_screenshot_args The value for `screenshot_args` when producing a debug screenshot for `$expect_values()`.
+    #' @param check_names Check if widget names are unique once the application initially loads?
     #' @param view Opens the Chromote Session in an interactive browser tab once initialization. Defaults to `FALSE`.
     #' @param height,width Window size to use when opening the Chromote Session. These values will only be used if both `height` and `width` are not `NULL`.
-    #' @param seed An optional random seed to use before starting the application.
-    #'   For apps that use R's random number generator, this can make their
-    #'   behavior repeatable.
     #' @param clean_logs Whether to remove the stdout and stderr logs when the
     #'   Shiny process object is garbage collected.
-    #' @param shiny_args A list of options to pass to [shiny::runApp()].
-    #' @param render_args Passed to `rmarkdown::run()` for interactive `.Rmd`s.
+    #' @param shiny_args A list of options to pass to [shiny::runApp()]. Ex: `list(port = 8080)`.
+    #' @param render_args Passed to `rmarkdown::run(render_args=)` for interactive `.Rmd`s. Ex: `list(quiet = TRUE)
     #' @param options A list of [base::options()] to set in the driver's child
-    #'   process. See [`shiny::shinyOptions()`] for inspiration. If `shiny.trace`
-    #'   is set to `TRUE`, then all WebSocket traffic will be captured by `chromote`
-    #'   as to have access to the when the message was received by the browser.
+    #'   process. See [`shiny::shinyOptions()`] for inspiration. If `shiny.trace = TRUE`,
+    #'   then all WebSocket traffic will be captured by `chromote` and logged.
     #' @importFrom callr process
     #' @importFrom rlang abort
     initialize = function(
@@ -95,16 +106,16 @@ AppDriver <- R6Class(# nolint
       # Should we have many options that can be set to override the defaults?
       # Like the shinytest2.variant? Or `shinytest2.seed`? Or even `shinytest2.idle.duration`?
       # Should `shinytest2.variant` be removed?
-      load_timeout = NULL,
-      variant = getOption("shinytest2.variant", missing_arg()),
-      expect_values_screenshot_args = TRUE,
-      screenshot_args = missing_arg(),
-      check_names = TRUE,
       name = NULL,
+      variant = getOption("shinytest2.variant", missing_arg()),
+      seed = NULL,
+      load_timeout = NULL,
+      screenshot_args = missing_arg(),
+      expect_values_screenshot_args = TRUE,
+      check_names = TRUE,
       view = missing_arg(),
       height = NULL,
       width = NULL,
-      seed = NULL,
       clean_logs = TRUE,
       shiny_args = list(),
       render_args = NULL,
@@ -267,16 +278,23 @@ AppDriver <- R6Class(# nolint
     #' 1. A screenshot of the Shiny application using the `$screenshot()` function of the [`chromote::ChromoteSession`]
     #' 2. A JSON snapshot of all Shiny component values
     #'
-    #' @param name The prefix name to be used for the snapshot. By default, this uses the name supplied to `app` on initialization.
-    #' @param items Components to only be included in the snapshot. If supplied, can contain `inputs`, `output`, and `export`. Each value of `items` can either be `TRUE` (for all values) or a character list of names to use.
-    #' @param screenshot If the value is `NULL`, then the initalization value of `screenshot_args` will be used. If this value is `NULL`, then `screenshot` will be set to the result of `!is.null(items)`.
+    #' @param name The file name to be used for the snapshot. The file extension will be ignored. By default, this uses the name supplied to `app` on initialization with a counter.
+    #' @param input,output,export
+    #'   Depending on which parameters are supplied, different return values can occur:
+    #'     * If `input`, `output`, and `export` are missing, then all values are included in the snapshot.
+    #'     * If at least one `input`, `output`, or `export` is specified, then only those values are included in the snapshot.
+    #'   The values supplied can be:
+    #'     * A character vector of specific names to only include in the snapshot.
+    #'     * `TRUE`, then all values of that type are included in the snapshot.
+    #'     * Anything else will result in the parameter being ignored.
+    #' @param screenshot_args This value is passed along to `$expect_screenshot()` where the resulting expectation is ignored. If missing, the default value will be `$initialize(expect_values_screenshot_args=)`.
     #'
     #'   The final value can either be:
     #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
     #'   * `FALSE`: No screenshot will be taken
     #'   * A named list of arguments: Arguments passed directly to [`chromote::ChromoteSession`]'s
     #' `$screenshot()` method. The selector and delay will default to `"html"` and `0` respectively.
-    # TODO-barret-docs; document methods!
+    # TODO-barret-docs; Examples!
     expect_values = function(
       ...,
       input = missing_arg(), output = missing_arg(), export = missing_arg(),
@@ -293,6 +311,10 @@ AppDriver <- R6Class(# nolint
         cran = cran
       )
     },
+    #' Take a screenshot of the Shiny application
+    #'
+    #' @param file If `NULL`, then the image will be displayed to the current Graphics Device. If a file path, then the screenshot will be saved to that file.
+    # TODO-barret-docs; Examples!
     screenshot = function(
       file = NULL,
       ...,
@@ -309,6 +331,30 @@ AppDriver <- R6Class(# nolint
         selector = selector
       )
     },
+    #' Expect a screenshot of the Shiny application
+    #'
+    #' @param screenshot_args This named list of arguments is passed along to
+    #'   [`chromote::ChromoteSession`]'s `$screenshot()` method. If missing, the
+    #'   value will default to `$initialize(screenshot_args=)`.
+    #'
+    #' If the value is:
+    #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
+    #'   * A named list of arguments: Arguments passed directly to [`chromote::ChromoteSession`]'s
+    #' `$screenshot()` method. The selector and delay will default to `"html"` and `0` respectively.
+    #'
+    #' If a `FALSE` value is provided, the parameter will be ignored and a
+    #' screenshot will be taken with default behavior.
+    #' @param delay The number of milliseconds to wait before taking the
+    #'   screenshot. This value can either be supplied as `delay` or
+    #'   `screenshot_args`'s delay slot. The `delay` parameter will have
+    #'   preference.
+    #' @param selector The selector is a CSS selector that will be used to
+    #'   select a portion of the page to be captured. This value can either be
+    #'   supplied as `selector` or `screenshot_args`'s selector slot. The
+    #'   `selector` parameter will have preference. The default value is to take
+    #'   a picture of the whole page.
+    #' @param name The file name to be used for the snapshot. The file extension will overwritten to `.png`. By default, this uses the name supplied to `app` on initialization with a counter.
+    # TODO-barret-docs; Examples!
     expect_screenshot = function(
       ...,
       screenshot_args = missing_arg(),

@@ -164,16 +164,16 @@ Initialize the AppDriver
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$new(
   path = testthat::test_path("../../"),
   ...,
-  load_timeout = NULL,
-  variant = getOption("shinytest2.variant", missing_arg()),
-  expect_values_screenshot_args = TRUE,
-  screenshot_args = missing_arg(),
-  check_names = TRUE,
   name = NULL,
+  variant = getOption("shinytest2.variant", missing_arg()),
+  seed = NULL,
+  load_timeout = NULL,
+  screenshot_args = missing_arg(),
+  expect_values_screenshot_args = TRUE,
+  check_names = TRUE,
   view = missing_arg(),
   height = NULL,
   width = NULL,
-  seed = NULL,
   clean_logs = TRUE,
   shiny_args = list(),
   render_args = NULL,
@@ -189,9 +189,7 @@ single \code{app.R} file or a \code{server.R}-\code{ui.R} pair.}
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
-\item{\code{load_timeout}}{How long to wait for the app to load, in ms.
-This includes the time to start R. Defaults to 10s when running
-locally and 20s when running on CI.}
+\item{\code{name}}{Prefix name to use when saving testthat snapshot files}
 
 \item{\code{variant}}{If not-\code{NULL}, results will be saved in
 _snaps/{variant}/{test.md}\verb{, so }variant` must be a single
@@ -204,32 +202,35 @@ Common use cases include variations for operating system, R
 version, or version of key dependency. For example usage,
 see \code{\link[=platform_variant]{platform_variant()}}.}
 
+\item{\code{seed}}{An optional random seed to use before starting the application.
+For apps that use R's random number generator, this can make their
+behavior repeatable.}
+
+\item{\code{load_timeout}}{How long to wait for the app to load, in ms.
+This includes the time to start R. Defaults to 10s when running
+locally and 20s when running on CI.}
+
 \item{\code{screenshot_args}}{Default set of arguments to pass in to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
 \verb{$screenshot()} method when taking screnshots within \verb{$expect_screenshot()}. To disable screenshots by default, set to \code{FALSE}.}
 
-\item{\code{check_names}}{Check if widget names are unique?}
+\item{\code{expect_values_screenshot_args}}{The value for \code{screenshot_args} when producing a debug screenshot for \verb{$expect_values()}.}
 
-\item{\code{name}}{Prefix name to use when saving testthat snapshot files}
+\item{\code{check_names}}{Check if widget names are unique once the application initially loads?}
 
 \item{\code{view}}{Opens the Chromote Session in an interactive browser tab once initialization. Defaults to \code{FALSE}.}
 
 \item{\code{height, width}}{Window size to use when opening the Chromote Session. These values will only be used if both \code{height} and \code{width} are not \code{NULL}.}
 
-\item{\code{seed}}{An optional random seed to use before starting the application.
-For apps that use R's random number generator, this can make their
-behavior repeatable.}
-
 \item{\code{clean_logs}}{Whether to remove the stdout and stderr logs when the
 Shiny process object is garbage collected.}
 
-\item{\code{shiny_args}}{A list of options to pass to \code{\link[shiny:runApp]{shiny::runApp()}}.}
+\item{\code{shiny_args}}{A list of options to pass to \code{\link[shiny:runApp]{shiny::runApp()}}. Ex: \code{list(port = 8080)}.}
 
-\item{\code{render_args}}{Passed to \code{rmarkdown::run()} for interactive \code{.Rmd}s.}
+\item{\code{render_args}}{Passed to \code{rmarkdown::run(render_args=)} for interactive \code{.Rmd}s. Ex: `list(quiet = TRUE)}
 
 \item{\code{options}}{A list of \code{\link[base:options]{base::options()}} to set in the driver's child
-process. See \code{\link[shiny:shinyOptions]{shiny::shinyOptions()}} for inspiration. If \code{shiny.trace}
-is set to \code{TRUE}, then all WebSocket traffic will be captured by \code{chromote}
-as to have access to the when the message was received by the browser.}
+process. See \code{\link[shiny:shinyOptions]{shiny::shinyOptions()}} for inspiration. If \code{shiny.trace = TRUE},
+then all WebSocket traffic will be captured by \code{chromote} and logged.}
 }
 \if{html}{\out{</div>}}
 }
@@ -432,6 +433,8 @@ Returns a named list of all inputs, outputs, and export values.
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
 \item{\code{input, output, export}}{One of these variable should contain a single string value. If more than one value is specified or no values are specified, an error will be thrown.}
+
+\item{\code{hash_images}}{If \code{TRUE}, images will be hashed before being returned. Otherwise, all images will return their full data64 encoded value.}
 }
 \if{html}{\out{</div>}}
 }
@@ -459,6 +462,8 @@ Returns a named list of all inputs, outputs, and export values.
 \item{\code{input, output, export}}{Either \code{TRUE} to return all
 input/output/exported values, or a character vector of specific
 controls.}
+
+\item{\code{hash_images}}{If \code{TRUE}, images will be hashed before being returned. Otherwise, all images will return their full data64 encoded value.}
 }
 \if{html}{\out{</div>}}
 }
@@ -493,15 +498,15 @@ An appshot currently consists of two snapshot files:
 \describe{
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
-\item{\code{name}}{The prefix name to be used for the snapshot. By default, this uses the name supplied to \code{app} on initialization.}
+\item{\code{input, output, export}}{Depending on which parameters are supplied, different return values can occur:
+* If \code{input}, \code{output}, and \code{export} are missing, then all values are included in the snapshot.
+* If at least one \code{input}, \code{output}, or \code{export} is specified, then only those values are included in the snapshot.
+The values supplied can be:
+* A character vector of specific names to only include in the snapshot.
+* \code{TRUE}, then all values of that type are included in the snapshot.
+* Anything else will result in the parameter being ignored.}
 
-\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
-they are not, because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.}
-
-\item{\code{items}}{Components to only be included in the snapshot. If supplied, can contain \code{inputs}, \code{output}, and \code{export}. Each value of \code{items} can either be \code{TRUE} (for all values) or a character list of names to use.}
-
-\item{\code{screenshot}}{If the value is \code{NULL}, then the initalization value of \code{screenshot_args} will be used. If this value is \code{NULL}, then \code{screenshot} will be set to the result of \code{!is.null(items)}.
+\item{\code{screenshot_args}}{This value is passed along to \verb{$expect_screenshot()} where the resulting expectation is ignored. If missing, the default value will be \verb{$initialize(expect_values_screenshot_args=)}.
 
 The final value can either be:
 \itemize{
@@ -509,7 +514,14 @@ The final value can either be:
 \item \code{FALSE}: No screenshot will be taken
 \item A named list of arguments: Arguments passed directly to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
 \verb{$screenshot()} method. The selector and delay will default to \code{"html"} and \code{0} respectively.
+Take a screenshot of the Shiny application
 }}
+
+\item{\code{name}}{The file name to be used for the snapshot. The file extension will be ignored. By default, this uses the name supplied to \code{app} on initialization with a counter.}
+
+\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
+they are not, because snapshot tests tend to be fragile
+because they often rely on minor details of dependencies.}
 }
 \if{html}{\out{</div>}}
 }
@@ -531,7 +543,27 @@ The final value can either be:
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{file}}{If \code{NULL}, then the image will be displayed to the current Graphics Device. If a file path, then the screenshot will be saved to that file.
+Expect a screenshot of the Shiny application}
+
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{screenshot_args}}{This named list of arguments is passed along to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$screenshot()} method.
+If missing, the value will default to \verb{$initialize(screenshot_args=)}.
+
+If the value is:
+\itemize{
+\item \code{TRUE}: A screenshot of the whole page will be taken with no delay
+\item A named list of arguments: Arguments passed directly to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
+\verb{$screenshot()} method. The selector and delay will default to \code{"html"} and \code{0} respectively.
+}
+
+If a \code{FALSE} value is provided, the parameter will be ignored and a screenshot will be taken with default behavior.}
+
+\item{\code{delay}}{The number of milliseconds to wait before taking the screenshot. This value can either be supplied as \code{delay} or \code{screenshot_args}'s delay slot. The \code{delay} parameter will have preference.}
+
+\item{\code{selector}}{The selector is a CSS selector that will be used to select a portion of the page to be captured. This value can either be supplied as \code{selector} or \code{screenshot_args}'s selector slot. The \code{selector} parameter will have preference.
+The default value is to take a picture of the whole page.}
 }
 \if{html}{\out{</div>}}
 }
@@ -555,6 +587,33 @@ The final value can either be:
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{screenshot_args}}{This named list of arguments is passed along to
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$screenshot()} method. If missing, the
+value will default to \verb{$initialize(screenshot_args=)}.
+
+If the value is:
+\itemize{
+\item \code{TRUE}: A screenshot of the whole page will be taken with no delay
+\item A named list of arguments: Arguments passed directly to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
+\verb{$screenshot()} method. The selector and delay will default to \code{"html"} and \code{0} respectively.
+}
+
+If a \code{FALSE} value is provided, the parameter will be ignored and a
+screenshot will be taken with default behavior.}
+
+\item{\code{delay}}{The number of milliseconds to wait before taking the
+screenshot. This value can either be supplied as \code{delay} or
+\code{screenshot_args}'s delay slot. The \code{delay} parameter will have
+preference.}
+
+\item{\code{selector}}{The selector is a CSS selector that will be used to
+select a portion of the page to be captured. This value can either be
+supplied as \code{selector} or \code{screenshot_args}'s selector slot. The
+\code{selector} parameter will have preference. The default value is to take
+a picture of the whole page.}
+
+\item{\code{name}}{The file name to be used for the snapshot. The file extension will overwritten to \code{.png}. By default, this uses the name supplied to \code{app} on initialization with a counter.}
 
 \item{\code{cran}}{Should these expectations be verified on CRAN? By default,
 they are not, because snapshot tests tend to be fragile
