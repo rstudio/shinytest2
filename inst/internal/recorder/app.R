@@ -210,14 +210,14 @@ app_dir <- function() {
   }
   path
 }
-save_file <- file.path(app_dir(), "tests", "testthat", save_file)
+test_save_file <- file.path(app_dir(), "tests", "testthat", save_file)
 app_test_path <- function() {
   path <- app$get_path()
   # NULL maps to `../../`
   if (dir.exists(path)) return(NULL)
   # TODO-barret; test for RMD
   # Return .Rmd file name
-  rel_path <- fs::path_rel(path, fs::path_dir(save_file))
+  rel_path <- fs::path_rel(path, fs::path_dir(test_save_file))
   paste0("test_path(", deparse2(rel_path), ")")
 }
 
@@ -494,7 +494,7 @@ shinyApp(
 
                 # Check that all files exist. If not, add a message and don't run test
                 # automatically on exit.
-                if (!all(file.exists(filepaths))) {
+                if (!all(fs::file_exists(filepaths))) {
                   # TODO-barret; test
                   add_dont_run_reason("An uploadFile() must be updated: use the correct path relative to the app's ./tests/testthat directory, or copy the file to the app's ./tests/testthat directory.")
                   code <- paste0(code,
@@ -598,20 +598,23 @@ shinyApp(
         modalDialog(
           tagList(
             "An update input event does not have a corresponding input binding.", tags$br(),
-            "If you would like for these type of events to be saved, click", tags$code("Save Events"), ", otherwise click", tags$code("Ignore"), ".",
-            tags$br(),
+            tags$ul(
+              tags$li("Click", tags$code("Record"), " to record updates to", tags$code("input"), "without a binding."),
+              tags$li("Click", tags$code("Ignore"), " to discard these events."),
+            ),
+            # tags$br(),
+          ),
+          footer = tagList(
+            actionButton("inputs_no_binding_ignore", "Ignore", `data-dismiss` = "modal"),
+            actionButton("inputs_no_binding_save",   "Record", `data-dismiss` = "modal"),
             tooltip(tagList(
               "To prevent this modal from being displayed, set the parameter", tags$br(),
               tags$ul(
                 tags$li(tags$code("record_test(allow_input_no_binding = TRUE)"), "to", tags$strong("record") ,"these events."),
                 tags$li(tags$code("record_test(allow_input_no_binding = FALSE)"), "to", tags$strong("ignore"), "these events.")
               )
-            ), placement = "bottom"),
-            enable_tooltip_script()
-          ),
-          footer = tagList(
-            actionButton("inputs_no_binding_ignore", "Ignore",      `data-dismiss` = "modal"),
-            actionButton("inputs_no_binding_save",   "Save Events", `data-dismiss` = "modal")
+            ), placement = "left"),
+            enable_tooltip_script(),
           )
         )
       )
@@ -661,29 +664,51 @@ shinyApp(
           input$testname,
           seed = seed
         )
+        # Add separator lines between code and prior tests
+        code <- paste0("\n\n", code)
 
         # Make sure tests folder exists.
-        fs::dir_create(fs::path_dir(save_file), recurse = TRUE)
+        fs::dir_create(fs::path_dir(test_save_file), recurse = TRUE)
 
         add_library_call <- TRUE
-        if (file.exists(save_file)) {
-          # Add a blank line at end of code
-          # Add separator lines between code and prior tests
-          code <- paste0("\n\n", code)
+        if (fs::file_exists(test_save_file)) {
           # Don't double library()
-          add_library_call <- !any(grepl("^\\s*library\\s*\\(\\s*shinytest2\\s*\\)\\s*$", readLines(save_file)))
+          add_library_call <- !any(grepl("^\\s*library\\s*\\(\\s*shinytest2\\s*\\)\\s*$", readLines(test_save_file)))
         }
         if (add_library_call) {
-          code <- paste0("library(shinytest2)\n", code)
+          code <- paste0("library(shinytest2)", code)
         }
 
         # TODO-barret; Save runner file
+        test_runner_file <- fs::path(fs::path_dir(fs::path_dir(test_save_file)), "testthat.R")
+        overwrite_test_runner <-
+          if (fs::file_exists(test_runner_file)) {
+            if (!any(grepl("test_app(", readLines(test_runner_file), fixed = TRUE))) {
+              rlang::warning(paste0("Overwriting test runner ", test_runner_file, " with `shinytest2::test_app()` call to ensure proper a testing environment."))
+              # Runner exists. Overwrite existing contents
+              TRUE
+            } else {
+              # Runner exists. Don't overwrite existing contents
+              FALSE
+            }
+          } else {
+            # File missing. Create it.
+            TRUE
+          }
+        if (overwrite_test_runner) {
+          rlang::inform(paste0("Saving test runner: ", test_runner_file))
+          fs::file_copy(
+            system.file("internal/template/testthat.R", package = "shinytest2"),
+            test_runner_file,
+            overwrite = TRUE
+          )
+        }
 
-        message("Saving test file: ", fs::path_rel(save_file, app$get_path()))
-        cat(code, file = save_file, append = TRUE)
+        rlang::inform(paste0("Saving test file: ", fs::path_rel(test_save_file, app$get_path())))
+        cat(code, file = test_save_file, append = TRUE)
 
         invisible(list(
-          test_file = save_file,
+          test_file = test_save_file,
           dont_run_reasons = dont_run_reasons
         ))
       })
