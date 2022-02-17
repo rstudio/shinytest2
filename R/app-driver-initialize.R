@@ -89,9 +89,13 @@ app_initialize_ <- function(
   app_init_browser_log(self, private, options = options)
 
   "!DEBUG navigate to Shiny app"
-  if (!is.null(height) && !is.null(width)) {
+  # TODO-barret; test
+  if (!is.null(height) || !is.null(width)) {
+    ckm8_assert_single_integer(height, lower = 1)
+    ckm8_assert_single_integer(width, lower = 1)
     self$log_message(paste0("Setting window size: ", height, "x", width))
-    self$set_window_size(width, height, wait = FALSE)
+    # Do not wait for shiny values... Have not navigated to Shiny app yet
+    self$set_window_size(width = width, height = height, wait = FALSE)
   }
   self$log_message("Navigating to Shiny app")
   # private$web$go(private$shiny_url$get())
