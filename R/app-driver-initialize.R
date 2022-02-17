@@ -91,8 +91,8 @@ app_initialize_ <- function(
   "!DEBUG navigate to Shiny app"
   # TODO-barret; test
   if (!is.null(height) || !is.null(width)) {
-    ckm8_assert_single_integer(height, lower = 1)
-    ckm8_assert_single_integer(width, lower = 1)
+    ckm8_assert_single_number(height, lower = 1)
+    ckm8_assert_single_number(width, lower = 1)
     self$log_message(paste0("Setting window size: ", height, "x", width))
     # Do not wait for shiny values... Have not navigated to Shiny app yet
     self$set_window_size(width = width, height = height, wait = FALSE)
