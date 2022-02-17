@@ -3,8 +3,11 @@
 ckm8_assert_single_string <- function(x, .var.name = checkmate::vname(x)) {
   checkmate::assert_character(x, len = 1, any.missing = FALSE, .var.name = .var.name, null.ok = FALSE)
 }
-ckm8_assert_single_integer <- function(x, .var.name = checkmate::vname(x)) {
-  checkmate::assert_integer(x, len = 1, any.missing = FALSE, .var.name = .var.name)
+ckm8_assert_single_integer <- function(x, ..., len = 1, any.missing = FALSE, .var.name = checkmate::vname(x)) {
+  checkmate::assert_integer(x, len = len, any.missing = any.missing, .var.name = .var.name, ...)
+}
+ckm8_assert_single_number <- function(x, ..., .var.name = checkmate::vname(x)) {
+  checkmate::assert_number(x, .var.name = .var.name, ...)
 }
 ckm8_assert_single_url <- function(x, .var.name = checkmate::vname(x)) {
   checkmate::assert_character(x, pattern = "^/", len = 1, any.missing = FALSE, .var.name = .var.name)

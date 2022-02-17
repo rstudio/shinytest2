@@ -4,6 +4,7 @@
 
 window.shinyRecorder = (function() {
     var shinyrecorder = {
+        sendWindowSize: null,
         initialized: false,
         token: null        // Gets set by parent frame
     };
@@ -87,28 +88,29 @@ window.shinyRecorder = (function() {
         setTimeout(function() { delete updatedInputs[inputId]; }, 0);
     });
 
-    // Ctrl-click or Cmd-click (Mac) to record an output value
     $(document).on("click", ".shiny-bound-output", function(e) {
         if (!(e.ctrlKey || e.metaKey))
-            return;
+        return;
 
-        var $el = $(e.target).closest(".shiny-bound-output");
-        if ($el.length == 0)
-            return;
+        // Ctrl-click or Cmd-click (Mac) to record an output value
+        var $elOutput = $(e.target).closest(".shiny-bound-output");
+        if ($elOutput.length > 0) sendOutputSnapshotToParent($elOutput[0].id);
 
-        sendOutputSnapshotToParent($el[0].id);
+        // Ctrl-click or Cmd-click (Mac) to record an input value
+        var $elInput = $(e.target).closest(".shiny-bound-input");
+        if ($elInput.length > 0) sendInputSnapshotToParent($elInput[0].id);
     });
 
-    // Trigger a snapshot on Ctrl-shift-S or Cmd-shift-S (Mac)
     $(document).keydown(function(e) {
-        if (!(e.ctrlKey || e.metaKey))
-            return;
-        if (!e.shiftKey)
-            return;
-        if (e.which !== 83)
-            return;
+        if (!(e.ctrlKey || e.metaKey)) return;
+        if (!e.shiftKey) return;
 
-        sendSnapshotToParent();
+        // Trigger a snapshot on Ctrl-shift-S or Cmd-shift-S (Mac)
+        if (e.which === 83) sendSreenshotSnapshotToParent();
+        // Trigger a snapshot on Ctrl-shift-V or Cmd-shift-V (Mac)
+        if (e.which === 86) sendValuesSnapshotToParent();
+        // Trigger a wait for idle on Ctrl-shift-I or Cmd-shift-I (Mac)
+        if (e.which === 73) sendWaitForIdleToParent();
     });
 
     function debounce(f, delay) {
@@ -123,50 +125,85 @@ window.shinyRecorder = (function() {
         };
     }
 
+    function sendMessageToParent(obj) {
+      obj.token = shinyrecorder.token;
+      window.parent.postMessage(obj, "*");
+    }
+
     function sendInputEventToParent(inputType, name, value, hasBinding, priority) {
-        parent.postMessage({
-            token: shinyrecorder.token,
-            inputEvent: {
-                inputType: inputType,
-                name: name,
-                value: value,
-                hasBinding: hasBinding,
-                priority: priority
-             }
-        }, "*");
+        sendMessageToParent({
+            type: "inputEvent",
+            inputType: inputType,
+            name: name,
+            value: value,
+            hasBinding: hasBinding,
+            priority: priority
+        });
     }
 
     function sendFileDownloadEventToParent(name, url) {
-        parent.postMessage({
-            token: shinyrecorder.token,
-            fileDownload: { name: name }
-        }, "*");
+        sendMessageToParent({
+            type: "expectDownload",
+            name: name
+        });
     }
 
     function sendOutputEventToParent() {
-        parent.postMessage({
-            token: shinyrecorder.token,
-            outputEvent: {}
-        }, "*");
+        sendMessageToParent({
+            type: "outputEvent"
+        });
     }
+
+    function sendWindowSizeToParent() {
+        sendMessageToParent({
+            type: "setWindowSize",
+            width: window.innerWidth,
+            height: window.innerHeight
+        });
+    }
+
+    // will be called whenever window size changes
+    var sendWindowSizeToParentDebounced = debounce(sendWindowSizeToParent, 250)
+    window.addEventListener('resize', function() {
+        // viewport and full window dimensions will change
+        sendWindowSizeToParentDebounced();
+    });
+    shinyrecorder.sendWindowSize = sendWindowSizeToParentDebounced;
 
     // If multiple outputs are updated in a single reactive flush, the JS
     // output events will all happen in a single tick. Debouncing for one tick
     // will collapse them into a single call to sendOutputEventToParent().
     var sendOutputEventToParentDebounced = debounce(sendOutputEventToParent, 10);
 
-    function sendSnapshotToParent() {
-        parent.postMessage({
-            token: shinyrecorder.token,
-            snapshotKeypress: true
-        }, "*");
+    function sendSreenshotSnapshotToParent() {
+        sendMessageToParent({
+            type: "expectScreenshot"
+        });
     }
 
+    function sendInputSnapshotToParent(name) {
+        sendMessageToParent({
+            type: "expectValues",
+            key: "input",
+            value: name
+        });
+    }
     function sendOutputSnapshotToParent(name) {
-        parent.postMessage({
-            token: shinyrecorder.token,
-            outputSnapshot: { name: name }
-        }, "*");
+        sendMessageToParent({
+            type: "expectValues",
+            key: "output",
+            value: name
+        });
+    }
+    function sendValuesSnapshotToParent(name) {
+        sendMessageToParent({
+            type: "expectValues"
+        });
+    }
+    function sendWaitForIdleToParent(name) {
+        sendMessageToParent({
+            type: "waitForIdle"
+        });
     }
 
 

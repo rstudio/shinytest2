@@ -71,26 +71,42 @@ app_find_node_id <- function(
 }
 
 
-app_click <- function(self, private, input = missing_arg(), output = missing_arg(), selector = missing_arg()) {
+#' @importFrom rlang :=
+app_click <- function(
+  self, private,
+  input = missing_arg(),
+  output = missing_arg(),
+  selector = missing_arg(),
+  ...
+) {
   ckm8_assert_app_driver(self, private)
 
+  # Will validate that only a single input/output/selector was provided as a single string
   node_id <- app_find_node_id(self, private, input = input, output = output, selector = selector)
-  self$log_message(paste0(
-    "Clicking HTML element with selector: ",
-    node_id_css_selector(
-      self, private,
-      input = input,
-      output = output,
-      selector = selector
-    )
-  ))
-  click_script <- "
-    function() {
-      this.click()
-    }
-  "
 
-  chromote_call_js_on_node(self$get_chromote_session(), node_id, click_script)
+  if (!rlang::is_missing(input)) {
+    # Will delay until outputs have been updated.
+    self$set_inputs(!!input := "click", ...)
+
+  } else {
+    self$log_message(paste0(
+      "Clicking HTML element with selector: ",
+      node_id_css_selector(
+        self, private,
+        input = input,
+        output = output,
+        selector = selector
+      )
+    ))
+    click_script <- "
+      function() {
+        this.click()
+      }
+    "
+
+    chromote_call_js_on_node(self$get_chromote_session(), node_id, click_script)
+  }
+
 
   invisible(self)
 }

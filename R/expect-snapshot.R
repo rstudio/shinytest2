@@ -29,10 +29,12 @@ app__expect_snapshot_file <- function(
     } else {
       paste0(private$name, "-", name)
     }
+  # Make it path safe so others are not created or accessed
+  name_safe <- fs::path_sanitize(name, "_")
 
   testthat::expect_snapshot_file(
     file,
-    name = name,
+    name = name_safe,
     cran = cran,
     compare = compare,
     variant = self$get_variant()

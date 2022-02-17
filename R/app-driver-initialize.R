@@ -9,6 +9,8 @@ app_initialize_ <- function(
   name = NULL,
   variant = getOption("shinytest2.variant", missing_arg()),
   view = missing_arg(),
+  height = NULL,
+  width = NULL,
   seed = NULL,
   clean_logs = TRUE,
   shiny_args = list(),
@@ -87,6 +89,14 @@ app_initialize_ <- function(
   app_init_browser_log(self, private, options = options)
 
   "!DEBUG navigate to Shiny app"
+  # TODO-barret; test
+  if (!is.null(height) || !is.null(width)) {
+    ckm8_assert_single_number(height, lower = 1)
+    ckm8_assert_single_number(width, lower = 1)
+    self$log_message(paste0("Setting window size: ", height, "x", width))
+    # Do not wait for shiny values... Have not navigated to Shiny app yet
+    self$set_window_size(width = width, height = height, wait = FALSE)
+  }
   self$log_message("Navigating to Shiny app")
   # private$web$go(private$shiny_url$get())
   self$get_chromote_session()$Page$navigate(private$shiny_url$get())
@@ -166,8 +176,16 @@ app_initialize <- function(self, private, ...) {
       # `view` defaults to `rlang::missing_arg()`
       withCallingHandlers(
         {
-          view_val <- list(...)$view
-          if (rlang::is_interactive() && !isTRUE(view_val) && !is_false(view_val)) {
+          view_val <- rlang::maybe_missing(list(...)$view, NULL)
+          if (
+            rlang::is_interactive() &&
+            # If no chromote session object exists, then we can't view it
+            inherits(self$get_chromote_session(), "ChromoteSession") &&
+            # If view_val == TRUE, ChromoteSession was opened earlier when possible. Do not open again.
+            !isTRUE(view_val) &&
+            # If view_val == FALSE, user asked to not open chromote session. Do not open
+            !is_false(view_val)
+          ) {
             message("`$view()`ing chromote session for debugging purposes")
             self$log_message("Viewing chromote session for debugging purposes")
             self$view()

@@ -171,6 +171,8 @@ Initialize the AppDriver
   check_names = TRUE,
   name = NULL,
   view = missing_arg(),
+  height = NULL,
+  width = NULL,
   seed = NULL,
   clean_logs = TRUE,
   shiny_args = list(),
@@ -210,6 +212,8 @@ see \code{\link[=platform_variant]{platform_variant()}}.}
 \item{\code{name}}{Prefix name to use when saving testthat snapshot files}
 
 \item{\code{view}}{Opens the Chromote Session in an interactive browser tab once initialization. Defaults to \code{FALSE}.}
+
+\item{\code{height, width}}{Window size to use when opening the Chromote Session. These values will only be used if both \code{height} and \code{width} are not \code{NULL}.}
 
 \item{\code{seed}}{An optional random seed to use before starting the application.
 For apps that use R's random number generator, this can make their
@@ -606,7 +610,8 @@ Find a Shiny input/output value or DOM CSS selector and click it using the DOM m
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$click(
   input = missing_arg(),
   output = missing_arg(),
-  selector = missing_arg()
+  selector = missing_arg(),
+  ...
 )}\if{html}{\out{</div>}}
 }
 
@@ -614,6 +619,8 @@ Find a Shiny input/output value or DOM CSS selector and click it using the DOM m
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{input, output, selector}}{A name of an Shiny input/output value or a DOM CSS selector. Only one of these may be used.}
+
+\item{\code{...}}{If \code{input} is used, all extra arguments are passed to \verb{$set_inputs(!!input := "click", ...)}. By default, this means that the AppDriver will wait until an output has been updated within the specified \code{timeout_}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -649,7 +656,7 @@ Wait for a JavaScript expression to be true
 Waits until a JavaScript \code{expr}ession evaluates to \code{true} or the
 \code{timeout} is exceeded.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_js(script, timeout = 3 * 1000, interval = 100)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_js(script, timeout = 30 * 1000, interval = 100)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -821,13 +828,16 @@ named \code{width} and \code{height}.
 \subsection{Method \code{set_window_size()}}{
 Sets size of the browser window.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_window_size(width, height)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_window_size(width, height, wait = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{width, height}}{Height and width of browser, in pixels.}
+
+\item{\code{wait}}{If \code{TRUE}, \verb{$wait_for_idle()} will be called after setting the window size.
+This will allow for any width specific items (such as plots) to be rerendered.}
 }
 \if{html}{\out{</div>}}
 }

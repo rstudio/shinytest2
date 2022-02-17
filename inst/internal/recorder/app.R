@@ -1,11 +1,18 @@
+# TODO-barret; record many many tests
+# TODO-barret; find all names of existing appdriver new names; If match is found, use `name-X` where `X` is a number that gets inc larger.
+
+
 library(shiny)
 library(promises)
 
 target_url    <- getOption("shinytest2.recorder.url")
 app           <- getOption("shinytest2.app")
+app_name      <- getOption("shinytest2.name")
 load_timeout  <- getOption("shinytest2.load.timeout")
 start_seed    <- getOption("shinytest2.seed")
 shiny_args    <- getOption("shinytest2.shiny.args")
+save_file     <- getOption("shinytest2.test_file")
+allow_input_no_binding <- getOption("shinytest2.allow_input_no_binding")
 
 # If there are any reasons to not run a test, a message should be appended to
 # this vector.
@@ -16,7 +23,7 @@ add_dont_run_reason <- function(reason) {
 
 if (is.null(target_url) || is.null(app$get_path())) {
   abort(paste0("Test recorder requires the 'shinytest2.recorder.url' and ",
-    "'shinytest2.app.dir' options to be set."))
+    "'shinytest2.app' options to be set."))
 }
 
 # Can't register more than once, so remove existing one just in case.
@@ -52,24 +59,27 @@ deparse2 <- function(x) {
 
 # A modified version of shiny::numericInput but with a placholder
 numeric_input <- function(..., placeholder = NULL) {
-  res <- shiny::numericInput(...)
-  res$children[[2]]$attribs$placeholder <- placeholder
-  res
+  tagAppendAttributes(
+    shiny::numericInput(...),
+    placeholder = placeholder,
+    .cssSelector = "input"
+  )
 }
 
 # Create a question mark icon that displays a tooltip when hovered over.
 tooltip <- function(text, placement = "top") {
-  a(href = "#",
+  span(
     `data-toggle` = "tooltip",
     title = text,
     icon("question-sign", lib = "glyphicon"),
     `data-placement` = placement,
-    `data-html` = "true"
+    `data-html` = "true",
+    `data-container` = "body"
   )
 }
 
 enable_tooltip_script <- function() {
-  shiny::tags$script("$('a[data-toggle=\"tooltip\"]').tooltip({ delay: 250 });")
+  shiny::tags$script("$('span[data-toggle=\"tooltip\"]').tooltip({ delay: 250 });")
 }
 
 # Given a vector/list, return TRUE if any elements are unnamed, FALSE otherwise.
@@ -129,7 +139,7 @@ input_processors <- list(
   },
 
   shiny.action = function(value) {
-    '"click"'
+    structure("click", class = c("st2_click", "character"))
   },
 
   shiny.fileupload = function(value) {
@@ -190,159 +200,105 @@ quote_name <- function(name) {
   }
 }
 
-code_generators <- list(
-  initialize = function(event, next_event = NULL, ...) {
-    NA_character_
-  },
-
-  input = function(event, next_event = NULL, allow_no_input_binding = FALSE, ...) {
-    # Extra arguments when using times
-    args <- ""
-
-    if (event$inputType == "shiny.fileupload") {
-      filename <- process_input_value(event$value, event$inputType)
-
-      code <- paste0(
-        "app$uploadFile(",
-        quote_name(event$name), " = ", filename,
-        args,
-        ")"
-      )
-
-      # Get unescaped filenames in a char vector, with full path
-      filepaths <- vapply(event$value, `[[`, "name", FUN.VALUE = "")
-      filepaths <- file.path(app$getTestsDir(), filepaths)
-
-      # Check that all files exist. If not, add a message and don't run test
-      # automatically on exit.
-      if (!all(file.exists(filepaths))) {
-        add_dont_run_reason("An uploadFile() must be updated: use the correct path relative to the app's tests/shinytest directory, or copy the file to the app's tests/shinytest directory.")
-        code <- paste0(code,
-          " # <-- This should be the path to the file, relative to the app's tests/shinytest directory"
-        )
-      }
-
-      code
-
-    } else if (event$hasBinding) {
-      paste0(
-        "app$set_inputs(",
-        quote_name(event$name), " = ",
-        process_input_value(event$value, event$inputType),
-        args,
-        ")"
-      )
-
-    } else {
-      if (allow_no_input_binding) {
-        args <- paste0(args, ", allow_no_input_binding_ = TRUE")
-        if (identical(event$priority, "event")) args <- paste0(args, ', priority_ = "event"')
-        paste0(
-          "app$set_inputs(",
-          quote_name(event$name), " = ",
-          process_input_value(event$value, input_type = "default"),
-          args,
-          ")"
-        )
-      } else {
-        paste0(
-          "# Input '", quote_name(event$name),
-          "' was set, but doesn't have an input binding."
-        )
-      }
-    }
-  },
-
-  fileDownload = function(event, next_event = NULL, ...) {
-    paste0('app$expect_download("', event$name, '")')
-  },
-
-  outputEvent = function(event, next_event = NULL, ...) {
-     NA_character_
-  },
-
-  outputSnapshot = function(event, next_event = NULL, ...) {
-    paste0('app$expect_appshot(items = list(output = "', event$name, '"))')
-  },
-
-  appshot = function(event, next_event = NULL, ...) {
-    "app$expect_appshot()"
-  }
-)
 
 app_dir <- function() {
-  app$get_path()
+  path <- app$get_path()
+  if (shinytest2:::is_rmd(path)) {
+    path <- fs::path_dir(path)
+  }
+  path
 }
-app_dir_basename <- function() {
-  fs::path_file(app_dir())
-}
+test_save_file <- file.path(app_dir(), "tests", "testthat", save_file)
 app_test_path <- function() {
   path <- app$get_path()
+  # NULL maps to `../../`
   if (dir.exists(path)) return(NULL)
-  basename(path)
+  # TODO-barret; test for RMD
+  # Return .Rmd file name
+  rel_path <- fs::path_rel(path, fs::path_dir(test_save_file))
+  paste0("test_path(", deparse2(rel_path), ")")
 }
 
-generate_test_code <- function(events, name, seed,
-  allow_no_input_binding = FALSE)
-{
 
-  # Generate code for each input and output event
-  event_code <- mapply(
-    function(event, next_event) {
-      code_generators[[event$type]](event, next_event,
-                                   allow_no_input_binding = allow_no_input_binding)
-    },
-    events,
-    c(events[-1], list(NULL))
-  )
+generate_test_code <- function(events, name, seed) {
 
-  # Find the indices of the initialize event and output events. The code lines
-  # and (optional) Sys.sleep() calls for these events will be removed later.
-  # We need the output events for now in order to calculate times.
-  remove_events <- vapply(events, function(event) {
-    event$type %in% c("initialize", "outputEvent")
-  }, logical(1))
+  # Remove st2_comment code events
+  height <- NULL
+  width <- NULL
+  event_code <- unlist(lapply(events, function(event) {
+    if (inherits(event$app_code, "st2_comment")) {
+      return(NULL)
+    }
+    switch(event$type,
+      "setWindowSize" = {
+        if (isTRUE(event$first_set_window_size)) {
+          height <<- event$height
+          width <<- event$width
+          NULL
+        } else {
+          event$app_code
+        }
+      },
+      event$app_code
+    )
+  })) # Unlist to remove `NULL`s
+  event_code <- paste0(event_code, collapse = "\n")
 
-  if (length(event_code) != 0) {
-    # Remove unwanted events
-    event_code  <- event_code[!remove_events]
-
-    event_code <- paste0("  ", event_code, collapse = "\n")
-  }
+  has_expect_screenshot <- any(unlist(lapply(events, `[[`, "type")) == "expectScreenshot")
 
   # From the tests dir, it is up two folders and then the app file
   inner_code <- paste(
     paste0(
-      "  app <- AppDriver$new(\n",
-      "    ", paste(c(
+      "app <- AppDriver$new(\n",
+      "  ", paste(c(
         app_test_path(),
-        if (!is.null(seed)) paste0("seed = %s", seed),
+        # TODO-future; Should this value be a parameter?
+        # Going with "no" for now as it is difficult to capture the expression
+        # when nothing else is an expression
+        if (has_expect_screenshot) "variant = platform_variant()",
+        if (!is.null(name)) paste0("name = ", deparse2(name)),
+        if (!is.null(seed)) paste0("seed = ", seed),
+        if (!is.null(height)) paste0("height = ", height),
+        if (!is.null(width)) paste0("width = ", width),
         if (!is.null(load_timeout)) paste0("load_timeout = ", load_timeout),
         if (length(shiny_args) > 0) paste0("shiny_args = ", deparse2(shiny_args)),
-        "variant = platform_variant()"
+        NULL # used for trailing comma
         ),
-        collapse = ",\n    "
+        collapse = ",\n  "
       ), "\n",
-      "  )"
+      ")"
     ),
-    # paste0('app$snapshotInit("', name, '")'),
-    # '',
     event_code,
     sep = "\n"
   )
+  # Use R's default formatter to wrap the code
+  inner_code <-
+    paste0(
+      lapply(parse(text = inner_code), rlang::expr_text, width = 78L),
+      collapse = "\n"
+    )
+  inner_code <- gsub("\n", "\n  ", paste0("  ", inner_code))
 
-  paste0(
-    "test_that(\"", app_dir_basename(), "\", {\n",
+  ret <- paste0(
+    "test_that(\"{shinytest2} recording: ", name, "\", {\n",
     inner_code, "\n",
     "})\n"
   )
+
+  ret
 }
 
 has_inputs_without_binding <- function(events) {
   any(vapply(events, function(event) {
-    return(event$type == "input" && !event$hasBinding)
+    return(event$type == "inputEvent" && !event$hasBinding)
   }, TRUE))
 }
+
+
+# Keep a pointer to the last err/std lines that were printed.
+# Only display the new ones if the recorder is refreshed
+n_console_err_lines <- 0
+n_console_std_lines <- 0
 
 shinyApp(
   ui = fluidPage(
@@ -355,297 +311,412 @@ shinyApp(
       tags$iframe(id = "app-iframe", src = target_url)
     ),
     div(id = "shiny-recorder",
-      div(class = "shiny-recorder-header", "Test event recorder"),
+      div(class = "shiny-recorder-header", tags$code("{shinytest2}"), "expections"),
       div(class = "shiny-recorder-controls",
-        span(
-          actionLink("appshot",
-            span(
-              img(src = "appshot.png", class = "shiny-recorder-icon"),
-              "Take appshot"
-            ),
-            style = "display: inline;"
-          ),
-          tooltip(
-            HTML("You can also Ctrl-click or &#8984;-click on an output to snapshot just that one output.<br> To trigger a appshot via the keyboard, press Ctrl-shift-S or &#8984;-shift-S"),
-            placement = "bottom"
-          ),
-          hr()
-        ),
-        actionLink("exit_save",
+        actionButton("values",
           span(
-            img(src = "exit-save.png", class = "shiny-recorder-icon"),
-            "Save script and exit test event recorder"
+            img(src = "shiny.png", class = "shiny-recorder-icon", style = "height: 23px;vertical-align: middle;"),
+            "Expect Shiny values"
           )
         ),
-        actionLink("exit_nosave",
+        tooltip(
+          HTML("To capture all Shiny values via the keyboard, press Ctrl-shift-V or or &#8984;-shift-V.<br/>You can also Ctrl-click or &#8984;-click on an input/output to capture just that one input/output."),
+          placement = "bottom"
+        ),
+        actionButton("screenshot",
+          span(
+            img(src = "snapshot.png", class = "shiny-recorder-icon"),
+            "Expect screenshot",
+            style = "display: inline;"
+          )
+        ),
+        tooltip(
+          HTML("To trigger a screenshot via the keyboard, press Ctrl-shift-S or &#8984;-shift-S"),
+          placement = "bottom"
+        ),
+      ),
+      div(class = "shiny-recorder-header", "Code"),
+      uiOutput("recorded_events"),
+      div(class = "shiny-recorder-header", "Save"),
+      div(id = "save-and-quit",
+        tagAppendChild(
+          tagAppendAttributes(
+            textInput("testname", label = "Test name:", value = app_name),
+            class = "inline-input-container",
+          ),
+          tooltip("The name of the test should be short, unique, and path-friendly way to describe what the set of expectations are trying to confirm."),
+        ),
+        tagAppendChild(
+          tagAppendAttributes(
+            numeric_input("seed",
+              label = "Random seed:",
+              value = start_seed,
+              placeholder = "(None)"
+            ),
+            class = "inline-input-container"
+          ),
+          tooltip("A seed is recommended if your application uses any randomness. This includes all Shiny Rmd documents.")
+        ),
+        actionButton("exit_nosave",
           span(
             img(src = "exit-nosave.png", class = "shiny-recorder-icon"),
-            "Quit without saving"
+            "Exit"
           )
         ),
-        textInput("testname", label = "On exit, save test script as:", value = "mytest"),
-        if (rstudioapi::isAvailable()) checkboxInput("editSaveFile", "Open script in editor on exit", value = TRUE),
-        checkboxInput("runScript", "Run test script on exit", value = TRUE),
-        checkboxInput(
-          "allow_no_input_binding",
-          tagList("Save inputs that do not have a binding",
-            tooltip(
-              paste(
-                "This enables recording inputs that do not have a binding, which is common in htmlwidgets",
-                "like DT and plotly. Note that playback support is limited: shinytest will set the input",
-                "value so that R gets the input value, but the htmlwidget itself will not be aware of the value."
-              ),
-              placement = "bottom"
-            )
+        actionButton("exit_save",
+          span(
+            img(src = "exit-save.png", class = "shiny-recorder-icon"),
+            "Save test and exit"
           ),
-          value = FALSE
-        ),
-        numeric_input("seed",
-          label = tagList("Random seed:",
-            tooltip("A seed is recommended if your application uses any randomness. This includes all Shiny Rmd documents.")
-          ),
-          value = start_seed,
-          placeholder = "(None)"
+          class = "disabled",
+          title = "Perform an \"Expectation\" to enable \"Save test and exit\" button"
         )
-      ),
-      div(class = "shiny-recorder-header", "Recorded events"),
-      div(id = "recorded-events",
-        tableOutput("recorded_events")
       ),
       enable_tooltip_script()
     )
   ),
 
-  server = function(input, output) {
+  server = function(input, output, session) {
     # Read the recorder.js file for injection into iframe
-    output$recorder_js <- renderText({
+    observeEvent(once = TRUE, session$clientData$url_hostname, {
       file <- "recorder.js"
-      readChar(file, file.info(file)$size, useBytes = TRUE)
+      session$sendCustomMessage(
+        "recorder_js",
+        readChar(file, file.info(file)$size, useBytes = TRUE)
+      )
     })
-    outputOptions(output, "recorder_js", suspendWhenHidden = FALSE)
+
 
     # echo console output from the driver object (in real-time)
-    n_console_lines <- 0
     observe({
       invalidateLater(500)
       logs <- subset(app$get_log(), location == "shiny")
-      # print(logs)
-      n <- nrow(logs)
-      if (n > n_console_lines) {
-        new_lines <- seq.int(n_console_lines + 1, n)
-        cat("\n\n")
-        print(logs[new_lines, ])
-        cat("\n")
+
+      print_logs <- function(..., n) {
+        logs_sub <- subset(logs, ...)
+        n_sub <- nrow(logs_sub)
+        if (n_sub > n) {
+          print(logs_sub[seq.int(n + 1, n_sub), ])
+          cat("\n")
+        }
+        n_sub
       }
-      n_console_lines <<- n
+
+      n_console_err_lines <<- print_logs(level == "error", n = n_console_err_lines)
+      n_console_std_lines <<- print_logs(level != "error", n = n_console_std_lines)
     })
 
-    save_file <- reactive({
-      file.path(app_dir(), "tests", "testthat", paste0("test-", input$testname, ".R"))
-    })
+    allow_input_no_binding_react <- reactiveVal(allow_input_no_binding)
 
-    # Number of snapshot or fileDownload events in input$testevents
-    num_snapshots <- reactive({
-      snapshots <- vapply(input$testevents, function(event) {
-        return(event$type %in% c("appshot", "outputSnapshot", "fileDownload"))
-      }, logical(1))
-      sum(snapshots)
-    })
+    trim_testevents <- reactive({
+      events <- input$testevents
 
-    output$recorded_events <- renderTable(
-      {
-        # Genereate list of lists from all events. Inner lists have 'type' and
-        # 'name' fields.
-        events <- lapply(input$testevents, function(event) {
-          type <- event$type
-
-          if (type == "initialize") {
-            NULL
-          } else if (type == "outputSnapshot") {
-            list(type = "snapshot-output", name = event$name)
-          } else if (type == "appshot") {
-            list(type = "appshot", name = "<all>")
-          } else if (type == "input") {
-            if (event$inputType == "shiny.fileupload") {
-              # File uploads are a special case of inputs
-              list(type = "file-upload", name = event$name)
-            } else if (!event$hasBinding) {
-              list(type = "input *", name = event$name)
-            } else {
-              list(type = "input", name = event$name)
+      to_remove <- c()
+      for (i in seq_along(events)) {
+        if (i == 1) next
+        prev_event <- events[[i - 1]]
+        curr_event <- events[[i]]
+        if (prev_event$type == curr_event$type) {
+          switch(curr_event$type,
+            "outputEvent" = , # nolint
+            "waitForIdle" = , # nolint
+            "setWindowSize" = {
+              # Remove previous event
+              to_remove[length(to_remove) + 1] <- i - 1
+            },
+            "inputEvent" = {
+              if (!isTRUE(allow_input_no_binding_react())) {
+                if (!curr_event$hasBinding && !prev_event$hasBinding) {
+                  to_remove[length(to_remove) + 1] <- i
+                }
+              }
             }
-          } else if (type == "fileDownload") {
-            list(type = "file-download", name = event$name)
-          } else if (type == "outputEvent") {
-            list(type = "output-event", name = "--")
+          )
+        } else if (
+          i >= 3 &&
+          curr_event$type == "setWindowSize" &&
+          prev_event$type == "outputEvent" &&
+          events[[i - 2]]$type == "setWindowSize"
+        ) {
+          # If two setWindowSize events sandwich an outputEvent,
+          # remove the first setWindowSize
+          to_remove[length(to_remove) + 1] <- i - 2
+        }
+      }
+
+      if (length(to_remove)) {
+        events <- events[-to_remove]
+      }
+
+      found_first_set_window_size <- FALSE
+
+      events <- lapply(events, function(event) {
+        event$app_code <-
+          switch(event$type,
+            "initialize" = NULL,
+            "waitForIdle" = "app$wait_for_idle()",
+            "setWindowSize" = {
+              code <- paste0("app$set_window_size(width = ", event$width, ", height = ", event$height, ")")
+              if (is_false(found_first_set_window_size)) {
+                found_first_set_window_size <<- TRUE
+                event$first_set_window_size <- TRUE
+              }
+              code
+            },
+            "expectDownload" = paste0("app$expect_download(\"", event$name, "\")"),
+            "expectScreenshot" = "app$expect_screenshot()",
+            "expectValues" = {
+              key <- event$key
+              value <- event$value
+              if (!is.null(key)) {
+                paste0("app$expect_values(", quote_name(key), " = ", process_input_value(value, "default"), ")")
+              } else {
+                paste0("app$expect_values()")
+              }
+            },
+            "inputEvent" = {
+              key <- quote_name(event$name)
+              value <- process_input_value(event$value, event$inputType)
+              if (inherits(value, "st2_click")) {
+                # `"click"` event
+                paste0("app$click(\"", event$name, "\")")
+              } else if (event$inputType == "shiny.fileupload") {
+                # File uploads are a special case of inputs
+                code <- paste0(
+                  "app$upload_file(", key, " = ", value, ")"
+                )
+
+                # Get unescaped filenames in a char vector, with full path
+                filepaths <- vapply(event$value, `[[`, "name", FUN.VALUE = "")
+                filepaths <- file.path(app_dir(), "tests", "testthat", filepaths)
+
+                # Check that all files exist. If not, add a message and don't run test
+                # automatically on exit.
+                if (!all(fs::file_exists(filepaths))) {
+                  # TODO-barret; test
+                  add_dont_run_reason("An uploadFile() must be updated: use the correct path relative to the app's ./tests/testthat directory, or copy the file to the app's ./tests/testthat directory.")
+                  code <- paste0(code,
+                    " # <-- This should be the path to the file, relative to the app's tests/testthat directory"
+                  )
+                }
+
+                code
+              } else {
+                if (!event$hasBinding && !isTRUE(allow_input_no_binding_react())) {
+                  structure(
+                    paste0(
+                      "# Update unbound `input` value"
+                    ),
+                    class = c("st2_comment", "character")
+                  )
+                } else {
+                  args <- ""
+                  if (!event$hasBinding && isTRUE(allow_input_no_binding_react())) {
+                    # TODO-barret; test
+                    args <- paste0(args, ", allow_input_no_binding_ = TRUE")
+                    if (identical(event$priority, "event")) {
+                      args <- paste0(args, ', priority_ = "event"')
+                    }
+                  }
+
+                  paste0(
+                    "app$set_inputs(",
+                    quote_name(event$name), " = ",
+                    process_input_value(event$value, input_type = "default"),
+                    args,
+                    ")"
+                  )
+                }
+              }
+            },
+            "outputEvent" = {
+              structure("# Update output value", class = c("st2_comment", "character"))
+            },
+            stop(paste0("Unknown type: ", event$type))
+          )
+        event
+      })
+
+      events
+    })
+
+    # Use reactiveVal dedupe feature
+    save_enabled <- reactiveVal(FALSE)
+    save_enable_obs <- observeEvent(trim_testevents(), {
+      for (event in trim_testevents()) {
+        switch(event$type,
+          "expectValues" = , # nolint
+          "expectScreenshot" = , # nolint
+          "expectDownload" = {
+            save_enabled(TRUE)
+            session$sendCustomMessage(
+              "enable_save_button",
+              "1"
+            )
+            save_enable_obs$destroy()
+            return()
           }
-        })
-
-        events <- events[!vapply(events, is.null, logical(1))]
-
-        # Transpose list of lists into data frame
-        data.frame(
-          `Event type` = vapply(events, `[[`, character(1), "type"),
-          Name = vapply(events, `[[`, character(1), "name"),
-          stringsAsFactors = FALSE,
-          check.names = FALSE
         )
-      },
-      width = "100%",
-      rownames = TRUE
-    )
+      }
+    })
 
-    save_and_exit <- function(delete_test_file = FALSE) {
-      stopApp({
+    # If an unbound input value is updated, ask the user if the event should be recorded
+    no_binding_obs <- list()
+    no_binding_obs[[1]] <- observeEvent(trim_testevents(), {
+      if (!is.null(allow_input_no_binding_react())) {
+        # Cancel the observers and return
+        lapply(no_binding_obs, function(ob) { ob$destroy() })
+        no_binding_obs <<- list()
+        return();
+      }
 
-        seed <- as.integer(input$seed)
-        if (is.null(seed) || is.na(seed))
-          seed <- NULL
-
-        code <- generate_test_code(
-          input$testevents,
-          input$testname,
-          seed = seed,
-          allow_no_input_binding = input$allow_no_input_binding
-        )
-
-        # (maybe) Remove prior file
-        if (isTRUE(delete_test_file)) {
-          unlink(save_file())
-        }
-
-        # Make sure folder exists
-        dir.create(fs::path_dir(save_file()), recursive = TRUE, showWarnings = FALSE)
-
-        add_library_call <- TRUE
-        if (file.exists(save_file())) {
-          code <- paste0(code, "\n\n")
-          # don't double library()
-          add_library_call <- !any(grepl(readLines(save_file()), "^library\\(shinytest2\\)$"))
-        }
-        if (add_library_call) {
-          code <- paste0("library(shinytest2)\n\n", code)
-        }
-        cat(code, file = save_file(), append = TRUE)
-        message("Saved test code to ", save_file())
-        if (isTRUE(input$editSaveFile)) {
-          file.edit(save_file())
-        }
-
-        invisible(list(
-          test_file = save_file(),
-          run = input$runScript && (length(dont_run_reasons) == 0),
-          dont_run_reasons = dont_run_reasons
-        ))
-      })
-    }
-
-
-    present_modal <- function(modal_dialog, cancels, oks) {
-      promise(function(resolve, reject) {
-
-        obs <- list()
-        lapply(cancels, function(cancel) {
-          obs[[length(obs) + 1]] <<- observeEvent(input[[cancel]],
-            {
-              # cancel all observers
-              lapply(obs, function(ob) { ob$destroy() })
-              reject(cancel)
-            },
-            ignoreInit = TRUE
-          )
-
-        })
-
-        lapply(oks, function(ok) {
-          obs[[length(obs) + 1]] <<- observeEvent(input[[ok]],
-            {
-              # cancel all observers
-              lapply(obs, function(ob) { ob$destroy() })
-              resolve(ok)
-            },
-            ignoreInit = TRUE
-          )
-        })
-
-        showModal(modal_dialog)
-      })
-    }
-
-    observeEvent(input$exit_save, {
-
-      if (num_snapshots() == 0) {
-        showModal(
-          modal_dialog("Must have at least one snapshot to save and exit.")
-        )
+      # Don't do anything if there is no unbound input event
+      if (!has_inputs_without_binding(trim_testevents())) {
         return()
       }
 
-      p <- promise_resolve(TRUE)
+      no_binding_obs[[2]] <<-
+        observeEvent(
+          input$inputs_no_binding_ignore,
+          {
+            allow_input_no_binding_react(FALSE)
+          },
+          ignoreInit = TRUE
+        )
+      no_binding_obs[[3]] <<-
+        observeEvent(
+          input$inputs_no_binding_save,
+          {
+            allow_input_no_binding_react(TRUE)
+          },
+          ignoreInit = TRUE
+        )
 
-      if (has_inputs_without_binding(input$testevents) && !input$allow_no_input_binding) {
-        p <- p %...>% {
-          present_modal(
-            modal_dialog(
-              tagList(
-                "There are some input events (marked with a *) that do not have a corresponding input binding.",
-                "If you want them to be saved in the test script, press Cancel, then check ",
-                tags$b("Save inputs that do not have a binding."),
-                "If you don't want to save them, press Continue."
-              ),
-              footer = tagList(
-                actionButton("inputs_no_binding_cancel",   "Cancel",   `data-dismiss` = "modal"),
-                actionButton("inputs_no_binding_continue", "Continue", `data-dismiss` = "modal")
-              )
+      showModal(
+        modalDialog(
+          tagList(
+            "An update input event does not have a corresponding input binding.", tags$br(),
+            tags$ul(
+              tags$li("Click", tags$code("Record"), " to record updates to", tags$code("input"), "without a binding."),
+              tags$li("Click", tags$code("Ignore"), " to discard these events."),
             ),
-            "inputs_no_binding_cancel",
-            "inputs_no_binding_continue"
-          )
-        }
-      }
-
-      p <- p %...>% {
-        if (file.exists(save_file())) {
-          present_modal(
-            modal_dialog(
-              paste0("Overwrite ", basename(save_file()), "?"),
-              footer = tagList(
-                actionButton("overwrite_cancel",   "Cancel",   `data-dismiss` = "modal"),
-                actionButton("overwrite_append", "Append", `data-dismiss` = "modal"),
-                actionButton("overwrite_overwrite", "Overwrite", `data-dismiss` = "modal")
+            # tags$br(),
+          ),
+          footer = tagList(
+            actionButton("inputs_no_binding_ignore", "Ignore", `data-dismiss` = "modal"),
+            actionButton("inputs_no_binding_save",   "Record", `data-dismiss` = "modal"),
+            tooltip(tagList(
+              "To prevent this modal from being displayed, set the parameter", tags$br(),
+              tags$ul(
+                tags$li(tags$code("record_test(allow_input_no_binding = TRUE)"), "to", tags$strong("record"), "these events."),
+                tags$li(tags$code("record_test(allow_input_no_binding = FALSE)"), "to", tags$strong("ignore"), "these events.")
               )
-            ),
-            "overwrite_cancel",
-            c("overwrite_overwrite", "overwrite_append")
+            ), placement = "left"),
+            enable_tooltip_script(),
           )
-        } else {
-          promise_resolve(TRUE)
-        }
-      }
-
-      p <- p %...>% {
-        delete_test_file <- identical(., "overwrite_overwrite")
-        save_and_exit(delete_test_file)
-      }
-
-      # When Cancel is pressed, catch the rejection.
-      p <- p %...!% {
-        NULL
-      }
-
-      # Need to return something other than the promise. Otherwise Shiny will
-      # wait for the promise to resolve before processing any further
-      # reactivity, including the inputs from the actionButtons, so the app
-      # will simply stop responding.
-      NULL
+        )
+      )
     })
 
+    output$recorded_events <- renderUI({
+      events <- trim_testevents()
+      event_codes <- unlist(lapply(events, `[[`, "app_code")) # Unlist to remove `NULL`s
+      # Genereate list of lists from all event_codes. Inner lists have 'type' and
+      # 'name' fields.
+      tagList(
+        tags$pre(div(
+          .noWS = "outside",
+          lapply(event_codes, function(event_code) {
+            can_select <- !inherits(event_code, "st2_comment")
+            # https://stackoverflow.com/a/64917958/591574
+            tagList(
+              tags$span(
+                class = paste0(if (can_select) "line-number ", "no-select-code")
+              ),
+              tags$code(
+                event_code,
+                .noWS = "outside",
+                class = if (!can_select) "no-select-code slant-code"
+              )
+            )
+          })
+        )),
+        tags$script(HTML(
+          '$("#recorded_events pre")[0].scrollTop = $("#recorded_events pre div")[0].scrollHeight;'
+        ))
+      )
+    })
+
+
+    observeEvent(input$exit_save, {
+      req(save_enabled())
+
+      stopApp({
+        seed <- as.integer(input$seed)
+        if (is.null(seed) || is.na(seed)) {
+          seed <- NULL
+        }
+
+        code <- generate_test_code(
+          trim_testevents(),
+          input$testname,
+          seed = seed
+        )
+        # Add separator lines between code and prior tests
+        code <- paste0("\n\n", code)
+
+        # Make sure tests folder exists.
+        fs::dir_create(fs::path_dir(test_save_file), recurse = TRUE)
+
+        add_library_call <- TRUE
+        if (fs::file_exists(test_save_file)) {
+          # Don't double library()
+          add_library_call <- !any(grepl("^\\s*library\\s*\\(\\s*shinytest2\\s*\\)\\s*$", readLines(test_save_file)))
+        }
+        if (add_library_call) {
+          code <- paste0("library(shinytest2)", code)
+        }
+
+        # TODO-barret; Save runner file
+        test_runner_file <- fs::path(fs::path_dir(fs::path_dir(test_save_file)), "testthat.R")
+        overwrite_test_runner <-
+          if (fs::file_exists(test_runner_file)) {
+            if (!any(grepl("test_app(", readLines(test_runner_file), fixed = TRUE))) {
+              rlang::warn(paste0("Overwriting test runner ", fs::path_rel(test_runner_file, app$get_path()), " with `shinytest2::test_app()` call to ensure proper a testing environment."))
+              # Runner exists. Overwrite existing contents
+              TRUE
+            } else {
+              # Runner exists. Don't overwrite existing contents
+              FALSE
+            }
+          } else {
+            # File missing. Create it.
+            TRUE
+          }
+        if (overwrite_test_runner) {
+          # TODO-barret; make relative file path
+          rlang::inform(paste0("Saving test runner: ", fs::path_rel(test_runner_file, app$get_path())))
+          fs::file_copy(
+            system.file("internal/template/testthat.R", package = "shinytest2"),
+            test_runner_file,
+            overwrite = TRUE
+          )
+        }
+
+        rlang::inform(paste0("Saving test file: ", fs::path_rel(test_save_file, app$get_path())))
+        cat(code, file = test_save_file, append = TRUE)
+
+        invisible(list(
+          test_file = test_save_file,
+          dont_run_reasons = dont_run_reasons
+        ))
+      })
+    })
     observeEvent(input$exit_nosave, {
       stopApp({
-        message("Quitting without saving or running tests.")
         invisible(list(
-          file = NULL,
-          run = FALSE
+          test_file = NULL,
+          dont_run_reasons = NULL
         ))
       })
     })

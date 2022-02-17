@@ -8,8 +8,8 @@ NULL
 #'
 #' Example usage:
 #' ```r
-#' library(shinytest2)
-#' test_app()
+#' # ./tests/testthat.R
+#' shinytest2::test_app()
 #' ```
 #'
 #' @param app_dir The base directory for the Shiny application

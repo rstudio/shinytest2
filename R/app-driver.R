@@ -74,6 +74,7 @@ AppDriver <- R6Class(# nolint
     #' @param name Prefix name to use when saving testthat snapshot files
     #' @param check_names Check if widget names are unique?
     #' @param view Opens the Chromote Session in an interactive browser tab once initialization. Defaults to `FALSE`.
+    #' @param height,width Window size to use when opening the Chromote Session. These values will only be used if both `height` and `width` are not `NULL`.
     #' @param seed An optional random seed to use before starting the application.
     #'   For apps that use R's random number generator, this can make their
     #'   behavior repeatable.
@@ -90,6 +91,10 @@ AppDriver <- R6Class(# nolint
     initialize = function(
       path = testthat::test_path("../../"),
       ...,
+      # TODO-barret-questions:
+      # Should we have many options that can be set to override the defaults?
+      # Like the shinytest2.variant? Or `shinytest2.seed`? Or even `shinytest2.idle.duration`?
+      # Should `shinytest2.variant` be removed?
       load_timeout = NULL,
       variant = getOption("shinytest2.variant", missing_arg()),
       expect_values_screenshot_args = TRUE,
@@ -97,6 +102,8 @@ AppDriver <- R6Class(# nolint
       check_names = TRUE,
       name = NULL,
       view = missing_arg(),
+      height = NULL,
+      width = NULL,
       seed = NULL,
       clean_logs = TRUE,
       shiny_args = list(),
@@ -114,6 +121,8 @@ AppDriver <- R6Class(# nolint
         name = name,
         variant = variant,
         view = view,
+        height = height,
+        width = width,
         seed = seed,
         clean_logs = clean_logs,
         shiny_args = shiny_args,
@@ -144,6 +153,7 @@ AppDriver <- R6Class(# nolint
       app_expect_text(self, private, selector, ..., cran = cran)
     },
     #' @param selector A DOM CSS selector to be passed into `document.querySelectorAll()`
+    # TODO-barret; Add note that this does not work for text inputs or text area inputs.
     get_text = function(selector) {
       app_get_text(self, private, selector = selector)
     },
@@ -156,12 +166,15 @@ AppDriver <- R6Class(# nolint
     #' @param selector A DOM selector to be passed into `document.querySelectorAll()`
     #' @param outer_html If `TRUE`, the full DOM structure will be returned (`TAG.outerHTML`).
     #'   If `FALSE`, the full DOM structure of the child elements will be returned (`TAG.innerHTML`).
+    # TODO-barret; Default `outer_html` to TRUE
     expect_html = function(selector, ..., outer_html = FALSE, cran = FALSE) {
       app_expect_html(self, private, selector, ..., outer_html = outer_html, cran = cran)
     },
     #' @param selector A DOM selector to be passed into `document.querySelectorAll()`
     #' @param outer_html If `TRUE`, the full DOM structure will be returned (`TAG.outerHTML`).
     #'   If `FALSE`, the full DOM structure of the child elements will be returned (`TAG.innerHTML`).
+    # TODO-barret; Default `outer_html` to TRUE
+    # TODO-barret-document; does not work with shadow DOM; Only works with updated HTML elements
     get_html = function(selector, ..., outer_html = FALSE) {
       app_get_html(self, private, selector, ..., outer_html = outer_html)
     },
@@ -340,8 +353,12 @@ AppDriver <- R6Class(# nolint
     #' @description
     #' Find a Shiny input/output value or DOM CSS selector and click it using the DOM method `TAG.click()`
     #' @param input,output,selector A name of an Shiny input/output value or a DOM CSS selector. Only one of these may be used.
-    click = function(input = missing_arg(), output = missing_arg(), selector = missing_arg()) {
-      app_click(self, private, input = input, output = output, selector = selector)
+    #' @param ... If `input` is used, all extra arguments are passed to `$set_inputs(!!input := "click", ...)`. By default, this means that the AppDriver will wait until an output has been updated within the specified `timeout_`.
+    click = function(
+      input = missing_arg(), output = missing_arg(), selector = missing_arg(),
+      ...
+    ) {
+      app_click(self, private, input = input, output = output, selector = selector, ...)
     },
 
     #' @description
@@ -364,7 +381,7 @@ AppDriver <- R6Class(# nolint
     #' @return `invisible(self)` if expression evaluates to `true` without error within the timeout.
     #'   Otherwise an error will be thrown
     # TODO-barret-docs; Document $execute_js(file = "complicated_file.js"); $wait_for_js("return complicated_condition()")
-    wait_for_js = function(script, timeout = 3 * 1000, interval = 100) {
+    wait_for_js = function(script, timeout = 30 * 1000, interval = 100) {
       app_wait_for_js(self, private, script = script, timeout = timeout, interval = interval)
     },
 
@@ -466,8 +483,10 @@ AppDriver <- R6Class(# nolint
     #' @description
     #' Sets size of the browser window.
     #' @param width,height Height and width of browser, in pixels.
-    set_window_size = function(width, height) {
-      app_set_window_size(self, private, width, height)
+    #' @param wait If `TRUE`, `$wait_for_idle()` will be called after setting the window size.
+    #'   This will allow for any width specific items (such as plots) to be rerendered.
+    set_window_size = function(width, height, wait = TRUE) {
+      app_set_window_size(self, private, width = width, height = height, wait = wait)
     },
 
     #' @description

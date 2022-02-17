@@ -30,7 +30,7 @@
     "text": "Enter text..."
   },
   "output": {
-    "action_out": "[1] 0\nattr(,\"class\")\n[1] \"integer\"                \"shinyActionButtonValue\"",
+    "action_out": "[1] 0\nattr(,\"class\")\n[1] \"shinyActionButtonValue\" \"integer\"               ",
     "checkGroup_out": "[1] \"1\"",
     "checkbox_out": "[1] FALSE",
     "date_out": "[1] \"2014-01-01\"",

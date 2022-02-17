@@ -48,5 +48,6 @@ test_that("set kitchen sink of inputs", {
   #     "search" = "Test text", # must hit enter to submit
   #     "sliderText" = "Strongly agree",
 
+  Sys.sleep(0.5) # css animations
   app$expect_values()
 })

@@ -18,7 +18,7 @@
         "test-app-set-inputs.R"
       ],
       "size": [
-        1203
+        1237
       ],
       "type": [
         ""
@@ -46,14 +46,14 @@
     "text": "Text entered"
   },
   "output": {
-    "action_out": "[1] 1\nattr(,\"class\")\n[1] \"integer\"                \"shinyActionButtonValue\"",
+    "action_out": "[1] 1\nattr(,\"class\")\n[1] \"shinyActionButtonValue\" \"integer\"               ",
     "bsSwitch_out": "[1] FALSE",
     "checkGroup_out": "[1] \"2\" \"3\"",
     "checkboxGroupButtons_out": "NULL",
     "checkbox_out": "[1] TRUE",
     "date_out": "[1] \"2015-01-01\"",
     "dates_out": "[1] \"2015-01-01\" \"2015-02-20\"",
-    "file_out": "                   name size type      datapath\n1 test-app-set-inputs.R 1203      <tempdir>/0.R",
+    "file_out": "                   name size type      datapath\n1 test-app-set-inputs.R 1237      <tempdir>/0.R",
     "knob_out": "[1] 0",
     "matSwitch_out": "[1] FALSE",
     "num_out": "[1] 100",

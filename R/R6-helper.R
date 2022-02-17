@@ -50,7 +50,7 @@ Url <- R6Class( # nolint
 
       if (nzchar(res$port)) {
         res$port <- as.integer(res$port)
-        ckm8_assert_single_integer(res$port)
+        ckm8_assert_single_integer(res$port, .var.name = "port")
       } else {
         res$port <- NULL
       }
