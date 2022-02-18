@@ -8,7 +8,7 @@ expect_migration <- function(test_app_folder, ...) {
   new_path <- tempfile()
   fs::dir_copy(original_path, new_path)
 
-  migrate(new_path, ..., quiet = TRUE)
+  migrate_from_shinytest(new_path, ..., quiet = TRUE)
 
   expected_path <- paste0(original_path, "-expected")
 
