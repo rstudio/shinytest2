@@ -436,7 +436,12 @@ m__driver_new <- function(expr, info_env) {
       if (fs::path_rel(expr_args$path) != "../..")
       init_args[[1]] <- expr_args$path
     }
+    # Do not do this if using a unique file name
+    # init_args$name <- info_env$name
     init_args$variant <- rlang::maybe_missing(info_env$suffix, NULL)
+    # No need to do this as the pictures are different anyways
+    # init_args$width <- 992
+    # init_args$height <- 744
     for (name_info in list(
       list(from = "loadTimeout", to = "load_timeout"),
       list(from = "checkNames", to = "check_names"),
