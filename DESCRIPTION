@@ -37,7 +37,7 @@ Imports:
     jsonlite,
     pingr,
     rmarkdown,
-    shiny (>= 1.7.1.9003),
+    shiny,
     withr
 Suggests:
     png,
@@ -48,6 +48,8 @@ Suggests:
     knitr
 Remotes:
     rstudio/chromote
+Config/Needs/other:
+    shiny (>= 1.7.1.9003)
 Config/Needs/website:
     pkgdown
 Config/testthat/edition: 3
