@@ -3,5 +3,8 @@ pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   migration: migration.html
-last_built: 2022-02-18T17:55Z
+last_built: 2022-02-18T17:58Z
+urls:
+  reference: https://rstudio.github.io/shinytest2/reference
+  article: https://rstudio.github.io/shinytest2/articles
 

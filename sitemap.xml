@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/404.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/LICENSE.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/migration.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/articles/migration.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/index.html</loc>
   </url>
   <url>
-    <loc>/news/index.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/AppDriver.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/reference/AppDriver.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/migrate_from_shinytest.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/reference/migrate_from_shinytest.html</loc>
   </url>
   <url>
-    <loc>/reference/platform_variant.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/reference/platform_variant.html</loc>
   </url>
   <url>
-    <loc>/reference/record_test.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/reference/record_test.html</loc>
   </url>
   <url>
-    <loc>/reference/register_input_processor.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/reference/register_input_processor.html</loc>
   </url>
   <url>
-    <loc>/reference/test_app.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/reference/test_app.html</loc>
   </url>
   <url>
-    <loc>/todo.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/todo.html</loc>
   </url>
 </urlset>
