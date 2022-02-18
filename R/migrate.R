@@ -15,6 +15,7 @@
 #' @param include_expect_screenshot If `TRUE`, `ShinyDriver$snapshot()` will turn into both `AppDriver$expect_values()` and `AppDriver$expect_screenshot()`. If `FALSE`, `ShinyDriver$snapshot()` will only turn into `AppDriver$expect_values()`. If missing, `include_expect_screenshot` will behave as `FALSE` if `shinytest::testApp(compareImages = FALSE)` or `ShinyDriver$snapshotInit(screenshot = FALSE)` is called.
 #' @param quiet Logical that determines if migration information and steps should be printed to the console.
 #' @return Invisible `TRUE`
+#' @export
 migrate_from_shinytest <- function(
   path,
   ...,
