@@ -89,7 +89,6 @@ m__find_shinytest_testapp <- function(exprs, info_env) {
   args <- NULL
   post_fn <- function(expr_list, is_top_level) {
     if (is_test_app(expr_list)) {
-      testapp_expr <- expr_list[[3]]
       if (!is.null(args)) {
         if (info_env$verbose) rlang::inform(c(
           "!" = "Multiple shinytest::testApp() calls found. Only the first one will be used."
@@ -170,7 +169,7 @@ m__extract_runner_info <- function(app_info_env) {
       "i" = "Using defaults! Assuming `shinytest::testApp(testDir='..')`"
     ))
     testapp_args <- formals(shinytest::testApp)
-    testapp_args$appDir <- ".."
+    testapp_args$appDir <- ".." # nolint
   }
   if (fs::path_rel(testapp_args$appDir) != "..") {
     abort(paste0(
