@@ -164,11 +164,14 @@ m__extract_runner_info <- function(app_info_env) {
 
   testapp_args <- m__find_shinytest_testapp(exprs, app_info_env)
   if (is.null(testapp_args)) {
-    rlang::abort(c(
-      paste0("No `shinytest::testApp()` call found in file: ", shinytest_file)
+    rlang::inform(c(
+      "!" = paste0("No `shinytest::testApp()` call found in file: ", shinytest_file),
+      "i" = "Using defaults! Assuming `shinytest::testApp(testDir='..')`"
     ))
+    testapp_args <- formals(shinytest::testApp)
+    testapp_args$appDir <- ".."
   }
-  if (fs::path_rel(testapp_args$appDir) != ".") {
+  if (fs::path_rel(testapp_args$appDir) != "..") {
     abort(paste0(
       "shinytest::testApp() must be called on the parent App directory (`appDir = \"..\"`).\n",
       "{shinytest2} does not know how to automatically migrate this app."
