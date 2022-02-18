@@ -1,6 +1,6 @@
 Package: shinytest2
-Title: Test Shiny Apps
-Version: 0.0.0.9000
+Title: Test Shiny Apps with 'testthat'
+Version: 0.0.0.9001
 Authors@R:
     c(
         person("Barret", "Schloerke", role = c("cre", "aut"), email = "barret@rstudio.com", comment = c(ORCID = "0000-0001-9986-114X")),
@@ -10,8 +10,7 @@ Authors@R:
         person("Hadley", "Wickham", role = "ctb", email = "hadley@rstudio.com", comment = "Original author to rstudio/shinytest"),
         person(family = "Mango Solutions", role = c("cph", "ccp"), comment = "Original author to rstudio/shinytest")
     )
-Description: For automated testing of Shiny applications, using
-    a headless browser, driven through 'Chromium' based browsers.
+Description: Automated unit testing of Shiny applications through a headless 'Chromium' browser.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
