@@ -27,12 +27,9 @@ test_app <- function(
   # force variables before testing starts / paths change
   list2(app_dir, env, ...)
 
-  message("app_dir: ", app_dir)
-
   path_info <- app_path(app_dir, "app_dir")
   if (path_info$is_rmd) {
     app_dir <- path_info$app
-    message("Rmd detected!", app_dir)
   }
 
   # By using this envvar, the DESCRIPTION file is not needed. Yay!
