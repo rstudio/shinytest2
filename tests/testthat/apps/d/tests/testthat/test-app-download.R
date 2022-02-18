@@ -8,3 +8,26 @@ test_that("download files work from link and button", {
   app$expect_download("download_link")
   app$expect_download("download_button")
 })
+
+
+test_that("download files can be retrieved", {
+  on.exit({
+    if (fs::file_exists("barret.test")) {
+      fs::file_delete("barret.test")
+    }
+  }, add = TRUE)
+
+  app <- AppDriver$new(variant = NULL)
+
+  app$wait_for_js("return $('#download_link').attr('href') != ''")
+  app$wait_for_js("return $('#download_button').attr('href') != ''")
+
+  link_file <- app$get_download("download_link")
+  button_file <- app$get_download("download_button", "barret.test")
+
+  expect_equal(fs::path_ext(link_file), "download")
+  expect_equal(fs::path_file(button_file), "barret.test")
+
+  expect_gt(file.info(link_file)$size, 0)
+  expect_gt(file.info(button_file)$size, 0)
+})

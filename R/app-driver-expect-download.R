@@ -1,12 +1,19 @@
 
 app_download <- function(
   self, private,
-  id, name = NULL
+  id,
+  name = NULL
 ) {
   ckm8_assert_app_driver(self, private)
 
   if (is.null(name)) {
     name <- sprintf("%03d.download", private$counter$increment())
+  }
+  if (fs::path_file(name) != name) {
+    rlang::abort(
+      paste0("Download file name must be a single name location, not a full path. Received: ", name),
+      app = self
+    )
   }
 
   self$log_message(paste0("Downloading file: ", name))
@@ -51,4 +58,22 @@ app_expect_download <- function(
   )
 
   invisible(self)
+}
+
+
+app_get_download <- function(
+  self, private,
+  id,
+  filename = NULL
+) {
+  ckm8_assert_app_driver(self, private)
+  # ellipsis::check_dots_empty()
+
+  filename <- filename %||% tempfile(fileext = ".download")
+  ckm8_assert_single_string(filename)
+
+  snapshot_info <- app_download(self, private, id = id, name = fs::path_file(tempfile()))
+  fs::file_copy(snapshot_info$download_path, filename, overwrite = TRUE)
+
+  filename
 }
