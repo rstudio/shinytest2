@@ -132,6 +132,7 @@ app$get_log() # (long output lines have been truncated)
 \item \href{#method-get_html}{\code{AppDriver$get_html()}}
 \item \href{#method-expect_js}{\code{AppDriver$expect_js()}}
 \item \href{#method-expect_download}{\code{AppDriver$expect_download()}}
+\item \href{#method-get_download}{\code{AppDriver$get_download()}}
 \item \href{#method-get_value}{\code{AppDriver$get_value()}}
 \item \href{#method-get_values}{\code{AppDriver$get_values()}}
 \item \href{#method-expect_values}{\code{AppDriver$expect_values()}}
@@ -408,6 +409,28 @@ generates an ascending sequence of names: \verb{001.download},
 \item{\code{cran}}{Should these expectations be verified on CRAN? By default,
 they are not, because snapshot tests tend to be fragile
 because they often rely on minor details of dependencies.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_download"></a>}}
+\if{latex}{\out{\hypertarget{method-get_download}{}}}
+\subsection{Method \code{get_download()}}{
+Retrieve download from a download file action.
+
+Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}} \code{id}, the corresponding
+file will be downloaded and saved as a file.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_download(id, filename = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{Output id of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
+
+\item{\code{filenamename}}{File path to save the downloaded file to. If \code{NULL}, then a temp file ending in \code{.download} will be used.}
 }
 \if{html}{\out{</div>}}
 }

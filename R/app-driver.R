@@ -231,7 +231,17 @@ AppDriver <- R6Class(# nolint
     expect_download = function(id, ..., name = NULL, cran = FALSE) {
       app_expect_download(self, private, id = id, ..., name = name, cran = cran)
     },
-
+    #' @description
+    #' Retrieve download from a download file action.
+    #'
+    #' Given a [shiny::downloadButton()]/[shiny::downloadLink()] `id`, the corresponding
+    #' file will be downloaded and saved as a file.
+    #'
+    #' @param id Output id of [shiny::downloadButton()]/[shiny::downloadLink()]
+    #' @param filenamename File path to save the downloaded file to. If `NULL`, then a temp file ending in `.download` will be used.
+    get_download = function(id, filename = NULL) {
+      app_get_download(self, private, id = id, filename = filename)
+    },
 
 
     #' @description
