@@ -121,14 +121,16 @@ retrieved after any initialization error has been thrown.</p>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
   path <span class="op">=</span> <span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_path.html" class="external-link">test_path</a></span><span class="op">(</span><span class="st">"../../"</span><span class="op">)</span>,
   <span class="va">...</span>,
-  load_timeout <span class="op">=</span> <span class="cn">NULL</span>,
-  variant <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"shinytest2.variant"</span>, <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
-  expect_values_screenshot_args <span class="op">=</span> <span class="cn">TRUE</span>,
-  screenshot_args <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
-  check_names <span class="op">=</span> <span class="cn">TRUE</span>,
   name <span class="op">=</span> <span class="cn">NULL</span>,
-  view <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
+  variant <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"shinytest2.variant"</span>, <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
   seed <span class="op">=</span> <span class="cn">NULL</span>,
+  load_timeout <span class="op">=</span> <span class="cn">NULL</span>,
+  screenshot_args <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
+  expect_values_screenshot_args <span class="op">=</span> <span class="cn">TRUE</span>,
+  check_names <span class="op">=</span> <span class="cn">TRUE</span>,
+  view <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
+  height <span class="op">=</span> <span class="cn">NULL</span>,
+  width <span class="op">=</span> <span class="cn">NULL</span>,
   clean_logs <span class="op">=</span> <span class="cn">TRUE</span>,
   shiny_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
   render_args <span class="op">=</span> <span class="cn">NULL</span>,
@@ -147,10 +149,8 @@ single <code>app.R</code> file or a <code>server.R</code>-<code>ui.R</code> pair
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
 
 
-<dt><code>load_timeout</code></dt>
-<dd><p>How long to wait for the app to load, in ms.
-This includes the time to start R. Defaults to 10s when running
-locally and 20s when running on CI.</p></dd>
+<dt><code>name</code></dt>
+<dd><p>Prefix name to use when saving testthat snapshot files</p></dd>
 
 
 <dt><code>variant</code></dt>
@@ -165,27 +165,37 @@ version, or version of key dependency. For example usage,
 see <code><a href="platform_variant.html">platform_variant()</a></code>.</p></dd>
 
 
+<dt><code>seed</code></dt>
+<dd><p>An optional random seed to use before starting the application.
+For apps that use R's random number generator, this can make their
+behavior repeatable.</p></dd>
+
+
+<dt><code>load_timeout</code></dt>
+<dd><p>How long to wait for the app to load, in ms.
+This includes the time to start R. Defaults to 10s when running
+locally and 20s when running on CI.</p></dd>
+
+
 <dt><code>screenshot_args</code></dt>
 <dd><p>Default set of arguments to pass in to <code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s
 <code>$screenshot()</code> method when taking screnshots within <code>$expect_screenshot()</code>. To disable screenshots by default, set to <code>FALSE</code>.</p></dd>
 
 
+<dt><code>expect_values_screenshot_args</code></dt>
+<dd><p>The value for <code>screenshot_args</code> when producing a debug screenshot for <code>$expect_values()</code>.</p></dd>
+
+
 <dt><code>check_names</code></dt>
-<dd><p>Check if widget names are unique?</p></dd>
-
-
-<dt><code>name</code></dt>
-<dd><p>Prefix name to use when saving testthat snapshot files</p></dd>
+<dd><p>Check if widget names are unique once the application initially loads?</p></dd>
 
 
 <dt><code>view</code></dt>
 <dd><p>Opens the Chromote Session in an interactive browser tab once initialization. Defaults to <code>FALSE</code>.</p></dd>
 
 
-<dt><code>seed</code></dt>
-<dd><p>An optional random seed to use before starting the application.
-For apps that use R's random number generator, this can make their
-behavior repeatable.</p></dd>
+<dt><code>height, width</code></dt>
+<dd><p>Window size to use when opening the Chromote Session. These values will only be used if both <code>height</code> and <code>width</code> are not <code>NULL</code>.</p></dd>
 
 
 <dt><code>clean_logs</code></dt>
@@ -194,18 +204,17 @@ Shiny process object is garbage collected.</p></dd>
 
 
 <dt><code>shiny_args</code></dt>
-<dd><p>A list of options to pass to <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">shiny::runApp()</a></code>.</p></dd>
+<dd><p>A list of options to pass to <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">shiny::runApp()</a></code>. Ex: <code>list(port = 8080)</code>.</p></dd>
 
 
 <dt><code>render_args</code></dt>
-<dd><p>Passed to <code><a href="https://pkgs.rstudio.com/rmarkdown/reference/run.html" class="external-link">rmarkdown::run()</a></code> for interactive <code>.Rmd</code>s.</p></dd>
+<dd><p>Passed to <code>rmarkdown::run(render_args=)</code> for interactive <code>.Rmd</code>s. Ex: `list(quiet = TRUE)</p></dd>
 
 
 <dt><code>options</code></dt>
 <dd><p>A list of <code><a href="https://rdrr.io/r/base/options.html" class="external-link">base::options()</a></code> to set in the driver's child
-process. See <code><a href="https://rdrr.io/pkg/shiny/man/shinyOptions.html" class="external-link">shiny::shinyOptions()</a></code> for inspiration. If <code>shiny.trace</code>
-is set to <code>TRUE</code>, then all WebSocket traffic will be captured by <code>chromote</code>
-as to have access to the when the message was received by the browser.</p></dd>
+process. See <code><a href="https://rdrr.io/pkg/shiny/man/shinyOptions.html" class="external-link">shiny::shinyOptions()</a></code> for inspiration. If <code>shiny.trace = TRUE</code>,
+then all WebSocket traffic will be captured by <code>chromote</code> and logged.</p></dd>
 
 
 </dl><p></p></div>
@@ -434,6 +443,10 @@ because they often rely on minor details of dependencies.</p></dd>
 <dd><p>One of these variable should contain a single string value. If more than one value is specified or no values are specified, an error will be thrown.</p></dd>
 
 
+<dt><code>hash_images</code></dt>
+<dd><p>If <code>TRUE</code>, images will be hashed before being returned. Otherwise, all images will return their full data64 encoded value.</p></dd>
+
+
 </dl><p></p></div>
 </div>
 
@@ -460,6 +473,10 @@ because they often rely on minor details of dependencies.</p></dd>
 <dd><p>Either <code>TRUE</code> to return all
 input/output/exported values, or a character vector of specific
 controls.</p></dd>
+
+
+<dt><code>hash_images</code></dt>
+<dd><p>If <code>TRUE</code>, images will be hashed before being returned. Otherwise, all images will return their full data64 encoded value.</p></dd>
 
 
 </dl><p></p></div>
@@ -490,27 +507,34 @@ controls.</p></dd>
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
 
 
+<dt><code>input, output, export</code></dt>
+<dd><p>Depending on which parameters are supplied, different return values can occur:
+* If <code>input</code>, <code>output</code>, and <code>export</code> are missing, then all values are included in the snapshot.
+* If at least one <code>input</code>, <code>output</code>, or <code>export</code> is specified, then only those values are included in the snapshot.
+The values supplied can be:
+* A character vector of specific names to only include in the snapshot.
+* <code>TRUE</code>, then all values of that type are included in the snapshot.
+* Anything else will result in the parameter being ignored.</p></dd>
+
+
+<dt><code>screenshot_args</code></dt>
+<dd><p>This value is passed along to <code>$expect_screenshot()</code> where the resulting expectation is ignored. If missing, the default value will be <code>$initialize(expect_values_screenshot_args=)</code>.</p>
+<p>The final value can either be:</p><ul><li><p><code>TRUE</code>: A screenshot of the whole page will be taken with no delay</p></li>
+<li><p><code>FALSE</code>: No screenshot will be taken</p></li>
+<li><p>A named list of arguments: Arguments passed directly to <code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s
+<code>$screenshot()</code> method. The selector and delay will default to <code>"html"</code> and <code>0</code> respectively.
+Take a screenshot of the Shiny application</p></li>
+</ul></dd>
+
+
 <dt><code>name</code></dt>
-<dd><p>The prefix name to be used for the snapshot. By default, this uses the name supplied to <code>app</code> on initialization.</p></dd>
+<dd><p>The file name to be used for the snapshot. The file extension will be ignored. By default, this uses the name supplied to <code>app</code> on initialization with a counter.</p></dd>
 
 
 <dt><code>cran</code></dt>
 <dd><p>Should these expectations be verified on CRAN? By default,
 they are not, because snapshot tests tend to be fragile
 because they often rely on minor details of dependencies.</p></dd>
-
-
-<dt><code>items</code></dt>
-<dd><p>Components to only be included in the snapshot. If supplied, can contain <code>inputs</code>, <code>output</code>, and <code>export</code>. Each value of <code>items</code> can either be <code>TRUE</code> (for all values) or a character list of names to use.</p></dd>
-
-
-<dt><code>screenshot</code></dt>
-<dd><p>If the value is <code>NULL</code>, then the initalization value of <code>screenshot_args</code> will be used. If this value is <code>NULL</code>, then <code>screenshot</code> will be set to the result of <code>!is.null(items)</code>.</p>
-<p>The final value can either be:</p><ul><li><p><code>TRUE</code>: A screenshot of the whole page will be taken with no delay</p></li>
-<li><p><code>FALSE</code>: No screenshot will be taken</p></li>
-<li><p>A named list of arguments: Arguments passed directly to <code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s
-<code>$screenshot()</code> method. The selector and delay will default to <code>"html"</code> and <code>0</code> respectively.</p></li>
-</ul></dd>
 
 
 </dl><p></p></div>
@@ -532,8 +556,31 @@ because they often rely on minor details of dependencies.</p></dd>
 
 <div class="section">
 <h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>...</code></dt>
+<p></p><div class="arguments"><dl><dt><code>file</code></dt>
+<dd><p>If <code>NULL</code>, then the image will be displayed to the current Graphics Device. If a file path, then the screenshot will be saved to that file.
+Expect a screenshot of the Shiny application</p></dd>
+
+
+<dt><code>...</code></dt>
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
+
+
+<dt><code>screenshot_args</code></dt>
+<dd><p>This named list of arguments is passed along to <code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$screenshot()</code> method.
+If missing, the value will default to <code>$initialize(screenshot_args=)</code>.</p>
+<p>If the value is:</p><ul><li><p><code>TRUE</code>: A screenshot of the whole page will be taken with no delay</p></li>
+<li><p>A named list of arguments: Arguments passed directly to <code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s
+<code>$screenshot()</code> method. The selector and delay will default to <code>"html"</code> and <code>0</code> respectively.</p></li>
+</ul><p>If a <code>FALSE</code> value is provided, the parameter will be ignored and a screenshot will be taken with default behavior.</p></dd>
+
+
+<dt><code>delay</code></dt>
+<dd><p>The number of milliseconds to wait before taking the screenshot. This value can either be supplied as <code>delay</code> or <code>screenshot_args</code>'s delay slot. The <code>delay</code> parameter will have preference.</p></dd>
+
+
+<dt><code>selector</code></dt>
+<dd><p>The selector is a CSS selector that will be used to select a portion of the page to be captured. This value can either be supplied as <code>selector</code> or <code>screenshot_args</code>'s selector slot. The <code>selector</code> parameter will have preference.
+The default value is to take a picture of the whole page.</p></dd>
 
 
 </dl><p></p></div>
@@ -558,6 +605,36 @@ because they often rely on minor details of dependencies.</p></dd>
 <h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
+
+
+<dt><code>screenshot_args</code></dt>
+<dd><p>This named list of arguments is passed along to
+<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$screenshot()</code> method. If missing, the
+value will default to <code>$initialize(screenshot_args=)</code>.</p>
+<p>If the value is:</p><ul><li><p><code>TRUE</code>: A screenshot of the whole page will be taken with no delay</p></li>
+<li><p>A named list of arguments: Arguments passed directly to <code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s
+<code>$screenshot()</code> method. The selector and delay will default to <code>"html"</code> and <code>0</code> respectively.</p></li>
+</ul><p>If a <code>FALSE</code> value is provided, the parameter will be ignored and a
+screenshot will be taken with default behavior.</p></dd>
+
+
+<dt><code>delay</code></dt>
+<dd><p>The number of milliseconds to wait before taking the
+screenshot. This value can either be supplied as <code>delay</code> or
+<code>screenshot_args</code>'s delay slot. The <code>delay</code> parameter will have
+preference.</p></dd>
+
+
+<dt><code>selector</code></dt>
+<dd><p>The selector is a CSS selector that will be used to
+select a portion of the page to be captured. This value can either be
+supplied as <code>selector</code> or <code>screenshot_args</code>'s selector slot. The
+<code>selector</code> parameter will have preference. The default value is to take
+a picture of the whole page.</p></dd>
+
+
+<dt><code>name</code></dt>
+<dd><p>The file name to be used for the snapshot. The file extension will overwritten to <code>.png</code>. By default, this uses the name supplied to <code>app</code> on initialization with a counter.</p></dd>
 
 
 <dt><code>cran</code></dt>
@@ -622,7 +699,8 @@ an input binding.</p></dd>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span>
   input <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   output <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
-  selector <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>
+  selector <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">...</span>
 <span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -630,6 +708,10 @@ an input binding.</p></dd>
 <h4 id="arguments-13">Arguments<a class="anchor" aria-label="anchor" href="#arguments-13"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>input, output, selector</code></dt>
 <dd><p>A name of an Shiny input/output value or a DOM CSS selector. Only one of these may be used.</p></dd>
+
+
+<dt><code>...</code></dt>
+<dd><p>If <code>input</code> is used, all extra arguments are passed to <code>$set_inputs(!!input := "click", ...)</code>. By default, this means that the AppDriver will wait until an output has been updated within the specified <code>timeout_</code>.</p></dd>
 
 
 </dl><p></p></div>
@@ -666,7 +748,7 @@ an input binding.</p></dd>
 <p>Waits until a JavaScript <code>expr</code>ession evaluates to <code>true</code> or the
 <code>timeout</code> is exceeded.</p><div class="section">
 <h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_js</span><span class="op">(</span><span class="va">script</span>, timeout <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">1000</span>, interval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_js</span><span class="op">(</span><span class="va">script</span>, timeout <span class="op">=</span> <span class="fl">30</span> <span class="op">*</span> <span class="fl">1000</span>, interval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -851,13 +933,18 @@ named <code>width</code> and <code>height</code>.</p><div class="section">
 <h3 id="method-set-window-size-">Method <code>set_window_size()</code><a class="anchor" aria-label="anchor" href="#method-set-window-size-"></a></h3>
 <p>Sets size of the browser window.</p><div class="section">
 <h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">set_window_size</span><span class="op">(</span><span class="va">width</span>, <span class="va">height</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">set_window_size</span><span class="op">(</span><span class="va">width</span>, <span class="va">height</span>, wait <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-19">Arguments<a class="anchor" aria-label="anchor" href="#arguments-19"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>width, height</code></dt>
 <dd><p>Height and width of browser, in pixels.</p></dd>
+
+
+<dt><code>wait</code></dt>
+<dd><p>If <code>TRUE</code>, <code>$wait_for_idle()</code> will be called after setting the window size.
+This will allow for any width specific items (such as plots) to be rerendered.</p></dd>
 
 
 </dl><p></p></div>
