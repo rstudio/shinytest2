@@ -430,7 +430,7 @@ file will be downloaded and saved as a file.
 \describe{
 \item{\code{id}}{Output id of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
 
-\item{\code{filenamename}}{File path to save the downloaded file to. If \code{NULL}, then a temp file ending in \code{.download} will be used.}
+\item{\code{filename}}{File path to save the downloaded file to. If \code{NULL}, then a temp file ending in \code{.download} will be used.}
 }
 \if{html}{\out{</div>}}
 }
