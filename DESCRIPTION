@@ -47,10 +47,14 @@ Suggests:
     shinytest,
     knitr
 Remotes:
-    rstudio/chromote,
-    rstudio/shiny
+    rstudio/chromote
 Config/Needs/website:
-    pkgdown
+    pkgdown,
+    rstudio/shiny
+Config/Needs/check:
+    rstudio/shiny
+Config/Needs/routine:
+    rstudio/shiny
 Config/testthat/edition: 3
 Collate:
     'R6-helper.R'
