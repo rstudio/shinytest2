@@ -159,11 +159,11 @@ app_initialize_ <- function(
 }
 
 
-app_initialize <- function(self, private, ...) {
+app_initialize <- function(self, private, ..., view = missing_arg()) {
   ckm8_assert_app_driver(self, private)
 
   withCallingHandlers(
-    app_initialize_(self, private, ...),
+    app_initialize_(self, private, ..., view = view),
     error = function(e) {
       withCallingHandlers(
         self$log_message(paste0("Error while initializing AppDriver:\n", conditionMessage(e))),
@@ -176,7 +176,7 @@ app_initialize <- function(self, private, ...) {
       # `view` defaults to `rlang::missing_arg()`
       withCallingHandlers(
         {
-          view_val <- rlang::maybe_missing(list(...)$view, NULL)
+          view_val <- rlang::maybe_missing(view, NULL)
           if (
             rlang::is_interactive() &&
             # If no chromote session object exists, then we can't view it

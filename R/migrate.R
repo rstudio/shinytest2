@@ -89,7 +89,6 @@ m__find_shinytest_testapp <- function(exprs, info_env) {
   args <- NULL
   post_fn <- function(expr_list, is_top_level) {
     if (is_test_app(expr_list)) {
-      testapp_expr <- expr_list[[3]]
       if (!is.null(args)) {
         if (info_env$verbose) rlang::inform(c(
           "!" = "Multiple shinytest::testApp() calls found. Only the first one will be used."
@@ -97,7 +96,7 @@ m__find_shinytest_testapp <- function(exprs, info_env) {
       } else {
         args <<- rlang::call_args(
           rlang::call_match(
-            as.call(testapp_expr),
+            as.call(expr_list),
             shinytest::testApp,
             defaults = TRUE
           )
@@ -165,11 +164,14 @@ m__extract_runner_info <- function(app_info_env) {
 
   testapp_args <- m__find_shinytest_testapp(exprs, app_info_env)
   if (is.null(testapp_args)) {
-    rlang::abort(c(
-      paste0("No `shinytest::testApp()` call found in file: ", shinytest_file)
+    rlang::inform(c(
+      "!" = paste0("No `shinytest::testApp()` call found in file: ", shinytest_file),
+      "i" = "Using defaults! Assuming `shinytest::testApp(testDir='..')`"
     ))
+    testapp_args <- formals(shinytest::testApp)
+    testapp_args$appDir <- ".." # nolint
   }
-  if (fs::path_rel(testapp_args$appDir) != ".") {
+  if (fs::path_rel(testapp_args$appDir) != "..") {
     abort(paste0(
       "shinytest::testApp() must be called on the parent App directory (`appDir = \"..\"`).\n",
       "{shinytest2} does not know how to automatically migrate this app."
@@ -306,16 +308,40 @@ m__expected_files <- function(test_path, info_env) {
     fs::dir_create(testthat_path)
 
     shinytest_files <- dir(shinytest_dir, full.names = TRUE)
-    fs::file_copy(
-      # `tests/shinytest/NAME-expected[-SUFFIX]/XXX.json`
-      shinytest_files,
-      # `tests/testthat/_snaps/[SUFFIX/]NAME/XXX.json`
-      fs::path(
-        testthat_path,
-        fs::path_file(shinytest_files)
-      ),
-      overwrite = TRUE
-    )
+    lapply(seq_along(shinytest_files), function(i) {
+      shinytest_file <- shinytest_files[i]
+
+      expected_file <- fs::path_file(shinytest_file)
+
+      cur_number_reg <- regexpr("(?<digits>\\d\\d\\d).(json|png)$", expected_file, perl = TRUE)
+      if (cur_number_reg > 0) {
+        start <- attr(cur_number_reg, "capture.start")[1, ][["digits"]]
+        length <- attr(cur_number_reg, "capture.length")[1, ][["digits"]]
+        cur_number_txt <- substr(expected_file, start, start + length - 1)
+        cur_number <- as.integer(cur_number_txt)
+
+        new_number <- cur_number * 2
+        if (fs::path_ext(expected_file) == "json") {
+          new_number <- new_number - 1
+        }
+
+        new_number <- as.character(new_number)
+        new_number_txt <- paste0(paste0(rep("0", 3 - nchar(new_number)), collapse = ""), new_number)
+        # Turn new number into the file name
+        expected_file <- sub(paste0(cur_number_txt, "."), paste0(new_number_txt, "."), expected_file, fixed = TRUE)
+      }
+
+      fs::file_copy(
+        # `tests/shinytest/NAME-expected[-SUFFIX]/XXX.json`
+        shinytest_file,
+        # `tests/testthat/_snaps/[SUFFIX/]NAME/XXX.json`
+        fs::path(
+          testthat_path,
+          expected_file
+        ),
+        overwrite = TRUE
+      )
+    })
   })
 }
 
@@ -410,7 +436,12 @@ m__driver_new <- function(expr, info_env) {
       if (fs::path_rel(expr_args$path) != "../..")
       init_args[[1]] <- expr_args$path
     }
+    # Do not do this if using a unique file name
+    # init_args$name <- info_env$name
     init_args$variant <- rlang::maybe_missing(info_env$suffix, NULL)
+    # No need to do this as the pictures are different anyways
+    # init_args$width <- 992
+    # init_args$height <- 744
     for (name_info in list(
       list(from = "loadTimeout", to = "load_timeout"),
       list(from = "checkNames", to = "check_names"),
