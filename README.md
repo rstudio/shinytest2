@@ -8,7 +8,7 @@
 <!-- badges: end -->
 
 
-> !! {shinytest2} is in beta developement. Please report any bugs or feedback at [https://github.com/rstudio/shinytest2/issues](https://github.com/rstudio/shinytest2/issues) !!
+> :triangular_flag_on_post::triangular_flag_on_post: {shinytest2} is in beta developement. Please report any bugs or feedback at [https://github.com/rstudio/shinytest2/issues](https://github.com/rstudio/shinytest2/issues) :triangular_flag_on_post::triangular_flag_on_post:
 
 
 `{shinytest2}` facilitates the testing of `{shiny}` applications using a headless Chromium web browser via `{chromote}`. Using the latest features of `{testthat}` edition 3, snapshot files are saved for each of the expected values.
