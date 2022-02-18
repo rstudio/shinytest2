@@ -1,4 +1,4 @@
-# shinytest2 <a href='https://testthat.r-lib.org/'><img src="https://testthat.r-lib.org/logo.png"  align="right" height="138.5" style="margin:10px;" /></a><a href='https://shiny.rstudio.com/'><img src="https://raw.githubusercontent.com/rstudio/hex-stickers/master/SVG/shiny.svg"  align="right" height="138.5" style="margin:10px;" /></a>
+# shinytest2
 
 
 <!-- badges: start -->
