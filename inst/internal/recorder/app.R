@@ -457,7 +457,7 @@ shinyApp(
             "waitForIdle" = "app$wait_for_idle()",
             "setWindowSize" = {
               code <- paste0("app$set_window_size(width = ", event$width, ", height = ", event$height, ")")
-              if (is_false(found_first_set_window_size)) {
+              if (shinytest2:::is_false(found_first_set_window_size)) {
                 found_first_set_window_size <<- TRUE
                 event$first_set_window_size <- TRUE
               }
@@ -522,7 +522,7 @@ shinyApp(
                   paste0(
                     "app$set_inputs(",
                     quote_name(event$name), " = ",
-                    process_input_value(event$value, input_type = "default"),
+                    value,
                     args,
                     ")"
                   )

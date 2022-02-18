@@ -125,7 +125,7 @@ record_test <- function(
     utils::file.edit(saved_test_file)
   }
 
-  app_path <- app$get_path()
+  app_path <- app_path(app$get_path())$app
   test_filter <- sub("^test-", "", fs::path_ext_remove(fs::path_file(saved_test_file)))
   if (length(res$dont_run_reasons) == 0) {
     # Run the test script

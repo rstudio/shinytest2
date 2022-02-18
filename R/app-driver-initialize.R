@@ -123,7 +123,7 @@ app_initialize_ <- function(
       self$wait_for_idle(duration = 500, timeout = load_timeout)
     },
     error = function(e) {
-      abort(
+      rlang::abort(
         paste0(
           "Shiny app did not become stable in ", load_timeout, "ms.\n",
           "Message: ", conditionMessage(e)
@@ -168,7 +168,7 @@ app_initialize <- function(self, private, ...) {
       withCallingHandlers(
         self$log_message(paste0("Error while initializing AppDriver:\n", conditionMessage(e))),
         error = function(ee) {
-          message("Could not log error message. Error: ", conditionMessage(ee))
+          rlang::inform(paste0("Could not log error message. Error: ", conditionMessage(ee)))
         }
       )
 
@@ -186,13 +186,15 @@ app_initialize <- function(self, private, ...) {
             # If view_val == FALSE, user asked to not open chromote session. Do not open
             !is_false(view_val)
           ) {
-            message("`$view()`ing chromote session for debugging purposes")
+            rlang::inform("`$view()`ing chromote session for debugging purposes")
             self$log_message("Viewing chromote session for debugging purposes")
             self$view()
           }
         },
         error = function(ee) {
-          message("Could not open chromote session. Error: ", conditionMessage(ee))
+          rlang::inform(c(
+            "!" = paste0("Could not open chromote session. Error: ", conditionMessage(ee))
+          ))
         }
       )
 
