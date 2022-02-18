@@ -1,0 +1,11 @@
+url: https://rstudio.github.io/shinytest2/
+
+template:
+  package: tidytemplate
+  bootstrap: 5
+
+  bslib:
+    primary: "#A51D21"
+    # https://mdigi.tools/lighten-color/#a51d21 @ 92%
+    navbar-background: "#fbe9ea"
+  trailing_slash_redirect: true
