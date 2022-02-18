@@ -432,7 +432,7 @@ file will be downloaded and saved as a file.</p><div class="section">
 <dd><p>Output id of <code><a href="https://rdrr.io/pkg/shiny/man/downloadButton.html" class="external-link">shiny::downloadButton()</a></code>/<code><a href="https://rdrr.io/pkg/shiny/man/downloadButton.html" class="external-link">shiny::downloadLink()</a></code></p></dd>
 
 
-<dt><code>filenamename</code></dt>
+<dt><code>filename</code></dt>
 <dd><p>File path to save the downloaded file to. If <code>NULL</code>, then a temp file ending in <code>.download</code> will be used.</p></dd>
 
 
@@ -673,7 +673,7 @@ because they often rely on minor details of dependencies.</p></dd>
   <span class="va">...</span>,
   wait_ <span class="op">=</span> <span class="cn">TRUE</span>,
   timeout_ <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">1000</span>,
-  allow_input_no_binding_ <span class="op">=</span> <span class="cn">FALSE</span>,
+  allow_no_input_binding_ <span class="op">=</span> <span class="cn">FALSE</span>,
   priority_ <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"input"</span>, <span class="st">"event"</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div><p></p></div>
 </div>
@@ -693,7 +693,7 @@ Input with name <code>component_name_1</code> will be assigned value <code>value
 <dd><p>Amount of time to wait before giving up (milliseconds).</p></dd>
 
 
-<dt><code>allow_input_no_binding_</code></dt>
+<dt><code>allow_no_input_binding_</code></dt>
 <dd><p>When setting the value of an input, allow
 it to set the value of an input even if that input does not have
 an input binding.</p></dd>

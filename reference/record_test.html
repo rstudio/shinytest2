@@ -66,7 +66,7 @@
   shiny_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
   test_file <span class="op">=</span> <span class="st">"test-shinytest2.R"</span>,
   edit_test <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/is_interactive.html" class="external-link">is_interactive</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu">rstudioapi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rstudioapi/man/isAvailable.html" class="external-link">isAvailable</a></span><span class="op">(</span><span class="op">)</span>,
-  allow_input_no_binding <span class="op">=</span> <span class="cn">NULL</span>,
+  allow_no_input_binding <span class="op">=</span> <span class="cn">NULL</span>,
   run_test <span class="op">=</span> <span class="cn">TRUE</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -93,7 +93,7 @@ is provided, it will be saved in the test script.</p></dd>
 <dd><p>Base file name of the <span class="pkg">testthat</span> test file.</p></dd>
 <dt>edit_test</dt>
 <dd><p>If <code>TRUE</code>, the test file will be opened in an editor via <code><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit()</a></code> before executing.</p></dd>
-<dt>allow_input_no_binding</dt>
+<dt>allow_no_input_binding</dt>
 <dd><p>This value controls if events without input
 bindings are recorded.</p><ul><li><p>If <code>TRUE</code>, events without input bindings are recorded.</p></li>
 <li><p>If <code>FALSE</code>, events without input bindings are not recorded.</p></li>
