@@ -1,5 +1,7 @@
 # shinytest2
 
+> !! {shinytest2} is in beta developement. Please report any bugs or feedback at [https://github.com/rstudio/shinytest2/issues](https://github.com/rstudio/shinytest2/issues) !!
+
 
 <!-- badges: start -->
 <!-- badges: end -->
