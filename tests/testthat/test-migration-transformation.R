@@ -67,10 +67,10 @@ expect_migration_error <- function(
 
 
 test_that("setInputs is converted", {
-  # expect_migration(
-  #   app$setInputs(x = 1, allowInputNoBinding_ = TRUE, y = 2),
-  #   app$set_inputs(x = 1, y = 2, allow_input_no_binding_ = TRUE)
-  # )
+  expect_migration(
+    app$setInputs(x = 1, allowInputNoBinding_ = TRUE, y = 2),
+    app$set_inputs(x = 1, y = 2, allow_no_input_binding_ = TRUE)
+  )
   expect_migration_error(
     app <- app$setInputs(x = 1, allowInputNoBinding_ = TRUE, y = 2),
     "Use `AppDriver$get_values()` directly."

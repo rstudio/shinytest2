@@ -727,7 +727,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       matched_args <- match_shinytest_args("setInputs")
       matched_args_names <- names(matched_args)
       if ("allowInputNoBinding_" %in% matched_args_names) {
-        names(matched_args)[matched_args_names == "allowInputNoBinding_"] <- "allow_input_no_binding_"
+        names(matched_args)[matched_args_names == "allowInputNoBinding_"] <- "allow_no_input_binding_"
       }
       # Yell about removed functionality
       if (

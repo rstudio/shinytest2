@@ -14,7 +14,7 @@
 #'   is provided, it will be saved in the test script.
 #' @param test_file Base file name of the \pkg{testthat} test file.
 #' @param edit_test If `TRUE`, the test file will be opened in an editor via [`file.edit()`] before executing.
-#' @param allow_input_no_binding This value controls if events without input
+#' @param allow_no_input_binding This value controls if events without input
 #' bindings are recorded.
 #'   * If `TRUE`, events without input bindings are recorded.
 #'   * If `FALSE`, events without input bindings are not recorded.
@@ -32,9 +32,7 @@ record_test <- function(
   shiny_args = list(),
   test_file = "test-shinytest2.R",
   edit_test = rlang::is_interactive() && rstudioapi::isAvailable(),
-  allow_input_no_binding = NULL, # new,
-  # TODO-barret; change to _this variable_ throughout package
-  # allow_no_input_binding = FALSE,
+  allow_no_input_binding = NULL,
   run_test = TRUE
 ) {
   ellipsis::check_dots_empty()
@@ -106,7 +104,7 @@ record_test <- function(
       shinytest2.seed         = seed,
       shinytest2.shiny.args   = shiny_args,
       shinytest2.test_file    = test_file,
-      shinytest2.allow_input_no_binding = allow_input_no_binding
+      shinytest2.allow_no_input_binding = allow_no_input_binding
     ),
     res <- shiny::runApp(system.file("internal", "recorder", package = "shinytest2"))
   )
