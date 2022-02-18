@@ -522,7 +522,7 @@ shinyApp(
                   paste0(
                     "app$set_inputs(",
                     quote_name(event$name), " = ",
-                    process_input_value(event$value, input_type = "default"),
+                    value,
                     args,
                     ")"
                   )
