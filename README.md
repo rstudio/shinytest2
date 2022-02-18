@@ -1,13 +1,15 @@
 # shinytest2
 
-> !! {shinytest2} is in beta developement. Please report any bugs or feedback at [https://github.com/rstudio/shinytest2/issues](https://github.com/rstudio/shinytest2/issues) !!
-
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN status](https://www.r-pkg.org/badges/version/shinytest2)](https://CRAN.R-project.org/package=shinytest2)
 [![R-CMD-check](https://github.com/rstudio/shinytest2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rstudio/shinytest2/actions)
 <!-- badges: end -->
+
+
+> !! {shinytest2} is in beta developement. Please report any bugs or feedback at [https://github.com/rstudio/shinytest2/issues](https://github.com/rstudio/shinytest2/issues) !!
+
 
 `{shinytest2}` facilitates the testing of `{shiny}` applications using a headless Chromium web browser via `{chromote}`. Using the latest features of `{testthat}` edition 3, snapshot files are saved for each of the expected values.
 
