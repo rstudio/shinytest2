@@ -238,7 +238,7 @@ AppDriver <- R6Class(# nolint
     #' file will be downloaded and saved as a file.
     #'
     #' @param id Output id of [shiny::downloadButton()]/[shiny::downloadLink()]
-    #' @param filenamename File path to save the downloaded file to. If `NULL`, then a temp file ending in `.download` will be used.
+    #' @param filename File path to save the downloaded file to. If `NULL`, then a temp file ending in `.download` will be used.
     get_download = function(id, filename = NULL) {
       app_get_download(self, private, id = id, filename = filename)
     },
@@ -387,7 +387,7 @@ AppDriver <- R6Class(# nolint
     #' @description Set input values.
     #' @param ... Name-value pairs, `component_name_1 = value_1, component_name_2 = value_2` etc.
     #'   Input with name `component_name_1` will be assigned value `value_1`.
-    #' @param allow_input_no_binding_ When setting the value of an input, allow
+    #' @param allow_no_input_binding_ When setting the value of an input, allow
     #'   it to set the value of an input even if that input does not have
     #'   an input binding.
     #' @param priority_ Sets the event priority. For expert use only: see
@@ -397,12 +397,12 @@ AppDriver <- R6Class(# nolint
       ...,
       wait_ = TRUE,
       timeout_ = 3 * 1000,
-      allow_input_no_binding_ = FALSE,
+      allow_no_input_binding_ = FALSE,
       priority_ = c("input", "event")
     ) {
       app_set_inputs(
         self, private, ..., wait_ = wait_, timeout_ = timeout_,
-        allow_input_no_binding_ = allow_input_no_binding_, priority_ = priority_
+        allow_no_input_binding_ = allow_no_input_binding_, priority_ = priority_
       )
     },
 

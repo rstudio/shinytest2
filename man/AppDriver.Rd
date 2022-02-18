@@ -430,7 +430,7 @@ file will be downloaded and saved as a file.
 \describe{
 \item{\code{id}}{Output id of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
 
-\item{\code{filenamename}}{File path to save the downloaded file to. If \code{NULL}, then a temp file ending in \code{.download} will be used.}
+\item{\code{filename}}{File path to save the downloaded file to. If \code{NULL}, then a temp file ending in \code{.download} will be used.}
 }
 \if{html}{\out{</div>}}
 }
@@ -655,7 +655,7 @@ Set input values.
   ...,
   wait_ = TRUE,
   timeout_ = 3 * 1000,
-  allow_input_no_binding_ = FALSE,
+  allow_no_input_binding_ = FALSE,
   priority_ = c("input", "event")
 )}\if{html}{\out{</div>}}
 }
@@ -670,7 +670,7 @@ Input with name \code{component_name_1} will be assigned value \code{value_1}.}
 
 \item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).}
 
-\item{\code{allow_input_no_binding_}}{When setting the value of an input, allow
+\item{\code{allow_no_input_binding_}}{When setting the value of an input, allow
 it to set the value of an input even if that input does not have
 an input binding.}
 

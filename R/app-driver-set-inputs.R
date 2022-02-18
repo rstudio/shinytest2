@@ -3,7 +3,7 @@ app_set_inputs <- function(
   ...,
   wait_ = TRUE,
   timeout_ = 3 * 1000,
-  allow_input_no_binding_ = FALSE,
+  allow_no_input_binding_ = FALSE,
   priority_ = c("input", "event")
 ) {
   ckm8_assert_app_driver(self, private)
@@ -14,7 +14,8 @@ app_set_inputs <- function(
   input_values <- lapply(inputs, function(value) {
     list(
       value = value,
-      allowInputNoBinding = allow_input_no_binding_,
+      # TODO-barret; rename
+      allowInputNoBinding = allow_no_input_binding_,
       priority = priority_
     )
   })

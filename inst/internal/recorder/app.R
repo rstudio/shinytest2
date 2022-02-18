@@ -12,7 +12,7 @@ load_timeout  <- getOption("shinytest2.load.timeout")
 start_seed    <- getOption("shinytest2.seed")
 shiny_args    <- getOption("shinytest2.shiny.args")
 save_file     <- getOption("shinytest2.test_file")
-allow_input_no_binding <- getOption("shinytest2.allow_input_no_binding")
+allow_no_input_binding <- getOption("shinytest2.allow_no_input_binding")
 
 # If there are any reasons to not run a test, a message should be appended to
 # this vector.
@@ -406,7 +406,7 @@ shinyApp(
       n_console_std_lines <<- print_logs(level != "error", n = n_console_std_lines)
     })
 
-    allow_input_no_binding_react <- reactiveVal(allow_input_no_binding)
+    allow_no_input_binding_react <- reactiveVal(allow_no_input_binding)
 
     trim_testevents <- reactive({
       events <- input$testevents
@@ -425,7 +425,7 @@ shinyApp(
               to_remove[length(to_remove) + 1] <- i - 1
             },
             "inputEvent" = {
-              if (!isTRUE(allow_input_no_binding_react())) {
+              if (!isTRUE(allow_no_input_binding_react())) {
                 if (!curr_event$hasBinding && !prev_event$hasBinding) {
                   to_remove[length(to_remove) + 1] <- i
                 }
@@ -502,7 +502,7 @@ shinyApp(
 
                 code
               } else {
-                if (!event$hasBinding && !isTRUE(allow_input_no_binding_react())) {
+                if (!event$hasBinding && !isTRUE(allow_no_input_binding_react())) {
                   structure(
                     paste0(
                       "# Update unbound `input` value"
@@ -511,9 +511,9 @@ shinyApp(
                   )
                 } else {
                   args <- ""
-                  if (!event$hasBinding && isTRUE(allow_input_no_binding_react())) {
+                  if (!event$hasBinding && isTRUE(allow_no_input_binding_react())) {
                     # TODO-barret; test
-                    args <- paste0(args, ", allow_input_no_binding_ = TRUE")
+                    args <- paste0(args, ", allow_no_input_binding_ = TRUE")
                     if (identical(event$priority, "event")) {
                       args <- paste0(args, ', priority_ = "event"')
                     }
@@ -563,7 +563,7 @@ shinyApp(
     # If an unbound input value is updated, ask the user if the event should be recorded
     no_binding_obs <- list()
     no_binding_obs[[1]] <- observeEvent(trim_testevents(), {
-      if (!is.null(allow_input_no_binding_react())) {
+      if (!is.null(allow_no_input_binding_react())) {
         # Cancel the observers and return
         lapply(no_binding_obs, function(ob) { ob$destroy() })
         no_binding_obs <<- list()
@@ -579,7 +579,7 @@ shinyApp(
         observeEvent(
           input$inputs_no_binding_ignore,
           {
-            allow_input_no_binding_react(FALSE)
+            allow_no_input_binding_react(FALSE)
           },
           ignoreInit = TRUE
         )
@@ -587,7 +587,7 @@ shinyApp(
         observeEvent(
           input$inputs_no_binding_save,
           {
-            allow_input_no_binding_react(TRUE)
+            allow_no_input_binding_react(TRUE)
           },
           ignoreInit = TRUE
         )
@@ -608,8 +608,8 @@ shinyApp(
             tooltip(tagList(
               "To prevent this modal from being displayed, set the parameter", tags$br(),
               tags$ul(
-                tags$li(tags$code("record_test(allow_input_no_binding = TRUE)"), "to", tags$strong("record"), "these events."),
-                tags$li(tags$code("record_test(allow_input_no_binding = FALSE)"), "to", tags$strong("ignore"), "these events.")
+                tags$li(tags$code("record_test(allow_no_input_binding = TRUE)"), "to", tags$strong("record"), "these events."),
+                tags$li(tags$code("record_test(allow_no_input_binding = FALSE)"), "to", tags$strong("ignore"), "these events.")
               )
             ), placement = "left"),
             enable_tooltip_script(),
