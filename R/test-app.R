@@ -27,6 +27,11 @@ test_app <- function(
   # force variables before testing starts / paths change
   list2(app_dir, env, ...)
 
+  path_info <- app_path(app_dir, "app_dir")
+  if (path_info$is_rmd) {
+    app_dir <- path_info$app
+  }
+
   # By using this envvar, the DESCRIPTION file is not needed. Yay!
   # See `testthat::edition_get()` for usage
   withr::with_envvar(list(TESTTHAT_EDITION = 3), {
