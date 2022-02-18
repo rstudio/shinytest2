@@ -47,8 +47,7 @@ Suggests:
     shinytest,
     knitr
 Remotes:
-    rstudio/chromote,
-    rstudio/shiny
+    rstudio/chromote
 Config/Needs/other:
     shiny (>= 1.7.1.9003)
 Config/Needs/website:
