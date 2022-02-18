@@ -49,12 +49,7 @@ Suggests:
 Remotes:
     rstudio/chromote
 Config/Needs/website:
-    pkgdown,
-    rstudio/shiny
-Config/Needs/check:
-    rstudio/shiny
-Config/Needs/routine:
-    rstudio/shiny
+    pkgdown
 Config/testthat/edition: 3
 Collate:
     'R6-helper.R'
