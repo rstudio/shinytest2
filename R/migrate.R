@@ -96,7 +96,7 @@ m__find_shinytest_testapp <- function(exprs, info_env) {
       } else {
         args <<- rlang::call_args(
           rlang::call_match(
-            as.call(testapp_expr),
+            as.call(expr_list),
             shinytest::testApp,
             defaults = TRUE
           )
