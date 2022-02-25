@@ -54,6 +54,6 @@ In addition to the expected snapshot, a debug screenshot file will be saved to `
 
 `{shinytest}` is the predecesor to `{shinytest2}`. `{shinytest}` was implemented using `{webdriver}` which uses [PhantomJS](https://phantomjs.org/api/). PhantomJS has been unsupported since 2017 and does not support displaying `{bslib}`'s Bootstrap v5.
 
-`{shinytest2}` uses {chromote} to connect to your locally installed Chrome or Chromium application. `{shinytest2}` does not have any rendering issues when displaying `{bslib}`'s Bootstrap v5.
+`{shinytest2}` uses `{chromote}` to connect to your locally installed Chrome or Chromium application. `{shinytest2}` does not have any rendering issues when displaying `{bslib}`'s Bootstrap v5.
 
 To migrate your existing `{shinytest}` tests to `{shinytest2}`, call the helper method `shinytest2::migrate_from_shinytest(path)`.
