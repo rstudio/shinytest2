@@ -20,7 +20,7 @@ expect_log_tests <- function(log) {
   expect_match(log, msg("\\{chromote\\}   JS info  \\d\\d:\\d\\d:\\d\\d.\\d\\d shinytest2; Loaded"), all = FALSE)
 
   expect_match(log, msg("\\{chromote\\}   JS throw \\d\\d:\\d\\d:\\d\\d.\\d\\d Uncaught Exception msg"), all = FALSE)
-  expect_match(log, msg("\\{chromote\\}   JS log   \\d\\d:\\d\\d:\\d\\d.\\d\\d Log msg"), all = FALSE)
+  expect_match(log, msg("\\{chromote\\}   JS log   \\d\\d:\\d\\d:\\d\\d.\\d\\d Log msg 123"), all = FALSE)
 
   expect_match(
     log[which(grepl("Log msg", log)) + 1],
