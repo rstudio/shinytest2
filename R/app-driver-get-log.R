@@ -3,6 +3,7 @@
 obj_to_string <- function(obj) {
   switch(obj$type,
     "string" = obj$value,
+    "number" = obj$value,
     "object" = {
       if (obj$subtype == "error") {
         obj$description
@@ -23,7 +24,8 @@ obj_to_string <- function(obj) {
           "*" = paste0("Structure:\n", structure),
           ">" = "Please report this new type with an example structure on https://github.com/rstudio/shinytest2/issues/new"
         ),
-        .frequency = "once"
+        .frequency = "once",
+        .frequency_id = obj$type
       )
       "(unknown)"
     }
