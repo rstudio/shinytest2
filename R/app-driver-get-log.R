@@ -3,7 +3,7 @@
 obj_to_string <- function(obj) {
   switch(obj$type,
     "string" = obj$value,
-    "number" = obj$value,
+    "number" = as.character(obj$value),
     "object" = {
       if (obj$subtype == "error") {
         obj$description
