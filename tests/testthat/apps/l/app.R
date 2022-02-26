@@ -3,7 +3,7 @@ library(shiny)
 ui <- fluidPage(
   "For testing logging purposes only",
   verbatimTextOutput("time"),
-  tags$script("console.log('Log msg')"),
+  tags$script("console.log('Log msg', 123)"),
   tags$script("setTimeout(function() { throw 'Exception msg' }, 2)")
 )
 server <- function(input, output, session) {
