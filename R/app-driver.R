@@ -694,7 +694,7 @@ AppDriver <- R6Class(# nolint
     #' To stop your shiny application and return a value from `$stop()`, see [`shiny::stopApp()`]. This is useful in testing to return context information.
     #'
     #' Typically, this is paired with a button that when clicked will call `shiny::stopApp(info)` to return `info` from the test app back to the main R session.
-    #' @return The result of the background process if it has already been terminated.
+    #' @return The result of the background process if the Shiny application has already been terminated.
     stop = function() {
       app_stop(self, private)
     }

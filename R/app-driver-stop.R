@@ -13,7 +13,7 @@ app_stop <- function(self, private) {
   # If the app is being hosted locally, kill the process.
   if (!is.null(private$shiny_process)) {
     if (private$shiny_process$is_alive()) {
-      self$log_message("Ending Shiny process")
+      self$log_message("Ending Shiny process. Ignoring value")
 
       # Attempt soft-kill before hard-kill. This is a workaround for
       # https://github.com/r-lib/processx/issues/95
@@ -25,11 +25,11 @@ app_stop <- function(self, private) {
       private$shiny_process$signal(tools::SIGTERM)
       private$shiny_process$wait(250)
       private$shiny_process$kill()
+    } else {
+      # Store the value to return later
+      self$log_message("Getting Shiny process value")
+      private$shiny_proc_value <- private$shiny_process$get_result()
     }
-
-    # Store the value to return later
-    self$log_message("Getting Shiny process value")
-    private$shiny_proc_value <- private$shiny_process$get_result()
   }
 
   private$state <- "stopped"

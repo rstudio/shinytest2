@@ -1116,7 +1116,7 @@ Typically, this is paired with a button that when clicked will call \code{shiny:
 }
 
 \subsection{Returns}{
-The result of the background process if it has already been terminated.
+The result of the background process if the Shiny application has already been terminated.
 }
 }
 }
