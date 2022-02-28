@@ -17,7 +17,7 @@ ui <- fluidPage(
   # Capture throw
   tags$script("setTimeout(function() { throw 'Exception msg' }, 2)"),
   # Capture exception
-  tags$script("setTimeout(function() { test_method(); }, 4)"),
+  tags$script("setTimeout(function() { window.test_method(); }, 4)"),
 )
 server <- function(input, output, session) {
   cat("Cat msg!\n")

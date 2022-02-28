@@ -20,6 +20,8 @@ expect_log_tests <- function(log) {
   expect_match(log, msg("\\{chromote\\}   JS info  \\d\\d:\\d\\d:\\d\\d.\\d\\d shinytest2; Loaded"), all = FALSE)
 
   expect_match(log, msg("\\{chromote\\}   JS throw \\d\\d:\\d\\d:\\d\\d.\\d\\d Uncaught Exception msg"), all = FALSE)
+  expect_match(log, msg("\\{chromote\\}   JS throw \\d\\d:\\d\\d:\\d\\d.\\d\\d Uncaught TypeError: window.test_method is not a function"), all = FALSE)
+
   for (extra_msg in c(
     "Nullish null undefined",
     "Boolean false true",
