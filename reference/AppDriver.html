@@ -1134,11 +1134,17 @@ app$get_log() # (long output lines have been truncated)
 <h3 id="method-stop-">Method <code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code><a class="anchor" aria-label="anchor" href="#method-stop-"></a></h3>
 <p>Stop the Shiny application
 Stop the app, the terminate external R process that runs the app and
-the Chromote Session instance.</p><div class="section">
+the Chromote Session instance.</p>
+<p>To stop your shiny application and return a value from <code>$stop()</code>, see <code><a href="https://rdrr.io/pkg/shiny/man/stopApp.html" class="external-link">shiny::stopApp()</a></code>. This is useful in testing to return context information.</p>
+<p>Typically, this is paired with a button that when clicked will call <code>shiny::stopApp(info)</code> to return <code>info</code> from the test app back to the main R session.</p><div class="section">
 <h4 id="usage-29">Usage<a class="anchor" aria-label="anchor" href="#usage-29"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="kw">stop</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
+<div class="section">
+<h4 id="returns-8">Returns<a class="anchor" aria-label="anchor" href="#returns-8"></a></h4>
+<p>The result of the background process if the Shiny application has already been terminated.</p>
+</div>
 
 </div>
 
