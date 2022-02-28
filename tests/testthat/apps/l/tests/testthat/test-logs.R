@@ -57,7 +57,6 @@ expect_log_tests <- function(log) {
 
 test_that("App captures known debug messages", {
   app <- AppDriver$new(test_path("../../."))
-  on.exit({app$stop()}, add = TRUE)
 
   log_df <- app$get_log()
 
@@ -104,7 +103,6 @@ test_that("App captures known debug messages", {
 
 test_that("App captures known debug messages", {
   app <- AppDriver$new(test_path("../../."), options = list(shiny.trace = TRUE))
-  on.exit({app$stop()}, add = TRUE)
 
   log_df <- app$get_log()
 
