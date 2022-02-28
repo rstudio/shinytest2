@@ -2,17 +2,37 @@
 
 obj_to_string <- function(obj) {
   switch(obj$type,
+    "boolean" = if (obj$value) "true" else "false",
     "string" = obj$value,
     "number" = as.character(obj$value),
+    "symbol" = , # nolint
+    "function" = {
+      obj$description
+    },
+    "undefined" = "undefined",
+    "bigint" = {
+      obj$unserializableValue
+    },
     "object" = {
-      if (obj$subtype == "error") {
-        obj$description
-      } else {
-        "[object Object]"
-      }
+      switch(obj$subtype %||% "unknown",
+        "error" = {
+          obj$description
+        },
+        "array" = {
+          vals <- vapply(obj$preview$properties, obj_to_string, character(1))
+          if (obj$preview$overflow) {
+            vals[length(vals) + 1] <- "..."
+          }
+          paste0("[", paste0(vals, collapse = ","), "]")
+        },
+        "null" = "null",
+        {
+          # Work with objects like `Math`
+          paste0("[object", " ", obj$className %||% "Object", "]")
+        }
+      )
     },
     {
-
       structure <- paste0(
         # Try to caputre some, but not all output
         utils::capture.output(utils::str(obj, max.level = 4)),

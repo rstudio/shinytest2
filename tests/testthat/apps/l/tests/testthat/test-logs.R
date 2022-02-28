@@ -20,10 +20,30 @@ expect_log_tests <- function(log) {
   expect_match(log, msg("\\{chromote\\}   JS info  \\d\\d:\\d\\d:\\d\\d.\\d\\d shinytest2; Loaded"), all = FALSE)
 
   expect_match(log, msg("\\{chromote\\}   JS throw \\d\\d:\\d\\d:\\d\\d.\\d\\d Uncaught Exception msg"), all = FALSE)
-  expect_match(log, msg("\\{chromote\\}   JS log   \\d\\d:\\d\\d:\\d\\d.\\d\\d Log msg 123"), all = FALSE)
+  expect_match(log, msg("\\{chromote\\}   JS throw \\d\\d:\\d\\d:\\d\\d.\\d\\d Uncaught TypeError: window.test_method is not a function"), all = FALSE)
+
+  for (extra_msg in c(
+    "Nullish null undefined",
+    "Boolean false true",
+    "Character abc",
+    "Number 123",
+    "BigInt 10n",
+    "Object \\[object Object\\]",
+    "Math \\[object Math\\]",
+    "Symbol Symbol\\(abc\\)",
+    "Array \\[1,2,3\\]",
+    "Function function Date\\(\\)",
+    NULL
+  )) {
+    expect_match(
+      log,
+      msg(paste0("\\{chromote\\}   JS log   \\d\\d:\\d\\d:\\d\\d.\\d\\d ", extra_msg)),
+      all = FALSE
+    )
+  }
 
   expect_match(
-    log[which(grepl("Log msg", log)) + 1],
+    log[which(grepl("Character abc", log)) + 1],
     msg("                                  (anonymous) @ "),
     all = FALSE, fixed = TRUE
   )
@@ -37,6 +57,7 @@ expect_log_tests <- function(log) {
 
 test_that("App captures known debug messages", {
   app <- AppDriver$new(test_path("../../."))
+  on.exit({app$stop()}, add = TRUE)
 
   log_df <- app$get_log()
 
@@ -83,6 +104,7 @@ test_that("App captures known debug messages", {
 
 test_that("App captures known debug messages", {
   app <- AppDriver$new(test_path("../../."), options = list(shiny.trace = TRUE))
+  on.exit({app$stop()}, add = TRUE)
 
   log_df <- app$get_log()
 

@@ -3,7 +3,7 @@ library(shinytest2)
 test_that("Migrated shinytest test: mytest.R", {
   # Comment
   # app <- ShinyDriver$new("../../", seed = 100, shinyOptions = list(display.mode = "normal"))
-  app <- AppDriver$new(seed = 100, shiny_args = list(display.mode = "normal"))
+  app <- AppDriver$new(variant = osName(), seed = 100, shiny_args = list(display.mode = "normal"))
 
 
   # Another comment
