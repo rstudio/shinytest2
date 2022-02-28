@@ -1107,9 +1107,16 @@ Add an message to log.
 Stop the Shiny application
 Stop the app, the terminate external R process that runs the app and
 the Chromote Session instance.
+
+To stop your shiny application and return a value from \verb{$stop()}, see \code{\link[shiny:stopApp]{shiny::stopApp()}}. This is useful in testing to return context information.
+
+Typically, this is paired with a button that when clicked will call \code{shiny::stopApp(info)} to return \code{info} from the test app back to the main R session.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$stop()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+The result of the background process if the Shiny application has already been terminated.
+}
 }
 }
