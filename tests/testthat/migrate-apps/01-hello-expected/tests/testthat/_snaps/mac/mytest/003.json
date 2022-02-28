@@ -1,10 +1,10 @@
 {
   "input": {
-    "bins": 22
+    "bins": 8
   },
   "output": {
     "distPlot": {
-      "src": "[image data sha1: d7505b9166d013de01887deba9ffdb484ec3291d]",
+      "src": "[image data sha1: 145b2714251bd342b58c0e95913922469a596cc9]",
       "width": 631,
       "height": 400,
       "alt": "Plot object",
@@ -14,8 +14,8 @@
             "domain": {
               "left": 40.88,
               "right": 98.12,
-              "bottom": -1.48,
-              "top": 38.48
+              "bottom": -2.8,
+              "top": 72.8
             },
             "range": {
               "left": 59.04,
