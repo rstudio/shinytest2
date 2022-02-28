@@ -3,30 +3,37 @@ app_stop <- function(self, private) {
   "!DEBUG AppDriver$stop"
   ckm8_assert_app_driver(self, private)
 
-  if (private$state == "stopped")
-    return(invisible(self))
+  if (private$state == "stopped") {
+    return(invisible(private$shiny_proc_value))
+  }
 
   self$log_message("Closing chromote session")
   self$get_chromote_session()$close()
 
   # If the app is being hosted locally, kill the process.
   if (!is.null(private$shiny_process)) {
-    self$log_message("Ending Shiny process")
+    if (private$shiny_process$is_alive()) {
+      self$log_message("Ending Shiny process")
 
-    # Attempt soft-kill before hard-kill. This is a workaround for
-    # https://github.com/r-lib/processx/issues/95
-    # SIGINT quits the Shiny application, SIGTERM tells R to quit.
-    # Unfortunately, SIGTERM isn't quite the same as `q()`, because
-    # finalizers with onexit=TRUE don't seem to run.
-    private$shiny_process$signal(tools::SIGINT)
-    private$shiny_process$wait(500)
-    private$shiny_process$signal(tools::SIGTERM)
-    private$shiny_process$wait(250)
-    private$shiny_process$kill()
+      # Attempt soft-kill before hard-kill. This is a workaround for
+      # https://github.com/r-lib/processx/issues/95
+      # SIGINT quits the Shiny application, SIGTERM tells R to quit.
+      # Unfortunately, SIGTERM isn't quite the same as `q()`, because
+      # finalizers with onexit=TRUE don't seem to run.
+      private$shiny_process$signal(tools::SIGINT)
+      private$shiny_process$wait(500)
+      private$shiny_process$signal(tools::SIGTERM)
+      private$shiny_process$wait(250)
+      private$shiny_process$kill()
+    }
+
+    # Store the value to return later
+    self$log_message("Getting Shiny process value")
+    private$shiny_proc_value <- private$shiny_process$get_result()
   }
 
   private$state <- "stopped"
-  invisible(self)
+  invisible(private$shiny_proc_value)
 }
 
 

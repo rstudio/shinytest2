@@ -38,6 +38,7 @@ AppDriver <- R6Class(# nolint
   private = list(
     chromote_session = "<chromote::ChromoteSession>",
     shiny_process = NULL, # `callr::r_bg()` object
+    shiny_proc_value = NULL, # Output of `private$shiny_process$value()`
 
     counter = "<Count>",
     shiny_url = "<Url>",
@@ -689,6 +690,11 @@ AppDriver <- R6Class(# nolint
     #' @description Stop the Shiny application
     #' Stop the app, the terminate external R process that runs the app and
     #' the Chromote Session instance.
+    #'
+    #' To stop your shiny application and return a value from `$stop()`, see [`shiny::stopApp()`]. This is useful in testing to return context information.
+    #'
+    #' Typically, this is paired with a button that when clicked will call `shiny::stopApp(info)` to return `info` from the test app back to the main R session.
+    #' @return The result of the background process if it has already been terminated.
     stop = function() {
       app_stop(self, private)
     }
