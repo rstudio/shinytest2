@@ -82,7 +82,7 @@ record_test <- function(
   # Are we running in RStudio? If so, we might need to fix up the URL so that
   # it's externally accessible.
   rstudio_is_available <-
-    if (rlang::is_installed("rstudioapi")) rstudio::isAvailable()
+    if (rlang::is_installed("rstudioapi")) rstudioapi::isAvailable()
     # placeholder for the unlikely case of using IDE and {rstudioapi} is not installed
     else identical(.Platform$GUI, "RStudio")
   if (rstudio_is_available) {

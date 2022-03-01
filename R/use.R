@@ -1,3 +1,8 @@
+# TODO-barret; display relative path files
+# TODO-barret; Add `test_app_path()` or something to test an app directly? Or does `test_`
+# TODO-barret; Auto accept all new debug snapshots. This will remove the requirement to ignore _.new.png
+# TODO-barret; if test_app is run in testing mode, then test_app should expect_true(TRUE) when done
+
 #' Use \pkg{shinytest2} methods
 #'
 #' This unified method initializes many different useful features when using
@@ -14,6 +19,7 @@
 #'  * `"test_file"`: Create a \pkg{shinytest2} test file at `./tests/testthat/test-shinytest2.R`
 #'  * `"ignore"`: Add entries to `.Rbuildignore` and `.gitignore` to ignore new debug screenshots. (`*_.new.png`)
 #'  * `"package"`: Add \pkg{shinytest2} to `Suggests` in the `DESCRIPTION` file.
+#' @export
 #' @examples
 #' \dontrun{use_shinytest2()}
 use_shinytest2 <- function(
@@ -73,6 +79,7 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
       "# {shinytest2}: Ignore new debug snapshots for `$expect_values()`",
       "*_.new.png"
     )
+    # TODO-barret; write-union is verbose, do not be double verbose
     wrote_lines <- usethis::write_union(".gitignore", git_ignores)
     if (!quiet) {
       if (wrote_lines) {
