@@ -27,7 +27,7 @@ Imports:
     callr,
     crayon,
     rlang (>= 0.3.0),
-    checkmate,
+    checkmate (>= 2.0.0),
     ellipsis,
     globals,
     httpuv,
