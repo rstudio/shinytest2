@@ -33,13 +33,13 @@ Imports:
     jsonlite,
     pingr,
     rmarkdown,
+    rstudioapi,
     shiny,
     withr
 Suggests:
     png,
     globals (>= 0.14.0),
     plotly,
-    rstudioapi,
     shinyWidgets,
     shinytest,
     knitr
