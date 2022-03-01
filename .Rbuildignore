@@ -10,3 +10,4 @@ todo.md
 ^docs$
 ^logo$
 ^pkgdown$
+_\.new\.png$

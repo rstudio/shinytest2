@@ -33,16 +33,17 @@ Imports:
     jsonlite,
     pingr,
     rmarkdown,
-    rstudioapi,
     shiny,
     withr
 Suggests:
     globals (>= 0.14.0),
     plotly,
+    rstudioapi,
     shinyWidgets,
-    knitr
     shinytest (>= 1.5.1),
     showimage,
+    knitr,
+    usethis
 Remotes:
     rstudio/chromote
 Config/Needs/other:
@@ -81,4 +82,5 @@ Collate:
     'save-app.R'
     'shinytest2_logs.R'
     'test-app.R'
+    'use.R'
 VignetteBuilder: knitr

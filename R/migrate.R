@@ -197,17 +197,13 @@ m__extract_runner_info <- function(app_info_env) {
 # Save a new shinytest2 runner file
 m__write_shinytest2_runner <- function(app_info_env) {
   if (app_info_env$verbose) {
-    if (file.exists("tests/testthat.R")) {
+    if (fs::file_exists("tests/testthat.R")) {
       rlang::inform(c("!" = "Overwriting `tests/testthat.R` with a {shinytest2} test runner"))
     } else {
       rlang::inform(c("*" = "Writing a {shinytest2} based test runner: `tests/testthat.R`"))
     }
   }
-  fs::file_copy(
-    system.file("internal/template/testthat.R", package = "shinytest2"),
-    "tests/testthat.R",
-    overwrite = TRUE
-  )
+  use_shinytest2_runner(app_dir = ".", quiet = TRUE, overwrite = TRUE)
 }
 
 

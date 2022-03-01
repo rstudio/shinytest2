@@ -4,7 +4,7 @@
 .Ruserdata
 
 docs
-# ignore all new snapshots for $expect_values()
+# {shinytest2}: Ignore new debug snapshots for `$expect_values()`
 *_.new.png
 inst/doc
 logo/

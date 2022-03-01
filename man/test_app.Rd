@@ -17,7 +17,11 @@ test_app(app_dir = "../", env = shiny::loadSupport(app_dir), ...)
 To be used within \code{./tests/testthat.R}.
 }
 \details{
-Example usage:\if{html}{\out{<div class="sourceCode r">}}\preformatted{# ./tests/testthat.R
+Example usage:\if{html}{\out{<div class="sourceCode r">}}\preformatted{# Interactive usage
+path_to_app <- "."
+shinytest2::test_app(path_to_app)
+
+# ./tests/testthat.R
 shinytest2::test_app()
 }\if{html}{\out{</div>}}
 }

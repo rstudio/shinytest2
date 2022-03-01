@@ -8,6 +8,10 @@ NULL
 #'
 #' Example usage:
 #' ```r
+#' # Interactive usage
+#' path_to_app <- "."
+#' shinytest2::test_app(path_to_app)
+#'
 #' # ./tests/testthat.R
 #' shinytest2::test_app()
 #' ```
