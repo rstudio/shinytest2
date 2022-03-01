@@ -11,10 +11,6 @@ app_start_shiny <- function(
   ckm8_assert_app_driver(self, private)
   ckm8_assert_single_string(path)
 
-  if (is.null(shiny_args$port)) {
-    shiny_args$port <- httpuv::randomPort()
-  }
-
   tempfile_format <- temp_file(pattern = "%s-", fileext = ".log")
 
   # the RNG kind should inherit from the parent process

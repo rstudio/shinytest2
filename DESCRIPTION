@@ -30,7 +30,6 @@ Imports:
     checkmate (>= 2.0.0),
     ellipsis,
     globals,
-    httpuv,
     httr,
     jsonlite,
     pingr,
