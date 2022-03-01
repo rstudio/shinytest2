@@ -41,8 +41,8 @@ Suggests:
     globals (>= 0.14.0),
     plotly,
     shinyWidgets,
-    shinytest,
     knitr
+    shinytest (>= 1.5.1),
 Remotes:
     rstudio/chromote
 Config/Needs/other:

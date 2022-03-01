@@ -24,6 +24,7 @@ migrate_from_shinytest <- function(
   quiet = FALSE
 ) {
   ellipsis::check_dots_empty()
+  rlang::check_installed("shinytest", version = "1.5.1")
 
   path_info <- app_path(path, "path")
 
