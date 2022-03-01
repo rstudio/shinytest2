@@ -37,9 +37,8 @@ app_data <- function(app, env = parent.frame()) {
 }
 
 app_server_globals <- function(server, env = parent.frame()) {
-  # Work around for https://github.com/HenrikBengtsson/globals/issues/61
-  env <- new.env(parent = env)
-  env$output <- NULL
+  # https://github.com/HenrikBengtsson/globals/issues/61#issuecomment-731777640
+  rlang::check_installed("globals", version = "0.14.0")
 
   globals <- globals::globalsOf(server, envir = env, recursive = FALSE)
   globals <- globals::cleanup(globals)
@@ -53,9 +52,6 @@ app_server_globals <- function(server, env = parent.frame()) {
   )
   globals <- globals[!in_package]
   attributes(globals) <- list(names = names(globals))
-
-  # https://github.com/HenrikBengtsson/globals/issues/61
-  globals$output <- NULL
 
   list(
     globals = globals,

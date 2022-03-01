@@ -29,7 +29,6 @@ Imports:
     rlang (>= 0.3.0),
     checkmate (>= 2.0.0),
     ellipsis,
-    globals,
     httr,
     jsonlite,
     pingr,
@@ -38,6 +37,7 @@ Imports:
     withr
 Suggests:
     png,
+    globals (>= 0.14.0),
     plotly,
     rstudioapi,
     shinyWidgets,
