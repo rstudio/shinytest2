@@ -37,12 +37,12 @@ Imports:
     shiny,
     withr
 Suggests:
-    png,
     globals (>= 0.14.0),
     plotly,
     shinyWidgets,
     knitr
     shinytest (>= 1.5.1),
+    showimage,
 Remotes:
     rstudio/chromote
 Config/Needs/other:
