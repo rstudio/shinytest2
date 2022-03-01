@@ -26,7 +26,6 @@ Imports:
     fs,
     callr,
     crayon,
-    parsedate (>= 1.2.0),
     rlang (>= 0.3.0),
     checkmate,
     ellipsis,
