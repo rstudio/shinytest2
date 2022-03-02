@@ -79,6 +79,7 @@ Collate:
     'utils.R'
     'platform.R'
     'record_test.R'
+    'rstudio.R'
     'save-app.R'
     'shiny-browser.R'
     'shinytest2_logs.R'
