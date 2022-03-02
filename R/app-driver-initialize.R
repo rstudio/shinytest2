@@ -79,8 +79,8 @@ app_initialize_ <- function(
 
 
   "!DEBUG create new phantomjs session"
-  self$log_message("Creating new chromote session")
-  private$chromote_session <- chromote::ChromoteSession$new()
+  self$log_message("Creating new ChromoteSession")
+  private$chromote_session <- chromote::default_chromote_object()$new_session()
 
   if (isTRUE(view)) {
     self$view()

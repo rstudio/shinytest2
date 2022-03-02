@@ -1,7 +1,4 @@
-# TODO-barret; display relative path files
-# TODO-barret; Add `test_app_path()` or something to test an app directly? Or does `test_`
-# TODO-barret; Auto accept all new debug snapshots. This will remove the requirement to ignore _.new.png
-# TODO-barret; if test_app is run in testing mode, then test_app should expect_true(TRUE) when done
+# TODO-barret; Auto accept all new debug snapshots? This will remove the requirement to ignore _.new.png
 
 #' Use \pkg{shinytest2} methods
 #'
@@ -50,14 +47,25 @@ use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
   withr::with_dir(app_dir, {
     if (!fs::file_exists("DESCRIPTION")) {
       if (!quiet) {
-        rlang::inform(c("!" = "No DESCRIPTION file found. Skipping adding `{shinytest2}` to `Suggests`"))
+        rlang::inform(
+          c("!" = paste0(
+            "No `", fs::path(app_dir, "DESCRIPTION"), "` file found.",
+            " Skipping adding `{shinytest2}` to `Suggests`"
+          ))
+        )
       }
       return(FALSE)
     }
-    if (!quiet) rlang::inform(c("*" = "Adding `shinytest2` to `Suggests` in `DESCRIPTION` file"))
+    ## No need for comments, usethis::use_package() provides messages
+    # if (!quiet) rlang::inform(c("*" = "Adding `shinytest2` to `Suggests` in `DESCRIPTION` file"))
 
     with_this_project({
-      wrapper <- if (quiet) function(...) {capture.output(..., type = "message")} else force
+      wrapper <-
+        if (quiet) function(...) {
+          capture.output(..., type = "message")
+        } else {
+          force
+        }
       wrapper({
         usethis::use_package("shinytest2", "Suggests")
       })
@@ -83,9 +91,9 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
     wrote_lines <- usethis::write_union(".gitignore", git_ignores)
     if (!quiet) {
       if (wrote_lines) {
-        rlang::inform(c("*" = "Added `*_.new.png` to `.gitignore`"))
+        rlang::inform(c("*" = "Added `*_.new.png` to `", fs::path(app_dir, ".gitignore"), "`"))
       } else {
-        rlang::inform(c("!" = "`.gitignore` already contains `*_.new.png`"))
+        rlang::inform(c("!" = "`", fs::path(app_dir, ".gitignore"), "` already contains `*_.new.png`"))
       }
     }
 
@@ -95,9 +103,9 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
     wrote_lines <- usethis::write_union(".Rbuildignore", build_ignores)
     if (!quiet) {
       if (wrote_lines) {
-        rlang::inform(c("*" = "Added `_*.new.png` to `.Rbuildignore`"))
+        rlang::inform(c("*" = "Added `_*.new.png` to `", fs::path(app_dir, ".Rbuildignore"), "`"))
       } else {
-        rlang::inform(c("!" = "`.Rbuildignore` already contains `_*.new.png`"))
+        rlang::inform(c("!" = "`", fs::path(app_dir, ".Rbuildignore"), "` already contains `_*.new.png`"))
       }
     }
   })
@@ -142,7 +150,6 @@ copy_test_file_helper <- function(
 
   withr::with_dir(app_dir, {
 
-    test_file <- "tests/testthat/test-shinytest2.R"
     if (!overwrite && fs::file_exists(to_file)) {
       if (!quiet) {
         rlang::inform(c("!" = paste0(existing_pre_msg, to_file)))

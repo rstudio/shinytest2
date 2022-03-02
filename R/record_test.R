@@ -104,7 +104,10 @@ record_test <- function(
       shinytest2.test_file    = test_file,
       shinytest2.allow_no_input_binding = allow_no_input_binding
     ),
-    res <- shiny::runApp(system.file("internal", "recorder", package = "shinytest2"))
+    # Make sure the recorder opens in an external browser
+    with_external_shiny_browser({
+      res <- shiny::runApp(system.file("internal", "recorder", package = "shinytest2"))
+    })
   )
 
   saved_test_file <- res$test_file
