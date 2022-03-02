@@ -40,7 +40,7 @@ app_stop <- function(self, private) {
     } else {
       # Store the value to return later
       self$log_message("Getting Shiny process result")
-      tryCatc(
+      withCallingHandlers(
         private$shiny_proc_value <- private$shiny_process$get_result(),
         error = function(e) {
           self$log_message(paste0("Error getting Shiny process result!\n", conditionMessage(e)))
