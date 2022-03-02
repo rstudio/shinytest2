@@ -179,7 +179,7 @@ m__extract_runner_info <- function(app_info_env) {
     ))
   }
   # Store knowledge
-  tryCatch(
+  withCallingHandlers(
     testnames <- eval(testapp_args$testnames, envir = globalenv()),
     error = function(e) {
       rlang::abort("Could not use variables for `testnames` in `shinytest::testApp()`. Only atomic values are supported.")
