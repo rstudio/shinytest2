@@ -87,11 +87,11 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
       "# {shinytest2}: Ignore new debug snapshots for `$expect_values()`",
       "*_.new.png"
     )
-    # TODO-barret; write-union is verbose, do not be double verbose
     wrote_lines <- usethis::write_union(".gitignore", git_ignores)
     if (!quiet) {
       if (wrote_lines) {
-        rlang::inform(c("*" = "Added `*_.new.png` to `", fs::path(app_dir, ".gitignore"), "`"))
+        ## `write_union()` is verbose, do not be double verbose
+        # rlang::inform(c("*" = "Added `*_.new.png` to `", fs::path(app_dir, ".gitignore"), "`"))
       } else {
         rlang::inform(c("!" = "`", fs::path(app_dir, ".gitignore"), "` already contains `*_.new.png`"))
       }
@@ -103,7 +103,8 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
     wrote_lines <- usethis::write_union(".Rbuildignore", build_ignores)
     if (!quiet) {
       if (wrote_lines) {
-        rlang::inform(c("*" = "Added `_*.new.png` to `", fs::path(app_dir, ".Rbuildignore"), "`"))
+        ## `write_union()` is verbose, do not be double verbose
+        # rlang::inform(c("*" = "Added `_*.new.png` to `", fs::path(app_dir, ".Rbuildignore"), "`"))
       } else {
         rlang::inform(c("!" = "`", fs::path(app_dir, ".Rbuildignore"), "` already contains `_*.new.png`"))
       }
