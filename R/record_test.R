@@ -23,7 +23,6 @@
 #'   See [`AppDriver`]`$set_inputs()` for more information.
 #' @param run_test If `TRUE`, `test_file` will be executed after saving the recording.
 #' @export
-# TODO-future; can we force the user to view the app in Chrome?
 record_test <- function(
   app = ".",
   ...,
