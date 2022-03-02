@@ -80,12 +80,7 @@ record_test <- function(
 
   # Are we running in RStudio? If so, we might need to fix up the URL so that
   # it's externally accessible.
-  rstudio_is_available <-
-    if (rlang::is_installed("rstudioapi")) rstudioapi::isAvailable()
-    # placeholder for the unlikely case of using IDE and {rstudioapi} is not installed
-    else identical(.Platform$GUI, "RStudio")
-  if (rstudio_is_available) {
-    rlang::check_installed("rstudioapi")
+  if (rstudio_is_available()) {
     if (rstudioapi::hasFun("translateLocalUrl")) {
       # If the RStudio API knows how to translate URLs, call it.
       url <- rstudioapi::translateLocalUrl(url, absolute = TRUE)
