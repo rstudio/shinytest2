@@ -26,12 +26,9 @@ Imports:
     fs,
     callr,
     crayon,
-    parsedate (>= 1.2.0),
     rlang (>= 0.3.0),
-    checkmate,
+    checkmate (>= 2.0.0),
     ellipsis,
-    globals,
-    httpuv,
     httr,
     jsonlite,
     pingr,
@@ -39,12 +36,14 @@ Imports:
     shiny,
     withr
 Suggests:
-    png,
+    globals (>= 0.14.0),
     plotly,
     rstudioapi,
     shinyWidgets,
-    shinytest,
-    knitr
+    shinytest (>= 1.5.1),
+    showimage,
+    knitr,
+    usethis
 Remotes:
     rstudio/chromote
 Config/Needs/other:
@@ -80,7 +79,10 @@ Collate:
     'utils.R'
     'platform.R'
     'record_test.R'
+    'rstudio.R'
     'save-app.R'
+    'shiny-browser.R'
     'shinytest2_logs.R'
     'test-app.R'
+    'use.R'
 VignetteBuilder: knitr

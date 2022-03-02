@@ -47,9 +47,11 @@ app_screenshot <- function(
   }
 
   if (is.null(file)) {
-    withr::local_par(list(bg = "grey90"))
-    png <- png::readPNG(path)
-    graphics::plot(grDevices::as.raster(png))
+    # Display file in graphics device
+    rlang::check_installed("showimage")
+    withr::with_par(list(bg = "grey90"), {
+      showimage::show_image(path)
+    })
   } else {
     fs::file_copy(path, file)
   }

@@ -13,16 +13,16 @@
 #' @param shiny_args A list of options to pass to `runApp()`. If a value
 #'   is provided, it will be saved in the test script.
 #' @param test_file Base file name of the \pkg{testthat} test file.
-#' @param edit_test If `TRUE`, the test file will be opened in an editor via [`file.edit()`] before executing.
+#' @param open_test_file If `TRUE`, the test file will be opened in an editor
+#'   via [`file.edit()`] before executing.
 #' @param allow_no_input_binding This value controls if events without input
-#' bindings are recorded.
+#'   bindings are recorded.
 #'   * If `TRUE`, events without input bindings are recorded.
 #'   * If `FALSE`, events without input bindings are not recorded.
 #'   * If `NULL` (default), if an updated input does not have a corresponding input, a modal dialog will be shown asking if unbound input events should be recorded.
 #'   See [`AppDriver`]`$set_inputs()` for more information.
 #' @param run_test If `TRUE`, `test_file` will be executed after saving the recording.
 #' @export
-# TODO-future; can we force the user to view the app in Chrome?
 record_test <- function(
   app = ".",
   ...,
@@ -31,13 +31,11 @@ record_test <- function(
   load_timeout = NULL,
   shiny_args = list(),
   test_file = "test-shinytest2.R",
-  edit_test = rlang::is_interactive() && rstudioapi::isAvailable(),
+  open_test_file = rlang::is_interactive(),
   allow_no_input_binding = NULL,
   run_test = TRUE
 ) {
   ellipsis::check_dots_empty()
-
-  checkmate::assert_true(rlang::is_installed("rstudioapi"))
 
   for (class_val in c("shiny.appobj", "ShinyDriver")) {
     if (inherits(app, class_val)) {
@@ -82,7 +80,7 @@ record_test <- function(
 
   # Are we running in RStudio? If so, we might need to fix up the URL so that
   # it's externally accessible.
-  if (rstudioapi::isAvailable()) {
+  if (rstudio_is_available()) {
     if (rstudioapi::hasFun("translateLocalUrl")) {
       # If the RStudio API knows how to translate URLs, call it.
       url <- rstudioapi::translateLocalUrl(url, absolute = TRUE)
@@ -106,7 +104,10 @@ record_test <- function(
       shinytest2.test_file    = test_file,
       shinytest2.allow_no_input_binding = allow_no_input_binding
     ),
-    res <- shiny::runApp(system.file("internal", "recorder", package = "shinytest2"))
+    # Make sure the recorder opens in an external browser
+    with_external_shiny_browser({
+      res <- shiny::runApp(system.file("internal", "recorder", package = "shinytest2"))
+    })
   )
 
   saved_test_file <- res$test_file
@@ -119,8 +120,8 @@ record_test <- function(
     return(invisible(NULL))
   }
 
-  if (isTRUE(edit_test)) {
-    utils::file.edit(saved_test_file)
+  if (isTRUE(open_test_file)) {
+    edit_file(saved_test_file)
   }
 
   app_path <- app_path(app$get_path())$app

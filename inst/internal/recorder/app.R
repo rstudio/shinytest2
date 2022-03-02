@@ -694,13 +694,7 @@ shinyApp(
             TRUE
           }
         if (overwrite_test_runner) {
-          # TODO-barret; make relative file path
-          rlang::inform(paste0("Saving test runner: ", fs::path_rel(test_runner_file, app$get_path())))
-          fs::file_copy(
-            system.file("internal/template/testthat.R", package = "shinytest2"),
-            test_runner_file,
-            overwrite = TRUE
-          )
+          shinytest2:::use_shinytest2_runner(app$get_path(), quiet = FALSE)
         }
 
         rlang::inform(paste0("Saving test file: ", fs::path_rel(test_save_file, app$get_path())))

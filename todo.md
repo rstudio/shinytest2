@@ -231,6 +231,7 @@ app$expect_appshot(id = "winston")
 
 
 
+
 ----------------------------------------------
 
 
@@ -304,3 +305,9 @@ app$expect_appshot(id = "winston")
 * Migration guide from shinytest -> shinytest2
 
 ## Release
+
+
+
+## Notes from David:
+Document: How to set chromote args before starting testing
+  * Link to flags document

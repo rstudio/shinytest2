@@ -14,10 +14,18 @@ test_app(app_dir = "../", env = shiny::loadSupport(app_dir), ...)
 \item{...}{Parameters passed to \code{\link[testthat:test_dir]{testthat::test_dir()}}}
 }
 \description{
-To be used within \code{./tests/testthat.R}.
-}
-\details{
-Example usage:\if{html}{\out{<div class="sourceCode r">}}\preformatted{# ./tests/testthat.R
-shinytest2::test_app()
+Example usage:\if{html}{\out{<div class="sourceCode r">}}\preformatted{# Interactive usage
+path_to_app <- "."
+shinytest2::test_app(path_to_app)
 }\if{html}{\out{</div>}}
 }
+\section{File: ./tests/testthat.R}{
+shinytest2::test_app()
+}
+
+\section{File: ./tests/testthat/test-shinytest2.R}{
+test_that("Testing an external app", {
+shinytest2::test_app(path_to_app)
+})\preformatted{}
+}
+

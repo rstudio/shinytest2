@@ -12,7 +12,7 @@ record_test(
   load_timeout = NULL,
   shiny_args = list(),
   test_file = "test-shinytest2.R",
-  edit_test = rlang::is_interactive() && rstudioapi::isAvailable(),
+  open_test_file = rlang::is_interactive(),
   allow_no_input_binding = NULL,
   run_test = TRUE
 )
@@ -36,7 +36,8 @@ is provided, it will be saved in the test script.}
 
 \item{test_file}{Base file name of the \pkg{testthat} test file.}
 
-\item{edit_test}{If \code{TRUE}, the test file will be opened in an editor via \code{\link[=file.edit]{file.edit()}} before executing.}
+\item{open_test_file}{If \code{TRUE}, the test file will be opened in an editor
+via \code{\link[=file.edit]{file.edit()}} before executing.}
 
 \item{allow_no_input_binding}{This value controls if events without input
 bindings are recorded.

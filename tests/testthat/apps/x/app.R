@@ -5,7 +5,7 @@ ui <- fluidPage(
   actionButton("greet", "Greet"),
   textOutput("greeting"),
   tags$br(),
-  # consistely sized box and consistent across OS
+  # consistenly sized box and consistent across OS
   tags$div(
     id = "custom_div",
     style = "width: 100px;height: 100px;"
