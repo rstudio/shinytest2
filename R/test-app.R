@@ -54,7 +54,7 @@ test_app <- function(
   # If we are testing and no error has been thrown,
   # then perform an expectation so that the testing chunk passes
   if (is_currently_testing) {
-    expect_equal(TRUE, TRUE)
+    testthat::expect_equal(TRUE, TRUE)
   }
 
   ret
