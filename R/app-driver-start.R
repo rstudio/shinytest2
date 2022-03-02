@@ -34,6 +34,8 @@ app_start_shiny <- function(
         # options[["shiny-testmode-html-dep"]] <- getTracerDep()
         do.call(base::options, options)
 
+        # Return value is important for `AppDriver$stop()`
+        # Do not add code after this if else block
         if (rmd) {
           # Shiny document
           rmarkdown::run(path, shiny_args = shiny_args, render_args = render_args)
