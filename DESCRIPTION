@@ -80,6 +80,7 @@ Collate:
     'platform.R'
     'record_test.R'
     'save-app.R'
+    'shiny-browser.R'
     'shinytest2_logs.R'
     'test-app.R'
     'use.R'
