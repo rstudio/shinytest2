@@ -28,7 +28,7 @@ with_external_shiny_browser <- function(code) {
       # Use the local Chrome browser path and shell escape it
       browser_path <- shQuote(browser$get_path())
       open_chrome <- function(url) {
-        browseURL(url, browser_path)
+        utils::browseURL(url, browser_path)
       }
       old_options <- options(shiny.launch.browser = open_chrome)
       withr::defer({
