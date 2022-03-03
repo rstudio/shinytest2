@@ -41,11 +41,13 @@ Suggests:
     rstudioapi,
     shinyWidgets,
     shinytest (>= 1.5.1),
+    shinyvalidate (>= 1.0.0.9001),
     showimage,
     knitr,
     usethis
 Remotes:
-    rstudio/chromote
+    rstudio/chromote,
+    rstudio/shinyvalidate#55
 Config/Needs/other:
     shiny (>= 1.7.1.9003)
 Config/Needs/website:
@@ -73,11 +75,13 @@ Collate:
     'app-driver.R'
     'chromote-methods.R'
     'expect-snapshot.R'
+    'expr-recurse.R'
     'httr.R'
     'migrate.R'
     'missing-value.R'
     'utils.R'
     'platform.R'
+    'record-test-unique-name.R'
     'record-test.R'
     'rstudio.R'
     'save-app.R'
