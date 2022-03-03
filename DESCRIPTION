@@ -41,7 +41,7 @@ Suggests:
     rstudioapi,
     shinyWidgets,
     shinytest (>= 1.5.1),
-    shinyvalidate (>= 1.0.0.9001),
+    shinyvalidate (>= 1.0.0),
     showimage,
     knitr,
     usethis
