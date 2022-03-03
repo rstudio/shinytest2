@@ -22,12 +22,16 @@ known_app_driver_name_values <- function(test_file) {
           AppDriver$public_methods$initialize
         )
       )
-      # TODO-barret; test that a R variable isn't being used
-      # rlang::is_scalar_vector?
 
       new_name <- args$name
-      # Allows the collecting of NULL name values
-      known_names[length(known_names) + 1] <<- list(new_name)
+      if (
+        is.null(new_name) || # allow `NULL`
+        rlang::is_scalar_character(new_name) # allow single character value
+        # Do not allow symbols or language expressions
+      ) {
+        # Allows the collecting of NULL name values
+        known_names[length(known_names) + 1] <<- list(new_name)
+      }
     }
     # Don't alter the expr_list, just return it
     as.call(expr_list)
