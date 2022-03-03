@@ -18,6 +18,7 @@ with_external_shiny_browser <- function(code) {
 
   if (!is_rstudio_server) {
     # Match the same Chromote object when initializing AppDriver's Chromote session
+    # Use similar logic to `browse_url()`
     browser <- chromote::default_chromote_object()$get_browser()
     if (inherits(browser, "Chrome")) {
       # Has local Chrome browser!
