@@ -78,7 +78,7 @@ Collate:
     'missing-value.R'
     'utils.R'
     'platform.R'
-    'record_test.R'
+    'record-test.R'
     'rstudio.R'
     'save-app.R'
     'shiny-browser.R'
