@@ -282,14 +282,31 @@ app$expect_appshot(id = "winston")
 ## Week 3-4 (document)
 
 ### Vignettes:
+* Getting started
+  * intro intro intro
+    * walk through the bare minimum to get started using shinytest2
+    * Copy source of geyser
+    * Record test
+    * run test
+  * Medium difficulty example:
+    * Use an `$expect_screenshot()` with a `variant`
+    * explain what a variant is
+  * How to review different variants
+    *
 * Which do I need and why do I need them?
 * Explain testing robustness
+  * Add a details section in `AppDriver` docs to summarize this vignette
+    * Have the methods link to the within page values
+    * Find a way to link to these methods
+    * Have all `$expect_*()` bundled. All `$get_*()` bundled. Link between paired method.
   * Robust to flakey; Sensitivity to external updates
     * Export internal values
     * `$expect_values(input, output, export)` - TODO- add this method; save outputs to snapshots
       * `$expect_appshot(items = value, screenshot = FALSE)`
     * `$expect_text()`
       * Text wont really change
+      * Only recommended if you can not use `$expect_values()`
+        * Add these types of notes to the standard docs.
     * `$expect_html()`
       * Classes could be added by external packages
     * `$expect_appshot()`
@@ -301,7 +318,7 @@ app$expect_appshot(id = "winston")
 * Priority sort the App docs methods
   * Tell docs that they are sorted for a reason
 * Add some description about how often we guess people will use the method.
-  * $execute_script_callback(): rare; Only if your JS requires a callback; Otherwise use $execute_script()
+  * $execute_script(): [for non-shiny use]; Only if your JS requires a callback; Otherwise use $execute_script()
 * Migration guide from shinytest -> shinytest2
 
 ## Release
