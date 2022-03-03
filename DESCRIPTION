@@ -71,7 +71,7 @@ Collate:
     'app-driver-wait.R'
     'app-driver-window.R'
     'app-driver.R'
-    'chromote_methods.R'
+    'chromote-methods.R'
     'expect-snapshot.R'
     'httr.R'
     'migrate.R'
@@ -82,7 +82,7 @@ Collate:
     'rstudio.R'
     'save-app.R'
     'shiny-browser.R'
-    'shinytest2_logs.R'
+    'shinytest2-logs.R'
     'test-app.R'
     'use.R'
 VignetteBuilder: knitr
