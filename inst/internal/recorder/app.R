@@ -537,7 +537,6 @@ shinyApp(
                 } else {
                   args <- ""
                   if (!event$hasBinding && isTRUE(allow_no_input_binding_react())) {
-                    # TODO-barret; test
                     args <- paste0(args, ", allow_no_input_binding_ = TRUE")
                     if (identical(event$priority, "event")) {
                       args <- paste0(args, ', priority_ = "event"')
