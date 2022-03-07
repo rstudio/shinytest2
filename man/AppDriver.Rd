@@ -166,7 +166,7 @@ Initialize the AppDriver
   path = testthat::test_path("../../"),
   ...,
   name = NULL,
-  variant = getOption("shinytest2.variant", missing_arg()),
+  variant = missing_arg(),
   seed = NULL,
   load_timeout = NULL,
   screenshot_args = missing_arg(),
