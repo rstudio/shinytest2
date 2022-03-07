@@ -14,8 +14,7 @@ app_set_inputs <- function(
   input_values <- lapply(inputs, function(value) {
     list(
       value = value,
-      # TODO-barret; rename
-      allowInputNoBinding = allow_no_input_binding_,
+      allowNoInputBinding = allow_no_input_binding_,
       priority = priority_
     )
   })
