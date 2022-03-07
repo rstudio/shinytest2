@@ -7,7 +7,7 @@ app_initialize_ <- function(
   screenshot_args = missing_arg(),
   check_names = TRUE,
   name = NULL,
-  variant = getOption("shinytest2.variant", missing_arg()),
+  variant = missing_arg(),
   view = missing_arg(),
   height = NULL,
   width = NULL,

@@ -108,7 +108,7 @@ AppDriver <- R6Class(# nolint
       # Like the shinytest2.variant? Or `shinytest2.seed`? Or even `shinytest2.idle.duration`?
       # Should `shinytest2.variant` be removed?
       name = NULL,
-      variant = getOption("shinytest2.variant", missing_arg()),
+      variant = missing_arg(),
       seed = NULL,
       load_timeout = NULL,
       screenshot_args = missing_arg(),
