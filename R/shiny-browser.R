@@ -12,7 +12,7 @@ with_external_shiny_browser <- function(code) {
   ##   else If RStudio desktop, open in external
 
   is_avail <- rstudio_is_available()
-  rstudio_mode <- rstudioapi::versionInfo()$mode
+  rstudio_mode <- is_avail && rstudioapi::versionInfo()$mode
   is_rstudio_server <- is_avail && rstudio_mode == "server"
   is_rstudio_desktop <- is_avail && rstudio_mode != "server"
 

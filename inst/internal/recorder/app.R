@@ -256,7 +256,7 @@ generate_test_code <- function(events, name, seed) {
         # Going with "no" for now as it is difficult to capture the expression
         # when nothing else is an expression
         if (has_expect_screenshot) "variant = platform_variant()",
-        if (!is.null(name)) paste0("name = ", deparse2(name)),
+        if (isTRUE(nzchar(name))) paste0("name = ", deparse2(name)),
         if (!is.null(seed)) paste0("seed = ", seed),
         if (!is.null(height)) paste0("height = ", height),
         if (!is.null(width)) paste0("width = ", width),
@@ -312,7 +312,7 @@ shinyApp(
     ),
     div(id = "shiny-recorder",
       div(class = "shiny-recorder-header", tags$code("{shinytest2}"), "expections"),
-      div(class = "shiny-recorder-controls",
+      div(class = "shiny-recorder-controls form-group",
         actionButton("values",
           span(
             img(src = "shiny.png", class = "shiny-recorder-icon", style = "height: 23px;vertical-align: middle;"),
@@ -351,6 +351,7 @@ shinyApp(
             numeric_input("seed",
               label = "Random seed:",
               value = start_seed,
+              min = 0,
               placeholder = "(None)"
             ),
             class = "inline-input-container"
@@ -411,41 +412,48 @@ shinyApp(
     trim_testevents <- reactive({
       events <- input$testevents
 
-      to_remove <- c()
-      for (i in seq_along(events)) {
-        if (i == 1) next
-        prev_event <- events[[i - 1]]
-        curr_event <- events[[i]]
-        if (prev_event$type == curr_event$type) {
-          switch(curr_event$type,
-            "outputEvent" = , # nolint
-            "waitForIdle" = , # nolint
-            "setWindowSize" = {
-              # Remove previous event
-              to_remove[length(to_remove) + 1] <- i - 1
-            },
-            "inputEvent" = {
-              if (!isTRUE(allow_no_input_binding_react())) {
-                if (!curr_event$hasBinding && !prev_event$hasBinding) {
-                  to_remove[length(to_remove) + 1] <- i
+      has_removed <- TRUE
+      # Might repeat ~ 3 times
+      while (has_removed) {
+        has_removed <- FALSE
+        to_remove <- c()
+
+        for (i in seq_along(events)) {
+          if (i == 1) next
+          prev_event <- events[[i - 1]]
+          curr_event <- events[[i]]
+          if (prev_event$type == curr_event$type) {
+            switch(curr_event$type,
+              "outputEvent" = , # nolint
+              "waitForIdle" = , # nolint
+              "setWindowSize" = {
+                # Remove previous event
+                to_remove[length(to_remove) + 1] <- i - 1
+              },
+              "inputEvent" = {
+                if (!isTRUE(allow_no_input_binding_react())) {
+                  if (!curr_event$hasBinding && !prev_event$hasBinding) {
+                    to_remove[length(to_remove) + 1] <- i
+                  }
                 }
               }
-            }
-          )
-        } else if (
-          i >= 3 &&
-          curr_event$type == "setWindowSize" &&
-          prev_event$type == "outputEvent" &&
-          events[[i - 2]]$type == "setWindowSize"
-        ) {
-          # If two setWindowSize events sandwich an outputEvent,
-          # remove the first setWindowSize
-          to_remove[length(to_remove) + 1] <- i - 2
+            )
+          } else if (
+            i >= 3 &&
+            curr_event$type == "setWindowSize" &&
+            prev_event$type == "outputEvent" &&
+            events[[i - 2]]$type == "setWindowSize"
+          ) {
+            # If two setWindowSize events sandwich an outputEvent,
+            # remove the first setWindowSize
+            to_remove[length(to_remove) + 1] <- i - 2
+          }
         }
-      }
 
-      if (length(to_remove)) {
-        events <- events[-to_remove]
+        if (length(to_remove)) {
+          has_removed <- TRUE
+          events <- events[-to_remove]
+        }
       }
 
       found_first_set_window_size <- FALSE
@@ -540,24 +548,53 @@ shinyApp(
       events
     })
 
-    # Use reactiveVal dedupe feature
-    save_enabled <- reactiveVal(FALSE)
-    save_enable_obs <- observeEvent(trim_testevents(), {
+    has_expectation_event <- reactive({
       for (event in trim_testevents()) {
         switch(event$type,
           "expectValues" = , # nolint
           "expectScreenshot" = , # nolint
           "expectDownload" = {
-            save_enabled(TRUE)
-            session$sendCustomMessage(
-              "enable_save_button",
-              "1"
-            )
-            save_enable_obs$destroy()
-            return()
+            return(TRUE)
           }
         )
       }
+      FALSE
+    })
+
+    testname_validator <- function(name) {
+      if (is.null(name)) return()
+      if (!fs::file_exists(test_save_file)) return()
+
+      cur_test_names <- known_app_driver_name_values(test_save_file)
+      # Convert names to chars
+      cur_test_names <- unique(as.character(lapply(cur_test_names, function(x) {
+        x %||% "`NULL`"
+      })))
+      if (name %in% cur_test_names) {
+        shiny::tags$div(
+          "Please use a unique name. Known names:",
+          shiny::tags$ul(
+            lapply(cur_test_names, shiny::tags$li)
+          )
+        )
+      }
+    }
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("testname", testname_validator)
+    iv$add_rule("seed", shinyvalidate::sv_integer(allow_na = TRUE))
+    iv_screenshot <- shinyvalidate::InputValidator$new()
+    iv_screenshot$condition(~ !has_expectation_event())
+    iv_screenshot$add_rule("screenshot", ~ "At least one expectation must be made")
+
+    iv$add_validator(iv_screenshot)
+    iv$enable()
+
+    # Use reactiveVal dedupe feature
+    save_enabled <- reactiveVal(FALSE)
+    save_enable_obs <- observe({
+      enable_save <- iv$is_valid()
+      save_enabled(enable_save)
+      session$sendCustomMessage("enable_save_button", enable_save)
     })
 
     # If an unbound input value is updated, ask the user if the event should be recorded
@@ -646,7 +683,6 @@ shinyApp(
         ))
       )
     })
-
 
     observeEvent(input$exit_save, {
       req(save_enabled())

@@ -147,7 +147,7 @@ window.recorder = (function() {
 
         // Enable save button when there is an expectation
         Shiny.addCustomMessageHandler("enable_save_button", function(message) {
-            $("#exit_save").removeClass("disabled");
+            $("#exit_save").toggleClass("disabled", !message);
         });
 
     });
