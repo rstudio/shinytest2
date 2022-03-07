@@ -1,5 +1,3 @@
-# TODO-barret; Auto accept all new debug snapshots? This will remove the requirement to ignore _.new.png
-
 #' Use \pkg{shinytest2} methods
 #'
 #' This unified method initializes many different useful features when using
