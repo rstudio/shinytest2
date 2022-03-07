@@ -212,7 +212,7 @@ app_test_path <- function() {
   path <- app$get_path()
   # NULL maps to `../../`
   if (dir.exists(path)) return(NULL)
-  # TODO-barret; test for RMD
+  # TODO-barret; test for RMD. See learnr
   # Return .Rmd file name
   rel_path <- fs::path_rel(path, fs::path_dir(test_save_file))
   paste0("test_path(", deparse2(rel_path), ")")
@@ -712,7 +712,6 @@ shinyApp(
           code <- paste0("library(shinytest2)", code)
         }
 
-        # TODO-barret; Save runner file
         test_runner_file <- fs::path(fs::path_dir(fs::path_dir(test_save_file)), "testthat.R")
         overwrite_test_runner <-
           if (fs::file_exists(test_runner_file)) {
