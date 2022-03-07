@@ -1,4 +1,4 @@
-# TODO-barret-document; add_dont_run_reason("An uploadFile() must be updated: use the correct path relative to the app's ./tests/testthat directory, or copy the file to the app's ./tests/testthat directory.")
+# TODO-barret-docs; add_dont_run_reason("An uploadFile() must be updated: use the correct path relative to the app's ./tests/testthat directory, or copy the file to the app's ./tests/testthat directory.")
     # rlang::inform(c(
     #   "After making changes to the test script, run it with:",
     #   " " = paste0("shinytest2::test_app(\"", app_path_val, "\", filter = \"", test_filter, "\")"),

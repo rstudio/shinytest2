@@ -165,7 +165,7 @@ AppDriver <- R6Class(# nolint
       app_expect_text(self, private, selector, ..., cran = cran)
     },
     #' @param selector A DOM CSS selector to be passed into `document.querySelectorAll()`
-    # TODO-barret; Add note that this does not work for text inputs or text area inputs.
+    # TODO-barret-docs; Add note that this does not work for text inputs or text area inputs.
     get_text = function(selector) {
       app_get_text(self, private, selector = selector)
     },
@@ -178,15 +178,13 @@ AppDriver <- R6Class(# nolint
     #' @param selector A DOM selector to be passed into `document.querySelectorAll()`
     #' @param outer_html If `TRUE`, the full DOM structure will be returned (`TAG.outerHTML`).
     #'   If `FALSE`, the full DOM structure of the child elements will be returned (`TAG.innerHTML`).
-    # TODO-barret; Default `outer_html` to TRUE
     expect_html = function(selector, ..., outer_html = TRUE, cran = FALSE) {
       app_expect_html(self, private, selector, ..., outer_html = outer_html, cran = cran)
     },
     #' @param selector A DOM selector to be passed into `document.querySelectorAll()`
     #' @param outer_html If `TRUE`, the full DOM structure will be returned (`TAG.outerHTML`).
     #'   If `FALSE`, the full DOM structure of the child elements will be returned (`TAG.innerHTML`).
-    # TODO-barret; Default `outer_html` to TRUE
-    # TODO-barret-document; does not work with shadow DOM; Only works with updated HTML elements
+    # TODO-barret-docs; does not work with shadow DOM; Only works with updated HTML elements
     get_html = function(selector, ..., outer_html = TRUE) {
       app_get_html(self, private, selector, ..., outer_html = outer_html)
     },
