@@ -299,7 +299,7 @@ Expect snapshot of UI HTML
 
 \verb{$expect_html()} will extract the full DOM structures of each matching element and store them in a snapshot file.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_html(selector, ..., outer_html = FALSE, cran = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_html(selector, ..., outer_html = TRUE, cran = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -324,7 +324,7 @@ because they often rely on minor details of dependencies.}
 \if{latex}{\out{\hypertarget{method-get_html}{}}}
 \subsection{Method \code{get_html()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_html(selector, ..., outer_html = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_html(selector, ..., outer_html = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
