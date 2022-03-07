@@ -19,7 +19,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
 
   observe({
-    updateSliderInput(inputId = "slider", value = input$click)
+    shiny::updateSliderInput(inputId = "slider", value = input$click)
     session$sendCustomMessage("count", input$click)
   })
 
