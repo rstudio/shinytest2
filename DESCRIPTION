@@ -41,15 +41,15 @@ Suggests:
     rstudioapi,
     shinyWidgets,
     shinytest (>= 1.5.1),
-    shinyvalidate (>= 1.0.0),
+    shinyvalidate,
     showimage,
     knitr,
     usethis
 Remotes:
-    rstudio/chromote,
-    rstudio/shinyvalidate#55
+    rstudio/chromote
 Config/Needs/other:
-    shiny (>= 1.7.1.9003)
+    shiny (>= 1.7.1.9003),
+    shinyvalidate (>= 1.0.0.9001),
 Config/Needs/website:
     pkgdown,
     tidyverse/tidytemplate
