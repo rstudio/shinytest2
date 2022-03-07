@@ -62,7 +62,7 @@ use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
     with_this_project({
       wrapper <-
         if (quiet) function(...) {
-          capture.output(..., type = "message")
+          utils::capture.output(..., type = "message")
         } else {
           force
         }

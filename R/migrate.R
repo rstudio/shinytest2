@@ -109,7 +109,7 @@ m__find_shinytest_testapp <- function(exprs, info_env) {
   }
   # For all exprs, find a single shinytest::testApp()
   lapply(exprs, function(expr) {
-    m__recurse_expr(expr, post_fn = post_fn)
+    expr_recurse(expr, post_fn = post_fn)
   })
 
   args
@@ -150,7 +150,7 @@ m__find_shinydriver_new <- function(exprs, info_env) {
   }
   # For all exprs, find a single shinytest::testApp()
   lapply(exprs, function(expr) {
-    m__recurse_expr(expr, post_fn = post_fn)
+    expr_recurse(expr, post_fn = post_fn)
   })
 
   ret
@@ -464,13 +464,13 @@ m__driver_new <- function(expr, info_env) {
       !!!init_args
     )
 
-    # Signify that a match was found for m__recurse_expr
+    # Signify that a match was found for m__algo_2
     info_env$match_found <- TRUE
     # Return upgraded expr
     ret_expr
   }
 
-  m__recurse_expr(expr, post_fn = post_fn)
+  expr_recurse(expr, post_fn = post_fn)
 }
 
 # Copy over code to avoid being hosed down the road
@@ -580,59 +580,6 @@ m__algo_2 <- function(test_text, expr_fn, info_env) {
 }
 
 
-
-# m__shinytest_lang <- function(expr, info_env, is_top_level = FALSE) {
-#   shinytest_lang_is_fn <- function(expr_list) {
-#     expr_fn <- expr_list[[1]]
-
-#     is.language(expr_fn) &&
-#       length(expr_fn) >= 3 &&
-#       expr_fn[[1]] == "$" &&
-#       expr_fn[[2]] == info_env$app_var
-#   }
-
-#   if (!is.language(expr)) {
-#     return(expr)
-#   }
-#   expr_list <- as.list(expr)
-
-#   if (
-#     # Return early if it is a single item
-#     length(expr_list) == 1 &&
-#     # Make sure not something like `app$getAllValues()`
-#     is.language(expr_list[[1]]) &&
-#     length(expr_list[[1]]) == 1
-#   ) {
-#     return(expr)
-#   }
-#   # # Some methods return a list of values
-#   # new_expr_list <- list()
-#   # for (expr_list_item in expr_list) {
-#   #   new_expr_list <- append(
-#   #     new_expr_list,
-#   #     m__shinytest_lang(expr_list[[i]], info_env, is_top_level = FALSE)
-#   #   )
-#   # }
-#   for (i in seq_len(length(expr_list))) {
-#     expr_list[[i]] <-
-#       m__shinytest_lang(expr_list[[i]], info_env, is_top_level = FALSE)
-#   }
-
-#   if (!shinytest_lang_is_fn(expr_list)) {
-#     return(
-#       # Reconstruct language call
-#       rlang::call2(expr_list[[1]], !!!expr_list[-1])
-#     )
-#   }
-
-#   # By being after the for-loop, it alters from the leaf to the trunk
-#   # Mark that a match was found
-#   info_env$match_found <- TRUE
-#   # Match against known function names in expr_list[[3]]
-#   matched_expr <- match_shinytest_expr(expr_list, is_top_level, info_env)
-#   matched_expr
-# }
-
 m__shinytest_lang <- function(expr, info_env) {
   shinytest_lang_is_fn <- function(expr_list) {
     expr_fn <- expr_list[[1]]
@@ -657,37 +604,10 @@ m__shinytest_lang <- function(expr, info_env) {
     matched_expr <- match_shinytest_expr(expr_list, is_top_level, info_env)
     matched_expr
   }
-  m__recurse_expr(expr, post_fn = post_fn)
+  expr_recurse(expr, post_fn = post_fn)
 }
 
 
-m__recurse_expr <- function(expr, post_fn) {
-  m__recurse_expr_ <- function(expr, post_fn, is_top_level = FALSE) {
-    if (!is.language(expr)) {
-      return(expr)
-    }
-    expr_list <- as.list(expr)
-
-    if (
-      # Return early if it is a single item
-      length(expr_list) == 1 &&
-      # Make sure not something like `app$getAllValues()`
-      is.language(expr_list[[1]]) &&
-      length(expr_list[[1]]) == 1
-    ) {
-      return(expr)
-    }
-    for (i in seq_len(length(expr_list))) {
-      expr_list[[i]] <-
-        m__recurse_expr_(expr_list[[i]], post_fn, is_top_level = FALSE)
-    }
-
-    # By being after the for-loop, it alters from the leaf to the trunk
-    post_fn(expr_list, is_top_level)
-  }
-  # Shim `is_top_level = TRUE`
-  m__recurse_expr_(expr = expr, post_fn = post_fn, is_top_level = TRUE)
-}
 
 
 
@@ -1226,21 +1146,6 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
   )
 }
 
-
-st2_expr_text <- function(expr) {
-  if (is.null(expr) || is.character(expr)) return(expr)
-  if (is.list(expr)) return(lapply(expr, st2_expr_text))
-  gsub(
-    "\\s*\n    ",
-    "\n  ",
-    rlang::expr_text(expr, width = 60L)
-  )
-}
-for_each_expr_text <- function(exprs, expr_fn, ...) {
-  unlist(lapply(exprs, function(expr) {
-    st2_expr_text(expr_fn(expr, ...))
-  }))
-}
 
 
 migrate_shinycoreci_shinytest <- function(app_path) {

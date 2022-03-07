@@ -95,7 +95,14 @@ html,body {
 /* #shiny-recorder .shiny-recorder-controls .inline-input-container {
   display: inline-block;
 } */
-#shiny-recorder #save-and-quit .inline-input-container * {
+#shiny-recorder .shiny-recorder-controls .help-block {
+  margin-bottom: 5px;
+}
+#shiny-recorder .shiny-recorder-controls.form-group {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+#shiny-recorder #save-and-quit .inline-input-container *:not(.shiny-validation-message *){
   display: inline-block;
 }
 #shiny-recorder #save-and-quit .inline-input-container input[type="text"] {
