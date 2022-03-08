@@ -473,7 +473,7 @@
 <span class="va">new</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span><span class="st">"window.location.reload();"</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>
-<code>old$getAppDir()</code>, <code>old$getAppFilename()</code>, <code>old$isRmd()</code>: These methods have been removed in favor of <code>new$get_path()</code>. All of the same information can be accessed via <code>new$get_path()</code>.</li>
+<code>old$getAppDir()</code>, <code>old$getAppFilename()</code>, <code>old$isRmd()</code>: <code>new$get_dir()</code> is the only method still supported given <code>AppDriver$new(app_dir=)</code> is a single directory path. The other methods have been removed as their functionality can not be easily replicated within <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>.</li>
 </ul>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Old</span>
@@ -482,10 +482,10 @@
 <span class="va">old</span><span class="op">$</span><span class="fu">getAppFilename</span><span class="op">(</span><span class="op">)</span>
 
 <span class="co">## New</span>
-<span class="va">path</span> <span class="op">&lt;-</span> <span class="va">new</span><span class="op">$</span><span class="fu">get_path</span><span class="op">(</span><span class="op">)</span>
-<span class="va">is_rmd</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path_file.html" class="external-link">path_ext</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span> <span class="op">==</span> <span class="st">".Rmd"</span>
-<span class="va">app_dir</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="va">is_rmd</span><span class="op">)</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path_file.html" class="external-link">path_dir</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span> <span class="kw">else</span> <span class="va">path</span>
-<span class="va">filename</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="va">is_rmd</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span> <span class="kw">else</span> <span class="cn">NULL</span></code></pre></div>
+<span class="va">app_dir</span> <span class="op">&lt;-</span> <span class="va">new</span><span class="op">$</span><span class="fu">get_dir</span><span class="op">(</span><span class="op">)</span>
+<span class="va">rmd_files</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">dir_ls</a></span><span class="op">(</span><span class="va">new</span><span class="op">$</span><span class="fu">get_dir</span><span class="op">(</span><span class="op">)</span>, regexp <span class="op">=</span> <span class="st">"\\.[Rr]md$"</span><span class="op">)</span>
+<span class="va">is_rmd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">rmd_files</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fl">1</span>
+<span class="va">app_filename</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="va">has_rmd</span><span class="op">)</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path_file.html" class="external-link">path_file</a></span><span class="op">(</span><span class="va">rmd_files</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="kw">else</span> <span class="cn">NULL</span></code></pre></div>
 <ul>
 <li>
 <code>old$sendKeys(name, keys)</code>: This method has been removed and there is currently no easy alternative. If you are familiar with the <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode#value_of_keycode" class="external-link">key code values</a>, you can trigger then with <code>new$execute_js(script)</code>.</li>

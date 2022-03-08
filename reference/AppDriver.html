@@ -102,7 +102,7 @@ retrieved after any initialization error has been thrown.</p>
 <li><p><a href="#method-wait_for_idle"><code>AppDriver$wait_for_idle()</code></a></p></li>
 <li><p><a href="#method-wait_for_value"><code>AppDriver$wait_for_value()</code></a></p></li>
 <li><p><a href="#method-execute_js"><code>AppDriver$execute_js()</code></a></p></li>
-<li><p><a href="#method-get_path"><code>AppDriver$get_path()</code></a></p></li>
+<li><p><a href="#method-get_dir"><code>AppDriver$get_dir()</code></a></p></li>
 <li><p><a href="#method-get_url"><code>AppDriver$get_url()</code></a></p></li>
 <li><p><a href="#method-get_window_size"><code>AppDriver$get_window_size()</code></a></p></li>
 <li><p><a href="#method-set_window_size"><code>AppDriver$set_window_size()</code></a></p></li>
@@ -116,7 +116,7 @@ retrieved after any initialization error has been thrown.</p>
 <p>Initialize the AppDriver</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-  path <span class="op">=</span> <span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_path.html" class="external-link">test_path</a></span><span class="op">(</span><span class="st">"../../"</span><span class="op">)</span>,
+  app_dir <span class="op">=</span> <span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_path.html" class="external-link">test_path</a></span><span class="op">(</span><span class="st">"../../"</span><span class="op">)</span>,
   <span class="va">...</span>,
   name <span class="op">=</span> <span class="cn">NULL</span>,
   variant <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
@@ -137,9 +137,9 @@ retrieved after any initialization error has been thrown.</p>
 
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>path</code></dt>
-<dd><p>Path to a directory containing a Shiny app, i.e. a
-single <code>app.R</code> file or a <code>server.R</code>-<code>ui.R</code> pair.</p></dd>
+<p></p><div class="arguments"><dl><dt><code>app_dir</code></dt>
+<dd><p>Directory containing your Shiny application or a runtime
+Shiny R Markdown document.</p></dd>
 
 
 <dt><code>...</code></dt>
@@ -915,11 +915,11 @@ To have JavaScript code execute asynchronously, wrap the code in a Promise objec
 <p>Result of the <code>script</code> (or <code>file</code> contents)</p>
 </div>
 
-</div><p></p><hr><a id="method-get_path"></a><div class="section">
-<h3 id="method-get-path-">Method <code>get_path()</code><a class="anchor" aria-label="anchor" href="#method-get-path-"></a></h3>
+</div><p></p><hr><a id="method-get_dir"></a><div class="section">
+<h3 id="method-get-dir-">Method <code>get_dir()</code><a class="anchor" aria-label="anchor" href="#method-get-dir-"></a></h3>
 <p>Retrieve the Shiny app path</p><div class="section">
 <h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_path</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_dir</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">

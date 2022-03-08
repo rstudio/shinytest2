@@ -58,7 +58,7 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">migrate_from_shinytest</span><span class="op">(</span>
-  <span class="va">path</span>,
+  <span class="va">app_dir</span>,
   <span class="va">...</span>,
   clean <span class="op">=</span> <span class="cn">TRUE</span>,
   include_expect_screenshot <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
@@ -68,8 +68,8 @@
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>path</dt>
-<dd><p>Path to the test directory or Shiny Rmd file</p></dd>
+    <dl><dt>app_dir</dt>
+<dd><p>Directory containing the Shiny application or Shiny Rmd file</p></dd>
 <dt>...</dt>
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
 <dt>clean</dt>
