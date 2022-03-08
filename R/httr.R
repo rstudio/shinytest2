@@ -7,8 +7,11 @@ httr_get <- function(url) {
   #   pieces = pieces
   # ))
 
-  if (!pingr::is_up(pieces$hostname, pieces$port)) {
-    abort("Shiny app is no longer running")
+  # Only check if no basic auth is being used
+  if (is.null(pieces$username) && is.null(pieces$password)) {
+    if (!pingr::is_up(pieces$hostname, pieces$port)) {
+      abort("Shiny app is no longer running")
+    }
   }
 
   withCallingHandlers(

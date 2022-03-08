@@ -9,9 +9,6 @@ ckm8_assert_single_integer <- function(x, ..., len = 1, any.missing = FALSE, .va
 ckm8_assert_single_number <- function(x, ..., .var.name = checkmate::vname(x)) {
   checkmate::assert_number(x, .var.name = .var.name, ...)
 }
-ckm8_assert_single_url <- function(x, .var.name = checkmate::vname(x)) {
-  checkmate::assert_character(x, pattern = "^/", len = 1, any.missing = FALSE, .var.name = .var.name)
-}
 ckm8_assert_app_driver <- function(self, private, self.var.name = checkmate::vname(self), private.var.name = checkmate::vname(private)) {
   checkmate::assert_r6(self, "AppDriver", .var.name = self.var.name)
   checkmate::assert_environment(private, .var.name = private.var.name)
@@ -51,54 +48,6 @@ read_utf8 <- function(file) {
 # write text as UTF-8
 write_utf8 <- function(text, ...) {
   writeBin(charToRaw(enc2utf8(text)), ...)
-}
-
-
-parse_url <- function(url) {
-  res <- regexpr("^(?<protocol>https?)://(?<host>[^:/]+)(:(?<port>\\d+))?(?<path>/.*)?$", url, perl = TRUE)
-
-  if (res == -1) abort(paste0(url, " is not a valid URL."))
-
-  start  <- attr(res, "capture.start",  exact = TRUE)[1, ]
-  length <- attr(res, "capture.length", exact = TRUE)[1, ]
-
-  get_piece <- function(n) {
-    if (start[[n]] == 0) return("")
-
-    substring(url, start[[n]], start[[n]] + length[[n]] - 1)
-  }
-
-  list(
-    protocol = get_piece("protocol"),
-    host     = get_piece("host"),
-    port     = get_piece("port"),
-    path     = get_piece("path")
-  )
-}
-is_rmd <- function(path) {
-  if (utils::file_test("-d", path)) {
-    FALSE
-  } else if (grepl("\\.Rmd", path, ignore.case = TRUE)) {
-    TRUE
-  } else {
-    FALSE
-  }
-}
-
-is_app <- function(path) {
-  tryCatch(
-    {
-      shiny::shinyAppDir(path)
-      TRUE
-    },
-    # shiny::shinyAppDir() throws a classed exception when path isn't a
-    # directory, or it doesn't contain an app.R (or server.R) file
-    # https://github.com/rstudio/shiny/blob/a60406a/R/shinyapp.R#L116-L119
-    invalidShinyAppDir = function(x) FALSE,
-    # If we get some other error, it's probably from sourcing
-    # of the app file(s), so throw that error now
-    error = function(x) abort(conditionMessage(x))
-  )
 }
 
 
