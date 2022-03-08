@@ -1,0 +1,19 @@
+---
+title: "Old Faithful"
+format: html
+server: shiny
+---
+
+```{r, echo=FALSE}
+textInput("name", "What is your name?")
+actionButton("greet", "Greet")
+textOutput("greeting")
+```
+
+```{r}
+#| context: server
+output$greeting <- renderText({
+  shiny::req(input$greet)
+  paste0("Hello ", shiny::isolate(input$name), "!")
+})
+```
