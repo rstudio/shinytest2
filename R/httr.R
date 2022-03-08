@@ -1,12 +1,5 @@
 httr_get <- function(url) {
   pieces <- httr::parse_url(url)
-
-  # cat("Url parts: \n")
-  # utils::str(list(
-  #   url = url,
-  #   pieces = pieces
-  # ))
-
   # Only check if no basic auth is being used
   if (is.null(pieces$username) && is.null(pieces$password)) {
     if (!pingr::is_up(pieces$hostname, pieces$port)) {
