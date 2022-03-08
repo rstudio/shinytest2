@@ -57,6 +57,7 @@ Config/testthat/edition: 3
 Collate:
     'R6-helper.R'
     'app-driver-chromote.R'
+    'app-driver-dir.R'
     'app-driver-expect-download.R'
     'app-driver-expect-js.R'
     'app-driver-expect-screenshot.R'

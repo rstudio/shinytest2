@@ -196,28 +196,19 @@ test_that("getAllValues is converted", {
 test_that("isRmd, getAppDir, getAppFilename is converted", {
   expect_migration(
     app$isRmd(),
-    local({
-      path <- app$get_path()
-      fs::path_ext(path) == ".Rmd"
-    })
+    length(fs::dir_ls(app$get_dir(), regexp = "\\.[Rr]md$")) > 0
   )
   expect_migration(
     app$getAppDir(),
-    local({
-      path <- app$get_path()
-      if (fs::path_ext(path) == ".Rmd") {
-        fs::path_dir(path)
-      } else {
-        path
-      }
-    })
+    app$get_dir()
   )
   expect_migration(
     app$getAppFilename(),
     local({
-      path <- app$get_path()
-      if (fs::path_ext(path) == ".Rmd") {
-        fs::path_file(path)
+      rmd_paths <- fs::dir_ls(app$get_dir(), regexp = "\\.[Rr]md$")
+      is_rmd <- length(rmd_paths) > 0
+      if (is_rmd) {
+        fs::path_file(rmd_paths[1])
       } else {
         NULL
       }

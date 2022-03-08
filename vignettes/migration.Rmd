@@ -420,7 +420,7 @@ new$execute_js("window.history.back();")
 new$execute_js("window.location.reload();")
 ```
 
-* `old$getAppDir()`, `old$getAppFilename()`, `old$isRmd()`: These methods have been removed in favor of `new$get_path()`. All of the same information can be accessed via `new$get_path()`.
+* `old$getAppDir()`, `old$getAppFilename()`, `old$isRmd()`: `new$get_dir()` is the only method still supported given `AppDriver$new(app_dir=)` is a single directory path. The other methods have been removed as their functionality can not be easily replicated within `{shinytest2}`.
 
 ```r
 ## Old
@@ -429,10 +429,10 @@ old$getAppDir()
 old$getAppFilename()
 
 ## New
-path <- new$get_path()
-is_rmd <- fs::path_ext(path) == ".Rmd"
-app_dir <- if (is_rmd) fs::path_dir(path) else path
-filename <- if (is_rmd) basename(path) else NULL
+app_dir <- new$get_dir()
+rmd_files <- fs::dir_ls(new$get_dir(), regexp = "\\.[Rr]md$")
+is_rmd <- length(rmd_files) >= 1
+app_filename <- if (has_rmd) fs::path_file(rmd_files[1]) else NULL
 ```
 
 * `old$sendKeys(name, keys)`: This method has been removed and there is currently no easy alternative. If you are familiar with the [key code values](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode#value_of_keycode), you can trigger then with `new$execute_js(script)`.

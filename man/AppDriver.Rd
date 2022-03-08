@@ -145,7 +145,7 @@ app$get_log() # (long output lines have been truncated)
 \item \href{#method-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
 \item \href{#method-wait_for_value}{\code{AppDriver$wait_for_value()}}
 \item \href{#method-execute_js}{\code{AppDriver$execute_js()}}
-\item \href{#method-get_path}{\code{AppDriver$get_path()}}
+\item \href{#method-get_dir}{\code{AppDriver$get_dir()}}
 \item \href{#method-get_url}{\code{AppDriver$get_url()}}
 \item \href{#method-get_window_size}{\code{AppDriver$get_window_size()}}
 \item \href{#method-set_window_size}{\code{AppDriver$set_window_size()}}
@@ -163,7 +163,7 @@ app$get_log() # (long output lines have been truncated)
 Initialize the AppDriver
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$new(
-  path = testthat::test_path("../../"),
+  app_dir = testthat::test_path("../../"),
   ...,
   name = NULL,
   variant = missing_arg(),
@@ -185,8 +185,8 @@ Initialize the AppDriver
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{path}}{Path to a directory containing a Shiny app, i.e. a
-single \code{app.R} file or a \code{server.R}-\code{ui.R} pair.}
+\item{\code{app_dir}}{Directory containing your Shiny application or a runtime
+Shiny R Markdown document.}
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
@@ -868,12 +868,12 @@ Result of the \code{script} (or \code{file} contents)
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_path"></a>}}
-\if{latex}{\out{\hypertarget{method-get_path}{}}}
-\subsection{Method \code{get_path()}}{
+\if{html}{\out{<a id="method-get_dir"></a>}}
+\if{latex}{\out{\hypertarget{method-get_dir}{}}}
+\subsection{Method \code{get_dir()}}{
 Retrieve the Shiny app path
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_path()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_dir()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

@@ -62,7 +62,7 @@ record_test <- function(
     }
 
     # Rmds need a random seed
-    if (app_path(app, "app")$is_rmd && is.null(seed)) {
+    if (is.null(seed) && app_dir_has_rmd(app_dir = app)) {
       seed <- floor(stats::runif(1, min = 0, max = 1e5))
     }
 
@@ -72,7 +72,7 @@ record_test <- function(
       gc()
     })
   } else {
-    app_path_val <- app$get_path()
+    app_path_val <- app$get_dir()
   }
 
   if (!inherits(app, "AppDriver")) {
@@ -80,9 +80,7 @@ record_test <- function(
   }
 
   if (is.null(name)) {
-    name <- fs::path_abs(app$get_path())
-    if (!fs::dir_exists(name)) name <- fs::path_dir(name)
-    name <- fs::path_file(name)
+    name <- fs::path_file(app$get_dir())
   }
 
   # Get the URL for the app. Depending on what type of object `app` is, it may
@@ -137,7 +135,10 @@ record_test <- function(
 
   test_filter <- sub("^test-", "", fs::path_ext_remove(fs::path_file(saved_test_file)))
   # Run the test script
-  rlang::inform("Running recorded test: ", fs::path_rel(saved_test_file, app_path_val))
+  rlang::inform(paste0(
+    "Running recorded test: ",
+    fs::path_rel(saved_test_file, app$get_dir())
+  ))
   test_app(app_path_val, filter = test_filter)
 
   invisible(res$test_file)

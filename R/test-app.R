@@ -34,10 +34,7 @@ test_app <- function(
   # force variables before testing starts / paths change
   list2(app_dir, env, ...)
 
-  path_info <- app_path(app_dir, "app_dir")
-  if (path_info$is_rmd) {
-    app_dir <- path_info$app
-  }
+  app_dir <- app_dir_value(app_dir)
 
   is_currently_testing <- testthat::is_testing()
 

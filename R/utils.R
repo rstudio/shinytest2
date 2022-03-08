@@ -101,36 +101,6 @@ is_app <- function(path) {
   )
 }
 
-app_path <- function(path, arg = "path") {
-  # must also check for dir (windows trailing '/')
-  if (!(file.exists(path) || dir.exists(path))) {
-    abort(paste0("'", path, "' doesn't exist"))
-  }
-
-  if (is_app(path)) {
-    app <- path
-    dir <- path
-  } else if (is_rmd(path)) {
-    # Fallback for old behaviour
-    if (length(dir(dirname(path), pattern = "\\.[Rr]md$")) > 1) {
-      abort("For testing, only one .Rmd file is allowed per directory.")
-    }
-    app <- path
-    dir <- dirname(path)
-  } else {
-    rmds <- dir(path, pattern = "\\.Rmd$", full.names = TRUE)
-    if (length(rmds) != 1) {
-      abort(paste0(
-        "`", arg, "` doesn't contain 'app.R', 'server.R', or exactly one '.Rmd'"
-      ))
-    } else {
-      app <- rmds
-      dir <- dirname(app)
-    }
-  }
-
-  list(app = app, dir = dir, is_rmd = is_rmd(path))
-}
 
 
 # nolint start

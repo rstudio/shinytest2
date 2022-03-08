@@ -42,6 +42,7 @@ use_shinytest2 <- function(
 
 use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
   rlang::check_installed("usethis")
+  app_dir <- app_dir_value(app_dir)
   withr::with_dir(app_dir, {
     if (!fs::file_exists("DESCRIPTION")) {
       if (!quiet) {
@@ -80,6 +81,7 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
   # Do not use `usethis::use_git_ignore()` or `usethis::use_build_ignore()` directly!
   # The functions have sticky paths once set. Instead, use their inner logic via
   # `usethis::write_union(FILE, LINES)`
+  app_dir <- app_dir_value(app_dir)
   withr::with_dir(app_dir, {
     git_ignores <- c(
       "# {shinytest2}: Ignore new debug snapshots for `$expect_values()`",
@@ -147,6 +149,7 @@ copy_test_file_helper <- function(
   open = FALSE
 ) {
 
+  app_dir <- app_dir_value(app_dir)
   withr::with_dir(app_dir, {
 
     if (!overwrite && fs::file_exists(to_file)) {
