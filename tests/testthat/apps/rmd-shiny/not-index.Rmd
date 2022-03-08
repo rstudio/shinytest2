@@ -1,0 +1,18 @@
+---
+title: "Hello Shiny"
+output: html_document
+runtime: shiny
+---
+
+```{r, echo=FALSE}
+textInput("name", "What is your name?")
+actionButton("greet", "Greet")
+textOutput("greeting")
+```
+
+```{r, echo = FALSE}
+output$greeting <- renderText({
+  shiny::req(input$greet)
+  paste0("Hello ", shiny::isolate(input$name), "!")
+})
+```
