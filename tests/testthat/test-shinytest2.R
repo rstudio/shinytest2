@@ -11,7 +11,7 @@ test_that("testthat is a depends package", {
 test_that("AppDriver can print while working with `missing_arg()` values", {
   expect_error(
     utils::capture.output({
-      print(AppDriver$new(test_path("apps/x")))
+      print(AppDriver$new(test_path("apps/hello")))
     }),
     NA
   )
