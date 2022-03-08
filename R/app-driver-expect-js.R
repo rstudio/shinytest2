@@ -116,7 +116,7 @@ app_get_html <- function(
   self, private,
   selector,
   ...,
-  outer_html = FALSE
+  outer_html = TRUE
 ) {
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
@@ -131,7 +131,7 @@ app_expect_html <- function(
   self, private,
   selector,
   ...,
-  outer_html = FALSE,
+  outer_html = TRUE,
   cran = FALSE
 ) {
   ckm8_assert_app_driver(self, private)

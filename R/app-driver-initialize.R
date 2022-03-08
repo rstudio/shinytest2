@@ -7,7 +7,7 @@ app_initialize_ <- function(
   screenshot_args = missing_arg(),
   check_names = TRUE,
   name = NULL,
-  variant = getOption("shinytest2.variant", missing_arg()),
+  variant = missing_arg(),
   view = missing_arg(),
   height = NULL,
   width = NULL,
@@ -89,7 +89,6 @@ app_initialize_ <- function(
   app_init_browser_log(self, private, options = options)
 
   "!DEBUG navigate to Shiny app"
-  # TODO-barret; test
   if (!is.null(height) || !is.null(width)) {
     ckm8_assert_single_number(height, lower = 1)
     ckm8_assert_single_number(width, lower = 1)

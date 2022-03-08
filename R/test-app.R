@@ -57,5 +57,5 @@ test_app <- function(
     testthat::expect_equal(TRUE, TRUE)
   }
 
-  ret
+  invisible(ret)
 }

@@ -5,8 +5,8 @@ test_that("basic text and dom outputs are expected", {
   app$expect_text("#text")
   app$expect_text("#custom")
 
-  app$expect_html("#custom", outer_html = FALSE)
   app$expect_html("#custom", outer_html = TRUE)
+  app$expect_html("#custom", outer_html = FALSE)
 })
 
 test_that("basic text and dom outputs are captured", {
@@ -23,11 +23,11 @@ test_that("basic text and dom outputs are captured", {
   )
 
   expect_equal(
-    app$get_html("#custom", outer_html = FALSE),
-    "<p>My Custom Output</p>"
-  )
-  expect_equal(
     app$get_html("#custom", outer_html = TRUE),
     "<div id=\"custom\"><p>My Custom Output</p></div>"
+  )
+  expect_equal(
+    app$get_html("#custom", outer_html = FALSE),
+    "<p>My Custom Output</p>"
   )
 })

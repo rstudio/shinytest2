@@ -32,7 +32,7 @@ window.shinytest2 = (function() {
                 queue.push({
                     name: name,
                     value: input.value,
-                    allowInputNoBinding: input.allowInputNoBinding,
+                    allowNoInputBinding: input.allowNoInputBinding,
                     priority: input.priority
                 });
             }
@@ -53,7 +53,7 @@ window.shinytest2 = (function() {
                     // For inputs without a binding: if the script says it's
                     // OK, just set the value directly. Otherwise throw an
                     // error.
-                    if (item.allowInputNoBinding) {
+                    if (item.allowNoInputBinding) {
                         var priority = item.priority === "event" ? {priority: "event"} : undefined;
                         Shiny.setInputValue(item.name, item.value, priority);
                     } else {

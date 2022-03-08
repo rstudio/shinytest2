@@ -8,9 +8,9 @@
 
 ---
 
-    "<p>My Custom Output<\/p>"
+    "<div id=\"custom\"><p>My Custom Output<\/p><\/div>"
 
 ---
 
-    "<div id=\"custom\"><p>My Custom Output<\/p><\/div>"
+    "<p>My Custom Output<\/p>"
 
