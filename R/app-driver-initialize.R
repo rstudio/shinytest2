@@ -1,6 +1,6 @@
 app_initialize_ <- function(
   self, private,
-  path = testthat::test_path("../../"),
+  app_dir = testthat::test_path("../../"),
   ...,
   load_timeout = NULL,
   expect_values_screenshot_args = expect_values_screenshot_args,
@@ -24,8 +24,6 @@ app_initialize_ <- function(
   # in case they're using some of the same resources.
   # https://github.com/rstudio/shinytest2/issues/19#issuecomment-954095837
   gc()
-
-  private$path <- fs::path_abs(path)
 
   # Convert `rlang::missing_arg()` to `missing_value()` to allow for R6 printing
   private$default_expect_values_screenshot_args <- maybe_missing_value(expect_values_screenshot_args, missing_value()) # nolint
@@ -51,20 +49,18 @@ app_initialize_ <- function(
 
   self$log_message("Start AppDriver initialization")
 
-  if (shiny::is.shiny.appobj(path)) {
-    path <- app_save(path)
-  }
-
   private$state <- "initialize"
 
-  if (grepl("^http(s?)://", path)) {
-    private$shiny_url$set(path)
+  if (grepl("^http(s?)://", app_dir)) {
+    private$shiny_url$set(app_dir)
+    app_set_dir(self, private, ".")
   } else {
     "!DEBUG starting shiny app from path"
     self$log_message("Starting Shiny app")
+    app_set_dir(self, private, app_dir)
+
     app_start_shiny(
       self, private,
-      path = path,
       seed = seed,
       load_timeout = load_timeout,
       shiny_args = shiny_args,

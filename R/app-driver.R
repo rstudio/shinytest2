@@ -52,7 +52,7 @@ AppDriver <- R6Class(# nolint
     state = "stopped", # "stopped" or "running"
     shiny_worker_id = NA_character_,
 
-    path = NULL, # Full path to app (including filename if it's a .Rmd)
+    dir = NULL, # Full dir path to app. No file path included
     save_dir = NULL, # Temp folder to store snapshot outputs
     default_screenshot_args = "missing_value()", # Default screenshot args to use
     default_expect_values_screenshot_args = TRUE, # Should `$expect_values()` expect a non-failing screenshot?
@@ -75,8 +75,8 @@ AppDriver <- R6Class(# nolint
     #' to initialize" to be signaled while also allowing for the `app` to be
     #' retrieved after any initialization error has been thrown.
     #'
-    #' @param path Path to a directory containing a Shiny app, i.e. a
-    #'   single `app.R` file or a `server.R`-`ui.R` pair.
+    #' @param app_dir Directory containing your Shiny application or a runtime
+    #' Shiny R Markdown document.
     #' @param name Prefix name to use when saving testthat snapshot files
     #' @template variant
     #' @param seed An optional random seed to use before starting the application.
@@ -101,7 +101,7 @@ AppDriver <- R6Class(# nolint
     #' @importFrom callr process
     #' @importFrom rlang abort
     initialize = function(
-      path = testthat::test_path("../../"),
+      app_dir = testthat::test_path("../../"),
       ...,
       # TODO-barret-questions:
       # Should we have many options that can be set to override the defaults?
@@ -124,7 +124,7 @@ AppDriver <- R6Class(# nolint
     ) {
       app_initialize(
         self, private,
-        path = path,
+        app_dir = app_dir,
         ...,
         load_timeout = load_timeout,
         expect_values_screenshot_args = expect_values_screenshot_args,
@@ -518,8 +518,8 @@ AppDriver <- R6Class(# nolint
     #' Retrieve the Shiny app path
     #'
     #' @return If it's a .Rmd file, it will return the full .Rmd path, otherwise it will return the directory containing the file.
-    get_path = function() {
-      private$path
+    get_dir = function() {
+      app_get_dir(self, private)
     },
     #' @description
     #' Retrieve the Shiny app URL

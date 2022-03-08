@@ -9,7 +9,7 @@
 #'
 #' \pkg{shinytest} file contents will be traversed and converted to the new \pkg{shinytest2} format. If the \pkg{shinytest} code can not be directly seen in the code, then it will not be converted.
 #'
-#' @param path Path to the test directory or Shiny Rmd file
+#' @param app_dir Directory containing the Shiny application or Shiny Rmd file
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @param clean If TRUE, then the shinytest test directory and runner will be deleted after the migration to use \pkg{shinytest2}.
 #' @param include_expect_screenshot If `TRUE`, `ShinyDriver$snapshot()` will turn into both `AppDriver$expect_values()` and `AppDriver$expect_screenshot()`. If `FALSE`, `ShinyDriver$snapshot()` will only turn into `AppDriver$expect_values()`. If missing, `include_expect_screenshot` will behave as `FALSE` if `shinytest::testApp(compareImages = FALSE)` or `ShinyDriver$snapshotInit(screenshot = FALSE)` is called.
@@ -17,7 +17,7 @@
 #' @return Invisible `TRUE`
 #' @export
 migrate_from_shinytest <- function(
-  path,
+  app_dir,
   ...,
   clean = TRUE,
   include_expect_screenshot = missing_arg(),
@@ -26,15 +26,15 @@ migrate_from_shinytest <- function(
   ellipsis::check_dots_empty()
   rlang::check_installed("shinytest", version = "1.5.1")
 
-  path_info <- app_path(path, "path")
-
   # Use an environment to avoid having to return many function levels to merge info and then send back many function levels
-  app_info_env <- as.environment(path_info)
+  app_info_env <- as.environment(list(
+    dir = app_dir
+  ))
   app_info_env$verbose <- is_false(quiet)
   app_info_env$include_expect_screenshot <- include_expect_screenshot
 
-  if (app_info_env$verbose) rlang::inform(c(i = paste0("Temp working directory: ", path_info$dir)))
-  withr::with_dir(path_info$dir, {
+  if (app_info_env$verbose) rlang::inform(c(i = paste0("Temp working directory: ", app_info_env$dir)))
+  withr::with_dir(app_info_env$dir, {
     m__extract_runner_info(app_info_env)
     m__write_shinytest2_runner(app_info_env)
     m__parse_test_files(app_info_env)
@@ -782,34 +782,21 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     "isRmd" = {
       app_val <- rlang::sym(info_env$app_var)
       new_expr <- rlang::expr(
-        local({
-          path <- (!!app_val)$get_path()
-          fs::path_ext(path) == ".Rmd"
-        })
+        length(fs::dir_ls((!!app_val)$get_dir(), regexp = "\\.[Rr]md$")) > 0
       )
       new_expr
     },
     "getAppDir" = {
-      app_val <- rlang::sym(info_env$app_var)
-      new_expr <- rlang::expr(
-        local({
-          path <- (!!app_val)$get_path()
-          if (fs::path_ext(path) == ".Rmd") {
-            fs::path_dir(path)
-          } else {
-            path
-          }
-        })
-      )
-      new_expr
+      shinytest2_expr("get_dir", list())
     },
     "getAppFilename" = {
       app_val <- rlang::sym(info_env$app_var)
       new_expr <- rlang::expr(
         local({
-          path <- (!!app_val)$get_path()
-          if (fs::path_ext(path) == ".Rmd") {
-            fs::path_file(path)
+          rmd_paths <- fs::dir_ls((!!app_val)$get_dir(), regexp = "\\.[Rr]md$")
+          is_rmd <- length(rmd_paths) > 0
+          if (is_rmd) {
+            fs::path_file(rmd_paths[1])
           } else {
             NULL
           }

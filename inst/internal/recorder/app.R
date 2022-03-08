@@ -13,10 +13,12 @@ shiny_args    <- getOption("shinytest2.shiny.args")
 save_file     <- getOption("shinytest2.test_file")
 allow_no_input_binding <- getOption("shinytest2.allow_no_input_binding")
 
-if (is.null(target_url) || is.null(app$get_path())) {
+if (is.null(target_url) || is.null(app)) {
   abort(paste0("Test recorder requires the 'shinytest2.recorder.url' and ",
     "'shinytest2.app' options to be set."))
 }
+
+test_save_file <- file.path(app$get_dir(), "tests", "testthat", save_file)
 
 # Can't register more than once, so remove existing one just in case.
 removeInputHandler("shinytest2.testevents")
@@ -213,26 +215,6 @@ quote_name <- function(name) {
   }
 }
 
-
-app_dir <- function() {
-  path <- app$get_path()
-  if (shinytest2:::is_rmd(path)) {
-    path <- fs::path_dir(path)
-  }
-  path
-}
-test_save_file <- file.path(app_dir(), "tests", "testthat", save_file)
-app_test_path <- function() {
-  path <- app$get_path()
-  # NULL maps to `../../`
-  if (dir.exists(path)) return(NULL)
-  # TODO-barret; test for RMD. See learnr
-  # Return .Rmd file name
-  rel_path <- fs::path_rel(path, fs::path_dir(test_save_file))
-  paste0("test_path(", deparse2(rel_path), ")")
-}
-
-
 generate_test_code <- function(events, name, seed) {
 
   # Remove st2_comment code events
@@ -264,7 +246,6 @@ generate_test_code <- function(events, name, seed) {
     paste0(
       "app <- AppDriver$new(\n",
       "  ", paste(c(
-        app_test_path(),
         # TODO-future; Should this value be a parameter?
         # Going with "no" for now as it is difficult to capture the expression
         # when nothing else is an expression
@@ -509,7 +490,7 @@ shinyApp(
 
                 # Get unescaped filenames in a char vector, with full path
                 filepaths <- vapply(event$value, `[[`, "name", FUN.VALUE = "")
-                filepaths <- fs::path(app_dir(), "tests", "testthat", filepaths)
+                filepaths <- fs::path(app$get_dir(), "tests", "testthat", filepaths)
 
                 # Check that all files exist. If not, add a message and don't run test
                 # automatically on exit.
@@ -748,7 +729,7 @@ shinyApp(
         overwrite_test_runner <-
           if (fs::file_exists(test_runner_file)) {
             if (!any(grepl("test_app(", readLines(test_runner_file), fixed = TRUE))) {
-              rlang::warn(paste0("Overwriting test runner ", fs::path_rel(test_runner_file, app$get_path()), " with `shinytest2::test_app()` call to ensure proper a testing environment."))
+              rlang::warn(paste0("Overwriting test runner ", fs::path_rel(test_runner_file, app$get_dir()), " with `shinytest2::test_app()` call to ensure proper a testing environment."))
               # Runner exists. Overwrite existing contents
               TRUE
             } else {
@@ -760,10 +741,10 @@ shinyApp(
             TRUE
           }
         if (overwrite_test_runner) {
-          shinytest2:::use_shinytest2_runner(app$get_path(), quiet = FALSE)
+          shinytest2:::use_shinytest2_runner(app$get_dir(), quiet = FALSE)
         }
 
-        rlang::inform(paste0("Saving test file: ", fs::path_rel(test_save_file, app$get_path())))
+        rlang::inform(paste0("Saving test file: ", fs::path_rel(test_save_file, app$get_dir())))
         cat(code, file = test_save_file, append = TRUE)
 
         invisible(list(

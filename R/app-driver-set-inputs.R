@@ -25,6 +25,12 @@ app_set_inputs <- function(
 
   app_queue_inputs(self, private, input_values)
   res <- app_flush_inputs(self, private, wait = wait_, timeout = timeout_)
+  if (is.character(res)) {
+    msg <- paste0("Error received while setting inputs: ", res)
+    self$log_message(msg)
+    inform_where(msg)
+    return(invisible())
+  }
 
   if (isTRUE(res$timedOut)) {
     # Get the text from one call back, like "app$set_inputs(a=1, b=2)"

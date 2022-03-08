@@ -5,7 +5,7 @@
 \title{Migrate shinytest tests}
 \usage{
 migrate_from_shinytest(
-  path,
+  app_dir,
   ...,
   clean = TRUE,
   include_expect_screenshot = missing_arg(),
@@ -13,7 +13,7 @@ migrate_from_shinytest(
 )
 }
 \arguments{
-\item{path}{Path to the test directory or Shiny Rmd file}
+\item{app_dir}{Directory containing the Shiny application or Shiny Rmd file}
 
 \item{...}{Must be empty. Allows for parameter expansion.}
 
