@@ -36,13 +36,7 @@ os_name <- cache_fn_val(function() {
     "Darwin" = "mac",
     "SunOS" = "solaris",
     "Linux" = "linux",
-    {
-      switch(.Platform$OS.type,
-        "windows" = "windows",
-        "unix" = "unix",
-        abort("Unknown OS") # internal
-      )
-    }
+    .Platform$OS.type
   )
 })
 
