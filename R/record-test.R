@@ -51,14 +51,14 @@ record_test <- function(
 
   for (class_val in c("shiny.appobj", "ShinyDriver")) {
     if (inherits(app, class_val)) {
-      abort(paste0("Recording tests for ", class_val, " objects is not supported."))
+      rlang::abort(paste0("Recording tests for ", class_val, " objects is not supported."))
     }
   }
 
   if (is.character(app)) {
     app_path_val <- app
     if (grepl("^http(s?)://", app)) {
-      abort("Recording tests for remote apps is not supported.")
+      rlang::abort("Recording tests for remote apps is not supported.")
     }
 
     # Rmds need a random seed
@@ -76,7 +76,7 @@ record_test <- function(
   }
 
   if (!inherits(app, "AppDriver")) {
-    abort("Unknown object type to record tests for. Must supply a `AppDriver` object or file path")
+    rlang::abort("Unknown object type to record tests for. Must supply a `AppDriver` object or file path")
   }
 
   if (is.null(name)) {
@@ -162,7 +162,7 @@ record_test <- function(
 #' @keywords internal
 register_input_processor <- function(input_type, processor) {
   if (!is.function(processor) || !identical(names(formals(processor)), "value")) {
-    abort("`processor` must be a function that takes one parameter, `value`")
+    rlang::abort("`processor` must be a function that takes one parameter, `value`")
   }
   recorder_input_processors[[input_type]] <- processor
 }

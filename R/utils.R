@@ -86,12 +86,12 @@ toJSON <- function(x, ...,  dataframe = "columns", null = "null", na = "null",
 # resolution.
 #
 # https://github.com/ariya/phantomjs/issues/10659#issuecomment-14993827
-normalize_png_res_header <- function(file) {
+normalize_png_res_header <- function(self, private, file) {
   data <- readBin(file, raw(), n = 512)
   header_offset <- grepRaw("pHYs", data)
 
   if (length(header_offset) == 0) {
-    warning("Cannot find pHYs header in ", fs::path_file(file))
+    app_warn(self, private, paste0("Cannot find pHYs header in ", fs::path_file(file)))
     return(FALSE)
   }
 
@@ -113,11 +113,13 @@ png_res_header_data <- as.raw(c(
   0x00, 0x9a, 0x9c, 0x18   # Checksum
 ))
 
-inform_where <- function(message) {
+app_inform_where <- function(self, private, message) {
+  ckm8_assert_app_driver(self, private)
+
   bt <- rlang::trace_back(bottom = parent.frame())
   bt_string <- paste0(format(bt), collapse = "\n")
 
-  rlang::inform(paste0(message, "\n", bt_string))
+  app_inform(self, private, paste0(message, "\n", bt_string))
 }
 
 

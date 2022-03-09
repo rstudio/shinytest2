@@ -66,6 +66,7 @@ Collate:
     'app-driver-get-log.R'
     'app-driver-initialize.R'
     'app-driver-log-message.R'
+    'app-driver-message.R'
     'app-driver-node.R'
     'app-driver-set-inputs.R'
     'app-driver-start.R'

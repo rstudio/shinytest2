@@ -2,7 +2,10 @@
 test_that("set kitchen sink of inputs", {
   skip_if_not_installed("shinyWidgets")
 
-  app <- AppDriver$new(test_path("../../."), variant = platform_variant())
+  app <- AppDriver$new(
+    # variant = platform_variant()
+    variant = NULL
+  )
 
   app$expect_values()
 
@@ -24,10 +27,10 @@ test_that("set kitchen sink of inputs", {
     "text" = "Text entered",
   )
   # File upload
-  tmpfile <- "__tmpfile"
+  tmpfile <- "__tmpfile.txt"
   cat("tmpfile content", file = tmpfile)
-  on.exit({unlink(tmpfile)}, add = TRUE)
-  app$upload_file(file = test_path("test-app-set-inputs.R"))
+  withr::defer({unlink(tmpfile)})
+  app$upload_file(file = tmpfile)
 
   app$expect_values()
 

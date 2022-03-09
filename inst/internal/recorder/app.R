@@ -1,4 +1,4 @@
-# TODO-barret; record many many tests
+# TODO-barret-test; record many many tests
 
 
 library(shiny)
@@ -744,7 +744,10 @@ shinyApp(
           shinytest2:::use_shinytest2_runner(app$get_dir(), quiet = FALSE)
         }
 
-        rlang::inform(paste0("Saving test file: ", fs::path_rel(test_save_file, app$get_dir())))
+        app_inform(
+          self, private,
+          paste0("Saving test file: ", fs::path_rel(test_save_file, app$get_dir()))
+        )
         cat(code, file = test_save_file, append = TRUE)
 
         invisible(list(

@@ -68,10 +68,10 @@ app_start_shiny <- function(
 
   "!DEBUG waiting for shiny to start"
   if (! p$is_alive()) {
-    abort(paste0(
+    app_abort(self, private, paste0(
       "Failed to start shiny. Error:\n",
       strwrap(readLines(p$get_error_file()))
-    ), app = self)
+    ))
   }
 
   "!DEBUG finding shiny port"
@@ -81,20 +81,20 @@ app_start_shiny <- function(
     err_lines <- readLines(p$get_error_file())
 
     if (!p$is_alive()) {
-      abort(paste0(
+      app_abort(self, private, paste0(
         "Error starting shiny application:\n",
         paste(err_lines, collapse = "\n")
-      ), app = self)
+      ))
     }
     if (any(grepl("Listening on http", err_lines))) break
 
     Sys.sleep(0.2)
 
     if (i == max_i) {
-      abort(paste0(
+      app_abort(self, private, paste0(
         "Cannot find shiny port number. Error:\n",
         paste(err_lines, collapse = "\n")
-      ), app = self)
+      ))
     }
   }
 

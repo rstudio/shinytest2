@@ -33,7 +33,7 @@ app_check_unique_names <- function(self, private) {
   }
   duplicates_with_stars <- function(x) {
     ret <- unique(x[duplicated(x)])
-    setNames(ret, rep("*", length(ret)))
+    stats::setNames(ret, rep("*", length(ret)))
   }
 
   for (info in list(

@@ -1,6 +1,4 @@
-# TODO-barret; Add more tests around `migrate_from_shinytest()`
-# TODO-barret; Make test app using allowNoInputBinding = TRUE
-
+# TODO-barret-test; Add more tests around `migrate_from_shinytest()`
 
 
 #' Migrate shinytest tests
@@ -359,7 +357,7 @@ m__parse_test_file <- function(test_path, info_env) {
   migrated_text <- m__parse_test_text(test_text, test_path, info_env)
 
   if (length(migrated_text) == 0) {
-    # TODO-barret; test this; does it work?
+    # TODO-barret-test; does it work?
     abort("Needs testing")
     if (info_env$verbose) {
       rlang::inform(paste0("No test content found in `{test_path}`"))
@@ -814,7 +812,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     },
     "getDebugLog" = , # nolint
     "getEventLog" = {
-      rlang::inform(c(
+      if (info_env$verbose) rlang::inform(c(
         i = paste0("`ShinyDriver$", as.character(app_fn_sym), "()` is not implemented in `AppDriver`."),
         "!" = "A single `AppDriver$get_log()` method should be used."
       ))

@@ -146,7 +146,7 @@ new$set_inputs(life = 42)
 get_values_result <- new$get_values()
 ```
 
-* `old$getWindowSize()`, `old$setWindowSize(width, height)`: These methods have bee renamed to `new$get_window_size()` and `new$set_window_size(width, height)`.
+* `old$getWindowSize()`, `old$setWindowSize(width, height)`: These methods have been renamed to `new$get_window_size()` and `new$set_window_size(width, height)`.
 
 ```r
 ## Old
@@ -157,6 +157,18 @@ old$setWindowSize(width = 1024, height = 768)
 new$get_window_size()
 new$set_window_size(width = 1024, height = 768)
 ```
+
+* `old$checkUniqueWidgetNames()`: This method checked to make sure all input and output names are unique. It is still run at initialization via `AppDriver$new(check_names = TRUE)` and if any issues are found during startup, only warnings will be displayed.  The exported method has been upgraded to an expectation version and renamed to `new$expect_unique_names()`.
+
+```r
+## Old
+old$checkUniqueWidgetNames()
+
+## New
+new$expect_unique_names()
+```
+
+
 
 ## Snapshots
 
@@ -400,9 +412,6 @@ old$listWidgets()
 ## New
 lapply(new$get_values(), names)
 ```
-
-* `old$checkUniqueWidgetNames()`: Automatically performed on startup in `{shinytest2}`.
-TODO-barret; `AppDriver$expect_unique_names()`
 
 * `old$clone()`: `AppDriver` does not support cloning. (The underlying `ChromoteSession` does not support cloning, so `AppDriver` can not support cloning.)
 

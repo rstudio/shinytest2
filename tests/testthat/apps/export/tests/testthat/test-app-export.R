@@ -1,6 +1,6 @@
 
 test_that("Exported values", {
-  app <- AppDriver$new(test_path("../../."))
+  app <- AppDriver$new()
 
   x <- app$get_values()
   expect_identical(x$export$x, 1)

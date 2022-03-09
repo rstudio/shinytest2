@@ -1,7 +1,9 @@
-httr_get <- function(url) {
+app_httr_get <- function(self, private, url) {
+  ckm8_assert_app_driver(self, private)
+
   pieces <- httr::parse_url(url)
   if (!pingr::is_up(pieces$hostname, pieces$port)) {
-    abort("Shiny app is no longer running")
+    app_abort(self, private, "Shiny app is no longer running")
   }
 
   withCallingHandlers(
@@ -11,10 +13,10 @@ httr_get <- function(url) {
     # Attempt to capture empty reply error and provide better message
     error = function(e) {
       if (grepl("Empty reply from server", as.character(e), fixed = TRUE)) {
-        abort("Shiny app is no longer running", parent = e)
+        app_abort(self, private, "Shiny app is no longer running", parent = e)
       }
       # Unknown error, rethrow
-      abort(e)
+      app_abort(self, private, e)
     }
   )
 
@@ -26,5 +28,5 @@ httr_get <- function(url) {
   cat("Query failed (", status, ")----------------------\n", sep = "")
   cat(httr::content(req, "text"), "\n")
   cat("----------------------------------------\n")
-  abort("Unable request data from server")
+  app_abort(self, private, "Unable request data from server")
 }

@@ -13,7 +13,7 @@ node_id_css_selector <- function(
   if (
     sum(input_provided, output_provided, selector_provided) != 1
   ) {
-    abort("Must specify either `input`, `output`, or `selector`", app = self)
+    app_abort(self, private, "Must specify either `input`, `output`, or `selector`")
   }
 
   css_selector <-
@@ -27,7 +27,7 @@ node_id_css_selector <- function(
       ckm8_assert_single_string(selector)
       selector
     } else {
-      abort("Should never get here") # internal
+      app_abort(self, private, "Missing css type", .internal = TRUE)
     }
   css_selector
 
@@ -55,14 +55,14 @@ app_find_node_id <- function(
   el_node_ids <- chromote_find_elements(self$get_chromote_session(), css_selector)
 
   if (length(el_node_ids) == 0) {
-    abort(paste0(
+    app_abort(self, private, paste0(
       "Cannot find HTML element with selector ", css_selector
-    ), app = self)
+    ))
 
   } else if (length(el_node_ids) > 1) {
-    warning(
+    app_warn(self, private, paste0(
       "Multiple HTML elements found with selector ", css_selector
-    )
+    ))
   }
 
   node_id <- el_node_ids[[1]]
@@ -123,48 +123,3 @@ app_click <- function(
 #   private$find_widget(id)$sendKeys(keys)
 #   invisible(self)
 # })
-
-
-app_list_component_names <- function(self, private) {
-  "!DEBUG app_list_component_names()"
-  ckm8_assert_app_driver(self, private)
-
-  res <- chromote_eval(self$get_chromote_session(), "shinytest2.listComponents()")$result$value
-
-  res$input <- sort_c(unlist(res$input))
-  res$output <- sort_c(unlist(res$output))
-  res
-}
-
-app_check_unique_widget_names <- function(self, private) {
-  "!DEBUG app_check_unique_widget_names()"
-  ckm8_assert_app_driver(self, private)
-
-  names <- app_list_component_names(self, private)
-  inputs <- names$input
-  outputs <- names$output
-
-  check <- function(what, ids) {
-    if (any(duplicated(ids))) {
-      dup <- paste(unique(ids[duplicated(ids)]), collapse = ", ")
-      warning("Possible duplicate ", what, " widget ids: ", dup)
-    }
-  }
-
-  if (any(inputs %in% outputs)) {
-    dups <- unique(inputs[inputs %in% outputs])
-    warning(
-      "Widget ids both for input and output: ",
-      paste(dups, collapse = ", ")
-    )
-
-    ## Otherwise the following checks report it, too
-    inputs <- setdiff(inputs, dups)
-    outputs <- setdiff(outputs, dups)
-  }
-
-  if (length(inputs) > 0) check("input", inputs)
-  if (length(outputs) > 0) check("output", outputs)
-
-  invisible(self)
-}
