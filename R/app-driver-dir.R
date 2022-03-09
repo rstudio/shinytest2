@@ -8,11 +8,14 @@ app_set_dir <- function(
   app_dir <- app_dir_value(app_dir)
 
   if (!fs::dir_exists(app_dir)) {
-    rlang::abort("`app_dir` must be an existing directory", app = self)
+    app_abort(
+      self, private,
+      "`app_dir` must be an existing directory"
+    )
   }
 
   generic_abort <- function() {
-    rlang::abort(
+    app_abort(self, private,
       c(
         "`app_dir` must be a directory containing:",
         "",
@@ -25,13 +28,12 @@ app_set_dir <- function(
         "",
         "i" = "If a Shiny R Markdown document is found, it will be the prefered document.",
         "i" = "`./app.R` is not compatible with Shiny R Markdown files."
-      ),
-      app = self
+      )
     )
   }
 
   if (!fs::dir_exists(app_dir)) {
-    rlang::abort("`app_dir` must be an existing directory", app = self)
+    app_abort(self, private, "`app_dir` must be an existing directory")
   }
 
   has_app_path <- fs::file_exists(fs::path(app_dir, "app.R"))
@@ -39,7 +41,7 @@ app_set_dir <- function(
 
   rmds <- app_dir_rmd(self, private, app_dir)
   # if (length(rmds) > 1) {
-  #   rlang::abort("For testing, only one .Rmd file is allowed per directory.", app = self)
+  #   app_abort(self, private, "For testing, only one .Rmd file is allowed per directory.")
   # }
   if (length(rmds) > 0 && has_app_path) {
     # Has an Rmd and an app.R

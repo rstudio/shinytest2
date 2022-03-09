@@ -28,7 +28,7 @@ app_set_inputs <- function(
   if (is.character(res)) {
     msg <- paste0("Error received while setting inputs: ", res)
     self$log_message(msg)
-    inform_where(msg)
+    app_inform_where(self, private, msg)
     return(invisible())
   }
 
@@ -37,7 +37,7 @@ app_set_inputs <- function(
     calls <- sys.calls()
     call_text <- deparse(calls[[length(calls) - 1]])
 
-    inform_where(paste0(
+    app_inform_where(self, private, paste0(
       "set_inputs(", call_text, "): ",
       "Server did not update any output values within ",
       format(timeout_ / 1000, digits = 2), " seconds. ",

@@ -21,7 +21,7 @@ app_screenshot <- function(
     maybe_missing_value(screenshot_args, private$default_screenshot_args)
   )
   if (is_false(screenshot_args)) {
-    warning("`screenshot_args` can not be `FALSE` when calling `app$screenshot()`. Setting to `list()`")
+    app_warn(self, private, "`screenshot_args` can not be `FALSE` when calling `app$screenshot()`. Setting to `list()`")
     screenshot_args <- list()
   }
   checkmate::assert_list(screenshot_args)
@@ -43,7 +43,7 @@ app_screenshot <- function(
 
   # Fix up the PNG resolution header on windows
   if (is_windows()) {
-    normalize_png_res_header(path)
+    normalize_png_res_header(self, private, path)
   }
 
   if (is.null(file)) {
@@ -97,7 +97,7 @@ app_expect_screenshot_and_variant <- function( # nolint
   ...
 ) {
   if (app_is_missing_variant(self, private)) {
-    abort(c(
+    app_abort(self, private, c(
       "This `AppDriver` object can not call `$expect_screenshot()` without a `variant` initialized. Please supply a `variant` value when creating your `AppDriver` object, like `AppDriver(variant = <value>)`",
       i = "`variant = platform_variant()` is the suggested value",
       i = "`variant = NULL` can work, but screenshots are known to cause conflicts when changing R version or platform."

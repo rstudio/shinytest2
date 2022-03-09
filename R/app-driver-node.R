@@ -13,7 +13,7 @@ node_id_css_selector <- function(
   if (
     sum(input_provided, output_provided, selector_provided) != 1
   ) {
-    abort("Must specify either `input`, `output`, or `selector`", app = self)
+    app_abort(self, private, "Must specify either `input`, `output`, or `selector`")
   }
 
   css_selector <-
@@ -27,7 +27,7 @@ node_id_css_selector <- function(
       ckm8_assert_single_string(selector)
       selector
     } else {
-      abort("Should never get here") # internal
+      app_abort(self, private, "Missing css type", .internal = TRUE)
     }
   css_selector
 
@@ -55,14 +55,14 @@ app_find_node_id <- function(
   el_node_ids <- chromote_find_elements(self$get_chromote_session(), css_selector)
 
   if (length(el_node_ids) == 0) {
-    abort(paste0(
+    app_abort(self, private, paste0(
       "Cannot find HTML element with selector ", css_selector
-    ), app = self)
+    ))
 
   } else if (length(el_node_ids) > 1) {
-    warning(
+    app_warn(self, private, paste0(
       "Multiple HTML elements found with selector ", css_selector
-    )
+    ))
   }
 
   node_id <- el_node_ids[[1]]

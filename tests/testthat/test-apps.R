@@ -6,7 +6,7 @@ lapply(dirs, function(shiny_app_dir) {
   test_path <- file.path(shiny_app_dir, "tests", "")
   if (dir.exists(test_path)) {
 
-    message(shiny_app_dir)
+    rlang::inform(shiny_app_dir)
     test_that(paste0("All apps pass their tests - ", shiny_app_dir), {
       # Test that `test_app()` is performing an expectation in a testing setting
       expect_success({

@@ -10,9 +10,8 @@ app_download <- function(
     name <- sprintf("%03d.download", private$counter$increment())
   }
   if (fs::path_file(name) != name) {
-    rlang::abort(
-      paste0("Download file name must be a single name location, not a full path. Received: ", name),
-      app = self
+    app_abort(self, private,
+      paste0("Download file name must be a single name location, not a full path. Received: ", name)
     )
   }
 
@@ -21,11 +20,11 @@ app_download <- function(
   # Find the URL to download from (the href of the <a> tag)
   sub_url <- chromote_eval(self$get_chromote_session(), paste0("$('#", id, "').attr('href')"))$result$value
   if (identical(sub_url, "")) {
-    abort(paste0("Download from '#", id, "' failed"), app = self)
+    app_abort(self, private, paste0("Download from '#", id, "' failed"))
   }
   # Add the base location to the URL
   full_url <- paste0(private$shiny_url$get(), sub_url)
-  req <- httr_get(full_url)
+  req <- app_httr_get(self, private, full_url)
 
   download_path <- fs::path(private$save_dir, name)
   writeBin(req$content, download_path)
