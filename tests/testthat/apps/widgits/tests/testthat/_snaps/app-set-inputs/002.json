@@ -15,16 +15,16 @@
     ],
     "file": {
       "name": [
-        "test-app-set-inputs.R"
+        "__tmpfile.txt"
       ],
       "size": [
-        1244
+        15
       ],
       "type": [
-        ""
+        "text/plain"
       ],
       "datapath": [
-        "0.R"
+        "0.txt"
       ]
     },
     "knob": 0,
@@ -51,7 +51,7 @@
     "checkbox_out": "[1] TRUE",
     "date_out": "[1] \"2015-01-01\"",
     "dates_out": "[1] \"2015-01-01\" \"2015-02-20\"",
-    "file_out": "                   name size type      datapath\n1 test-app-set-inputs.R 1244      <tempdir>/0.R",
+    "file_out": "           name size       type        datapath\n1 __tmpfile.txt   15 text/plain <tempdir>/0.txt",
     "num_out": "[1] 100",
     "radio_out": "[1] \"2\"",
     "select_out": "[1] \"2\"",
