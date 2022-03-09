@@ -56,7 +56,7 @@ expect_log_tests <- function(log) {
 }
 
 test_that("App captures known debug messages", {
-  app <- AppDriver$new(test_path("../../."))
+  app <- AppDriver$new()
 
   log_df <- app$get_log()
 
@@ -102,7 +102,7 @@ test_that("App captures known debug messages", {
 
 
 test_that("App captures known debug messages", {
-  app <- AppDriver$new(test_path("../../."), options = list(shiny.trace = TRUE))
+  app <- AppDriver$new(options = list(shiny.trace = TRUE))
 
   log_df <- app$get_log()
 
@@ -205,7 +205,6 @@ test_that("App captures known debug messages", {
   expect_match(log, "websocket", all = FALSE, fixed = TRUE)
 
   expect_match(log, "----------- SEND {\"busy\":\"busy\"}", all = FALSE, fixed = TRUE)
-  # browser()
   expect_match(log, "\\{chromote\\}   JS websocket \\d\\d:\\d\\d:\\d\\d.\\d\\d recv \\{\"busy\":\"busy\"\\}", all = FALSE)
 
 })
