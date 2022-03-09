@@ -38,8 +38,7 @@ obj_to_string <- function(obj) {
         utils::capture.output(utils::str(obj, max.level = 4)),
         collapse = "\n"
       )
-      app_inform(
-        self, private,
+      rlang::inform(
         c(
           "!" = paste0("Unknown JavaScript return type: ", obj$type),
           "*" = paste0("Structure:\n", structure),
