@@ -101,6 +101,7 @@ app_initialize_ <- function(
   self$get_chromote_session()$Page$navigate(private$shiny_url$get())
 
   # TODO-future; This feels like it is being loaded too late. There is no guarantee that the script will load in time.
+  # This would be nice if it was an HTML dependency to work with page reloading.
   "!DEBUG inject shiny-tracer.js to load before all other scripts"
   self$log_message("Injecting shiny-tracer.js")
   utils::capture.output({
@@ -119,7 +120,8 @@ app_initialize_ <- function(
         "return window.shinytest2 && window.shinytest2.ready === true",
         timeout = load_timeout
       )
-      self$wait_for_idle(duration = 500, timeout = load_timeout)
+      # Use value less than the common 250ms/500ms timeout of watching a file for changes
+      self$wait_for_idle(duration = 200, timeout = load_timeout)
     },
     error = function(e) {
       app_abort(self, private,
