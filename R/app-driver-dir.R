@@ -77,7 +77,6 @@ app_dir_rmd <- function(self, private, app_dir = rlang::missing_arg()) {
   }
   # Similar to https://github.com/rstudio/rmarkdown/issues/2236
   docs <- fs::dir_ls(app_dir, regexp = "^[^_].*\\.[Rrq][Mm][Dd]$", type = "file")
-  # TODO-barret; shiny prerendered isn't being found
 
   if (length(docs) >= 1) {
     docs <- Filter(docs, f = function(doc_path) {

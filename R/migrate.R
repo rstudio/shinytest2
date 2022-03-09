@@ -1,5 +1,5 @@
-# TODO-barret; Add more tests around `migrate_from_shinytest()`
-# TODO-barret; Make test app using allowNoInputBinding = TRUE
+# TODO-barret-test; Add more tests around `migrate_from_shinytest()`
+# TODO-barret-test; Make test app using allowNoInputBinding = TRUE
 
 
 
