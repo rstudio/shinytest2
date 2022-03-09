@@ -85,16 +85,26 @@ AppDriver <- R6Class(# nolint
     #' @param load_timeout How long to wait for the app to load, in ms.
     #'   This includes the time to start R. Defaults to 10s when running
     #'   locally and 20s when running on CI.
-    #' @param screenshot_args Default set of arguments to pass in to [`chromote::ChromoteSession`]'s
-    #' `$screenshot()` method when taking screnshots within `$expect_screenshot()`. To disable screenshots by default, set to `FALSE`.
-    #' @param expect_values_screenshot_args The value for `screenshot_args` when producing a debug screenshot for `$expect_values()`.
-    #' @param check_names Check if widget names are unique once the application initially loads?
-    #' @param view Opens the Chromote Session in an interactive browser tab once initialization. Defaults to `FALSE`.
-    #' @param height,width Window size to use when opening the Chromote Session. These values will only be used if both `height` and `width` are not `NULL`.
+    #' @param screenshot_args Default set of arguments to pass in to
+    #' [`chromote::ChromoteSession`]'s `$screenshot()` method when taking
+    #' screnshots within `$expect_screenshot()`. To disable screenshots by
+    #' default, set to `FALSE`.
+    #' @param expect_values_screenshot_args The value for `screenshot_args` when
+    #' producing a debug screenshot for `$expect_values()`.
+    #' @param check_names Check if widget names are unique once the application
+    #' initially loads? If duplicate names are found, only a warning will be
+    #' displayed.
+    #' @param view Opens the Chromote Session in an interactive browser tab once
+    #' initialization. Defaults to `FALSE`.
+    #' @param height,width Window size to use when opening the Chromote Session.
+    #' These values will only be used if both `height` and `width` are not
+    #' `NULL`.
     #' @param clean_logs Whether to remove the stdout and stderr logs when the
     #'   Shiny process object is garbage collected.
-    #' @param shiny_args A list of options to pass to [shiny::runApp()]. Ex: `list(port = 8080)`.
-    #' @param render_args Passed to `rmarkdown::run(render_args=)` for interactive `.Rmd`s. Ex: `list(quiet = TRUE)
+    #' @param shiny_args A list of options to pass to [shiny::runApp()]. Ex:
+    #' `list(port = 8080)`.
+    #' @param render_args Passed to `rmarkdown::run(render_args=)` for
+    #' interactive `.Rmd`s. Ex: `list(quiet = TRUE)
     #' @param options A list of [base::options()] to set in the driver's child
     #'   process. See [`shiny::shinyOptions()`] for inspiration. If `shiny.trace = TRUE`,
     #'   then all WebSocket traffic will be captured by `chromote` and logged.
@@ -103,10 +113,6 @@ AppDriver <- R6Class(# nolint
     initialize = function(
       app_dir = testthat::test_path("../../"),
       ...,
-      # TODO-barret-questions:
-      # Should we have many options that can be set to override the defaults?
-      # Like the shinytest2.variant? Or `shinytest2.seed`? Or even `shinytest2.idle.duration`?
-      # Should `shinytest2.variant` be removed?
       name = NULL,
       variant = missing_arg(),
       seed = NULL,
@@ -513,6 +519,26 @@ AppDriver <- R6Class(# nolint
         timeout = timeout
       )
     },
+
+    #' @description
+    #' Expect unique input and output names.
+    #'
+    #' If the HTML has duplicate input or output elements with matching `id` values, this function will
+    #' throw an error. It is similar to `AppDriver$new(check_names = TRUE)`, but
+    #' asserts that no warnings are displayed.
+    #'
+    #' This method will not throw if a single input and a single output have the same name.
+    #' @examples
+    #' example_app <- system.file("tests/testthat/apps/init-input/", package = "shinytest2")
+    #' # Initial checking for unique names (default behavior)
+    #' \dontrun{app <- AppDriver$new(example_app, check_names = TRUE)}
+    #' # Manually assert that all names are unique
+    #' \dontrun{app <- AppDriver$new(example_app, check_names = FALSE)
+    #' app$expect_unique_names()}
+    expect_unique_names = function() {
+      app_expect_unique_names(self, private)
+    },
+
 
     #' @description
     #' Retrieve the Shiny app path

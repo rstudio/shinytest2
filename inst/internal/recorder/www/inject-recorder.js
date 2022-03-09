@@ -1,7 +1,7 @@
 // This file is loaded by the recorder app.
 
-// TODO-barret; Is it `opt` or `cmd` for mac?
-// Todo-barret-test:
+// TODO-barret-verify; Is it `opt` or `cmd` for mac?
+// TODO-barret-test:
 // * capture input
 // * capture output
 // * capture all values (via button)

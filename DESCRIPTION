@@ -61,6 +61,7 @@ Collate:
     'app-driver-expect-download.R'
     'app-driver-expect-js.R'
     'app-driver-expect-screenshot.R'
+    'app-driver-expect-unique-names.R'
     'app-driver-expect-values.R'
     'app-driver-get-log.R'
     'app-driver-initialize.R'
