@@ -51,7 +51,11 @@ app_initialize_ <- function(
 
   private$state <- "initialize"
 
-  if (grepl("^http(s?)://", app_dir)) {
+  if (shiny::is.shiny.appobj(app_dir)) {
+    app_dir <- app_save(app_dir)
+  }
+
+  if (length(app_dir) == 1 && is.character(app_dir) && grepl("^http(s?)://", app_dir)) {
     private$shiny_url$set(app_dir)
     app_set_dir(self, private, ".")
   } else {

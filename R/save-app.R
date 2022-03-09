@@ -1,22 +1,13 @@
-# TODO-barret-test; Test feeding a shiny app obj to `AppDriver$new(path = app)`
-app_save <- function(app, path = temp_file(), env = parent.frame()) {
-  if (!rlang::is_installed("globals")) {
-    abort(c(
-      "globals package required to test app object",
-      i = "Do you need to run `install.packages('globals')`"
-    ))
-  }
+app_save <- function(app, path = fs::file_temp("st2-")) {
+  rlang::check_installed("globals")
 
-  if (!dir.exists(path)) {
-    dir.create(path, recursive = TRUE)
-  }
-
+  fs::dir_create(path, recurse = TRUE)
   fs::file_copy(
-    system.file("app-template.R", package = "shinytest2"),
+    system.file("internal/app-template.R", package = "shinytest2"),
     fs::path(path, "app.R")
   )
 
-  data <- app_data(app, env)
+  data <- app_data(app)
   saveRDS(data, fs::path(path, "data.rds"))
 
   path
@@ -24,9 +15,9 @@ app_save <- function(app, path = temp_file(), env = parent.frame()) {
 
 # Open questions:
 # * what happen if app uses non-exported function?
-app_data <- function(app, env = parent.frame()) {
+app_data <- function(app) {
   server <- app$serverFuncSource()
-  globals <- app_server_globals(server, env)
+  globals <- app_server_globals(server)
 
   data <- globals$globals
   data$ui <- environment(app$httpHandler)$ui
@@ -36,11 +27,11 @@ app_data <- function(app, env = parent.frame()) {
   data
 }
 
-app_server_globals <- function(server, env = parent.frame()) {
+app_server_globals <- function(server) {
   # https://github.com/HenrikBengtsson/globals/issues/61#issuecomment-731777640
   rlang::check_installed("globals", version = "0.14.0")
 
-  globals <- globals::globalsOf(server, envir = env, recursive = FALSE)
+  globals <- globals::globalsOf(server, envir = environment(server), recursive = FALSE)
   globals <- globals::cleanup(globals)
 
   # remove globals found in packages
