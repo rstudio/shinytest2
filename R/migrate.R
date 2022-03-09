@@ -814,7 +814,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     },
     "getDebugLog" = , # nolint
     "getEventLog" = {
-      rlang::inform(c(
+      if (info_env$verbose) rlang::inform(c(
         i = paste0("`ShinyDriver$", as.character(app_fn_sym), "()` is not implemented in `AppDriver`."),
         "!" = "A single `AppDriver$get_log()` method should be used."
       ))
