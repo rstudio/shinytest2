@@ -102,6 +102,7 @@ retrieved after any initialization error has been thrown.</p>
 <li><p><a href="#method-wait_for_idle"><code>AppDriver$wait_for_idle()</code></a></p></li>
 <li><p><a href="#method-wait_for_value"><code>AppDriver$wait_for_value()</code></a></p></li>
 <li><p><a href="#method-execute_js"><code>AppDriver$execute_js()</code></a></p></li>
+<li><p><a href="#method-expect_unique_names"><code>AppDriver$expect_unique_names()</code></a></p></li>
 <li><p><a href="#method-get_dir"><code>AppDriver$get_dir()</code></a></p></li>
 <li><p><a href="#method-get_url"><code>AppDriver$get_url()</code></a></p></li>
 <li><p><a href="#method-get_window_size"><code>AppDriver$get_window_size()</code></a></p></li>
@@ -175,24 +176,32 @@ locally and 20s when running on CI.</p></dd>
 
 
 <dt><code>screenshot_args</code></dt>
-<dd><p>Default set of arguments to pass in to <code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s
-<code>$screenshot()</code> method when taking screnshots within <code>$expect_screenshot()</code>. To disable screenshots by default, set to <code>FALSE</code>.</p></dd>
+<dd><p>Default set of arguments to pass in to
+<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$screenshot()</code> method when taking
+screnshots within <code>$expect_screenshot()</code>. To disable screenshots by
+default, set to <code>FALSE</code>.</p></dd>
 
 
 <dt><code>expect_values_screenshot_args</code></dt>
-<dd><p>The value for <code>screenshot_args</code> when producing a debug screenshot for <code>$expect_values()</code>.</p></dd>
+<dd><p>The value for <code>screenshot_args</code> when
+producing a debug screenshot for <code>$expect_values()</code>.</p></dd>
 
 
 <dt><code>check_names</code></dt>
-<dd><p>Check if widget names are unique once the application initially loads?</p></dd>
+<dd><p>Check if widget names are unique once the application
+initially loads? If duplicate names are found, only a warning will be
+displayed.</p></dd>
 
 
 <dt><code>view</code></dt>
-<dd><p>Opens the Chromote Session in an interactive browser tab once initialization. Defaults to <code>FALSE</code>.</p></dd>
+<dd><p>Opens the Chromote Session in an interactive browser tab once
+initialization. Defaults to <code>FALSE</code>.</p></dd>
 
 
 <dt><code>height, width</code></dt>
-<dd><p>Window size to use when opening the Chromote Session. These values will only be used if both <code>height</code> and <code>width</code> are not <code>NULL</code>.</p></dd>
+<dd><p>Window size to use when opening the Chromote Session.
+These values will only be used if both <code>height</code> and <code>width</code> are not
+<code>NULL</code>.</p></dd>
 
 
 <dt><code>clean_logs</code></dt>
@@ -201,11 +210,13 @@ Shiny process object is garbage collected.</p></dd>
 
 
 <dt><code>shiny_args</code></dt>
-<dd><p>A list of options to pass to <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">shiny::runApp()</a></code>. Ex: <code>list(port = 8080)</code>.</p></dd>
+<dd><p>A list of options to pass to <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">shiny::runApp()</a></code>. Ex:
+<code>list(port = 8080)</code>.</p></dd>
 
 
 <dt><code>render_args</code></dt>
-<dd><p>Passed to <code>rmarkdown::run(render_args=)</code> for interactive <code>.Rmd</code>s. Ex: `list(quiet = TRUE)</p></dd>
+<dd><p>Passed to <code>rmarkdown::run(render_args=)</code> for
+interactive <code>.Rmd</code>s. Ex: `list(quiet = TRUE)</p></dd>
 
 
 <dt><code>options</code></dt>
@@ -915,10 +926,33 @@ To have JavaScript code execute asynchronously, wrap the code in a Promise objec
 <p>Result of the <code>script</code> (or <code>file</code> contents)</p>
 </div>
 
+</div><p></p><hr><a id="method-expect_unique_names"></a><div class="section">
+<h3 id="method-expect-unique-names-">Method <code>expect_unique_names()</code><a class="anchor" aria-label="anchor" href="#method-expect-unique-names-"></a></h3>
+<p>Expect unique input and output names.</p>
+<p>If the HTML has duplicate input or output elements with matching <code>id</code> values, this function will
+throw an error. It is similar to <code>AppDriver$new(check_names = TRUE)</code>, but
+asserts that no warnings are displayed.</p>
+<p>This method will not throw if a single input and a single output have the same name.</p><div class="section">
+<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">expect_unique_names</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h4>
+<p></p><div class="r example copy"><div class="sourceCode"><pre><code>example_app &lt;- system.file("tests/testthat/apps/init-input/", package = "shinytest2")
+# Initial checking for unique names (default behavior)
+\dontrun{app &lt;- AppDriver$new(example_app, check_names = TRUE)}
+# Manually assert that all names are unique
+\dontrun{app &lt;- AppDriver$new(example_app, check_names = FALSE)
+app$expect_unique_names()}
+</code></pre></div><p></p></div>
+</div>
+
+
 </div><p></p><hr><a id="method-get_dir"></a><div class="section">
 <h3 id="method-get-dir-">Method <code>get_dir()</code><a class="anchor" aria-label="anchor" href="#method-get-dir-"></a></h3>
 <p>Retrieve the Shiny app path</p><div class="section">
-<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
+<h4 id="usage-22">Usage<a class="anchor" aria-label="anchor" href="#usage-22"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_dir</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -930,7 +964,7 @@ To have JavaScript code execute asynchronously, wrap the code in a Promise objec
 </div><p></p><hr><a id="method-get_url"></a><div class="section">
 <h3 id="method-get-url-">Method <code>get_url()</code><a class="anchor" aria-label="anchor" href="#method-get-url-"></a></h3>
 <p>Retrieve the Shiny app URL</p><div class="section">
-<h4 id="usage-22">Usage<a class="anchor" aria-label="anchor" href="#usage-22"></a></h4>
+<h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_url</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -943,7 +977,7 @@ To have JavaScript code execute asynchronously, wrap the code in a Promise objec
 <h3 id="method-get-window-size-">Method <code>get_window_size()</code><a class="anchor" aria-label="anchor" href="#method-get-window-size-"></a></h3>
 <p>Get current size of the browser window, as list of integer scalars
 named <code>width</code> and <code>height</code>.</p><div class="section">
-<h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
+<h4 id="usage-24">Usage<a class="anchor" aria-label="anchor" href="#usage-24"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_window_size</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -951,7 +985,7 @@ named <code>width</code> and <code>height</code>.</p><div class="section">
 </div><p></p><hr><a id="method-set_window_size"></a><div class="section">
 <h3 id="method-set-window-size-">Method <code>set_window_size()</code><a class="anchor" aria-label="anchor" href="#method-set-window-size-"></a></h3>
 <p>Sets size of the browser window.</p><div class="section">
-<h4 id="usage-24">Usage<a class="anchor" aria-label="anchor" href="#usage-24"></a></h4>
+<h4 id="usage-25">Usage<a class="anchor" aria-label="anchor" href="#usage-25"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">set_window_size</span><span class="op">(</span><span class="va">width</span>, <span class="va">height</span>, wait <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -972,7 +1006,7 @@ This will allow for any width specific items (such as plots) to be rerendered.</
 </div><p></p><hr><a id="method-get_chromote_session"></a><div class="section">
 <h3 id="method-get-chromote-session-">Method <code>get_chromote_session()</code><a class="anchor" aria-label="anchor" href="#method-get-chromote-session-"></a></h3>
 <p>Chromote Session object from the <span class="pkg">chromote</span> package.</p><div class="section">
-<h4 id="usage-25">Usage<a class="anchor" aria-label="anchor" href="#usage-25"></a></h4>
+<h4 id="usage-26">Usage<a class="anchor" aria-label="anchor" href="#usage-26"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_chromote_session</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -980,7 +1014,7 @@ This will allow for any width specific items (such as plots) to be rerendered.</
 </div><p></p><hr><a id="method-get_variant"></a><div class="section">
 <h3 id="method-get-variant-">Method <code>get_variant()</code><a class="anchor" aria-label="anchor" href="#method-get-variant-"></a></h3>
 <p>Get the variant supplied at initialization</p><div class="section">
-<h4 id="usage-26">Usage<a class="anchor" aria-label="anchor" href="#usage-26"></a></h4>
+<h4 id="usage-27">Usage<a class="anchor" aria-label="anchor" href="#usage-27"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_variant</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -993,7 +1027,7 @@ There are a few standard debug types that may be used:</p><ul><li><p><code>"shin
 <li><p><code>"shinytest2"</code>: Displays the messages saved by the <code>window.shinytest2</code> object in the browser when <code>$get_log()</code> is called.</p></li>
 <li><p><code>"ws_messages"</code>: Saves all messages sent by Shiny to the</p></li>
 </ul><div class="section">
-<h4 id="usage-27">Usage<a class="anchor" aria-label="anchor" href="#usage-27"></a></h4>
+<h4 id="usage-28">Usage<a class="anchor" aria-label="anchor" href="#usage-28"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_log</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -1013,7 +1047,7 @@ for more details</p></li>
 <li><p><code>level</code>:</p></li>
 </ul></div>
 <div class="section">
-<h4 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h4>
+<h4 id="examples-1">Examples<a class="anchor" aria-label="anchor" href="#examples-1"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code>\dontrun{
 
 app &lt;- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
@@ -1117,7 +1151,7 @@ app$get_log() # (long output lines have been truncated)
 </div><p></p><hr><a id="method-log_message"></a><div class="section">
 <h3 id="method-log-message-">Method <code>log_message()</code><a class="anchor" aria-label="anchor" href="#method-log-message-"></a></h3>
 <p>Add an message to log.</p><div class="section">
-<h4 id="usage-28">Usage<a class="anchor" aria-label="anchor" href="#usage-28"></a></h4>
+<h4 id="usage-29">Usage<a class="anchor" aria-label="anchor" href="#usage-29"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">log_message</span><span class="op">(</span><span class="va">message</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -1137,7 +1171,7 @@ Stop the app, the terminate external R process that runs the app and
 the Chromote Session instance.</p>
 <p>To stop your shiny application and return a value from <code>$stop()</code>, see <code><a href="https://rdrr.io/pkg/shiny/man/stopApp.html" class="external-link">shiny::stopApp()</a></code>. This is useful in testing to return context information.</p>
 <p>Typically, this is paired with a button that when clicked will call <code>shiny::stopApp(info)</code> to return <code>info</code> from the test app back to the main R session.</p><div class="section">
-<h4 id="usage-29">Usage<a class="anchor" aria-label="anchor" href="#usage-29"></a></h4>
+<h4 id="usage-30">Usage<a class="anchor" aria-label="anchor" href="#usage-30"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="kw">stop</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -1153,6 +1187,18 @@ the Chromote Session instance.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
+<span class="r-in"><span class="co">## ------------------------------------------------</span></span>
+<span class="r-in"><span class="co">## Method `AppDriver$expect_unique_names`</span></span>
+<span class="r-in"><span class="co">## ------------------------------------------------</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">example_app</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tests/testthat/apps/init-input/"</span>, package <span class="op">=</span> <span class="st">"shinytest2"</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># Initial checking for unique names (default behavior)</span></span>
+<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="va">app</span> <span class="op">&lt;-</span> <span class="va">AppDriver</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">example_app</span>, check_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># Manually assert that all names are unique</span></span>
+<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="va">app</span> <span class="op">&lt;-</span> <span class="va">AppDriver</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">example_app</span>, check_names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">expect_unique_names</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'app' not found</span>
+<span class="r-in"></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
 <span class="r-in"><span class="co">## Method `AppDriver$get_log`</span></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
