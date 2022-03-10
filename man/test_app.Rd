@@ -4,26 +4,40 @@
 \alias{test_app}
 \title{Test shiny application with testthat}
 \usage{
-test_app(app_dir = "../", env = shiny::loadSupport(app_dir), ...)
+test_app(app_dir = missing_arg(), env = shiny::loadSupport(app_dir), ...)
 }
 \arguments{
-\item{app_dir}{The base directory for the Shiny application}
+\item{app_dir}{The base directory for the Shiny application.
+\itemize{
+\item If \code{app_dir} is missing and \code{test_app()} is called within the
+\code{./tests/testthat.R} file, the parent directory (\code{"../"}) is used.
+\item Otherwise, the default path of \code{"."} is used.
+}}
 
 \item{env}{Use the shiny application's environment after sourcing the R folder}
 
 \item{...}{Parameters passed to \code{\link[testthat:test_dir]{testthat::test_dir()}}}
 }
 \description{
-Example usage:\if{html}{\out{<div class="sourceCode r">}}\preformatted{# Interactive usage
-path_to_app <- "."
+Example usage:\if{html}{\out{<div class="sourceCode r">}}\preformatted{## Interactive usage
+# Test Shiny app in current working directory
+shinytest2::test_app()
+# Test Shiny app in another directory
+path_to_app <- "path/to/app"
 shinytest2::test_app(path_to_app)
 }\if{html}{\out{</div>}}
 }
-\section{File: ./tests/testthat.R}{
+\details{
+\subsection{File: ./tests/testthat.R}{
+}
+}
+\section{Will find Shiny app in "../"}{
 shinytest2::test_app()
+\subsection{File: ./tests/testthat/test-shinytest2.R}{
+}
 }
 
-\section{File: ./tests/testthat/test-shinytest2.R}{
+\section{Test a shiny application within your own {testthat} code}{
 test_that("Testing an external app", {
 shinytest2::test_app(path_to_app)
 })\preformatted{}
