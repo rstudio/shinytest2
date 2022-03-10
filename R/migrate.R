@@ -401,13 +401,13 @@ m__parse_test_file <- function(test_path, info_env) {
 }
 
 m__parse_test_text <- function(test_text, test_path, info_env) {
-  test_lines <- strsplit(test_text, "\n")[[1]]
-
-  if (length(test_lines) == 0) {
+  parsed_text <- parse(text = test_text)
+  # If nothing to copy
+  if (length(parsed_text) == 0) {
     return(character(0))
   }
 
-  init_infos <- m__find_shinydriver_new(parse(text = test_text), info_env)
+  init_infos <- m__find_shinydriver_new(parsed_text, info_env)
   if (length(init_infos) == 0) abort(paste0("Can not find `ShinyDriver$new` in test file: ", test_path))
   # TODO-future; split the code into parts and recurse
   if (length(init_infos) > 1) abort(paste0("Can not migrate file that contains multiple calls to `ShinyDriver$new`: ", test_path))
