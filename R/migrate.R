@@ -180,7 +180,7 @@ m__extract_runner_info <- function(app_info_env) {
   withCallingHandlers(
     testnames <- eval(testapp_args$testnames, envir = globalenv()),
     error = function(e) {
-      rlang::abort("Could not use variables for `testnames` in `shinytest::testApp()`. Only atomic values are supported.")
+      rlang::abort("Could not parse variable for `testnames` in `shinytest::testApp()`. Only atomic values are supported.")
     }
   )
   app_info_env$testnames <-
@@ -208,7 +208,7 @@ m__write_shinytest2_runner <- function(app_info_env) {
 m__parse_test_files <- function(app_info_env) {
   if (app_info_env$verbose) {
     rlang::inform(c(
-      "i" = paste0("`suffix`: '", app_info_env$suffix, "'"),
+      "i" = paste0("`suffix`: '", st2_expr_text(app_info_env$suffix), "'"),
       "i" = paste0("`compareImages`: ", app_info_env$compare_images),
       "i" = paste0("`testnames`: ", paste0(app_info_env$testnames, collapse = ", "))
     ))
@@ -932,7 +932,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     "snapshotInit" = {
       if (info_env$verbose) rlang::inform(c(
         "*" = "`ShinyDriver$snapshotInit()` is not implemented in `AppDriver`.",
-        "*" = "`ShinyDriver$snapshotInit(path=)` will become `AppDriver$initialize(name=)`",
+        "*" = "`ShinyDriver$snapshotInit(path=)` will be ignored as the snaps folder is determined by the test file name.",
         "*" = "`ShinyDriver$snapshotInit(screenshot=)` will help determine if `AppDriver$expect_screenshot()` will be provided alongside `AppDriver$expect_values()` when replacing `ShinyDriver$snapshot()`"
       ))
 
