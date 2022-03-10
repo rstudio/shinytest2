@@ -10,7 +10,7 @@ expect_migration <- function(test_app_folder, ...) {
 
   migrate_from_shinytest(new_path, ..., quiet = TRUE)
 
-  expected_path <- paste0(original_path, "-expected")
+  expected_path <- paste0(original_path, "ex")
 
   expected_files <- fs::dir_ls(expected_path, recurse = TRUE)
   new_files <- fs::dir_ls(new_path, recurse = TRUE)
@@ -49,10 +49,10 @@ expect_migration <- function(test_app_folder, ...) {
 
 
 test_that("Migrations work", {
-  expect_migration("migrate-apps/001-hello")
-  expect_migration("migrate-apps/002-text")
-  expect_migration("migrate-apps/005-sliders")
-  expect_migration("migrate-apps/008-html")
-  expect_migration("migrate-apps/009-upload")
-  expect_migration("migrate-apps/010-download")
+  expect_migration("migrate-apps/01")
+  expect_migration("migrate-apps/02")
+  expect_migration("migrate-apps/05")
+  expect_migration("migrate-apps/08")
+  expect_migration("migrate-apps/09")
+  expect_migration("migrate-apps/10")
 })
