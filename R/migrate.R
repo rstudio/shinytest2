@@ -376,13 +376,12 @@ m__parse_test_file <- function(test_path, info_env) {
   info_env$from_file <- fs::path_file(test_path)
   info_env$save_path <-
     fs::path("tests", "testthat", paste0("test-", info_env$from_file))
+  fs::dir_create(fs::path_dir(info_env$save_path))
 
   test_text <- read_utf8(test_path)
   migrated_text <- m__parse_test_text(test_text, test_path, info_env)
 
   if (length(migrated_text) == 0) {
-    # TODO-barret-test; does it work?
-    abort("Needs testing")
     if (info_env$verbose) {
       rlang::inform(paste0("No test content found in `{test_path}`"))
       rlang::inform(paste0("Creating: ", info_env$save_path))
@@ -398,7 +397,6 @@ m__parse_test_file <- function(test_path, info_env) {
     title = paste0("Migrated shinytest test: ", info_env$from_file),
     body_txts = migrated_text
   )
-  fs::dir_create(fs::path_dir(info_env$save_path))
   write_utf8(testthat_text, info_env$save_path)
 }
 
