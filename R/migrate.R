@@ -319,22 +319,30 @@ m__expected_files <- function(test_path, info_env) {
     fs::dir_create(testthat_path)
 
     shinytest_files <- dir(shinytest_dir, full.names = TRUE)
+    downloads_found <- 0
     lapply(seq_along(shinytest_files), function(i) {
       shinytest_file <- shinytest_files[i]
 
       expected_file <- fs::path_file(shinytest_file)
 
-      cur_number_reg <- regexpr("(?<digits>\\d\\d\\d).(json|png)$", expected_file, perl = TRUE)
+      cur_number_reg <- regexpr("(?<digits>\\d\\d\\d).(json|png|download)$", expected_file, perl = TRUE)
       if (cur_number_reg > 0) {
         start <- attr(cur_number_reg, "capture.start")[1, ][["digits"]]
         length <- attr(cur_number_reg, "capture.length")[1, ][["digits"]]
         cur_number_txt <- substr(expected_file, start, start + length - 1)
         cur_number <- as.integer(cur_number_txt)
 
-        new_number <- cur_number * 2
-        if (fs::path_ext(expected_file) == "json") {
-          new_number <- new_number - 1
-        }
+        new_number <- 2 * cur_number - downloads_found
+        switch(fs::path_ext(expected_file),
+          "png" = {},
+          "json" = {
+            new_number <- new_number - 1
+          },
+          "download" = {
+            new_number <- new_number - 1
+            downloads_found <<- downloads_found + 1
+          }
+        )
 
         new_number <- as.character(new_number)
         new_number_txt <- paste0(paste0(rep("0", 3 - nchar(new_number)), collapse = ""), new_number)
