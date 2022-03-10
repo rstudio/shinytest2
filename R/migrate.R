@@ -222,6 +222,22 @@ m__parse_test_files <- function(app_info_env) {
     m__parse_test_file(test_path, info_env)
     m__expected_files(test_path, info_env)
   })
+  lapply(fs::dir_ls("tests/shinytest"), function(path_name) {
+    if (fs::dir_exists(path_name)) {
+      # If contains in "-expected" (or "-expected-"), ignore it. Otherwise copy it
+      if (grepl("-expected", path_name)) {
+        # Skip!
+        return()
+      }
+      # Copy it to testthat dir
+      fs::dir_copy(path_name, fs::path("tests/testthat", fs::path_file(path_name)))
+      return()
+    }
+    # Is file
+    # Ignore top level shinytest folder R files
+    if (fs::path_ext(path_name) %in% c("r", "R")) return()
+    fs::file_copy(path_name, fs::path("tests/testthat", fs::path_file(path_name)))
+  })
 }
 
 m__reset_info_env <- function(app_info_env) {
