@@ -70,7 +70,7 @@ server <- function(input, output) {
     # and uploads a file, head of that data file by default,
     # or all rows if selected, will be shown.
 
-    req(input$file1)
+    shiny::req(input$file1)
 
     # when reading semicolon separated files,
     # having a comma separator causes `read.csv` to error
@@ -83,7 +83,7 @@ server <- function(input, output) {
       },
       error = function(e) {
         # return a safeError if a parsing error occurs
-        stop(safeError(e))
+        stop(shiny::safeError(e))
       }
     )
 
