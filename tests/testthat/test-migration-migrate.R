@@ -10,14 +10,14 @@ expect_migration <- function(test_app_folder, ...) {
 
   migrate_from_shinytest(new_path, ..., quiet = TRUE)
 
-  expected_path <- paste0(original_path, "-expected")
+  expected_path <- paste0(original_path, "ex")
 
   expected_files <- fs::dir_ls(expected_path, recurse = TRUE)
   new_files <- fs::dir_ls(new_path, recurse = TRUE)
 
-  expect_setequal(
-    fs::path_rel(expected_files, expected_path),
-    fs::path_rel(new_files, new_path)
+  expect_equal(
+    sort_c(fs::path_rel(new_files, new_path)),
+    sort_c(fs::path_rel(expected_files, expected_path))
   )
   fs::dir_walk(new_path, recurse = TRUE, fun = function(new_file_path) {
     if (fs::dir_exists(new_file_path)) return()
@@ -49,5 +49,10 @@ expect_migration <- function(test_app_folder, ...) {
 
 
 test_that("Migrations work", {
-  expect_migration("migrate-apps/01-hello")
+  expect_migration("migrate-apps/01")
+  expect_migration("migrate-apps/02")
+  expect_migration("migrate-apps/05")
+  expect_migration("migrate-apps/08")
+  expect_migration("migrate-apps/09")
+  expect_migration("migrate-apps/10")
 })

@@ -3,7 +3,7 @@ require("shiny", quietly = TRUE, character.only = TRUE)
 
 test_that("Saving an app has the right context", {
   n <- 5
-  test_app <- shinyApp(
+  shiny_app <- shinyApp(
     ui = fluidPage(
       textOutput("text")
     ),
@@ -14,7 +14,7 @@ test_that("Saving an app has the right context", {
     }
   )
 
-  app <- AppDriver$new(test_app)
+  app <- AppDriver$new(shiny_app)
   expect_equal(
     app$get_value(output = "text"),
     as.character(n)
