@@ -3,7 +3,7 @@ require("shiny", quietly = TRUE, character.only = TRUE)
 
 test_that("Duplicate input ids are found", {
 
-  test_app <- shinyApp(
+  shiny_app <- shinyApp(
     ui = fluidPage(
       # Duplicate input IDs; Warning!
       textInput("text", "Text 1"),
@@ -15,7 +15,7 @@ test_that("Duplicate input ids are found", {
   )
 
   expect_warning(
-    app <- AppDriver$new(test_app, check_names = TRUE),
+    app <- AppDriver$new(shiny_app, check_names = TRUE),
     "text"
   )
 
@@ -28,7 +28,7 @@ test_that("Duplicate input ids are found", {
 
 test_that("Duplicate input/output ids are found", {
 
-  test_app <- shinyApp(
+  shiny_app <- shinyApp(
     ui = fluidPage(
       # Duplicate input/output ID; Warning!
       selectInput("select", "Selector", c("A", "B")),
@@ -40,7 +40,7 @@ test_that("Duplicate input/output ids are found", {
   )
 
   expect_warning(
-    app <- AppDriver$new(test_app, check_names = TRUE),
+    app <- AppDriver$new(shiny_app, check_names = TRUE),
     "select"
   )
 
@@ -55,7 +55,7 @@ test_that("Duplicate input/output ids are found", {
 
 test_that("Duplicate output ids are found", {
 
-  test_app <- shinyApp(
+  shiny_app <- shinyApp(
     ui = fluidPage(
       div(id = "custom", class = "shiny-bound-output", "Div 1 content"),
       div(id = "custom", class = "shiny-bound-output", "Div 2 content")
@@ -66,7 +66,7 @@ test_that("Duplicate output ids are found", {
   )
 
   expect_warning(
-    app <- AppDriver$new(test_app, check_names = TRUE),
+    app <- AppDriver$new(shiny_app, check_names = TRUE),
     "custom"
   )
 
@@ -78,7 +78,7 @@ test_that("Duplicate output ids are found", {
 
 
 test_that("Duplicate input ids are found", {
-  test_app <- shinyApp(
+  shiny_app <- shinyApp(
     ui = fluidPage(
       # Duplicate output IDs causes failure to load application
       htmlOutput("html"),
@@ -91,7 +91,7 @@ test_that("Duplicate input ids are found", {
   )
 
   expect_error(
-    AppDriver$new(test_app, load_timeout = 1000),
+    AppDriver$new(shiny_app, load_timeout = 1000),
     "Shiny app did not become stable"
   )
 })
