@@ -1,6 +1,3 @@
-# TODO-barret-test; Add more tests around `migrate_from_shinytest()`
-
-
 #' Migrate shinytest tests
 #'
 #' This function will migrate standard shinytest test files to the new \pkg{shinytest2} + \pkg{testthat} ed 3 snapshot format.
