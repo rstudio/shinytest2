@@ -15,9 +15,9 @@ expect_migration <- function(test_app_folder, ...) {
   expected_files <- fs::dir_ls(expected_path, recurse = TRUE)
   new_files <- fs::dir_ls(new_path, recurse = TRUE)
 
-  expect_setequal(
-    fs::path_rel(expected_files, expected_path),
-    fs::path_rel(new_files, new_path)
+  expect_equal(
+    sort_c(fs::path_rel(new_files, new_path)),
+    sort_c(fs::path_rel(expected_files, expected_path))
   )
   fs::dir_walk(new_path, recurse = TRUE, fun = function(new_file_path) {
     if (fs::dir_exists(new_file_path)) return()
@@ -49,5 +49,10 @@ expect_migration <- function(test_app_folder, ...) {
 
 
 test_that("Migrations work", {
-  expect_migration("migrate-apps/01-hello")
+  expect_migration("migrate-apps/001-hello")
+  expect_migration("migrate-apps/002-text")
+  expect_migration("migrate-apps/005-sliders")
+  expect_migration("migrate-apps/008-html")
+  expect_migration("migrate-apps/009-upload")
+  expect_migration("migrate-apps/010-download")
 })
