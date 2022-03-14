@@ -1,8 +1,11 @@
-js_script_helper <- function(script = missing_arg(), file = missing_arg()) {
+app_js_script_helper <- function(self, private, script = missing_arg(), file = missing_arg()) {
+  ckm8_assert_app_driver(self, private)
   if (rlang::is_missing(file)) return(script)
 
   if (!rlang::is_missing(script)) {
-    warning("Both `file` and `script` are specified. `script` will be ignored.")
+    app_warn(self, private,
+      "Both `file` and `script` are specified. `script` will be ignored."
+    )
   }
   read_utf8(file)
 }
@@ -21,7 +24,7 @@ app_execute_js <- function(
   "!DEBUG app_execute_js()"
   chromote_execute_script(
     self$get_chromote_session(),
-    js_script_helper(script, file),
+    app_js_script_helper(self, private, script, file),
     arguments = arguments,
     timeout = timeout
   )$result$value
@@ -116,7 +119,7 @@ app_get_html <- function(
   self, private,
   selector,
   ...,
-  outer_html = FALSE
+  outer_html = TRUE
 ) {
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
@@ -131,7 +134,7 @@ app_expect_html <- function(
   self, private,
   selector,
   ...,
-  outer_html = FALSE,
+  outer_html = TRUE,
   cran = FALSE
 ) {
   ckm8_assert_app_driver(self, private)

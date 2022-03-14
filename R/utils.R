@@ -9,9 +9,6 @@ ckm8_assert_single_integer <- function(x, ..., len = 1, any.missing = FALSE, .va
 ckm8_assert_single_number <- function(x, ..., .var.name = checkmate::vname(x)) {
   checkmate::assert_number(x, .var.name = .var.name, ...)
 }
-ckm8_assert_single_url <- function(x, .var.name = checkmate::vname(x)) {
-  checkmate::assert_character(x, pattern = "^/", len = 1, any.missing = FALSE, .var.name = .var.name)
-}
 ckm8_assert_app_driver <- function(self, private, self.var.name = checkmate::vname(self), private.var.name = checkmate::vname(private)) {
   checkmate::assert_r6(self, "AppDriver", .var.name = self.var.name)
   checkmate::assert_environment(private, .var.name = private.var.name)
@@ -54,84 +51,6 @@ write_utf8 <- function(text, ...) {
 }
 
 
-parse_url <- function(url) {
-  res <- regexpr("^(?<protocol>https?)://(?<host>[^:/]+)(:(?<port>\\d+))?(?<path>/.*)?$", url, perl = TRUE)
-
-  if (res == -1) abort(paste0(url, " is not a valid URL."))
-
-  start  <- attr(res, "capture.start",  exact = TRUE)[1, ]
-  length <- attr(res, "capture.length", exact = TRUE)[1, ]
-
-  get_piece <- function(n) {
-    if (start[[n]] == 0) return("")
-
-    substring(url, start[[n]], start[[n]] + length[[n]] - 1)
-  }
-
-  list(
-    protocol = get_piece("protocol"),
-    host     = get_piece("host"),
-    port     = get_piece("port"),
-    path     = get_piece("path")
-  )
-}
-is_rmd <- function(path) {
-  if (utils::file_test("-d", path)) {
-    FALSE
-  } else if (grepl("\\.Rmd", path, ignore.case = TRUE)) {
-    TRUE
-  } else {
-    FALSE
-  }
-}
-
-is_app <- function(path) {
-  tryCatch(
-    {
-      shiny::shinyAppDir(path)
-      TRUE
-    },
-    # shiny::shinyAppDir() throws a classed exception when path isn't a
-    # directory, or it doesn't contain an app.R (or server.R) file
-    # https://github.com/rstudio/shiny/blob/a60406a/R/shinyapp.R#L116-L119
-    invalidShinyAppDir = function(x) FALSE,
-    # If we get some other error, it's probably from sourcing
-    # of the app file(s), so throw that error now
-    error = function(x) abort(conditionMessage(x))
-  )
-}
-
-app_path <- function(path, arg = "path") {
-  # must also check for dir (windows trailing '/')
-  if (!(file.exists(path) || dir.exists(path))) {
-    abort(paste0("'", path, "' doesn't exist"))
-  }
-
-  if (is_app(path)) {
-    app <- path
-    dir <- path
-  } else if (is_rmd(path)) {
-    # Fallback for old behaviour
-    if (length(dir(dirname(path), pattern = "\\.[Rr]md$")) > 1) {
-      abort("For testing, only one .Rmd file is allowed per directory.")
-    }
-    app <- path
-    dir <- dirname(path)
-  } else {
-    rmds <- dir(path, pattern = "\\.Rmd$", full.names = TRUE)
-    if (length(rmds) != 1) {
-      abort(paste0(
-        "`", arg, "` doesn't contain 'app.R', 'server.R', or exactly one '.Rmd'"
-      ))
-    } else {
-      app <- rmds
-      dir <- dirname(app)
-    }
-  }
-
-  list(app = app, dir = dir, is_rmd = is_rmd(path))
-}
-
 
 # nolint start
 # https://github.com/rstudio/shiny/blob/2360bde13efac1fe501efee447a8f3dde0136722/R/shiny.R#L35-L49
@@ -167,12 +86,12 @@ toJSON <- function(x, ...,  dataframe = "columns", null = "null", na = "null",
 # resolution.
 #
 # https://github.com/ariya/phantomjs/issues/10659#issuecomment-14993827
-normalize_png_res_header <- function(file) {
+normalize_png_res_header <- function(self, private, file) {
   data <- readBin(file, raw(), n = 512)
   header_offset <- grepRaw("pHYs", data)
 
   if (length(header_offset) == 0) {
-    warning("Cannot find pHYs header in ", fs::path_file(file))
+    app_warn(self, private, paste0("Cannot find pHYs header in ", fs::path_file(file)))
     return(FALSE)
   }
 
@@ -194,11 +113,13 @@ png_res_header_data <- as.raw(c(
   0x00, 0x9a, 0x9c, 0x18   # Checksum
 ))
 
-inform_where <- function(message) {
+app_inform_where <- function(self, private, message) {
+  ckm8_assert_app_driver(self, private)
+
   bt <- rlang::trace_back(bottom = parent.frame())
   bt_string <- paste0(format(bt), collapse = "\n")
 
-  rlang::inform(paste0(message, "\n", bt_string))
+  app_inform(self, private, paste0(message, "\n", bt_string))
 }
 
 

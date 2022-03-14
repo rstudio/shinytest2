@@ -1,0 +1,14 @@
+{
+  "input": {
+    "click": 0,
+    "counter": 4,
+    "slider": 0
+  },
+  "output": {
+    "clicks": "0",
+    "js_clicks": "4"
+  },
+  "export": {
+
+  }
+}

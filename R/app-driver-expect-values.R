@@ -23,23 +23,22 @@ app_get_single_ioe <- function(
   export_is_provided <- !rlang::is_missing(export)
 
   if (sum(input_is_provided, output_is_provided, export_is_provided) != 1) {
-    rlang::abort("Must specify only one of `input`, `output`, `export`")
+    app_abort(self, private, "Must specify only one of `input`, `output`, `export`")
   }
 
   if (input_is_provided) ckm8_assert_single_string(input)
   else if (output_is_provided) ckm8_assert_single_string(output)
   else if (export_is_provided) ckm8_assert_single_string(export)
+  else app_abort(self, private, "Missing ioe type", .internal = TRUE)
 
   type <-
     if (input_is_provided) "input"
     else if (output_is_provided) "output"
     else if (export_is_provided) "export"
-    else abort("unknown type") # internal
   name <-
     if (input_is_provided) input
     else if (output_is_provided) output
     else if (export_is_provided) export
-    else abort("unknown type") # internal
 
   list(
     input = input,
@@ -88,7 +87,7 @@ app_get_values <- function(
 
   url <- app_get_shiny_test_url(self, private, input, output, export, format = "rds")
   # Ask Shiny for info
-  req <- httr_get(url)
+  req <- app_httr_get(self, private, url)
 
   ## Writing to memory is 2x faster than disk and produces the same result
   ## However, the `disk` approach is tried and tested in `{shinytest}`
@@ -157,7 +156,7 @@ app_expect_values <- function(
 
   url <- app_get_shiny_test_url(self, private, input, output, export, format = "json")
   # Ask Shiny for info
-  req <- httr_get(url)
+  req <- app_httr_get(self, private, url)
 
   # Convert to text, then replace base64-encoded images with hashes.
   content <- raw_to_utf8(req$content)

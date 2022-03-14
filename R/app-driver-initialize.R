@@ -1,13 +1,13 @@
 app_initialize_ <- function(
   self, private,
-  path = testthat::test_path("../../"),
+  app_dir = testthat::test_path("../../"),
   ...,
   load_timeout = NULL,
   expect_values_screenshot_args = expect_values_screenshot_args,
   screenshot_args = missing_arg(),
   check_names = TRUE,
   name = NULL,
-  variant = getOption("shinytest2.variant", missing_arg()),
+  variant = missing_arg(),
   view = missing_arg(),
   height = NULL,
   width = NULL,
@@ -24,8 +24,6 @@ app_initialize_ <- function(
   # in case they're using some of the same resources.
   # https://github.com/rstudio/shinytest2/issues/19#issuecomment-954095837
   gc()
-
-  private$path <- fs::path_abs(path)
 
   # Convert `rlang::missing_arg()` to `missing_value()` to allow for R6 printing
   private$default_expect_values_screenshot_args <- maybe_missing_value(expect_values_screenshot_args, missing_value()) # nolint
@@ -51,20 +49,22 @@ app_initialize_ <- function(
 
   self$log_message("Start AppDriver initialization")
 
-  if (shiny::is.shiny.appobj(path)) {
-    path <- app_save(path)
-  }
-
   private$state <- "initialize"
 
-  if (grepl("^http(s?)://", path)) {
-    private$shiny_url$set(path)
+  if (shiny::is.shiny.appobj(app_dir)) {
+    app_dir <- app_save(app_dir)
+  }
+
+  if (length(app_dir) == 1 && is.character(app_dir) && grepl("^http(s?)://", app_dir)) {
+    private$shiny_url$set(app_dir)
+    app_set_dir(self, private, ".")
   } else {
     "!DEBUG starting shiny app from path"
     self$log_message("Starting Shiny app")
+    app_set_dir(self, private, app_dir)
+
     app_start_shiny(
       self, private,
-      path = path,
       seed = seed,
       load_timeout = load_timeout,
       shiny_args = shiny_args,
@@ -89,7 +89,6 @@ app_initialize_ <- function(
   app_init_browser_log(self, private, options = options)
 
   "!DEBUG navigate to Shiny app"
-  # TODO-barret; test
   if (!is.null(height) || !is.null(width)) {
     ckm8_assert_single_number(height, lower = 1)
     ckm8_assert_single_number(width, lower = 1)
@@ -102,6 +101,7 @@ app_initialize_ <- function(
   self$get_chromote_session()$Page$navigate(private$shiny_url$get())
 
   # TODO-future; This feels like it is being loaded too late. There is no guarantee that the script will load in time.
+  # This would be nice if it was an HTML dependency to work with page reloading.
   "!DEBUG inject shiny-tracer.js to load before all other scripts"
   self$log_message("Injecting shiny-tracer.js")
   utils::capture.output({
@@ -120,15 +120,15 @@ app_initialize_ <- function(
         "return window.shinytest2 && window.shinytest2.ready === true",
         timeout = load_timeout
       )
-      self$wait_for_idle(duration = 500, timeout = load_timeout)
+      # Use value less than the common 250ms/500ms timeout of watching a file for changes
+      self$wait_for_idle(duration = 200, timeout = load_timeout)
     },
     error = function(e) {
-      rlang::abort(
+      app_abort(self, private,
         paste0(
           "Shiny app did not become stable in ", load_timeout, "ms.\n",
           "Message: ", conditionMessage(e)
         ),
-        app = self,
         parent = e
       )
     }
@@ -151,8 +151,7 @@ app_initialize_ <- function(
   )$result$value
 
   if (check_names) {
-    "!DEBUG checking widget names"
-    app_check_unique_widget_names(self, private)
+    app_check_unique_names(self, private)
   }
 
   invisible(self)
@@ -168,7 +167,7 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
       withCallingHandlers(
         self$log_message(paste0("Error while initializing AppDriver:\n", conditionMessage(e))),
         error = function(ee) {
-          rlang::inform(paste0("Could not log error message. Error: ", conditionMessage(ee)))
+          app_inform(self, private, paste0("Could not log error message. Error: ", conditionMessage(ee)))
         }
       )
 
@@ -186,13 +185,13 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
             # If view_val == FALSE, user asked to not open chromote session. Do not open
             !is_false(view_val)
           ) {
-            rlang::inform("`$view()`ing chromote session for debugging purposes")
+            app_inform(self, private, "`$view()`ing chromote session for debugging purposes")
             self$log_message("Viewing chromote session for debugging purposes")
             self$view()
           }
         },
         error = function(ee) {
-          rlang::inform(c(
+          app_inform(self, private, c(
             "!" = paste0("Could not open chromote session. Error: ", conditionMessage(ee))
           ))
         }
@@ -203,7 +202,7 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
         error = function(e) "(Error retrieving logs)"
       )
 
-      abort(
+      app_abort(self, private,
         c(
           conditionMessage(e),
           "\n",
@@ -211,7 +210,6 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
           i = paste0("AppDriver logs:\n", logs),
           "\n"
         ),
-        app = self,
         parent = e
       )
     }

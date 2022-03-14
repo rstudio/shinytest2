@@ -1,3 +1,15 @@
+# TODO-barret-docs; add_dont_run_reason("An uploadFile() must be updated: use the correct path relative to the app's ./tests/testthat directory, or copy the file to the app's ./tests/testthat directory.")
+    # rlang::inform(c(
+    #   "After making changes to the test script, run it with:",
+    #   " " = paste0("shinytest2::test_app(\"", app_path_val, "\", filter = \"", test_filter, "\")"),
+    #   "Or",
+    #   " " = paste0("shinytest2::test_app(\"", app_path_val, "\")")
+    #   # ,
+    #   # "Or run all tests generically with:",
+    #   # " " = paste0("shiny::runTests(\"", app_path_val, "\")")
+    # ))
+
+
 #' Launch test event recorder for a Shiny app
 #'
 #' Once a recording is completed, it will create or append a new \pkg{shinytest2} test to the \pkg{testthat} `test_file`.
@@ -39,39 +51,36 @@ record_test <- function(
 
   for (class_val in c("shiny.appobj", "ShinyDriver")) {
     if (inherits(app, class_val)) {
-      abort(paste0("Recording tests for ", class_val, " objects is not supported."))
+      rlang::abort(paste0("Recording tests for ", class_val, " objects is not supported."))
     }
   }
 
   if (is.character(app)) {
+    app_path_val <- app
     if (grepl("^http(s?)://", app)) {
-      abort("Recording tests for remote apps is not supported.")
+      rlang::abort("Recording tests for remote apps is not supported.")
     }
 
-    app_path_info <- app_path(app, "app")
-    app_path <- app_path_info$app
-    is_rmd <- app_path_info$is_rmd
-
     # Rmds need a random seed
-    if (is_rmd && is.null(seed)) {
+    if (is.null(seed) && app_dir_has_rmd(app_dir = app)) {
       seed <- floor(stats::runif(1, min = 0, max = 1e5))
     }
 
-    app <- AppDriver$new(app_path, seed = seed, load_timeout = load_timeout, shiny_args = shiny_args)
+    app <- AppDriver$new(app, seed = seed, load_timeout = load_timeout, shiny_args = shiny_args)
     on.exit({
       rm(app)
       gc()
     })
+  } else {
+    app_path_val <- app$get_dir()
   }
 
   if (!inherits(app, "AppDriver")) {
-    abort("Unknown object type to record tests for. Must supply a `AppDriver` object or file path")
+    rlang::abort("Unknown object type to record tests for. Must supply a `AppDriver` object or file path")
   }
 
   if (is.null(name)) {
-    name <- fs::path_abs(app$get_path())
-    if (!fs::dir_exists(name)) name <- fs::path_dir(name)
-    name <- fs::path_file(name)
+    name <- fs::path_file(app$get_dir())
   }
 
   # Get the URL for the app. Depending on what type of object `app` is, it may
@@ -124,29 +133,13 @@ record_test <- function(
     edit_file(saved_test_file)
   }
 
-  app_path <- app_path(app$get_path())$app
   test_filter <- sub("^test-", "", fs::path_ext_remove(fs::path_file(saved_test_file)))
-  if (length(res$dont_run_reasons) == 0) {
-    # Run the test script
-    rlang::inform("Running recorded test: ", fs::path_rel(saved_test_file, app_path))
-    test_app(app_path, filter = test_filter)
-  } else {
-    # TODO-barret; Test code
-    rlang::inform(
-      stats::setNames(
-        c("Not running test script because", res$dont_run_reasons),
-        c("", rep("*", length(res$dont_run_reasons)))
-      )
-    )
-    rlang::inform(paste0(
-      "*" = "After making changes to the test script, run it with:\n",
-      "  shinytest::test_app(\"", app_path, "\", filter = \"", test_filter, "\")\n",
-      "*" = "Or run all {testthat} tests using edition 3:\n",
-      "  shinytest::test_app(\"", app_path, "\")\n",
-      "*" = "Or run all tests generically with:\n",
-      "  shiny::runTests(\"", app_path, "\")",
-    ))
-  }
+  # Run the test script
+  rlang::inform(paste0(
+    "Running recorded test: ",
+    fs::path_rel(saved_test_file, app$get_dir())
+  ))
+  test_app(app_path_val, filter = test_filter)
 
   invisible(res$test_file)
 }
@@ -169,7 +162,7 @@ record_test <- function(
 #' @keywords internal
 register_input_processor <- function(input_type, processor) {
   if (!is.function(processor) || !identical(names(formals(processor)), "value")) {
-    abort("`processor` must be a function that takes one parameter, `value`")
+    rlang::abort("`processor` must be a function that takes one parameter, `value`")
   }
   recorder_input_processors[[input_type]] <- processor
 }

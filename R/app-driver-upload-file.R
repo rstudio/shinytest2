@@ -8,7 +8,9 @@ app_upload_file <- function(
 
   inputs <- list2(...)
   if (length(inputs) != 1 || !rlang::is_named(inputs)) {
-    abort("Can only upload file to exactly one input, and input must be named", app = self)
+    app_abort(self, private,
+      "Can only upload file to exactly one input, and input must be named"
+    )
   }
 
   # Wait for two messages by calling `.start(timeout, 2)`. This is because

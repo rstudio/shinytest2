@@ -146,7 +146,7 @@ new$set_inputs(life = 42)
 get_values_result <- new$get_values()
 ```
 
-* `old$getWindowSize()`, `old$setWindowSize(width, height)`: These methods have bee renamed to `new$get_window_size()` and `new$set_window_size(width, height)`.
+* `old$getWindowSize()`, `old$setWindowSize(width, height)`: These methods have been renamed to `new$get_window_size()` and `new$set_window_size(width, height)`.
 
 ```r
 ## Old
@@ -157,6 +157,18 @@ old$setWindowSize(width = 1024, height = 768)
 new$get_window_size()
 new$set_window_size(width = 1024, height = 768)
 ```
+
+* `old$checkUniqueWidgetNames()`: This method checked to make sure all input and output names are unique. It is still run at initialization via `AppDriver$new(check_names = TRUE)` and if any issues are found during startup, only warnings will be displayed.  The exported method has been upgraded to an expectation version and renamed to `new$expect_unique_names()`.
+
+```r
+## Old
+old$checkUniqueWidgetNames()
+
+## New
+new$expect_unique_names()
+```
+
+
 
 ## Snapshots
 
@@ -401,9 +413,6 @@ old$listWidgets()
 lapply(new$get_values(), names)
 ```
 
-* `old$checkUniqueWidgetNames()`: Automatically performed on startup in `{shinytest2}`.
-TODO-barret; `AppDriver$expect_unique_names()`
-
 * `old$clone()`: `AppDriver` does not support cloning. (The underlying `ChromoteSession` does not support cloning, so `AppDriver` can not support cloning.)
 
 * `old$goBack()`, `old$refresh()`: These method have been removed and can be achieved with `new$execute_js(script)`.
@@ -420,7 +429,7 @@ new$execute_js("window.history.back();")
 new$execute_js("window.location.reload();")
 ```
 
-* `old$getAppDir()`, `old$getAppFilename()`, `old$isRmd()`: These methods have been removed in favor of `new$get_path()`. All of the same information can be accessed via `new$get_path()`.
+* `old$getAppDir()`, `old$getAppFilename()`, `old$isRmd()`: `new$get_dir()` is the only method still supported given `AppDriver$new(app_dir=)` is a single directory path. The other methods have been removed as their functionality can not be easily replicated within `{shinytest2}`.
 
 ```r
 ## Old
@@ -429,10 +438,10 @@ old$getAppDir()
 old$getAppFilename()
 
 ## New
-path <- new$get_path()
-is_rmd <- fs::path_ext(path) == ".Rmd"
-app_dir <- if (is_rmd) fs::path_dir(path) else path
-filename <- if (is_rmd) basename(path) else NULL
+app_dir <- new$get_dir()
+rmd_files <- fs::dir_ls(new$get_dir(), regexp = "\\.[Rr]md$")
+is_rmd <- length(rmd_files) >= 1
+app_filename <- if (has_rmd) fs::path_file(rmd_files[1]) else NULL
 ```
 
 * `old$sendKeys(name, keys)`: This method has been removed and there is currently no easy alternative. If you are familiar with the [key code values](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode#value_of_keycode), you can trigger then with `new$execute_js(script)`.

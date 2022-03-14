@@ -14,8 +14,7 @@ app_set_inputs <- function(
   input_values <- lapply(inputs, function(value) {
     list(
       value = value,
-      # TODO-barret; rename
-      allowInputNoBinding = allow_no_input_binding_,
+      allowNoInputBinding = allow_no_input_binding_,
       priority = priority_
     )
   })
@@ -26,13 +25,19 @@ app_set_inputs <- function(
 
   app_queue_inputs(self, private, input_values)
   res <- app_flush_inputs(self, private, wait = wait_, timeout = timeout_)
+  if (is.character(res)) {
+    msg <- paste0("Error received while setting inputs: ", res)
+    self$log_message(msg)
+    app_inform_where(self, private, msg)
+    return(invisible())
+  }
 
   if (isTRUE(res$timedOut)) {
     # Get the text from one call back, like "app$set_inputs(a=1, b=2)"
     calls <- sys.calls()
     call_text <- deparse(calls[[length(calls) - 1]])
 
-    inform_where(paste0(
+    app_inform_where(self, private, paste0(
       "set_inputs(", call_text, "): ",
       "Server did not update any output values within ",
       format(timeout_ / 1000, digits = 2), " seconds. ",

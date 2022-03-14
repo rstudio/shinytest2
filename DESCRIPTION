@@ -46,7 +46,9 @@ Suggests:
     knitr,
     usethis
 Remotes:
-    rstudio/chromote
+    rstudio/chromote,
+    rstudio/shiny,
+    rstudio/shinyvalidate
 Config/Needs/other:
     shiny (>= 1.7.1.9003),
     shinyvalidate (>= 1.0.0.9001),
@@ -57,13 +59,16 @@ Config/testthat/edition: 3
 Collate:
     'R6-helper.R'
     'app-driver-chromote.R'
+    'app-driver-dir.R'
     'app-driver-expect-download.R'
     'app-driver-expect-js.R'
     'app-driver-expect-screenshot.R'
+    'app-driver-expect-unique-names.R'
     'app-driver-expect-values.R'
     'app-driver-get-log.R'
     'app-driver-initialize.R'
     'app-driver-log-message.R'
+    'app-driver-message.R'
     'app-driver-node.R'
     'app-driver-set-inputs.R'
     'app-driver-start.R'

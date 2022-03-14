@@ -21,6 +21,17 @@ retrieved after any initialization error has been thrown.
 \examples{
 
 ## ------------------------------------------------
+## Method `AppDriver$expect_unique_names`
+## ------------------------------------------------
+
+example_app <- system.file("tests/testthat/apps/init-input/", package = "shinytest2")
+# Initial checking for unique names (default behavior)
+\dontrun{app <- AppDriver$new(example_app, check_names = TRUE)}
+# Manually assert that all names are unique
+\dontrun{app <- AppDriver$new(example_app, check_names = FALSE)
+app$expect_unique_names()}
+
+## ------------------------------------------------
 ## Method `AppDriver$get_log`
 ## ------------------------------------------------
 
@@ -145,7 +156,8 @@ app$get_log() # (long output lines have been truncated)
 \item \href{#method-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
 \item \href{#method-wait_for_value}{\code{AppDriver$wait_for_value()}}
 \item \href{#method-execute_js}{\code{AppDriver$execute_js()}}
-\item \href{#method-get_path}{\code{AppDriver$get_path()}}
+\item \href{#method-expect_unique_names}{\code{AppDriver$expect_unique_names()}}
+\item \href{#method-get_dir}{\code{AppDriver$get_dir()}}
 \item \href{#method-get_url}{\code{AppDriver$get_url()}}
 \item \href{#method-get_window_size}{\code{AppDriver$get_window_size()}}
 \item \href{#method-set_window_size}{\code{AppDriver$set_window_size()}}
@@ -163,10 +175,10 @@ app$get_log() # (long output lines have been truncated)
 Initialize the AppDriver
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$new(
-  path = testthat::test_path("../../"),
+  app_dir = testthat::test_path("../../"),
   ...,
   name = NULL,
-  variant = getOption("shinytest2.variant", missing_arg()),
+  variant = missing_arg(),
   seed = NULL,
   load_timeout = NULL,
   screenshot_args = missing_arg(),
@@ -185,8 +197,8 @@ Initialize the AppDriver
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{path}}{Path to a directory containing a Shiny app, i.e. a
-single \code{app.R} file or a \code{server.R}-\code{ui.R} pair.}
+\item{\code{app_dir}}{Directory containing your Shiny application or a runtime
+Shiny R Markdown document.}
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
@@ -211,23 +223,33 @@ behavior repeatable.}
 This includes the time to start R. Defaults to 10s when running
 locally and 20s when running on CI.}
 
-\item{\code{screenshot_args}}{Default set of arguments to pass in to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
-\verb{$screenshot()} method when taking screnshots within \verb{$expect_screenshot()}. To disable screenshots by default, set to \code{FALSE}.}
+\item{\code{screenshot_args}}{Default set of arguments to pass in to
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$screenshot()} method when taking
+screnshots within \verb{$expect_screenshot()}. To disable screenshots by
+default, set to \code{FALSE}.}
 
-\item{\code{expect_values_screenshot_args}}{The value for \code{screenshot_args} when producing a debug screenshot for \verb{$expect_values()}.}
+\item{\code{expect_values_screenshot_args}}{The value for \code{screenshot_args} when
+producing a debug screenshot for \verb{$expect_values()}.}
 
-\item{\code{check_names}}{Check if widget names are unique once the application initially loads?}
+\item{\code{check_names}}{Check if widget names are unique once the application
+initially loads? If duplicate names are found, only a warning will be
+displayed.}
 
-\item{\code{view}}{Opens the Chromote Session in an interactive browser tab once initialization. Defaults to \code{FALSE}.}
+\item{\code{view}}{Opens the Chromote Session in an interactive browser tab once
+initialization. Defaults to \code{FALSE}.}
 
-\item{\code{height, width}}{Window size to use when opening the Chromote Session. These values will only be used if both \code{height} and \code{width} are not \code{NULL}.}
+\item{\code{height, width}}{Window size to use when opening the Chromote Session.
+These values will only be used if both \code{height} and \code{width} are not
+\code{NULL}.}
 
 \item{\code{clean_logs}}{Whether to remove the stdout and stderr logs when the
 Shiny process object is garbage collected.}
 
-\item{\code{shiny_args}}{A list of options to pass to \code{\link[shiny:runApp]{shiny::runApp()}}. Ex: \code{list(port = 8080)}.}
+\item{\code{shiny_args}}{A list of options to pass to \code{\link[shiny:runApp]{shiny::runApp()}}. Ex:
+\code{list(port = 8080)}.}
 
-\item{\code{render_args}}{Passed to \code{rmarkdown::run(render_args=)} for interactive \code{.Rmd}s. Ex: `list(quiet = TRUE)}
+\item{\code{render_args}}{Passed to \code{rmarkdown::run(render_args=)} for
+interactive \code{.Rmd}s. Ex: `list(quiet = TRUE)}
 
 \item{\code{options}}{A list of \code{\link[base:options]{base::options()}} to set in the driver's child
 process. See \code{\link[shiny:shinyOptions]{shiny::shinyOptions()}} for inspiration. If \code{shiny.trace = TRUE},
@@ -299,7 +321,7 @@ Expect snapshot of UI HTML
 
 \verb{$expect_html()} will extract the full DOM structures of each matching element and store them in a snapshot file.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_html(selector, ..., outer_html = FALSE, cran = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_html(selector, ..., outer_html = TRUE, cran = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -324,7 +346,7 @@ because they often rely on minor details of dependencies.}
 \if{latex}{\out{\hypertarget{method-get_html}{}}}
 \subsection{Method \code{get_html()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_html(selector, ..., outer_html = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_html(selector, ..., outer_html = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -868,12 +890,41 @@ Result of the \code{script} (or \code{file} contents)
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_path"></a>}}
-\if{latex}{\out{\hypertarget{method-get_path}{}}}
-\subsection{Method \code{get_path()}}{
+\if{html}{\out{<a id="method-expect_unique_names"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_unique_names}{}}}
+\subsection{Method \code{expect_unique_names()}}{
+Expect unique input and output names.
+
+If the HTML has duplicate input or output elements with matching \code{id} values, this function will
+throw an error. It is similar to \code{AppDriver$new(check_names = TRUE)}, but
+asserts that no warnings are displayed.
+
+This method will not throw if a single input and a single output have the same name.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_unique_names()}\if{html}{\out{</div>}}
+}
+
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{example_app <- system.file("tests/testthat/apps/init-input/", package = "shinytest2")
+# Initial checking for unique names (default behavior)
+\dontrun{app <- AppDriver$new(example_app, check_names = TRUE)}
+# Manually assert that all names are unique
+\dontrun{app <- AppDriver$new(example_app, check_names = FALSE)
+app$expect_unique_names()}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_dir"></a>}}
+\if{latex}{\out{\hypertarget{method-get_dir}{}}}
+\subsection{Method \code{get_dir()}}{
 Retrieve the Shiny app path
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_path()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_dir()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

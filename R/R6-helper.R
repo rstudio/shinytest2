@@ -46,25 +46,18 @@ Url <- R6Class( # nolint
       private$url
     },
     set = function(url) {
-      res <- parse_url(url)
+      res <- httr::parse_url(url)
 
-      if (nzchar(res$port)) {
+      checkmate::assert_subset(res$scheme, c("http", "https"), .var.name = "url scheme")
+
+      if (!is.null(res$port)) {
         res$port <- as.integer(res$port)
-        ckm8_assert_single_integer(res$port, .var.name = "port")
-      } else {
-        res$port <- NULL
+        ckm8_assert_single_integer(res$port, .var.name = "url port")
       }
 
-      res$path <- if (nzchar(res$path)) res$path else "/"
+      ckm8_assert_single_string(res$hostname, .var.name = "url hostname")
 
-      ckm8_assert_single_string(res$host)
-      ckm8_assert_single_url(res$path)
-
-      private$url <- paste0( # nolint
-        res$protocol, "://", res$host,
-        if (!is.null(res$port)) paste0(":", res$port),
-        res$path
-      )
+      private$url <- httr::build_url(res)
 
       invisible(self)
     }

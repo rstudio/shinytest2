@@ -32,7 +32,7 @@ window.shinytest2 = (function() {
                 queue.push({
                     name: name,
                     value: input.value,
-                    allowInputNoBinding: input.allowInputNoBinding,
+                    allowNoInputBinding: input.allowNoInputBinding,
                     priority: input.priority
                 });
             }
@@ -53,7 +53,7 @@ window.shinytest2 = (function() {
                     // For inputs without a binding: if the script says it's
                     // OK, just set the value directly. Otherwise throw an
                     // error.
-                    if (item.allowInputNoBinding) {
+                    if (item.allowNoInputBinding) {
                         var priority = item.priority === "event" ? {priority: "event"} : undefined;
                         Shiny.setInputValue(item.name, item.value, priority);
                     } else {
@@ -91,7 +91,7 @@ window.shinytest2 = (function() {
 
             "shiny.actionButtonInput": function(el, value) {
                 if (value !== "click") {
-                    throw 'The only valid value for an actionButton is "click".';
+                    throw "The only valid value for an actionButton is \"click\".";
                 }
 
                 // Instead of setting a value, we'll just trigger a click.
@@ -270,18 +270,23 @@ window.shinytest2 = (function() {
         }
 
         // This is a trick to find duplicate ids
-        function get(selector) {
+        function get(selector, not_selector) {
+            var not_css_selector = ":not(" + not_selector + ")";
             var els = $(selector);
             return getids(els)
                 .map(function(x) {
-                    var id = '#' + escapeSelector(x) + ',' + '#' + escapeSelector(x);
+                    // Find all matching ids that are not the other selector
+                    // Input Ex: `#text:not(.shiny-bound-output), #text:not(.shiny-bound-output)`
+                    var css_selector = "#" + escapeSelector(x) + not_css_selector;
+                    var id = css_selector + "," + css_selector;
                     return getids($(id));
                 });
         }
 
         return {
-            'input':  get('.shiny-bound-input'),
-            'output': get('.shiny-bound-output')
+            "input_not_output":  get(".shiny-bound-input", ".shiny-bound-output"),
+            "output_not_input":  get(".shiny-bound-output", ".shiny-bound-input"),
+            "both":              get(".shiny-bound-input, .shiny-bound-output", null)
         };
     };
 

@@ -241,6 +241,7 @@ html,body {
   padding-top: 5px;
   padding-left: 3px;
   padding-right: 3px;
+  margin-bottom: 0;
 }
 
 #shiny-recorder #recorded_events pre>div {
@@ -279,4 +280,10 @@ span[data-toggle="tooltip"]:hover {
 .tooltip-inner {
   max-width: 100% !important;
   text-align: left;
+}
+
+
+.shiny-validation-message {
+  background-color: #f5e6e5;
+  padding-left: 4px;
 }

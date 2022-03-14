@@ -1,7 +1,3 @@
-# TODO-barret; record many many tests
-# TODO-barret; find all names of existing appdriver new names; If match is found, use `name-X` where `X` is a number that gets inc larger.
-
-
 library(shiny)
 library(promises)
 
@@ -14,17 +10,12 @@ shiny_args    <- getOption("shinytest2.shiny.args")
 save_file     <- getOption("shinytest2.test_file")
 allow_no_input_binding <- getOption("shinytest2.allow_no_input_binding")
 
-# If there are any reasons to not run a test, a message should be appended to
-# this vector.
-dont_run_reasons <- character(0)
-add_dont_run_reason <- function(reason) {
-  dont_run_reasons <<- c(dont_run_reasons, reason)
-}
-
-if (is.null(target_url) || is.null(app$get_path())) {
+if (is.null(target_url) || is.null(app)) {
   abort(paste0("Test recorder requires the 'shinytest2.recorder.url' and ",
     "'shinytest2.app' options to be set."))
 }
+
+test_save_file <- file.path(app$get_dir(), "tests", "testthat", save_file)
 
 # Can't register more than once, so remove existing one just in case.
 removeInputHandler("shinytest2.testevents")
@@ -108,6 +99,27 @@ merge_vectors <- function(a, b) {
   x <- c(a, b)
   drop_idx <- duplicated(names(x), fromLast = TRUE)
   x[!drop_idx]
+}
+
+st2_comment <- function(x, save_code = NULL) {
+  structure(
+    list(
+      comment = paste0("# ", x),
+      save_code = save_code
+    ),
+    class = c("st2_comment", "list")
+  )
+}
+is_st2_comment <- function(x) {
+  inherits(x, "st2_comment")
+}
+get_st2_comment <- function(x) {
+  if (!is_st2_comment(x)) stop("Not a st2_comment")
+  x$comment
+}
+get_st2_comment_save_code <- function(x) {
+  if (!is_st2_comment(x)) stop("Not a st2_comment")
+  x$save_code
 }
 
 input_processors <- list(
@@ -200,34 +212,14 @@ quote_name <- function(name) {
   }
 }
 
-
-app_dir <- function() {
-  path <- app$get_path()
-  if (shinytest2:::is_rmd(path)) {
-    path <- fs::path_dir(path)
-  }
-  path
-}
-test_save_file <- file.path(app_dir(), "tests", "testthat", save_file)
-app_test_path <- function() {
-  path <- app$get_path()
-  # NULL maps to `../../`
-  if (dir.exists(path)) return(NULL)
-  # TODO-barret; test for RMD
-  # Return .Rmd file name
-  rel_path <- fs::path_rel(path, fs::path_dir(test_save_file))
-  paste0("test_path(", deparse2(rel_path), ")")
-}
-
-
 generate_test_code <- function(events, name, seed) {
 
   # Remove st2_comment code events
   height <- NULL
   width <- NULL
   event_code <- unlist(lapply(events, function(event) {
-    if (inherits(event$app_code, "st2_comment")) {
-      return(NULL)
+    if (is_st2_comment(event$app_code)) {
+      return(get_st2_comment_save_code(event$app_code))
     }
     switch(event$type,
       "setWindowSize" = {
@@ -251,7 +243,6 @@ generate_test_code <- function(events, name, seed) {
     paste0(
       "app <- AppDriver$new(\n",
       "  ", paste(c(
-        app_test_path(),
         # TODO-future; Should this value be a parameter?
         # Going with "no" for now as it is difficult to capture the expression
         # when nothing else is an expression
@@ -496,31 +487,34 @@ shinyApp(
 
                 # Get unescaped filenames in a char vector, with full path
                 filepaths <- vapply(event$value, `[[`, "name", FUN.VALUE = "")
-                filepaths <- file.path(app_dir(), "tests", "testthat", filepaths)
+                filepaths <- fs::path(app$get_dir(), "tests", "testthat", filepaths)
 
                 # Check that all files exist. If not, add a message and don't run test
                 # automatically on exit.
                 if (!all(fs::file_exists(filepaths))) {
-                  # TODO-barret; test
-                  add_dont_run_reason("An uploadFile() must be updated: use the correct path relative to the app's ./tests/testthat directory, or copy the file to the app's ./tests/testthat directory.")
-                  code <- paste0(code,
-                    " # <-- This should be the path to the file, relative to the app's tests/testthat directory"
+
+                  code <- list(
+                    st2_comment(
+                      "Uploaded file outside of: ./tests/testthat",
+                      paste0(
+                        "\n",
+                        "rlang::warn(paste0(\n",
+                        "  \"`", key, "` should be the path to the file, relative to the app's tests/testthat directory.\\n\",\n",
+                        "  \"Remove this warning when the file is in the correct location.\"\n",
+                        "))\n"
+                      )
+                    ),
+                    code
                   )
                 }
 
                 code
               } else {
                 if (!event$hasBinding && !isTRUE(allow_no_input_binding_react())) {
-                  structure(
-                    paste0(
-                      "# Update unbound `input` value"
-                    ),
-                    class = c("st2_comment", "character")
-                  )
+                  st2_comment("Update unbound `input` value")
                 } else {
                   args <- ""
                   if (!event$hasBinding && isTRUE(allow_no_input_binding_react())) {
-                    # TODO-barret; test
                     args <- paste0(args, ", allow_no_input_binding_ = TRUE")
                     if (identical(event$priority, "event")) {
                       args <- paste0(args, ', priority_ = "event"')
@@ -538,7 +532,7 @@ shinyApp(
               }
             },
             "outputEvent" = {
-              structure("# Update output value", class = c("st2_comment", "character"))
+              st2_comment("Update output value")
             },
             stop(paste0("Unknown type: ", event$type))
           )
@@ -657,21 +651,36 @@ shinyApp(
 
     output$recorded_events <- renderUI({
       events <- trim_testevents()
-      event_codes <- unlist(lapply(events, `[[`, "app_code")) # Unlist to remove `NULL`s
+      # event_codes <- unlist(lapply(events, `[[`, "app_code"), recursive = FALSE) # Unlist to remove `NULL`s
       # Genereate list of lists from all event_codes. Inner lists have 'type' and
       # 'name' fields.
+      event_codes <- lapply(events, function(event) {
+        app_code <- event$app_code
+        if (is.list(app_code) && !is_st2_comment(app_code)) {
+          # Such as upload file with comment and code
+          app_code
+        } else {
+          # Wrap in list to help with appending
+          list(app_code)
+        }
+      })
+      # Remove top layer wrapper only
+      event_codes <- unlist(event_codes, recursive = FALSE)
       tagList(
         tags$pre(div(
           .noWS = "outside",
           lapply(event_codes, function(event_code) {
-            can_select <- !inherits(event_code, "st2_comment")
+            if (is.null(event_code)) return()
+            is_st2_comment_val <- is_st2_comment(event_code)
+            code <- if (is_st2_comment_val) get_st2_comment(event_code) else event_code
+            can_select <- !is_st2_comment_val
             # https://stackoverflow.com/a/64917958/591574
             tagList(
               tags$span(
                 class = paste0(if (can_select) "line-number ", "no-select-code")
               ),
               tags$code(
-                event_code,
+                code,
                 .noWS = "outside",
                 class = if (!can_select) "no-select-code slant-code"
               )
@@ -713,12 +722,11 @@ shinyApp(
           code <- paste0("library(shinytest2)", code)
         }
 
-        # TODO-barret; Save runner file
         test_runner_file <- fs::path(fs::path_dir(fs::path_dir(test_save_file)), "testthat.R")
         overwrite_test_runner <-
           if (fs::file_exists(test_runner_file)) {
             if (!any(grepl("test_app(", readLines(test_runner_file), fixed = TRUE))) {
-              rlang::warn(paste0("Overwriting test runner ", fs::path_rel(test_runner_file, app$get_path()), " with `shinytest2::test_app()` call to ensure proper a testing environment."))
+              rlang::warn(paste0("Overwriting test runner ", fs::path_rel(test_runner_file, app$get_dir()), " with `shinytest2::test_app()` call to ensure proper a testing environment."))
               # Runner exists. Overwrite existing contents
               TRUE
             } else {
@@ -730,23 +738,24 @@ shinyApp(
             TRUE
           }
         if (overwrite_test_runner) {
-          shinytest2:::use_shinytest2_runner(app$get_path(), quiet = FALSE)
+          shinytest2:::use_shinytest2_runner(app$get_dir(), quiet = FALSE)
         }
 
-        rlang::inform(paste0("Saving test file: ", fs::path_rel(test_save_file, app$get_path())))
+        app_inform(
+          self, private,
+          paste0("Saving test file: ", fs::path_rel(test_save_file, app$get_dir()))
+        )
         cat(code, file = test_save_file, append = TRUE)
 
         invisible(list(
-          test_file = test_save_file,
-          dont_run_reasons = dont_run_reasons
+          test_file = test_save_file
         ))
       })
     })
     observeEvent(input$exit_nosave, {
       stopApp({
         invisible(list(
-          test_file = NULL,
-          dont_run_reasons = NULL
+          test_file = NULL
         ))
       })
     })

@@ -1,0 +1,75 @@
+{
+  "input": {
+    "action": 1,
+    "bsSwitch": false,
+    "checkGroup": [
+      "2",
+      "3"
+    ],
+    "checkbox": true,
+    "checkboxGroupButtons": null,
+    "date": "2015-01-01",
+    "dates": [
+      "2015-01-01",
+      "2015-02-20"
+    ],
+    "file": {
+      "name": [
+        "__tmpfile.txt"
+      ],
+      "size": [
+        15
+      ],
+      "type": [
+        "text/plain"
+      ],
+      "datapath": [
+        "0.txt"
+      ]
+    },
+    "knob": 0,
+    "matSwitch": false,
+    "num": 100,
+    "picker": null,
+    "prettyCheckbox": false,
+    "radio": "2",
+    "search": "",
+    "search_text": "",
+    "select": "2",
+    "slider1": 65,
+    "slider2": [
+      35,
+      85
+    ],
+    "sliderText": "Strongly disagree",
+    "tabset": "shinyWidgets",
+    "text": "Text entered"
+  },
+  "output": {
+    "action_out": "[1] 1\nattr(,\"class\")\n[1] \"shinyActionButtonValue\" \"integer\"               ",
+    "bsSwitch_out": "[1] FALSE",
+    "checkGroup_out": "[1] \"2\" \"3\"",
+    "checkboxGroupButtons_out": "NULL",
+    "checkbox_out": "[1] TRUE",
+    "date_out": "[1] \"2015-01-01\"",
+    "dates_out": "[1] \"2015-01-01\" \"2015-02-20\"",
+    "file_out": "           name size       type        datapath\n1 __tmpfile.txt   15 text/plain <tempdir>/0.txt",
+    "knob_out": "[1] 0",
+    "matSwitch_out": "[1] FALSE",
+    "num_out": "[1] 100",
+    "picker_out": "NULL",
+    "prettyCheckbox_out": "[1] FALSE",
+    "radio_out": "[1] \"2\"",
+    "search_out": "[1] \"\"",
+    "search_text_out": "[1] \"\"",
+    "select_out": "[1] \"2\"",
+    "slider1_out": "[1] 65",
+    "slider2_out": "[1] 35 85",
+    "sliderText_out": "[1] \"Strongly disagree\"",
+    "tabset_out": "[1] \"shinyWidgets\"",
+    "text_out": "[1] \"Text entered\""
+  },
+  "export": {
+
+  }
+}

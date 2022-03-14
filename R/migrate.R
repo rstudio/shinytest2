@@ -1,15 +1,10 @@
-# TODO-barret; Add more tests around `migrate_from_shinytest()`
-# TODO-barret; Make test app using allowInputNoBinding = TRUE
-
-
-
 #' Migrate shinytest tests
 #'
 #' This function will migrate standard shinytest test files to the new \pkg{shinytest2} + \pkg{testthat} ed 3 snapshot format.
 #'
 #' \pkg{shinytest} file contents will be traversed and converted to the new \pkg{shinytest2} format. If the \pkg{shinytest} code can not be directly seen in the code, then it will not be converted.
 #'
-#' @param path Path to the test directory or Shiny Rmd file
+#' @param app_dir Directory containing the Shiny application or Shiny Rmd file
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @param clean If TRUE, then the shinytest test directory and runner will be deleted after the migration to use \pkg{shinytest2}.
 #' @param include_expect_screenshot If `TRUE`, `ShinyDriver$snapshot()` will turn into both `AppDriver$expect_values()` and `AppDriver$expect_screenshot()`. If `FALSE`, `ShinyDriver$snapshot()` will only turn into `AppDriver$expect_values()`. If missing, `include_expect_screenshot` will behave as `FALSE` if `shinytest::testApp(compareImages = FALSE)` or `ShinyDriver$snapshotInit(screenshot = FALSE)` is called.
@@ -17,7 +12,7 @@
 #' @return Invisible `TRUE`
 #' @export
 migrate_from_shinytest <- function(
-  path,
+  app_dir,
   ...,
   clean = TRUE,
   include_expect_screenshot = missing_arg(),
@@ -26,15 +21,15 @@ migrate_from_shinytest <- function(
   ellipsis::check_dots_empty()
   rlang::check_installed("shinytest", version = "1.5.1")
 
-  path_info <- app_path(path, "path")
-
   # Use an environment to avoid having to return many function levels to merge info and then send back many function levels
-  app_info_env <- as.environment(path_info)
+  app_info_env <- as.environment(list(
+    dir = app_dir
+  ))
   app_info_env$verbose <- is_false(quiet)
   app_info_env$include_expect_screenshot <- include_expect_screenshot
 
-  if (app_info_env$verbose) rlang::inform(c(i = paste0("Temp working directory: ", path_info$dir)))
-  withr::with_dir(path_info$dir, {
+  if (app_info_env$verbose) rlang::inform(c(i = paste0("Temp working directory: ", app_info_env$dir)))
+  withr::with_dir(app_info_env$dir, {
     m__extract_runner_info(app_info_env)
     m__write_shinytest2_runner(app_info_env)
     m__parse_test_files(app_info_env)
@@ -182,7 +177,7 @@ m__extract_runner_info <- function(app_info_env) {
   withCallingHandlers(
     testnames <- eval(testapp_args$testnames, envir = globalenv()),
     error = function(e) {
-      rlang::abort("Could not use variables for `testnames` in `shinytest::testApp()`. Only atomic values are supported.")
+      rlang::abort("Could not parse variable for `testnames` in `shinytest::testApp()`. Only atomic values are supported.")
     }
   )
   app_info_env$testnames <-
@@ -210,7 +205,7 @@ m__write_shinytest2_runner <- function(app_info_env) {
 m__parse_test_files <- function(app_info_env) {
   if (app_info_env$verbose) {
     rlang::inform(c(
-      "i" = paste0("`suffix`: '", app_info_env$suffix, "'"),
+      "i" = paste0("`suffix`: '", st2_expr_text(app_info_env$suffix), "'"),
       "i" = paste0("`compareImages`: ", app_info_env$compare_images),
       "i" = paste0("`testnames`: ", paste0(app_info_env$testnames, collapse = ", "))
     ))
@@ -223,6 +218,22 @@ m__parse_test_files <- function(app_info_env) {
 
     m__parse_test_file(test_path, info_env)
     m__expected_files(test_path, info_env)
+  })
+  lapply(fs::dir_ls("tests/shinytest"), function(path_name) {
+    if (fs::dir_exists(path_name)) {
+      # If contains in "-expected" (or "-expected-"), ignore it. Otherwise copy it
+      if (grepl("-expected", path_name)) {
+        # Skip!
+        return()
+      }
+      # Copy it to testthat dir
+      fs::dir_copy(path_name, fs::path("tests/testthat", fs::path_file(path_name)))
+      return()
+    }
+    # Is file
+    # Ignore top level shinytest folder R files
+    if (fs::path_ext(path_name) %in% c("r", "R")) return()
+    fs::file_copy(path_name, fs::path("tests/testthat", fs::path_file(path_name)))
   })
 }
 
@@ -305,22 +316,30 @@ m__expected_files <- function(test_path, info_env) {
     fs::dir_create(testthat_path)
 
     shinytest_files <- dir(shinytest_dir, full.names = TRUE)
+    downloads_found <- 0
     lapply(seq_along(shinytest_files), function(i) {
       shinytest_file <- shinytest_files[i]
 
       expected_file <- fs::path_file(shinytest_file)
 
-      cur_number_reg <- regexpr("(?<digits>\\d\\d\\d).(json|png)$", expected_file, perl = TRUE)
+      cur_number_reg <- regexpr("(?<digits>\\d\\d\\d).(json|png|download)$", expected_file, perl = TRUE)
       if (cur_number_reg > 0) {
         start <- attr(cur_number_reg, "capture.start")[1, ][["digits"]]
         length <- attr(cur_number_reg, "capture.length")[1, ][["digits"]]
         cur_number_txt <- substr(expected_file, start, start + length - 1)
         cur_number <- as.integer(cur_number_txt)
 
-        new_number <- cur_number * 2
-        if (fs::path_ext(expected_file) == "json") {
-          new_number <- new_number - 1
-        }
+        new_number <- 2 * cur_number - downloads_found
+        switch(fs::path_ext(expected_file),
+          "png" = {},
+          "json" = {
+            new_number <- new_number - 1
+          },
+          "download" = {
+            new_number <- new_number - 1
+            downloads_found <<- downloads_found + 1
+          }
+        )
 
         new_number <- as.character(new_number)
         new_number_txt <- paste0(paste0(rep("0", 3 - nchar(new_number)), collapse = ""), new_number)
@@ -354,13 +373,12 @@ m__parse_test_file <- function(test_path, info_env) {
   info_env$from_file <- fs::path_file(test_path)
   info_env$save_path <-
     fs::path("tests", "testthat", paste0("test-", info_env$from_file))
+  fs::dir_create(fs::path_dir(info_env$save_path))
 
   test_text <- read_utf8(test_path)
   migrated_text <- m__parse_test_text(test_text, test_path, info_env)
 
   if (length(migrated_text) == 0) {
-    # TODO-barret; test this; does it work?
-    abort("Needs testing")
     if (info_env$verbose) {
       rlang::inform(paste0("No test content found in `{test_path}`"))
       rlang::inform(paste0("Creating: ", info_env$save_path))
@@ -376,18 +394,17 @@ m__parse_test_file <- function(test_path, info_env) {
     title = paste0("Migrated shinytest test: ", info_env$from_file),
     body_txts = migrated_text
   )
-  fs::dir_create(fs::path_dir(info_env$save_path))
   write_utf8(testthat_text, info_env$save_path)
 }
 
 m__parse_test_text <- function(test_text, test_path, info_env) {
-  test_lines <- strsplit(test_text, "\n")[[1]]
-
-  if (length(test_lines) == 0) {
+  parsed_text <- parse(text = test_text)
+  # If nothing to copy
+  if (length(parsed_text) == 0) {
     return(character(0))
   }
 
-  init_infos <- m__find_shinydriver_new(parse(text = test_text), info_env)
+  init_infos <- m__find_shinydriver_new(parsed_text, info_env)
   if (length(init_infos) == 0) abort(paste0("Can not find `ShinyDriver$new` in test file: ", test_path))
   # TODO-future; split the code into parts and recurse
   if (length(init_infos) > 1) abort(paste0("Can not migrate file that contains multiple calls to `ShinyDriver$new`: ", test_path))
@@ -782,34 +799,21 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     "isRmd" = {
       app_val <- rlang::sym(info_env$app_var)
       new_expr <- rlang::expr(
-        local({
-          path <- (!!app_val)$get_path()
-          fs::path_ext(path) == ".Rmd"
-        })
+        length(fs::dir_ls((!!app_val)$get_dir(), regexp = "\\.[Rr]md$")) > 0
       )
       new_expr
     },
     "getAppDir" = {
-      app_val <- rlang::sym(info_env$app_var)
-      new_expr <- rlang::expr(
-        local({
-          path <- (!!app_val)$get_path()
-          if (fs::path_ext(path) == ".Rmd") {
-            fs::path_dir(path)
-          } else {
-            path
-          }
-        })
-      )
-      new_expr
+      shinytest2_expr("get_dir", list())
     },
     "getAppFilename" = {
       app_val <- rlang::sym(info_env$app_var)
       new_expr <- rlang::expr(
         local({
-          path <- (!!app_val)$get_path()
-          if (fs::path_ext(path) == ".Rmd") {
-            fs::path_file(path)
+          rmd_paths <- fs::dir_ls((!!app_val)$get_dir(), regexp = "\\.[Rr]md$")
+          is_rmd <- length(rmd_paths) > 0
+          if (is_rmd) {
+            fs::path_file(rmd_paths[1])
           } else {
             NULL
           }
@@ -827,7 +831,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     },
     "getDebugLog" = , # nolint
     "getEventLog" = {
-      rlang::inform(c(
+      if (info_env$verbose) rlang::inform(c(
         i = paste0("`ShinyDriver$", as.character(app_fn_sym), "()` is not implemented in `AppDriver`."),
         "!" = "A single `AppDriver$get_log()` method should be used."
       ))
@@ -947,7 +951,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     "snapshotInit" = {
       if (info_env$verbose) rlang::inform(c(
         "*" = "`ShinyDriver$snapshotInit()` is not implemented in `AppDriver`.",
-        "*" = "`ShinyDriver$snapshotInit(path=)` will become `AppDriver$initialize(name=)`",
+        "*" = "`ShinyDriver$snapshotInit(path=)` will be ignored as the snaps folder is determined by the test file name.",
         "*" = "`ShinyDriver$snapshotInit(screenshot=)` will help determine if `AppDriver$expect_screenshot()` will be provided alongside `AppDriver$expect_values()` when replacing `ShinyDriver$snapshot()`"
       ))
 

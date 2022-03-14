@@ -52,7 +52,7 @@ AppDriver <- R6Class(# nolint
     state = "stopped", # "stopped" or "running"
     shiny_worker_id = NA_character_,
 
-    path = NULL, # Full path to app (including filename if it's a .Rmd)
+    dir = NULL, # Full dir path to app. No file path included
     save_dir = NULL, # Temp folder to store snapshot outputs
     default_screenshot_args = "missing_value()", # Default screenshot args to use
     default_expect_values_screenshot_args = TRUE, # Should `$expect_values()` expect a non-failing screenshot?
@@ -75,8 +75,8 @@ AppDriver <- R6Class(# nolint
     #' to initialize" to be signaled while also allowing for the `app` to be
     #' retrieved after any initialization error has been thrown.
     #'
-    #' @param path Path to a directory containing a Shiny app, i.e. a
-    #'   single `app.R` file or a `server.R`-`ui.R` pair.
+    #' @param app_dir Directory containing your Shiny application or a runtime
+    #' Shiny R Markdown document.
     #' @param name Prefix name to use when saving testthat snapshot files
     #' @template variant
     #' @param seed An optional random seed to use before starting the application.
@@ -85,30 +85,36 @@ AppDriver <- R6Class(# nolint
     #' @param load_timeout How long to wait for the app to load, in ms.
     #'   This includes the time to start R. Defaults to 10s when running
     #'   locally and 20s when running on CI.
-    #' @param screenshot_args Default set of arguments to pass in to [`chromote::ChromoteSession`]'s
-    #' `$screenshot()` method when taking screnshots within `$expect_screenshot()`. To disable screenshots by default, set to `FALSE`.
-    #' @param expect_values_screenshot_args The value for `screenshot_args` when producing a debug screenshot for `$expect_values()`.
-    #' @param check_names Check if widget names are unique once the application initially loads?
-    #' @param view Opens the Chromote Session in an interactive browser tab once initialization. Defaults to `FALSE`.
-    #' @param height,width Window size to use when opening the Chromote Session. These values will only be used if both `height` and `width` are not `NULL`.
+    #' @param screenshot_args Default set of arguments to pass in to
+    #' [`chromote::ChromoteSession`]'s `$screenshot()` method when taking
+    #' screnshots within `$expect_screenshot()`. To disable screenshots by
+    #' default, set to `FALSE`.
+    #' @param expect_values_screenshot_args The value for `screenshot_args` when
+    #' producing a debug screenshot for `$expect_values()`.
+    #' @param check_names Check if widget names are unique once the application
+    #' initially loads? If duplicate names are found, only a warning will be
+    #' displayed.
+    #' @param view Opens the Chromote Session in an interactive browser tab once
+    #' initialization. Defaults to `FALSE`.
+    #' @param height,width Window size to use when opening the Chromote Session.
+    #' These values will only be used if both `height` and `width` are not
+    #' `NULL`.
     #' @param clean_logs Whether to remove the stdout and stderr logs when the
     #'   Shiny process object is garbage collected.
-    #' @param shiny_args A list of options to pass to [shiny::runApp()]. Ex: `list(port = 8080)`.
-    #' @param render_args Passed to `rmarkdown::run(render_args=)` for interactive `.Rmd`s. Ex: `list(quiet = TRUE)
+    #' @param shiny_args A list of options to pass to [shiny::runApp()]. Ex:
+    #' `list(port = 8080)`.
+    #' @param render_args Passed to `rmarkdown::run(render_args=)` for
+    #' interactive `.Rmd`s. Ex: `list(quiet = TRUE)
     #' @param options A list of [base::options()] to set in the driver's child
     #'   process. See [`shiny::shinyOptions()`] for inspiration. If `shiny.trace = TRUE`,
     #'   then all WebSocket traffic will be captured by `chromote` and logged.
     #' @importFrom callr process
     #' @importFrom rlang abort
     initialize = function(
-      path = testthat::test_path("../../"),
+      app_dir = testthat::test_path("../../"),
       ...,
-      # TODO-barret-questions:
-      # Should we have many options that can be set to override the defaults?
-      # Like the shinytest2.variant? Or `shinytest2.seed`? Or even `shinytest2.idle.duration`?
-      # Should `shinytest2.variant` be removed?
       name = NULL,
-      variant = getOption("shinytest2.variant", missing_arg()),
+      variant = missing_arg(),
       seed = NULL,
       load_timeout = NULL,
       screenshot_args = missing_arg(),
@@ -124,7 +130,7 @@ AppDriver <- R6Class(# nolint
     ) {
       app_initialize(
         self, private,
-        path = path,
+        app_dir = app_dir,
         ...,
         load_timeout = load_timeout,
         expect_values_screenshot_args = expect_values_screenshot_args,
@@ -165,7 +171,7 @@ AppDriver <- R6Class(# nolint
       app_expect_text(self, private, selector, ..., cran = cran)
     },
     #' @param selector A DOM CSS selector to be passed into `document.querySelectorAll()`
-    # TODO-barret; Add note that this does not work for text inputs or text area inputs.
+    # TODO-barret-docs; Add note that this does not work for text inputs or text area inputs.
     get_text = function(selector) {
       app_get_text(self, private, selector = selector)
     },
@@ -178,16 +184,14 @@ AppDriver <- R6Class(# nolint
     #' @param selector A DOM selector to be passed into `document.querySelectorAll()`
     #' @param outer_html If `TRUE`, the full DOM structure will be returned (`TAG.outerHTML`).
     #'   If `FALSE`, the full DOM structure of the child elements will be returned (`TAG.innerHTML`).
-    # TODO-barret; Default `outer_html` to TRUE
-    expect_html = function(selector, ..., outer_html = FALSE, cran = FALSE) {
+    expect_html = function(selector, ..., outer_html = TRUE, cran = FALSE) {
       app_expect_html(self, private, selector, ..., outer_html = outer_html, cran = cran)
     },
     #' @param selector A DOM selector to be passed into `document.querySelectorAll()`
     #' @param outer_html If `TRUE`, the full DOM structure will be returned (`TAG.outerHTML`).
     #'   If `FALSE`, the full DOM structure of the child elements will be returned (`TAG.innerHTML`).
-    # TODO-barret; Default `outer_html` to TRUE
-    # TODO-barret-document; does not work with shadow DOM; Only works with updated HTML elements
-    get_html = function(selector, ..., outer_html = FALSE) {
+    # TODO-barret-docs; does not work with shadow DOM; Only works with updated HTML elements
+    get_html = function(selector, ..., outer_html = TRUE) {
       app_get_html(self, private, selector, ..., outer_html = outer_html)
     },
 
@@ -517,11 +521,31 @@ AppDriver <- R6Class(# nolint
     },
 
     #' @description
+    #' Expect unique input and output names.
+    #'
+    #' If the HTML has duplicate input or output elements with matching `id` values, this function will
+    #' throw an error. It is similar to `AppDriver$new(check_names = TRUE)`, but
+    #' asserts that no warnings are displayed.
+    #'
+    #' This method will not throw if a single input and a single output have the same name.
+    #' @examples
+    #' example_app <- system.file("tests/testthat/apps/init-input/", package = "shinytest2")
+    #' # Initial checking for unique names (default behavior)
+    #' \dontrun{app <- AppDriver$new(example_app, check_names = TRUE)}
+    #' # Manually assert that all names are unique
+    #' \dontrun{app <- AppDriver$new(example_app, check_names = FALSE)
+    #' app$expect_unique_names()}
+    expect_unique_names = function() {
+      app_expect_unique_names(self, private)
+    },
+
+
+    #' @description
     #' Retrieve the Shiny app path
     #'
     #' @return If it's a .Rmd file, it will return the full .Rmd path, otherwise it will return the directory containing the file.
-    get_path = function() {
-      private$path
+    get_dir = function() {
+      app_get_dir(self, private)
     },
     #' @description
     #' Retrieve the Shiny app URL

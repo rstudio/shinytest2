@@ -1,7 +1,6 @@
 
 app_start_shiny <- function(
   self, private,
-  path,
   seed = NULL,
   load_timeout = 10000,
   shiny_args = list(),
@@ -9,7 +8,6 @@ app_start_shiny <- function(
   options = list()
 ) {
   ckm8_assert_app_driver(self, private)
-  ckm8_assert_single_string(path)
 
   tempfile_format <- temp_file(pattern = "%s-", fileext = ".log")
 
@@ -19,7 +17,7 @@ app_start_shiny <- function(
   p <- withr::with_envvar(
     c("R_TESTS" = NA),
     callr::r_bg(
-      function(path, shiny_args, rmd, seed, rng_kind, render_args, options) {
+      function(app_dir, shiny_args, has_rmd, seed, rng_kind, render_args, options) {
 
         if (!is.null(seed)) {
           # Prior to R 3.6, RNGkind has 2 args, otherwise it has 3
@@ -36,18 +34,26 @@ app_start_shiny <- function(
 
         # Return value is important for `AppDriver$stop()`
         # Do not add code after this if else block
-        if (rmd) {
+        if (has_rmd) {
           # Shiny document
-          rmarkdown::run(path, shiny_args = shiny_args, render_args = render_args)
+          rmarkdown::run(
+            file = NULL, # Do not open anything in browser
+            dir = app_dir,
+            default_file = NULL, # Let rmarkdown find the default file
+            # DO NOT ENABLE! Makes things like `app$wait_for_idle()` not work as expected.
+            auto_reload = FALSE, # Do not constantly poll for file changes. Drastically reduces `app$get_log()`
+            shiny_args = shiny_args,
+            render_args = render_args
+          )
         } else {
           # Normal shiny app
-          do.call(shiny::runApp, c(path, shiny_args))
+          do.call(shiny::runApp, c(app_dir, shiny_args))
         }
       },
       args = list(
-        path = path,
+        app_dir = self$get_dir(),
         shiny_args = shiny_args,
-        rmd = is_rmd(path),
+        has_rmd = app_dir_has_rmd(self, private),
         seed = seed,
         rng_kind = rng_kind,
         render_args = render_args,
@@ -62,10 +68,10 @@ app_start_shiny <- function(
 
   "!DEBUG waiting for shiny to start"
   if (! p$is_alive()) {
-    abort(paste0(
+    app_abort(self, private, paste0(
       "Failed to start shiny. Error:\n",
       strwrap(readLines(p$get_error_file()))
-    ), app = self)
+    ))
   }
 
   "!DEBUG finding shiny port"
@@ -75,20 +81,20 @@ app_start_shiny <- function(
     err_lines <- readLines(p$get_error_file())
 
     if (!p$is_alive()) {
-      abort(paste0(
+      app_abort(self, private, paste0(
         "Error starting shiny application:\n",
         paste(err_lines, collapse = "\n")
-      ), app = self)
+      ))
     }
     if (any(grepl("Listening on http", err_lines))) break
 
     Sys.sleep(0.2)
 
     if (i == max_i) {
-      abort(paste0(
+      app_abort(self, private, paste0(
         "Cannot find shiny port number. Error:\n",
         paste(err_lines, collapse = "\n")
-      ), app = self)
+      ))
     }
   }
 
