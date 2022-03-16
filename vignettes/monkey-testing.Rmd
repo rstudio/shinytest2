@@ -85,3 +85,35 @@ chromote::set_chrome_args(
 Some flags are considered by default, particularly `--no-sandbox` which is apply only on CI/CD (Chrome won't start
 without) such that you don't need to worry too much about this.
 
+## Injecting gremlins.js
+
+The next steps consists of injecting the gremlins.js dependency in the DOM so that we can unleash the horde.
+
+### Easy way
+The easiest way is to call:
+
+```r
+plop$execute_js("
+  (function() {
+    var s = document.createElement('script');
+    s.src = 'https://unpkg.com/gremlins.js';
+    document.body.appendChild(s);
+  })();"
+)
+```
+
+This creates a `script` tag pointing to the right CDN (content delivery network: optimized server to store libraries) and inserts
+it at the end of the body.
+
+To test whether everything worked well, we can dump the DOM, look for the scripts. We should be able to find
+gremlins.js and try to call `typeof window.gremlins`, which should return an object:
+
+```r
+plop$get_html("script", outer_html = TRUE)
+plop$execute_js("return typeof window.gremlins")
+```
+
+If `undefined` is returned instead, it means something went wrong. This is generally because the JS code
+is clocked by the network. In this case, let's see what we can do in the next part.
+
+### Local way
