@@ -71,5 +71,17 @@ might be useful if your organization restricts port number. `load_timeout` defau
 Therefore, if your app takes longer to launch, you can change this value. Keep in mind that an app taking more than 20s to launch is generally
 under-optimized and would require specific care such as profiling and refactoring. 
 
+AppDriver starts a Chrome-based headless browser. Interestingly, if you need specific [flags](https://peter.sh/experiments/chromium-command-line-switches/) that are not
+available by default in `{shinytest2}`, you can pass them before instantiating the driver:
 
+```r
+chromote::set_chrome_args(
+  c(
+    chromote::default_chrome_args(),
+    # Custom flags: see https://peter.sh/experiments/chromium-command-line-switches/
+)
+```
+
+Some flags are considered by default, particularly `--no-sandbox` which is apply only on CI/CD (Chrome won't start
+without) such that you don't need to worry too much about this.
 
