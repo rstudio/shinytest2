@@ -93,7 +93,7 @@ The next steps consists of injecting the gremlins.js dependency in the DOM so th
 The easiest way is to call:
 
 ```r
-plop$execute_js("
+headless_app$execute_js("
   (function() {
     var s = document.createElement('script');
     s.src = 'https://unpkg.com/gremlins.js';
@@ -109,11 +109,137 @@ To test whether everything worked well, we can dump the DOM, look for the script
 gremlins.js and try to call `typeof window.gremlins`, which should return an object:
 
 ```r
-plop$get_html("script", outer_html = TRUE)
-plop$execute_js("return typeof window.gremlins")
+headless_app$get_html("script", outer_html = TRUE)
+headless_app$execute_js("return typeof window.gremlins")
 ```
 
 If `undefined` is returned instead, it means something went wrong. This is generally because the JS code
 is clocked by the network. In this case, let's see what we can do in the next part.
 
 ### Local way
+
+If you work in a corporate environment chances are you'll end up in this situation. 
+A solution is then to store and serve a local copy of the gremlin.js script with `shiny::addResourcePath()`.
+Assuming `gremlins.js` are in `inst/js/gremlins.min.js`. Add this to the `app.R` file:
+
+```r
+addResourcePath("gremlins", "inst/js/gremlins.min.js")
+```
+
+We can subsequently inject the gremlins in the DOM and checks whether everything worked as expected:
+
+```r
+headless_app$execute_js("
+  (function() {
+    var s = document.createElement('script');
+    s.src = './gremlins/gremlins.min.js';
+    document.body.appendChild(s);
+  })();"
+)
+plop$get_html("script", outer_html = TRUE)
+plop$execute_js("return typeof window.gremlins")
+```
+
+## Unleash the horde
+
+### A bit about gremlins.js
+
+The workflow is rather simple:
+
+  - We create the horde with `gremlins.createHorde()`.
+  - We run the monkey test with `horde.unleash();`. 
+
+```js
+const horde = gremlins.createHorde();
+horde.unleash();
+```
+
+`createHorde()` accepts many species of gremlins capable of handling various events such as
+clicks, touch, form filling, scrolling, typing, ... describes in the [documentation](https://github.com/marmelab/gremlins.js#advanced-usage).
+
+As a side note, we don't recommend using the `scroller` which crashes the Chrome instance. 
+
+If your plots rely on random elements like `rnorm`, it is best practice to setup a seed. 
+By default, all species will attack in random order with a delay of 10 ms between each event. You can also control the attack strategy to fine tune the global behavior. Finally, if you want more control over what gremlins specie should be doing, you can define a custom specie. 
+
+
+### Practice
+
+Let's go back to our example. Does it really makes sense to invoke all species given we only have a slider? Absolutely not!
+In the following code, we want the clicker gremlin to only click on the element with `id=obs`, that is the slider input.
+
+```js
+const customClicker = gremlins.species.clicker({
+  // which mouse event types will be triggered
+  clickTypes: ['click'],
+  // Click only if element has id obs
+  canClick: (element) => element.id === 'obs',
+  // by default, the clicker gremlin shows its action by a red circle
+  // overriding showAction() with an empty function makes the gremlin action invisible
+  showAction: (x, y) => {},
+});
+```
+
+We can create our custom horde, ensuring it is repeatable (random seed) and assuming the clicker specie will 
+trigger in 80% of the cases compared to the toucher gremlins:
+
+```js
+const horde = gremlins.createHorde({
+  randomizer: new gremlins.Chance(1234), // repeatable
+  species: [customClicker, gremlins.species.toucher()],
+  mogwais: [gremlins.mogwais.alert(), gremlins.mogwais.gizmo()],
+  strategies: [
+    gremlins.strategies.distribution({
+      distribution: [0.8, 0.2], // custom 
+      delay: 10 // default
+    })
+  ]
+});
+```
+
+Since `unleash` is a promise, we can execute a function right after, to check whether the script ran as expected.
+
+```js
+horde
+  .unleash()
+  .then(() => {
+    console.log('Gremlins test success')
+});
+```
+
+The `console.log` output will be captured by the `{shinytest2}` logs with `headless_app$get_log()` allowing you to debug and refine the 
+monkey testing script. 
+
+As Monkey testing lasts about 10s, you often want to take a screenshot of the ongoing attack:
+
+```r
+headless_app$execute_js(
+  "const customClicker = gremlins.species.clicker({
+      // which mouse event types will be triggered
+      clickTypes: ['click'],
+      // Click only if element has id obs
+      canClick: (element) => element.id === 'obs',
+      // by default, the clicker gremlin shows its action by a red circle
+      // overriding showAction() with an empty function makes the gremlin action invisible
+      showAction: (x, y) => {},
+    });
+    
+    gremlins.createHorde({
+      randomizer: new gremlins.Chance(1234), // repeatable
+      species: [customClicker, gremlins.species.toucher()],
+      mogwais: [gremlins.mogwais.alert(),gremlins.mogwais.gizmo()],
+      strategies: [
+        gremlins.strategies.distribution({
+          distribution: [0.8, 0.2], // custom 
+          delay: 10 // default
+        })
+      ]
+    }).unleash().then(() => {
+      console.log('Gremlins test success')
+    });
+  "
+)
+
+Sys.sleep(3)
+headless_app$screenshot("gremlins.png")
+```
