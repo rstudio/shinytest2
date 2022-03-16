@@ -1,0 +1,75 @@
+---
+title: "Monkey-testing"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{monkey-testing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(shinytest2)
+library(shiny)
+```
+
+# Monkey (headless) testing with `{shinytest2}`
+
+Most people will use `{shinytest2}` with the plug and play `record_test()` app, which is very convenient if you are
+not familiar with JavaScript. Under the hood, `record_test()` generates a R script composed of a series of 
+instructions that manipulates the app to automate testing on CI/CD environments. 
+
+Monkey testing is widely used by web developers to check the application robustness, particularly in apps with large
+number of inputs. The goal is ultimately to try to break the app by triggering unexpected combinations. Most available libraries
+are JS-based such as [gremlins.js](https://github.com/marmelab/gremlins.js), traditionally combined with JS-based global testing libraries like [Puppeteer](https://pptr.dev/), but can work with `{shinytest2}` as well. 
+
+In this vignette, we'll provide a more thorough overview of the `AppDriver` R6 class (like for [`{shinytest}`](https://rstudio.github.io/shinytest/articles/in-depth.html)), which allows the developer
+to programmatically control the app. We'll see how we can seemlessly benefit from gremlins.js with only few lines of code.
+
+## Initialize the driver
+
+We consider a simple app composed of a slider and a plot output:
+
+```r
+ui <- fluidPage(
+  sliderInput("obs", "Number of observations:",
+    min = 0, max = 1000, value = 500
+  ),
+  plotOutput("distPlot")
+)
+
+# Server logic
+server <- function(input, output) {
+  output$distPlot <- renderPlot({
+    hist(rnorm(input$obs))
+  })
+}
+
+# Complete app with UI and server components
+shinyApp(ui, server)
+```
+
+The driver may be initialized with:
+
+```r
+headless_app <- AppDriver$new(
+  #load_timeout = 10,
+  path = "<PATH_TO_APP>",
+  name = "monkey-test",
+  shiny_args = list(port = 3515)
+)
+```
+
+Note the `shiny_args` slot allowing you to pass custom options to `shiny::runApp()` such as the port, which
+might be useful if your organization restricts port number. `load_timeout` defaults to 10s and 20s locally and during CI/CD, respectively. 
+Therefore, if your app takes longer to launch, you can change this value. Keep in mind that an app taking more than 20s to launch is generally
+under-optimized and would require specific care such as profiling and refactoring. 
+
+
+
