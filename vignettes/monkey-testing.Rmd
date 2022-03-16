@@ -59,8 +59,7 @@ The driver may be initialized with:
 
 ```r
 headless_app <- AppDriver$new(
-  #load_timeout = 10,
-  path = "<PATH_TO_APP>",
+  app_dir = "<PATH_TO_APP>",
   name = "monkey-test",
   shiny_args = list(port = 3515)
 )
