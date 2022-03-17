@@ -97,16 +97,22 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
       }
     }
 
-    build_ignores <- c(
-      "_\\.new\\.png$"
-    )
-    wrote_lines <- usethis::write_union(".Rbuildignore", build_ignores)
-    if (!quiet) {
-      if (wrote_lines) {
-        ## `write_union()` is verbose, do not be double verbose
-        # rlang::inform(c("*" = "Added `_*.new.png` to `", fs::path(app_dir, ".Rbuildignore"), "`"))
-      } else {
-        rlang::inform(c("!" = "`", fs::path(app_dir, ".Rbuildignore"), "` already contains `_*.new.png`"))
+    if (fs::file_exists(fs::path(app_dir, ".Rbuildignore"))) {
+      build_ignores <- c(
+        "_\\.new\\.png$"
+      )
+      wrote_lines <- usethis::write_union(".Rbuildignore", build_ignores)
+      if (!quiet) {
+        if (wrote_lines) {
+          ## `write_union()` is verbose, do not be double verbose
+          # rlang::inform(c("*" = "Added `_*.new.png` to `", fs::path(app_dir, ".Rbuildignore"), "`"))
+        } else {
+          rlang::inform(c("!" = "`", fs::path(app_dir, ".Rbuildignore"), "` already contains `_*.new.png`"))
+        }
+      }
+    } else {
+      if (!quiet) {
+        rlang::inform(c("!" = "No `.Rbuildignore` file found. Skipping adding `_*.new.png` to `.Rbuildignore`"))
       }
     }
   })
