@@ -86,7 +86,7 @@ without) such that you don't need to worry too much about this.
 
 If you run this script locally, you may add `view = TRUE` to open the Chrome Devtools, which will significantly ease the testing calibration. I highly recommend to create the test protocol locally and then move to CI/CD later when all bugs are fixed. In the below figure, the application is shown on the left side panel. The top-right side panel shows the DOM elements (default) and the bottom-right side panel displays the JavaScript console output. 
 
-```{r echo=FALSE, out.width='50%', fig.align='center'}
+```{r echo=FALSE, out.width='100%', fig.align='center'}
 knitr::include_graphics("figures/gremlins-start.png")
 ```
 
@@ -107,7 +107,7 @@ headless_app$execute_js("
 )
 ```
 
-This creates a `script` tag pointing to the right CDN (content delivery network: optimized server to store libraries) and inserts
+This creates a `<script>` tag pointing to the right CDN (content delivery network: optimized server to store libraries) and inserts
 it at the end of the body.
 
 To test whether everything worked well, we can dump the DOM, look for the scripts. We should be able to find
@@ -119,9 +119,9 @@ headless_app$execute_js("return typeof window.gremlins")
 ```
 
 If `undefined` is returned instead, it means something went wrong. This is generally because the JS code
-is clocked by the network. In this case, let's see what we can do in the next part.
+is blocked by the network. In this case, let's see what we can do in the next part.
 
-```{r echo=FALSE, out.width='50%', fig.align='center'}
+```{r echo=FALSE, out.width='100%', fig.align='center'}
 knitr::include_graphics("figures/gremlins-inject.png")
 ```
 
@@ -165,9 +165,9 @@ horde.unleash();
 ```
 
 `createHorde()` accepts many species of gremlins capable of handling various events such as
-clicks, touch, form filling, scrolling, typing, ... describes in the [documentation](https://github.com/marmelab/gremlins.js#advanced-usage).
+clicks, touch, form filling, scrolling, typing, ... described in the gremlins.js [documentation](https://github.com/marmelab/gremlins.js#advanced-usage).
 
-As a side note, we don't recommend using the `scroller` which crashes the Chrome instance. 
+As a side note, we don't recommend using the `scroller` which sometimes [crashes](https://github.com/rstudio/shinytest2/issues/117) the Chrome instance. 
 
 If your plots rely on random elements like `rnorm`, it is best practice to setup a seed. 
 By default, all species will attack in random order with a delay of 10 ms between each event. You can also control the attack strategy to fine tune the global behavior. Finally, if you want more control over what gremlins specie should be doing, you can define a custom specie. 
@@ -185,7 +185,7 @@ headless_app$execute_js("gremlins.createHorde().unleash();")
 
 Result is shown in the gif below. 
 
-```{r echo=FALSE, out.width='50%', fig.align='center'}
+```{r echo=FALSE, out.width='100%', fig.align='center'}
 knitr::include_graphics("figures/gremlins-attack.gif")
 ```
 
@@ -194,11 +194,11 @@ knitr::include_graphics("figures/gremlins-attack.gif")
 Does it really makes sense to invoke all species given we only have a slider? Absolutely not!
 In the following code, we only want to test the slider input.
 
-```{r echo=FALSE, out.width='50%', fig.align='center'}
+```{r echo=FALSE, out.width='100%', fig.align='center'}
 knitr::include_graphics("figures/gremlins-slider-handle.png")
 ```
 
-The best specie to handle this is the `toucher`, which is able to randomly move the slider input. The documentation specifies many events such as tap, doubletap, gesture and multitouch. It seems more relevant to apply only gesture, consisting of dragging the slider on the x-axis. Also, we target the slider handle by its class `irs-handle single` to ensure we don't touch any other element and increase the number of maximum touch from 2 to 200. Not how precious is the HTML inspector, which allows to seamlessly inspect and extract any class, id.  The log parameter enables log in the JavaScript console:
+The best specie to perform this task is the `toucher`, which is able to randomly move the slider input. The documentation specifies many events such as tap, doubletap, gesture and multitouch. It seems more relevant to apply only gesture, consisting of dragging the slider on the x-axis (note: gesture also consider the y-axis which does not make sense for the slider, which is an gremlins.js limitation. This however won't prevent our test from running). Also, we target the slider handle by its class `irs-handle single` to ensure we don't touch any other element and increase the number of maximum touch from 2 to 200. Not how precious is the HTML inspector, which allows to seamlessly inspect and extract any class or id. The __log__ parameter enables log in the JavaScript console:
 
 ```js
 const customToucher = gremlins.species.toucher({
@@ -220,7 +220,7 @@ const horde = gremlins.createHorde({
 });
 ```
 
-As `unleash` is a promise, we can execute a function right after, to check whether the script ran as expected.
+As `unleash` is a __promise__, we can execute a function right after, to check whether the script ran as expected.
 
 ```js
 horde
@@ -233,7 +233,7 @@ horde
 If you are running on CI/CD and can't see the Chrome Devtools, you can still display the logs. The `console.log` output will be captured by the `{shinytest2}` logs with `headless_app$get_log()` allowing you to debug and refine the 
 monkey testing script. 
 
-```{r echo=FALSE, out.width='50%', fig.align='center'}
+```{r echo=FALSE, out.width='100%', fig.align='center'}
 knitr::include_graphics("figures/gremlins-logs.png")
 ```
 
@@ -265,7 +265,7 @@ Sys.sleep(3)
 headless_app$screenshot("gremlins.png")
 ```
 
-```{r echo=FALSE, out.width='50%', fig.align='center'}
+```{r echo=FALSE, out.width='100%', fig.align='center'}
 knitr::include_graphics("figures/gremlins-attack-refined.gif")
 ```
 
@@ -277,7 +277,7 @@ headless_app$set_inputs(obs = 500)
 ```
 
 
-If you run on CI/CD, don't forget to clean the session after tests are completed, particularly if you fixes the `shiny.port` option (you can't have 2 apps running on the same port):
+If you run on CI/CD, don't forget to clean the session after tests are completed, particularly if you set the `shiny.port` option (you can't have 2 apps running on the same port):
 
 ```r
 headless_app$stop()
