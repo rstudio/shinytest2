@@ -26,7 +26,8 @@ with_external_shiny_browser <- function(code) {
       # shiny.launch.browser option
 
       # Use the local Chrome browser path and shell escape it
-      browser_path <- shQuote(browser$get_path())
+      browser_path <- browser$get_path()
+      if (!is_windows()) browser_path <- shQuote(browser_path)
       open_chrome <- function(url) {
         utils::browseURL(url, browser_path)
       }
