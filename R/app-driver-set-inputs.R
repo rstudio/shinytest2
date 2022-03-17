@@ -29,7 +29,7 @@ app_set_inputs <- function(
     msg <- paste0("Error received while setting inputs: ", res)
     self$log_message(msg)
     app_inform_where(self, private, msg)
-    return(invisible())
+    return(invisible(self))
   }
 
   if (isTRUE(res$timedOut)) {
@@ -47,7 +47,7 @@ app_set_inputs <- function(
 
   self$log_message(paste0("Finished setting inputs. Timedout: ", isTRUE(res$timedOut)))
 
-  invisible()
+  invisible(self)
 }
 
 app_queue_inputs <- function(self, private, inputs) {
