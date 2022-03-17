@@ -61,11 +61,11 @@ m__remove_shinytest_files <- function(app_info_env) {
 # Make sure all folders exist as expected
 # @return shinytest runner file location
 m__validate_shinytest_exists <- function() {
-  if (!fs::dir_exists("tests")) abort("No ./tests directory found")
+  if (!fs::dir_exists("tests")) rlang::abort("No ./tests directory found")
   shinytest_file <- fs::dir_ls("tests", regexp = "shinytest\\.[rR]$", type = "file")
-  if (length(shinytest_file) == 0) abort("No ./tests/shinytest.R file found")
-  if (length(shinytest_file) > 1) abort("Multiple files matching `./tests/shinytest` found")
-  if (!fs::dir_exists("./tests/shinytest")) abort("./tests/shinytest folder not found")
+  if (length(shinytest_file) == 0) rlang::abort("No ./tests/shinytest.R file found")
+  if (length(shinytest_file) > 1) rlang::abort("Multiple files matching `./tests/shinytest` found")
+  if (!fs::dir_exists("./tests/shinytest")) rlang::abort("./tests/shinytest folder not found")
 
   # return runner file location
   unname(shinytest_file)
@@ -1146,7 +1146,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     # "getEventLog" = {
     #   expr_fn[[3]] <- rlang::sym("get_log")
     # },
-    abort(paste0("Unknown method: ", as.character(app_fn_sym)))
+    rlang::abort(paste0("Unknown method: ", as.character(app_fn_sym)))
   )
 }
 

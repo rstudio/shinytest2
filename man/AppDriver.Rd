@@ -333,19 +333,6 @@ tmpfile <- tempfile(fileext = ".png")
 app$screenshot(tmpfile)
 showimage::show_image(tmpfile)
 }
-Expect a screenshot of the Shiny application
-
-Please be aware that this method is very brittle to changes outside of your Shiny application.
-These changes can include:
-* running on a different R version
-* running on a different in operating system
-* using a different default system font
-* using different package versions
-These differences are explicitly clear when working with plots.
-
-Unless absolutely necessary for application consistency, it is strongly
-recommended to use other expectation methods.
-
 
 ## ------------------------------------------------
 ## Method `AppDriver$expect_screenshot`
@@ -1711,19 +1698,6 @@ tmpfile <- tempfile(fileext = ".png")
 app$screenshot(tmpfile)
 showimage::show_image(tmpfile)
 }
-Expect a screenshot of the Shiny application
-
-Please be aware that this method is very brittle to changes outside of your Shiny application.
-These changes can include:
-* running on a different R version
-* running on a different in operating system
-* using a different default system font
-* using different package versions
-These differences are explicitly clear when working with plots.
-
-Unless absolutely necessary for application consistency, it is strongly
-recommended to use other expectation methods.
-
 }
 \if{html}{\out{</div>}}
 
@@ -1734,6 +1708,20 @@ recommended to use other expectation methods.
 \if{html}{\out{<a id="method-expect_screenshot"></a>}}
 \if{latex}{\out{\hypertarget{method-expect_screenshot}{}}}
 \subsection{Method \code{expect_screenshot()}}{
+Expect a screenshot of the Shiny application
+
+Please be aware that this method is very brittle to changes outside of your Shiny application.
+These changes can include:
+\itemize{
+\item running on a different R version
+\item running on a different in operating system
+\item using a different default system font
+\item using different package versions
+These differences are explicitly clear when working with plots.
+}
+
+Unless absolutely necessary for application consistency, it is strongly
+recommended to use other expectation methods.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_screenshot(
   ...,

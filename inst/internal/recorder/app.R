@@ -11,7 +11,7 @@ save_file     <- getOption("shinytest2.test_file")
 allow_no_input_binding <- getOption("shinytest2.allow_no_input_binding")
 
 if (is.null(target_url) || is.null(app)) {
-  abort(paste0("Test recorder requires the 'shinytest2.recorder.url' and ",
+  rlang::abort(paste0("Test recorder requires the 'shinytest2.recorder.url' and ",
     "'shinytest2.app' options to be set."))
 }
 
@@ -93,7 +93,7 @@ any_unnamed <- function(x) {
 # duplicated names in a or b, only the last one with that name is kept.
 merge_vectors <- function(a, b) {
   if (any_unnamed(a) || any_unnamed(b)) {
-    abort("Vectors must be either NULL or have names for all elements")
+    rlang::abort("Vectors must be either NULL or have names for all elements")
   }
 
   x <- c(a, b)

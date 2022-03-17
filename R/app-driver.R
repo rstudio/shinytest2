@@ -698,6 +698,7 @@ AppDriver <- R6Class(# nolint
         selector = selector
       )
     },
+    #' @description
     #' Expect a screenshot of the Shiny application
     #'
     #' Please be aware that this method is very brittle to changes outside of your Shiny application.
