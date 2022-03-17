@@ -752,7 +752,7 @@ shinyApp(
         }
 
         rlang::inform(
-          paste0("Saving test file: ", fs::path_rel(test_save_file, app$get_dir()))
+          c("*" = paste0("Saving test file: ", fs::path_rel(test_save_file, app$get_dir())))
         )
         cat(code, file = test_save_file, append = TRUE)
 

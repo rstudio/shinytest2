@@ -136,10 +136,10 @@ record_test <- function(
 
   test_filter <- sub("^test-", "", fs::path_ext_remove(fs::path_file(saved_test_file)))
   # Run the test script
-  rlang::inform(paste0(
+  rlang::inform(c("*" = paste0(
     "Running recorded test: ",
     fs::path_rel(saved_test_file, app$get_dir())
-  ))
+  )))
   test_app(app_path_val, filter = test_filter)
 
   invisible(res$test_file)
