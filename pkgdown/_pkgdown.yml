@@ -9,3 +9,23 @@ template:
     # https://mdigi.tools/lighten-color/#a51d21 @ 92%
     navbar-background: "#fbe9ea"
   trailing_slash_redirect: true
+
+
+reference:
+- title: Making a test
+  desc: ~
+  contents:
+  - AppDriver
+  - platform_variant
+  - record_test
+
+- title: Running tests
+  desc: ~
+  contents:
+  - test_app
+
+- title: Setting up a test
+  desc: ~
+  contents:
+  - use_shinytest2
+  - migrate_from_shinytest
