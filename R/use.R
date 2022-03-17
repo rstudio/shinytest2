@@ -1,7 +1,18 @@
-#' Use \pkg{shinytest2} methods
+#' Use \pkg{shinytest2} test
 #'
 #' This unified method initializes many different useful features when using
-#' \pkg{shinytest2}. See `actions` below for more details.
+#' \pkg{shinytest2}:
+#' * Creates a \pkg{shinytest2} test runner at `./tests/testthat.R`. This file
+#' will contain a call to [`test_app()`] which will set up the proper testing
+#' environment for your Shiny application, enable \pkg{testthat} edition 3, and
+#' execute all \pkg{testthat} tests.
+#' * Creates a test file called `./tests/testthat/test-shinytest2.R`. By
+#' default, this file's template test will initialize your Shiny application and
+#' expect the initial values.
+#' * Add an entry to `./Rbuildignore` (if it exists) and `.gitignore` to ignore
+#' new debug screenshots. (`*_.new.png`)
+#' * Adds `shinytest` to the `Suggests` packages in the `DESCRIPTION` file (if it
+#' exists).
 #'
 #' @param app_dir The base directory for the Shiny application
 #' @param ... Must be empty. Allows for parameter expansion.

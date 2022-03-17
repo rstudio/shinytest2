@@ -2,7 +2,7 @@
 % Please edit documentation in R/test-app.R
 \name{test_app}
 \alias{test_app}
-\title{Test shiny application with testthat}
+\title{Test Shiny applications with \pkg{testthat}}
 \usage{
 test_app(app_dir = missing_arg(), env = shiny::loadSupport(app_dir), ...)
 }
@@ -14,32 +14,62 @@ test_app(app_dir = missing_arg(), env = shiny::loadSupport(app_dir), ...)
 \item Otherwise, the default path of \code{"."} is used.
 }}
 
-\item{env}{Use the shiny application's environment after sourcing the R folder}
+\item{env}{Use the Shiny application's environment after sourcing the R folder}
 
 \item{...}{Parameters passed to \code{\link[testthat:test_dir]{testthat::test_dir()}}}
 }
 \description{
+This is a helper method that wraps around \code{\link[testthat:test_dir]{testthat::test_dir()}} to test your Shiny application or Shiny runtime document.  This is similar to how \code{\link[testthat:test_package]{testthat::test_check()}} tests your R package but for your app.
+}
+\details{
+When setting up tests for your app,
+
 Example usage:\if{html}{\out{<div class="sourceCode r">}}\preformatted{## Interactive usage
 # Test Shiny app in current working directory
 shinytest2::test_app()
+
 # Test Shiny app in another directory
 path_to_app <- "path/to/app"
 shinytest2::test_app(path_to_app)
+
+## File: ./tests/testthat.R
+# Will find Shiny app in "../"
+shinytest2::test_app()
+
+## File: ./tests/testthat/test-shinytest2.R
+# Test a shiny application within your own \{testthat\} code
+test_that("Testing a Shiny app in a package", \{
+  shinytest2::test_app(path_to_app)
+\})
 }\if{html}{\out{</div>}}
 }
-\details{
-\subsection{File: ./tests/testthat.R}{
-}
-}
-\section{Will find Shiny app in "../"}{
-shinytest2::test_app()
-\subsection{File: ./tests/testthat/test-shinytest2.R}{
-}
+\section{Uploading files}{
+
+
+When testing an application, all non-temp files that are uploaded should be
+located in the \code{./tests/testthat} directory. This allows for tests to be more
+portable and self contained.
+
+When recording a test with \code{\link[=record_test]{record_test()}}, for every uploaded file that is
+located outside of \code{./tests/testthat}, a warning will be thrown. Once the
+file path has be fixed, you may remove the warning statement.
 }
 
-\section{Test a shiny application within your own {testthat} code}{
-test_that("Testing an external app", {
-shinytest2::test_app(path_to_app)
-})\preformatted{}
+\section{Different ways to test}{
+
+
+\code{test_app()} is an opinionated testing function that will only execute
+\pkg{testthat} tests in the \code{./tests/testthat} folder. If (for some rare
+reason) you have other non-\pkg{testthat} tests to execute, you can call
+\code{\link[shiny:runTests]{shiny::runTests()}}. This method will generically run all test runners and
+their associated tests.\if{html}{\out{<div class="sourceCode r">}}\preformatted{# Execute a single Shiny app's \{testthat\} file such as `./tests/testthat/test-shinytest2.R`
+test_app(filter = "shinytest2")
+
+# Execute all \{testthat\} tests
+test_app()
+
+# Execute all tests for all test runners
+shiny::runTests()
+}\if{html}{\out{</div>}}
 }
 
