@@ -86,7 +86,9 @@ without) such that you don't need to worry too much about this.
 
 If you run this script locally, you may add `view = TRUE` to open the Chrome Devtools, which will significantly ease the testing calibration. I highly recommend to create the test protocol locally and then move to CI/CD later when all bugs are fixed. In the below figure, the application is shown on the left side panel. The top-right side panel shows the DOM elements (default) and the bottom-right side panel displays the JavaScript console output. 
 
-![Gremlins start](figures/gremlins-start.png)
+```{r echo=FALSE, out.width='50%', fig.align='center'}
+knitr::include_graphics("figures/gremlins-start.png")
+```
 
 ## Injecting gremlins.js
 
@@ -119,7 +121,10 @@ headless_app$execute_js("return typeof window.gremlins")
 If `undefined` is returned instead, it means something went wrong. This is generally because the JS code
 is clocked by the network. In this case, let's see what we can do in the next part.
 
-![Gremlins injected](figures/gremlins-inject.png)
+```{r echo=FALSE, out.width='50%', fig.align='center'}
+knitr::include_graphics("figures/gremlins-inject.png")
+```
+
 
 ### Local way
 
@@ -180,14 +185,18 @@ headless_app$execute_js("gremlins.createHorde().unleash();")
 
 Result is shown in the gif below. 
 
-![Gremlins blinded attack](figures/gremlins-attack.gif)
+```{r echo=FALSE, out.width='50%', fig.align='center'}
+knitr::include_graphics("figures/gremlins-attack.gif")
+```
 
 #### Optimized testing
 
 Does it really makes sense to invoke all species given we only have a slider? Absolutely not!
 In the following code, we only want to test the slider input.
 
-![Slider handle](figures/gremlins-slider-handle.png)
+```{r echo=FALSE, out.width='50%', fig.align='center'}
+knitr::include_graphics("figures/gremlins-slider-handle.png")
+```
 
 The best specie to handle this is the `toucher`, which is able to randomly move the slider input. The documentation specifies many events such as tap, doubletap, gesture and multitouch. It seems more relevant to apply only gesture, consisting of dragging the slider on the x-axis. Also, we target the slider handle by its class `irs-handle single` to ensure we don't touch any other element and increase the number of maximum touch from 2 to 200. Not how precious is the HTML inspector, which allows to seamlessly inspect and extract any class, id.  The log parameter enables log in the JavaScript console:
 
@@ -224,7 +233,9 @@ horde
 If you are running on CI/CD and can't see the Chrome Devtools, you can still display the logs. The `console.log` output will be captured by the `{shinytest2}` logs with `headless_app$get_log()` allowing you to debug and refine the 
 monkey testing script. 
 
-![Gremlins logs](figures/gremlins-logs.png)
+```{r echo=FALSE, out.width='50%', fig.align='center'}
+knitr::include_graphics("figures/gremlins-logs.png")
+```
 
 
 As Monkey testing lasts about 10s, you often want to take a screenshot of the ongoing attack:
@@ -254,7 +265,10 @@ Sys.sleep(3)
 headless_app$screenshot("gremlins.png")
 ```
 
-![Gremlins focused attack](figures/gremlins-attack-refined.gif)
+```{r echo=FALSE, out.width='50%', fig.align='center'}
+knitr::include_graphics("figures/gremlins-attack-refined.gif")
+```
+
 
 Should you run multiple attacks, it is always good practice to reset Shiny inputs between or even close the current headless app and restart a new session:
 
