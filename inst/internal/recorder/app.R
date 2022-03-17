@@ -579,8 +579,18 @@ shinyApp(
     iv_screenshot <- shinyvalidate::InputValidator$new()
     iv_screenshot$condition(~ !has_expectation_event())
     iv_screenshot$add_rule("screenshot", ~ "At least one expectation must be made")
+    iv_app_path <- shinyvalidate::InputValidator$new()
+    iv_app_path$condition(~ fs::path_has_parent(app$get_dir(), tempdir()))
+    iv_app_path$add_rule(
+      "seed",
+        ~ shiny::tagList(
+          shiny::tags$p("Can not save tests for a Shiny object."),
+          shiny::tags$p("Please supply an application directory to", shiny::tags$code("record_test(app_dir =)"))
+      )
+    )
 
     iv$add_validator(iv_screenshot)
+    iv$add_validator(iv_app_path)
     iv$enable()
 
     # Use reactiveVal dedupe feature

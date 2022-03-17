@@ -49,10 +49,11 @@ record_test <- function(
 ) {
   ellipsis::check_dots_empty()
 
-  for (class_val in c("shiny.appobj", "ShinyDriver")) {
-    if (inherits(app, class_val)) {
-      rlang::abort(paste0("Recording tests for ", class_val, " objects is not supported."))
-    }
+  if (inherits(app, "ShinyDriver")) {
+    rlang::abort(paste0("Recording tests for `ShinyDriver` objects is not supported."))
+  }
+  if (shiny::is.shiny.appobj(app)) {
+    app <- AppDriver$new(app)
   }
 
   if (is.character(app)) {
