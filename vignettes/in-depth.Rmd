@@ -235,7 +235,7 @@ In many cases, instead of setting the random seed, it is more elegant to use an 
 
 ### Tabs
 
-With tabbed views, such as `tabsetPanel()` and `navbarPage()`, in order for `{shinytest}` to keep track of which tab is currently selected, they must have an `id`. For example:
+With tabbed views, such as `tabsetPanel()` and `navbarPage()`, in order for `{shinytest2}` to keep track of which tab is currently selected, they must have an `id`. For example:
 
 
 ```{r}
@@ -474,5 +474,5 @@ app$set_inputs(
 
 ## Next
 
-Learn about using shinytest with [continuous integration](ci.html).
+Learn about using shinytest2 with [continuous integration](ci.html).
 TODO-barret; update link

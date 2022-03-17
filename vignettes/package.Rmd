@@ -26,7 +26,7 @@ An application could live in a subdirectory of `inst/`, as shown below:
 ├── NAMESPACE
 ├── R
 ├── inst
-│   └── appdir
+│   └── sample_app
 │       ├── app.R
 │       └── tests
 │           ├── testthat
@@ -49,11 +49,11 @@ Since we are using `{testthat}` for automated tests, you would create a test dri
 # File: tests/testthat/test-inst-apps.R
 library(shinytest2)
 
-test_that("sampleapp works", {
+test_that("sample_app works", {
   # Don't run these tests on the CRAN build servers
   skip_on_cran()
 
-  appdir <- system.file(package = "shinytestPackageExample", "sampleapp")
+  appdir <- system.file(package = "exPackage", "sample_app")
   test_app(appdir)
 })
 ```
@@ -140,7 +140,7 @@ Suggests:
 When all of these items are in place, you can test your package using `devtools::install(); testthat::test_local()` or by running ``R CMD check`` on your package. If you are using the RStudio IDE, you can also run Build -> Test Package or Build -> Check Package.
 
 
-`{shinytest2}` requires that your package to be *installed* when testing. [`testthat::test_local()`](https://testthat.r-lib.org/reference/test_package.html) (and related wrappers) eventually call `pkgload::load_all()` to temporarily source the local R package. You can use `test_local()` to test non-`shinytest` tests, but you will need to install your R package to safely execute your `shinytest` tests. If not installed, it will create a confusing situation where your `{shinytest2}` tests are running on a *different* version of your R package (whichever was last installed), than the rest of your tests (the current source).
+`{shinytest2}` requires that your package to be *installed* when testing. [`testthat::test_local()`](https://testthat.r-lib.org/reference/test_package.html) (and related wrappers) eventually call `pkgload::load_all()` to temporarily source the local R package. You can use `test_local()` to test non-`{shinytest2}` tests, but you will need to install your R package to safely execute your `{shinytest2}` tests. If not installed, it will create a confusing situation where your `{shinytest2}` tests are running on a *different* version of your R package (whichever was last installed), than the rest of your tests (the current source).
 
 
 ## Continuous integration
