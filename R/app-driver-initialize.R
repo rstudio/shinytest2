@@ -3,7 +3,8 @@ app_initialize_ <- function(
   app_dir = testthat::test_path("../../"),
   ...,
   load_timeout = NULL,
-  expect_values_screenshot_args = expect_values_screenshot_args,
+  wait = TRUE,
+  expect_values_screenshot_args = TRUE,
   screenshot_args = missing_arg(),
   check_names = TRUE,
   name = NULL,
@@ -120,8 +121,10 @@ app_initialize_ <- function(
         "return window.shinytest2 && window.shinytest2.ready === true",
         timeout = load_timeout
       )
-      # Use value less than the common 250ms/500ms timeout of watching a file for changes
-      self$wait_for_idle(duration = 200, timeout = load_timeout)
+      if (isTRUE(wait)) {
+        # Use value less than the common 250ms/500ms timeout of watching a file for changes
+        self$wait_for_idle(duration = 200, timeout = load_timeout)
+      }
     },
     error = function(e) {
       app_abort(self, private,
