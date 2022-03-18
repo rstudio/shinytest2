@@ -8,9 +8,19 @@ app_set_dir <- function(
   app_dir <- app_dir_value(app_dir)
 
   if (!fs::dir_exists(app_dir)) {
+    cur_dir <- app_dir
+    cur_dir <-
+      if (is.null(cur_dir)) {
+        "`NULL`"
+      } else {
+        paste0("\"", cur_dir, "\"")
+      }
     app_abort(
       self, private,
-      "`app_dir` must be an existing directory"
+      c(
+        "`app_dir` must be an existing directory",
+        "i" = paste0("Received: ", cur_dir)
+      )
     )
   }
 
@@ -60,7 +70,7 @@ app_set_dir <- function(
 
 app_get_dir <- function(self, private) {
   ckm8_assert_app_driver(self, private)
-  private$dir
+  as.character(private$dir)
 }
 
 app_dir_has_rmd <- function(self, private, app_dir = missing_arg()) {

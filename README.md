@@ -11,6 +11,8 @@
 > :triangular_flag_on_post::triangular_flag_on_post: {shinytest2} is in beta developement. Please report any bugs or feedback at [https://github.com/rstudio/shinytest2/issues](https://github.com/rstudio/shinytest2/issues) :triangular_flag_on_post::triangular_flag_on_post:
 
 
+<!-- TODO-barret; Intro should mention shinytest, but link to larger comparisons -->
+
 `{shinytest2}` facilitates the testing of `{shiny}` applications using a headless Chromium web browser via `{chromote}`. Using the latest features of `{testthat}` edition 3, snapshot files are saved for each of the expected values.
 
 ## Installation
@@ -21,6 +23,23 @@ You can install the development version of shinytest2 from [GitHub](https://gith
 remotes::install_github("rstudio/shinytest2")
 ```
 
+<!-- TODO-barret; High level bullet take away points of `{shinytest}` vs `{shinytest2}` -->
+
+
+<!-- TODO-barret; First class support for cross platform / R version testing -->
+* since shinytest builds on {testthat} ed 3 snapshot testing, allows us to manage multiple variants
+* See more in Getting Started
+
+
+
+
+
+
+
+
+
+
+<!-- TODO-barret; Put these sections in the getting started -->
 ## Recording a test
 
 To record a test for an existing `{shiny}` application, use the `record_test()` method:
@@ -40,8 +59,9 @@ The saved recording will look similar to
 library(shinytest2)
 
 test_that("values are captured", {
-  app <- AppDriver$new(name = "unique-name")
+  app <- AppDriver$new(name = "unique-name", variant = platform_varaint())
   app$expect_values()
+  app$expect_screenshot()
 })
 ```
 
@@ -52,8 +72,6 @@ In addition to the expected snapshot, a debug screenshot file will be saved to `
 
 # Migrating from `{shinytest}`
 
-`{shinytest}` is the predecesor to `{shinytest2}`. `{shinytest}` was implemented using `{webdriver}` which uses [PhantomJS](https://phantomjs.org/api/). PhantomJS has been unsupported since 2017 and does not support displaying `{bslib}`'s Bootstrap v5.
-
-`{shinytest2}` uses `{chromote}` to connect to your locally installed Chrome or Chromium application. `{shinytest2}` does not have any rendering issues when displaying `{bslib}`'s Bootstrap v5.
+`{shinytest}` is the predecesor to `{shinytest2}`. `{shinytest}` was implemented using `{webdriver}` which uses [PhantomJS](https://phantomjs.org/api/). PhantomJS has been unsupported since 2017 and does not support displaying `{bslib}`'s Bootstrap v5. `{shinytest2}` uses `{chromote}` to connect to your locally installed Chrome or Chromium application. So, `{shinytest2}` is able to display `{bslib}`'s Bootstrap v5.
 
 To migrate your existing `{shinytest}` tests to `{shinytest2}`, call the helper method `shinytest2::migrate_from_shinytest(path)`.

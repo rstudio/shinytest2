@@ -76,7 +76,7 @@ app_start_shiny <- function(
 
   "!DEBUG finding shiny port"
   ## Try to read out the port. Try 5 times/sec, until timeout.
-  max_i <- load_timeout / 1000 * 5
+  max_i <- floor(load_timeout / 1000 * 5)
   for (i in seq_len(max_i)) {
     err_lines <- readLines(p$get_error_file())
 
@@ -86,19 +86,19 @@ app_start_shiny <- function(
         paste(err_lines, collapse = "\n")
       ))
     }
-    if (any(grepl("Listening on http", err_lines))) break
+    if (any(grepl("Listening on http", err_lines, fixed = TRUE))) break
 
     Sys.sleep(0.2)
 
     if (i == max_i) {
       app_abort(self, private, paste0(
-        "Cannot find shiny port number. Error:\n",
+        "Cannot find shiny port number. Error lines found:\n",
         paste(err_lines, collapse = "\n")
       ))
     }
   }
 
-  line <- err_lines[grepl("Listening on http", err_lines)]
+  line <- err_lines[grepl("Listening on http", err_lines, fixed = TRUE)]
   "!DEBUG shiny up and running, `line`"
 
   url <- sub(".*(https?://.*)", "\\1", line)

@@ -44,12 +44,36 @@ bindings are recorded.
 \itemize{
 \item If \code{TRUE}, events without input bindings are recorded.
 \item If \code{FALSE}, events without input bindings are not recorded.
-\item If \code{NULL} (default), if an updated input does not have a corresponding input, a modal dialog will be shown asking if unbound input events should be recorded.
-See \code{\link{AppDriver}}\verb{$set_inputs()} for more information.
-}}
+\item If \code{NULL} (default), if an updated input does not have a corresponding
+\item input, a modal dialog will be shown asking if unbound input events should
+\item be recorded.
+}
+
+See \code{\link{AppDriver}}\verb{$set_inputs()} for more information.}
 
 \item{run_test}{If \code{TRUE}, \code{test_file} will be executed after saving the recording.}
 }
 \description{
-Once a recording is completed, it will create or append a new \pkg{shinytest2} test to the \pkg{testthat} \code{test_file}.
+Once a recording is completed, it will create or append a new
+\pkg{shinytest2} test to the \pkg{testthat} \code{test_file}.
+}
+\section{Uploading files}{
+
+
+Files that are uploaded to your Shiny app must be located somewhere within
+the \code{tests/testthat} subdirectory or available via \code{system.file()}.
+
+Files that are uploaded during recording that do not have a valid path will
+have a warning inserted into the code. Please fix the file path by moving the
+file to the \code{tests/testthat} subdirectory or by using \code{system.file()}. After
+fixing the path, remove the line of warning code.
+}
+
+\examples{
+\dontrun{
+record_test("path/to/app")
+}
+}
+\seealso{
+\code{\link[=test_app]{test_app()}}
 }
