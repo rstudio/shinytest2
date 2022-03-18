@@ -3,7 +3,8 @@ app_initialize_ <- function(
   app_dir = testthat::test_path("../../"),
   ...,
   load_timeout = NULL,
-  expect_values_screenshot_args = expect_values_screenshot_args,
+  wait = TRUE,
+  expect_values_screenshot_args = TRUE,
   screenshot_args = missing_arg(),
   check_names = TRUE,
   name = NULL,
@@ -33,7 +34,7 @@ app_initialize_ <- function(
   private$counter <- Count$new()
   private$shiny_url <- Url$new()
 
-  private$save_dir <- temp_file()
+  private$save_dir <- st2_temp_file()
   # Clear out any prior files
   if (fs::dir_exists(private$save_dir)) {
     unlink(private$save_dir, recursive = TRUE)
@@ -117,11 +118,13 @@ app_initialize_ <- function(
   withCallingHandlers(
     {
       self$wait_for_js(
-        "return window.shinytest2 && window.shinytest2.ready === true",
+        "window.shinytest2 && window.shinytest2.ready === true",
         timeout = load_timeout
       )
-      # Use value less than the common 250ms/500ms timeout of watching a file for changes
-      self$wait_for_idle(duration = 200, timeout = load_timeout)
+      if (isTRUE(wait)) {
+        # Use value less than the common 250ms/500ms timeout of watching a file for changes
+        self$wait_for_idle(duration = 200, timeout = load_timeout)
+      }
     },
     error = function(e) {
       app_abort(self, private,
@@ -198,7 +201,7 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
       )
 
       logs <- withCallingHandlers(
-        format(self$get_log()),
+        format(self$get_logs()),
         error = function(e) "(Error retrieving logs)"
       )
 

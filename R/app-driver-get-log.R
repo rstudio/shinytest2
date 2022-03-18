@@ -226,19 +226,19 @@ filter_log_text <- function(str) {
 
 
 
-app_get_log <- function(
+app_get_logs <- function(
   self, private
 ) {
   ckm8_assert_app_driver(self, private)
 
-  log <- do.call(rbind, c(
+  logs <- do.call(rbind, c(
     # browser console / shinytest2 + manual entries
-    private$log,
+    private$logs,
     # shiny console
     app_make_shiny_log(self, private)
   ))
 
-  log <- log[order(log$timestamp), ]
-  class(log) <- c("shinytest2_log", class(log))
-  log
+  logs <- logs[order(logs$timestamp), ]
+  class(logs) <- c("shinytest2_log", class(logs))
+  logs
 }

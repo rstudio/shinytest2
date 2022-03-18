@@ -1,0 +1,275 @@
+---
+title: "Using shinytest2 with continuous integration"
+output:
+  html_document: default
+  pdf_document: default
+editor_options:
+  chunk_output_type: console
+vignette: >
+  %\VignetteIndexEntry{Using shinytest2 with continuous integration}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+`{shinytest2}` can be used not only when developing applications locally -- it can also be used with continuous integration (CI) platforms, such as [GitHub Actions](https://help.github.com/en/actions).
+
+The rest of this document explains how to use `{shinytest2}` with GitHub in two use cases: with applications that stand alone (are not part of an R package), and with an application that are part of an R package.
+
+## Overview
+
+The overall procedure for enabling tests on a CI platform is this:
+
+* First create tests locally (on your development machine) and save the expected results.
+* Commit the expected results into the project's git repository and push to GitHub.
+* Create a GitHub Actions workflow file to run tests on GitHub Actions (GHA).
+
+Once you have set up continuous integration, the typical development cycle is this:
+
+* Modify your project, commit, and push the changes.
+* The CI platform will automatically do an *action*, in which it downloads the code and runs tests. If the tests fail, it will send you an email alert.
+
+As you develop your application, it may also be appropriate to add, remove, or modify tests, or re-run tests and save new expected results.
+
+
+## A repository with a single application
+
+For Shiny applications that aren't part of an R package, there are two common ways that the repository will be set up:
+
+1. The repository contains one application, and the application files (like `app.R` and `global.R`) are contained at the top level of the repository.
+1. The repository contains more than one application files, and each application is contained in a subdirectory.
+
+This section explains how to set up GHA to test a repository with a single application.
+<!-- See https://github.com/rstudio/shinytest-ci-example for an example. -->
+
+The directory structure of such a project will look something like this:
+
+```
+/
+├── .github
+│   └── workflows
+│       └── check-app.yaml
+├── .Rprofile
+├── README.md
+├── app.R
+├── renv/activate.R
+├── renv.lock
+└── tests
+    ├── testthat.R
+    └── testthat
+        ├── _snaps
+        │   └── shinytest2
+        │       ├── 001.json
+        │       ├── 002.png
+        │       ├── 003.json
+        │       └── 004.png
+        └── test-shinytest2.R
+```
+
+The files that you will need to add are described below.
+
+
+### `check-app.yaml`
+
+This file contains information for GitHub Actions to build and test your application. It should look similar to this:
+
+```yml
+# Workflow derived from https://github.com/r-lib/actions/blob/v2-branch/examples/check-standard.yaml
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+name: R-CMD-check
+
+jobs:
+  R-CMD-check:
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: ubuntu-20.04,   r: '4.1'}
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-renv@v2
+
+      - uses: rstudio/shinytest2/check_app@v2
+        with:
+          path: "."
+```
+
+You should change the `os` and `r` version (set to `ubuntu-20.04` and `4.1` above) to whatever operating system and R version is being used on the platform that your application will be deployed to.
+
+
+### `renv.lock`, `renv/activate.R`, `.Rprofile`
+
+`{renv}` project-local dependency management system for projects. This is useful for Shiny applications where using specific package versions for all of your Shiny app dependencies. `{renv}` uses the same mechanism that is used by shinyapps.io and RStudio Connect.
+
+`{renv}` autogenerates these three files using is`renv::init()` and `renv::snapshot()`.
+
+----------------------
+| File | Usage |
+----------------------
+| `.Rprofile` | Used to activate renv for new R sessions launched in the project. |
+| `renv.lock` | The lockfile, describing the state of your project's library at some point in time. |
+| `renv/activate.R` | The activation script run by the project `.Rprofile`. |
+----------------------
+
+To create `.Rprofile` and `renv/activate.R`, call `renv::init()` within your App project. To create / update `renv.lock`, call `renv::snapshot()`.
+
+**Whenever you update packages on your development machine, you should run `renv::snapshot()` command again to make sure the packages used on GitHub stay in sync.**
+
+
+To learn more about `{renv}`, please see their [Introduction to renv](https://rstudio.github.io/renv/articles/renv.html) and [Colaborating with renv](https://rstudio.github.io/renv/articles/collaborating.html) articles.
+
+
+An alternative to using packrat is to create a `DESCRIPTION` file. This will not lock package versions; instead, it will use the latest version of each package from CRAN.
+
+
+### Running the first build
+
+Once you've added these files, commit them and push to GitHub. This will trigger a build on GitHub Actions (GHA).
+
+The first build of your package on GHA will generally take much longer than subsequent runs, because it needs to install all the R packages the first time. After a successful run, the packages are cached, so the builds should be much faster.
+
+
+## A repository with multiple applications
+
+Another way to run your tests is using a repository with multiple applications, each in its own subdirectory.
+<!-- See https://github.com/rstudio/shinytest-ci-example-multi for an example. -->
+
+The directory structure would look something like this:
+
+```
+/
+├── .github
+│   └── workflows
+│       └── check-app.yaml
+├── .Rprofile
+├── README.md
+├── renv/activate.R
+├── renv.lock
+├── 01_hello
+│   ├── app.R
+│   └── tests
+│       ├── testthat.R
+│       └── testthat
+│           ├── _snaps
+│           │   └── shinytest2
+│           │       ├── 001.json
+│           │       ├── 002.png
+│           │       ├── 003.json
+│           │       └── 004.png
+│           └── test-shinytest2.R
+└── 06_tabsets
+    ├── app.R
+    └── tests
+        ├── testthat.R
+        └── testthat
+            ├── _snaps
+            │   └── shinytest2
+            │       ├── 001.json
+            │       ├── 002.png
+            │       ├── 003.json
+            │       ├── 004.png
+            │       ├── 005.json
+            │       └── 006.png
+            └── test-shinytest2.R
+```
+
+For a repository with this structure, the configuration is largely the same as a repository with a single app, as described above. The only difference is in the `check-app.yaml` file.
+
+
+### `check-app.yaml`
+
+The `check-app.yaml` should have a step for each application in the respective directory, instead of testing just one application in the current directory.
+
+```R
+      - uses: rstudio/shinytest2/check_app@v2
+        with:
+          path: "01_hello"
+      - uses: rstudio/shinytest2/check_app@v2
+        with:
+          path: "06_tabsets"
+```
+
+
+## Testing applications in a package
+
+See the [Using shinytest2 with R packages](package.html) article.
+
+## Frequently asked questions
+
+### How do I add a status badge to my project?
+
+See GitHub's docs on [adding a badge](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/adding-a-workflow-status-badge).
+
+If your workflow file is named `check-app.yaml` in the `schloerke/example-app` repo, you can add a status badge to your GitHub to your README.md with the following line:
+
+```md
+![check-app](https://github.com/schloerke/example-app/actions/workflows/check-app.yml/badge.svg)
+```
+
+In your `README.md` file, you can add a build status badge, like the one below, so that you can see the status of your code at a glance:
+
+### How do I use a `DESCRIPTION` file instead of `{renv}`?
+
+Instead of using `{renv}`, you can use a `DESCRIPTION` file can be used to tell GHA which packages are needed to test the application. Instead of locking each package to a specific version like `{renv}`, this will result in the latest version of each package being downloaded from CRAN. This may be appropriate if you want to make sure your application works with the latest version of each package, instead of a frozen set of packages.
+
+To use a `DESCRIPTION` file, you need to modify your `check-app.yaml` file to use `r-lib/actions` default package installation system instead of `{renv}`. Replace this line from the template provided above:
+
+```yml
+      - uses: r-lib/actions/setup-renv@v2
+```
+
+with
+
+```yaml
+      - uses: r-lib/actions/setup-r-dependencies@v2
+```
+
+You will not want generate a `renv.lock`, `.Rprofile`, or other `{renv}` files, so do not run the `{renv}` commands listed above.
+
+
+Next, create a `DESCRIPTION` file that looks something like this:
+
+```
+Imports:
+  shiny,
+  shinytest2
+```
+
+The `Imports` field must list all R packages that your application directly uses.
+
+Normally the latest versions of the listed packages will be installed from CRAN. However, if you need to install development versions of packages from GitHub, that can be done by adding a `Remotes` section. For example:
+
+```
+Remotes:
+  rstudio/shiny,
+  rstudio/shinytest2@dev
+```
+
+This tells GitHub to install the `{shiny}` package from the `main` branch of https://github.com/rstudio/shiny, the `{shinytest2}` package from the `dev` branch of https://github.com/rstudio/shinytest2. In addition to branch names like `dev`, you can use commit hashes or tags.

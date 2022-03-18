@@ -2,8 +2,8 @@
 test_that("download files work from link and button", {
   app <- AppDriver$new(variant = NULL)
 
-  app$wait_for_js("return $('#download_link').attr('href') != ''")
-  app$wait_for_js("return $('#download_button').attr('href') != ''")
+  app$wait_for_js("$('#download_link').attr('href') != ''")
+  app$wait_for_js("$('#download_button').attr('href') != ''")
 
   app$expect_download("download_link")
   app$expect_download("download_button")
@@ -19,13 +19,13 @@ test_that("download files can be retrieved", {
 
   app <- AppDriver$new(variant = NULL)
 
-  app$wait_for_js("return $('#download_link').attr('href') != ''")
-  app$wait_for_js("return $('#download_button').attr('href') != ''")
+  app$wait_for_js("$('#download_link').attr('href') != ''")
+  app$wait_for_js("$('#download_button').attr('href') != ''")
 
   link_file <- app$get_download("download_link")
   button_file <- app$get_download("download_button", "barret.test")
 
-  expect_equal(fs::path_ext(link_file), "download")
+  expect_equal(fs::path_file(link_file), "download-link.csv")
   expect_equal(fs::path_file(button_file), "barret.test")
 
   expect_gt(file.info(link_file)$size, 0)

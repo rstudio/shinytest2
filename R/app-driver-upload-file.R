@@ -16,11 +16,9 @@ app_upload_file <- function(
   # Wait for two messages by calling `.start(timeout, 2)`. This is because
   # uploading a file will result in two messages before the file is successfully
   # uploaded.
-  self$execute_js(
-    "var timeout = arguments[0];
-    shinytest2.outputValuesWaiter.start(timeout, 2);",
-    arguments = list(timeout_)
-  )
+  self$run_js(paste0(
+    "shinytest2.outputValuesWaiter.start(", toJSON_atomic(timeout_), ", 2);"
+  ))
 
   self$log_message(paste0("Uploading file", input = inputs[[1]]))
 
@@ -31,15 +29,13 @@ app_upload_file <- function(
     nodeId = node_id
   )
 
-  self$execute_js(
+  self$get_js(paste0(
     "
-    return new Promise((resolve, reject) => {
-      var wait = arguments[0];
-      shinytest2.outputValuesWaiter.finish(wait, resolve);
-    });",
-    arguments = list(wait_),
-    timeout = 2 * timeout_ # Don't let chromote timeout before we do
-  )
+    new Promise((resolve, reject) => {
+      shinytest2.outputValuesWaiter.finish(", toJSON_atomic(wait_), ", resolve);
+    });
+    "
+  ))
 
   # Need to wait for the progress bar's CSS transition to complete. The
   # transition is 0.6s, so this will ensure that it's done.

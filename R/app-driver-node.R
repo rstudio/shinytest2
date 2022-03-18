@@ -85,10 +85,11 @@ app_click <- function(
   node_id <- app_find_node_id(self, private, input = input, output = output, selector = selector)
 
   if (!rlang::is_missing(input)) {
-    # Will delay until outputs have been updated.
+    # Will delay returning until outputs have been updated.
     self$set_inputs(!!input := "click", ...)
 
   } else {
+    ellipsis::check_dots_empty()
     self$log_message(paste0(
       "Clicking HTML element with selector: ",
       node_id_css_selector(

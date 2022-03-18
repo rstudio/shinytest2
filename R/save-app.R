@@ -21,6 +21,14 @@ app_data <- function(app) {
 
   data <- globals$globals
   data$ui <- environment(app$httpHandler)$ui
+  # If the app is made from shinyAppDir with a wrapper around the handler...
+  # See https://github.com/rstudio/shiny/blob/fd7518018cbb2ec0b89960c922e34576d5dbc1e7/R/shinyapp.R#L407
+  if (is.null(data$ui)) {
+    try({
+      first_handler <- environment(app$httpHandler)$handlers[[1]]
+      data$ui <- environment(environment(first_handler)$appObj()$httpHandler)$ui
+    }, silent = TRUE)
+  }
   data$server <- server
   data$resources <- shiny::resourcePaths()
   data$packages <- globals$packages

@@ -2,7 +2,7 @@
 % Please edit documentation in R/use.R
 \name{use_shinytest2}
 \alias{use_shinytest2}
-\title{Use \pkg{shinytest2} methods}
+\title{Use \pkg{shinytest2} test}
 \usage{
 use_shinytest2(
   app_dir = ".",
@@ -35,7 +35,20 @@ use_shinytest2(
 }
 \description{
 This unified method initializes many different useful features when using
-\pkg{shinytest2}. See \code{actions} below for more details.
+\pkg{shinytest2}:
+\itemize{
+\item Creates a \pkg{shinytest2} test runner at \code{./tests/testthat.R}. This file
+will contain a call to \code{\link[=test_app]{test_app()}} which will set up the proper testing
+environment for your Shiny application, enable \pkg{testthat} edition 3, and
+execute all \pkg{testthat} tests.
+\item Creates a test file called \code{./tests/testthat/test-shinytest2.R}. By
+default, this file's template test will initialize your Shiny application and
+expect the initial values.
+\item Add an entry to \code{./Rbuildignore} (if it exists) and \code{.gitignore} to ignore
+new debug screenshots. (\verb{*_.new.png})
+\item Adds \code{shinytest} to the \code{Suggests} packages in the \code{DESCRIPTION} file (if it
+exists).
+}
 }
 \examples{
 \dontrun{use_shinytest2()}

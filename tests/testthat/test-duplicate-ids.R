@@ -91,7 +91,7 @@ test_that("Duplicate input ids are found", {
   )
 
   expect_error(
-    AppDriver$new(shiny_app, load_timeout = 1000),
+    AppDriver$new(shiny_app, load_timeout = 2000),
     "Shiny app did not become stable"
   )
 })

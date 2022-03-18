@@ -1,0 +1,24 @@
+{
+  "input": {
+    "file": {
+      "name": [
+        "cars.csv"
+      ],
+      "size": [
+        308
+      ],
+      "type": [
+        "text/csv"
+      ],
+      "datapath": [
+        "0.csv"
+      ]
+    }
+  },
+  "output": {
+    "file_out": "      name size     type        datapath\n1 cars.csv  308 text/csv <tempdir>/0.csv"
+  },
+  "export": {
+
+  }
+}

@@ -121,16 +121,13 @@ test_that("click is converted", {
 
 
 test_that("executeScript is converted", {
-  script_msg <- "Please add JavaScript `return` statements appropriately"
   expect_migration(
     app$executeScript("1 + 1"),
-    app$execute_js(script = "1 + 1", timeout = 10000),
-    script_msg
+    app$get_js(script = "1 + 1", timeout = 10000)
   )
   expect_migration(
     app$executeScript("1 + 1", x = 1, y = 2),
-    app$execute_js(script = "1 + 1", arguments = list(x = 1, y = 2), timeout = 10000),
-    script_msg
+    app$get_js(script = "let arguments_ = {\"x\":1,\"y\":2};\n1 + 1", timeout = 10000)
   )
 })
 
@@ -225,13 +222,13 @@ test_that("enableDebugLogMessages, getDebugLog, getEventLog is converted", {
   )
   expect_migration(
     app$getDebugLog(),
-    app$get_log(),
-    "A single `AppDriver$get_log()`"
+    app$get_logs(),
+    "A single `AppDriver$get_logs()`"
   )
   expect_migration(
     app$getEventLog(),
-    app$get_log(),
-    "A single `AppDriver$get_log()`"
+    app$get_logs(),
+    "A single `AppDriver$get_logs()`"
   )
 })
 
@@ -259,7 +256,7 @@ test_that("getSource, getTitle is converted", {
   )
   expect_migration(
     app$getTitle(),
-    app$execute_js("return window.document.title;")
+    app$get_js("window.document.title;")
   )
 })
 
@@ -349,11 +346,11 @@ test_that("getWindowSize, setWindowSize is converted", {
 test_that("goBack, refresh is converted", {
   expect_migration(
     app$goBack(),
-    app$execute_js("window.history.back();")
+    app$run_js("window.history.back();")
   )
   expect_migration(
     app$refresh(),
-    app$execute_js("window.location.reload();")
+    app$run_js("window.location.reload();")
   )
 })
 
@@ -413,23 +410,23 @@ test_that("snapshotDownload is converted", {
 test_that("takeScreenshot is converted", {
   expect_migration(
     app$takeScreenshot("file.png"),
-    app$screenshot("file.png")
+    app$get_screenshot("file.png")
   )
   expect_migration(
     app$takeScreenshot("file.png", "myid"),
-    app$screenshot("file.png", selector = "#myid")
+    app$get_screenshot("file.png", selector = "#myid")
   )
   expect_migration(
     app$takeScreenshot("file.png", myid),
-    app$screenshot("file.png", selector = paste0("#", myid))
+    app$get_screenshot("file.png", selector = paste0("#", myid))
   )
   expect_migration(
     app$takeScreenshot(myfile, myvar),
-    app$screenshot(myfile, selector = paste0("#", myvar))
+    app$get_screenshot(myfile, selector = paste0("#", myvar))
   )
   expect_migration(
     app$takeScreenshot("file.png", "myid", parent = FALSE),
-    app$screenshot("file.png", selector = "#myid")
+    app$get_screenshot("file.png", selector = "#myid")
   )
   expect_migration_error(
     app$takeScreenshot("file.png", "myid", parent = TRUE),
