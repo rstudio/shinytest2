@@ -9,14 +9,14 @@ test_that("basic website example works", {
 
 
   # Track clicks on `#greeting` and `#custom_div`
-  app$execute_js("
+  app$run_js("
     window.greeting_count = 0;
 
     $('#greeting').click(function () {
       window.greeting_count += 1;
     });
   ")
-  app$execute_js("
+  app$run_js("
     window.custom_count = 0;
 
     $('#custom_div').click(function () {
@@ -24,19 +24,19 @@ test_that("basic website example works", {
     });
   ")
 
-  expect_equal(app$execute_js("return window.greeting_count"), 0)
-  expect_equal(app$execute_js("return window.custom_count"), 0)
+  expect_equal(app$get_js("window.greeting_count"), 0)
+  expect_equal(app$get_js("window.custom_count"), 0)
 
   app$click(output = "greeting")
   app$click(output = "greeting")
 
-  expect_equal(app$execute_js("return window.greeting_count"), 2)
-  expect_equal(app$execute_js("return window.custom_count"), 0)
+  expect_equal(app$get_js("window.greeting_count"), 2)
+  expect_equal(app$get_js("window.custom_count"), 0)
 
   app$click(selector = "#custom_div")
   app$click(selector = "#custom_div")
   app$click(selector = "#custom_div")
 
-  expect_equal(app$execute_js("return window.greeting_count"), 2)
-  expect_equal(app$execute_js("return window.custom_count"), 3)
+  expect_equal(app$get_js("window.greeting_count"), 2)
+  expect_equal(app$get_js("window.custom_count"), 3)
 })

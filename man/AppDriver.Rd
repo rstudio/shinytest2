@@ -89,7 +89,7 @@ expect_snapshot_file(
 
 ## Expect screenshot
 tmpfile <- tempfile(fileext = ".png")
-app$screenshot(tmpfile)
+app$get_screenshot(tmpfile)
 expect_snapshot_file(
   tmpfile,
   variant = app$get_variant(),
@@ -189,7 +189,7 @@ app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
 
 # Track how many clicks are given to `#update` button
-app$execute_js("
+app$run_js("
   window.test_counter = 0;
   $('#update').click(() => window.test_counter++);
 ")
@@ -197,7 +197,7 @@ app$set_inputs(obs = 20)
 # Click the update button, incrementing the counter
 app$click("update")
 # Save a snapshot of number of clicks (1)
-app$expect_js("return window.test_counter;")
+app$expect_js("window.test_counter;")
 }
 
 ## ------------------------------------------------
@@ -346,7 +346,7 @@ app$expect_values(input = "A", output = "C")
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$screenshot`
+## Method `AppDriver$get_screenshot`
 ## ------------------------------------------------
 
 \dontrun{
@@ -354,15 +354,15 @@ app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
 # Display in viewer
-app$screenshot()
+app$get_screenshot()
 
 # Update bins then display `"disPlot"` in viewer
 app$set_inputs(bins = 10)
-app$screenshot(selector = "#distPlot")
+app$get_screenshot(selector = "#distPlot")
 
 # Save screenshot to file and view it
 tmpfile <- tempfile(fileext = ".png")
-app$screenshot(tmpfile)
+app$get_screenshot(tmpfile)
 showimage::show_image(tmpfile)
 }
 
@@ -437,13 +437,13 @@ app <- AppDriver$new(shiny_app)
 # Contrived example:
 # Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)
 system.time(
-  app$wait_for_js("return Math.floor((Date.now() / 1000) \% 10) == 5;")
+  app$wait_for_js("Math.floor((Date.now() / 1000) \% 10) == 5;")
 )
 
 ## A second example where we run the contents of a JavaScript file
 ## and use the result to wait for a condition
-app$execute_js(file = "complicated_file.js")
-app$wait_for_js("return complicated_condition();")
+app$run_js(file = "complicated_file.js")
+app$wait_for_js("complicated_condition();")
 }
 
 ## ------------------------------------------------
@@ -527,7 +527,7 @@ app$get_value(output = "total")
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$execute_js`
+## Method `AppDriver$get_js`
 ## ------------------------------------------------
 
 \dontrun{
@@ -536,17 +536,63 @@ shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
 
 # Execute JavaScript code in the app's browser
-app$execute_js("return 1 + 1;")
+app$get_js("1 + 1;")
 #> [1] 2
 
 # Execute a JavaScript Promise. Return the resolved value.
-app$execute_js("
-  return new Promise((resolve) => {
+app$get_js("
+  new Promise((resolve) => {
     setTimeout(() => resolve(1 + 1), 1000)
   }).
   then((value) => value + 1);
 ")
 #> [1] 3
+
+# With escaped arguments
+loc_field <- "hostname"
+js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+app$get_js(js_txt)
+#> [1] "127.0.0.1"
+
+# With `glue::glue()`
+js_txt <- glue::glue_data(
+  lapply(
+    list(x = 40, y = 2),
+    jsonlite::toJSON,
+    auto_unbox = TRUE
+  ),
+  .open = "<", .close = ">",
+  "let answer = function(a, b) {\n",
+  "  return a + b;\n",
+  "};\n",
+  "answer(<x>, <y>);\n"
+)
+app$get_js(js_txt)
+#> [1] 42
+}
+
+## ------------------------------------------------
+## Method `AppDriver$run_js`
+## ------------------------------------------------
+
+\dontrun{
+library(shiny)
+shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
+app <- AppDriver$new(shiny_app)
+
+# Get JavaScript answer from the app's browser
+app$get_js("1 + 1")
+#> [1] 2
+# Execute JavaScript code in the app's browser
+app$run_js("1 + 1")
+# (Returns `app` invisibly)
+
+# With escaped arguments
+loc_field <- "hostname"
+js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+app$run_js(js_txt)
+app$get_js(js_txt)
+#> [1] "127.0.0.1"
 }
 
 ## ------------------------------------------------
@@ -680,12 +726,12 @@ app$get_variant()
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_log`
+## Method `AppDriver$get_logs`
 ## ------------------------------------------------
 
 \dontrun{
 app <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-app$get_log()
+app$get_logs()
 # \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
 # \{shinytest2\} R  info  11:15:20.11 Starting Shiny app
 # \{shinytest2\} R  info  11:15:20.99 Creating new chromote session
@@ -713,7 +759,7 @@ app <- AppDriver$new(
   system.file("examples/01_hello", package = "shiny"),
   options = list(shiny.trace = TRUE)
 )
-app$get_log() # (long output lines have been truncated)
+app$get_logs() # (long output lines have been truncated)
 # \{shinytest2\} R  info      11:09:57.43 Start AppDriver initialization
 # \{shinytest2\} R  info      11:09:57.43 Starting Shiny app
 # \{shinytest2\} R  info      11:09:58.27 Creating new chromote session
@@ -778,7 +824,7 @@ app$get_log() # (long output lines have been truncated)
 # \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
 
 # The log that is returned is a `data.frame()`.
-log <- app$get_log()
+log <- app$get_logs()
 tibble::glimpse(log)
 #> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
 #> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:…
@@ -816,7 +862,7 @@ app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 app$log_message("Setting bins to smaller value")
 app$set_inputs(bins = 10)
-app$get_log()
+app$get_logs()
 }
 
 ## ------------------------------------------------
@@ -888,7 +934,7 @@ str(head(rlog, 2))
 \item \href{#method-get_value}{\code{AppDriver$get_value()}}
 \item \href{#method-get_values}{\code{AppDriver$get_values()}}
 \item \href{#method-expect_values}{\code{AppDriver$expect_values()}}
-\item \href{#method-screenshot}{\code{AppDriver$screenshot()}}
+\item \href{#method-get_screenshot}{\code{AppDriver$get_screenshot()}}
 \item \href{#method-expect_screenshot}{\code{AppDriver$expect_screenshot()}}
 \item \href{#method-set_inputs}{\code{AppDriver$set_inputs()}}
 \item \href{#method-click}{\code{AppDriver$click()}}
@@ -896,7 +942,8 @@ str(head(rlog, 2))
 \item \href{#method-wait_for_js}{\code{AppDriver$wait_for_js()}}
 \item \href{#method-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
 \item \href{#method-wait_for_value}{\code{AppDriver$wait_for_value()}}
-\item \href{#method-execute_js}{\code{AppDriver$execute_js()}}
+\item \href{#method-get_js}{\code{AppDriver$get_js()}}
+\item \href{#method-run_js}{\code{AppDriver$run_js()}}
 \item \href{#method-expect_unique_names}{\code{AppDriver$expect_unique_names()}}
 \item \href{#method-get_dir}{\code{AppDriver$get_dir()}}
 \item \href{#method-get_url}{\code{AppDriver$get_url()}}
@@ -904,7 +951,7 @@ str(head(rlog, 2))
 \item \href{#method-set_window_size}{\code{AppDriver$set_window_size()}}
 \item \href{#method-get_chromote_session}{\code{AppDriver$get_chromote_session()}}
 \item \href{#method-get_variant}{\code{AppDriver$get_variant()}}
-\item \href{#method-get_log}{\code{AppDriver$get_log()}}
+\item \href{#method-get_logs}{\code{AppDriver$get_logs()}}
 \item \href{#method-log_message}{\code{AppDriver$log_message()}}
 \item \href{#method-stop}{\code{AppDriver$stop()}}
 }
@@ -974,7 +1021,7 @@ will be called once the app has connected a new session, blocking until the
 Shiny app is idle for 200ms.}
 
 \item{\code{screenshot_args}}{Default set of arguments to pass in to
-\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$screenshot()} method when taking
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method when taking
 screnshots within \verb{$expect_screenshot()}. To disable screenshots by
 default, set to \code{FALSE}.}
 
@@ -1244,7 +1291,6 @@ For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers a
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_js(
   script = missing_arg(),
   ...,
-  arguments = list(),
   file = missing_arg(),
   timeout = 15 * 1000,
   pre_snapshot = NULL,
@@ -1258,8 +1304,6 @@ For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers a
 \item{\code{script}}{A string containing the JavaScript script to be executed.}
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
 
 \item{\code{file}}{A file containing JavaScript code to be read and used as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
 
@@ -1281,7 +1325,7 @@ app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
 
 # Track how many clicks are given to `#update` button
-app$execute_js("
+app$run_js("
   window.test_counter = 0;
   $('#update').click(() => window.test_counter++);
 ")
@@ -1289,7 +1333,7 @@ app$set_inputs(obs = 20)
 # Click the update button, incrementing the counter
 app$click("update")
 # Save a snapshot of number of clicks (1)
-app$expect_js("return window.test_counter;")
+app$expect_js("window.test_counter;")
 }
 }
 \if{html}{\out{</div>}}
@@ -1608,7 +1652,7 @@ The final value can either be:
 \item \code{TRUE}: A screenshot of the whole page will be taken with no delay
 \item \code{FALSE}: No screenshot will be taken
 \item A named list of arguments. These arguments are passed directly to
-\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$screenshot()} method. The \code{selector}
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. The \code{selector}
 and \code{delay} will default to \code{"html"} and \code{0} respectively.
 }}
 
@@ -1669,14 +1713,14 @@ app$expect_values(input = "A", output = "C")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-screenshot"></a>}}
-\if{latex}{\out{\hypertarget{method-screenshot}{}}}
-\subsection{Method \code{screenshot()}}{
+\if{html}{\out{<a id="method-get_screenshot"></a>}}
+\if{latex}{\out{\hypertarget{method-get_screenshot}{}}}
+\subsection{Method \code{get_screenshot()}}{
 Take a screenshot
 
 Take a screenshot of the Shiny application.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$screenshot(
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_screenshot(
   file = NULL,
   ...,
   screenshot_args = missing_arg(),
@@ -1695,14 +1739,14 @@ that file.}
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
 \item{\code{screenshot_args}}{This named list of arguments is passed along to
-\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$screenshot()} method. If missing, the
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. If missing, the
 value will default to \verb{$new(screenshot_args=)}.
 
 If the value is:
 \itemize{
 \item \code{TRUE}: A screenshot of the whole page will be taken with no delay
 \item A named list of arguments: Arguments passed directly to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
-\verb{$screenshot()} method. The \code{selector} and \code{delay} will default to \code{"html"} and \code{0} respectively.
+\verb{$get_screenshot()} method. The \code{selector} and \code{delay} will default to \code{"html"} and \code{0} respectively.
 }
 
 If a \code{FALSE} value is provided, the parameter will be ignored and a
@@ -1726,15 +1770,15 @@ app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
 # Display in viewer
-app$screenshot()
+app$get_screenshot()
 
 # Update bins then display `"disPlot"` in viewer
 app$set_inputs(bins = 10)
-app$screenshot(selector = "#distPlot")
+app$get_screenshot(selector = "#distPlot")
 
 # Save screenshot to file and view it
 tmpfile <- tempfile(fileext = ".png")
-app$screenshot(tmpfile)
+app$get_screenshot(tmpfile)
 showimage::show_image(tmpfile)
 }
 }
@@ -1781,14 +1825,14 @@ recommended to use other expectation methods.
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
 \item{\code{screenshot_args}}{This named list of arguments is passed along to
-\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$screenshot()} method. If missing, the
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. If missing, the
 value will default to \verb{$new(screenshot_args=)}.
 
 If the value is:
 \itemize{
 \item \code{TRUE}: A screenshot of the whole page will be taken with no delay
 \item A named list of arguments: Arguments passed directly to
-\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$screenshot()} method. The \code{selector}
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. The \code{selector}
 and \code{delay} will default to \code{"html"} and \code{0} respectively.
 }
 
@@ -2014,13 +2058,13 @@ app <- AppDriver$new(shiny_app)
 # Contrived example:
 # Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)
 system.time(
-  app$wait_for_js("return Math.floor((Date.now() / 1000) \% 10) == 5;")
+  app$wait_for_js("Math.floor((Date.now() / 1000) \% 10) == 5;")
 )
 
 ## A second example where we run the contents of a JavaScript file
 ## and use the result to wait for a condition
-app$execute_js(file = "complicated_file.js")
-app$wait_for_js("return complicated_condition();")
+app$run_js(file = "complicated_file.js")
+app$wait_for_js("complicated_condition();")
 }
 }
 \if{html}{\out{</div>}}
@@ -2199,21 +2243,25 @@ app$get_value(output = "total")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-execute_js"></a>}}
-\if{latex}{\out{\hypertarget{method-execute_js}{}}}
-\subsection{Method \code{execute_js()}}{
-Execute JavaScript code in the browser.
+\if{html}{\out{<a id="method-get_js"></a>}}
+\if{latex}{\out{\hypertarget{method-get_js}{}}}
+\subsection{Method \code{get_js()}}{
+Execute JavaScript code in the browser and return the result
 
 This function will block the local R session until the code has finished
 executing its \emph{tick} in the browser. If a \code{Promise} is returned from the
-script, \verb{$execute_js()} will wait for the promise to resolve. To have
+script, \verb{$get_js()} will wait for the promise to resolve. To have
 JavaScript code execute asynchronously, wrap the code in a Promise object
 and have the script return an atomic value.
+
+Arguments will have to be inserted into the script as there is not access
+to \code{arguments}. This can be done with commands like \code{paste()}. If using
+\code{glue::glue()}, be sure to use uncommon \code{.open} and \code{.close} values to
+avoid having to doulbe all \verb{\{} and \verb{\}}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$execute_js(
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_js(
   script = missing_arg(),
   ...,
-  arguments = list(),
   file = missing_arg(),
   timeout = 15 * 1000
 )}\if{html}{\out{</div>}}
@@ -2227,8 +2275,6 @@ the R session will block until the promise has been resolved and return
 the value.}
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
 
 \item{\code{file}}{A (local) file containing JavaScript code to be read and used
 as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
@@ -2248,17 +2294,99 @@ shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
 
 # Execute JavaScript code in the app's browser
-app$execute_js("return 1 + 1;")
+app$get_js("1 + 1;")
 #> [1] 2
 
 # Execute a JavaScript Promise. Return the resolved value.
-app$execute_js("
-  return new Promise((resolve) => {
+app$get_js("
+  new Promise((resolve) => {
     setTimeout(() => resolve(1 + 1), 1000)
   }).
   then((value) => value + 1);
 ")
 #> [1] 3
+
+# With escaped arguments
+loc_field <- "hostname"
+js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+app$get_js(js_txt)
+#> [1] "127.0.0.1"
+
+# With `glue::glue()`
+js_txt <- glue::glue_data(
+  lapply(
+    list(x = 40, y = 2),
+    jsonlite::toJSON,
+    auto_unbox = TRUE
+  ),
+  .open = "<", .close = ">",
+  "let answer = function(a, b) {\n",
+  "  return a + b;\n",
+  "};\n",
+  "answer(<x>, <y>);\n"
+)
+app$get_js(js_txt)
+#> [1] 42
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-run_js"></a>}}
+\if{latex}{\out{\hypertarget{method-run_js}{}}}
+\subsection{Method \code{run_js()}}{
+Execute JavaScript code in the browser
+
+This function will block the local R session until the code has finished
+executing its \emph{tick} in the browser.
+
+The final result of the code will be ignored and not returned to the R session.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$run_js(
+  script = missing_arg(),
+  ...,
+  file = missing_arg(),
+  timeout = 15 * 1000
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{script}}{JavaScript to execute.}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{file}}{A (local) file containing JavaScript code to be read and used
+as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
+
+\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+library(shiny)
+shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
+app <- AppDriver$new(shiny_app)
+
+# Get JavaScript answer from the app's browser
+app$get_js("1 + 1")
+#> [1] 2
+# Execute JavaScript code in the app's browser
+app$run_js("1 + 1")
+# (Returns `app` invisibly)
+
+# With escaped arguments
+loc_field <- "hostname"
+js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+app$run_js(js_txt)
+app$get_js(js_txt)
+#> [1] "127.0.0.1"
 }
 }
 \if{html}{\out{</div>}}
@@ -2521,21 +2649,21 @@ app$get_variant()
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_log"></a>}}
-\if{latex}{\out{\hypertarget{method-get_log}{}}}
-\subsection{Method \code{get_log()}}{
+\if{html}{\out{<a id="method-get_logs"></a>}}
+\if{latex}{\out{\hypertarget{method-get_logs}{}}}
+\subsection{Method \code{get_logs()}}{
 Get all logs
 
 Retrieve all of the debug logs that have been recorded.
 There are a few standard debug types that may be used:
 \itemize{
-\item \code{"shiny_console"}: Displays the console messages from the Shiny server when \verb{$get_log()} is called.
-\item \code{"browser"}: Displays the browser console messages when \verb{$get_log()} is called.
-\item \code{"shinytest2"}: Displays the messages saved by the \code{window.shinytest2} object in the browser when \verb{$get_log()} is called.
+\item \code{"shiny_console"}: Displays the console messages from the Shiny server when \verb{$get_logs()} is called.
+\item \code{"browser"}: Displays the browser console messages when \verb{$get_logs()} is called.
+\item \code{"shinytest2"}: Displays the messages saved by the \code{window.shinytest2} object in the browser when \verb{$get_logs()} is called.
 \item \code{"ws_messages"}: Saves all messages sent by Shiny to the
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_log()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_logs()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
@@ -2568,7 +2696,7 @@ for more details
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
 app <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-app$get_log()
+app$get_logs()
 # \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
 # \{shinytest2\} R  info  11:15:20.11 Starting Shiny app
 # \{shinytest2\} R  info  11:15:20.99 Creating new chromote session
@@ -2596,7 +2724,7 @@ app <- AppDriver$new(
   system.file("examples/01_hello", package = "shiny"),
   options = list(shiny.trace = TRUE)
 )
-app$get_log() # (long output lines have been truncated)
+app$get_logs() # (long output lines have been truncated)
 # \{shinytest2\} R  info      11:09:57.43 Start AppDriver initialization
 # \{shinytest2\} R  info      11:09:57.43 Starting Shiny app
 # \{shinytest2\} R  info      11:09:58.27 Creating new chromote session
@@ -2661,7 +2789,7 @@ app$get_log() # (long output lines have been truncated)
 # \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
 
 # The log that is returned is a `data.frame()`.
-log <- app$get_log()
+log <- app$get_logs()
 tibble::glimpse(log)
 #> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
 #> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:…
@@ -2718,7 +2846,7 @@ app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 app$log_message("Setting bins to smaller value")
 app$set_inputs(bins = 10)
-app$get_log()
+app$get_logs()
 }
 }
 \if{html}{\out{</div>}}

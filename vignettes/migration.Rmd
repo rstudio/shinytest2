@@ -51,23 +51,24 @@ new$click(selector = "#my_id")
 
 Signature: `ShinyDriver$executeScript(script, ...)`
 
-The `...` must now be supplied to `AppDriver$execute_js(arguments=)`. This allows for extra parameters such as `file` which can contain your `script` content or `timeout` which will throw an error if the `timeout` (in milliseconds) is reached before the script returns. Note, all `script`s now require a `return` statement and are executed within a function to be able to access `arguments`. If a promise is returned from the `script` then the `resolve`d value will be sent back to the R session.
+The `...` must now be inserted into the script. You can do this with commands like `glue::glue()` or `paste()`. Extra parameters include `file` which can contain your `script` content and `timeout` which will throw an error if the `timeout` (in milliseconds) is reached before the script returns. If a promise is the last value in the `script` then the `resolve`d value will be sent back to the R session.
 
 ```r
 ## {shinytest}
+life <- 42
 old$executeScript("1 + 1;")
-old$executeScript("var life = arguments[0]; life;", 42)
+old$executeScript("var life = arguments[0]; life;", life)
 
 ## {shinytest2}
-new$execute_js("return 1 + 1;")
-new$execute_js("let life = arguments[0]; return life;", arguments = list(42))
+life <- 42
+new$get_js("1 + 1;")
+new$get_js(paste0("let life = ", jsonlite::toJSON(life, auto_unbox = TRUE), "; life;"))
 # If a promise is returned, the resolved value will be sent back to the R session
-new$execute_js(
-  "
-  let life = arguments[0];
-  return new Promise((resolve, reject) => resolve(life));
-  ",
-  arguments = list(42)
+new$get_js(
+  paset0("
+  let life = ", jsonlite::toJSON(life, auto_unbox = TRUE), ";
+  new Promise((resolve, reject) => resolve(life));
+  ")
 )
 ```
 
@@ -92,16 +93,15 @@ old$executeScriptAsync(
 
 ## {shinytest2}
 # Wait until a button is clicked
-new$execute_js(
-  '
-  let selector = arguments[0];
-  return new Promise((resolve, reject) => {
-    $( selector ).one( "click", function() {
+new$get_js(
+  paste0("
+  let selector = ", jsonlite::toJSON("#mybutton", auto_unbox = TRUE), ";
+  new Promise((resolve, reject) => {
+    $( selector ).one( \"click\", function() {
       resolve();
     });
   });
-  ',
-  arguments = list("#mybutton"),
+  "),
   timeout = 15 * 1000
 )
 ```
@@ -255,7 +255,7 @@ new$expect_values()
 
 Signature: `ShinyDriver$takeScreenshot(file = NULL, id = NULL, parent = FALSE)`
 
-This method has been renamed to `AppDriver$screenshot(file)`, and the `id` and `parent` parameters have been removed. To use a selector, set `AppDriver$screenshot(myfile, selector = ".custom-selector")` or `screenshot_args` directly.
+This method has been renamed to `AppDriver$get_screenshot(file)`, and the `id` and `parent` parameters have been removed. To use a selector, set `AppDriver$get_screenshot(myfile, selector = ".custom-selector")` or `screenshot_args` directly.
 
 ```r
 ## {shinytest}
@@ -263,9 +263,9 @@ old$takeScreenshot("myfile1.png")
 old$takeScreenshot("myfile2.png", id = "myid")
 
 ## {shinytest2}
-new$screenshot("myfile1.png")
-new$screenshot("myfile2.png", selector = "#myid")
-new$screenshot("myfile2.png", screenshot_args = list(selector = "#myid"))
+new$get_screenshot("myfile1.png")
+new$get_screenshot("myfile2.png", selector = "#myid")
+new$get_screenshot("myfile2.png", screenshot_args = list(selector = "#myid"))
 ```
 
 ### `ShinyDriver$snapshotDownload()`
@@ -313,7 +313,7 @@ This method has been renamed and had its parameters reordered to `AppDriver$wait
 old$waitFor("$('#myid').length > 0")
 
 ## {shinytest2}
-new$wait_for_js("return $('#myid').length > 0");
+new$wait_for_js("$('#myid').length > 0");
 ```
 
 ### `ShinyDriver$waitForShiny()`
@@ -351,7 +351,7 @@ new$wait_for_value(output = "mydynamicplot")
 
 ## Elements / Widgets
 
-Direct element or Widget support for `{shinytest2}` has been drastically reduced. With the ability to execute any JavaScript function via `$execute_js(script)`, it is now possible to reproduce many of the methods that were provided in `{shinytest}`.
+Direct element or Widget support for `{shinytest2}` has been drastically reduced. With the ability to execute any JavaScript function via `$get_js(script)` and `$run_js(script)`, it is now possible to reproduce many of the methods that were provided in `{shinytest}`.
 
 ### `ShinyDriver$findElement()`, `ShinyDriver$findElements()`, `ShinyDriver$findWidget()`
 
@@ -372,7 +372,7 @@ old$findElement("#mybutton")$getCssValue("color")
 new$get_text(selector = "#mybutton")
 new$click(selector = "#mybutton")
 # No direct equivalent method. Using JavaScript instead
-new$execute_js('$("#mybutton").css("color")')
+new$get_js('$("#mybutton").css("color")')
 ```
 
 ### `ShinyDriver$getSource()`, `ShinyDriver$getTitle()`
@@ -390,7 +390,7 @@ old$getTitle()
 
 ## {shinytest2}
 new$get_html("html", outer_html = TRUE)
-new$execute_js("return window.document.title;")
+new$get_js("window.document.title;")
 ```
 
 
@@ -450,9 +450,9 @@ testthat::expect_failure(
 
 ## Debugging
 
-Debugging in `{shinytest2}` has been unified and is enabled at all times. The `{shinytest}` debugging methods have been removed in favor of `AppDriver$get_log()` which returns a similarly shaped `tibble` as `ShinyDriver$getDebugLog()`'s `data.frame`. The columns have been altered to be more generic where `type` has been broken into two columns: `location` and `level`.
+Debugging in `{shinytest2}` has been unified and is enabled at all times. The `{shinytest}` debugging methods have been removed in favor of `AppDriver$get_logs()` which returns a similarly shaped `tibble` as `ShinyDriver$getDebugLog()`'s `data.frame`. The columns have been altered to be more generic where `type` has been broken into two columns: `location` and `level`.
 
-* `ShinyDriver$getDebugLog()`, `ShinyDriver$getEventLog()`: Now use `AppDriver$get_log()`.
+* `ShinyDriver$getDebugLog()`, `ShinyDriver$getEventLog()`: Now use `AppDriver$get_logs()`.
 * `ShinyDriver$logEvent(event, ...)`: Messages can still be recorded using `AppDriver$log_message(text)`, but `...` values are no longer supported.
 * `ShinyDriver$enableDebugLogMessages(enable = TRUE)`: No longer used. *All* messages are always recorded.
 
@@ -462,7 +462,7 @@ old$getDebugLog(); old$getEventLog()
 old$logEvent("Creating report")
 
 ## {shinytest2}
-new$get_log()
+new$get_logs()
 old$log_message("Creating report")
 ```
 
@@ -472,7 +472,7 @@ If `options = list(shiny.trace = TRUE)` is set when initializing a `AppDriver` o
 ## {shinytest2}
 # Record all websocket traffic. Caution!! This is very verbose!!
 new <- AppDriver$new(path_to_app, options = list(shiny.trace = TRUE))
-new$get_log()
+new$get_logs()
 ```
 
 
@@ -501,7 +501,7 @@ lapply(new$get_values(), names)
 
 * `ShinyDriver$clone()`: `AppDriver` does not support cloning. (The underlying `ChromoteSession` does not support cloning, so `AppDriver` can not support cloning.)
 
-* `ShinyDriver$goBack()`, `ShinyDriver$refresh()`: These method have been removed, but can be achieved with `AppDriver$execute_js(script)`.
+* `ShinyDriver$goBack()`, `ShinyDriver$refresh()`: These method have been removed, but can be achieved with `AppDriver$run_js(script)`.
 
 ```r
 ## {shinytest}
@@ -510,9 +510,9 @@ old$refresh()
 
 ## {shinytest2}
 # Go back
-new$execute_js("window.history.back();")
+new$run_js("window.history.back();")
 # Refresh page
-new$execute_js("window.location.reload();")
+new$run_js("window.location.reload();")
 ```
 
 * `ShinyDriver$getAppDir()`, `ShinyDriver$getAppFilename()`, `ShinyDriver$isRmd()`: `AppDriver$get_dir()` is the only method still supported given `AppDriver$new(app_dir=)` is a single directory path. The other methods have been removed as their functionality does not make sense within `{shinytest2}`.
@@ -530,12 +530,12 @@ is_rmd <- length(rmd_files) >= 1
 app_filename <- if (has_rmd) fs::path_file(rmd_files[1]) else NULL
 ```
 
-* `ShinyDriver$sendKeys(name, keys)`: This method has been removed and there is currently no easy alternative. If you are familiar with the [key code values](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode#value_of_keycode), you can trigger them with `jQuery` and `AppDriver$execute_js(script)`.
+* `ShinyDriver$sendKeys(name, keys)`: This method has been removed and there is currently no easy alternative. If you are familiar with the [key code values](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode#value_of_keycode), you can trigger them with `jQuery` and `AppDriver$run_js(script)`.
 
 ```r
 ## {shinytest}
 old$sendKeys("myinput", webdriver::keys$enter)
 
 ## {shinytest2}
-new$execute_js("$('#myinput').trigger({type: 'keypress', which: 13, keyCode: 13});")
+new$run_js("$('#myinput').trigger({type: 'keypress', which: 13, keyCode: 13});")
 ```

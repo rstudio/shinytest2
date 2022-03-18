@@ -27,11 +27,11 @@ app_wait_for_idle <- function(self, private, duration = 500, timeout = 30 * 1000
 
   self$log_message(paste0("Waiting for Shiny to become idle for ", duration, "ms within ", timeout, "ms"))
 
-  stable_js <- "
-  let duration = arguments[0]; // time needed to be idle
-  let timeout = arguments[1]; // max total time
+  stable_js <- paste0("
+  let duration = ", duration, "; // time needed to be idle
+  let timeout = ", timeout, "; // max total time
 
-  return new Promise((resolve, reject) => {
+  new Promise((resolve, reject) => {
 
     window.shinytest2.log('Waiting for Shiny to be stable');
 
@@ -75,15 +75,11 @@ app_wait_for_idle <- function(self, private, duration = 500, timeout = 30 * 1000
       idleFn();
     }
   })
-  "
+  ")
 
-  ret <- chromote_execute_script(
+  ret <- chromote_eval(
     self$get_chromote_session(),
     stable_js,
-    arguments = list(
-      duration,
-      timeout
-    ),
     ## Supply a large "wall time" to chrome devtools protocol. The manual logic should be hit first
     timeout = timeout * 2
   )

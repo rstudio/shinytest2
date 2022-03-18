@@ -34,7 +34,7 @@ app_initialize_ <- function(
   private$counter <- Count$new()
   private$shiny_url <- Url$new()
 
-  private$save_dir <- temp_file()
+  private$save_dir <- st2_temp_file()
   # Clear out any prior files
   if (fs::dir_exists(private$save_dir)) {
     unlink(private$save_dir, recursive = TRUE)
@@ -118,7 +118,7 @@ app_initialize_ <- function(
   withCallingHandlers(
     {
       self$wait_for_js(
-        "return window.shinytest2 && window.shinytest2.ready === true",
+        "window.shinytest2 && window.shinytest2.ready === true",
         timeout = load_timeout
       )
       if (isTRUE(wait)) {
@@ -201,7 +201,7 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
       )
 
       logs <- withCallingHandlers(
-        format(self$get_log()),
+        format(self$get_logs()),
         error = function(e) "(Error retrieving logs)"
       )
 

@@ -21,7 +21,7 @@ app_screenshot <- function(
     maybe_missing_value(screenshot_args, private$default_screenshot_args)
   )
   if (is_false(screenshot_args)) {
-    app_warn(self, private, "`screenshot_args` can not be `FALSE` when calling `app$screenshot()`. Setting to `list()`")
+    app_warn(self, private, "`screenshot_args` can not be `FALSE` when calling `app$get_screenshot()`. Setting to `list()`")
     screenshot_args <- list()
   }
   checkmate::assert_list(screenshot_args)
@@ -36,7 +36,7 @@ app_screenshot <- function(
   } else {
     self$log_message(paste0("Taking screenshot: ", file))
   }
-  path <- temp_file(".png")
+  path <- st2_temp_file(".png")
   screenshot_args$filename <- path
 
   do.call(self$get_chromote_session()$screenshot, screenshot_args)
@@ -76,7 +76,7 @@ app_expect_screenshot <- function(
   filename <- app_next_temp_snapshot_path(self, private, name, "png")
 
   # Take screenshot
-  self$screenshot(
+  self$get_screenshot(
     file = filename,
     screenshot_args = screenshot_args,
     delay = delay,

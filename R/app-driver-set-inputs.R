@@ -54,9 +54,8 @@ app_queue_inputs <- function(self, private, inputs) {
   ckm8_assert_app_driver(self, private)
   checkmate::assert_true(rlang::is_named(inputs))
 
-  self$execute_js(
-    "shinytest2.inputQueue.add(arguments[0]);",
-    arguments = list(inputs)
+  self$run_js(
+    paste0("shinytest2.inputQueue.add(", toJSON(inputs), ");")
   )
 }
 app_flush_inputs <- function(self, private, wait = TRUE, timeout = 1000) {
@@ -64,17 +63,14 @@ app_flush_inputs <- function(self, private, wait = TRUE, timeout = 1000) {
   wait <- isTRUE(wait)
   checkmate::assert_number(timeout, lower = 0, finite = TRUE, null.ok = FALSE)
 
-  self$execute_js(
-    "
-    return new Promise((resolve, reject) => {
-      var wait = arguments[0];
-      var timeout = arguments[1];
-      shinytest2.outputValuesWaiter.start(timeout);
+  self$get_js(
+    paste0("
+    new Promise((resolve, reject) => {
+      shinytest2.outputValuesWaiter.start(", toJSON_atomic(timeout), ");
       shinytest2.inputQueue.flush();
-      shinytest2.outputValuesWaiter.finish(wait, resolve);
+      shinytest2.outputValuesWaiter.finish(", toJSON_atomic(wait), ", resolve);
     });
-    ",
-    arguments = list(wait, timeout),
+    "),
     timeout = 2 * timeout # Don't let chromote timeout before we do
   )
 }

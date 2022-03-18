@@ -58,7 +58,7 @@ expect_log_tests <- function(log) {
 test_that("App captures known debug messages", {
   app <- AppDriver$new()
 
-  log_df <- app$get_log()
+  log_df <- app$get_logs()
 
   expect_s3_class(log_df, "shinytest2_log")
   checkmate::assert_names(
@@ -104,7 +104,7 @@ test_that("App captures known debug messages", {
 test_that("App captures known debug messages", {
   app <- AppDriver$new(options = list(shiny.trace = TRUE))
 
-  log_df <- app$get_log()
+  log_df <- app$get_logs()
 
   expect_s3_class(log_df, "shinytest2_log")
   checkmate::assert_names(

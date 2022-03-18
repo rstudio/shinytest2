@@ -90,7 +90,7 @@ NULL
 #'
 #' ## Expect screenshot
 #' tmpfile <- tempfile(fileext = ".png")
-#' app$screenshot(tmpfile)
+#' app$get_screenshot(tmpfile)
 #' expect_snapshot_file(
 #'   tmpfile,
 #'   variant = app$get_variant(),
@@ -104,7 +104,6 @@ NULL
 #'
 #'
 #' @param ... Must be empty. Allows for parameter expansion.
-#' @param arguments A list of unnamed arguments to send to the script.
 #' @param timeout Amount of time to wait before giving up (milliseconds).
 #' @param cran Should these expectations be verified on CRAN? By default,
 #'        they are not because snapshot tests tend to be fragile
@@ -114,13 +113,13 @@ NULL
 #' @param hash_images If `TRUE`, images will be hashed before being returned.
 #'   Otherwise, all images will return their full data64 encoded value.
 #' @param screenshot_args This named list of arguments is passed along to
-#'   [`chromote::ChromoteSession`]'s `$screenshot()` method. If missing, the
+#'   [`chromote::ChromoteSession`]'s `$get_screenshot()` method. If missing, the
 #'   value will default to `$new(screenshot_args=)`.
 #'
 #' If the value is:
 #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
 #'   * A named list of arguments: Arguments passed directly to [`chromote::ChromoteSession`]'s
-#' `$screenshot()` method. The `selector` and `delay` will default to `"html"` and `0` respectively.
+#' `$get_screenshot()` method. The `selector` and `delay` will default to `"html"` and `0` respectively.
 #'
 #' If a `FALSE` value is provided, the parameter will be ignored and a
 #' screenshot will be taken with default behavior.
@@ -145,7 +144,7 @@ AppDriver <- R6Class(# nolint
     counter = "<Count>",
     shiny_url = "<Url>",
 
-    log = list(), # List of all log messages added via `$log_message()`
+    logs = list(), # List of all log messages added via `$log_message()`
 
     clean_logs = TRUE, # Whether to clean logs when GC'd
 
@@ -188,7 +187,7 @@ AppDriver <- R6Class(# nolint
     #'   will be called once the app has connected a new session, blocking until the
     #'   Shiny app is idle for 200ms.
     #' @param screenshot_args Default set of arguments to pass in to
-    #'   [`chromote::ChromoteSession`]'s `$screenshot()` method when taking
+    #'   [`chromote::ChromoteSession`]'s `$get_screenshot()` method when taking
     #'   screnshots within `$expect_screenshot()`. To disable screenshots by
     #'   default, set to `FALSE`.
     #' @param expect_values_screenshot_args The value for `screenshot_args` when
@@ -393,7 +392,7 @@ AppDriver <- R6Class(# nolint
     #' app <- AppDriver$new(app_path)
     #'
     #' # Track how many clicks are given to `#update` button
-    #' app$execute_js("
+    #' app$run_js("
     #'   window.test_counter = 0;
     #'   $('#update').click(() => window.test_counter++);
     #' ")
@@ -401,12 +400,11 @@ AppDriver <- R6Class(# nolint
     #' # Click the update button, incrementing the counter
     #' app$click("update")
     #' # Save a snapshot of number of clicks (1)
-    #' app$expect_js("return window.test_counter;")
+    #' app$expect_js("window.test_counter;")
     #' }
     expect_js = function(
       script = missing_arg(),
       ...,
-      arguments = list(),
       file = missing_arg(),
       timeout = 15 * 1000,
       pre_snapshot = NULL,
@@ -414,7 +412,7 @@ AppDriver <- R6Class(# nolint
     ) {
       app_expect_js(
         self, private,
-        script = script, arguments = arguments,
+        script = script,
         ...,
         file = file, timeout = timeout, pre_snapshot = pre_snapshot, cran = cran
       )
@@ -635,7 +633,7 @@ AppDriver <- R6Class(# nolint
     #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
     #'   * `FALSE`: No screenshot will be taken
     #'   * A named list of arguments. These arguments are passed directly to
-    #'     [`chromote::ChromoteSession`]'s `$screenshot()` method. The `selector`
+    #'     [`chromote::ChromoteSession`]'s `$get_screenshot()` method. The `selector`
     #'     and `delay` will default to `"html"` and `0` respectively.
     #' @return The result of the snapshot expectation
     #' @examples
@@ -704,18 +702,18 @@ AppDriver <- R6Class(# nolint
     #' app <- AppDriver$new(app_path)
     #'
     #' # Display in viewer
-    #' app$screenshot()
+    #' app$get_screenshot()
     #'
     #' # Update bins then display `"disPlot"` in viewer
     #' app$set_inputs(bins = 10)
-    #' app$screenshot(selector = "#distPlot")
+    #' app$get_screenshot(selector = "#distPlot")
     #'
     #' # Save screenshot to file and view it
     #' tmpfile <- tempfile(fileext = ".png")
-    #' app$screenshot(tmpfile)
+    #' app$get_screenshot(tmpfile)
     #' showimage::show_image(tmpfile)
     #' }
-    screenshot = function(
+    get_screenshot = function(
       file = NULL,
       ...,
       screenshot_args = missing_arg(),
@@ -749,13 +747,13 @@ AppDriver <- R6Class(# nolint
     #' recommended to use other expectation methods.
     #'
     #' @param screenshot_args This named list of arguments is passed along to
-    #'   [`chromote::ChromoteSession`]'s `$screenshot()` method. If missing, the
+    #'   [`chromote::ChromoteSession`]'s `$get_screenshot()` method. If missing, the
     #'   value will default to `$new(screenshot_args=)`.
     #'
     #' If the value is:
     #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
     #'   * A named list of arguments: Arguments passed directly to
-    #'     [`chromote::ChromoteSession`]'s `$screenshot()` method. The `selector`
+    #'     [`chromote::ChromoteSession`]'s `$get_screenshot()` method. The `selector`
     #'     and `delay` will default to `"html"` and `0` respectively.
     #'
     #' If `FALSE` is provided, the parameter will be ignored and a
@@ -901,13 +899,13 @@ AppDriver <- R6Class(# nolint
     #' # Contrived example:
     #' # Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)
     #' system.time(
-    #'   app$wait_for_js("return Math.floor((Date.now() / 1000) % 10) == 5;")
+    #'   app$wait_for_js("Math.floor((Date.now() / 1000) % 10) == 5;")
     #' )
     #'
     #' ## A second example where we run the contents of a JavaScript file
     #' ## and use the result to wait for a condition
-    #' app$execute_js(file = "complicated_file.js")
-    #' app$wait_for_js("return complicated_condition();")
+    #' app$run_js(file = "complicated_file.js")
+    #' app$wait_for_js("complicated_condition();")
     #' }
     wait_for_js = function(script, timeout = 30 * 1000, interval = 100) {
       app_wait_for_js(self, private, script = script, timeout = timeout, interval = interval)
@@ -1045,13 +1043,18 @@ AppDriver <- R6Class(# nolint
 
 
     #' @description
-    #' Execute JavaScript code in the browser.
+    #' Execute JavaScript code in the browser and return the result
     #'
     #' This function will block the local R session until the code has finished
     #' executing its _tick_ in the browser. If a `Promise` is returned from the
-    #' script, `$execute_js()` will wait for the promise to resolve. To have
+    #' script, `$get_js()` will wait for the promise to resolve. To have
     #' JavaScript code execute asynchronously, wrap the code in a Promise object
     #' and have the script return an atomic value.
+    #'
+    #' Arguments will have to be inserted into the script as there is not access
+    #' to `arguments`. This can be done with commands like `paste()`. If using
+    #' `glue::glue()`, be sure to use uncommon `.open` and `.close` values to
+    #' avoid having to doulbe all `{` and `}`.
     #' @param script JavaScript to execute. If a JavaScript Promise is returned,
     #'   the R session will block until the promise has been resolved and return
     #'   the value.
@@ -1065,30 +1068,94 @@ AppDriver <- R6Class(# nolint
     #' app <- AppDriver$new(shiny_app)
     #'
     #' # Execute JavaScript code in the app's browser
-    #' app$execute_js("return 1 + 1;")
+    #' app$get_js("1 + 1;")
     #' #> [1] 2
     #'
     #' # Execute a JavaScript Promise. Return the resolved value.
-    #' app$execute_js("
-    #'   return new Promise((resolve) => {
+    #' app$get_js("
+    #'   new Promise((resolve) => {
     #'     setTimeout(() => resolve(1 + 1), 1000)
     #'   }).
     #'   then((value) => value + 1);
     #' ")
     #' #> [1] 3
+    #'
+    #' # With escaped arguments
+    #' loc_field <- "hostname"
+    #' js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+    #' app$get_js(js_txt)
+    #' #> [1] "127.0.0.1"
+    #'
+    #' # With `glue::glue()`
+    #' js_txt <- glue::glue_data(
+    #'   lapply(
+    #'     list(x = 40, y = 2),
+    #'     jsonlite::toJSON,
+    #'     auto_unbox = TRUE
+    #'   ),
+    #'   .open = "<", .close = ">",
+    #'   "let answer = function(a, b) {\n",
+    #'   "  return a + b;\n",
+    #'   "};\n",
+    #'   "answer(<x>, <y>);\n"
+    #' )
+    #' app$get_js(js_txt)
+    #' #> [1] 42
     #' }
-    execute_js = function(
+    get_js = function(
       script = missing_arg(),
       ...,
-      arguments = list(),
       file = missing_arg(),
       timeout = 15 * 1000
     ) {
-      app_execute_js(
+      app_get_js(
         self, private,
         script = script,
         ...,
-        arguments = arguments,
+        file = file,
+        timeout = timeout
+      )
+    },
+    #' @description
+    #' Execute JavaScript code in the browser
+    #'
+    #' This function will block the local R session until the code has finished
+    #' executing its _tick_ in the browser.
+    #'
+    #' The final result of the code will be ignored and not returned to the R session.
+    #' @param script JavaScript to execute.
+    #' @param file A (local) file containing JavaScript code to be read and used
+    #'   as the `script`. Only one of `script` or `file` can be specified.
+    #' @examples
+    #' \dontrun{
+    #' library(shiny)
+    #' shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
+    #' app <- AppDriver$new(shiny_app)
+    #'
+    #' # Get JavaScript answer from the app's browser
+    #' app$get_js("1 + 1")
+    #' #> [1] 2
+    #' # Execute JavaScript code in the app's browser
+    #' app$run_js("1 + 1")
+    #' # (Returns `app` invisibly)
+    #'
+    #' # With escaped arguments
+    #' loc_field <- "hostname"
+    #' js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+    #' app$run_js(js_txt)
+    #' app$get_js(js_txt)
+    #' #> [1] "127.0.0.1"
+    #' }
+    run_js = function(
+      script = missing_arg(),
+      ...,
+      file = missing_arg(),
+      timeout = 15 * 1000
+    ) {
+      app_run_js(
+        self, private,
+        script = script,
+        ...,
         file = file,
         timeout = timeout
       )
@@ -1268,9 +1335,9 @@ AppDriver <- R6Class(# nolint
     #'
     #' Retrieve all of the debug logs that have been recorded.
     #' There are a few standard debug types that may be used:
-    #' * `"shiny_console"`: Displays the console messages from the Shiny server when `$get_log()` is called.
-    #' * `"browser"`: Displays the browser console messages when `$get_log()` is called.
-    #' * `"shinytest2"`: Displays the messages saved by the `window.shinytest2` object in the browser when `$get_log()` is called.
+    #' * `"shiny_console"`: Displays the console messages from the Shiny server when `$get_logs()` is called.
+    #' * `"browser"`: Displays the browser console messages when `$get_logs()` is called.
+    #' * `"shinytest2"`: Displays the messages saved by the `window.shinytest2` object in the browser when `$get_logs()` is called.
     #' * `"ws_messages"`: Saves all messages sent by Shiny to the
     #' @return A data.frame with the following columns:
     #' * `workerid`: The shiny worker ID found within the browser
@@ -1296,7 +1363,7 @@ AppDriver <- R6Class(# nolint
     #' @examples
     #' \dontrun{
     #' app <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-    #' app$get_log()
+    #' app$get_logs()
     #' # \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
     #' # \{shinytest2\} R  info  11:15:20.11 Starting Shiny app
     #' # \{shinytest2\} R  info  11:15:20.99 Creating new chromote session
@@ -1324,7 +1391,7 @@ AppDriver <- R6Class(# nolint
     #'   system.file("examples/01_hello", package = "shiny"),
     #'   options = list(shiny.trace = TRUE)
     #' )
-    #' app$get_log() # (long output lines have been truncated)
+    #' app$get_logs() # (long output lines have been truncated)
     #' # \{shinytest2\} R  info      11:09:57.43 Start AppDriver initialization
     #' # \{shinytest2\} R  info      11:09:57.43 Starting Shiny app
     #' # \{shinytest2\} R  info      11:09:58.27 Creating new chromote session
@@ -1389,7 +1456,7 @@ AppDriver <- R6Class(# nolint
     #' # \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
     #'
     #' # The log that is returned is a `data.frame()`.
-    #' log <- app$get_log()
+    #' log <- app$get_logs()
     #' tibble::glimpse(log)
     #' #> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
     #' #> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:…
@@ -1417,8 +1484,8 @@ AppDriver <- R6Class(# nolint
     #' # \{chromote\}   JS websocket 11:09:59.19 recv \{"busy":"idle"\}
     #' # \{chromote\}   JS websocket 11:09:59.21 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
     #' }
-    get_log = function() {
-      app_get_log(self, private)
+    get_logs = function() {
+      app_get_logs(self, private)
     },
 
     #' @description
@@ -1430,7 +1497,7 @@ AppDriver <- R6Class(# nolint
     #' app <- AppDriver$new(app_path)
     #' app$log_message("Setting bins to smaller value")
     #' app$set_inputs(bins = 10)
-    #' app$get_log()
+    #' app$get_logs()
     #' }
     log_message = function(message) {
       app_log_message(self, private, message = message)
