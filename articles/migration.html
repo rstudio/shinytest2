@@ -119,22 +119,23 @@
 <code>ShinyDriver$executeScript()</code><a class="anchor" aria-label="anchor" href="#shinydriverexecutescript"></a>
 </h4>
 <p>Signature: <code>ShinyDriver$executeScript(script, ...)</code></p>
-<p>The <code>...</code> must now be supplied to <code>AppDriver$execute_js(arguments=)</code>. This allows for extra parameters such as <code>file</code> which can contain your <code>script</code> content or <code>timeout</code> which will throw an error if the <code>timeout</code> (in milliseconds) is reached before the script returns. Note, all <code>script</code>s now require a <code>return</code> statement and are executed within a function to be able to access <code>arguments</code>. If a promise is returned from the <code>script</code> then the <code>resolve</code>d value will be sent back to the R session.</p>
+<p>The <code>...</code> must now be inserted into the script. You can do this with commands like <code><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue()</a></code> or <code><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste()</a></code>. Extra parameters include <code>file</code> which can contain your <code>script</code> content and <code>timeout</code> which will throw an error if the <code>timeout</code> (in milliseconds) is reached before the script returns. If a promise is the last value in the <code>script</code> then the <code>resolve</code>d value will be sent back to the R session.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## {shinytest}</span>
+<span class="va">life</span> <span class="op">&lt;-</span> <span class="fl">42</span>
 <span class="va">old</span><span class="op">$</span><span class="fu">executeScript</span><span class="op">(</span><span class="st">"1 + 1;"</span><span class="op">)</span>
-<span class="va">old</span><span class="op">$</span><span class="fu">executeScript</span><span class="op">(</span><span class="st">"var life = arguments[0]; life;"</span>, <span class="fl">42</span><span class="op">)</span>
+<span class="va">old</span><span class="op">$</span><span class="fu">executeScript</span><span class="op">(</span><span class="st">"var life = arguments[0]; life;"</span>, <span class="va">life</span><span class="op">)</span>
 
 <span class="co">## {shinytest2}</span>
-<span class="va">new</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span><span class="st">"return 1 + 1;"</span><span class="op">)</span>
-<span class="va">new</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span><span class="st">"let life = arguments[0]; return life;"</span>, arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span><span class="op">)</span>
+<span class="va">life</span> <span class="op">&lt;-</span> <span class="fl">42</span>
+<span class="va">new</span><span class="op">$</span><span class="fu">get_js</span><span class="op">(</span><span class="st">"1 + 1;"</span><span class="op">)</span>
+<span class="va">new</span><span class="op">$</span><span class="fu">get_js</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"let life = "</span>, <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">toJSON</a></span><span class="op">(</span><span class="va">life</span>, auto_unbox <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="st">"; life;"</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># If a promise is returned, the resolved value will be sent back to the R session</span>
-<span class="va">new</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span>
-  <span class="st">"
-  let life = arguments[0];
-  return new Promise((resolve, reject) =&gt; resolve(life));
-  "</span>,
-  arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span>
+<span class="va">new</span><span class="op">$</span><span class="fu">get_js</span><span class="op">(</span>
+  <span class="fu">paset0</span><span class="op">(</span><span class="st">"
+  let life = "</span>, <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">toJSON</a></span><span class="op">(</span><span class="va">life</span>, auto_unbox <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="st">";
+  new Promise((resolve, reject) =&gt; resolve(life));
+  "</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 </div>
 <div class="section level4">
@@ -159,16 +160,15 @@
 
 <span class="co">## {shinytest2}</span>
 <span class="co"># Wait until a button is clicked</span>
-<span class="va">new</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span>
-  <span class="st">'
-  let selector = arguments[0];
-  return new Promise((resolve, reject) =&gt; {
-    $( selector ).one( "click", function() {
+<span class="va">new</span><span class="op">$</span><span class="fu">get_js</span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"
+  let selector = "</span>, <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">toJSON</a></span><span class="op">(</span><span class="st">"#mybutton"</span>, auto_unbox <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="st">";
+  new Promise((resolve, reject) =&gt; {
+    $( selector ).one( \"click\", function() {
       resolve();
     });
   });
-  '</span>,
-  arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"#mybutton"</span><span class="op">)</span>,
+  "</span><span class="op">)</span>,
   timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span>
 <span class="op">)</span></code></pre></div>
 </div>
@@ -309,16 +309,16 @@
 <code>ShinyDriver$takeScreenshot()</code><a class="anchor" aria-label="anchor" href="#shinydrivertakescreenshot"></a>
 </h4>
 <p>Signature: <code>ShinyDriver$takeScreenshot(file = NULL, id = NULL, parent = FALSE)</code></p>
-<p>This method has been renamed to <code>AppDriver$screenshot(file)</code>, and the <code>id</code> and <code>parent</code> parameters have been removed. To use a selector, set <code>AppDriver$screenshot(myfile, selector = ".custom-selector")</code> or <code>screenshot_args</code> directly.</p>
+<p>This method has been renamed to <code>AppDriver$get_screenshot(file)</code>, and the <code>id</code> and <code>parent</code> parameters have been removed. To use a selector, set <code>AppDriver$get_screenshot(myfile, selector = ".custom-selector")</code> or <code>screenshot_args</code> directly.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## {shinytest}</span>
 <span class="va">old</span><span class="op">$</span><span class="fu">takeScreenshot</span><span class="op">(</span><span class="st">"myfile1.png"</span><span class="op">)</span>
 <span class="va">old</span><span class="op">$</span><span class="fu">takeScreenshot</span><span class="op">(</span><span class="st">"myfile2.png"</span>, id <span class="op">=</span> <span class="st">"myid"</span><span class="op">)</span>
 
 <span class="co">## {shinytest2}</span>
-<span class="va">new</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"myfile1.png"</span><span class="op">)</span>
-<span class="va">new</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"myfile2.png"</span>, selector <span class="op">=</span> <span class="st">"#myid"</span><span class="op">)</span>
-<span class="va">new</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="st">"myfile2.png"</span>, screenshot_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selector <span class="op">=</span> <span class="st">"#myid"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="va">new</span><span class="op">$</span><span class="fu">get_screenshot</span><span class="op">(</span><span class="st">"myfile1.png"</span><span class="op">)</span>
+<span class="va">new</span><span class="op">$</span><span class="fu">get_screenshot</span><span class="op">(</span><span class="st">"myfile2.png"</span>, selector <span class="op">=</span> <span class="st">"#myid"</span><span class="op">)</span>
+<span class="va">new</span><span class="op">$</span><span class="fu">get_screenshot</span><span class="op">(</span><span class="st">"myfile2.png"</span>, screenshot_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selector <span class="op">=</span> <span class="st">"#myid"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="shinydriversnapshotdownload">
@@ -364,7 +364,7 @@
 <span class="va">old</span><span class="op">$</span><span class="fu">waitFor</span><span class="op">(</span><span class="st">"$('#myid').length &gt; 0"</span><span class="op">)</span>
 
 <span class="co">## {shinytest2}</span>
-<span class="va">new</span><span class="op">$</span><span class="fu">wait_for_js</span><span class="op">(</span><span class="st">"return $('#myid').length &gt; 0"</span><span class="op">)</span>;</code></pre></div>
+<span class="va">new</span><span class="op">$</span><span class="fu">wait_for_js</span><span class="op">(</span><span class="st">"$('#myid').length &gt; 0"</span><span class="op">)</span>;</code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="shinydriverwaitforshiny">
@@ -400,7 +400,7 @@
 <div class="section level3">
 <h3 id="elements-widgets">Elements / Widgets<a class="anchor" aria-label="anchor" href="#elements-widgets"></a>
 </h3>
-<p>Direct element or Widget support for <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> has been drastically reduced. With the ability to execute any JavaScript function via <code>$execute_js(script)</code>, it is now possible to reproduce many of the methods that were provided in <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a>.</p>
+<p>Direct element or Widget support for <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> has been drastically reduced. With the ability to execute any JavaScript function via <code>$get_js(script)</code> and <code>$run_js(script)</code>, it is now possible to reproduce many of the methods that were provided in <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a>.</p>
 <div class="section level4">
 <h4 id="shinydriverfindelement-shinydriverfindelements-shinydriverfindwidget">
 <code>ShinyDriver$findElement()</code>, <code>ShinyDriver$findElements()</code>, <code>ShinyDriver$findWidget()</code><a class="anchor" aria-label="anchor" href="#shinydriverfindelement-shinydriverfindelements-shinydriverfindwidget"></a>
@@ -417,7 +417,7 @@
 <span class="va">new</span><span class="op">$</span><span class="fu">get_text</span><span class="op">(</span>selector <span class="op">=</span> <span class="st">"#mybutton"</span><span class="op">)</span>
 <span class="va">new</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span>selector <span class="op">=</span> <span class="st">"#mybutton"</span><span class="op">)</span>
 <span class="co"># No direct equivalent method. Using JavaScript instead</span>
-<span class="va">new</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span><span class="st">'$("#mybutton").css("color")'</span><span class="op">)</span></code></pre></div>
+<span class="va">new</span><span class="op">$</span><span class="fu">get_js</span><span class="op">(</span><span class="st">'$("#mybutton").css("color")'</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="shinydrivergetsource-shinydrivergettitle">
@@ -432,7 +432,7 @@
 
 <span class="co">## {shinytest2}</span>
 <span class="va">new</span><span class="op">$</span><span class="fu">get_html</span><span class="op">(</span><span class="st">"html"</span>, outer_html <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">new</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span><span class="st">"return window.document.title;"</span><span class="op">)</span></code></pre></div>
+<span class="va">new</span><span class="op">$</span><span class="fu">get_js</span><span class="op">(</span><span class="st">"window.document.title;"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
@@ -488,10 +488,10 @@
 <div class="section level3">
 <h3 id="debugging">Debugging<a class="anchor" aria-label="anchor" href="#debugging"></a>
 </h3>
-<p>Debugging in <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> has been unified and is enabled at all times. The <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> debugging methods have been removed in favor of <code>AppDriver$get_log()</code> which returns a similarly shaped <code>tibble</code> as <code>ShinyDriver$getDebugLog()</code>’s <code>data.frame</code>. The columns have been altered to be more generic where <code>type</code> has been broken into two columns: <code>location</code> and <code>level</code>.</p>
+<p>Debugging in <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> has been unified and is enabled at all times. The <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> debugging methods have been removed in favor of <code>AppDriver$get_logs()</code> which returns a similarly shaped <code>tibble</code> as <code>ShinyDriver$getDebugLog()</code>’s <code>data.frame</code>. The columns have been altered to be more generic where <code>type</code> has been broken into two columns: <code>location</code> and <code>level</code>.</p>
 <ul>
 <li>
-<code>ShinyDriver$getDebugLog()</code>, <code>ShinyDriver$getEventLog()</code>: Now use <code>AppDriver$get_log()</code>.</li>
+<code>ShinyDriver$getDebugLog()</code>, <code>ShinyDriver$getEventLog()</code>: Now use <code>AppDriver$get_logs()</code>.</li>
 <li>
 <code>ShinyDriver$logEvent(event, ...)</code>: Messages can still be recorded using <code>AppDriver$log_message(text)</code>, but <code>...</code> values are no longer supported.</li>
 <li>
@@ -503,14 +503,14 @@
 <span class="va">old</span><span class="op">$</span><span class="fu">logEvent</span><span class="op">(</span><span class="st">"Creating report"</span><span class="op">)</span>
 
 <span class="co">## {shinytest2}</span>
-<span class="va">new</span><span class="op">$</span><span class="fu">get_log</span><span class="op">(</span><span class="op">)</span>
+<span class="va">new</span><span class="op">$</span><span class="fu">get_logs</span><span class="op">(</span><span class="op">)</span>
 <span class="va">old</span><span class="op">$</span><span class="fu">log_message</span><span class="op">(</span><span class="st">"Creating report"</span><span class="op">)</span></code></pre></div>
 <p>If <code>options = list(shiny.trace = TRUE)</code> is set when initializing a <code>AppDriver</code> object, then all WebSocket traffic will be recorded.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## {shinytest2}</span>
 <span class="co"># Record all websocket traffic. Caution!! This is very verbose!!</span>
 <span class="va">new</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">path_to_app</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>shiny.trace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="va">new</span><span class="op">$</span><span class="fu">get_log</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<span class="va">new</span><span class="op">$</span><span class="fu">get_logs</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="other-removed-methods">Other removed methods<a class="anchor" aria-label="anchor" href="#other-removed-methods"></a>
@@ -537,7 +537,7 @@
 <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">new</span><span class="op">$</span><span class="fu">get_values</span><span class="op">(</span><span class="op">)</span>, <span class="va">names</span><span class="op">)</span></code></pre></div>
 <ul>
 <li><p><code>ShinyDriver$clone()</code>: <code>AppDriver</code> does not support cloning. (The underlying <code>ChromoteSession</code> does not support cloning, so <code>AppDriver</code> can not support cloning.)</p></li>
-<li><p><code>ShinyDriver$goBack()</code>, <code>ShinyDriver$refresh()</code>: These method have been removed, but can be achieved with <code>AppDriver$execute_js(script)</code>.</p></li>
+<li><p><code>ShinyDriver$goBack()</code>, <code>ShinyDriver$refresh()</code>: These method have been removed, but can be achieved with <code>AppDriver$run_js(script)</code>.</p></li>
 </ul>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## {shinytest}</span>
@@ -546,9 +546,9 @@
 
 <span class="co">## {shinytest2}</span>
 <span class="co"># Go back</span>
-<span class="va">new</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span><span class="st">"window.history.back();"</span><span class="op">)</span>
+<span class="va">new</span><span class="op">$</span><span class="fu">run_js</span><span class="op">(</span><span class="st">"window.history.back();"</span><span class="op">)</span>
 <span class="co"># Refresh page</span>
-<span class="va">new</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span><span class="st">"window.location.reload();"</span><span class="op">)</span></code></pre></div>
+<span class="va">new</span><span class="op">$</span><span class="fu">run_js</span><span class="op">(</span><span class="st">"window.location.reload();"</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>
 <code>ShinyDriver$getAppDir()</code>, <code>ShinyDriver$getAppFilename()</code>, <code>ShinyDriver$isRmd()</code>: <code>AppDriver$get_dir()</code> is the only method still supported given <code>AppDriver$new(app_dir=)</code> is a single directory path. The other methods have been removed as their functionality does not make sense within <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>.</li>
@@ -566,14 +566,14 @@
 <span class="va">app_filename</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="va">has_rmd</span><span class="op">)</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path_file.html" class="external-link">path_file</a></span><span class="op">(</span><span class="va">rmd_files</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="kw">else</span> <span class="cn">NULL</span></code></pre></div>
 <ul>
 <li>
-<code>ShinyDriver$sendKeys(name, keys)</code>: This method has been removed and there is currently no easy alternative. If you are familiar with the <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode#value_of_keycode" class="external-link">key code values</a>, you can trigger them with <code>jQuery</code> and <code>AppDriver$execute_js(script)</code>.</li>
+<code>ShinyDriver$sendKeys(name, keys)</code>: This method has been removed and there is currently no easy alternative. If you are familiar with the <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode#value_of_keycode" class="external-link">key code values</a>, you can trigger them with <code>jQuery</code> and <code>AppDriver$run_js(script)</code>.</li>
 </ul>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## {shinytest}</span>
 <span class="va">old</span><span class="op">$</span><span class="fu">sendKeys</span><span class="op">(</span><span class="st">"myinput"</span>, <span class="fu">webdriver</span><span class="fu">::</span><span class="va">keys</span><span class="op">$</span><span class="va">enter</span><span class="op">)</span>
 
 <span class="co">## {shinytest2}</span>
-<span class="va">new</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span><span class="st">"$('#myinput').trigger({type: 'keypress', which: 13, keyCode: 13});"</span><span class="op">)</span></code></pre></div>
+<span class="va">new</span><span class="op">$</span><span class="fu">run_js</span><span class="op">(</span><span class="st">"$('#myinput').trigger({type: 'keypress', which: 13, keyCode: 13});"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

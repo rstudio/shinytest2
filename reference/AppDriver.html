@@ -152,7 +152,7 @@ eventually wrap <code><a href="https://testthat.r-lib.org/reference/expect_snaps
 
 <span class="co">## Expect screenshot</span>
 <span class="va">tmpfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".png"</span><span class="op">)</span>
-<span class="va">app</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="va">tmpfile</span><span class="op">)</span>
+<span class="va">app</span><span class="op">$</span><span class="fu">get_screenshot</span><span class="op">(</span><span class="va">tmpfile</span><span class="op">)</span>
 <span class="fu"><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">expect_snapshot_file</a></span><span class="op">(</span>
   <span class="va">tmpfile</span>,
   variant <span class="op">=</span> <span class="va">app</span><span class="op">$</span><span class="fu">get_variant</span><span class="op">(</span><span class="op">)</span>,
@@ -184,7 +184,7 @@ eventually wrap <code><a href="https://testthat.r-lib.org/reference/expect_snaps
 <li><p><a href="#method-get_value"><code>AppDriver$get_value()</code></a></p></li>
 <li><p><a href="#method-get_values"><code>AppDriver$get_values()</code></a></p></li>
 <li><p><a href="#method-expect_values"><code>AppDriver$expect_values()</code></a></p></li>
-<li><p><a href="#method-screenshot"><code>AppDriver$screenshot()</code></a></p></li>
+<li><p><a href="#method-get_screenshot"><code>AppDriver$get_screenshot()</code></a></p></li>
 <li><p><a href="#method-expect_screenshot"><code>AppDriver$expect_screenshot()</code></a></p></li>
 <li><p><a href="#method-set_inputs"><code>AppDriver$set_inputs()</code></a></p></li>
 <li><p><a href="#method-click"><code>AppDriver$click()</code></a></p></li>
@@ -192,7 +192,8 @@ eventually wrap <code><a href="https://testthat.r-lib.org/reference/expect_snaps
 <li><p><a href="#method-wait_for_js"><code>AppDriver$wait_for_js()</code></a></p></li>
 <li><p><a href="#method-wait_for_idle"><code>AppDriver$wait_for_idle()</code></a></p></li>
 <li><p><a href="#method-wait_for_value"><code>AppDriver$wait_for_value()</code></a></p></li>
-<li><p><a href="#method-execute_js"><code>AppDriver$execute_js()</code></a></p></li>
+<li><p><a href="#method-get_js"><code>AppDriver$get_js()</code></a></p></li>
+<li><p><a href="#method-run_js"><code>AppDriver$run_js()</code></a></p></li>
 <li><p><a href="#method-expect_unique_names"><code>AppDriver$expect_unique_names()</code></a></p></li>
 <li><p><a href="#method-get_dir"><code>AppDriver$get_dir()</code></a></p></li>
 <li><p><a href="#method-get_url"><code>AppDriver$get_url()</code></a></p></li>
@@ -200,7 +201,7 @@ eventually wrap <code><a href="https://testthat.r-lib.org/reference/expect_snaps
 <li><p><a href="#method-set_window_size"><code>AppDriver$set_window_size()</code></a></p></li>
 <li><p><a href="#method-get_chromote_session"><code>AppDriver$get_chromote_session()</code></a></p></li>
 <li><p><a href="#method-get_variant"><code>AppDriver$get_variant()</code></a></p></li>
-<li><p><a href="#method-get_log"><code>AppDriver$get_log()</code></a></p></li>
+<li><p><a href="#method-get_logs"><code>AppDriver$get_logs()</code></a></p></li>
 <li><p><a href="#method-log_message"><code>AppDriver$log_message()</code></a></p></li>
 <li><p><a href="#method-stop"><code>AppDriver$stop()</code></a></p></li>
 </ul></div><p></p><hr><a id="method-new"></a><div class="section">
@@ -279,7 +280,7 @@ Shiny app is idle for 200ms.</p></dd>
 
 <dt><code>screenshot_args</code></dt>
 <dd><p>Default set of arguments to pass in to
-<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$screenshot()</code> method when taking
+<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method when taking
 screnshots within <code>$expect_screenshot()</code>. To disable screenshots by
 default, set to <code>FALSE</code>.</p></dd>
 
@@ -555,7 +556,6 @@ For example, <code>$expect_text()</code> and <code>$expect_html()</code> are thi
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">expect_js</span><span class="op">(</span>
   script <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   <span class="va">...</span>,
-  arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
   file <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span>,
   pre_snapshot <span class="op">=</span> <span class="cn">NULL</span>,
@@ -571,10 +571,6 @@ For example, <code>$expect_text()</code> and <code>$expect_html()</code> are thi
 
 <dt><code>...</code></dt>
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
-
-
-<dt><code>arguments</code></dt>
-<dd><p>A list of unnamed arguments to send to the script.</p></dd>
 
 
 <dt><code>file</code></dt>
@@ -605,7 +601,7 @@ app_path &lt;- system.file("examples/07_widgets", package = "shiny")
 app &lt;- AppDriver$new(app_path)
 
 # Track how many clicks are given to `#update` button
-app$execute_js("
+app$run_js("
   window.test_counter = 0;
   $('#update').click(() =&gt; window.test_counter++);
 ")
@@ -613,7 +609,7 @@ app$set_inputs(obs = 20)
 # Click the update button, incrementing the counter
 app$click("update")
 # Save a snapshot of number of clicks (1)
-app$expect_js("return window.test_counter;")
+app$expect_js("window.test_counter;")
 }
 </code></pre></div><p></p></div>
 </div>
@@ -922,7 +918,7 @@ missing, the default value will be
 <p>The final value can either be:</p><ul><li><p><code>TRUE</code>: A screenshot of the whole page will be taken with no delay</p></li>
 <li><p><code>FALSE</code>: No screenshot will be taken</p></li>
 <li><p>A named list of arguments. These arguments are passed directly to
-<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$screenshot()</code> method. The <code>selector</code>
+<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. The <code>selector</code>
 and <code>delay</code> will default to <code>"html"</code> and <code>0</code> respectively.</p></li>
 </ul></dd>
 
@@ -986,12 +982,12 @@ app$expect_values(input = "A", output = "C")
 </div>
 
 
-</div><p></p><hr><a id="method-screenshot"></a><div class="section">
-<h3 id="method-screenshot-">Method <code>screenshot()</code><a class="anchor" aria-label="anchor" href="#method-screenshot-"></a></h3>
+</div><p></p><hr><a id="method-get_screenshot"></a><div class="section">
+<h3 id="method-get-screenshot-">Method <code>get_screenshot()</code><a class="anchor" aria-label="anchor" href="#method-get-screenshot-"></a></h3>
 <p>Take a screenshot</p>
 <p>Take a screenshot of the Shiny application.</p><div class="section">
 <h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_screenshot</span><span class="op">(</span>
   file <span class="op">=</span> <span class="cn">NULL</span>,
   <span class="va">...</span>,
   screenshot_args <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
@@ -1014,11 +1010,11 @@ that file.</p></dd>
 
 <dt><code>screenshot_args</code></dt>
 <dd><p>This named list of arguments is passed along to
-<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$screenshot()</code> method. If missing, the
+<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. If missing, the
 value will default to <code>$new(screenshot_args=)</code>.</p>
 <p>If the value is:</p><ul><li><p><code>TRUE</code>: A screenshot of the whole page will be taken with no delay</p></li>
 <li><p>A named list of arguments: Arguments passed directly to <code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s
-<code>$screenshot()</code> method. The <code>selector</code> and <code>delay</code> will default to <code>"html"</code> and <code>0</code> respectively.</p></li>
+<code>$get_screenshot()</code> method. The <code>selector</code> and <code>delay</code> will default to <code>"html"</code> and <code>0</code> respectively.</p></li>
 </ul><p>If a <code>FALSE</code> value is provided, the parameter will be ignored and a
 screenshot will be taken with default behavior.</p></dd>
 
@@ -1045,15 +1041,15 @@ app_path &lt;- system.file("examples/01_hello", package = "shiny")
 app &lt;- AppDriver$new(app_path)
 
 # Display in viewer
-app$screenshot()
+app$get_screenshot()
 
 # Update bins then display `"disPlot"` in viewer
 app$set_inputs(bins = 10)
-app$screenshot(selector = "#distPlot")
+app$get_screenshot(selector = "#distPlot")
 
 # Save screenshot to file and view it
 tmpfile &lt;- tempfile(fileext = ".png")
-app$screenshot(tmpfile)
+app$get_screenshot(tmpfile)
 showimage::show_image(tmpfile)
 }
 </code></pre></div><p></p></div>
@@ -1092,11 +1088,11 @@ recommended to use other expectation methods.</p><div class="section">
 
 <dt><code>screenshot_args</code></dt>
 <dd><p>This named list of arguments is passed along to
-<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$screenshot()</code> method. If missing, the
+<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. If missing, the
 value will default to <code>$new(screenshot_args=)</code>.</p>
 <p>If the value is:</p><ul><li><p><code>TRUE</code>: A screenshot of the whole page will be taken with no delay</p></li>
 <li><p>A named list of arguments: Arguments passed directly to
-<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$screenshot()</code> method. The <code>selector</code>
+<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. The <code>selector</code>
 and <code>delay</code> will default to <code>"html"</code> and <code>0</code> respectively.</p></li>
 </ul><p>If <code>FALSE</code> is provided, the parameter will be ignored and a
 screenshot will be taken with default behavior.</p></dd>
@@ -1332,13 +1328,13 @@ app &lt;- AppDriver$new(shiny_app)
 # Contrived example:
 # Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)
 system.time(
-  app$wait_for_js("return Math.floor((Date.now() / 1000) % 10) == 5;")
+  app$wait_for_js("Math.floor((Date.now() / 1000) % 10) == 5;")
 )
 
 ## A second example where we run the contents of a JavaScript file
 ## and use the result to wait for a condition
-app$execute_js(file = "complicated_file.js")
-app$wait_for_js("return complicated_condition();")
+app$run_js(file = "complicated_file.js")
+app$wait_for_js("complicated_condition();")
 }
 </code></pre></div><p></p></div>
 </div>
@@ -1512,19 +1508,22 @@ app$get_value(output = "total")
 </div>
 
 
-</div><p></p><hr><a id="method-execute_js"></a><div class="section">
-<h3 id="method-execute-js-">Method <code>execute_js()</code><a class="anchor" aria-label="anchor" href="#method-execute-js-"></a></h3>
-<p>Execute JavaScript code in the browser.</p>
+</div><p></p><hr><a id="method-get_js"></a><div class="section">
+<h3 id="method-get-js-">Method <code>get_js()</code><a class="anchor" aria-label="anchor" href="#method-get-js-"></a></h3>
+<p>Execute JavaScript code in the browser and return the result</p>
 <p>This function will block the local R session until the code has finished
 executing its <em>tick</em> in the browser. If a <code>Promise</code> is returned from the
-script, <code>$execute_js()</code> will wait for the promise to resolve. To have
+script, <code>$get_js()</code> will wait for the promise to resolve. To have
 JavaScript code execute asynchronously, wrap the code in a Promise object
-and have the script return an atomic value.</p><div class="section">
+and have the script return an atomic value.</p>
+<p>Arguments will have to be inserted into the script as there is not access
+to <code>arguments</code>. This can be done with commands like <code><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste()</a></code>. If using
+<code><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue()</a></code>, be sure to use uncommon <code>.open</code> and <code>.close</code> values to
+avoid having to doulbe all <code>{</code> and <code>}</code>.</p><div class="section">
 <h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_js</span><span class="op">(</span>
   script <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   <span class="va">...</span>,
-  arguments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
   file <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
   timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span>
 <span class="op">)</span></code></pre></div><p></p></div>
@@ -1540,10 +1539,6 @@ the value.</p></dd>
 
 <dt><code>...</code></dt>
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
-
-
-<dt><code>arguments</code></dt>
-<dd><p>A list of unnamed arguments to send to the script.</p></dd>
 
 
 <dt><code>file</code></dt>
@@ -1569,17 +1564,100 @@ shiny_app &lt;- shinyApp(h1("Empty App"), function(input, output) { })
 app &lt;- AppDriver$new(shiny_app)
 
 # Execute JavaScript code in the app's browser
-app$execute_js("return 1 + 1;")
+app$get_js("1 + 1;")
 #&gt; [1] 2
 
 # Execute a JavaScript Promise. Return the resolved value.
-app$execute_js("
-  return new Promise((resolve) =&gt; {
+app$get_js("
+  new Promise((resolve) =&gt; {
     setTimeout(() =&gt; resolve(1 + 1), 1000)
   }).
   then((value) =&gt; value + 1);
 ")
 #&gt; [1] 3
+
+# With escaped arguments
+loc_field &lt;- "hostname"
+js_txt &lt;- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+app$get_js(js_txt)
+#&gt; [1] "127.0.0.1"
+
+# With `glue::glue()`
+js_txt &lt;- glue::glue_data(
+  lapply(
+    list(x = 40, y = 2),
+    jsonlite::toJSON,
+    auto_unbox = TRUE
+  ),
+  .open = "&lt;", .close = "&gt;",
+  "let answer = function(a, b) {\n",
+  "  return a + b;\n",
+  "};\n",
+  "answer(&lt;x&gt;, &lt;y&gt;);\n"
+)
+app$get_js(js_txt)
+#&gt; [1] 42
+}
+</code></pre></div><p></p></div>
+</div>
+
+
+</div><p></p><hr><a id="method-run_js"></a><div class="section">
+<h3 id="method-run-js-">Method <code>run_js()</code><a class="anchor" aria-label="anchor" href="#method-run-js-"></a></h3>
+<p>Execute JavaScript code in the browser</p>
+<p>This function will block the local R session until the code has finished
+executing its <em>tick</em> in the browser.</p>
+<p>The final result of the code will be ignored and not returned to the R session.</p><div class="section">
+<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">run_js</span><span class="op">(</span>
+  script <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">...</span>,
+  file <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
+  timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span>
+<span class="op">)</span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-20">Arguments<a class="anchor" aria-label="anchor" href="#arguments-20"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>script</code></dt>
+<dd><p>JavaScript to execute.</p></dd>
+
+
+<dt><code>...</code></dt>
+<dd><p>Must be empty. Allows for parameter expansion.</p></dd>
+
+
+<dt><code>file</code></dt>
+<dd><p>A (local) file containing JavaScript code to be read and used
+as the <code>script</code>. Only one of <code>script</code> or <code>file</code> can be specified.</p></dd>
+
+
+<dt><code>timeout</code></dt>
+<dd><p>Amount of time to wait before giving up (milliseconds).</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="examples-21">Examples<a class="anchor" aria-label="anchor" href="#examples-21"></a></h4>
+<p></p><div class="r example copy"><div class="sourceCode"><pre><code>\dontrun{
+library(shiny)
+shiny_app &lt;- shinyApp(h1("Empty App"), function(input, output) { })
+app &lt;- AppDriver$new(shiny_app)
+
+# Get JavaScript answer from the app's browser
+app$get_js("1 + 1")
+#&gt; [1] 2
+# Execute JavaScript code in the app's browser
+app$run_js("1 + 1")
+# (Returns `app` invisibly)
+
+# With escaped arguments
+loc_field &lt;- "hostname"
+js_txt &lt;- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+app$run_js(js_txt)
+app$get_js(js_txt)
+#&gt; [1] "127.0.0.1"
 }
 </code></pre></div><p></p></div>
 </div>
@@ -1594,12 +1672,12 @@ values, this function will throw an error. It is similar to
 displayed.</p>
 <p>This method will not throw if a single input and a single output have the
 same name.</p><div class="section">
-<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
+<h4 id="usage-22">Usage<a class="anchor" aria-label="anchor" href="#usage-22"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">expect_unique_names</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="examples-21">Examples<a class="anchor" aria-label="anchor" href="#examples-21"></a></h4>
+<h4 id="examples-22">Examples<a class="anchor" aria-label="anchor" href="#examples-22"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code>\dontrun{
 shiny_app &lt;- shinyApp(
   ui = fluidPage(
@@ -1634,7 +1712,7 @@ app$expect_unique_names()
 </div><p></p><hr><a id="method-get_dir"></a><div class="section">
 <h3 id="method-get-dir-">Method <code>get_dir()</code><a class="anchor" aria-label="anchor" href="#method-get-dir-"></a></h3>
 <p>Retrieve the Shiny app path</p><div class="section">
-<h4 id="usage-22">Usage<a class="anchor" aria-label="anchor" href="#usage-22"></a></h4>
+<h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_dir</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -1644,7 +1722,7 @@ app$expect_unique_names()
 document.</p>
 </div>
 <div class="section">
-<h4 id="examples-22">Examples<a class="anchor" aria-label="anchor" href="#examples-22"></a></h4>
+<h4 id="examples-23">Examples<a class="anchor" aria-label="anchor" href="#examples-23"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code>\dontrun{
 app_path &lt;- system.file("examples/01_hello", package = "shiny")
 app &lt;- AppDriver$new(app_path)
@@ -1658,7 +1736,7 @@ identical(app$get_dir(), app_path)
 </div><p></p><hr><a id="method-get_url"></a><div class="section">
 <h3 id="method-get-url-">Method <code>get_url()</code><a class="anchor" aria-label="anchor" href="#method-get-url-"></a></h3>
 <p>Retrieve the Shiny app URL</p><div class="section">
-<h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
+<h4 id="usage-24">Usage<a class="anchor" aria-label="anchor" href="#usage-24"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_url</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -1667,7 +1745,7 @@ identical(app$get_dir(), app_path)
 <p>URL where the Shiny app is being hosted</p>
 </div>
 <div class="section">
-<h4 id="examples-23">Examples<a class="anchor" aria-label="anchor" href="#examples-23"></a></h4>
+<h4 id="examples-24">Examples<a class="anchor" aria-label="anchor" href="#examples-24"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code>\dontrun{
 app_path &lt;- system.file("examples/01_hello", package = "shiny")
 app &lt;- AppDriver$new(app_path)
@@ -1682,12 +1760,12 @@ browseURL(app$get_url())
 <p>Get window size</p>
 <p>Get current size of the browser window, as list of numeric scalars
 named <code>width</code> and <code>height</code>.</p><div class="section">
-<h4 id="usage-24">Usage<a class="anchor" aria-label="anchor" href="#usage-24"></a></h4>
+<h4 id="usage-25">Usage<a class="anchor" aria-label="anchor" href="#usage-25"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_window_size</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="examples-24">Examples<a class="anchor" aria-label="anchor" href="#examples-24"></a></h4>
+<h4 id="examples-25">Examples<a class="anchor" aria-label="anchor" href="#examples-25"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code>\dontrun{
 app_path &lt;- system.file("examples/01_hello", package = "shiny")
 app &lt;- AppDriver$new(app_path)
@@ -1705,12 +1783,12 @@ app$get_window_size()
 </div><p></p><hr><a id="method-set_window_size"></a><div class="section">
 <h3 id="method-set-window-size-">Method <code>set_window_size()</code><a class="anchor" aria-label="anchor" href="#method-set-window-size-"></a></h3>
 <p>Sets size of the browser window.</p><div class="section">
-<h4 id="usage-25">Usage<a class="anchor" aria-label="anchor" href="#usage-25"></a></h4>
+<h4 id="usage-26">Usage<a class="anchor" aria-label="anchor" href="#usage-26"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">set_window_size</span><span class="op">(</span><span class="va">width</span>, <span class="va">height</span>, wait <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-20">Arguments<a class="anchor" aria-label="anchor" href="#arguments-20"></a></h4>
+<h4 id="arguments-21">Arguments<a class="anchor" aria-label="anchor" href="#arguments-21"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>width, height</code></dt>
 <dd><p>Height and width of browser, in pixels.</p></dd>
 
@@ -1724,7 +1802,7 @@ as plots) that need to be re-rendered.</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="examples-25">Examples<a class="anchor" aria-label="anchor" href="#examples-25"></a></h4>
+<h4 id="examples-26">Examples<a class="anchor" aria-label="anchor" href="#examples-26"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code>\dontrun{
 app_path &lt;- system.file("examples/01_hello", package = "shiny")
 # Set init window size
@@ -1754,7 +1832,7 @@ app$get_window_size()
 <h3 id="method-get-chromote-session-">Method <code>get_chromote_session()</code><a class="anchor" aria-label="anchor" href="#method-get-chromote-session-"></a></h3>
 <p>Get Chromote Session</p>
 <p>Get the <code>ChromoteSession</code> object from the <span class="pkg">chromote</span> package.</p><div class="section">
-<h4 id="usage-26">Usage<a class="anchor" aria-label="anchor" href="#usage-26"></a></h4>
+<h4 id="usage-27">Usage<a class="anchor" aria-label="anchor" href="#usage-27"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_chromote_session</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -1763,7 +1841,7 @@ app$get_window_size()
 <p><code>ChromoteSession</code> R6 object</p>
 </div>
 <div class="section">
-<h4 id="examples-26">Examples<a class="anchor" aria-label="anchor" href="#examples-26"></a></h4>
+<h4 id="examples-27">Examples<a class="anchor" aria-label="anchor" href="#examples-27"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code>\dontrun{
 app_path &lt;- system.file("examples/01_hello", package = "shiny")
 app &lt;- AppDriver$new(app_path)
@@ -1787,7 +1865,7 @@ b$Runtime$evaluate("1 + 1")
 <h3 id="method-get-variant-">Method <code>get_variant()</code><a class="anchor" aria-label="anchor" href="#method-get-variant-"></a></h3>
 <p>Get the variant</p>
 <p>Get the <code>variant</code> supplied during initialization</p><div class="section">
-<h4 id="usage-27">Usage<a class="anchor" aria-label="anchor" href="#usage-27"></a></h4>
+<h4 id="usage-28">Usage<a class="anchor" aria-label="anchor" href="#usage-28"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_variant</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -1797,7 +1875,7 @@ b$Runtime$evaluate("1 + 1")
 no value was supplied.</p>
 </div>
 <div class="section">
-<h4 id="examples-27">Examples<a class="anchor" aria-label="anchor" href="#examples-27"></a></h4>
+<h4 id="examples-28">Examples<a class="anchor" aria-label="anchor" href="#examples-28"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code>\dontrun{
 app_path &lt;- system.file("examples/01_hello", package = "shiny")
 
@@ -1813,17 +1891,17 @@ app$get_variant()
 </div>
 
 
-</div><p></p><hr><a id="method-get_log"></a><div class="section">
-<h3 id="method-get-log-">Method <code>get_log()</code><a class="anchor" aria-label="anchor" href="#method-get-log-"></a></h3>
+</div><p></p><hr><a id="method-get_logs"></a><div class="section">
+<h3 id="method-get-logs-">Method <code>get_logs()</code><a class="anchor" aria-label="anchor" href="#method-get-logs-"></a></h3>
 <p>Get all logs</p>
 <p>Retrieve all of the debug logs that have been recorded.
-There are a few standard debug types that may be used:</p><ul><li><p><code>"shiny_console"</code>: Displays the console messages from the Shiny server when <code>$get_log()</code> is called.</p></li>
-<li><p><code>"browser"</code>: Displays the browser console messages when <code>$get_log()</code> is called.</p></li>
-<li><p><code>"shinytest2"</code>: Displays the messages saved by the <code>window.shinytest2</code> object in the browser when <code>$get_log()</code> is called.</p></li>
+There are a few standard debug types that may be used:</p><ul><li><p><code>"shiny_console"</code>: Displays the console messages from the Shiny server when <code>$get_logs()</code> is called.</p></li>
+<li><p><code>"browser"</code>: Displays the browser console messages when <code>$get_logs()</code> is called.</p></li>
+<li><p><code>"shinytest2"</code>: Displays the messages saved by the <code>window.shinytest2</code> object in the browser when <code>$get_logs()</code> is called.</p></li>
 <li><p><code>"ws_messages"</code>: Saves all messages sent by Shiny to the</p></li>
 </ul><div class="section">
-<h4 id="usage-28">Usage<a class="anchor" aria-label="anchor" href="#usage-28"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_log</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
+<h4 id="usage-29">Usage<a class="anchor" aria-label="anchor" href="#usage-29"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_logs</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -1847,10 +1925,10 @@ for more details</p></li>
 </ul></li>
 </ul></div>
 <div class="section">
-<h4 id="examples-28">Examples<a class="anchor" aria-label="anchor" href="#examples-28"></a></h4>
+<h4 id="examples-29">Examples<a class="anchor" aria-label="anchor" href="#examples-29"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code>\dontrun{
 app &lt;- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-app$get_log()
+app$get_logs()
 # {shinytest2} R  info  11:15:20.11 Start AppDriver initialization
 # {shinytest2} R  info  11:15:20.11 Starting Shiny app
 # {shinytest2} R  info  11:15:20.99 Creating new chromote session
@@ -1878,7 +1956,7 @@ app &lt;- AppDriver$new(
   system.file("examples/01_hello", package = "shiny"),
   options = list(shiny.trace = TRUE)
 )
-app$get_log() # (long output lines have been truncated)
+app$get_logs() # (long output lines have been truncated)
 # {shinytest2} R  info      11:09:57.43 Start AppDriver initialization
 # {shinytest2} R  info      11:09:57.43 Starting Shiny app
 # {shinytest2} R  info      11:09:58.27 Creating new chromote session
@@ -1943,7 +2021,7 @@ app$get_log() # (long output lines have been truncated)
 # {shiny}      R  error     ----------- SEND {"errors":{},"values":{"distPlot":{|truncated
 
 # The log that is returned is a `data.frame()`.
-log &lt;- app$get_log()
+log &lt;- app$get_logs()
 tibble::glimpse(log)
 #&gt; $ workerid  &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
 #&gt; $ timestamp &lt;dttm&gt; 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:…
@@ -1978,12 +2056,12 @@ subset(log, level == "websocket")
 </div><p></p><hr><a id="method-log_message"></a><div class="section">
 <h3 id="method-log-message-">Method <code>log_message()</code><a class="anchor" aria-label="anchor" href="#method-log-message-"></a></h3>
 <p>Add a message to the <span class="pkg">shinytest2</span> log.</p><div class="section">
-<h4 id="usage-29">Usage<a class="anchor" aria-label="anchor" href="#usage-29"></a></h4>
+<h4 id="usage-30">Usage<a class="anchor" aria-label="anchor" href="#usage-30"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">log_message</span><span class="op">(</span><span class="va">message</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-21">Arguments<a class="anchor" aria-label="anchor" href="#arguments-21"></a></h4>
+<h4 id="arguments-22">Arguments<a class="anchor" aria-label="anchor" href="#arguments-22"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>message</code></dt>
 <dd><p>Single message to store in log</p></dd>
 
@@ -1991,13 +2069,13 @@ subset(log, level == "websocket")
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="examples-29">Examples<a class="anchor" aria-label="anchor" href="#examples-29"></a></h4>
+<h4 id="examples-30">Examples<a class="anchor" aria-label="anchor" href="#examples-30"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code>\dontrun{
 app_path &lt;- system.file("examples/01_hello", package = "shiny")
 app &lt;- AppDriver$new(app_path)
 app$log_message("Setting bins to smaller value")
 app$set_inputs(bins = 10)
-app$get_log()
+app$get_logs()
 }
 </code></pre></div><p></p></div>
 </div>
@@ -2015,7 +2093,7 @@ information.</p>
 <p>Typically, this can be paired with a button that when clicked will call
 <code>shiny::stopApp(info)</code> to return <code>info</code> from the test app back to the
 main R session.</p><div class="section">
-<h4 id="usage-30">Usage<a class="anchor" aria-label="anchor" href="#usage-30"></a></h4>
+<h4 id="usage-31">Usage<a class="anchor" aria-label="anchor" href="#usage-31"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="kw">stop</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -2025,7 +2103,7 @@ main R session.</p><div class="section">
 already been terminated.</p>
 </div>
 <div class="section">
-<h4 id="examples-30">Examples<a class="anchor" aria-label="anchor" href="#examples-30"></a></h4>
+<h4 id="examples-31">Examples<a class="anchor" aria-label="anchor" href="#examples-31"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code>\dontrun{
 rlang::check_installed("reactlog")
 
@@ -2168,7 +2246,7 @@ str(head(rlog, 2))
 <span class="r-in"><span class="va">app</span> <span class="op">&lt;-</span> <span class="va">AppDriver</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">app_path</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Track how many clicks are given to `#update` button</span></span>
-<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span><span class="st">"</span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">run_js</span><span class="op">(</span><span class="st">"</span>
 <span class="r-in">  window.test_counter = 0;</span>
 <span class="r-in">  $('#update').click(() =&gt; window.test_counter++);</span>
 <span class="r-in">"</span><span class="op">)</span></span>
@@ -2176,7 +2254,7 @@ str(head(rlog, 2))
 <span class="r-in"><span class="co"># Click the update button, incrementing the counter</span></span>
 <span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="st">"update"</span><span class="op">)</span></span>
 <span class="r-in"><span class="co"># Save a snapshot of number of clicks (1)</span></span>
-<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">expect_js</span><span class="op">(</span><span class="st">"return window.test_counter;"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">expect_js</span><span class="op">(</span><span class="st">"window.test_counter;"</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
@@ -2325,7 +2403,7 @@ str(head(rlog, 2))
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
-<span class="r-in"><span class="co">## Method `AppDriver$screenshot`</span></span>
+<span class="r-in"><span class="co">## Method `AppDriver$get_screenshot`</span></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
@@ -2333,15 +2411,15 @@ str(head(rlog, 2))
 <span class="r-in"><span class="va">app</span> <span class="op">&lt;-</span> <span class="va">AppDriver</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">app_path</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Display in viewer</span></span>
-<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_screenshot</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Update bins then display `"disPlot"` in viewer</span></span>
 <span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>bins <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span>selector <span class="op">=</span> <span class="st">"#distPlot"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_screenshot</span><span class="op">(</span>selector <span class="op">=</span> <span class="st">"#distPlot"</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Save screenshot to file and view it</span></span>
 <span class="r-in"><span class="va">tmpfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".png"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="va">tmpfile</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_screenshot</span><span class="op">(</span><span class="va">tmpfile</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">showimage</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/showimage/man/show_image.html" class="external-link">show_image</a></span><span class="op">(</span><span class="va">tmpfile</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
@@ -2416,13 +2494,13 @@ str(head(rlog, 2))
 <span class="r-in"><span class="co"># Contrived example:</span></span>
 <span class="r-in"><span class="co"># Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">app</span><span class="op">$</span><span class="fu">wait_for_js</span><span class="op">(</span><span class="st">"return Math.floor((Date.now() / 1000) % 10) == 5;"</span><span class="op">)</span></span>
+<span class="r-in">  <span class="va">app</span><span class="op">$</span><span class="fu">wait_for_js</span><span class="op">(</span><span class="st">"Math.floor((Date.now() / 1000) % 10) == 5;"</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## A second example where we run the contents of a JavaScript file</span></span>
 <span class="r-in"><span class="co">## and use the result to wait for a condition</span></span>
-<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span>file <span class="op">=</span> <span class="st">"complicated_file.js"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">wait_for_js</span><span class="op">(</span><span class="st">"return complicated_condition();"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">run_js</span><span class="op">(</span>file <span class="op">=</span> <span class="st">"complicated_file.js"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">wait_for_js</span><span class="op">(</span><span class="st">"complicated_condition();"</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
@@ -2506,7 +2584,7 @@ str(head(rlog, 2))
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
-<span class="r-in"><span class="co">## Method `AppDriver$execute_js`</span></span>
+<span class="r-in"><span class="co">## Method `AppDriver$get_js`</span></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
@@ -2515,17 +2593,63 @@ str(head(rlog, 2))
 <span class="r-in"><span class="va">app</span> <span class="op">&lt;-</span> <span class="va">AppDriver</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">shiny_app</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Execute JavaScript code in the app's browser</span></span>
-<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span><span class="st">"return 1 + 1;"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_js</span><span class="op">(</span><span class="st">"1 + 1;"</span><span class="op">)</span></span>
 <span class="r-in"><span class="co">#&gt; [1] 2</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Execute a JavaScript Promise. Return the resolved value.</span></span>
-<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">execute_js</span><span class="op">(</span><span class="st">"</span>
-<span class="r-in">  return new Promise((resolve) =&gt; {</span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_js</span><span class="op">(</span><span class="st">"</span>
+<span class="r-in">  new Promise((resolve) =&gt; {</span>
 <span class="r-in">    setTimeout(() =&gt; resolve(1 + 1), 1000)</span>
 <span class="r-in">  }).</span>
 <span class="r-in">  then((value) =&gt; value + 1);</span>
 <span class="r-in">"</span><span class="op">)</span></span>
 <span class="r-in"><span class="co">#&gt; [1] 3</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># With escaped arguments</span></span>
+<span class="r-in"><span class="va">loc_field</span> <span class="op">&lt;-</span> <span class="st">"hostname"</span></span>
+<span class="r-in"><span class="va">js_txt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"window.location["</span>, <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">toJSON</a></span><span class="op">(</span><span class="va">loc_field</span>, auto_unbox <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="st">"]"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_js</span><span class="op">(</span><span class="va">js_txt</span><span class="op">)</span></span>
+<span class="r-in"><span class="co">#&gt; [1] "127.0.0.1"</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># With `glue::glue()`</span></span>
+<span class="r-in"><span class="va">js_txt</span> <span class="op">&lt;-</span> <span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue_data</a></span><span class="op">(</span></span>
+<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span></span>
+<span class="r-in">    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">40</span>, y <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu">jsonlite</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">toJSON</a></span>,</span>
+<span class="r-in">    auto_unbox <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span class="r-in">  <span class="op">)</span>,</span>
+<span class="r-in">  .open <span class="op">=</span> <span class="st">"&lt;"</span>, .close <span class="op">=</span> <span class="st">"&gt;"</span>,</span>
+<span class="r-in">  <span class="st">"let answer = function(a, b) {\n"</span>,</span>
+<span class="r-in">  <span class="st">"  return a + b;\n"</span>,</span>
+<span class="r-in">  <span class="st">"};\n"</span>,</span>
+<span class="r-in">  <span class="st">"answer(&lt;x&gt;, &lt;y&gt;);\n"</span></span>
+<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_js</span><span class="op">(</span><span class="va">js_txt</span><span class="op">)</span></span>
+<span class="r-in"><span class="co">#&gt; [1] 42</span></span>
+<span class="r-in"><span class="op">}</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co">## ------------------------------------------------</span></span>
+<span class="r-in"><span class="co">## Method `AppDriver$run_js`</span></span>
+<span class="r-in"><span class="co">## ------------------------------------------------</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span>
+<span class="r-in"><span class="va">shiny_app</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/htmltools/man/builder.html" class="external-link">h1</a></span><span class="op">(</span><span class="st">"Empty App"</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span><span class="op">)</span> <span class="op">{</span> <span class="op">}</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">app</span> <span class="op">&lt;-</span> <span class="va">AppDriver</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">shiny_app</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Get JavaScript answer from the app's browser</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_js</span><span class="op">(</span><span class="st">"1 + 1"</span><span class="op">)</span></span>
+<span class="r-in"><span class="co">#&gt; [1] 2</span></span>
+<span class="r-in"><span class="co"># Execute JavaScript code in the app's browser</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">run_js</span><span class="op">(</span><span class="st">"1 + 1"</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># (Returns `app` invisibly)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># With escaped arguments</span></span>
+<span class="r-in"><span class="va">loc_field</span> <span class="op">&lt;-</span> <span class="st">"hostname"</span></span>
+<span class="r-in"><span class="va">js_txt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"window.location["</span>, <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">toJSON</a></span><span class="op">(</span><span class="va">loc_field</span>, auto_unbox <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="st">"]"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">run_js</span><span class="op">(</span><span class="va">js_txt</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_js</span><span class="op">(</span><span class="va">js_txt</span><span class="op">)</span></span>
+<span class="r-in"><span class="co">#&gt; [1] "127.0.0.1"</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
@@ -2659,12 +2783,12 @@ str(head(rlog, 2))
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
-<span class="r-in"><span class="co">## Method `AppDriver$get_log`</span></span>
+<span class="r-in"><span class="co">## Method `AppDriver$get_logs`</span></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="va">app</span> <span class="op">&lt;-</span> <span class="va">AppDriver</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/01_hello"</span>, package <span class="op">=</span> <span class="st">"shiny"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_log</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_logs</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"><span class="co"># {shinytest2} R  info  11:15:20.11 Start AppDriver initialization</span></span>
 <span class="r-in"><span class="co"># {shinytest2} R  info  11:15:20.11 Starting Shiny app</span></span>
 <span class="r-in"><span class="co"># {shinytest2} R  info  11:15:20.99 Creating new chromote session</span></span>
@@ -2692,7 +2816,7 @@ str(head(rlog, 2))
 <span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/01_hello"</span>, package <span class="op">=</span> <span class="st">"shiny"</span><span class="op">)</span>,</span>
 <span class="r-in">  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>shiny.trace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_log</span><span class="op">(</span><span class="op">)</span> <span class="co"># (long output lines have been truncated)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_logs</span><span class="op">(</span><span class="op">)</span> <span class="co"># (long output lines have been truncated)</span></span>
 <span class="r-in"><span class="co"># {shinytest2} R  info      11:09:57.43 Start AppDriver initialization</span></span>
 <span class="r-in"><span class="co"># {shinytest2} R  info      11:09:57.43 Starting Shiny app</span></span>
 <span class="r-in"><span class="co"># {shinytest2} R  info      11:09:58.27 Creating new chromote session</span></span>
@@ -2757,7 +2881,7 @@ str(head(rlog, 2))
 <span class="r-in"><span class="co"># {shiny}      R  error     ----------- SEND {"errors":{},"values":{"distPlot":{|truncated</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># The log that is returned is a `data.frame()`.</span></span>
-<span class="r-in"><span class="va">log</span> <span class="op">&lt;-</span> <span class="va">app</span><span class="op">$</span><span class="fu">get_log</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">log</span> <span class="op">&lt;-</span> <span class="va">app</span><span class="op">$</span><span class="fu">get_logs</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">log</span><span class="op">)</span></span>
 <span class="r-in"><span class="co">#&gt; $ workerid  &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
 <span class="r-in"><span class="co">#&gt; $ timestamp &lt;dttm&gt; 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:…</span></span>
@@ -2795,7 +2919,7 @@ str(head(rlog, 2))
 <span class="r-in"><span class="va">app</span> <span class="op">&lt;-</span> <span class="va">AppDriver</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">app_path</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">log_message</span><span class="op">(</span><span class="st">"Setting bins to smaller value"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>bins <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_log</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_logs</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
