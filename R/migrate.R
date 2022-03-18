@@ -1091,10 +1091,10 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       ) {
         rlang::abort(c(
           "`ShinyDriver$takeScreenshot(parent=)` is not supported in {shinytest2}. Currently, CSS `parent` selector is not officially supported.",
-          x = "Please provide a better `AppDriver$screenshot(selector=)` value."
+          x = "Please provide a better `AppDriver$get_screenshot(selector=)` value."
         ))
       }
-      shinytest2_expr("screenshot", fn_args)
+      shinytest2_expr("get_screenshot", fn_args)
     },
 
     "uploadFile" = {

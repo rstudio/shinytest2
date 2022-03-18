@@ -90,7 +90,7 @@ NULL
 #'
 #' ## Expect screenshot
 #' tmpfile <- tempfile(fileext = ".png")
-#' app$screenshot(tmpfile)
+#' app$get_screenshot(tmpfile)
 #' expect_snapshot_file(
 #'   tmpfile,
 #'   variant = app$get_variant(),
@@ -114,13 +114,13 @@ NULL
 #' @param hash_images If `TRUE`, images will be hashed before being returned.
 #'   Otherwise, all images will return their full data64 encoded value.
 #' @param screenshot_args This named list of arguments is passed along to
-#'   [`chromote::ChromoteSession`]'s `$screenshot()` method. If missing, the
+#'   [`chromote::ChromoteSession`]'s `$get_screenshot()` method. If missing, the
 #'   value will default to `$new(screenshot_args=)`.
 #'
 #' If the value is:
 #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
 #'   * A named list of arguments: Arguments passed directly to [`chromote::ChromoteSession`]'s
-#' `$screenshot()` method. The `selector` and `delay` will default to `"html"` and `0` respectively.
+#' `$get_screenshot()` method. The `selector` and `delay` will default to `"html"` and `0` respectively.
 #'
 #' If a `FALSE` value is provided, the parameter will be ignored and a
 #' screenshot will be taken with default behavior.
@@ -188,7 +188,7 @@ AppDriver <- R6Class(# nolint
     #'   will be called once the app has connected a new session, blocking until the
     #'   Shiny app is idle for 200ms.
     #' @param screenshot_args Default set of arguments to pass in to
-    #'   [`chromote::ChromoteSession`]'s `$screenshot()` method when taking
+    #'   [`chromote::ChromoteSession`]'s `$get_screenshot()` method when taking
     #'   screnshots within `$expect_screenshot()`. To disable screenshots by
     #'   default, set to `FALSE`.
     #' @param expect_values_screenshot_args The value for `screenshot_args` when
@@ -635,7 +635,7 @@ AppDriver <- R6Class(# nolint
     #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
     #'   * `FALSE`: No screenshot will be taken
     #'   * A named list of arguments. These arguments are passed directly to
-    #'     [`chromote::ChromoteSession`]'s `$screenshot()` method. The `selector`
+    #'     [`chromote::ChromoteSession`]'s `$get_screenshot()` method. The `selector`
     #'     and `delay` will default to `"html"` and `0` respectively.
     #' @return The result of the snapshot expectation
     #' @examples
@@ -704,18 +704,18 @@ AppDriver <- R6Class(# nolint
     #' app <- AppDriver$new(app_path)
     #'
     #' # Display in viewer
-    #' app$screenshot()
+    #' app$get_screenshot()
     #'
     #' # Update bins then display `"disPlot"` in viewer
     #' app$set_inputs(bins = 10)
-    #' app$screenshot(selector = "#distPlot")
+    #' app$get_screenshot(selector = "#distPlot")
     #'
     #' # Save screenshot to file and view it
     #' tmpfile <- tempfile(fileext = ".png")
-    #' app$screenshot(tmpfile)
+    #' app$get_screenshot(tmpfile)
     #' showimage::show_image(tmpfile)
     #' }
-    screenshot = function(
+    get_screenshot = function(
       file = NULL,
       ...,
       screenshot_args = missing_arg(),
@@ -749,13 +749,13 @@ AppDriver <- R6Class(# nolint
     #' recommended to use other expectation methods.
     #'
     #' @param screenshot_args This named list of arguments is passed along to
-    #'   [`chromote::ChromoteSession`]'s `$screenshot()` method. If missing, the
+    #'   [`chromote::ChromoteSession`]'s `$get_screenshot()` method. If missing, the
     #'   value will default to `$new(screenshot_args=)`.
     #'
     #' If the value is:
     #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
     #'   * A named list of arguments: Arguments passed directly to
-    #'     [`chromote::ChromoteSession`]'s `$screenshot()` method. The `selector`
+    #'     [`chromote::ChromoteSession`]'s `$get_screenshot()` method. The `selector`
     #'     and `delay` will default to `"html"` and `0` respectively.
     #'
     #' If `FALSE` is provided, the parameter will be ignored and a

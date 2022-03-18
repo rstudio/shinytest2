@@ -89,7 +89,7 @@ expect_snapshot_file(
 
 ## Expect screenshot
 tmpfile <- tempfile(fileext = ".png")
-app$screenshot(tmpfile)
+app$get_screenshot(tmpfile)
 expect_snapshot_file(
   tmpfile,
   variant = app$get_variant(),
@@ -346,7 +346,7 @@ app$expect_values(input = "A", output = "C")
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$screenshot`
+## Method `AppDriver$get_screenshot`
 ## ------------------------------------------------
 
 \dontrun{
@@ -354,15 +354,15 @@ app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
 # Display in viewer
-app$screenshot()
+app$get_screenshot()
 
 # Update bins then display `"disPlot"` in viewer
 app$set_inputs(bins = 10)
-app$screenshot(selector = "#distPlot")
+app$get_screenshot(selector = "#distPlot")
 
 # Save screenshot to file and view it
 tmpfile <- tempfile(fileext = ".png")
-app$screenshot(tmpfile)
+app$get_screenshot(tmpfile)
 showimage::show_image(tmpfile)
 }
 
@@ -888,7 +888,7 @@ str(head(rlog, 2))
 \item \href{#method-get_value}{\code{AppDriver$get_value()}}
 \item \href{#method-get_values}{\code{AppDriver$get_values()}}
 \item \href{#method-expect_values}{\code{AppDriver$expect_values()}}
-\item \href{#method-screenshot}{\code{AppDriver$screenshot()}}
+\item \href{#method-get_screenshot}{\code{AppDriver$get_screenshot()}}
 \item \href{#method-expect_screenshot}{\code{AppDriver$expect_screenshot()}}
 \item \href{#method-set_inputs}{\code{AppDriver$set_inputs()}}
 \item \href{#method-click}{\code{AppDriver$click()}}
@@ -974,7 +974,7 @@ will be called once the app has connected a new session, blocking until the
 Shiny app is idle for 200ms.}
 
 \item{\code{screenshot_args}}{Default set of arguments to pass in to
-\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$screenshot()} method when taking
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method when taking
 screnshots within \verb{$expect_screenshot()}. To disable screenshots by
 default, set to \code{FALSE}.}
 
@@ -1608,7 +1608,7 @@ The final value can either be:
 \item \code{TRUE}: A screenshot of the whole page will be taken with no delay
 \item \code{FALSE}: No screenshot will be taken
 \item A named list of arguments. These arguments are passed directly to
-\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$screenshot()} method. The \code{selector}
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. The \code{selector}
 and \code{delay} will default to \code{"html"} and \code{0} respectively.
 }}
 
@@ -1669,14 +1669,14 @@ app$expect_values(input = "A", output = "C")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-screenshot"></a>}}
-\if{latex}{\out{\hypertarget{method-screenshot}{}}}
-\subsection{Method \code{screenshot()}}{
+\if{html}{\out{<a id="method-get_screenshot"></a>}}
+\if{latex}{\out{\hypertarget{method-get_screenshot}{}}}
+\subsection{Method \code{get_screenshot()}}{
 Take a screenshot
 
 Take a screenshot of the Shiny application.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$screenshot(
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_screenshot(
   file = NULL,
   ...,
   screenshot_args = missing_arg(),
@@ -1695,14 +1695,14 @@ that file.}
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
 \item{\code{screenshot_args}}{This named list of arguments is passed along to
-\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$screenshot()} method. If missing, the
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. If missing, the
 value will default to \verb{$new(screenshot_args=)}.
 
 If the value is:
 \itemize{
 \item \code{TRUE}: A screenshot of the whole page will be taken with no delay
 \item A named list of arguments: Arguments passed directly to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
-\verb{$screenshot()} method. The \code{selector} and \code{delay} will default to \code{"html"} and \code{0} respectively.
+\verb{$get_screenshot()} method. The \code{selector} and \code{delay} will default to \code{"html"} and \code{0} respectively.
 }
 
 If a \code{FALSE} value is provided, the parameter will be ignored and a
@@ -1726,15 +1726,15 @@ app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
 # Display in viewer
-app$screenshot()
+app$get_screenshot()
 
 # Update bins then display `"disPlot"` in viewer
 app$set_inputs(bins = 10)
-app$screenshot(selector = "#distPlot")
+app$get_screenshot(selector = "#distPlot")
 
 # Save screenshot to file and view it
 tmpfile <- tempfile(fileext = ".png")
-app$screenshot(tmpfile)
+app$get_screenshot(tmpfile)
 showimage::show_image(tmpfile)
 }
 }
@@ -1781,14 +1781,14 @@ recommended to use other expectation methods.
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
 \item{\code{screenshot_args}}{This named list of arguments is passed along to
-\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$screenshot()} method. If missing, the
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. If missing, the
 value will default to \verb{$new(screenshot_args=)}.
 
 If the value is:
 \itemize{
 \item \code{TRUE}: A screenshot of the whole page will be taken with no delay
 \item A named list of arguments: Arguments passed directly to
-\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$screenshot()} method. The \code{selector}
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. The \code{selector}
 and \code{delay} will default to \code{"html"} and \code{0} respectively.
 }
 

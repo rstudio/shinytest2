@@ -413,23 +413,23 @@ test_that("snapshotDownload is converted", {
 test_that("takeScreenshot is converted", {
   expect_migration(
     app$takeScreenshot("file.png"),
-    app$screenshot("file.png")
+    app$get_screenshot("file.png")
   )
   expect_migration(
     app$takeScreenshot("file.png", "myid"),
-    app$screenshot("file.png", selector = "#myid")
+    app$get_screenshot("file.png", selector = "#myid")
   )
   expect_migration(
     app$takeScreenshot("file.png", myid),
-    app$screenshot("file.png", selector = paste0("#", myid))
+    app$get_screenshot("file.png", selector = paste0("#", myid))
   )
   expect_migration(
     app$takeScreenshot(myfile, myvar),
-    app$screenshot(myfile, selector = paste0("#", myvar))
+    app$get_screenshot(myfile, selector = paste0("#", myvar))
   )
   expect_migration(
     app$takeScreenshot("file.png", "myid", parent = FALSE),
-    app$screenshot("file.png", selector = "#myid")
+    app$get_screenshot("file.png", selector = "#myid")
   )
   expect_migration_error(
     app$takeScreenshot("file.png", "myid", parent = TRUE),

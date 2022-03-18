@@ -255,7 +255,7 @@ new$expect_values()
 
 Signature: `ShinyDriver$takeScreenshot(file = NULL, id = NULL, parent = FALSE)`
 
-This method has been renamed to `AppDriver$screenshot(file)`, and the `id` and `parent` parameters have been removed. To use a selector, set `AppDriver$screenshot(myfile, selector = ".custom-selector")` or `screenshot_args` directly.
+This method has been renamed to `AppDriver$get_screenshot(file)`, and the `id` and `parent` parameters have been removed. To use a selector, set `AppDriver$get_screenshot(myfile, selector = ".custom-selector")` or `screenshot_args` directly.
 
 ```r
 ## {shinytest}
@@ -263,9 +263,9 @@ old$takeScreenshot("myfile1.png")
 old$takeScreenshot("myfile2.png", id = "myid")
 
 ## {shinytest2}
-new$screenshot("myfile1.png")
-new$screenshot("myfile2.png", selector = "#myid")
-new$screenshot("myfile2.png", screenshot_args = list(selector = "#myid"))
+new$get_screenshot("myfile1.png")
+new$get_screenshot("myfile2.png", selector = "#myid")
+new$get_screenshot("myfile2.png", screenshot_args = list(selector = "#myid"))
 ```
 
 ### `ShinyDriver$snapshotDownload()`
