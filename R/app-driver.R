@@ -70,6 +70,38 @@ NULL
 #' is set.  \pkg{shinytest2} sets this variable when running Shiny based app or
 #' document.
 #'
+#' @section \pkg{testthat} wrappers:
+#'
+#' The two main expectation methods: `$expect_values()` and `$expect_screenshot()`
+#' eventually wrap [`testthat::expect_snapshot_file()`].
+#'
+#' Their underlying logic is similar to:
+#' ```r
+#' ## Expect values
+#' tmpfile <- tempfile(fileext = ".json")
+#' jsonlite::write_json(app$get_values(), tmpfile)
+#' expect_snapshot_file(
+#'   tmpfile,
+#'   variant = app$get_variant(),
+#'   compare = testthat::compare_file_text,
+#'   cran = cran
+#' )
+#'
+#'
+#' ## Expect screenshot
+#' tmpfile <- tempfile(fileext = ".png")
+#' app$screenshot(tmpfile)
+#' expect_snapshot_file(
+#'   tmpfile,
+#'   variant = app$get_variant(),
+#'   compare = testthat::compare_file_binary,
+#'   cran = cran
+#' )
+#' ```
+#'
+#' To update the snapshot values, you will need to run a variation of
+#' [`testthat::snapshot_review()`].
+#'
 #'
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @param arguments A list of unnamed arguments to send to the script.
@@ -701,6 +733,9 @@ AppDriver <- R6Class(# nolint
     },
     #' @description
     #' Expect a screenshot of the Shiny application
+    #'
+    #' This method takes a screenshot of the application (of only the `selector`
+    #' area) and compares the image to the expected image.
     #'
     #' Please be aware that this method is very brittle to changes outside of your Shiny application.
     #' These changes can include:

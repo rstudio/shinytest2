@@ -70,6 +70,38 @@ is set.  \pkg{shinytest2} sets this variable when running Shiny based app or
 document.
 }
 
+\section{\pkg{testthat} wrappers}{
+
+
+The two main expectation methods: \verb{$expect_values()} and \verb{$expect_screenshot()}
+eventually wrap \code{\link[testthat:expect_snapshot_file]{testthat::expect_snapshot_file()}}.
+
+Their underlying logic is similar to:\if{html}{\out{<div class="sourceCode r">}}\preformatted{## Expect values
+tmpfile <- tempfile(fileext = ".json")
+jsonlite::write_json(app$get_values(), tmpfile)
+expect_snapshot_file(
+  tmpfile,
+  variant = app$get_variant(),
+  compare = testthat::compare_file_text,
+  cran = cran
+)
+
+
+## Expect screenshot
+tmpfile <- tempfile(fileext = ".png")
+app$screenshot(tmpfile)
+expect_snapshot_file(
+  tmpfile,
+  variant = app$get_variant(),
+  compare = testthat::compare_file_binary,
+  cran = cran
+)
+}\if{html}{\out{</div>}}
+
+To update the snapshot values, you will need to run a variation of
+\code{\link[testthat:snapshot_accept]{testthat::snapshot_review()}}.
+}
+
 \examples{
 
 ## ------------------------------------------------
@@ -1716,6 +1748,9 @@ showimage::show_image(tmpfile)
 \if{latex}{\out{\hypertarget{method-expect_screenshot}{}}}
 \subsection{Method \code{expect_screenshot()}}{
 Expect a screenshot of the Shiny application
+
+This method takes a screenshot of the application (of only the \code{selector}
+area) and compares the image to the expected image.
 
 Please be aware that this method is very brittle to changes outside of your Shiny application.
 These changes can include:
