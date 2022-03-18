@@ -9,7 +9,7 @@ app_start_shiny <- function(
 ) {
   ckm8_assert_app_driver(self, private)
 
-  tempfile_format <- temp_file(pattern = "%s-", fileext = ".log")
+  tempfile_format <- st2_temp_file(pattern = "%s-", fileext = ".log")
 
   # the RNG kind should inherit from the parent process
   rng_kind <- RNGkind()

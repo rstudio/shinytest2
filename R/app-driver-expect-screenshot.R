@@ -36,7 +36,7 @@ app_screenshot <- function(
   } else {
     self$log_message(paste0("Taking screenshot: ", file))
   }
-  path <- temp_file(".png")
+  path <- st2_temp_file(".png")
   screenshot_args$filename <- path
 
   do.call(self$get_chromote_session()$screenshot, screenshot_args)

@@ -34,7 +34,7 @@ app_initialize_ <- function(
   private$counter <- Count$new()
   private$shiny_url <- Url$new()
 
-  private$save_dir <- temp_file()
+  private$save_dir <- st2_temp_file()
   # Clear out any prior files
   if (fs::dir_exists(private$save_dir)) {
     unlink(private$save_dir, recursive = TRUE)

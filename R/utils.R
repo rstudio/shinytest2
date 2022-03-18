@@ -135,7 +135,7 @@ sort_c <- function(x) {
   }
 }
 
-temp_file <- function(fileext = "", pattern = "") {
+st2_temp_file <- function(fileext = "", pattern = "") {
   tempfile(pattern = paste0("st2-", pattern), fileext = fileext)
 }
 
