@@ -73,3 +73,6 @@ shiny::runTests()
 }\if{html}{\out{</div>}}
 }
 
+\seealso{
+\code{\link[=record_test]{record_test()}}, \code{\link[testthat:test_dir]{testthat::test_dir()}}
+}

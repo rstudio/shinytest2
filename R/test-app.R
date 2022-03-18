@@ -67,6 +67,7 @@ NULL
 #'   * Otherwise, the default path of `"."` is used.
 #' @param env Use the Shiny application's environment after sourcing the R folder
 #' @param ... Parameters passed to [`testthat::test_dir()`]
+#' @seealso [`record_test()`], [`testthat::test_dir()`]
 #' @export
 test_app <- function(
   app_dir = missing_arg(),

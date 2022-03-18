@@ -100,6 +100,7 @@ NULL
 #'   `selector` or `screenshot_args`'s selector slot. The `selector` parameter
 #'   will have preference.
 #' @importFrom R6 R6Class
+#' @seealso [`platform_variant()`], [`use_shinytest2()`]
 #' @export
 AppDriver <- R6Class(# nolint
   "AppDriver",
@@ -868,8 +869,11 @@ AppDriver <- R6Class(# nolint
     #'   app$wait_for_js("return Math.floor((Date.now() / 1000) % 10) == 5;")
     #' )
     #'
+    #' ## A second example where we run the contents of a JavaScript file
+    #' ## and use the result to wait for a condition
+    #' app$execute_js(file = "complicated_file.js")
+    #' app$wait_for_js("return complicated_condition();")
     #' }
-    # TODO-barret-docs; Document $execute_js(file = "complicated_file.js"); $wait_for_js("return complicated_condition()")
     wait_for_js = function(script, timeout = 30 * 1000, interval = 100) {
       app_wait_for_js(self, private, script = script, timeout = timeout, interval = interval)
     },
@@ -1227,8 +1231,7 @@ AppDriver <- R6Class(# nolint
     #' @description
     #' Get all logs
     #'
-    #' Query one or more of the debug logs.
-    # TODO-barret-docs; show example of filtering output on type
+    #' Retrieve all of the debug logs that have been recorded.
     #' There are a few standard debug types that may be used:
     #' * `"shiny_console"`: Displays the console messages from the Shiny server when `$get_log()` is called.
     #' * `"browser"`: Displays the browser console messages when `$get_log()` is called.
@@ -1238,15 +1241,23 @@ AppDriver <- R6Class(# nolint
     #' * `workerid`: The shiny worker ID found within the browser
     #' * `timestamp`: POSIXct timestamp of the message
     #' * `location`: The location of the message was found. One of three values:
-    #'   * `shinytest2`: Occurs when `$log_message()` is called
-    #'   * `shiny`: Stdin and stdout messages from the Shiny server. Note `message()` output is sent to stdout.
-    #'   * `chromote`: Captured by the \pkg{chromote} event handlers. See
+    #'   * `"shinytest2"`: Occurs when `$log_message()` is called
+    #'   * `"shiny"`: `stdin` and `stdout` messages from the Shiny server. Note `message()` output is sent to `stdout`.
+    #'   * `"chromote"`: Captured by the \pkg{chromote} event handlers. See
     #'      [console API](https://chromedevtools.github.io/devtools-protocol/1-3/Runtime/#event-consoleAPICalled),
     #'      [exception thrown](https://chromedevtools.github.io/devtools-protocol/1-3/Runtime/#event-exceptionThrown),
     #'      [websocket sent](https://chromedevtools.github.io/devtools-protocol/1-3/Network/#event-webSocketFrameSent), and
     #'      [websocket received](https://chromedevtools.github.io/devtools-protocol/1-3/Network/#event-webSocketFrameReceived)
     #'      for more details
-    #' * `level`:
+    #' * `level`: For a given location, there are different types of log levels.
+    #'   * `"shinytest2"`: `"log"`; Only log messages are captured.
+    #'   * `"shiny"`: `"log"` or `"error"`; These two levels correspond to the
+    #'     `stdin` or `stdout` messages.
+    #'   * `"chromote"`: Correspond to any level of a JavaScript
+    #'     `console.LEVEL()` function call. Typically, these are "log"` and
+    #'     `"error"` but can include `"info"`, `"debug"`, and `"warn"`. If
+    #'     `options(shiny.trace = TRUE)`, then the level will recorded as
+    #'     `"websocket"`.
     #' @examples
     #' \dontrun{
     #' app <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))

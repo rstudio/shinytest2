@@ -1,18 +1,17 @@
-# TODO-barret-docs; add_dont_run_reason("An uploadFile() must be updated: use the correct path relative to the app's ./tests/testthat directory, or copy the file to the app's ./tests/testthat directory.")
-    # rlang::inform(c(
-    #   "After making changes to the test script, run it with:",
-    #   " " = paste0("shinytest2::test_app(\"", app_path_val, "\", filter = \"", test_filter, "\")"),
-    #   "Or",
-    #   " " = paste0("shinytest2::test_app(\"", app_path_val, "\")")
-    #   # ,
-    #   # "Or run all tests generically with:",
-    #   # " " = paste0("shiny::runTests(\"", app_path_val, "\")")
-    # ))
-
-
 #' Launch test event recorder for a Shiny app
 #'
-#' Once a recording is completed, it will create or append a new \pkg{shinytest2} test to the \pkg{testthat} `test_file`.
+#' Once a recording is completed, it will create or append a new
+#' \pkg{shinytest2} test to the \pkg{testthat} `test_file`.
+#'
+#' @section Uploading files:
+#'
+#' Files that are uploaded to your Shiny app must be located somewhere within
+#' the `tests/testthat` subdirectory or available via `system.file()`.
+#'
+#' Files that are uploaded during recording that do not have a valid path will
+#' have a warning inserted into the code. Please fix the file path by moving the
+#' file to the `tests/testthat` subdirectory or by using `system.file()`. After
+#' fixing the path, remove the line of warning code.
 #'
 #' @param app A [`AppDriver`] object, or path to a Shiny
 #'   application.
@@ -31,10 +30,18 @@
 #'   bindings are recorded.
 #'   * If `TRUE`, events without input bindings are recorded.
 #'   * If `FALSE`, events without input bindings are not recorded.
-#'   * If `NULL` (default), if an updated input does not have a corresponding input, a modal dialog will be shown asking if unbound input events should be recorded.
+#'   * If `NULL` (default), if an updated input does not have a corresponding
+#'   * input, a modal dialog will be shown asking if unbound input events should
+#'   * be recorded.
+#'
 #'   See [`AppDriver`]`$set_inputs()` for more information.
 #' @param run_test If `TRUE`, `test_file` will be executed after saving the recording.
+#' @seealso [`test_app()`]
 #' @export
+#' @examples
+#' \dontrun{
+#' record_test("path/to/app")
+#' }
 record_test <- function(
   app = ".",
   ...,

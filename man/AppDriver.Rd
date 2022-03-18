@@ -408,6 +408,10 @@ system.time(
   app$wait_for_js("return Math.floor((Date.now() / 1000) \% 10) == 5;")
 )
 
+## A second example where we run the contents of a JavaScript file
+## and use the result to wait for a condition
+app$execute_js(file = "complicated_file.js")
+app$wait_for_js("return complicated_condition();")
 }
 
 ## ------------------------------------------------
@@ -833,6 +837,9 @@ str(head(rlog, 2))
 #> ..$ session: chr "bdc7417f2fc8c84fc05c9518e36fdc44"
 #> ..$ time   : num 1.65e+09
 }
+}
+\seealso{
+\code{\link[=platform_variant]{platform_variant()}}, \code{\link[=use_shinytest2]{use_shinytest2()}}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -1975,6 +1982,10 @@ system.time(
   app$wait_for_js("return Math.floor((Date.now() / 1000) \% 10) == 5;")
 )
 
+## A second example where we run the contents of a JavaScript file
+## and use the result to wait for a condition
+app$execute_js(file = "complicated_file.js")
+app$wait_for_js("return complicated_condition();")
 }
 }
 \if{html}{\out{</div>}}
@@ -2480,7 +2491,7 @@ app$get_variant()
 \subsection{Method \code{get_log()}}{
 Get all logs
 
-Query one or more of the debug logs.
+Retrieve all of the debug logs that have been recorded.
 There are a few standard debug types that may be used:
 \itemize{
 \item \code{"shiny_console"}: Displays the console messages from the Shiny server when \verb{$get_log()} is called.
@@ -2499,16 +2510,23 @@ A data.frame with the following columns:
 \item \code{timestamp}: POSIXct timestamp of the message
 \item \code{location}: The location of the message was found. One of three values:
 \itemize{
-\item \code{shinytest2}: Occurs when \verb{$log_message()} is called
-\item \code{shiny}: Stdin and stdout messages from the Shiny server. Note \code{message()} output is sent to stdout.
-\item \code{chromote}: Captured by the \pkg{chromote} event handlers. See
+\item \code{"shinytest2"}: Occurs when \verb{$log_message()} is called
+\item \code{"shiny"}: \code{stdin} and \code{stdout} messages from the Shiny server. Note \code{message()} output is sent to \code{stdout}.
+\item \code{"chromote"}: Captured by the \pkg{chromote} event handlers. See
 \href{https://chromedevtools.github.io/devtools-protocol/1-3/Runtime/#event-consoleAPICalled}{console API},
 \href{https://chromedevtools.github.io/devtools-protocol/1-3/Runtime/#event-exceptionThrown}{exception thrown},
 \href{https://chromedevtools.github.io/devtools-protocol/1-3/Network/#event-webSocketFrameSent}{websocket sent}, and
 \href{https://chromedevtools.github.io/devtools-protocol/1-3/Network/#event-webSocketFrameReceived}{websocket received}
 for more details
 }
-\item \code{level}:
+\item \code{level}: For a given location, there are different types of log levels.
+\itemize{
+\item \code{"shinytest2"}: \code{"log"}; Only log messages are captured.
+\item \code{"shiny"}: \code{"log"} or \code{"error"}; These two levels correspond to the
+\code{stdin} or \code{stdout} messages.
+\item \code{"chromote"}: Correspond to any level of a JavaScript
+\code{console.LEVEL()} function call. Typically, these are "log"\code{and}"error"\verb{but can include}"info"\verb{, }"debug"\verb{, and }"warn"\verb{. If }options(shiny.trace = TRUE)\verb{, then the level will recorded as }"websocket"`.
+}
 }
 }
 \subsection{Examples}{
