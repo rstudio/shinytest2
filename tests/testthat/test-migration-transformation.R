@@ -225,13 +225,13 @@ test_that("enableDebugLogMessages, getDebugLog, getEventLog is converted", {
   )
   expect_migration(
     app$getDebugLog(),
-    app$get_log(),
-    "A single `AppDriver$get_log()`"
+    app$get_logs(),
+    "A single `AppDriver$get_logs()`"
   )
   expect_migration(
     app$getEventLog(),
-    app$get_log(),
-    "A single `AppDriver$get_log()`"
+    app$get_logs(),
+    "A single `AppDriver$get_logs()`"
   )
 })
 

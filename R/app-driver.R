@@ -145,7 +145,7 @@ AppDriver <- R6Class(# nolint
     counter = "<Count>",
     shiny_url = "<Url>",
 
-    log = list(), # List of all log messages added via `$log_message()`
+    logs = list(), # List of all log messages added via `$log_message()`
 
     clean_logs = TRUE, # Whether to clean logs when GC'd
 
@@ -1268,9 +1268,9 @@ AppDriver <- R6Class(# nolint
     #'
     #' Retrieve all of the debug logs that have been recorded.
     #' There are a few standard debug types that may be used:
-    #' * `"shiny_console"`: Displays the console messages from the Shiny server when `$get_log()` is called.
-    #' * `"browser"`: Displays the browser console messages when `$get_log()` is called.
-    #' * `"shinytest2"`: Displays the messages saved by the `window.shinytest2` object in the browser when `$get_log()` is called.
+    #' * `"shiny_console"`: Displays the console messages from the Shiny server when `$get_logs()` is called.
+    #' * `"browser"`: Displays the browser console messages when `$get_logs()` is called.
+    #' * `"shinytest2"`: Displays the messages saved by the `window.shinytest2` object in the browser when `$get_logs()` is called.
     #' * `"ws_messages"`: Saves all messages sent by Shiny to the
     #' @return A data.frame with the following columns:
     #' * `workerid`: The shiny worker ID found within the browser
@@ -1296,7 +1296,7 @@ AppDriver <- R6Class(# nolint
     #' @examples
     #' \dontrun{
     #' app <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-    #' app$get_log()
+    #' app$get_logs()
     #' # \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
     #' # \{shinytest2\} R  info  11:15:20.11 Starting Shiny app
     #' # \{shinytest2\} R  info  11:15:20.99 Creating new chromote session
@@ -1324,7 +1324,7 @@ AppDriver <- R6Class(# nolint
     #'   system.file("examples/01_hello", package = "shiny"),
     #'   options = list(shiny.trace = TRUE)
     #' )
-    #' app$get_log() # (long output lines have been truncated)
+    #' app$get_logs() # (long output lines have been truncated)
     #' # \{shinytest2\} R  info      11:09:57.43 Start AppDriver initialization
     #' # \{shinytest2\} R  info      11:09:57.43 Starting Shiny app
     #' # \{shinytest2\} R  info      11:09:58.27 Creating new chromote session
@@ -1389,7 +1389,7 @@ AppDriver <- R6Class(# nolint
     #' # \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
     #'
     #' # The log that is returned is a `data.frame()`.
-    #' log <- app$get_log()
+    #' log <- app$get_logs()
     #' tibble::glimpse(log)
     #' #> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
     #' #> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:…
@@ -1417,8 +1417,8 @@ AppDriver <- R6Class(# nolint
     #' # \{chromote\}   JS websocket 11:09:59.19 recv \{"busy":"idle"\}
     #' # \{chromote\}   JS websocket 11:09:59.21 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
     #' }
-    get_log = function() {
-      app_get_log(self, private)
+    get_logs = function() {
+      app_get_logs(self, private)
     },
 
     #' @description
@@ -1430,7 +1430,7 @@ AppDriver <- R6Class(# nolint
     #' app <- AppDriver$new(app_path)
     #' app$log_message("Setting bins to smaller value")
     #' app$set_inputs(bins = 10)
-    #' app$get_log()
+    #' app$get_logs()
     #' }
     log_message = function(message) {
       app_log_message(self, private, message = message)

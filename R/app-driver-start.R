@@ -41,7 +41,7 @@ app_start_shiny <- function(
             dir = app_dir,
             default_file = NULL, # Let rmarkdown find the default file
             # DO NOT ENABLE! Makes things like `app$wait_for_idle()` not work as expected.
-            auto_reload = FALSE, # Do not constantly poll for file changes. Drastically reduces `app$get_log()`
+            auto_reload = FALSE, # Do not constantly poll for file changes. Drastically reduces `app$get_logs()`
             shiny_args = shiny_args,
             render_args = render_args
           )

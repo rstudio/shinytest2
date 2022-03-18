@@ -741,8 +741,6 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       rlang::abort("Please see the `shinytest-migration` vignette for an example on how to convert your `ShinyDriver$executeScriptAsync()` code to `AppDriver$execute_js()` using JavaScript Promises.")
     },
     "expectUpdate" = {
-      # expr_fn[[3]] <- rlang::sym("get_log")
-
       matched_args <- match_shinytest_args("expectUpdate")
       iotype <- iotype_arg(matched_args, "expectUpdate")
       if (iotype == "output") {
@@ -833,10 +831,10 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     "getEventLog" = {
       if (info_env$verbose) rlang::inform(c(
         i = paste0("`ShinyDriver$", as.character(app_fn_sym), "()` is not implemented in `AppDriver`."),
-        "!" = "A single `AppDriver$get_log()` method should be used."
+        "!" = "A single `AppDriver$get_logs()` method should be used."
       ))
 
-      shinytest2_expr("get_log", list())
+      shinytest2_expr("get_logs", list())
     },
 
     "getSnapshotDir" = , # nolint
@@ -1143,9 +1141,6 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     },
 
 
-    # "getEventLog" = {
-    #   expr_fn[[3]] <- rlang::sym("get_log")
-    # },
     rlang::abort(paste0("Unknown method: ", as.character(app_fn_sym)))
   )
 }

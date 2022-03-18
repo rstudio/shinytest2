@@ -201,7 +201,7 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
       )
 
       logs <- withCallingHandlers(
-        format(self$get_log()),
+        format(self$get_logs()),
         error = function(e) "(Error retrieving logs)"
       )
 

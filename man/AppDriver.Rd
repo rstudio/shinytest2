@@ -680,12 +680,12 @@ app$get_variant()
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_log`
+## Method `AppDriver$get_logs`
 ## ------------------------------------------------
 
 \dontrun{
 app <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-app$get_log()
+app$get_logs()
 # \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
 # \{shinytest2\} R  info  11:15:20.11 Starting Shiny app
 # \{shinytest2\} R  info  11:15:20.99 Creating new chromote session
@@ -713,7 +713,7 @@ app <- AppDriver$new(
   system.file("examples/01_hello", package = "shiny"),
   options = list(shiny.trace = TRUE)
 )
-app$get_log() # (long output lines have been truncated)
+app$get_logs() # (long output lines have been truncated)
 # \{shinytest2\} R  info      11:09:57.43 Start AppDriver initialization
 # \{shinytest2\} R  info      11:09:57.43 Starting Shiny app
 # \{shinytest2\} R  info      11:09:58.27 Creating new chromote session
@@ -778,7 +778,7 @@ app$get_log() # (long output lines have been truncated)
 # \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
 
 # The log that is returned is a `data.frame()`.
-log <- app$get_log()
+log <- app$get_logs()
 tibble::glimpse(log)
 #> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
 #> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:…
@@ -816,7 +816,7 @@ app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 app$log_message("Setting bins to smaller value")
 app$set_inputs(bins = 10)
-app$get_log()
+app$get_logs()
 }
 
 ## ------------------------------------------------
@@ -904,7 +904,7 @@ str(head(rlog, 2))
 \item \href{#method-set_window_size}{\code{AppDriver$set_window_size()}}
 \item \href{#method-get_chromote_session}{\code{AppDriver$get_chromote_session()}}
 \item \href{#method-get_variant}{\code{AppDriver$get_variant()}}
-\item \href{#method-get_log}{\code{AppDriver$get_log()}}
+\item \href{#method-get_logs}{\code{AppDriver$get_logs()}}
 \item \href{#method-log_message}{\code{AppDriver$log_message()}}
 \item \href{#method-stop}{\code{AppDriver$stop()}}
 }
@@ -2521,21 +2521,21 @@ app$get_variant()
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_log"></a>}}
-\if{latex}{\out{\hypertarget{method-get_log}{}}}
-\subsection{Method \code{get_log()}}{
+\if{html}{\out{<a id="method-get_logs"></a>}}
+\if{latex}{\out{\hypertarget{method-get_logs}{}}}
+\subsection{Method \code{get_logs()}}{
 Get all logs
 
 Retrieve all of the debug logs that have been recorded.
 There are a few standard debug types that may be used:
 \itemize{
-\item \code{"shiny_console"}: Displays the console messages from the Shiny server when \verb{$get_log()} is called.
-\item \code{"browser"}: Displays the browser console messages when \verb{$get_log()} is called.
-\item \code{"shinytest2"}: Displays the messages saved by the \code{window.shinytest2} object in the browser when \verb{$get_log()} is called.
+\item \code{"shiny_console"}: Displays the console messages from the Shiny server when \verb{$get_logs()} is called.
+\item \code{"browser"}: Displays the browser console messages when \verb{$get_logs()} is called.
+\item \code{"shinytest2"}: Displays the messages saved by the \code{window.shinytest2} object in the browser when \verb{$get_logs()} is called.
 \item \code{"ws_messages"}: Saves all messages sent by Shiny to the
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_log()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_logs()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
@@ -2568,7 +2568,7 @@ for more details
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
 app <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-app$get_log()
+app$get_logs()
 # \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
 # \{shinytest2\} R  info  11:15:20.11 Starting Shiny app
 # \{shinytest2\} R  info  11:15:20.99 Creating new chromote session
@@ -2596,7 +2596,7 @@ app <- AppDriver$new(
   system.file("examples/01_hello", package = "shiny"),
   options = list(shiny.trace = TRUE)
 )
-app$get_log() # (long output lines have been truncated)
+app$get_logs() # (long output lines have been truncated)
 # \{shinytest2\} R  info      11:09:57.43 Start AppDriver initialization
 # \{shinytest2\} R  info      11:09:57.43 Starting Shiny app
 # \{shinytest2\} R  info      11:09:58.27 Creating new chromote session
@@ -2661,7 +2661,7 @@ app$get_log() # (long output lines have been truncated)
 # \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
 
 # The log that is returned is a `data.frame()`.
-log <- app$get_log()
+log <- app$get_logs()
 tibble::glimpse(log)
 #> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
 #> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:…
@@ -2718,7 +2718,7 @@ app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 app$log_message("Setting bins to smaller value")
 app$set_inputs(bins = 10)
-app$get_log()
+app$get_logs()
 }
 }
 \if{html}{\out{</div>}}

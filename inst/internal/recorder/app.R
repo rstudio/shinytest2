@@ -382,7 +382,7 @@ shinyApp(
     # echo console output from the driver object (in real-time)
     observe({
       invalidateLater(500)
-      logs <- subset(app$get_log(), location == "shiny")
+      logs <- subset(app$get_logs(), location == "shiny")
 
       print_logs <- function(..., n) {
         logs_sub <- subset(logs, ...)

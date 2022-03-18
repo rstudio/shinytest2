@@ -450,9 +450,9 @@ testthat::expect_failure(
 
 ## Debugging
 
-Debugging in `{shinytest2}` has been unified and is enabled at all times. The `{shinytest}` debugging methods have been removed in favor of `AppDriver$get_log()` which returns a similarly shaped `tibble` as `ShinyDriver$getDebugLog()`'s `data.frame`. The columns have been altered to be more generic where `type` has been broken into two columns: `location` and `level`.
+Debugging in `{shinytest2}` has been unified and is enabled at all times. The `{shinytest}` debugging methods have been removed in favor of `AppDriver$get_logs()` which returns a similarly shaped `tibble` as `ShinyDriver$getDebugLog()`'s `data.frame`. The columns have been altered to be more generic where `type` has been broken into two columns: `location` and `level`.
 
-* `ShinyDriver$getDebugLog()`, `ShinyDriver$getEventLog()`: Now use `AppDriver$get_log()`.
+* `ShinyDriver$getDebugLog()`, `ShinyDriver$getEventLog()`: Now use `AppDriver$get_logs()`.
 * `ShinyDriver$logEvent(event, ...)`: Messages can still be recorded using `AppDriver$log_message(text)`, but `...` values are no longer supported.
 * `ShinyDriver$enableDebugLogMessages(enable = TRUE)`: No longer used. *All* messages are always recorded.
 
@@ -462,7 +462,7 @@ old$getDebugLog(); old$getEventLog()
 old$logEvent("Creating report")
 
 ## {shinytest2}
-new$get_log()
+new$get_logs()
 old$log_message("Creating report")
 ```
 
@@ -472,7 +472,7 @@ If `options = list(shiny.trace = TRUE)` is set when initializing a `AppDriver` o
 ## {shinytest2}
 # Record all websocket traffic. Caution!! This is very verbose!!
 new <- AppDriver$new(path_to_app, options = list(shiny.trace = TRUE))
-new$get_log()
+new$get_logs()
 ```
 
 

@@ -50,7 +50,7 @@ app_add_log_entry <- function(
   )
 
 
-  private$log[[length(private$log) + 1]] <- entry
+  private$logs[[length(private$logs) + 1]] <- entry
 
   invisible(entry)
 }
