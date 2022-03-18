@@ -681,12 +681,6 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     abort_if_not_character(iotype, fn_name, "iotype")
     match.arg(iotype, types)
   }
-  inform_js <- function(fn_name, arg_name, info_env) {
-    if (info_env$verbose) rlang::inform(c(
-      i = paste0("`ShinyDriver$", fn_name, "(", arg_name, "=)` would automatically return the last value. `AppDriver`'s `ChromoteSession` does not auto return the last value.",
-      "x" = "Please add JavaScript `return` statements appropriately.")
-    ))
-  }
 
   switch(as.character(app_fn_sym),
     "setInputs" = {
@@ -722,23 +716,25 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       shinytest2_expr("click", fn_args)
     },
     "executeScript" = {
-      inform_js("executeScript", "script", info_env)
-
       matched_args <- match_shinytest_args("executeScript")
       script <- matched_args$script
       script_args <- matched_args[!(names(matched_args) %in% "script")]
-      fn_args <- list(script = script)
       if (length(script_args) > 0) {
         # Store arguments as a list of args as `language`
-        fn_args[["arguments"]] <- list_call(!!!script_args)
+        args_txt <- paste0("let arguments_ = ", toJSON_atomic(script_args), ";", collapse = "\n")
+        # Replace all forms of `arguments` with `arguments_`
+        script <- gsub("\\barguments\\b", "arguments_", script)
+        # Prepend the `arguments_` definition to the script
+        script <- paste0(args_txt, "\n", script)
       }
+      fn_args <- list(script = script)
       # There was no timeout before.
       # Add at end to avoid surprises.
       fn_args[["timeout"]] <- 10000
-      shinytest2_expr("execute_js", fn_args)
+      shinytest2_expr("get_js", fn_args)
     },
     "executeScriptAsync" = {
-      rlang::abort("Please see the `shinytest-migration` vignette for an example on how to convert your `ShinyDriver$executeScriptAsync()` code to `AppDriver$execute_js()` using JavaScript Promises.")
+      rlang::abort("Please see the `shinytest-migration` vignette for an example on how to convert your `ShinyDriver$executeScriptAsync()` code to `AppDriver$get_js()` using JavaScript Promises.")
     },
     "expectUpdate" = {
       matched_args <- match_shinytest_args("expectUpdate")
@@ -850,7 +846,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       shinytest2_expr("get_html", list("html", outer_html = TRUE))
     },
     "getTitle" = {
-      shinytest2_expr("execute_js", list("return window.document.title;"))
+      shinytest2_expr("get_js", list("window.document.title;"))
     },
     "getUrl" = {
       shinytest2_expr("get_url", list())
@@ -904,10 +900,10 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     },
 
     "goBack" = {
-      shinytest2_expr("execute_js", list("window.history.back();"))
+      shinytest2_expr("run_js", list("window.history.back();"))
     },
     "refresh" = {
-      shinytest2_expr("execute_js", list("window.location.reload();"))
+      shinytest2_expr("run_js", list("window.location.reload();"))
     },
     "clone" = {
       rlang::abort("`AppDriver$clone()` is not supported.")
@@ -1114,7 +1110,6 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
 
     "waitFor" = {
       # wait_for_js
-      inform_js("waitFor", "expr", info_env)
       matched_args <- match_shinytest_args("waitForShiny", defaults = TRUE)
 
       fn_args <- list(

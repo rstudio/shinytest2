@@ -118,7 +118,7 @@ app_initialize_ <- function(
   withCallingHandlers(
     {
       self$wait_for_js(
-        "return window.shinytest2 && window.shinytest2.ready === true",
+        "window.shinytest2 && window.shinytest2.ready === true",
         timeout = load_timeout
       )
       if (isTRUE(wait)) {

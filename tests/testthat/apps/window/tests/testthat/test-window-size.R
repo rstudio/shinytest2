@@ -7,10 +7,10 @@ test_that("Init and Set window size", {
     height = 100,
     width = 150
   )
-  expect_equal(app$execute_js("return {height: window.innerHeight, width: window.innerWidth}"), list(height = 100, width = 150))
+  expect_equal(app$get_js("let size = {height: window.innerHeight, width: window.innerWidth}; size"), list(height = 100, width = 150))
 
   app$set_window_size(height = 200, width = 250)
-  expect_equal(app$execute_js("return {height: window.innerHeight, width: window.innerWidth}"), list(height = 200, width = 250))
+  expect_equal(app$get_js("let size = {height: window.innerHeight, width: window.innerWidth}; size"), list(height = 200, width = 250))
 })
 
 

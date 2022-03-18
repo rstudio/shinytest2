@@ -189,7 +189,7 @@ app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
 
 # Track how many clicks are given to `#update` button
-app$execute_js("
+app$run_js("
   window.test_counter = 0;
   $('#update').click(() => window.test_counter++);
 ")
@@ -197,7 +197,7 @@ app$set_inputs(obs = 20)
 # Click the update button, incrementing the counter
 app$click("update")
 # Save a snapshot of number of clicks (1)
-app$expect_js("return window.test_counter;")
+app$expect_js("window.test_counter;")
 }
 
 ## ------------------------------------------------
@@ -437,13 +437,13 @@ app <- AppDriver$new(shiny_app)
 # Contrived example:
 # Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)
 system.time(
-  app$wait_for_js("return Math.floor((Date.now() / 1000) \% 10) == 5;")
+  app$wait_for_js("Math.floor((Date.now() / 1000) \% 10) == 5;")
 )
 
 ## A second example where we run the contents of a JavaScript file
 ## and use the result to wait for a condition
-app$execute_js(file = "complicated_file.js")
-app$wait_for_js("return complicated_condition();")
+app$run_js(file = "complicated_file.js")
+app$wait_for_js("complicated_condition();")
 }
 
 ## ------------------------------------------------
@@ -527,7 +527,7 @@ app$get_value(output = "total")
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$execute_js`
+## Method `AppDriver$get_js`
 ## ------------------------------------------------
 
 \dontrun{
@@ -536,17 +536,63 @@ shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
 
 # Execute JavaScript code in the app's browser
-app$execute_js("return 1 + 1;")
+app$get_js("1 + 1;")
 #> [1] 2
 
 # Execute a JavaScript Promise. Return the resolved value.
-app$execute_js("
-  return new Promise((resolve) => {
+app$get_js("
+  new Promise((resolve) => {
     setTimeout(() => resolve(1 + 1), 1000)
   }).
   then((value) => value + 1);
 ")
 #> [1] 3
+
+# With escaped arguments
+loc_field <- "hostname"
+js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+app$get_js(js_txt)
+#> [1] "127.0.0.1"
+
+# With `glue::glue()`
+js_txt <- glue::glue_data(
+  lapply(
+    list(x = 40, y = 2),
+    jsonlite::toJSON,
+    auto_unbox = TRUE
+  ),
+  .open = "<", .close = ">",
+  "let answer = function(a, b) {\n",
+  "  return a + b;\n",
+  "};\n",
+  "answer(<x>, <y>);\n"
+)
+app$get_js(js_txt)
+#> [1] 42
+}
+
+## ------------------------------------------------
+## Method `AppDriver$run_js`
+## ------------------------------------------------
+
+\dontrun{
+library(shiny)
+shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
+app <- AppDriver$new(shiny_app)
+
+# Get JavaScript answer from the app's browser
+app$get_js("1 + 1")
+#> [1] 2
+# Execute JavaScript code in the app's browser
+app$run_js("1 + 1")
+# (Returns `app` invisibly)
+
+# With escaped arguments
+loc_field <- "hostname"
+js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+app$run_js(js_txt)
+app$get_js(js_txt)
+#> [1] "127.0.0.1"
 }
 
 ## ------------------------------------------------
@@ -896,7 +942,8 @@ str(head(rlog, 2))
 \item \href{#method-wait_for_js}{\code{AppDriver$wait_for_js()}}
 \item \href{#method-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
 \item \href{#method-wait_for_value}{\code{AppDriver$wait_for_value()}}
-\item \href{#method-execute_js}{\code{AppDriver$execute_js()}}
+\item \href{#method-get_js}{\code{AppDriver$get_js()}}
+\item \href{#method-run_js}{\code{AppDriver$run_js()}}
 \item \href{#method-expect_unique_names}{\code{AppDriver$expect_unique_names()}}
 \item \href{#method-get_dir}{\code{AppDriver$get_dir()}}
 \item \href{#method-get_url}{\code{AppDriver$get_url()}}
@@ -1244,7 +1291,6 @@ For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers a
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_js(
   script = missing_arg(),
   ...,
-  arguments = list(),
   file = missing_arg(),
   timeout = 15 * 1000,
   pre_snapshot = NULL,
@@ -1258,8 +1304,6 @@ For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers a
 \item{\code{script}}{A string containing the JavaScript script to be executed.}
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
 
 \item{\code{file}}{A file containing JavaScript code to be read and used as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
 
@@ -1281,7 +1325,7 @@ app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
 
 # Track how many clicks are given to `#update` button
-app$execute_js("
+app$run_js("
   window.test_counter = 0;
   $('#update').click(() => window.test_counter++);
 ")
@@ -1289,7 +1333,7 @@ app$set_inputs(obs = 20)
 # Click the update button, incrementing the counter
 app$click("update")
 # Save a snapshot of number of clicks (1)
-app$expect_js("return window.test_counter;")
+app$expect_js("window.test_counter;")
 }
 }
 \if{html}{\out{</div>}}
@@ -2014,13 +2058,13 @@ app <- AppDriver$new(shiny_app)
 # Contrived example:
 # Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)
 system.time(
-  app$wait_for_js("return Math.floor((Date.now() / 1000) \% 10) == 5;")
+  app$wait_for_js("Math.floor((Date.now() / 1000) \% 10) == 5;")
 )
 
 ## A second example where we run the contents of a JavaScript file
 ## and use the result to wait for a condition
-app$execute_js(file = "complicated_file.js")
-app$wait_for_js("return complicated_condition();")
+app$run_js(file = "complicated_file.js")
+app$wait_for_js("complicated_condition();")
 }
 }
 \if{html}{\out{</div>}}
@@ -2199,21 +2243,25 @@ app$get_value(output = "total")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-execute_js"></a>}}
-\if{latex}{\out{\hypertarget{method-execute_js}{}}}
-\subsection{Method \code{execute_js()}}{
-Execute JavaScript code in the browser.
+\if{html}{\out{<a id="method-get_js"></a>}}
+\if{latex}{\out{\hypertarget{method-get_js}{}}}
+\subsection{Method \code{get_js()}}{
+Execute JavaScript code in the browser and return the result
 
 This function will block the local R session until the code has finished
 executing its \emph{tick} in the browser. If a \code{Promise} is returned from the
-script, \verb{$execute_js()} will wait for the promise to resolve. To have
+script, \verb{$get_js()} will wait for the promise to resolve. To have
 JavaScript code execute asynchronously, wrap the code in a Promise object
 and have the script return an atomic value.
+
+Arguments will have to be inserted into the script as there is not access
+to \code{arguments}. This can be done with commands like \code{paste()}. If using
+\code{glue::glue()}, be sure to use uncommon \code{.open} and \code{.close} values to
+avoid having to doulbe all \verb{\{} and \verb{\}}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$execute_js(
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_js(
   script = missing_arg(),
   ...,
-  arguments = list(),
   file = missing_arg(),
   timeout = 15 * 1000
 )}\if{html}{\out{</div>}}
@@ -2227,8 +2275,6 @@ the R session will block until the promise has been resolved and return
 the value.}
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{arguments}}{A list of unnamed arguments to send to the script.}
 
 \item{\code{file}}{A (local) file containing JavaScript code to be read and used
 as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
@@ -2248,17 +2294,99 @@ shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
 
 # Execute JavaScript code in the app's browser
-app$execute_js("return 1 + 1;")
+app$get_js("1 + 1;")
 #> [1] 2
 
 # Execute a JavaScript Promise. Return the resolved value.
-app$execute_js("
-  return new Promise((resolve) => {
+app$get_js("
+  new Promise((resolve) => {
     setTimeout(() => resolve(1 + 1), 1000)
   }).
   then((value) => value + 1);
 ")
 #> [1] 3
+
+# With escaped arguments
+loc_field <- "hostname"
+js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+app$get_js(js_txt)
+#> [1] "127.0.0.1"
+
+# With `glue::glue()`
+js_txt <- glue::glue_data(
+  lapply(
+    list(x = 40, y = 2),
+    jsonlite::toJSON,
+    auto_unbox = TRUE
+  ),
+  .open = "<", .close = ">",
+  "let answer = function(a, b) {\n",
+  "  return a + b;\n",
+  "};\n",
+  "answer(<x>, <y>);\n"
+)
+app$get_js(js_txt)
+#> [1] 42
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-run_js"></a>}}
+\if{latex}{\out{\hypertarget{method-run_js}{}}}
+\subsection{Method \code{run_js()}}{
+Execute JavaScript code in the browser
+
+This function will block the local R session until the code has finished
+executing its \emph{tick} in the browser.
+
+The final result of the code will be ignored and not returned to the R session.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$run_js(
+  script = missing_arg(),
+  ...,
+  file = missing_arg(),
+  timeout = 15 * 1000
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{script}}{JavaScript to execute.}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{file}}{A (local) file containing JavaScript code to be read and used
+as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
+
+\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+library(shiny)
+shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
+app <- AppDriver$new(shiny_app)
+
+# Get JavaScript answer from the app's browser
+app$get_js("1 + 1")
+#> [1] 2
+# Execute JavaScript code in the app's browser
+app$run_js("1 + 1")
+# (Returns `app` invisibly)
+
+# With escaped arguments
+loc_field <- "hostname"
+js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+app$run_js(js_txt)
+app$get_js(js_txt)
+#> [1] "127.0.0.1"
 }
 }
 \if{html}{\out{</div>}}

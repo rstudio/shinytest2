@@ -121,16 +121,13 @@ test_that("click is converted", {
 
 
 test_that("executeScript is converted", {
-  script_msg <- "Please add JavaScript `return` statements appropriately"
   expect_migration(
     app$executeScript("1 + 1"),
-    app$execute_js(script = "1 + 1", timeout = 10000),
-    script_msg
+    app$get_js(script = "1 + 1", timeout = 10000)
   )
   expect_migration(
     app$executeScript("1 + 1", x = 1, y = 2),
-    app$execute_js(script = "1 + 1", arguments = list(x = 1, y = 2), timeout = 10000),
-    script_msg
+    app$get_js(script = "let arguments_ = {\"x\":1,\"y\":2};\n1 + 1", timeout = 10000)
   )
 })
 
@@ -259,7 +256,7 @@ test_that("getSource, getTitle is converted", {
   )
   expect_migration(
     app$getTitle(),
-    app$execute_js("return window.document.title;")
+    app$get_js("window.document.title;")
   )
 })
 
@@ -349,11 +346,11 @@ test_that("getWindowSize, setWindowSize is converted", {
 test_that("goBack, refresh is converted", {
   expect_migration(
     app$goBack(),
-    app$execute_js("window.history.back();")
+    app$run_js("window.history.back();")
   )
   expect_migration(
     app$refresh(),
-    app$execute_js("window.location.reload();")
+    app$run_js("window.location.reload();")
   )
 })
 

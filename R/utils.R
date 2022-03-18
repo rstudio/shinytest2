@@ -69,6 +69,9 @@ toJSON <- function(x, ...,  dataframe = "columns", null = "null", na = "null",
    force = force, POSIXt = POSIXt, UTC = UTC, rownames = rownames,
    keep_vec_names = keep_vec_names, json_verbatim = TRUE, ...)
 }
+toJSON_atomic <- function(x, ...) {
+  toJSON(x, ..., strict_atomic = FALSE)
+}
 # nolint end
 
 

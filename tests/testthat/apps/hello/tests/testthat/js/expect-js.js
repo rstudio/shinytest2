@@ -1,1 +1,1 @@
-return "testExpectJs";
+"testExpectJs";

@@ -104,7 +104,6 @@ NULL
 #'
 #'
 #' @param ... Must be empty. Allows for parameter expansion.
-#' @param arguments A list of unnamed arguments to send to the script.
 #' @param timeout Amount of time to wait before giving up (milliseconds).
 #' @param cran Should these expectations be verified on CRAN? By default,
 #'        they are not because snapshot tests tend to be fragile
@@ -393,7 +392,7 @@ AppDriver <- R6Class(# nolint
     #' app <- AppDriver$new(app_path)
     #'
     #' # Track how many clicks are given to `#update` button
-    #' app$execute_js("
+    #' app$run_js("
     #'   window.test_counter = 0;
     #'   $('#update').click(() => window.test_counter++);
     #' ")
@@ -401,12 +400,11 @@ AppDriver <- R6Class(# nolint
     #' # Click the update button, incrementing the counter
     #' app$click("update")
     #' # Save a snapshot of number of clicks (1)
-    #' app$expect_js("return window.test_counter;")
+    #' app$expect_js("window.test_counter;")
     #' }
     expect_js = function(
       script = missing_arg(),
       ...,
-      arguments = list(),
       file = missing_arg(),
       timeout = 15 * 1000,
       pre_snapshot = NULL,
@@ -414,7 +412,7 @@ AppDriver <- R6Class(# nolint
     ) {
       app_expect_js(
         self, private,
-        script = script, arguments = arguments,
+        script = script,
         ...,
         file = file, timeout = timeout, pre_snapshot = pre_snapshot, cran = cran
       )
@@ -901,13 +899,13 @@ AppDriver <- R6Class(# nolint
     #' # Contrived example:
     #' # Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)
     #' system.time(
-    #'   app$wait_for_js("return Math.floor((Date.now() / 1000) % 10) == 5;")
+    #'   app$wait_for_js("Math.floor((Date.now() / 1000) % 10) == 5;")
     #' )
     #'
     #' ## A second example where we run the contents of a JavaScript file
     #' ## and use the result to wait for a condition
-    #' app$execute_js(file = "complicated_file.js")
-    #' app$wait_for_js("return complicated_condition();")
+    #' app$run_js(file = "complicated_file.js")
+    #' app$wait_for_js("complicated_condition();")
     #' }
     wait_for_js = function(script, timeout = 30 * 1000, interval = 100) {
       app_wait_for_js(self, private, script = script, timeout = timeout, interval = interval)
@@ -1045,13 +1043,18 @@ AppDriver <- R6Class(# nolint
 
 
     #' @description
-    #' Execute JavaScript code in the browser.
+    #' Execute JavaScript code in the browser and return the result
     #'
     #' This function will block the local R session until the code has finished
     #' executing its _tick_ in the browser. If a `Promise` is returned from the
-    #' script, `$execute_js()` will wait for the promise to resolve. To have
+    #' script, `$get_js()` will wait for the promise to resolve. To have
     #' JavaScript code execute asynchronously, wrap the code in a Promise object
     #' and have the script return an atomic value.
+    #'
+    #' Arguments will have to be inserted into the script as there is not access
+    #' to `arguments`. This can be done with commands like `paste()`. If using
+    #' `glue::glue()`, be sure to use uncommon `.open` and `.close` values to
+    #' avoid having to doulbe all `{` and `}`.
     #' @param script JavaScript to execute. If a JavaScript Promise is returned,
     #'   the R session will block until the promise has been resolved and return
     #'   the value.
@@ -1065,30 +1068,94 @@ AppDriver <- R6Class(# nolint
     #' app <- AppDriver$new(shiny_app)
     #'
     #' # Execute JavaScript code in the app's browser
-    #' app$execute_js("return 1 + 1;")
+    #' app$get_js("1 + 1;")
     #' #> [1] 2
     #'
     #' # Execute a JavaScript Promise. Return the resolved value.
-    #' app$execute_js("
-    #'   return new Promise((resolve) => {
+    #' app$get_js("
+    #'   new Promise((resolve) => {
     #'     setTimeout(() => resolve(1 + 1), 1000)
     #'   }).
     #'   then((value) => value + 1);
     #' ")
     #' #> [1] 3
+    #'
+    #' # With escaped arguments
+    #' loc_field <- "hostname"
+    #' js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+    #' app$get_js(js_txt)
+    #' #> [1] "127.0.0.1"
+    #'
+    #' # With `glue::glue()`
+    #' js_txt <- glue::glue_data(
+    #'   lapply(
+    #'     list(x = 40, y = 2),
+    #'     jsonlite::toJSON,
+    #'     auto_unbox = TRUE
+    #'   ),
+    #'   .open = "<", .close = ">",
+    #'   "let answer = function(a, b) {\n",
+    #'   "  return a + b;\n",
+    #'   "};\n",
+    #'   "answer(<x>, <y>);\n"
+    #' )
+    #' app$get_js(js_txt)
+    #' #> [1] 42
     #' }
-    execute_js = function(
+    get_js = function(
       script = missing_arg(),
       ...,
-      arguments = list(),
       file = missing_arg(),
       timeout = 15 * 1000
     ) {
-      app_execute_js(
+      app_get_js(
         self, private,
         script = script,
         ...,
-        arguments = arguments,
+        file = file,
+        timeout = timeout
+      )
+    },
+    #' @description
+    #' Execute JavaScript code in the browser
+    #'
+    #' This function will block the local R session until the code has finished
+    #' executing its _tick_ in the browser.
+    #'
+    #' The final result of the code will be ignored and not returned to the R session.
+    #' @param script JavaScript to execute.
+    #' @param file A (local) file containing JavaScript code to be read and used
+    #'   as the `script`. Only one of `script` or `file` can be specified.
+    #' @examples
+    #' \dontrun{
+    #' library(shiny)
+    #' shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
+    #' app <- AppDriver$new(shiny_app)
+    #'
+    #' # Get JavaScript answer from the app's browser
+    #' app$get_js("1 + 1")
+    #' #> [1] 2
+    #' # Execute JavaScript code in the app's browser
+    #' app$run_js("1 + 1")
+    #' # (Returns `app` invisibly)
+    #'
+    #' # With escaped arguments
+    #' loc_field <- "hostname"
+    #' js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+    #' app$run_js(js_txt)
+    #' app$get_js(js_txt)
+    #' #> [1] "127.0.0.1"
+    #' }
+    run_js = function(
+      script = missing_arg(),
+      ...,
+      file = missing_arg(),
+      timeout = 15 * 1000
+    ) {
+      app_run_js(
+        self, private,
+        script = script,
+        ...,
         file = file,
         timeout = timeout
       )
