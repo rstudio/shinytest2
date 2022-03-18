@@ -2,8 +2,13 @@ pandoc: 2.7.3
 pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
+  ci: ci.html
+  faq: faq.html
+  in-depth: in-depth.html
   migration: migration.html
-last_built: 2022-03-10T21:20Z
+  package: package.html
+  shinytest2: shinytest2.html
+last_built: 2022-03-18T16:19Z
 urls:
   reference: https://rstudio.github.io/shinytest2/reference
   article: https://rstudio.github.io/shinytest2/articles

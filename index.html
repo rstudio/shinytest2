@@ -42,12 +42,19 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
+  <a class="nav-link" href="articles/shinytest2.html">Get started</a>
+</li>
+<li class="nav-item">
   <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/migration.html">{shinytest} migration guide</a>
+    <a class="dropdown-item" href="articles/ci.html">Using shinytest2 with continuous integration</a>
+    <a class="dropdown-item" href="articles/faq.html">Frequently Asked Questions</a>
+    <a class="dropdown-item" href="articles/in-depth.html">Testing in depth</a>
+    <a class="dropdown-item" href="articles/migration.html">Migrating from shinytest</a>
+    <a class="dropdown-item" href="articles/package.html">Using shinytest2 with R packages</a>
   </div>
 </li>
 <li class="nav-item">
@@ -80,6 +87,7 @@
 <blockquote>
 <p><span class="emoji" data-emoji="triangular_flag_on_post">🚩</span><span class="emoji" data-emoji="triangular_flag_on_post">🚩</span> {shinytest2} is in beta developement. Please report any bugs or feedback at <a href="https://github.com/rstudio/shinytest2/issues" class="external-link">https://github.com/rstudio/shinytest2/issues</a> <span class="emoji" data-emoji="triangular_flag_on_post">🚩</span><span class="emoji" data-emoji="triangular_flag_on_post">🚩</span></p>
 </blockquote>
+<!-- TODO-barret; Intro should mention shinytest, but link to larger comparisons -->
 <p><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> facilitates the testing of <a href="https://shiny.rstudio.com/" class="external-link">shiny</a> applications using a headless Chromium web browser via <a href="https://github.com/rstudio/chromote" class="external-link">chromote</a>. Using the latest features of <a href="https://testthat.r-lib.org" class="external-link">testthat</a> edition 3, snapshot files are saved for each of the expected values.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -87,6 +95,13 @@
 <p>You can install the development version of shinytest2 from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rstudio/shinytest2"</span><span class="op">)</span></code></pre></div>
+<!-- TODO-barret; High level bullet take away points of `{shinytest}` vs `{shinytest2}` -->
+<!-- TODO-barret; First class support for cross platform / R version testing -->
+<ul>
+<li>since shinytest builds on {testthat} ed 3 snapshot testing, allows us to manage multiple variants</li>
+<li>See more in Getting Started</li>
+</ul>
+<!-- TODO-barret; Put these sections in the getting started -->
 </div>
 <div class="section level2">
 <h2 id="recording-a-test">Recording a test<a class="anchor" aria-label="anchor" href="#recording-a-test"></a>
@@ -105,8 +120,9 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a></span><span class="op">)</span>
 
 <span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"values are captured"</span>, <span class="op">{</span>
-  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"unique-name"</span><span class="op">)</span>
+  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"unique-name"</span>, variant <span class="op">=</span> <span class="fu">platform_varaint</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
   <span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span>
+  <span class="va">app</span><span class="op">$</span><span class="fu">expect_screenshot</span><span class="op">(</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span></code></pre></div>
 <p>The call to <code>app$expect_values()</code> will save an expected snapshot to <code>./tests/testthat/_snaps/shinytest2/unique-name-001.json</code>.</p>
 <p>In addition to the expected snapshot, a debug screenshot file will be saved to <code>./tests/testthat/_snaps/shinytest2/unique-name-001_.png</code>. These screenshot files should be kept in version control (<code>GitHub</code>) to see how your app updates over times, but if visual differences are found, these differences will never fail a test.</p>
@@ -116,8 +132,7 @@
 <h1 id="migrating-from-shinytest">Migrating from <code>{shinytest}</code>
 <a class="anchor" aria-label="anchor" href="#migrating-from-shinytest"></a>
 </h1>
-<p><a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> is the predecesor to <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>. <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> was implemented using <a href="https://github.com/rstudio/webdriver" class="external-link">webdriver</a> which uses <a href="https://phantomjs.org/api/" class="external-link">PhantomJS</a>. PhantomJS has been unsupported since 2017 and does not support displaying <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5.</p>
-<p><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> uses <a href="https://github.com/rstudio/chromote" class="external-link">chromote</a> to connect to your locally installed Chrome or Chromium application. <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> does not have any rendering issues when displaying <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5.</p>
+<p><a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> is the predecesor to <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>. <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> was implemented using <a href="https://github.com/rstudio/webdriver" class="external-link">webdriver</a> which uses <a href="https://phantomjs.org/api/" class="external-link">PhantomJS</a>. PhantomJS has been unsupported since 2017 and does not support displaying <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5. <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> uses <a href="https://github.com/rstudio/chromote" class="external-link">chromote</a> to connect to your locally installed Chrome or Chromium application. So, <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> is able to display <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5.</p>
 <p>To migrate your existing <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> tests to <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>, call the helper method <code>shinytest2::migrate_from_shinytest(path)</code>.</p>
 </div>
 
