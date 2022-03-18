@@ -5,6 +5,10 @@ output:
   pdf_document: default
 editor_options:
   chunk_output_type: console
+vignette: >
+  %\VignetteIndexEntry{Testing in depth}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}

@@ -4,6 +4,10 @@ editor_options:
   chunk_output_type: console
   markdown:
     wrap: sentence
+vignette: >
+  %\VignetteIndexEntry{Getting started with shinytest2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
