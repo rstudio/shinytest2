@@ -87,7 +87,7 @@ This also launches a special Shiny application in the current R process which di
 We'll refer to this as the **recorder app**.
 You will see something like this:
 
-![](record-simple-app.png)
+![](images/record-simple-app.png)
 
 On the left is the target app (in this case, the "What is your name" app), and on the right is the recorder app sidebar.
 Note that you may need to make the browser window wider because the recorder sidebar occupies some space.
@@ -106,7 +106,7 @@ To do this, click the `Expect values` button on the recorder app.
 
 After modifying some `input`s and making an expectation, it will look something like this:
 
-![](record-simple-app-2.png)
+![](images/record-simple-app-2.png)
 
 It is also possible to take a *targeted* value expectation.
 This is a snapshot of one or more specified `output` (instead of the default, which is to snapshot the entire application).
