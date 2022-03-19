@@ -137,15 +137,13 @@ addResourcePath("gremlins", "inst/js/gremlins.min.js")
 We can subsequently inject the gremlins in the DOM and checks whether everything worked as expected:
 
 ```r
-headless_app$execute_js("
-  (function() {
-    var s = document.createElement('script');
-    s.src = './gremlins/gremlins.min.js';
-    document.body.appendChild(s);
-  })();"
-)
+headless_app$run_js("
+  let s = document.createElement('script');
+  s.src = './gremlins/gremlins.min.js';
+  document.body.appendChild(s);
+")
 plop$get_html("script", outer_html = TRUE)
-plop$execute_js("return typeof window.gremlins")
+plop$get_js("typeof window.gremlins")
 ```
 
 ## Unleash the horde
