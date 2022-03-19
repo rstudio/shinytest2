@@ -237,25 +237,24 @@ knitr::include_graphics("figures/gremlins-logs.png")
 As Monkey testing lasts about 10s, you often want to take a screenshot of the ongoing attack:
 
 ```r
-headless_app$execute_js(
-  "const customToucher = gremlins.species.toucher({
+headless_app$run_js("
+  const customToucher = gremlins.species.toucher({
     // which touch event types will be triggered
     touchTypes: ['gesture'],
     // Touch only if element has class irs-handle single
     canTouch: (element) => element.className === 'irs-handle single',
     log: true,
     maxTouches: 200
-    });
+  });
     
-    gremlins.createHorde({
-      //randomizer: new gremlins.Chance(1234), // repeatable
-      species: [customToucher],
-      mogwais: [gremlins.mogwais.gizmo()]
-    }).unleash().then(() => {
-      console.log('Gremlins test success')
-    });
-  "
-)
+  gremlins.createHorde({
+    //randomizer: new gremlins.Chance(1234), // repeatable
+    species: [customToucher],
+    mogwais: [gremlins.mogwais.gizmo()]
+  }).unleash().then(() => {
+    console.log('Gremlins test success')
+  });
+")
 
 Sys.sleep(3)
 headless_app$screenshot("gremlins.png")
