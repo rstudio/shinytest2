@@ -226,7 +226,7 @@ horde
 });
 ```
 
-If you are running on CI/CD and can't see the Chrome Devtools, you can still display the logs. The `console.log` output will be captured by the `{shinytest2}` logs with `headless_app$get_log()` allowing you to debug and refine the 
+If you are running on CI/CD and can't see the Chrome Devtools, you can still display the logs. The `console.log` output will be captured by the `{shinytest2}` logs with `headless_app$get_logs()` allowing you to debug and refine the 
 monkey testing script. 
 
 ```{r echo=FALSE, out.width='100%', fig.align='center'}
