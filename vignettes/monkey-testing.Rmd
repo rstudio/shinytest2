@@ -113,7 +113,7 @@ gremlins.js and try to call `typeof window.gremlins`, which should return an obj
 
 ```r
 headless_app$get_html("script", outer_html = TRUE)
-headless_app$execute_js("return typeof window.gremlins")
+headless_app$get_js("typeof window.gremlins")
 ```
 
 If `undefined` is returned instead, it means something went wrong. This is generally because the JS code
