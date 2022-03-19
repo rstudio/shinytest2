@@ -98,13 +98,11 @@ The next steps consists of injecting the gremlins.js dependency in the DOM so th
 The easiest way is to call:
 
 ```r
-headless_app$execute_js("
-  (function() {
-    var s = document.createElement('script');
-    s.src = 'https://unpkg.com/gremlins.js';
-    document.body.appendChild(s);
-  })();"
-)
+headless_app$run_js("
+  let s = document.createElement('script');
+  s.src = 'https://unpkg.com/gremlins.js';
+  document.body.appendChild(s);
+")
 ```
 
 This creates a `<script>` tag pointing to the right CDN (content delivery network: optimized server to store libraries) and inserts
