@@ -176,7 +176,7 @@ By default, all species will attack in random order with a delay of 10 ms betwee
 In the following, we run the most basic Monkey test configuration:
 
 ```r
-headless_app$execute_js("gremlins.createHorde().unleash();")
+headless_app$run_js("gremlins.createHorde().unleash();")
 ```
 
 Result is shown in the gif below. 
