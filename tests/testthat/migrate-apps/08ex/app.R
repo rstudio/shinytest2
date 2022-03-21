@@ -38,7 +38,7 @@ server <- function(input, output) {
 
   # Generate an HTML table view of the head of the data ----
   output$table <- renderTable({
-    head(data.frame(x = d()))
+    head(data.frame(x = d(), stringsAsFactors = FALSE))
   })
 
 }
