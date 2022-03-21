@@ -63,7 +63,7 @@ frames_to_msg <- function(details, url) {
     }
   }
 
-  frames <- do.call(rbind, lapply(call_frames, as.data.frame))
+  frames <- do.call(rbind, lapply(call_frames, as.data.frame, stringsAsFactors = FALSE))
   # Give anonymous functions a name
   frames$functionName[frames$functionName == ""] <- "(anonymous)" # nolint
   # Left justify the names
