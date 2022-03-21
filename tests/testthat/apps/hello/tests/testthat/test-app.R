@@ -36,7 +36,7 @@ test_that("basic website example works using testthat", {
   # Take picture and record inputs / outputs
   tmpfile <- tempfile()
   app$get_screenshot(tmpfile)
-  expect_snapshot_file(tmpfile, name = "manual-screenshot.png")
+  expect_snapshot_file(tmpfile, name = "manual-screenshot.png", variant = app$get_variant())
 
   values <- app$get_values()
   expect_equal(values$output$greeting, "Hello Hadley!")
