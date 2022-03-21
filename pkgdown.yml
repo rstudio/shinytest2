@@ -8,7 +8,7 @@ articles:
   migration: migration.html
   package: package.html
   shinytest2: shinytest2.html
-last_built: 2022-03-21T18:30Z
+last_built: 2022-03-21T19:46Z
 urls:
   reference: https://rstudio.github.io/shinytest2/reference
   article: https://rstudio.github.io/shinytest2/articles
