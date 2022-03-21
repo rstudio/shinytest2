@@ -95,4 +95,5 @@ Collate:
     'shinytest2-logs.R'
     'test-app.R'
     'use.R'
+    'zzz.R'
 VignetteBuilder: knitr
