@@ -4,7 +4,7 @@
 \alias{test_app}
 \title{Test Shiny applications with \pkg{testthat}}
 \usage{
-test_app(app_dir = missing_arg(), env = shiny::loadSupport(app_dir), ...)
+test_app(app_dir = missing_arg(), ..., env = shiny::loadSupport(app_dir))
 }
 \arguments{
 \item{app_dir}{The base directory for the Shiny application.
@@ -14,9 +14,9 @@ test_app(app_dir = missing_arg(), env = shiny::loadSupport(app_dir), ...)
 \item Otherwise, the default path of \code{"."} is used.
 }}
 
-\item{env}{Use the Shiny application's environment after sourcing the R folder}
-
 \item{...}{Parameters passed to \code{\link[testthat:test_dir]{testthat::test_dir()}}}
+
+\item{env}{Use the Shiny application's environment after sourcing the R folder}
 }
 \description{
 This is a helper method that wraps around \code{\link[testthat:test_dir]{testthat::test_dir()}} to test your Shiny application or Shiny runtime document.  This is similar to how \code{\link[testthat:test_package]{testthat::test_check()}} tests your R package but for your app.
