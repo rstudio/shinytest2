@@ -3,31 +3,13 @@ Future release:
     * upload an artifact with updated snapshots
       * like fix_all_branches, it must be initiated manually, but _automated_
 
-handle failures:
-https://github.com/r-lib/vdiffr/blob/fc03e91cccac04baa875063513b630d80c02e197/R/expect-doppelganger.R#L127-L151
-push_log stores information to a log file that is visible by cran and the testthat fail output logs
-
 
 #' @seealso [testthat::snapshot_review()] and [testthat::snapshot_accept()] if
 #'   you want to compare or update snapshots after testing. In most cases, the
 #'   user is prompted to do these tasks interactively, but there are also times
 #'   where it is useful to call these functions from the console.
-# Documentation:
 
-### Vignettes:
-* Which do I need and why do I need them?
-* Explain testing robustness
-  * Robust to flakey; Sensitivity to external updates
-    <!-- * `$expect_names(key)` - TODO- add this method; save outputs to snapshots if no key is provided
-      * `$expect_appshot(items = value, screenshot = FALSE)` -->
-    * `$expect_values(input, output, export)` - TODO- add this method; save outputs to snapshots
-      * `$expect_appshot(items = value, screenshot = FALSE)`
-    * `$expect_text()`
-      * Text wont really change
-    * `$expect_html()`
-      * Classes could be added by external packages
-    * `$expect_appshot()`
-      * images are not reliable
+# Documentation:
 
 ### Docs:
 * What are the conditions that I need this function?
@@ -49,7 +31,6 @@ push_log stores information to a log file that is visible by cran and the testth
     * explain what a variant is
   * How to review different variants
     *
-* Which do I need and why do I need them?
 * Explain testing robustness
   * Add a details section in `AppDriver` docs to summarize this vignette
     * Have the methods link to the within page values
@@ -67,12 +48,14 @@ push_log stores information to a log file that is visible by cran and the testth
       * Classes could be added by external packages
     * `$expect_appshot()`
       * images are not reliable
-* Pull over vignettes from {shinytest} where appropriate
+  * Which do I need and why do I need them?
 
 ### Docs:
 * What are the conditions that I need this function?
 * Priority sort the App docs methods
   * Tell docs that they are sorted for a reason
+* Fix vignette links
+* Fix markdown table in https://rstudio.github.io/shinytest2/articles/ci.html#renv-lock-renvactivate-r--rprofile
 * Add some description about how often we guess people will use the method.
   * $execute_script(): [for non-shiny use]; Only if your JS requires a callback; Otherwise use $execute_script()
 * Migration guide from shinytest -> shinytest2
