@@ -15,7 +15,7 @@ app__expect_snapshot_value <- function( # nolint
 app__expect_snapshot_file <- function(
   self, private,
   file,
-  variant,
+  variant = self$get_variant(),
   name = fs::path_file(file),
   cran = FALSE,
   compare = testthat::compare_file_binary
@@ -33,12 +33,12 @@ app__expect_snapshot_file <- function(
   name_safe <- fs::path_sanitize(name, "_")
 
   withCallingHandlers(
-    testthat::expect_snapshot_file(
+    ret <- testthat::expect_snapshot_file(
       file,
       name = name_safe,
       cran = cran,
       compare = compare,
-      variant = self$get_variant()
+      variant = variant
     ),
     expectation_failure = function(cnd) {
       if (
@@ -55,7 +55,7 @@ app__expect_snapshot_file <- function(
         # https://github.com/r-lib/vdiffr/blob/fc03e91cccac04baa875063513b630d80c02e197/R/expect-doppelganger.R#L127-L169
         snapshotter <- get_snapshotter()
         if (!is.null(snapshotter)) {
-          path_old <- snapshot_path(snapshotter, name)
+          path_old <- snapshot_path(snapshotter, variant, name)
           path_new <- fs::path_ext_set(path_old, paste0(".new.", fs::path_ext(path_old)))
           if (all(file.exists(path_old, path_new))) {
             diff <- diff_lines(path_old, path_new)
@@ -78,6 +78,24 @@ app__expect_snapshot_file <- function(
       stop(cnd)
     }
   )
+
+  # Validate that the snapshot files is new
+  snapshotter <- get_snapshotter()
+  if (!is.null(snapshotter)) {
+    snaps_seen <- snapshotter$snap_file_seen
+    if (length(snaps_seen) > 1) {
+      duplicated_snaps <- snaps_seen[duplicated(snaps_seen)]
+      if (length(duplicated_snaps) > 0) {
+        rlang::abort(c(
+          paste0("Duplicate snapshot files detected: ", paste0(duplicated_snaps, collapse = ", ")),
+          "i" = "Please set `AppDriver$new(name=)` to a unique value"
+        ))
+      }
+    }
+  }
+
+  # Return expectation
+  ret
 }
 
 get_snapshotter <- function() {
@@ -92,8 +110,12 @@ get_snapshotter <- function() {
 
   x
 }
-snapshot_path <- function(snapshotter, file) {
-  file.path(snapshotter$snap_dir, snapshotter$file, file)
+snapshot_path <- function(snapshotter, variant, file) {
+  if (is.null(variant)) {
+    file.path(snapshotter$snap_dir, snapshotter$file, file)
+  } else {
+    file.path(snapshotter$snap_dir, variant, snapshotter$file, file)
+  }
 }
 
 diff_lines <- function(before_path, after_path) {

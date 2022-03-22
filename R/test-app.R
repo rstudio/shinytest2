@@ -65,15 +65,16 @@ NULL
 #'   * If `app_dir` is missing and `test_app()` is called within the
 #'     `./tests/testthat.R` file, the parent directory (`"../"`) is used.
 #'   * Otherwise, the default path of `"."` is used.
-#' @param env Use the Shiny application's environment after sourcing the R folder
 #' @param ... Parameters passed to [`testthat::test_dir()`]
+#' @param env Use the Shiny application's environment after sourcing the R folder
 #' @seealso [`record_test()`], [`testthat::test_dir()`]
 #' @export
 test_app <- function(
   app_dir = missing_arg(),
+
+  ...,
   # Run in the app's environment containing all support methods.
-  env = shiny::loadSupport(app_dir),
-  ...
+  env = shiny::loadSupport(app_dir)
 ) {
   # Inspiration from https://github.com/rstudio/shiny/blob/a8c14dab9623c984a66fcd4824d8d448afb151e7/inst/app_template/tests/testthat.R
 
@@ -106,7 +107,9 @@ test_app <- function(
     ret <- testthat::test_dir(
       path = file.path(app_dir, "tests", "testthat"),
       env = env,
-      ...
+      ...,
+      reporter = c(testthat::default_reporter(), "UniqueName")
+      # TODO-barret support unique name reporter and default/default_parallel reporter
     )
   })
 
