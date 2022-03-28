@@ -10,7 +10,7 @@ server <- function(input, output) {
     head(cars, input$n)
   })
   plot_obj <- reactive({
-    ggplot(dt(), aes_string("speed", "dist")) + geom_point()
+    ggplot::ggplot(dt(), ggplot::aes_string("speed", "dist")) + ggplot::geom_point()
   })
 
   output$plot <- renderPlot({
