@@ -38,6 +38,8 @@ Imports:
 Suggests:
     diffobj,
     globals (>= 0.14.0),
+    ggplot2,
+    vdiffr (>= 1.0.0),
     plotly,
     rstudioapi,
     shinyWidgets,
