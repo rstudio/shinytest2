@@ -25,7 +25,8 @@ app_httr_get <- function(self, private, url) {
     return(req)
   }
 
-  cat("Query failed (", status, ")----------------------\n", sep = "")
+  cat("{shinytest2} query failed (", status, ")----------------------\n", sep = "")
+  cat("URL: ", url, "\n", sep = "")
   cat(httr::content(req, "text"), "\n")
   cat("----------------------------------------\n")
   app_abort(self, private, "Unable request data from server")
