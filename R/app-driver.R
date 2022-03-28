@@ -422,10 +422,10 @@ AppDriver <- R6Class(# nolint
     #' @description
     #' Expect a downloadable file
     #'
-    #' Given a [shiny::downloadButton()]/[shiny::downloadLink()] `id`, the corresponding
+    #' Given a [shiny::downloadButton()]/[shiny::downloadLink()] `output` ID, the corresponding
     #' file will be downloaded and saved as a snapshot file.
     #'
-    #' @param id Output id of [shiny::downloadButton()]/[shiny::downloadLink()]
+    #' @param output `output` ID of [shiny::downloadButton()]/[shiny::downloadLink()]
     #' @param name File name to save file to (including file name extension). The default, `NULL`,
     #'   generates an ascending sequence of names: `001.download`,
     #'   `002.download`, etc.
@@ -438,16 +438,16 @@ AppDriver <- R6Class(# nolint
     #' # Save snapshot value of `rock.csv` to capture default file name
     #' app$expect_download("downloadData")
     #' }
-    expect_download = function(id, ..., name = NULL, cran = FALSE) {
-      app_expect_download(self, private, id = id, ..., name = name, cran = cran)
+    expect_download = function(output, ..., name = NULL, cran = FALSE) {
+      app_expect_download(self, private, output = output, ..., name = name, cran = cran)
     },
     #' @description
     #' Get downloadable file
     #'
-    #' Given a [shiny::downloadButton()]/[shiny::downloadLink()] `id`, the corresponding
+    #' Given a [shiny::downloadButton()]/[shiny::downloadLink()] `output` ID, the corresponding
     #' file will be downloaded and saved as a file.
     #'
-    #' @param id Output id of [shiny::downloadButton()]/[shiny::downloadLink()]
+    #' @param output `output` ID of [shiny::downloadButton()]/[shiny::downloadLink()]
     #' @param filename File path to save the downloaded file to.
     #' @return
     #' `$get_download()` will return the final save location of the file. This
@@ -473,8 +473,8 @@ AppDriver <- R6Class(# nolint
     #' app$get_download("downloadData", filename = "./myfile.csv")
     #' #> [1] "./myfile.csv"
     #' }
-    get_download = function(id, filename = NULL) {
-      app_get_download(self, private, id = id, filename = filename)
+    get_download = function(output, filename = NULL) {
+      app_get_download(self, private, output = output, filename = filename)
     },
 
 
