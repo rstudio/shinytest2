@@ -1347,16 +1347,16 @@ app$expect_js("window.test_counter;")
 \subsection{Method \code{expect_download()}}{
 Expect a downloadable file
 
-Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}} \code{id}, the corresponding
+Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}} \code{output} ID, the corresponding
 file will be downloaded and saved as a snapshot file.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_download(id, ..., name = NULL, cran = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_download(output, ..., name = NULL, cran = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{Output id of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
+\item{\code{output}}{\code{output} ID of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
@@ -1392,16 +1392,16 @@ app$expect_download("downloadData")
 \subsection{Method \code{get_download()}}{
 Get downloadable file
 
-Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}} \code{id}, the corresponding
+Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}} \code{output} ID, the corresponding
 file will be downloaded and saved as a file.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_download(id, filename = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_download(output, filename = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{Output id of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
+\item{\code{output}}{\code{output} ID of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
 
 \item{\code{filename}}{File path to save the downloaded file to.}
 }
