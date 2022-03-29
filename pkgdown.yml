@@ -6,9 +6,10 @@ articles:
   faq: faq.html
   in-depth: in-depth.html
   migration: migration.html
+  monkey-testing: monkey-testing.html
   package: package.html
   shinytest2: shinytest2.html
-last_built: 2022-03-21T19:46Z
+last_built: 2022-03-29T16:58Z
 urls:
   reference: https://rstudio.github.io/shinytest2/reference
   article: https://rstudio.github.io/shinytest2/articles
