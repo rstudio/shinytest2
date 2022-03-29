@@ -131,7 +131,7 @@ NULL
 #'   `selector` or `screenshot_args`'s selector slot. The `selector` parameter
 #'   will have preference.
 #' @importFrom R6 R6Class
-#' @seealso [`platform_variant()`], [`use_shinytest2()`]
+#' @seealso [`platform_variant()`], [`use_shinytest2_test()`]
 #' @export
 AppDriver <- R6Class(# nolint
   "AppDriver",

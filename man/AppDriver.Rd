@@ -917,7 +917,7 @@ str(head(rlog, 2))
 }
 }
 \seealso{
-\code{\link[=platform_variant]{platform_variant()}}, \code{\link[=use_shinytest2]{use_shinytest2()}}
+\code{\link[=platform_variant]{platform_variant()}}, \code{\link[=use_shinytest2_test]{use_shinytest2_test()}}
 }
 \section{Methods}{
 \subsection{Public methods}{
