@@ -30,31 +30,13 @@ Future release:
     * Use an `$expect_screenshot()` with a `variant`
     * explain what a variant is
   * How to review different variants
-    *
-* Explain testing robustness
-  * Add a details section in `AppDriver` docs to summarize this vignette
-    * Have the methods link to the within page values
-    * Find a way to link to these methods
-    * Have all `$expect_*()` bundled. All `$get_*()` bundled. Link between paired method.
-  * Robust to flakey; Sensitivity to external updates
-    * Export internal values
-    * `$expect_values(input, output, export)` - TODO- add this method; save outputs to snapshots
-      * `$expect_appshot(items = value, screenshot = FALSE)`
-    * `$expect_text()`
-      * Text wont really change
-      * Only recommended if you can not use `$expect_values()`
-        * Add these types of notes to the standard docs.
-    * `$expect_html()`
-      * Classes could be added by external packages
-    * `$expect_appshot()`
-      * images are not reliable
-  * Which do I need and why do I need them?
 
 ### Docs:
 * What are the conditions that I need this function?
 * Priority sort the App docs methods
   * Tell docs that they are sorted for a reason
 * Fix vignette links
+* Link Robust vignette from AppDriver docs
 * Fix markdown table in https://rstudio.github.io/shinytest2/articles/ci.html#renv-lock-renvactivate-r--rprofile
 * Add some description about how often we guess people will use the method.
   * $execute_script(): [for non-shiny use]; Only if your JS requires a callback; Otherwise use $execute_script()
