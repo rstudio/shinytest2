@@ -131,7 +131,7 @@ A solution is then to store and serve a local copy of the gremlin.js script with
 Assuming `gremlins.js` are in `inst/js/gremlins.min.js`. Add this to the `app.R` file:
 
 ```r
-addResourcePath("gremlins", "inst/js/gremlins.min.js")
+shiny::addResourcePath("gremlins", "inst/js/gremlins.min.js")
 ```
 
 We can subsequently inject the gremlins in the DOM and checks whether everything worked as expected:
@@ -142,8 +142,8 @@ headless_app$run_js("
   s.src = './gremlins/gremlins.min.js';
   document.body.appendChild(s);
 ")
-plop$get_html("script", outer_html = TRUE)
-plop$get_js("typeof window.gremlins")
+headless_app$get_html("script", outer_html = TRUE)
+headless_app$get_js("typeof window.gremlins")
 ```
 
 ## Unleash the horde
@@ -165,8 +165,8 @@ clicks, touch, form filling, scrolling, typing, ... described in the gremlins.js
 
 As a side note, we don't recommend using the `scroller` which sometimes [crashes](https://github.com/rstudio/shinytest2/issues/117) the Chrome instance. 
 
-If your plots rely on random elements like `rnorm`, it is best practice to setup a seed. 
-By default, all species will attack in random order with a delay of 10 ms between each event. You can also control the attack strategy to fine tune the global behavior. Finally, if you want more control over what gremlins specie should be doing, you can define a custom specie. 
+If your plots rely on random elements like `rnorm`, it is best practice to setup a `seed`. 
+By default, all species will attack in random order with a delay of 10 ms between each event. You can also control the attack strategy to fine tune the global behavior. Finally, if you want more control over what your gremlins species should be doing, you can define a custom species.
 
 
 ### Practice
@@ -194,7 +194,7 @@ In the following code, we only want to test the slider input.
 knitr::include_graphics("figures/gremlins-slider-handle.png")
 ```
 
-The best specie to perform this task is the `toucher`, which is able to randomly move the slider input. The documentation specifies many events such as tap, doubletap, gesture and multitouch. It seems more relevant to apply only gesture, consisting of dragging the slider on the x-axis (note: gesture also consider the y-axis which does not make sense for the slider, which is an gremlins.js limitation. This however won't prevent our test from running). Also, we target the slider handle by its class `irs-handle single` to ensure we don't touch any other element and increase the number of maximum touch from 2 to 200. Not how precious is the HTML inspector, which allows to seamlessly inspect and extract any class or id. The __log__ parameter enables log in the JavaScript console:
+The best species to perform this task is the `toucher`, which is able to randomly move the slider input. The documentation specifies many events such as tap, doubletap, gesture and multitouch. It seems more relevant to apply only gesture, consisting of dragging the slider on the x-axis (note: gesture also consider the y-axis which does not make sense for the slider, which is a gremlins.js limitation. This however won't prevent our test from running). Also, we target the slider handle by its class `irs-handle single` to ensure we don't touch any other element and increase the number of maximum touch from 2 to 200. Note how precious is the HTML inspector, which allows to seamlessly inspect and extract any class or id. The __log__ parameter enables logging in the JavaScript console:
 
 ```js
 const customToucher = gremlins.species.toucher({
@@ -257,7 +257,7 @@ headless_app$run_js("
 ")
 
 Sys.sleep(3)
-headless_app$screenshot("gremlins.png")
+headless_app$get_screenshot("gremlins.png")
 ```
 
 ```{r echo=FALSE, out.width='100%', fig.align='center'}
