@@ -95,13 +95,6 @@ chromote_wait_for_condition <- function(
   checkmate::assert_number(timeout, lower = 0)
   checkmate::assert_number(interval, lower = 0)
 
-  condition_txt <- if (grepl("return", condition_js, fixed = TRUE)) {
-    ""
-  } else {
-    # No `return` found in script
-    ". Did you forget to `return` your value?"
-  }
-
   # Must use manual calulation of timeout, as `chromote_session` does not have a
   # way to cancel the `setTimeout` that has already been submitted. (Which will never stop resubmitting)
   script <- paste0(
@@ -115,7 +108,7 @@ chromote_wait_for_condition <- function(
   "chromote_wait_for_condition = () => {
     let diffTime = new Date() - (+start + ", timeout, ");
     if (diffTime > 0) {
-      return reject('Timed out waiting for JavaScript script to return `true`", condition_txt, "');
+      return reject('Timed out waiting for JavaScript script to return `true`');
     }
     if (condition()) {
       return resolve();

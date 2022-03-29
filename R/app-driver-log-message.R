@@ -24,7 +24,8 @@ app_log_entry <- function(
     location = match.arg(location),
     # do not match on a fixed set to allow console.trace() methods to work in browser.
     level,
-    message = message
+    message = message,
+    stringsAsFactors = FALSE
   )
   # message("Making entry: ")
   # str(entry)
