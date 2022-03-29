@@ -76,7 +76,7 @@ Multiple calls to `app$set_inputs()` should be reduced to a single line unless t
 
 ### Making expectations
 
-For an indepth discussion of expectations, see the [expectations vignette](expectations).
+For an indepth discussion of expectations, see the [Robust testing vignette](./robust.Rmd).
 TODO-barret
 
 There are a couple standard ways to make expectations from your `AppDriver` object.
@@ -204,18 +204,18 @@ This creates exported values called `xy` and `yz`. When a test snapshot is taken
 
 Note that the expression (i.e. `xy()` and `yz()`) is saved when `exportTestValues()` is called, not the specific values. Generally, you should keep these expressions as simple as possible so that test failures yield informative outputs. Note that any value here has to be serializable to JSON, so it's not suitable for testing complex objects.
 
-<!-- ### Adding delays
+### Adding delays
 
-In some cases, you may need to wait for some amount of time between steps. You can do this by adding `Sys.sleep()` in your script. For example:
+In some cases, you may need to wait for some amount of time between steps (e.g. waiting for CSS animations). You can do this by adding `Sys.sleep()` in your script. For example:
 
-# ```{r}
-# Sys.sleep(0.5)
-# ```
+```{r}
+Sys.sleep(0.5)
+```
 
-If you are waiting for some reactives to be calculated, please read more in the [Waiting for an `input` (or `output`) value](#wait-for-value) section. -->
+However, if you are waiting for some Shiny reactives to be calculated, please read more in the [Waiting for an `output` (or `input`) value](#wait-for-value) section.
 
 
-### Controlling random values
+### Controlling random values {#controlling-random-values}
 
 If your application uses randomly-generated values (by calling functions like `rnorm`, `runif`, `sample` directly or indirectly), then, in normal operation, it will produce different results on each run. Because `{shinytest2}` works by comparing the current state of an application to a previous state, these random changes will cause test failures.
 
@@ -225,14 +225,13 @@ To make such applications exactly repeatable, you can set the random seed. This 
 knitr::include_graphics("images/screenshot-recorder-random-seed.png")
 ```
 
-If your test script has already been created, you can set the random seed by editing the test script so that the `AppDriver$new()` call has a value for `seed`. Moreover, if you need these tests to pass on multiple versions of R with different `RNGkind()` defaults (e.g., 3.5 and 3.6), you may want to set a fixed `RNGkind()` across your tests (perhaps via `RNGversion("3.5.0")`).
-<!-- The **shinytest2** package does this in its own automated tests [via a **testthat** helper](https://github.com/rstudio/shinytest2/tree/main/tests/testthat/test-helper-rng.R). -->
+If your test script has already been created, you can set the random seed by editing the test script so that the `AppDriver$new()` call has a value for `seed`. Moreover, if you need these tests to pass on multiple versions of R with different `RNGkind()` defaults (e.g., 3.5 and 3.6), you may want to set a fixed `RNGkind()` across your tests (perhaps via `RNGversion("3.5.0")`). However, using a `AppDriver$new(variant=)` value that contains the R version can also remedy this situation.
 
 ```{r}
 app <- AppDriver$new(seed = 4323)
 ```
 
-In many cases, instead of setting the random seed, it is more elegant to use an [output preprocessor](faq.html#can-i-modify-the-output-and-input-values-that-are-recorded-in-snapshots).
+In many cases, instead of setting the random seed, it is more elegant to use an [output preprocessor](zz-faq.html#can-i-modify-the-input-and-output-values-that-are-recorded-in-snapshots).
 
 
 ## Widgets
@@ -262,8 +261,7 @@ app$uploadFile(file1 = "mtcars.csv")
 
 Notice that the filename `"mtcars.csv"` appears in the script without a full file path. This is because the test recorder does not know where the file came from; it only knows the name of the file.
 
-Before you run the test script, you must copy the file to the `tests/testthat/` directory.  See the `tests/testthat/` subdirectory of [this app](https://github.com/rstudio/shinytest/tree/main/tests/testthat/recorded_tests/009-upload) for an example.
-TODO-barret fix link
+Before you run the test script, you must copy the file to the `tests/testthat/` directory.  See the `tests/testthat/` subdirectory of [this app](https://github.com/rstudio/shinytest2/tree/61d51d9e96640bfae3eeefa12c4b685099b584c8/tests/testthat/apps/upload) for an example.
 
 After copying the file to that directory, run `test_app()` as usual.
 
@@ -449,6 +447,12 @@ if (isTRUE(getOption("shiny.testmode"))) {
 ```
 
 
+<!-- TODO-barret; talk about variants
+  * Medium difficulty example:
+    * Use an `$expect_screenshot()` with a `variant`
+    * explain what a variant is -->
+
+
 ## Limitations
 
 ### Inputs without input bindings
@@ -478,5 +482,4 @@ app$set_inputs(
 
 ## Next
 
-Learn about using shinytest2 with [continuous integration](ci.html).
-TODO-barret; update link
+Learn about using shinytest2 with [continuous integration](use-ci.html).

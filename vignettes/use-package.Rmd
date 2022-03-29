@@ -64,7 +64,7 @@ test_that("sample_app works", {
 
 If the application directory is not meant to be public, it can also be located in `./tests/testthat/apps`. `{shinytest2}` does this with many application and has `appdir` above point to the relative path to the application.
 
-For more information about this script, see the [Test driver script notes](#Test-driver-script-notes) section below.
+<!-- For more information about this script, see the [Test driver script notes](#Test-driver-script-notes) section below. -->
 
 
 ## Application objects created by functions
@@ -81,9 +81,8 @@ The second way have an application in an R package is by having a function that 
 └── tests
     ├── testthat
     │   ├── _snaps
-    │   ├── apps
-    │   │   └── hello-world
-    |   |       └── app.R
+    │   │   └── app-function
+    │   │       └── 001.json
     │   └── test-app-function.R
     └── testthat.R
 ```
@@ -127,12 +126,14 @@ test_that("hello-world app initial values are consistent", {
 To help create tests, you can call `record_test()` on your shiny application object directly. Unfortunately, the test file will not be able to be saved. Instead, the test commands can be copied into a test script manually.
 
 
-For more information about this script, see the [Test driver script notes](#Test-driver-script-notes) section below.
+<!-- For more information about this script, see the [Test driver script notes](#Test-driver-script-notes) section below. -->
 
 
 ## Other setup steps
 
 There are a few steps that are needed for both types of tests.
+
+It is recommended to call `shinytest2::use_shinytest()` to enable different test config set-ups.
 
 You will need to add `{shinytest2}` to the `Suggests` section in your `DESCRIPTION` file.
 
@@ -143,10 +144,9 @@ Suggests:
 
 When all of these items are in place, you can test your package using `devtools::install(); testthat::test_local()` or by running ``R CMD check`` on your package. If you are using the RStudio IDE, you can also run Build -> Test Package or Build -> Check Package.
 
-
 `{shinytest2}` requires that your package to be *installed* when testing. [`testthat::test_local()`](https://testthat.r-lib.org/reference/test_package.html) (and related wrappers) eventually call `pkgload::load_all()` to temporarily source the local R package. You can use `test_local()` to test non-`{shinytest2}` tests, but you will need to install your R package to safely execute your `{shinytest2}` tests. If not installed, it will create a confusing situation where your `{shinytest2}` tests are running on a *different* version of your R package (whichever was last installed), than the rest of your tests (the current source).
 
 
 ## Continuous integration
 
-If you would like your package to be tested with every commit, you can set it up with Travis CI as described in Hadley Wickham's [R Packages book](http://r-pkgs.had.co.nz/check.html#travis).
+If you would like your package to be tested with every commit, you can set it up with GitHub Actions. Please see [Using shinytest2 with continuous integration](./use-ci.html) for inspiration.

@@ -273,15 +273,13 @@ The saved test can be moved to a different testing file, e.g. `tests/testthat/te
 This includes those that use the [flexdashboard](http://rmarkdown.rstudio.com/flexdashboard/) package.
 
 Shiny documents have some differences compared to regular Shiny applications, and so the tests are slightly different.
-For an example of an interactive Rmd with tests, see [here](https://github.com/rstudio/shinytest/tree/main/tests/testthat/recorded_tests/rmd).
-TODO-barret; Fix link
+For an example of an interactive Rmd with tests, please follow [this link](https://github.com/rstudio/shinytest2/tree/main/tests/testthat/apps/rmd-shiny).
 
 ### Randomness
 
 In a Shiny Rmd application, the UI of the application is created dynamically, using some randomly generated IDs.
 To make the results repeatable, you must set a random `seed`; otherwise the output will have slight differences in each run.
-See the section on [controlling randomness](in-depth.html#controlling-randomness) for more information.
-TODO-barret; Fix link
+See the section on [controlling random values](in-depth.html#controlling-random-values) for more information.
 
 ### One .Rmd file per directory
 
@@ -302,10 +300,8 @@ rmarkdown::shiny_prerendered_clean("../doc.Rmd")
 
 Alternatively, you can save the generated files, but then the tests will be run with the generated files, so the prerendering step will not be run for future tests.
 
-For an example of a prerendered .Rmd and tests, see [here](https://github.com/rstudio/shinytest/tree/main/tests/testthat/recorded_tests/rmd-prerendered).
-TODO-barret; Fix link
+For an example of a prerendered .Rmd and tests, please follow [this link](https://github.com/rstudio/shinytest2/tree/61d51d9e96640bfae3eeefa12c4b685099b584c8/tests/testthat/apps/rmd-pre).
 
 ## Next
 
-Learn more about shinytest with the [testing in depth](in-depth.html) article.
-TODO-barret; Fix link
+Learn more about shinytest with the [testing in depth](./in-depth.html) article.
