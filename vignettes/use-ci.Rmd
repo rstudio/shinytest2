@@ -85,10 +85,10 @@ on:
   pull_request:
     branches: [main, master]
 
-name: R-CMD-check
+name: test-app
 
 jobs:
-  R-CMD-check:
+  test-app:
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
@@ -97,7 +97,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-20.04,   r: '4.1'}
+          - {os: ubuntu-20.04, r: '4.1'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -116,7 +116,7 @@ jobs:
 
       - uses: r-lib/actions/setup-renv@v2
 
-      - uses: rstudio/shinytest2/check_app@v2
+      - uses: rstudio/shinytest2/actions/test_app@v1
         with:
           path: "."
 ```

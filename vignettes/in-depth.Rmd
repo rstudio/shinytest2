@@ -76,8 +76,7 @@ Multiple calls to `app$set_inputs()` should be reduced to a single line unless t
 
 ### Making expectations
 
-For an indepth discussion of expectations, see the [Robust testing vignette](./robust.Rmd).
-TODO-barret
+For an indepth discussion of expectations, see the [Robust testing vignette](./robust.html).
 
 There are a couple standard ways to make expectations from your `AppDriver` object.
 * `app$expect_values()`: This is the simplest way to make an expectation. It creates a list of values and compares them to the current values of the application. It also takes a debug screenshot and stores it as a snapshot. However, this snapshot will never fail an expectation test. The extra screenshot file is useful for manually determining if UI changes have happened over time while not producing numerous false-positive test failures.
