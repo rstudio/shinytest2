@@ -1,8 +1,6 @@
 ---
 title: "Frequently Asked Questions"
-output:
-  html_document: default
-  pdf_document: default
+output: rmarkdown::html_vignette
 editor_options:
   chunk_output_type: console
 vignette: >

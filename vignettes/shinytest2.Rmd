@@ -1,5 +1,6 @@
 ---
 title: "Getting started with shinytest2"
+output: rmarkdown::html_vignette
 editor_options:
   chunk_output_type: console
   markdown:
