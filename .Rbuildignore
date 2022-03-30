@@ -11,3 +11,4 @@ todo.md
 ^logo$
 ^pkgdown$
 _\.new\.png$
+^actions$
