@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,12 +46,13 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/ci.html">Using shinytest2 with continuous integration</a>
-    <a class="dropdown-item" href="../articles/faq.html">Frequently Asked Questions</a>
     <a class="dropdown-item" href="../articles/in-depth.html">Testing in depth</a>
-    <a class="dropdown-item" href="../articles/migration.html">Migrating from shinytest</a>
-    <a class="dropdown-item" href="../articles/monkey-testing.html">Monkey-testing</a>
-    <a class="dropdown-item" href="../articles/package.html">Using shinytest2 with R packages</a>
+    <a class="dropdown-item" href="../articles/robust.html">Robust testing</a>
+    <a class="dropdown-item" href="../articles/use-ci.html">Using shinytest2 with continuous integration</a>
+    <a class="dropdown-item" href="../articles/use-package.html">Using shinytest2 with R packages</a>
+    <a class="dropdown-item" href="../articles/using-monkey-testing.html">Monkey testing</a>
+    <a class="dropdown-item" href="../articles/z-migration.html">Migrating from shinytest</a>
+    <a class="dropdown-item" href="../articles/zzz-faq.html">Frequently Asked Questions</a>
   </div>
 </li>
 <li class="nav-item">
@@ -78,13 +79,13 @@
 
 
 
-<script src="package_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+<script src="use-package_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Using shinytest2 with R packages</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/rstudio/shinytest2/blob/HEAD/vignettes/package.Rmd" class="external-link"><code>vignettes/package.Rmd</code></a></small>
-      <div class="d-none name"><code>package.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/rstudio/shinytest2/blob/HEAD/vignettes/use-package.Rmd" class="external-link"><code>vignettes/use-package.Rmd</code></a></small>
+      <div class="d-none name"><code>use-package.Rmd</code></div>
     </div>
 
     
@@ -127,7 +128,7 @@
   <span class="fu"><a href="../reference/test_app.html">test_app</a></span><span class="op">(</span><span class="va">appdir</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span></code></pre></div>
 <p>If the application directory is not meant to be public, it can also be located in <code>./tests/testthat/apps</code>. <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> does this with many application and has <code>appdir</code> above point to the relative path to the application.</p>
-<p>For more information about this script, see the <a href="#Test-driver-script-notes">Test driver script notes</a> section below.</p>
+<!-- For more information about this script, see the [Test driver script notes](#Test-driver-script-notes) section below. -->
 </div>
 <div class="section level2">
 <h2 id="application-objects-created-by-functions">Application objects created by functions<a class="anchor" aria-label="anchor" href="#application-objects-created-by-functions"></a>
@@ -142,9 +143,8 @@
 └── tests
     ├── testthat
     │   ├── _snaps
-    │   ├── apps
-    │   │   └── hello-world
-    |   |       └── app.R
+    │   │   └── app-function
+    │   │       └── 001.json
     │   └── test-app-function.R
     └── testthat.R</code></pre>
 <p>The function simply returns an object from <code><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp()</a></code>:</p>
@@ -178,12 +178,13 @@
   <span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span></code></pre></div>
 <p>To help create tests, you can call <code><a href="../reference/record_test.html">record_test()</a></code> on your shiny application object directly. Unfortunately, the test file will not be able to be saved. Instead, the test commands can be copied into a test script manually.</p>
-<p>For more information about this script, see the <a href="#Test-driver-script-notes">Test driver script notes</a> section below.</p>
+<!-- For more information about this script, see the [Test driver script notes](#Test-driver-script-notes) section below. -->
 </div>
 <div class="section level2">
 <h2 id="other-setup-steps">Other setup steps<a class="anchor" aria-label="anchor" href="#other-setup-steps"></a>
 </h2>
 <p>There are a few steps that are needed for both types of tests.</p>
+<p>It is recommended to call <code>shinytest2::use_shinytest()</code> to enable different test config set-ups.</p>
 <p>You will need to add <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> to the <code>Suggests</code> section in your <code>DESCRIPTION</code> file.</p>
 <pre><code><span class="va">Suggests</span><span class="op">:</span>
     <span class="va">shinytest2</span></code></pre>
@@ -193,7 +194,7 @@
 <div class="section level2">
 <h2 id="continuous-integration">Continuous integration<a class="anchor" aria-label="anchor" href="#continuous-integration"></a>
 </h2>
-<p>If you would like your package to be tested with every commit, you can set it up with Travis CI as described in Hadley Wickham’s <a href="http://r-pkgs.had.co.nz/check.html#travis" class="external-link">R Packages book</a>.</p>
+<p>If you would like your package to be tested with every commit, you can set it up with GitHub Actions. Please see <a href="./use-ci.html">Using shinytest2 with continuous integration</a> for inspiration.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

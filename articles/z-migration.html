@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,12 +46,13 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/ci.html">Using shinytest2 with continuous integration</a>
-    <a class="dropdown-item" href="../articles/faq.html">Frequently Asked Questions</a>
     <a class="dropdown-item" href="../articles/in-depth.html">Testing in depth</a>
-    <a class="dropdown-item" href="../articles/migration.html">Migrating from shinytest</a>
-    <a class="dropdown-item" href="../articles/monkey-testing.html">Monkey-testing</a>
-    <a class="dropdown-item" href="../articles/package.html">Using shinytest2 with R packages</a>
+    <a class="dropdown-item" href="../articles/robust.html">Robust testing</a>
+    <a class="dropdown-item" href="../articles/use-ci.html">Using shinytest2 with continuous integration</a>
+    <a class="dropdown-item" href="../articles/use-package.html">Using shinytest2 with R packages</a>
+    <a class="dropdown-item" href="../articles/using-monkey-testing.html">Monkey testing</a>
+    <a class="dropdown-item" href="../articles/z-migration.html">Migrating from shinytest</a>
+    <a class="dropdown-item" href="../articles/zzz-faq.html">Frequently Asked Questions</a>
   </div>
 </li>
 <li class="nav-item">
@@ -78,23 +79,27 @@
 
 
 
-<script src="migration_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+<script src="z-migration_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Migrating from shinytest</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/rstudio/shinytest2/blob/HEAD/vignettes/migration.Rmd" class="external-link"><code>vignettes/migration.Rmd</code></a></small>
-      <div class="d-none name"><code>migration.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/rstudio/shinytest2/blob/HEAD/vignettes/z-migration.Rmd" class="external-link"><code>vignettes/z-migration.Rmd</code></a></small>
+      <div class="d-none name"><code>z-migration.Rmd</code></div>
     </div>
 
     
     
 <div class="section level2">
+<h2 id="migrating-from-shinytest">Migrating from <code>{shinytest}</code><a class="anchor" aria-label="anchor" href="#migrating-from-shinytest"></a>
+</h2>
+<p><a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> is the predecesor to <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>. <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> was implemented using <a href="https://rstudio.github.io/webdriver/" class="external-link"><code>{webdriver}</code></a> which uses <a href="https://phantomjs.org/api/" class="external-link">PhantomJS</a>. PhantomJS has been unsupported since 2017 and does not support displaying <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5. <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> uses <a href="https://github.com/rstudio/chromote" class="external-link">chromote</a> to connect to your locally installed Chrome or Chromium application. So, <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> is able to display <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5.</p>
+<p>To auto migrate your existing <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> tests to <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>, call <code>shinytest2::migrate_from_shinytest(PATH_TO_APP)</code>.</p>
+</div>
+<div class="section level2">
 <h2 id="code-structure">Code structure<a class="anchor" aria-label="anchor" href="#code-structure"></a>
 </h2>
-<p>This article serves as a comprehensive guide to migrate your <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> tests code to the new <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> testing code.</p>
-<p>If possible, use the helper method [<code><a href="../reference/migrate_from_shinytest.html">migrate_from_shinytest()</a></code>] to migrate your <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> tests to <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>.</p>
-<p>In the sub sections below, <code>ShinyDriver</code> is a reference to the <code><a href="https://rdrr.io/pkg/shinytest/man/ShinyDriver.html" class="external-link">shinytest::ShinyDriver</a></code> R6 object. In each code block, the <code>ShinyDriver</code> object will be referred to as <code>old</code>. Similarly, <code>AppDriver</code> is a reference to <code><a href="../reference/AppDriver.html">shinytest2::AppDriver</a></code> R6 object. This object has replaced <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a>’s <code>ShinyDriver</code> object and will be referred to as <code>new</code> in each code block.</p>
+<p>In the sub sections below, <code>ShinyDriver</code> is a reference to the <code><a href="https://rdrr.io/pkg/shinytest/man/ShinyDriver.html" class="external-link">shinytest::ShinyDriver</a></code> R6 object. In each code block, the <code>ShinyDriver</code> object will be referred to as <code>old</code>. Similarly, <code>AppDriver</code> is a reference to <code><a href="../reference/AppDriver.html">shinytest2::AppDriver</a></code> R6 object. <code><a href="../reference/AppDriver.html">shinytest2::AppDriver</a></code> has replaced <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a>’s <code>ShinyDriver</code> object and will be referred to as <code>new</code> in each code block.</p>
 <div class="section level3">
 <h3 id="methods">Methods<a class="anchor" aria-label="anchor" href="#methods"></a>
 </h3>
@@ -439,7 +444,7 @@
 <div class="section level3">
 <h3 id="testing-setup">Testing setup<a class="anchor" aria-label="anchor" href="#testing-setup"></a>
 </h3>
-<p><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> is heavily integrated with the <a href="https://testthat.r-lib.org" class="external-link">testthat</a> testing framework. Similar to <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a>, snapshots are recorded but are recorded via <a href="https://testthat.r-lib.org" class="external-link">testthat</a> snapshots. For more information on the robustness of different testing approaches, please see the <a href="./testing-robustness.html">Testing Robustness</a> vignette. <!-- TODO-barret; Link vignette --></p>
+<p><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> is heavily integrated with the <a href="https://testthat.r-lib.org" class="external-link">testthat</a> testing framework. Similar to <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a>, snapshots are recorded but are recorded via <a href="https://testthat.r-lib.org" class="external-link">testthat</a> snapshots. For more information on the robustness of different testing approaches, please see the <a href="./robust.html">Robust testing</a> vignette.</p>
 <ul>
 <li>
 <code>ShinyDriver$new(suffix=)</code>: Please use <code>AppDriver$new(variant=)</code>.</li>

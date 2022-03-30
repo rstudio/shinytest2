@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,12 +27,13 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/ci.html">Using shinytest2 with continuous integration</a>
-    <a class="dropdown-item" href="articles/faq.html">Frequently Asked Questions</a>
     <a class="dropdown-item" href="articles/in-depth.html">Testing in depth</a>
-    <a class="dropdown-item" href="articles/migration.html">Migrating from shinytest</a>
-    <a class="dropdown-item" href="articles/monkey-testing.html">Monkey-testing</a>
-    <a class="dropdown-item" href="articles/package.html">Using shinytest2 with R packages</a>
+    <a class="dropdown-item" href="articles/robust.html">Robust testing</a>
+    <a class="dropdown-item" href="articles/use-ci.html">Using shinytest2 with continuous integration</a>
+    <a class="dropdown-item" href="articles/use-package.html">Using shinytest2 with R packages</a>
+    <a class="dropdown-item" href="articles/using-monkey-testing.html">Monkey testing</a>
+    <a class="dropdown-item" href="articles/z-migration.html">Migrating from shinytest</a>
+    <a class="dropdown-item" href="articles/zzz-faq.html">Frequently Asked Questions</a>
   </div>
 </li>
 <li class="nav-item">
@@ -58,118 +59,9 @@
       <small class="dont-index">Source: <a href="https://github.com/rstudio/shinytest2/blob/HEAD/todo.md" class="external-link"><code>todo.md</code></a></small>
     </div>
 
+<p>Future release: * GHA integration * upload an artifact with updated snapshots * like fix_all_branches, it must be initiated manually, but <em>automated</em> ### Vignettes: * Getting started * Medium difficulty example: * Use an <code>$expect_screenshot()</code> with a <code>variant</code> * explain what a variant is * How to review different variants</p>
 
-<p>Future release: * GHA integration * upload an artifact with updated snapshots * like fix_all_branches, it must be initiated manually, but <em>automated</em></p>
-<p>handle failures: <a href="https://github.com/r-lib/vdiffr/blob/fc03e91cccac04baa875063513b630d80c02e197/R/expect-doppelganger.R#L127-L151" class="external-link uri">https://github.com/r-lib/vdiffr/blob/fc03e91cccac04baa875063513b630d80c02e197/R/expect-doppelganger.R#L127-L151</a> push_log stores information to a log file that is visible by cran and the testthat fail output logs</p>
-<p>#’ @seealso [testthat::snapshot_review()] and [testthat::snapshot_accept()] if #’ you want to compare or update snapshots after testing. In most cases, the #’ user is prompted to do these tasks interactively, but there are also times #’ where it is useful to call these functions from the console. # Documentation:</p>
-<div class="section level3">
-<h3 id="vignettes">Vignettes:<a class="anchor" aria-label="anchor" href="#vignettes"></a></h3>
-<ul><li>Which do I need and why do I need them?</li>
-<li>Explain testing robustness
-<ul><li>Robust to flakey; Sensitivity to external updates <!-- * `$expect_names(key)` - TODO- add this method; save outputs to snapshots if no key is provided
-    * `$expect_appshot(items = value, screenshot = FALSE)` -->
-<ul><li>
-<code>$expect_values(input, output, export)</code> - TODO- add this method; save outputs to snapshots
-<ul><li><code>$expect_appshot(items = value, screenshot = FALSE)</code></li>
-</ul></li>
-<li>
-<code>$expect_text()</code>
-<ul><li>Text wont really change</li>
-</ul></li>
-<li>
-<code>$expect_html()</code>
-<ul><li>Classes could be added by external packages</li>
-</ul></li>
-<li>
-<code>$expect_appshot()</code>
-<ul><li>images are not reliable</li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ul></div>
-<div class="section level3">
-<h3 id="docs">Docs:<a class="anchor" aria-label="anchor" href="#docs"></a></h3>
-<ul><li>What are the conditions that I need this function?</li>
-<li>Priority sort the App docs methods
-<ul><li>Tell docs that they are sorted for a reason</li>
-</ul></li>
-<li>Add some description about how often we guess people will use the method.
-<ul><li>$execute_script_callback(): rare; Only if your JS requires a callback; Otherwise use $execute_script()</li>
-</ul></li>
-<li>Migration guide from shinytest -&gt; shinytest2</li>
-</ul></div>
-<div class="section level3">
-<h3 id="vignettes-1">Vignettes:<a class="anchor" aria-label="anchor" href="#vignettes-1"></a></h3>
-<ul><li>Getting started
-<ul><li>intro intro intro
-<ul><li>walk through the bare minimum to get started using shinytest2</li>
-<li>Copy source of geyser</li>
-<li>Record test</li>
-<li>run test</li>
-</ul></li>
-<li>Medium difficulty example:
-<ul><li>Use an <code>$expect_screenshot()</code> with a <code>variant</code>
-</li>
-<li>explain what a variant is</li>
-</ul></li>
-<li>How to review different variants
-<ul><li>
-</li></ul></li>
-</ul></li>
-<li>Which do I need and why do I need them?</li>
-<li>Explain testing robustness
-<ul><li>Add a details section in <code>AppDriver</code> docs to summarize this vignette
-<ul><li>Have the methods link to the within page values</li>
-<li>Find a way to link to these methods</li>
-<li>Have all <code>$expect_*()</code> bundled. All <code>$get_*()</code> bundled. Link between paired method.</li>
-</ul></li>
-<li>Robust to flakey; Sensitivity to external updates
-<ul><li>Export internal values</li>
-<li>
-<code>$expect_values(input, output, export)</code> - TODO- add this method; save outputs to snapshots
-<ul><li><code>$expect_appshot(items = value, screenshot = FALSE)</code></li>
-</ul></li>
-<li>
-<code>$expect_text()</code>
-<ul><li>Text wont really change</li>
-<li>Only recommended if you can not use <code>$expect_values()</code>
-<ul><li>Add these types of notes to the standard docs.</li>
-</ul></li>
-</ul></li>
-<li>
-<code>$expect_html()</code>
-<ul><li>Classes could be added by external packages</li>
-</ul></li>
-<li>
-<code>$expect_appshot()</code>
-<ul><li>images are not reliable</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li>Pull over vignettes from {shinytest} where appropriate</li>
-</ul></div>
-<div class="section level3">
-<h3 id="docs-1">Docs:<a class="anchor" aria-label="anchor" href="#docs-1"></a></h3>
-<ul><li>What are the conditions that I need this function?</li>
-<li>Priority sort the App docs methods
-<ul><li>Tell docs that they are sorted for a reason</li>
-</ul></li>
-<li>Add some description about how often we guess people will use the method.
-<ul><li>$execute_script(): [for non-shiny use]; Only if your JS requires a callback; Otherwise use $execute_script()</li>
-</ul></li>
-<li>Migration guide from shinytest -&gt; shinytest2</li>
-</ul></div>
-<div class="section level2">
-<h2 id="release">Release<a class="anchor" aria-label="anchor" href="#release"></a></h2>
-</div>
-<div class="section level2">
-<h2 id="notes-from-david">Notes from David:<a class="anchor" aria-label="anchor" href="#notes-from-david"></a></h2>
-<p>Document: How to set chromote args before starting testing * Link to flags document</p>
-</div>
-
-
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
-    </nav></aside></div>
+  </main></div>
 
 
    </div>

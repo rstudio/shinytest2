@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,12 +46,13 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/ci.html">Using shinytest2 with continuous integration</a>
-    <a class="dropdown-item" href="../articles/faq.html">Frequently Asked Questions</a>
     <a class="dropdown-item" href="../articles/in-depth.html">Testing in depth</a>
-    <a class="dropdown-item" href="../articles/migration.html">Migrating from shinytest</a>
-    <a class="dropdown-item" href="../articles/monkey-testing.html">Monkey-testing</a>
-    <a class="dropdown-item" href="../articles/package.html">Using shinytest2 with R packages</a>
+    <a class="dropdown-item" href="../articles/robust.html">Robust testing</a>
+    <a class="dropdown-item" href="../articles/use-ci.html">Using shinytest2 with continuous integration</a>
+    <a class="dropdown-item" href="../articles/use-package.html">Using shinytest2 with R packages</a>
+    <a class="dropdown-item" href="../articles/using-monkey-testing.html">Monkey testing</a>
+    <a class="dropdown-item" href="../articles/z-migration.html">Migrating from shinytest</a>
+    <a class="dropdown-item" href="../articles/zzz-faq.html">Frequently Asked Questions</a>
   </div>
 </li>
 <li class="nav-item">
@@ -78,13 +79,13 @@
 
 
 
-<script src="ci_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+<script src="use-ci_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Using shinytest2 with continuous integration</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/rstudio/shinytest2/blob/HEAD/vignettes/ci.Rmd" class="external-link"><code>vignettes/ci.Rmd</code></a></small>
-      <div class="d-none name"><code>ci.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/rstudio/shinytest2/blob/HEAD/vignettes/use-ci.Rmd" class="external-link"><code>vignettes/use-ci.Rmd</code></a></small>
+      <div class="d-none name"><code>use-ci.Rmd</code></div>
     </div>
 
     
@@ -150,10 +151,10 @@
 <span id="cb2-6"><a href="#cb2-6"></a><span class="at">  </span><span class="fu">pull_request</span><span class="kw">:</span></span>
 <span id="cb2-7"><a href="#cb2-7"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">main</span><span class="kw">,</span><span class="at"> master</span><span class="kw">]</span></span>
 <span id="cb2-8"><a href="#cb2-8"></a></span>
-<span id="cb2-9"><a href="#cb2-9"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> R-CMD-check</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> test-app</span></span>
 <span id="cb2-10"><a href="#cb2-10"></a></span>
 <span id="cb2-11"><a href="#cb2-11"></a><span class="fu">jobs</span><span class="kw">:</span></span>
-<span id="cb2-12"><a href="#cb2-12"></a><span class="at">  </span><span class="fu">R-CMD-check</span><span class="kw">:</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="at">  </span><span class="fu">test-app</span><span class="kw">:</span></span>
 <span id="cb2-13"><a href="#cb2-13"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ${{ matrix.config.os }}</span></span>
 <span id="cb2-14"><a href="#cb2-14"></a></span>
 <span id="cb2-15"><a href="#cb2-15"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> ${{ matrix.config.os }} (${{ matrix.config.r }})</span></span>
@@ -162,7 +163,7 @@
 <span id="cb2-18"><a href="#cb2-18"></a><span class="at">      </span><span class="fu">fail-fast</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
 <span id="cb2-19"><a href="#cb2-19"></a><span class="at">      </span><span class="fu">matrix</span><span class="kw">:</span></span>
 <span id="cb2-20"><a href="#cb2-20"></a><span class="at">        </span><span class="fu">config</span><span class="kw">:</span></span>
-<span id="cb2-21"><a href="#cb2-21"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="kw">{</span><span class="fu">os</span><span class="kw">:</span><span class="at"> ubuntu-20.04</span><span class="kw">,</span><span class="at">   </span><span class="fu">r</span><span class="kw">:</span><span class="at"> </span><span class="st">'4.1'</span><span class="kw">}</span></span>
+<span id="cb2-21"><a href="#cb2-21"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="kw">{</span><span class="fu">os</span><span class="kw">:</span><span class="at"> ubuntu-20.04</span><span class="kw">,</span><span class="at"> </span><span class="fu">r</span><span class="kw">:</span><span class="at"> </span><span class="st">'4.1'</span><span class="kw">}</span></span>
 <span id="cb2-22"><a href="#cb2-22"></a></span>
 <span id="cb2-23"><a href="#cb2-23"></a><span class="at">    </span><span class="fu">env</span><span class="kw">:</span></span>
 <span id="cb2-24"><a href="#cb2-24"></a><span class="at">      </span><span class="fu">GITHUB_PAT</span><span class="kw">:</span><span class="at"> ${{ secrets.GITHUB_TOKEN }}</span></span>
@@ -181,7 +182,7 @@
 <span id="cb2-37"><a href="#cb2-37"></a></span>
 <span id="cb2-38"><a href="#cb2-38"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-renv@v2</span></span>
 <span id="cb2-39"><a href="#cb2-39"></a></span>
-<span id="cb2-40"><a href="#cb2-40"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> rstudio/shinytest2/check_app@v2</span></span>
+<span id="cb2-40"><a href="#cb2-40"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> rstudio/shinytest2/actions/test_app@v1</span></span>
 <span id="cb2-41"><a href="#cb2-41"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
 <span id="cb2-42"><a href="#cb2-42"></a><span class="at">          </span><span class="fu">path</span><span class="kw">:</span><span class="at"> </span><span class="st">"."</span></span></code></pre></div>
 <p>You should change the <code>os</code> and <code>r</code> version (set to <code>ubuntu-20.04</code> and <code>4.1</code> above) to whatever operating system and R version is being used on the platform that your application will be deployed to.</p>
@@ -191,26 +192,41 @@
 <code>renv.lock</code>, <code>renv/activate.R</code>, <code>.Rprofile</code><a class="anchor" aria-label="anchor" href="#renv-lock-renvactivate-r--rprofile"></a>
 </h3>
 <p><a href="https://rstudio.github.io/renv/" class="external-link">renv</a> project-local dependency management system for projects. This is useful for Shiny applications where using specific package versions for all of your Shiny app dependencies. <a href="https://rstudio.github.io/renv/" class="external-link">renv</a> uses the same mechanism that is used by shinyapps.io and RStudio Connect.</p>
-<p><a href="https://rstudio.github.io/renv/" class="external-link">renv</a> autogenerates these three files using is<code>renv::init()</code> and <code>renv::snapshot()</code>.</p>
-<table style="width:32%;" class="table">
-<colgroup><col width="31%"></colgroup>
+<p><a href="https://rstudio.github.io/renv/" class="external-link">renv</a> auto-generates these three files using is<code>renv::init()</code> and <code>renv::snapshot()</code>.</p>
+<table class="table">
+<colgroup>
+<col width="18%">
+<col width="81%">
+</colgroup>
 <thead><tr class="header">
-<th align="left">| File | Usage |</th>
+<th align="left">File</th>
+<th align="left">Usage</th>
 </tr></thead>
-<tbody><tr class="odd">
-<td align="left">| <code>.Rprofile</code> | Used to activate renv for new R sessions launched in the project. | | <code>renv.lock</code> | The lockfile, describing the state of your project’s library at some point in time. | | <code>renv/activate.R</code> | The activation script run by the project <code>.Rprofile</code>. |</td>
-</tr></tbody>
+<tbody>
+<tr class="odd">
+<td align="left"><code>.Rprofile</code></td>
+<td align="left">Used to activate <a href="https://rstudio.github.io/renv/" class="external-link">renv</a> for new R sessions launched in the project.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>renv.lock</code></td>
+<td align="left">The lockfile, describing the state of your project’s library at some point in time.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>renv/activate.R</code></td>
+<td align="left">The activation script run by the project <code>.Rprofile</code>.</td>
+</tr>
+</tbody>
 </table>
 <p>To create <code>.Rprofile</code> and <code>renv/activate.R</code>, call <code>renv::init()</code> within your App project. To create / update <code>renv.lock</code>, call <code>renv::snapshot()</code>.</p>
 <p><strong>Whenever you update packages on your development machine, you should run <code>renv::snapshot()</code> command again to make sure the packages used on GitHub stay in sync.</strong></p>
 <p>To learn more about <a href="https://rstudio.github.io/renv/" class="external-link">renv</a>, please see their <a href="https://rstudio.github.io/renv/articles/renv.html" class="external-link">Introduction to renv</a> and <a href="https://rstudio.github.io/renv/articles/collaborating.html" class="external-link">Colaborating with renv</a> articles.</p>
-<p>An alternative to using packrat is to create a <code>DESCRIPTION</code> file. This will not lock package versions; instead, it will use the latest version of each package from CRAN.</p>
+<p>An alternative to using <a href="https://rstudio.github.io/renv/" class="external-link">renv</a> is to create a <code>DESCRIPTION</code> file. This will not lock package versions; instead, it will use the latest version of each package from CRAN.</p>
 </div>
 <div class="section level3">
 <h3 id="running-the-first-build">Running the first build<a class="anchor" aria-label="anchor" href="#running-the-first-build"></a>
 </h3>
 <p>Once you’ve added these files, commit them and push to GitHub. This will trigger a build on GitHub Actions (GHA).</p>
-<p>The first build of your package on GHA will generally take much longer than subsequent runs, because it needs to install all the R packages the first time. After a successful run, the packages are cached, so the builds should be much faster.</p>
+<p>The first successful run of your workflow on GHA will generally take much longer than subsequent runs, because it needs to install all the R packages the first time. After a successful run, the packages are cached, so the builds should be much faster.</p>
 </div>
 </div>
 <div class="section level2">
@@ -270,7 +286,7 @@
 <div class="section level2">
 <h2 id="testing-applications-in-a-package">Testing applications in a package<a class="anchor" aria-label="anchor" href="#testing-applications-in-a-package"></a>
 </h2>
-<p>See the <a href="package.html">Using shinytest2 with R packages</a> article.</p>
+<p>See the <a href="./use-package.html">Using shinytest2 with R packages</a> article.</p>
 </div>
 <div class="section level2">
 <h2 id="frequently-asked-questions">Frequently asked questions<a class="anchor" aria-label="anchor" href="#frequently-asked-questions"></a>

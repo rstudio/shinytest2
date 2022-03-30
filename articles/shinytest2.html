@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,12 +46,13 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/ci.html">Using shinytest2 with continuous integration</a>
-    <a class="dropdown-item" href="../articles/faq.html">Frequently Asked Questions</a>
     <a class="dropdown-item" href="../articles/in-depth.html">Testing in depth</a>
-    <a class="dropdown-item" href="../articles/migration.html">Migrating from shinytest</a>
-    <a class="dropdown-item" href="../articles/monkey-testing.html">Monkey-testing</a>
-    <a class="dropdown-item" href="../articles/package.html">Using shinytest2 with R packages</a>
+    <a class="dropdown-item" href="../articles/robust.html">Robust testing</a>
+    <a class="dropdown-item" href="../articles/use-ci.html">Using shinytest2 with continuous integration</a>
+    <a class="dropdown-item" href="../articles/use-package.html">Using shinytest2 with R packages</a>
+    <a class="dropdown-item" href="../articles/using-monkey-testing.html">Monkey testing</a>
+    <a class="dropdown-item" href="../articles/z-migration.html">Migrating from shinytest</a>
+    <a class="dropdown-item" href="../articles/zzz-faq.html">Frequently Asked Questions</a>
   </div>
 </li>
 <li class="nav-item">
@@ -279,11 +280,11 @@ Duration: 2.2 s
 <h2 id="interactive-r-markdown-documents">Interactive R Markdown documents<a class="anchor" aria-label="anchor" href="#interactive-r-markdown-documents"></a>
 </h2>
 <p><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> can be used with <a href="http://rmarkdown.rstudio.com/authoring_shiny.html" class="external-link">interactive R Markdown documents</a> that use <code>runtime: shiny</code> or <code>server: shiny</code> (sometimes also referred to as Shiny documents). This includes those that use the <a href="http://rmarkdown.rstudio.com/flexdashboard/" class="external-link">flexdashboard</a> package.</p>
-<p>Shiny documents have some differences compared to regular Shiny applications, and so the tests are slightly different. For an example of an interactive Rmd with tests, see <a href="https://github.com/rstudio/shinytest/tree/main/tests/testthat/recorded_tests/rmd" class="external-link">here</a>. TODO-barret; Fix link</p>
+<p>Shiny documents have some differences compared to regular Shiny applications, and so the tests are slightly different. For an example of an interactive Rmd with tests, please follow <a href="https://github.com/rstudio/shinytest2/tree/main/tests/testthat/apps/rmd-shiny" class="external-link">this link</a>.</p>
 <div class="section level3">
 <h3 id="randomness">Randomness<a class="anchor" aria-label="anchor" href="#randomness"></a>
 </h3>
-<p>In a Shiny Rmd application, the UI of the application is created dynamically, using some randomly generated IDs. To make the results repeatable, you must set a random <code>seed</code>; otherwise the output will have slight differences in each run. See the section on <a href="in-depth.html#controlling-randomness">controlling randomness</a> for more information. TODO-barret; Fix link</p>
+<p>In a Shiny Rmd application, the UI of the application is created dynamically, using some randomly generated IDs. To make the results repeatable, you must set a random <code>seed</code>; otherwise the output will have slight differences in each run. See the section on <a href="in-depth.html#controlling-random-values">controlling random values</a> for more information.</p>
 </div>
 <div class="section level3">
 <h3 id="one--rmd-file-per-directory">One .Rmd file per directory<a class="anchor" aria-label="anchor" href="#one--rmd-file-per-directory"></a>
@@ -298,13 +299,13 @@ Duration: 2.2 s
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">rmarkdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgs.rstudio.com/rmarkdown/reference/shiny_prerendered_clean.html" class="external-link">shiny_prerendered_clean</a></span><span class="op">(</span><span class="st">"../doc.Rmd"</span><span class="op">)</span></code></pre></div>
 <p>Alternatively, you can save the generated files, but then the tests will be run with the generated files, so the prerendering step will not be run for future tests.</p>
-<p>For an example of a prerendered .Rmd and tests, see <a href="https://github.com/rstudio/shinytest/tree/main/tests/testthat/recorded_tests/rmd-prerendered" class="external-link">here</a>. TODO-barret; Fix link</p>
+<p>For an example of a prerendered .Rmd and tests, please follow <a href="https://github.com/rstudio/shinytest2/tree/61d51d9e96640bfae3eeefa12c4b685099b584c8/tests/testthat/apps/rmd-pre" class="external-link">this link</a>.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="next">Next<a class="anchor" aria-label="anchor" href="#next"></a>
 </h2>
-<p>Learn more about shinytest with the <a href="in-depth.html">testing in depth</a> article. TODO-barret; Fix link</p>
+<p>Learn more about shinytest with the <a href="./in-depth.html">testing in depth</a> article.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

@@ -10,28 +10,31 @@
     <loc>https://rstudio.github.io/shinytest2/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://rstudio.github.io/shinytest2/articles/ci.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/articles/faq.html</loc>
-  </url>
-  <url>
     <loc>https://rstudio.github.io/shinytest2/articles/in-depth.html</loc>
   </url>
   <url>
     <loc>https://rstudio.github.io/shinytest2/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://rstudio.github.io/shinytest2/articles/migration.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/articles/monkey-testing.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/articles/package.html</loc>
+    <loc>https://rstudio.github.io/shinytest2/articles/robust.html</loc>
   </url>
   <url>
     <loc>https://rstudio.github.io/shinytest2/articles/shinytest2.html</loc>
+  </url>
+  <url>
+    <loc>https://rstudio.github.io/shinytest2/articles/use-ci.html</loc>
+  </url>
+  <url>
+    <loc>https://rstudio.github.io/shinytest2/articles/use-package.html</loc>
+  </url>
+  <url>
+    <loc>https://rstudio.github.io/shinytest2/articles/using-monkey-testing.html</loc>
+  </url>
+  <url>
+    <loc>https://rstudio.github.io/shinytest2/articles/z-migration.html</loc>
+  </url>
+  <url>
+    <loc>https://rstudio.github.io/shinytest2/articles/zzz-faq.html</loc>
   </url>
   <url>
     <loc>https://rstudio.github.io/shinytest2/authors.html</loc>
