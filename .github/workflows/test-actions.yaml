@@ -1,12 +1,10 @@
-# Workflow derived from https://github.com/r-lib/actions/blob/v2-branch/examples/check-standard.yaml
-# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
 
-name: test-app
+name: test-actions
 
 jobs:
   test-app:
@@ -41,6 +39,9 @@ jobs:
             "local::."
 
       - name: Test app
-        uses: rstudio/shinytest2/actions/test-app@robust_testing
+        uses: rstudio/shinytest2/actions/test-app@main
+        # uses: rstudio/shinytest2/actions/test-app@specific_branch
+        ## Suggested usage
+        # uses: rstudio/shinytest2/actions/test-app@v1
         with:
           app-dir: "tests/testthat/apps/hello"
