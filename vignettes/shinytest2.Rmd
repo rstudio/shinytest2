@@ -87,7 +87,9 @@ This also launches a special Shiny application in the current R process which di
 We'll refer to this as the **recorder app**.
 You will see something like this:
 
-![](images/record-simple-app.png)
+```{r echo=FALSE, out.width='100%', fig.align='center'}
+knitr::include_graphics("images/record-simple-app.png")
+```
 
 On the left is the target app (in this case, the "What is your name" app), and on the right is the recorder app sidebar.
 Note that you may need to make the browser window wider because the recorder sidebar occupies some space.
@@ -106,7 +108,9 @@ To do this, click the `Expect values` button on the recorder app.
 
 After modifying some `input`s and making an expectation, it will look something like this:
 
-![](images/record-simple-app-2.png)
+```{r echo=FALSE, out.width='100%', fig.align='center'}
+knitr::include_graphics("images/record-simple-app-2.png")
+```
 
 It is also possible to take a *targeted* value expectation.
 This is a snapshot of one or more specified `output` (instead of the default, which is to snapshot the entire application).
@@ -247,7 +251,9 @@ To view the differences, follow the prompted code `testthat::snapshot_review('sh
 
 It will look something like this:
 
-![](images/diffviewer-1.png)
+```{r echo=FALSE, out.width='100%', fig.align='center'}
+knitr::include_graphics("images/diffviewer-1.png")
+```
 
 After inspecting the changes, you can choose to update the expected results (that is, replace the old expected results with the new current results), or to just quit without updating.
 
@@ -261,7 +267,7 @@ In the example above, we had a single test script, named `test-shinytest2.R`.
 If you want to have more than one set of tests for an application, you can record new tests, each with a unique name.
 You can enter the name when recording your tests:
 
-```{r echo=FALSE, eval=TRUE}
+```{r echo=FALSE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/record-name.png")
 ```
 

@@ -327,7 +327,9 @@ plot_app <- shinyApp(ui = ui, server = server)
 plot_app
 ```
 
-![](./images/plot-app.png)
+```{r echo=FALSE, out.width='100%', fig.align='center'}
+knitr::include_graphics("images/plot-app.png")
+```
 
 Both `dt` and `plot_obj` have been `export`ed. This means that they are available when executing `AppDriver$get_values()`, `AppDriver$get_value()`, and `AppDriver$expect_values()`.
 
@@ -526,4 +528,3 @@ All `AppDriver$expect_*()` should have their snapshots manually inspected when f
   * Pro: A picture can be worth a thousand [tests]
   * Con: Screenshot reproducibility is **very** brittle to non-Shiny changes
   * Get: `AppDriver$get_screenshot()`
-

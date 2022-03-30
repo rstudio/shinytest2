@@ -12,3 +12,6 @@ todo.md
 ^pkgdown$
 _\.new\.png$
 ^actions$
+^vignettes/images$
+^doc$
+^Meta$

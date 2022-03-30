@@ -12,12 +12,10 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-```
-
-```{r setup}
 library(shinytest2)
 library(shiny)
 ```
+
 
 # Monkey (headless) testing with `{shinytest2}`
 
@@ -78,6 +76,7 @@ chromote::set_chrome_args(
   c(
     chromote::default_chrome_args(),
     # Custom flags: see https://peter.sh/experiments/chromium-command-line-switches/
+  )
 )
 ```
 
@@ -87,7 +86,7 @@ without) such that you don't need to worry too much about this.
 If you run this script locally, you may add `view = TRUE` to open the Chrome Devtools, which will significantly ease the testing calibration. I highly recommend to create the test protocol locally and then move to CI/CD later when all bugs are fixed. In the below figure, the application is shown on the left side panel. The top-right side panel shows the DOM elements (default) and the bottom-right side panel displays the JavaScript console output.
 
 ```{r echo=FALSE, out.width='100%', fig.align='center'}
-knitr::include_graphics("figures/gremlins-start.png")
+knitr::include_graphics("images/gremlins-start.png")
 ```
 
 ## Injecting gremlins.js
@@ -120,7 +119,7 @@ If `undefined` is returned instead, it means something went wrong. This is gener
 is blocked by the network. In this case, let's see what we can do in the next part.
 
 ```{r echo=FALSE, out.width='100%', fig.align='center'}
-knitr::include_graphics("figures/gremlins-inject.png")
+knitr::include_graphics("images/gremlins-inject.png")
 ```
 
 
@@ -182,7 +181,7 @@ headless_app$run_js("gremlins.createHorde().unleash();")
 Result is shown in the gif below.
 
 ```{r echo=FALSE, out.width='100%', fig.align='center'}
-knitr::include_graphics("figures/gremlins-attack.gif")
+knitr::include_graphics("images/gremlins-attack.gif")
 ```
 
 #### Optimized testing
@@ -191,7 +190,7 @@ Does it really makes sense to invoke all species given we only have a slider? Ab
 In the following code, we only want to test the slider input.
 
 ```{r echo=FALSE, out.width='100%', fig.align='center'}
-knitr::include_graphics("figures/gremlins-slider-handle.png")
+knitr::include_graphics("images/gremlins-slider-handle.png")
 ```
 
 The best species to perform this task is the `toucher`, which is able to randomly move the slider input. The documentation specifies many events such as tap, doubletap, gesture and multitouch. It seems more relevant to apply only gesture, consisting of dragging the slider on the x-axis (note: gesture also consider the y-axis which does not make sense for the slider, which is a gremlins.js limitation. This however won't prevent our test from running). Also, we target the slider handle by its class `irs-handle single` to ensure we don't touch any other element and increase the number of maximum touch from 2 to 200. Note how precious is the HTML inspector, which allows to seamlessly inspect and extract any class or id. The __log__ parameter enables logging in the JavaScript console:
@@ -230,7 +229,7 @@ If you are running on CI/CD and can't see the Chrome Devtools, you can still dis
 monkey testing script.
 
 ```{r echo=FALSE, out.width='100%', fig.align='center'}
-knitr::include_graphics("figures/gremlins-logs.png")
+knitr::include_graphics("images/gremlins-logs.png")
 ```
 
 
@@ -261,7 +260,7 @@ headless_app$get_screenshot("gremlins.png")
 ```
 
 ```{r echo=FALSE, out.width='100%', fig.align='center'}
-knitr::include_graphics("figures/gremlins-attack-refined.gif")
+knitr::include_graphics("images/gremlins-attack-refined.gif")
 ```
 
 
