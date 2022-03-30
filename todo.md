@@ -11,21 +11,8 @@ Future release:
 
 # Documentation:
 
-### Docs:
-* What are the conditions that I need this function?
-* Priority sort the App docs methods
-  * Tell docs that they are sorted for a reason
-* Add some description about how often we guess people will use the method.
-  * $execute_script_callback(): rare; Only if your JS requires a callback; Otherwise use $execute_script()
-* Migration guide from shinytest -> shinytest2
-
 ### Vignettes:
 * Getting started
-  * intro intro intro
-    * walk through the bare minimum to get started using shinytest2
-    * Copy source of geyser
-    * Record test
-    * run test
   * Medium difficulty example:
     * Use an `$expect_screenshot()` with a `variant`
     * explain what a variant is

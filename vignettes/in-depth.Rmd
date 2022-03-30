@@ -446,12 +446,15 @@ if (isTRUE(getOption("shiny.testmode"))) {
 }
 ```
 
+## Using `variant` to expect different snapshots
 
-<!-- TODO-barret; talk about variants
-  * Medium difficulty example:
-    * Use an `$expect_screenshot()` with a `variant`
-    * explain what a variant is -->
+You can variants to deal with cases where the snapshot output varies and you want to capture and test the variations. Common use cases include variations for operating system, R version, or version of key dependency. Variants are an advanced feature.
 
+When you use them, you'll need to carefully think about your testing strategy to ensure that all important variants are covered by automated tests, and ensure that you have a way to get snapshot changes out of your CI system and back into the repo.
+
+It is recommended to use `AppDriver$new(variant= platform_variant())` to capture the operating system and R version where the test is running. Variants are required when calling `$expect_screenshot()`. A `NULL` value may be used, but is not recommended for testing reproducibility.
+
+All `{shinytest2}` expectation methods eventually call [`testthat::expect_snapshot_file()`](https://testthat.r-lib.org/reference/expect_snapshot_file.html) to save the snapshot files. Snapshot expectations will only compare to their variant's version of the snapshot file.
 
 ## Limitations
 

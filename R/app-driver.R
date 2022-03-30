@@ -10,6 +10,17 @@ NULL
 #' a full simulation of a Shiny app so that you can test user interactions
 #' with a live app.
 #'
+#' Methods described below are ordered by perceived popularity.
+#' _Expect_ methods are grouped next to their corresponding _get_ methods.
+#'
+#' @section Vignettes:
+#'
+#' Please see [Testing in depth](https://rstudio.github.io/shinytest2/articles/in-depth.html)
+#' for more details about the different expectation methods.
+#'
+#' Please see [Robust testing](https://rstudio.github.io/shinytest2/articles/robust.html)
+#' for more details about the cost / benefits for each expectation method.
+#'
 #' @section Start-up failure:
 #'
 #' If the app throws an error during initialization, the `AppDriver` will
@@ -133,7 +144,7 @@ NULL
 #' @importFrom R6 R6Class
 #' @seealso [`platform_variant()`], [`use_shinytest2_test()`]
 #' @export
-AppDriver <- R6Class(# nolint
+AppDriver <- R6Class( # nolint
   "AppDriver",
   cloneable = FALSE,
   private = list(
@@ -271,6 +282,8 @@ AppDriver <- R6Class(# nolint
     #'
     #' Calls `$view()` on the [`ChromoteSession`] object to _view_ your Shiny
     #' application in a Chrome browser.
+    #'
+    #' This method is very helpful for debugging while writing your tests.
     #' @examples
     #' \dontrun{
     #' # Open app in Chrome
@@ -281,203 +294,185 @@ AppDriver <- R6Class(# nolint
     },
 
 
-    #' @description
-    #' Expect snapshot of UI text
+    #' @description Click an element
     #'
-    #' `$expect_text()` will extract the text value of all matching elements via
-    #' `TAG.textContent` and store them in a snapshot file. This method is more
-    #' robust to internal package change as only the text values will be
-    #' maintained. Note, this method will not retrieve any `<input />` value's
-    #' text content, e.g. text inputs or text areas, as the input values are not
-    #' stored in the live HTML.
+    #' Find a Shiny input/output value or DOM CSS selector and click it using
+    #' the [DOM method
+    #' `TAG.click()`](https://www.w3schools.com/jsref/met_html_click.asp).
     #'
-    #' When possible, use `$expect_text()` over `$expect_html()` to allow
-    #' package authors room to alter their HTML structures. The resulting array
-    #' of `TAG.textContent` values found will be stored in a snapshot file.
+    #' This method can be used to click input buttons and other elements that
+    #' need to simulate a click action.
     #'
-    #' @param selector A DOM CSS selector to be passed into `document.querySelectorAll()`
-    #' @examples
-    #' \dontrun{
-    #' hello_app <- system.file("examples/01_hello", package = "shiny")
-    #' app <- AppDriver$new(hello_app)
-    #'
-    #' # Make a snapshot of `"Hello Shiny!"`
-    #' app$expect_text("h2")
-    #' }
-    expect_text = function(selector, ..., cran = FALSE) {
-      app_expect_text(self, private, selector, ..., cran = cran)
-    },
-    #' @description
-    #' Get UI text
-    #'
-    #' `$get_text()` will extract the text value of all matching elements via
-    #' `TAG.textContent`. Note, this method will not retrieve any `<input />`
-    #' value's text content, e.g. text inputs or text areas, as the input values
-    #' are not stored in the live HTML.
-    #'
-    #' @param selector A DOM CSS selector to be passed into `document.querySelectorAll()`
-    #' @return A vector of character values
-    #' @examples
-    #' \dontrun{
-    #' hello_app <- system.file("examples/01_hello", package = "shiny")
-    #' app <- AppDriver$new(hello_app)
-    #'
-    #' app$get_text("h2")
-    #' #> [1] "Hello Shiny!"
-    #' }
-    get_text = function(selector) {
-      app_get_text(self, private, selector = selector)
-    },
-
-
-    #' @description Expect snapshot of UI HTML
-    #'
-    #' `$expect_html()` will extract the full DOM structures of each matching
-    #' element and store them in a snapshot file. This method captures internal
-    #' DOM structure which may be brittle to changes by external authors or
-    #' dependencies. Note, this method will not retrieve any `<input />` value's
-    #' text content, e.g. text inputs or text areas, as the input values are not
-    #' stored in the live HTML.
-    #'
-    #' When possible, use `$expect_text()` over `$expect_html()` to allow
-    #' package authors room to alter their HTML structures. The resulting array
-    #' of `TAG.textContent` values found will be stored in a snapshot file.
-    #'
-    #' @param selector A DOM selector to be passed into `document.querySelectorAll()`
-    #' @param outer_html If `TRUE` (default), the full DOM structure will be returned (`TAG.outerHTML`).
-    #'   If `FALSE`, the full DOM structure of the child elements will be returned (`TAG.innerHTML`).
-    #' @examples
-    #' \dontrun{
-    #' app_path <- system.file("examples/04_mpg", package = "shiny")
-    #' app <- AppDriver$new(app_path)
-    #' # Save a snapshot of the `caption` output
-    #' app$expect_html("#caption")
-    #' }
-    expect_html = function(selector, ..., outer_html = TRUE, cran = FALSE) {
-      app_expect_html(self, private, selector, ..., outer_html = outer_html, cran = cran)
-    },
-    #' @description Get UI HTML
-    #' @param selector A DOM selector to be passed into `document.querySelectorAll()`
-    #' @param outer_html If `TRUE`, the full DOM structure will be returned (`TAG.outerHTML`).
-    #'   If `FALSE`, the full DOM structure of the child elements will be returned (`TAG.innerHTML`).
-    #' @examples
-    #' \dontrun{
-    #' app_path <- system.file("examples/03_reactivity", package = "shiny")
-    #' app <- AppDriver$new(app_path, check_names = FALSE)
-    #' app$set_inputs(caption = "Custom value!")
-    #' cat(app$get_html(".shiny-input-container")[1])
-    #' #> <div class="form-group shiny-input-container">
-    #' #>   <label class="control-label" id="caption-label" for="caption">Caption:</label>
-    #' #>   <input id="caption" type="text" class="form-control shiny-bound-input" value="Data Summary">
-    #' #> </div>
-    #' ## ^^ No update to the DOM of `caption`
-    #' }
-    get_html = function(selector, ..., outer_html = TRUE) {
-      app_get_html(self, private, selector, ..., outer_html = outer_html)
-    },
-
-    #' @description
-    #' Expect snapshot of JavaScript script output
-    #'
-    #' This is a building block function that should be called by other functions.
-    #' For example, `$expect_text()` and `$expect_html()` are thin wrappers around this function.
-    #'
-    #' @param script A string containing the JavaScript script to be executed.
-    #' @param file A file containing JavaScript code to be read and used as the `script`. Only one of `script` or `file` can be specified.
-    #' @param pre_snapshot A function to be called on the result of the script before taking the snapshot.
-    #'   `$expect_html()` and `$expect_text()` both use [`unlist()`].
+    #' @param input,output,selector A name of an Shiny `input`/`output` value or
+    #'   a DOM CSS selector. Only one of these may be used.
+    #' @param ... If `input` is used, all extra arguments are passed to
+    #'   `$set_inputs(!!input := "click", ...)`. This means that the
+    #'   `AppDriver` will wait until an output has been updated within the
+    #'   specified `timeout_`. When clicking any other content, `...` must be empty.
     #' @examples
     #' \dontrun{
     #' app_path <- system.file("examples/07_widgets", package = "shiny")
     #' app <- AppDriver$new(app_path)
     #'
-    #' # Track how many clicks are given to `#update` button
-    #' app$run_js("
-    #'   window.test_counter = 0;
-    #'   $('#update').click(() => window.test_counter++);
-    #' ")
-    #' app$set_inputs(obs = 20)
-    #' # Click the update button, incrementing the counter
+    #' tmpfile <- write.csv(cars, "cars.csv")
+    #' app$upload_file(file1 = tmpfile)
+    #' cat(app$get_text("#view"))
+    #' app$set_inputs(dataset = "cars", obs = 6)
     #' app$click("update")
-    #' # Save a snapshot of number of clicks (1)
-    #' app$expect_js("window.test_counter;")
+    #' cat(app$get_text("#view"))
     #' }
-    expect_js = function(
-      script = missing_arg(),
-      ...,
-      file = missing_arg(),
-      timeout = 15 * 1000,
-      pre_snapshot = NULL,
-      cran = FALSE
+    click = function(
+      input = missing_arg(), output = missing_arg(), selector = missing_arg(),
+      ...
     ) {
-      app_expect_js(
-        self, private,
-        script = script,
-        ...,
-        file = file, timeout = timeout, pre_snapshot = pre_snapshot, cran = cran
+      app_click(self, private, input = input, output = output, selector = selector, ...)
+    },
+
+    #' @description Set input values
+    #'
+    #' Set Shiny inputs by sending the value to the Chrome browser and
+    #' programaticly updating the values. Given `wait_ = TRUE`, the method will
+    #' not return until an output value has been updated.
+    #'
+    #' @param ... Name-value pairs, `component_name_1 = value_1, component_name_2 = value_2` etc.
+    #'   Input with name `component_name_1` will be assigned value `value_1`.
+    #' @param allow_no_input_binding_ When setting the value of an input, allow
+    #'   it to set the value of an input even if that input does not have an
+    #'   input binding. This is useful to replicate behavior like hovering over
+    #'   a \pkg{plotly} plot.
+    #' @param priority_ Sets the event priority. For expert use only: see
+    #'   <https://shiny.rstudio.com/articles/communicating-with-js.html#values-vs-events> for details.
+    #' @examples
+    #' \dontrun{
+    #' app_path <- system.file("examples/07_widgets", package = "shiny")
+    #' app <- AppDriver$new(app_path)
+    #' cat(app$get_text("#view"))
+    #' app$set_inputs(dataset = "cars", obs = 6)
+    #' app$click("update")
+    #' cat(app$get_text("#view"))
+    #' }
+    set_inputs = function(
+      ...,
+      wait_ = TRUE,
+      timeout_ = 3 * 1000,
+      allow_no_input_binding_ = FALSE,
+      priority_ = c("input", "event")
+    ) {
+      app_set_inputs(
+        self, private, ..., wait_ = wait_, timeout_ = timeout_,
+        allow_no_input_binding_ = allow_no_input_binding_, priority_ = priority_
       )
     },
 
 
-    #' @description
-    #' Expect a downloadable file
+    #' @description Upload a file
     #'
-    #' Given a [shiny::downloadButton()]/[shiny::downloadLink()] `output` ID, the corresponding
-    #' file will be downloaded and saved as a snapshot file.
-    #'
-    #' @param output `output` ID of [shiny::downloadButton()]/[shiny::downloadLink()]
-    #' @param name File name to save file to (including file name extension). The default, `NULL`,
-    #'   generates an ascending sequence of names: `001.download`,
-    #'   `002.download`, etc.
+    #' Uploads a file to the specified file input.
+    #' @param ... Name-path pair, e.g. `component_name = file_path`. The file located at
+    #' `file_path` will be uploaded to file input with name `component_name`.
     #' @examples
     #' \dontrun{
-    #' app_path <- system.file("examples/10_download", package = "shiny")
+    #' app_path <- system.file("examples/09_upload", package = "shiny")
     #' app <- AppDriver$new(app_path)
     #'
-    #' # Save snapshot of rock.csv as 001.download
-    #' # Save snapshot value of `rock.csv` to capture default file name
-    #' app$expect_download("downloadData")
+    #' # Save example file
+    #' tmpfile <- tempfile(fileext = ".csv")
+    #' write.csv(cars, tmpfile, row.names = FALSE)
+    #'
+    #' # Upload file to input named: file1
+    #' app$upload_file(file1 = tmpfile)
     #' }
-    expect_download = function(output, ..., name = NULL, cran = FALSE) {
-      app_expect_download(self, private, output = output, ..., name = name, cran = cran)
+    upload_file = function(..., wait_ = TRUE, timeout_ = 3 * 1000) {
+      app_upload_file(self, private, ..., wait_ = wait_, timeout_ = timeout_)
     },
+
     #' @description
-    #' Get downloadable file
+    #' Expect `input`, `output`, and `export` values
     #'
-    #' Given a [shiny::downloadButton()]/[shiny::downloadLink()] `output` ID, the corresponding
-    #' file will be downloaded and saved as a file.
+    #' A JSON snapshot is saved of given the results from the underlying call to `$get_values()`.
     #'
-    #' @param output `output` ID of [shiny::downloadButton()]/[shiny::downloadLink()]
-    #' @param filename File path to save the downloaded file to.
-    #' @return
-    #' `$get_download()` will return the final save location of the file. This
-    #' location can change depending on the value of `filename` and response
-    #' headers.
+    #' Note, values that contain environments or other values that will have
+    #' trouble serializing may not work well. Instead, these objects should be
+    #' manually inspected and have their components tested individually.
     #'
-    #' Location logic:
-    #' * If `filename` is not NULL, `filename` will be returned.
-    #' * If a [\code{content-disposition} \code{filename}](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition) is provided,
-    #' then a temp file containing this `filename` will be
-    #' returned.
-    #' * Otherwise, a tempfile ending in `.download` will be returned.
+    #' Please see [Robust testing](https://rstudio.github.io/shinytest2/articles/robust.html) for more details.
+    #'
+    #' @param name The file name to be used for the snapshot. The file extension
+    #'   will be overwritten to `.json`. By default, the `name` supplied to
+    #'   `app` on initialization with a counter will be used (e.g. `"NAME-001.json"`).
+    #' @param input,output,export
+    #'   Depending on which parameters are supplied, different return values can occur:
+    #'     * If `input`, `output`, and `export` are all missing, then all values are included in the snapshot.
+    #'     * If at least one `input`, `output`, or `export` is specified, then only the requested values are included in the snapshot.
+    #'
+    #'   The values supplied to each variable can be:
+    #'     * A character vector of specific names to only include in the snapshot.
+    #'     * `TRUE` to request that all values of that type are included in the snapshot.
+    #'     * Anything else (e.g. `NULL` or `FALSE`) will result in the parameter being ignored.
+    #' @param screenshot_args This value is passed along to
+    #'   `$expect_screenshot()` where the resulting snapshot expectation is ignored. If
+    #'   missing, the default value will be
+    #'   `$new(expect_values_screenshot_args=)`.
+    #'
+    #'   The final value can either be:
+    #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
+    #'   * `FALSE`: No screenshot will be taken
+    #'   * A named list of arguments. These arguments are passed directly to
+    #'     [`chromote::ChromoteSession`]'s `$get_screenshot()` method. The `selector`
+    #'     and `delay` will default to `"html"` and `0` respectively.
+    #' @return The result of the snapshot expectation
     #' @examples
     #' \dontrun{
-    #' app_path <- system.file("examples/10_download", package = "shiny")
-    #' app <- AppDriver$new(app_path)
+    #' library(shiny)
+    #' shiny_app <- shinyApp(
+    #'   fluidPage(
+    #'     h1("Pythagorean theorem"),
+    #'     numericInput("A", "A", 3),
+    #'     numericInput("B", "B", 4),
+    #'     verbatimTextOutput("C"),
+    #'   ),
+    #'   function(input, output) {
+    #'     a_squared <- reactive({ req(input$A); input$A * input$A })
+    #'     b_squared <- reactive({ req(input$B); input$B * input$B })
+    #'     c_squared <- reactive({ a_squared() + b_squared() })
+    #'     c_value <- reactive({ sqrt(c_squared()) })
+    #'     output$C <- renderText({ c_value() })
     #'
-    #' # Get rock.csv as a tempfile
-    #' app$get_download("downloadData")
-    #' #> [1] "/TEMP/PATH/rock.csv"
+    #'     exportTestValues(
+    #'       a_squared = { a_squared() },
+    #'       b_squared = { b_squared() },
+    #'       c_squared = { c_squared() }
+    #'     )
+    #'   }
+    #' )
     #'
-    #' # Get rock.csv as a "./myfile.csv"
-    #' app$get_download("downloadData", filename = "./myfile.csv")
-    #' #> [1] "./myfile.csv"
+    #' app <- AppDriver$new(shiny_app)
+    #'
+    #' # Snapshot all known values
+    #' app$expect_values()
+    #'
+    #' # Snapshot only `export` values
+    #' app$expect_values(export = TRUE)
+    #'
+    #' # Snapshot values `"A"` from `input` and `"C"` from `output`
+    #' app$expect_values(input = "A", output = "C")
     #' }
-    get_download = function(output, filename = NULL) {
-      app_get_download(self, private, output = output, filename = filename)
+    expect_values = function(
+      ...,
+      input = missing_arg(), output = missing_arg(), export = missing_arg(),
+      screenshot_args = missing_arg(),
+      name = NULL,
+      cran = FALSE
+      ) {
+      app_expect_values(
+        self, private,
+        ...,
+        input = input, output = output, export = export,
+        screenshot_args = screenshot_args,
+        name = name,
+        cran = cran
+      )
     },
-
-
     #' @description
     #' Get a single `input`, `output`, or `export` value
     #'
@@ -486,7 +481,7 @@ AppDriver <- R6Class(# nolint
     #' `export` value can be used.
     #'
     #' Note, values that contain environments or other values that will have
-    #' trouble serializing may not work well. This includes R6 objects.
+    #' trouble serializing to RDS may not work well.
     #'
     #' @param input,output,export One of these variable should contain a single
     #'   string value. If more than one value is specified or no values are
@@ -522,7 +517,7 @@ AppDriver <- R6Class(# nolint
     #' method is a core method when inspecting your Shiny app.
     #'
     #' Note, values that contain environments or other values that will have
-    #' trouble serializing may not work well. This includes R6 objects.
+    #' trouble serializing may not work well.
     #'
     #' @param input,output,export
     #'   Depending on which parameters are supplied, different return values can occur:
@@ -602,133 +597,342 @@ AppDriver <- R6Class(# nolint
         hash_images = hash_images
       )
     },
+
     #' @description
-    #' Expect `input`, `output`, and `export` values
+    #' Expect a downloadable file
     #'
-    #' A JSON snapshot is saved of given the results from the underlying call to `$get_values()`.
+    #' Given a [shiny::downloadButton()]/[shiny::downloadLink()] `output` ID, the corresponding
+    #' file will be downloaded and saved as a snapshot file.
     #'
-    #' Note, values that contain environments or other values that will have
-    #' trouble serializing may not work well. This includes R6 objects. Instead,
-    #' these objects should be manually inspected and have their components
-    #' tested individually.
+    #' @param output `output` ID of [shiny::downloadButton()]/[shiny::downloadLink()]
+    #' @param name File name to save file to (including file name extension). The default, `NULL`,
+    #'   generates an ascending sequence of names: `001.download`,
+    #'   `002.download`, etc.
+    #' @examples
+    #' \dontrun{
+    #' app_path <- system.file("examples/10_download", package = "shiny")
+    #' app <- AppDriver$new(app_path)
     #'
-    #' @param name The file name to be used for the snapshot. The file extension
-    #'   will be overwritten to `.json`. By default, the `name` supplied to
-    #'   `app` on initialization with a counter will be used (e.g. `"NAME-001.json"`).
-    #' @param input,output,export
-    #'   Depending on which parameters are supplied, different return values can occur:
-    #'     * If `input`, `output`, and `export` are all missing, then all values are included in the snapshot.
-    #'     * If at least one `input`, `output`, or `export` is specified, then only the requested values are included in the snapshot.
+    #' # Save snapshot of rock.csv as 001.download
+    #' # Save snapshot value of `rock.csv` to capture default file name
+    #' app$expect_download("downloadData")
+    #' }
+    expect_download = function(output, ..., name = NULL, cran = FALSE) {
+      app_expect_download(self, private, output = output, ..., name = name, cran = cran)
+    },
+    #' @description
+    #' Get downloadable file
     #'
-    #'   The values supplied to each variable can be:
-    #'     * A character vector of specific names to only include in the snapshot.
-    #'     * `TRUE` to request that all values of that type are included in the snapshot.
-    #'     * Anything else (e.g. `NULL` or `FALSE`) will result in the parameter being ignored.
-    #' @param screenshot_args This value is passed along to
-    #'   `$expect_screenshot()` where the resulting snapshot expectation is ignored. If
-    #'   missing, the default value will be
-    #'   `$new(expect_values_screenshot_args=)`.
+    #' Given a [shiny::downloadButton()]/[shiny::downloadLink()] `output` ID, the corresponding
+    #' file will be downloaded and saved as a file.
     #'
-    #'   The final value can either be:
-    #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
-    #'   * `FALSE`: No screenshot will be taken
-    #'   * A named list of arguments. These arguments are passed directly to
-    #'     [`chromote::ChromoteSession`]'s `$get_screenshot()` method. The `selector`
-    #'     and `delay` will default to `"html"` and `0` respectively.
-    #' @return The result of the snapshot expectation
+    #' @param output `output` ID of [shiny::downloadButton()]/[shiny::downloadLink()]
+    #' @param filename File path to save the downloaded file to.
+    #' @return
+    #' `$get_download()` will return the final save location of the file. This
+    #' location can change depending on the value of `filename` and response
+    #' headers.
+    #'
+    #' Location logic:
+    #' * If `filename` is not NULL, `filename` will be returned.
+    #' * If a [\code{content-disposition} \code{filename}](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition) is provided,
+    #' then a temp file containing this `filename` will be
+    #' returned.
+    #' * Otherwise, a tempfile ending in `.download` will be returned.
+    #' @examples
+    #' \dontrun{
+    #' app_path <- system.file("examples/10_download", package = "shiny")
+    #' app <- AppDriver$new(app_path)
+    #'
+    #' # Get rock.csv as a tempfile
+    #' app$get_download("downloadData")
+    #' #> [1] "/TEMP/PATH/rock.csv"
+    #'
+    #' # Get rock.csv as a "./myfile.csv"
+    #' app$get_download("downloadData", filename = "./myfile.csv")
+    #' #> [1] "./myfile.csv"
+    #' }
+    get_download = function(output, filename = NULL) {
+      app_get_download(self, private, output = output, filename = filename)
+    },
+
+    #' @description
+    #' Expect snapshot of UI text
+    #'
+    #' `$expect_text()` will extract the text value of all matching elements via
+    #' `TAG.textContent` and store them in a snapshot file. This method is more
+    #' robust to internal package change as only the text values will be
+    #' maintained. Note, this method will not retrieve any `<input />` value's
+    #' text content, e.g. text inputs or text areas, as the input values are not
+    #' stored in the live HTML.
+    #'
+    #' When possible, use `$expect_text()` over `$expect_html()` to allow
+    #' package authors room to alter their HTML structures. The resulting array
+    #' of `TAG.textContent` values found will be stored in a snapshot file.
+    #'
+    #' Please see [Robust testing](https://rstudio.github.io/shinytest2/articles/robust.html) for more details.
+    #'
+    #' @param selector A DOM CSS selector to be passed into `document.querySelectorAll()`
+    #' @examples
+    #' \dontrun{
+    #' hello_app <- system.file("examples/01_hello", package = "shiny")
+    #' app <- AppDriver$new(hello_app)
+    #'
+    #' # Make a snapshot of `"Hello Shiny!"`
+    #' app$expect_text("h2")
+    #' }
+    expect_text = function(selector, ..., cran = FALSE) {
+      app_expect_text(self, private, selector, ..., cran = cran)
+    },
+    #' @description
+    #' Get UI text
+    #'
+    #' `$get_text()` will extract the text value of all matching elements via
+    #' `TAG.textContent`. Note, this method will not retrieve any `<input />`
+    #' value's text content, e.g. text inputs or text areas, as the input values
+    #' are not stored in the live HTML.
+    #'
+    #' @param selector A DOM CSS selector to be passed into `document.querySelectorAll()`
+    #' @return A vector of character values
+    #' @examples
+    #' \dontrun{
+    #' hello_app <- system.file("examples/01_hello", package = "shiny")
+    #' app <- AppDriver$new(hello_app)
+    #'
+    #' app$get_text("h2")
+    #' #> [1] "Hello Shiny!"
+    #' }
+    get_text = function(selector) {
+      app_get_text(self, private, selector = selector)
+    },
+
+
+    #' @description Expect snapshot of UI HTML
+    #'
+    #' `$expect_html()` will extract the full DOM structures of each matching
+    #' element and store them in a snapshot file. This method captures internal
+    #' DOM structure which may be brittle to changes by external authors or
+    #' dependencies.
+    #'
+    #' Note, this method will not retrieve any `<input />` value's
+    #' text content, e.g. text inputs or text areas, as the input values are not
+    #' stored in the live HTML.
+    #'
+    #' When possible, use `$expect_text()` over `$expect_html()` to allow
+    #' package authors room to alter their HTML structures. The resulting array
+    #' of `TAG.textContent` values found will be stored in a snapshot file.
+    #'
+    #' Please see [Robust testing](https://rstudio.github.io/shinytest2/articles/robust.html) for more details.
+    #'
+    #' @param selector A DOM selector to be passed into `document.querySelectorAll()`
+    #' @param outer_html If `TRUE` (default), the full DOM structure will be returned (`TAG.outerHTML`).
+    #'   If `FALSE`, the full DOM structure of the child elements will be returned (`TAG.innerHTML`).
+    #' @examples
+    #' \dontrun{
+    #' app_path <- system.file("examples/04_mpg", package = "shiny")
+    #' app <- AppDriver$new(app_path)
+    #' # Save a snapshot of the `caption` output
+    #' app$expect_html("#caption")
+    #' }
+    expect_html = function(selector, ..., outer_html = TRUE, cran = FALSE) {
+      app_expect_html(self, private, selector, ..., outer_html = outer_html, cran = cran)
+    },
+    #' @description Get UI HTML
+    #'
+    #' `$get()` will extract the full DOM structures of each matching
+    #' element. This method captures internal
+    #' DOM structure which may be brittle to changes by external authors or
+    #' dependencies.
+    #'
+    #' Note, this method will not retrieve any `<input />` value's
+    #' text content, e.g. text inputs or text areas, as the input values are not
+    #' stored in the live HTML.
+    #'
+    #' Please see [Robust testing](https://rstudio.github.io/shinytest2/articles/robust.html) for more details.
+    #'
+    #' @param selector A DOM selector to be passed into `document.querySelectorAll()`
+    #' @param outer_html If `TRUE`, the full DOM structure will be returned (`TAG.outerHTML`).
+    #'   If `FALSE`, the full DOM structure of the child elements will be returned (`TAG.innerHTML`).
+    #' @examples
+    #' \dontrun{
+    #' app_path <- system.file("examples/03_reactivity", package = "shiny")
+    #' app <- AppDriver$new(app_path, check_names = FALSE)
+    #' app$set_inputs(caption = "Custom value!")
+    #' cat(app$get_html(".shiny-input-container")[1])
+    #' #> <div class="form-group shiny-input-container">
+    #' #>   <label class="control-label" id="caption-label" for="caption">Caption:</label>
+    #' #>   <input id="caption" type="text" class="form-control shiny-bound-input" value="Data Summary">
+    #' #> </div>
+    #' ## ^^ No update to the DOM of `caption`
+    #' }
+    get_html = function(selector, ..., outer_html = TRUE) {
+      app_get_html(self, private, selector, ..., outer_html = outer_html)
+    },
+
+    #' @description
+    #' Expect snapshot of JavaScript script output
+    #'
+    #' This is a building block function that may be called by other functions.
+    #' For example, `$expect_text()` and `$expect_html()` are thin wrappers around this function.
+    #'
+    #' Once the `script` has executed, the JSON result will be saved to a snapshot file.
+    #'
+    #' @param script A string containing the JavaScript script to be executed.
+    #' @param file A file containing JavaScript code to be read and used as the `script`. Only one of `script` or `file` can be specified.
+    #' @param pre_snapshot A function to be called on the result of the script before taking the snapshot.
+    #'   `$expect_html()` and `$expect_text()` both use [`unlist()`].
+    #' @examples
+    #' \dontrun{
+    #' app_path <- system.file("examples/07_widgets", package = "shiny")
+    #' app <- AppDriver$new(app_path)
+    #'
+    #' # Track how many clicks are given to `#update` button
+    #' app$run_js("
+    #'   window.test_counter = 0;
+    #'   $('#update').click(() => window.test_counter++);
+    #' ")
+    #' app$set_inputs(obs = 20)
+    #' # Click the update button, incrementing the counter
+    #' app$click("update")
+    #' # Save a snapshot of number of clicks (1)
+    #' app$expect_js("window.test_counter;")
+    #' }
+    expect_js = function(
+      script = missing_arg(),
+      ...,
+      file = missing_arg(),
+      timeout = 15 * 1000,
+      pre_snapshot = NULL,
+      cran = FALSE
+    ) {
+      app_expect_js(
+        self, private,
+        script = script,
+        ...,
+        file = file, timeout = timeout, pre_snapshot = pre_snapshot, cran = cran
+      )
+    },
+
+    #' @description
+    #' Execute JavaScript code in the browser and return the result
+    #'
+    #' This function will block the local R session until the code has finished
+    #' executing its _tick_ in the browser. If a `Promise` is returned from the
+    #' script, `$get_js()` will wait for the promise to resolve. To have
+    #' JavaScript code execute asynchronously, wrap the code in a Promise object
+    #' and have the script return an atomic value.
+    #'
+    #' Arguments will have to be inserted into the script as there is not access
+    #' to `arguments`. This can be done with commands like `paste()`. If using
+    #' `glue::glue()`, be sure to use uncommon `.open` and `.close` values to
+    #' avoid having to doulbe all `{` and `}`.
+    #' @param script JavaScript to execute. If a JavaScript Promise is returned,
+    #'   the R session will block until the promise has been resolved and return
+    #'   the value.
+    #' @param file A (local) file containing JavaScript code to be read and used
+    #'   as the `script`. Only one of `script` or `file` can be specified.
+    #' @return Result of the `script` (or `file` contents)
     #' @examples
     #' \dontrun{
     #' library(shiny)
-    #' shiny_app <- shinyApp(
-    #'   fluidPage(
-    #'     h1("Pythagorean theorem"),
-    #'     numericInput("A", "A", 3),
-    #'     numericInput("B", "B", 4),
-    #'     verbatimTextOutput("C"),
-    #'   ),
-    #'   function(input, output) {
-    #'     a_squared <- reactive({ req(input$A); input$A * input$A })
-    #'     b_squared <- reactive({ req(input$B); input$B * input$B })
-    #'     c_squared <- reactive({ a_squared() + b_squared() })
-    #'     c_value <- reactive({ sqrt(c_squared()) })
-    #'     output$C <- renderText({ c_value() })
-    #'
-    #'     exportTestValues(
-    #'       a_squared = { a_squared() },
-    #'       b_squared = { b_squared() },
-    #'       c_squared = { c_squared() }
-    #'     )
-    #'   }
-    #' )
-    #'
+    #' shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
     #' app <- AppDriver$new(shiny_app)
     #'
-    #' # Snapshot all known values
-    #' app$expect_values()
+    #' # Execute JavaScript code in the app's browser
+    #' app$get_js("1 + 1;")
+    #' #> [1] 2
     #'
-    #' # Snapshot only `export` values
-    #' app$expect_values(export = TRUE)
+    #' # Execute a JavaScript Promise. Return the resolved value.
+    #' app$get_js("
+    #'   new Promise((resolve) => {
+    #'     setTimeout(() => resolve(1 + 1), 1000)
+    #'   }).
+    #'   then((value) => value + 1);
+    #' ")
+    #' #> [1] 3
     #'
-    #' # Snapshot values `"A"` from `input` and `"C"` from `output`
-    #' app$expect_values(input = "A", output = "C")
+    #' # With escaped arguments
+    #' loc_field <- "hostname"
+    #' js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+    #' app$get_js(js_txt)
+    #' #> [1] "127.0.0.1"
+    #'
+    #' # With `glue::glue()`
+    #' js_txt <- glue::glue_data(
+    #'   lapply(
+    #'     list(x = 40, y = 2),
+    #'     jsonlite::toJSON,
+    #'     auto_unbox = TRUE
+    #'   ),
+    #'   .open = "<", .close = ">",
+    #'   "let answer = function(a, b) {\n",
+    #'   "  return a + b;\n",
+    #'   "};\n",
+    #'   "answer(<x>, <y>);\n"
+    #' )
+    #' app$get_js(js_txt)
+    #' #> [1] 42
     #' }
-    expect_values = function(
+    get_js = function(
+      script = missing_arg(),
       ...,
-      input = missing_arg(), output = missing_arg(), export = missing_arg(),
-      screenshot_args = missing_arg(),
-      name = NULL,
-      cran = FALSE
-      ) {
-      app_expect_values(
+      file = missing_arg(),
+      timeout = 15 * 1000
+    ) {
+      app_get_js(
         self, private,
+        script = script,
         ...,
-        input = input, output = output, export = export,
-        screenshot_args = screenshot_args,
-        name = name,
-        cran = cran
+        file = file,
+        timeout = timeout
       )
     },
     #' @description
-    #' Take a screenshot
+    #' Execute JavaScript code in the browser
     #'
-    #' Take a screenshot of the Shiny application.
+    #' This function will block the local R session until the code has finished
+    #' executing its _tick_ in the browser.
     #'
-    #' @param file If `NULL`, then the image will be displayed to the current
-    #'   Graphics Device. If a file path, then the screenshot will be saved to
-    #'   that file.
+    #' The final result of the code will be ignored and not returned to the R session.
+    #' @param script JavaScript to execute.
+    #' @param file A (local) file containing JavaScript code to be read and used
+    #'   as the `script`. Only one of `script` or `file` can be specified.
     #' @examples
     #' \dontrun{
-    #' app_path <- system.file("examples/01_hello", package = "shiny")
-    #' app <- AppDriver$new(app_path)
+    #' library(shiny)
+    #' shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
+    #' app <- AppDriver$new(shiny_app)
     #'
-    #' # Display in viewer
-    #' app$get_screenshot()
+    #' # Get JavaScript answer from the app's browser
+    #' app$get_js("1 + 1")
+    #' #> [1] 2
+    #' # Execute JavaScript code in the app's browser
+    #' app$run_js("1 + 1")
+    #' # (Returns `app` invisibly)
     #'
-    #' # Update bins then display `"disPlot"` in viewer
-    #' app$set_inputs(bins = 10)
-    #' app$get_screenshot(selector = "#distPlot")
-    #'
-    #' # Save screenshot to file and view it
-    #' tmpfile <- tempfile(fileext = ".png")
-    #' app$get_screenshot(tmpfile)
-    #' showimage::show_image(tmpfile)
+    #' # With escaped arguments
+    #' loc_field <- "hostname"
+    #' js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+    #' app$run_js(js_txt)
+    #' app$get_js(js_txt)
+    #' #> [1] "127.0.0.1"
     #' }
-    get_screenshot = function(
-      file = NULL,
+    run_js = function(
+      script = missing_arg(),
       ...,
-      screenshot_args = missing_arg(),
-      delay = missing_arg(),
-      selector = missing_arg()
+      file = missing_arg(),
+      timeout = 15 * 1000
     ) {
-      app_screenshot(
+      app_run_js(
         self, private,
-        file = file,
+        script = script,
         ...,
-        screenshot_args = screenshot_args,
-        delay = delay,
-        selector = selector
+        file = file,
+        timeout = timeout
       )
     },
+
+
     #' @description
     #' Expect a screenshot of the Shiny application
     #'
@@ -790,126 +994,48 @@ AppDriver <- R6Class(# nolint
         cran = cran
       )
     },
-
-    #' @description Set input values
+    #' @description
+    #' Take a screenshot
     #'
-    #' Set Shiny inputs by sending the value to the Chrome browser and programaticly updating the values. Given `wait_ = TRUE`, the method will not return until an output value has been updated.
+    #' Take a screenshot of the Shiny application.
     #'
-    #' @param ... Name-value pairs, `component_name_1 = value_1, component_name_2 = value_2` etc.
-    #'   Input with name `component_name_1` will be assigned value `value_1`.
-    #' @param allow_no_input_binding_ When setting the value of an input, allow
-    #'   it to set the value of an input even if that input does not have an
-    #'   input binding. This is useful to replicate behavior like hovering over
-    #'   a \pkg{plotly} plot.
-    #' @param priority_ Sets the event priority. For expert use only: see
-    #'   <https://shiny.rstudio.com/articles/communicating-with-js.html#values-vs-events> for details.
+    #' @param file If `NULL`, then the image will be displayed to the current
+    #'   Graphics Device. If a file path, then the screenshot will be saved to
+    #'   that file.
     #' @examples
     #' \dontrun{
-    #' app_path <- system.file("examples/07_widgets", package = "shiny")
+    #' app_path <- system.file("examples/01_hello", package = "shiny")
     #' app <- AppDriver$new(app_path)
-    #' cat(app$get_text("#view"))
-    #' app$set_inputs(dataset = "cars", obs = 6)
-    #' app$click("update")
-    #' cat(app$get_text("#view"))
+    #'
+    #' # Display in viewer
+    #' app$get_screenshot()
+    #'
+    #' # Update bins then display `"disPlot"` in viewer
+    #' app$set_inputs(bins = 10)
+    #' app$get_screenshot(selector = "#distPlot")
+    #'
+    #' # Save screenshot to file and view it
+    #' tmpfile <- tempfile(fileext = ".png")
+    #' app$get_screenshot(tmpfile)
+    #' showimage::show_image(tmpfile)
     #' }
-    set_inputs = function(
+    get_screenshot = function(
+      file = NULL,
       ...,
-      wait_ = TRUE,
-      timeout_ = 3 * 1000,
-      allow_no_input_binding_ = FALSE,
-      priority_ = c("input", "event")
+      screenshot_args = missing_arg(),
+      delay = missing_arg(),
+      selector = missing_arg()
     ) {
-      app_set_inputs(
-        self, private, ..., wait_ = wait_, timeout_ = timeout_,
-        allow_no_input_binding_ = allow_no_input_binding_, priority_ = priority_
+      app_screenshot(
+        self, private,
+        file = file,
+        ...,
+        screenshot_args = screenshot_args,
+        delay = delay,
+        selector = selector
       )
     },
 
-    #' @description Click an element
-    #'
-    #' Find a Shiny input/output value or DOM CSS selector and click it using
-    #' the [DOM method
-    #' `TAG.click()`](https://www.w3schools.com/jsref/met_html_click.asp).
-    #'
-    #' @param input,output,selector A name of an Shiny `input`/`output` value or
-    #'   a DOM CSS selector. Only one of these may be used.
-    #' @param ... If `input` is used, all extra arguments are passed to
-    #'   `$set_inputs(!!input := "click", ...)`. By default, this means that the
-    #'   `AppDriver` will wait until an output has been updated within the
-    #'   specified `timeout_`.
-    #' @examples
-    #' \dontrun{
-    #' app_path <- system.file("examples/07_widgets", package = "shiny")
-    #' app <- AppDriver$new(app_path)
-    #'
-    #' tmpfile <- write.csv(cars, "cars.csv")
-    #' app$upload_file(file1 = tmpfile)
-    #' cat(app$get_text("#view"))
-    #' app$set_inputs(dataset = "cars", obs = 6)
-    #' app$click("update")
-    #' cat(app$get_text("#view"))
-    #' }
-    click = function(
-      input = missing_arg(), output = missing_arg(), selector = missing_arg(),
-      ...
-    ) {
-      app_click(self, private, input = input, output = output, selector = selector, ...)
-    },
-
-    #' @description Upload a file
-    #'
-    #' Uploads a file to the specified file input.
-    #' @param ... Name-path pair, e.g. `component_name = file_path`. The file located at
-    #' `file_path` will be uploaded to file input with name `component_name`.
-    #' @examples
-    #' \dontrun{
-    #' app_path <- system.file("examples/09_upload", package = "shiny")
-    #' app <- AppDriver$new(app_path)
-    #'
-    #' # Save example file
-    #' tmpfile <- tempfile(fileext = ".csv")
-    #' write.csv(cars, tmpfile, row.names = FALSE)
-    #'
-    #' # Upload file to input named: file1
-    #' app$upload_file(file1 = tmpfile)
-    #' }
-    upload_file = function(..., wait_ = TRUE, timeout_ = 3 * 1000) {
-      app_upload_file(self, private, ..., wait_ = wait_, timeout_ = timeout_)
-    },
-
-
-    #' @description Wait for a JavaScript expression to be true
-    #'
-    #' Waits until a JavaScript `expr`ession evaluates to `true` or the
-    #' `timeout` is exceeded.
-    #'
-    #' @param script A string containing JavaScript code. This code must
-    #'   eventually return a [`true`thy
-    #'   value](https://developer.mozilla.org/en-US/docs/Glossary/Truthy) or a
-    #'   timeout error will be thrown.
-    #' @param timeout How long the script has to return a `true`thy value, in ms.
-    #' @param interval How often to check for the condition, in ms.
-    #' @return `invisible(self)` if expression evaluates to `true` without error
-    #'   within the timeout. Otherwise an error will be thrown
-    #' @examples
-    #' \dontrun{
-    #' shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
-    #' app <- AppDriver$new(shiny_app)
-    #'
-    #' # Contrived example:
-    #' # Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)
-    #' system.time(
-    #'   app$wait_for_js("Math.floor((Date.now() / 1000) % 10) == 5;")
-    #' )
-    #'
-    #' ## A second example where we run the contents of a JavaScript file
-    #' ## and use the result to wait for a condition
-    #' app$run_js(file = "complicated_file.js")
-    #' app$wait_for_js("complicated_condition();")
-    #' }
-    wait_for_js = function(script, timeout = 30 * 1000, interval = 100) {
-      app_wait_for_js(self, private, script = script, timeout = timeout, interval = interval)
-    },
 
     #' @description Wait for Shiny to not be busy (idle) for a set amount of time
     #'
@@ -1040,126 +1166,40 @@ AppDriver <- R6Class(# nolint
         timeout = timeout, interval = interval
       )
     },
-
-
-    #' @description
-    #' Execute JavaScript code in the browser and return the result
+    #' @description Wait for a JavaScript expression to be true
     #'
-    #' This function will block the local R session until the code has finished
-    #' executing its _tick_ in the browser. If a `Promise` is returned from the
-    #' script, `$get_js()` will wait for the promise to resolve. To have
-    #' JavaScript code execute asynchronously, wrap the code in a Promise object
-    #' and have the script return an atomic value.
+    #' Waits until a JavaScript `expr`ession evaluates to `true` or the
+    #' `timeout` is exceeded.
     #'
-    #' Arguments will have to be inserted into the script as there is not access
-    #' to `arguments`. This can be done with commands like `paste()`. If using
-    #' `glue::glue()`, be sure to use uncommon `.open` and `.close` values to
-    #' avoid having to doulbe all `{` and `}`.
-    #' @param script JavaScript to execute. If a JavaScript Promise is returned,
-    #'   the R session will block until the promise has been resolved and return
-    #'   the value.
-    #' @param file A (local) file containing JavaScript code to be read and used
-    #'   as the `script`. Only one of `script` or `file` can be specified.
-    #' @return Result of the `script` (or `file` contents)
+    #' @param script A string containing JavaScript code. This code must
+    #'   eventually return a [`true`thy
+    #'   value](https://developer.mozilla.org/en-US/docs/Glossary/Truthy) or a
+    #'   timeout error will be thrown.
+    #' @param timeout How long the script has to return a `true`thy value, in ms.
+    #' @param interval How often to check for the condition, in ms.
+    #' @return `invisible(self)` if expression evaluates to `true` without error
+    #'   within the timeout. Otherwise an error will be thrown
     #' @examples
     #' \dontrun{
-    #' library(shiny)
     #' shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
     #' app <- AppDriver$new(shiny_app)
     #'
-    #' # Execute JavaScript code in the app's browser
-    #' app$get_js("1 + 1;")
-    #' #> [1] 2
-    #'
-    #' # Execute a JavaScript Promise. Return the resolved value.
-    #' app$get_js("
-    #'   new Promise((resolve) => {
-    #'     setTimeout(() => resolve(1 + 1), 1000)
-    #'   }).
-    #'   then((value) => value + 1);
-    #' ")
-    #' #> [1] 3
-    #'
-    #' # With escaped arguments
-    #' loc_field <- "hostname"
-    #' js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
-    #' app$get_js(js_txt)
-    #' #> [1] "127.0.0.1"
-    #'
-    #' # With `glue::glue()`
-    #' js_txt <- glue::glue_data(
-    #'   lapply(
-    #'     list(x = 40, y = 2),
-    #'     jsonlite::toJSON,
-    #'     auto_unbox = TRUE
-    #'   ),
-    #'   .open = "<", .close = ">",
-    #'   "let answer = function(a, b) {\n",
-    #'   "  return a + b;\n",
-    #'   "};\n",
-    #'   "answer(<x>, <y>);\n"
+    #' # Contrived example:
+    #' # Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)
+    #' system.time(
+    #'   app$wait_for_js("Math.floor((Date.now() / 1000) % 10) == 5;")
     #' )
-    #' app$get_js(js_txt)
-    #' #> [1] 42
+    #'
+    #' ## A second example where we run the contents of a JavaScript file
+    #' ## and use the result to wait for a condition
+    #' app$run_js(file = "complicated_file.js")
+    #' app$wait_for_js("complicated_condition();")
     #' }
-    get_js = function(
-      script = missing_arg(),
-      ...,
-      file = missing_arg(),
-      timeout = 15 * 1000
-    ) {
-      app_get_js(
-        self, private,
-        script = script,
-        ...,
-        file = file,
-        timeout = timeout
-      )
+    wait_for_js = function(script, timeout = 30 * 1000, interval = 100) {
+      app_wait_for_js(self, private, script = script, timeout = timeout, interval = interval)
     },
-    #' @description
-    #' Execute JavaScript code in the browser
-    #'
-    #' This function will block the local R session until the code has finished
-    #' executing its _tick_ in the browser.
-    #'
-    #' The final result of the code will be ignored and not returned to the R session.
-    #' @param script JavaScript to execute.
-    #' @param file A (local) file containing JavaScript code to be read and used
-    #'   as the `script`. Only one of `script` or `file` can be specified.
-    #' @examples
-    #' \dontrun{
-    #' library(shiny)
-    #' shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
-    #' app <- AppDriver$new(shiny_app)
-    #'
-    #' # Get JavaScript answer from the app's browser
-    #' app$get_js("1 + 1")
-    #' #> [1] 2
-    #' # Execute JavaScript code in the app's browser
-    #' app$run_js("1 + 1")
-    #' # (Returns `app` invisibly)
-    #'
-    #' # With escaped arguments
-    #' loc_field <- "hostname"
-    #' js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
-    #' app$run_js(js_txt)
-    #' app$get_js(js_txt)
-    #' #> [1] "127.0.0.1"
-    #' }
-    run_js = function(
-      script = missing_arg(),
-      ...,
-      file = missing_arg(),
-      timeout = 15 * 1000
-    ) {
-      app_run_js(
-        self, private,
-        script = script,
-        ...,
-        file = file,
-        timeout = timeout
-      )
-    },
+
+
 
     #' @description
     #' Expect unique input and output names.
@@ -1354,7 +1394,8 @@ AppDriver <- R6Class(# nolint
     #' * `level`: For a given location, there are different types of log levels.
     #'   * `"shinytest2"`: `"log"`; Only log messages are captured.
     #'   * `"shiny"`: `"log"` or `"error"`; These two levels correspond to the
-    #'     `stdin` or `stdout` messages.
+    #'     `stdin` or `stdout` messages. Note, `message()` output is sent to
+    #'     `stderr` which is recorded as `"error"`.
     #'   * `"chromote"`: Correspond to any level of a JavaScript
     #'     `console.LEVEL()` function call. Typically, these are "log"` and
     #'     `"error"` but can include `"info"`, `"debug"`, and `"warn"`. If
