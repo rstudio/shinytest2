@@ -218,7 +218,7 @@ test_that("enableDebugLogMessages, getDebugLog, getEventLog is converted", {
   expect_migration(
     app$enableDebugLogMessages(),
     NULL,
-    "`ShinyDriver$enableDebugLogMessages()` is not implemented",
+    "`ShinyDriver$enableDebugLogMessages()` is not implemented"
   )
   expect_migration(
     app$getDebugLog(),
