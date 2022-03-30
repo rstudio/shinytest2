@@ -1,7 +1,5 @@
 ---
-output:
-  html_document: default
-  pdf_document: default
+output: rmarkdown::html_document
 ---
 Here is my regression model:
 
