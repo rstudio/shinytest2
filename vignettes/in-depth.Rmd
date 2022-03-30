@@ -231,7 +231,7 @@ If your test script has already been created, you can set the random seed by edi
 app <- AppDriver$new(seed = 4323)
 ```
 
-In many cases, instead of setting the random seed, it is more elegant to use an [output preprocessor](zz-faq.html#can-i-modify-the-input-and-output-values-that-are-recorded-in-snapshots).
+In many cases, instead of setting the random seed, it is more elegant to use an [output preprocessor](zzz-faq.html#can-i-modify-the-input-and-output-values-that-are-recorded-in-snapshots).
 
 
 ## Widgets

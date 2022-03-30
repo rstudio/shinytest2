@@ -23,7 +23,7 @@ library(shinytest2)
 
 `{shinytest}` is the predecesor to `{shinytest2}`. `{shinytest}` was implemented using [`{webdriver}`](https://rstudio.github.io/webdriver/) which uses [PhantomJS](https://phantomjs.org/api/). PhantomJS has been unsupported since 2017 and does not support displaying `{bslib}`'s Bootstrap v5. `{shinytest2}` uses `{chromote}` to connect to your locally installed Chrome or Chromium application. So, `{shinytest2}` is able to display `{bslib}`'s Bootstrap v5.
 
-To migrate your existing `{shinytest}` tests to `{shinytest2}`, call `shinytest2::migrate_from_shinytest(PATH_TO_APP)`.
+To auto migrate your existing `{shinytest}` tests to `{shinytest2}`, call `shinytest2::migrate_from_shinytest(PATH_TO_APP)`.
 
 
 # Code structure
