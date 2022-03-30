@@ -193,7 +193,6 @@
     <span class="op">)</span>
   <span class="op">}</span>
 <span class="op">)</span></code></pre></div>
-<p><img src="images/screenshot-exports-app.png" width="492"></p>
 <p>Notice these lines:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R">    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span>
@@ -234,7 +233,6 @@
 </h3>
 <p>If your application uses randomly-generated values (by calling functions like <code>rnorm</code>, <code>runif</code>, <code>sample</code> directly or indirectly), then, in normal operation, it will produce different results on each run. Because <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> works by comparing the current state of an application to a previous state, these random changes will cause test failures.</p>
 <p>To make such applications exactly repeatable, you can set the random seed. This can be done by specifying a random seed in the recorder. The seed can be any integer value.</p>
-<p><img src="images/screenshot-recorder-random-seed.png" width="246"></p>
 <p>If your test script has already been created, you can set the random seed by editing the test script so that the <code>AppDriver$new()</code> call has a value for <code>seed</code>. Moreover, if you need these tests to pass on multiple versions of R with different <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">RNGkind()</a></code> defaults (e.g., 3.5 and 3.6), you may want to set a fixed <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">RNGkind()</a></code> across your tests (perhaps via <code>RNGversion("3.5.0")</code>). However, using a <code>AppDriver$new(variant=)</code> value that contains the R version can also remedy this situation.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>seed <span class="op">=</span> <span class="fl">4323</span><span class="op">)</span></code></pre></div>

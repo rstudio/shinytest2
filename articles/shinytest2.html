@@ -151,13 +151,11 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/record_test.html">record_test</a></span><span class="op">(</span><span class="st">"simple-app/"</span><span class="op">)</span></code></pre></div>
 <p>In a separate R process, this launches the Shiny application to be tested. We’ll refer to this as the <strong>target app</strong>. This also launches a special Shiny application in the current R process which displays the target app in an iframe and has some controls outside the iframe. We’ll refer to this as the <strong>recorder app</strong>. You will see something like this:</p>
-<p><img src="images/record-simple-app.png"></p>
 <p>On the left is the target app (in this case, the “What is your name” app), and on the right is the recorder app sidebar. Note that you may need to make the browser window wider because the recorder sidebar occupies some space.</p>
 <p>The sidebar on the right displays some controls for the test recorder, as well as a the set of <strong>Code</strong> for all expectations and actions. As you interact with the target app – in other words, when you set inputs on the app – you will see those actions recorded in the Code output.</p>
 <p>For testing a Shiny application, setting inputs is only one part. It’s also necessary to check that the application produces the correct <code>output</code>s. This is accomplished by taking expectations of the application’s state.</p>
 <p>There are two ways to record <code>output</code> values. One way is to take an <strong>expectation</strong> of the application’s state. This will record all <code>input</code> values, <code>output</code> values, and <code>export</code>ed values (more on exported values later). To do this, click the <code>Expect values</code> button on the recorder app.</p>
 <p>After modifying some <code>input</code>s and making an expectation, it will look something like this:</p>
-<p><img src="images/record-simple-app-2.png"></p>
 <p>It is also possible to take a <em>targeted</em> value expectation. This is a snapshot of one or more specified <code>output</code> (instead of the default, which is to snapshot the entire application). To do this, hold down the Control (or Command) button on your keyboard and click on an <code>output</code>; it will snapshot just that one <code>output</code>.</p>
 <p>When you are done recording a sequence of events, click on the <code>Save test and exit</code> button. If you are in the RStudio IDE, it will open the test script <code>tests/testthat/test-shinytest2.R</code> from a subdirectory of the application.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -263,7 +261,6 @@ Duration: 2.2 s
 [ FAIL 1 | WARN 0 | SKIP 0 | PASS 0 ]</code></pre>
 <p>To view the differences, follow the prompted code <code>testthat::snapshot_review('shinytest2/')</code> from within your application directory.</p>
 <p>It will look something like this:</p>
-<p><img src="images/diffviewer-1.png"></p>
 <p>After inspecting the changes, you can choose to update the expected results (that is, replace the old expected results with the new current results), or to just quit without updating.</p>
 <p>You should update the results if the changes are expected. You should skip/quit without updating if the changes are unexpected.</p>
 </div>
@@ -272,7 +269,6 @@ Duration: 2.2 s
 </h3>
 <p>In the example above, we had a single test script, named <code>test-shinytest2.R</code>.</p>
 <p>If you want to have more than one set of tests for an application, you can record new tests, each with a unique name. You can enter the name when recording your tests:</p>
-<p><img src="images/record-name.png" width="262"></p>
 <p>The saved test can be moved to a different testing file, e.g. <code>tests/testthat/test-simple-app.R</code>. When you run <code>test_app("path/to/app")</code>, it will run all the tests scripts in the application’s <code>tests/testhat</code> directory.</p>
 </div>
 </div>
