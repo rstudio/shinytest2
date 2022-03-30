@@ -2,15 +2,6 @@ Future release:
   * GHA integration
     * upload an artifact with updated snapshots
       * like fix_all_branches, it must be initiated manually, but _automated_
-
-
-#' @seealso [testthat::snapshot_review()] and [testthat::snapshot_accept()] if
-#'   you want to compare or update snapshots after testing. In most cases, the
-#'   user is prompted to do these tasks interactively, but there are also times
-#'   where it is useful to call these functions from the console.
-
-# Documentation:
-
 ### Vignettes:
 * Getting started
   * Medium difficulty example:
