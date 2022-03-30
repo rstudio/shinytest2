@@ -74,5 +74,9 @@ shiny::runTests()
 }
 
 \seealso{
-\code{\link[=record_test]{record_test()}}, \code{\link[testthat:test_dir]{testthat::test_dir()}}
+\itemize{
+\item \code{\link[=record_test]{record_test()}} to create tests to record against your Shiny application.
+\item \code{\link[testthat:snapshot_accept]{testthat::snapshot_review()}} and \code{\link[testthat:snapshot_accept]{testthat::snapshot_accept()}} if
+you want to compare or update snapshots after testing.
+}
 }

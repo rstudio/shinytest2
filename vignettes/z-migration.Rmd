@@ -19,13 +19,16 @@ library(shinytest2)
 ```
 
 
+# Migrating from `{shinytest}`
+
+`{shinytest}` is the predecesor to `{shinytest2}`. `{shinytest}` was implemented using [`{webdriver}`](https://rstudio.github.io/webdriver/) which uses [PhantomJS](https://phantomjs.org/api/). PhantomJS has been unsupported since 2017 and does not support displaying `{bslib}`'s Bootstrap v5. `{shinytest2}` uses `{chromote}` to connect to your locally installed Chrome or Chromium application. So, `{shinytest2}` is able to display `{bslib}`'s Bootstrap v5.
+
+To auto migrate your existing `{shinytest}` tests to `{shinytest2}`, call `shinytest2::migrate_from_shinytest(PATH_TO_APP)`.
+
+
 # Code structure
 
-This article serves as a comprehensive guide to migrate your `{shinytest}` tests code to the new `{shinytest2}` testing code.
-
-If possible, use the helper method [`migrate_from_shinytest()`] to migrate your `{shinytest}` tests to `{shinytest2}`.
-
-In the sub sections below, `ShinyDriver` is a reference to the `shinytest::ShinyDriver` R6 object. In each code block, the `ShinyDriver` object will be referred to as `old`.  Similarly, `AppDriver` is a reference to `shinytest2::AppDriver` R6 object. This object has replaced `{shinytest}`'s `ShinyDriver` object and will be referred to as `new` in each code block.
+In the sub sections below, `ShinyDriver` is a reference to the `shinytest::ShinyDriver` R6 object. In each code block, the `ShinyDriver` object will be referred to as `old`.  Similarly, `AppDriver` is a reference to `shinytest2::AppDriver` R6 object. `shinytest2::AppDriver` has replaced `{shinytest}`'s `ShinyDriver` object and will be referred to as `new` in each code block.
 
 ## Methods
 
@@ -396,8 +399,7 @@ new$get_js("window.document.title;")
 
 ## Testing setup
 
-`{shinytest2}` is heavily integrated with the `{testthat}` testing framework. Similar to `{shinytest}`, snapshots are recorded but are recorded via `{testthat}` snapshots. For more information on the robustness of different testing approaches, please see the [Testing Robustness](./testing-robustness.html) vignette.
-<!-- TODO-barret; Link vignette -->
+`{shinytest2}` is heavily integrated with the `{testthat}` testing framework. Similar to `{shinytest}`, snapshots are recorded but are recorded via `{testthat}` snapshots. For more information on the robustness of different testing approaches, please see the [Robust testing](./robust.html) vignette.
 
 * `ShinyDriver$new(suffix=)`: Please use `AppDriver$new(variant=)`.
 ```r

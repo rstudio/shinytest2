@@ -1,0 +1,48 @@
+name: 'test-app'
+description: 'Test a Shiny application or document with shinytest2'
+author: 'Barret Schloerke'
+inputs:
+  app-dir:
+    description: 'Directory of Shiny application (or Shiny-based document) to test'
+    default: '.'
+    required: false
+  # upload-snapshots:
+  #   description: 'Whether to upload all testthat snapshots as an artifact.'
+  #   default: false
+  #   required: false
+runs:
+  using: "composite"
+  steps:
+    - name: R version
+      shell: Rscript {0}
+      id: st2-r-version
+      run: |
+        ## --------------------------------------------------------------------
+        v <- paste0(version$major, ".", version$minor)
+        cat(paste0("::set-output name=version::", v, "\n"))
+
+    - name: Test app
+      shell: Rscript {0}
+      working-directory: ${{ inputs.app-dir }}
+      run: |
+        ## --------------------------------------------------------------------
+        options(crayon.enabled = TRUE)
+        shinytest2::test_app()
+
+    - name: Show testthat output
+      if: always()
+      run: |
+        ## --------------------------------------------------------------------
+        echo ::group::Show testthat output
+        find check -name 'testthat.Rout*' -exec cat '{}' \; || true
+        echo ::endgroup::
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Upload snapshots
+      if: always()
+      uses: actions/upload-artifact@main
+      with:
+        name: ${{ runner.os }}-r${{ steps.st2-r-version.outputs.version }}-testthat-snapshots
+        path: ${{ inputs.working-directory }}/tests*/testthat/_snaps
+        if-no-files-found: ignore

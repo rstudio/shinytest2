@@ -7,8 +7,8 @@ editor_options:
   chunk_output_type: console
 vignette: >
   %\VignetteIndexEntry{Using shinytest2 with continuous integration}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r setup, include=FALSE}
@@ -85,10 +85,10 @@ on:
   pull_request:
     branches: [main, master]
 
-name: R-CMD-check
+name: test-app
 
 jobs:
-  R-CMD-check:
+  test-app:
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
@@ -97,7 +97,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-20.04,   r: '4.1'}
+          - {os: ubuntu-20.04, r: '4.1'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -116,7 +116,7 @@ jobs:
 
       - uses: r-lib/actions/setup-renv@v2
 
-      - uses: rstudio/shinytest2/check_app@v2
+      - uses: rstudio/shinytest2/actions/test_app@v1
         with:
           path: "."
 ```
@@ -128,15 +128,13 @@ You should change the `os` and `r` version (set to `ubuntu-20.04` and `4.1` abov
 
 `{renv}` project-local dependency management system for projects. This is useful for Shiny applications where using specific package versions for all of your Shiny app dependencies. `{renv}` uses the same mechanism that is used by shinyapps.io and RStudio Connect.
 
-`{renv}` autogenerates these three files using is`renv::init()` and `renv::snapshot()`.
+`{renv}` auto-generates these three files using is`renv::init()` and `renv::snapshot()`.
 
-----------------------
-| File | Usage |
-----------------------
-| `.Rprofile` | Used to activate renv for new R sessions launched in the project. |
-| `renv.lock` | The lockfile, describing the state of your project's library at some point in time. |
-| `renv/activate.R` | The activation script run by the project `.Rprofile`. |
-----------------------
+File | Usage
+:---|:-----------------
+`.Rprofile` | Used to activate `{renv}` for new R sessions launched in the project.
+`renv.lock` | The lockfile, describing the state of your project's library at some point in time.
+`renv/activate.R` | The activation script run by the project `.Rprofile`.
 
 To create `.Rprofile` and `renv/activate.R`, call `renv::init()` within your App project. To create / update `renv.lock`, call `renv::snapshot()`.
 
@@ -146,14 +144,14 @@ To create `.Rprofile` and `renv/activate.R`, call `renv::init()` within your App
 To learn more about `{renv}`, please see their [Introduction to renv](https://rstudio.github.io/renv/articles/renv.html) and [Colaborating with renv](https://rstudio.github.io/renv/articles/collaborating.html) articles.
 
 
-An alternative to using packrat is to create a `DESCRIPTION` file. This will not lock package versions; instead, it will use the latest version of each package from CRAN.
+An alternative to using `{renv}` is to create a `DESCRIPTION` file. This will not lock package versions; instead, it will use the latest version of each package from CRAN.
 
 
 ### Running the first build
 
 Once you've added these files, commit them and push to GitHub. This will trigger a build on GitHub Actions (GHA).
 
-The first build of your package on GHA will generally take much longer than subsequent runs, because it needs to install all the R packages the first time. After a successful run, the packages are cached, so the builds should be much faster.
+The first successful run of your workflow on GHA will generally take much longer than subsequent runs, because it needs to install all the R packages the first time. After a successful run, the packages are cached, so the builds should be much faster.
 
 
 ## A repository with multiple applications
@@ -219,7 +217,7 @@ The `check-app.yaml` should have a step for each application in the respective d
 
 ## Testing applications in a package
 
-See the [Using shinytest2 with R packages](package.html) article.
+See the [Using shinytest2 with R packages](./use-package.html) article.
 
 ## Frequently asked questions
 

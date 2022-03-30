@@ -2,54 +2,72 @@
 % Please edit documentation in R/use.R
 \name{use_shinytest2}
 \alias{use_shinytest2}
+\alias{use_shinytest2_test}
 \title{Use \pkg{shinytest2} test}
 \usage{
 use_shinytest2(
   app_dir = ".",
+  runner = TRUE,
+  ignore = TRUE,
+  package = TRUE,
   ...,
+  quiet = FALSE,
+  overwrite = FALSE
+)
+
+use_shinytest2_test(
+  app_dir = ".",
   open = rlang::is_interactive(),
   quiet = FALSE,
-  overwrite = FALSE,
-  actions = c("runner", "test_file", "ignore", "package")
+  overwrite = FALSE
 )
 }
 \arguments{
 \item{app_dir}{The base directory for the Shiny application}
 
-\item{...}{Must be empty. Allows for parameter expansion.}
+\item{runner}{If \code{TRUE}, creates a \pkg{shinytest2} test runner at \code{./tests/testthat.R}}
 
-\item{open}{If \code{TRUE}, the test file will be opened in an editor via
-\code{\link[=file.edit]{file.edit()}} after saving.}
+\item{ignore}{If \code{TRUE}, adds entries to \code{.Rbuildignore} and \code{.gitignore} to ignore new debug screenshots. (\verb{*_.new.png})}
+
+\item{package}{If \code{TRUE}, adds \pkg{shinytest2} to \code{Suggests} in the \code{DESCRIPTION} file.}
+
+\item{...}{Must be empty. Allows for parameter expansion.}
 
 \item{quiet}{If \code{TRUE}, console output will be suppressed.}
 
 \item{overwrite}{If \code{TRUE}, the test file or test runner will be overwritten.}
 
-\item{actions}{Actions that can be performed:
-\itemize{
-\item \code{"runner"}: Create a \pkg{shinytest2} test runner at \code{./tests/testthat.R}
-\item \code{"test_file"}: Create a \pkg{shinytest2} test file at \code{./tests/testthat/test-shinytest2.R}
-\item \code{"ignore"}: Add entries to \code{.Rbuildignore} and \code{.gitignore} to ignore new debug screenshots. (\verb{*_.new.png})
-\item \code{"package"}: Add \pkg{shinytest2} to \code{Suggests} in the \code{DESCRIPTION} file.
-}}
+\item{open}{If \code{TRUE}, the test file will be opened in an editor via
+\code{\link[=file.edit]{file.edit()}} after saving.}
 }
 \description{
-This unified method initializes many different useful features when using
+Use \pkg{shinytest2} test
+}
+\section{Functions}{
+\itemize{
+\item \code{use_shinytest2}: This \pkg{usethis}-style method initializes many different useful features when using
 \pkg{shinytest2}:
 \itemize{
 \item Creates a \pkg{shinytest2} test runner at \code{./tests/testthat.R}. This file
 will contain a call to \code{\link[=test_app]{test_app()}} which will set up the proper testing
 environment for your Shiny application, enable \pkg{testthat} edition 3, and
 execute all \pkg{testthat} tests.
-\item Creates a test file called \code{./tests/testthat/test-shinytest2.R}. By
-default, this file's template test will initialize your Shiny application and
-expect the initial values.
 \item Add an entry to \code{./Rbuildignore} (if it exists) and \code{.gitignore} to ignore
 new debug screenshots. (\verb{*_.new.png})
 \item Adds \code{shinytest} to the \code{Suggests} packages in the \code{DESCRIPTION} file (if it
 exists).
 }
-}
+
+\item \code{use_shinytest2_test}: Creates a test file called \code{./tests/testthat/test-shinytest2.R}. By
+default, this file's template test will initialize your Shiny application and
+expect the initial values.
+
+This method will also set up a test runner if it does not exist.
+}}
+
 \examples{
+# Set up shinytest2 testing configs
 \dontrun{use_shinytest2()}
+# Set up a shinytest2 test
+\dontrun{use_shinytest2_test()}
 }

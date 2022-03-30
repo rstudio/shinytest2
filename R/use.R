@@ -1,55 +1,83 @@
 #' Use \pkg{shinytest2} test
 #'
-#' This unified method initializes many different useful features when using
+#' @describeIn use_shinytest2
+#' This \pkg{usethis}-style method initializes many different useful features when using
 #' \pkg{shinytest2}:
 #' * Creates a \pkg{shinytest2} test runner at `./tests/testthat.R`. This file
 #' will contain a call to [`test_app()`] which will set up the proper testing
 #' environment for your Shiny application, enable \pkg{testthat} edition 3, and
 #' execute all \pkg{testthat} tests.
-#' * Creates a test file called `./tests/testthat/test-shinytest2.R`. By
-#' default, this file's template test will initialize your Shiny application and
-#' expect the initial values.
 #' * Add an entry to `./Rbuildignore` (if it exists) and `.gitignore` to ignore
 #' new debug screenshots. (`*_.new.png`)
 #' * Adds `shinytest` to the `Suggests` packages in the `DESCRIPTION` file (if it
 #' exists).
 #'
 #' @param app_dir The base directory for the Shiny application
+#' @param runner If `TRUE`, creates a \pkg{shinytest2} test runner at `./tests/testthat.R`
+#' @param ignore If `TRUE`, adds entries to `.Rbuildignore` and `.gitignore` to ignore new debug screenshots. (`*_.new.png`)
+#' @param package If `TRUE`, adds \pkg{shinytest2} to `Suggests` in the `DESCRIPTION` file.
 #' @param ... Must be empty. Allows for parameter expansion.
-#' @param open If `TRUE`, the test file will be opened in an editor via
-#' [`file.edit()`] after saving.
 #' @param quiet If `TRUE`, console output will be suppressed.
 #' @param overwrite If `TRUE`, the test file or test runner will be overwritten.
-#' @param actions Actions that can be performed:
-#'  * `"runner"`: Create a \pkg{shinytest2} test runner at `./tests/testthat.R`
-#'  * `"test_file"`: Create a \pkg{shinytest2} test file at `./tests/testthat/test-shinytest2.R`
-#'  * `"ignore"`: Add entries to `.Rbuildignore` and `.gitignore` to ignore new debug screenshots. (`*_.new.png`)
-#'  * `"package"`: Add \pkg{shinytest2} to `Suggests` in the `DESCRIPTION` file.
 #' @export
 #' @examples
+#' # Set up shinytest2 testing configs
 #' \dontrun{use_shinytest2()}
 use_shinytest2 <- function(
   app_dir = ".",
+  runner = TRUE,
+  ignore = TRUE,
+  package = TRUE,
   ...,
-  open = rlang::is_interactive(),
   quiet = FALSE,
-  overwrite = FALSE,
-  actions = c("runner", "test_file", "ignore", "package")
+  overwrite = FALSE
 ) {
   ellipsis::check_dots_empty()
 
-  actions <- match.arg(actions, several.ok = TRUE)
-  for (action in actions) {
-    switch(action,
-      package = use_shinytest2_package(app_dir, quiet = quiet),
-      ignore = use_shinytest2_ignore(app_dir, quiet = quiet),
-      runner = use_shinytest2_runner(app_dir, quiet = quiet, overwrite = overwrite),
-      test_file = use_shinytest2_test_file(app_dir, quiet = quiet, overwrite = overwrite, open = open),
-      stop(paste0("Unknown action: ", action))
-    )
-  }
+  if (isTRUE(runner))  use_shinytest2_runner(app_dir, quiet = quiet, overwrite = overwrite)
+  if (isTRUE(ignore))  use_shinytest2_ignore(app_dir, quiet = quiet)
+  if (isTRUE(package)) use_shinytest2_package(app_dir, quiet = quiet)
+
   invisible()
 }
+
+#' @describeIn use_shinytest2
+#' Creates a test file called `./tests/testthat/test-shinytest2.R`. By
+#' default, this file's template test will initialize your Shiny application and
+#' expect the initial values.
+#'
+#' This method will also set up a test runner if it does not exist.
+#' @param open If `TRUE`, the test file will be opened in an editor via
+#' [`file.edit()`] after saving.
+#' @export
+#' @examples
+#' # Set up a shinytest2 test
+#' \dontrun{use_shinytest2_test()}
+use_shinytest2_test <- function(
+  app_dir = ".",
+  open = rlang::is_interactive(),
+  quiet = FALSE,
+  overwrite = FALSE
+) {
+  # Make sure runner exists!
+  # Wrap in if statement to allow for printing if it does not exist and not printing if it does
+  if (!fs::dir_exists(fs::path(app_dir, "tests/testthat.R"))) {
+    use_shinytest2_runner(app_dir, quiet = quiet, overwrite = FALSE)
+  }
+
+  copy_test_file_helper(
+    from_file = system.file("internal/template/test-shinytest2.R", package = "shinytest2"),
+    to_file = "tests/testthat/test-shinytest2.R",
+    pre_msg = "Saving test: ",
+    existing_pre_msg = "Test already found: ",
+    app_dir = app_dir,
+    quiet = quiet,
+    overwrite = overwrite,
+    open = open
+  )
+}
+
+
 
 use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
   rlang::check_installed("usethis")
@@ -142,18 +170,6 @@ use_shinytest2_runner <- function(app_dir = ".", quiet = FALSE, overwrite = FALS
   )
 }
 
-use_shinytest2_test_file <- function(app_dir = ".", open = rlang::is_interactive(), quiet = FALSE, overwrite = FALSE) {
-  copy_test_file_helper(
-    from_file = system.file("internal/template/test-shinytest2.R", package = "shinytest2"),
-    to_file = "tests/testthat/test-shinytest2.R",
-    pre_msg = "Saving test: ",
-    existing_pre_msg = "Test already found: ",
-    app_dir = app_dir,
-    quiet = quiet,
-    overwrite = overwrite,
-    open = open
-  )
-}
 
 copy_test_file_helper <- function(
   from_file,
@@ -171,10 +187,17 @@ copy_test_file_helper <- function(
 
     if (!overwrite && fs::file_exists(to_file)) {
       if (!quiet) {
-        rlang::inform(c("!" = paste0(existing_pre_msg, to_file)))
+        if (identical(readLines(from_file), readLines(to_file))) {
+          # Notify that the file is identical
+          rlang::inform(c("*" = paste0("Identical file found. Skipping: ", to_file)))
+        } else {
+          # Notify that a file already exists
+          rlang::inform(c("!" = paste0(existing_pre_msg, to_file)))
+        }
       }
       return(FALSE)
     }
+
     fs::dir_create(fs::path_dir(to_file))
     if (!quiet) {
       rlang::inform(c("*" = paste0(pre_msg, to_file)))

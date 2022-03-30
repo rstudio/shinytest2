@@ -8,7 +8,20 @@ This class starts a Shiny app in a new R session, along with \pkg{chromote}'s
 headless browser that can be used to simulate user actions. This provides
 a full simulation of a Shiny app so that you can test user interactions
 with a live app.
+
+Methods described below are ordered by perceived popularity.
+\emph{Expect} methods are grouped next to their corresponding \emph{get} methods.
 }
+\section{Vignettes}{
+
+
+Please see \href{https://rstudio.github.io/shinytest2/articles/in-depth.html}{Testing in depth}
+for more details about the different expectation methods.
+
+Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robust testing}
+for more details about the cost / benefits for each expectation method.
+}
+
 \section{Start-up failure}{
 
 
@@ -130,104 +143,88 @@ app$view()
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_text`
-## ------------------------------------------------
-
-\dontrun{
-hello_app <- system.file("examples/01_hello", package = "shiny")
-app <- AppDriver$new(hello_app)
-
-# Make a snapshot of `"Hello Shiny!"`
-app$expect_text("h2")
-}
-
-## ------------------------------------------------
-## Method `AppDriver$get_text`
-## ------------------------------------------------
-
-\dontrun{
-hello_app <- system.file("examples/01_hello", package = "shiny")
-app <- AppDriver$new(hello_app)
-
-app$get_text("h2")
-#> [1] "Hello Shiny!"
-}
-
-## ------------------------------------------------
-## Method `AppDriver$expect_html`
-## ------------------------------------------------
-
-\dontrun{
-app_path <- system.file("examples/04_mpg", package = "shiny")
-app <- AppDriver$new(app_path)
-# Save a snapshot of the `caption` output
-app$expect_html("#caption")
-}
-
-## ------------------------------------------------
-## Method `AppDriver$get_html`
-## ------------------------------------------------
-
-\dontrun{
-app_path <- system.file("examples/03_reactivity", package = "shiny")
-app <- AppDriver$new(app_path, check_names = FALSE)
-app$set_inputs(caption = "Custom value!")
-cat(app$get_html(".shiny-input-container")[1])
-#> <div class="form-group shiny-input-container">
-#>   <label class="control-label" id="caption-label" for="caption">Caption:</label>
-#>   <input id="caption" type="text" class="form-control shiny-bound-input" value="Data Summary">
-#> </div>
-## ^^ No update to the DOM of `caption`
-}
-
-## ------------------------------------------------
-## Method `AppDriver$expect_js`
+## Method `AppDriver$click`
 ## ------------------------------------------------
 
 \dontrun{
 app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
 
-# Track how many clicks are given to `#update` button
-app$run_js("
-  window.test_counter = 0;
-  $('#update').click(() => window.test_counter++);
-")
-app$set_inputs(obs = 20)
-# Click the update button, incrementing the counter
+tmpfile <- write.csv(cars, "cars.csv")
+app$upload_file(file1 = tmpfile)
+cat(app$get_text("#view"))
+app$set_inputs(dataset = "cars", obs = 6)
 app$click("update")
-# Save a snapshot of number of clicks (1)
-app$expect_js("window.test_counter;")
+cat(app$get_text("#view"))
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_download`
+## Method `AppDriver$set_inputs`
 ## ------------------------------------------------
 
 \dontrun{
-app_path <- system.file("examples/10_download", package = "shiny")
+app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
-
-# Save snapshot of rock.csv as 001.download
-# Save snapshot value of `rock.csv` to capture default file name
-app$expect_download("downloadData")
+cat(app$get_text("#view"))
+app$set_inputs(dataset = "cars", obs = 6)
+app$click("update")
+cat(app$get_text("#view"))
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_download`
+## Method `AppDriver$upload_file`
 ## ------------------------------------------------
 
 \dontrun{
-app_path <- system.file("examples/10_download", package = "shiny")
+app_path <- system.file("examples/09_upload", package = "shiny")
 app <- AppDriver$new(app_path)
 
-# Get rock.csv as a tempfile
-app$get_download("downloadData")
-#> [1] "/TEMP/PATH/rock.csv"
+# Save example file
+tmpfile <- tempfile(fileext = ".csv")
+write.csv(cars, tmpfile, row.names = FALSE)
 
-# Get rock.csv as a "./myfile.csv"
-app$get_download("downloadData", filename = "./myfile.csv")
-#> [1] "./myfile.csv"
+# Upload file to input named: file1
+app$upload_file(file1 = tmpfile)
+}
+
+## ------------------------------------------------
+## Method `AppDriver$expect_values`
+## ------------------------------------------------
+
+\dontrun{
+library(shiny)
+shiny_app <- shinyApp(
+  fluidPage(
+    h1("Pythagorean theorem"),
+    numericInput("A", "A", 3),
+    numericInput("B", "B", 4),
+    verbatimTextOutput("C"),
+  ),
+  function(input, output) {
+    a_squared <- reactive({ req(input$A); input$A * input$A })
+    b_squared <- reactive({ req(input$B); input$B * input$B })
+    c_squared <- reactive({ a_squared() + b_squared() })
+    c_value <- reactive({ sqrt(c_squared()) })
+    output$C <- renderText({ c_value() })
+
+    exportTestValues(
+      a_squared = { a_squared() },
+      b_squared = { b_squared() },
+      c_squared = { c_squared() }
+    )
+  }
+)
+
+app <- AppDriver$new(shiny_app)
+
+# Snapshot all known values
+app$expect_values()
+
+# Snapshot only `export` values
+app$expect_values(export = TRUE)
+
+# Snapshot values `"A"` from `input` and `"C"` from `output`
+app$expect_values(input = "A", output = "C")
 }
 
 ## ------------------------------------------------
@@ -306,43 +303,188 @@ str(app$get_values(input = "A", output = "C"))
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_values`
+## Method `AppDriver$expect_download`
+## ------------------------------------------------
+
+\dontrun{
+app_path <- system.file("examples/10_download", package = "shiny")
+app <- AppDriver$new(app_path)
+
+# Save snapshot of rock.csv as 001.download
+# Save snapshot value of `rock.csv` to capture default file name
+app$expect_download("downloadData")
+}
+
+## ------------------------------------------------
+## Method `AppDriver$get_download`
+## ------------------------------------------------
+
+\dontrun{
+app_path <- system.file("examples/10_download", package = "shiny")
+app <- AppDriver$new(app_path)
+
+# Get rock.csv as a tempfile
+app$get_download("downloadData")
+#> [1] "/TEMP/PATH/rock.csv"
+
+# Get rock.csv as a "./myfile.csv"
+app$get_download("downloadData", filename = "./myfile.csv")
+#> [1] "./myfile.csv"
+}
+
+## ------------------------------------------------
+## Method `AppDriver$expect_text`
+## ------------------------------------------------
+
+\dontrun{
+hello_app <- system.file("examples/01_hello", package = "shiny")
+app <- AppDriver$new(hello_app)
+
+# Make a snapshot of `"Hello Shiny!"`
+app$expect_text("h2")
+}
+
+## ------------------------------------------------
+## Method `AppDriver$get_text`
+## ------------------------------------------------
+
+\dontrun{
+hello_app <- system.file("examples/01_hello", package = "shiny")
+app <- AppDriver$new(hello_app)
+
+app$get_text("h2")
+#> [1] "Hello Shiny!"
+}
+
+## ------------------------------------------------
+## Method `AppDriver$expect_html`
+## ------------------------------------------------
+
+\dontrun{
+app_path <- system.file("examples/04_mpg", package = "shiny")
+app <- AppDriver$new(app_path)
+# Save a snapshot of the `caption` output
+app$expect_html("#caption")
+}
+
+## ------------------------------------------------
+## Method `AppDriver$get_html`
+## ------------------------------------------------
+
+\dontrun{
+app_path <- system.file("examples/03_reactivity", package = "shiny")
+app <- AppDriver$new(app_path, check_names = FALSE)
+app$set_inputs(caption = "Custom value!")
+cat(app$get_html(".shiny-input-container")[1])
+#> <div class="form-group shiny-input-container">
+#>   <label class="control-label" id="caption-label" for="caption">Caption:</label>
+#>   <input id="caption" type="text" class="form-control shiny-bound-input" value="Data Summary">
+#> </div>
+## ^^ No update to the DOM of `caption`
+}
+
+## ------------------------------------------------
+## Method `AppDriver$expect_js`
+## ------------------------------------------------
+
+\dontrun{
+app_path <- system.file("examples/07_widgets", package = "shiny")
+app <- AppDriver$new(app_path)
+
+# Track how many clicks are given to `#update` button
+app$run_js("
+  window.test_counter = 0;
+  $('#update').click(() => window.test_counter++);
+")
+app$set_inputs(obs = 20)
+# Click the update button, incrementing the counter
+app$click("update")
+# Save a snapshot of number of clicks (1)
+app$expect_js("window.test_counter;")
+}
+
+## ------------------------------------------------
+## Method `AppDriver$get_js`
 ## ------------------------------------------------
 
 \dontrun{
 library(shiny)
-shiny_app <- shinyApp(
-  fluidPage(
-    h1("Pythagorean theorem"),
-    numericInput("A", "A", 3),
-    numericInput("B", "B", 4),
-    verbatimTextOutput("C"),
-  ),
-  function(input, output) {
-    a_squared <- reactive({ req(input$A); input$A * input$A })
-    b_squared <- reactive({ req(input$B); input$B * input$B })
-    c_squared <- reactive({ a_squared() + b_squared() })
-    c_value <- reactive({ sqrt(c_squared()) })
-    output$C <- renderText({ c_value() })
-
-    exportTestValues(
-      a_squared = { a_squared() },
-      b_squared = { b_squared() },
-      c_squared = { c_squared() }
-    )
-  }
-)
-
+shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
 
-# Snapshot all known values
-app$expect_values()
+# Execute JavaScript code in the app's browser
+app$get_js("1 + 1;")
+#> [1] 2
 
-# Snapshot only `export` values
-app$expect_values(export = TRUE)
+# Execute a JavaScript Promise. Return the resolved value.
+app$get_js("
+  new Promise((resolve) => {
+    setTimeout(() => resolve(1 + 1), 1000)
+  }).
+  then((value) => value + 1);
+")
+#> [1] 3
 
-# Snapshot values `"A"` from `input` and `"C"` from `output`
-app$expect_values(input = "A", output = "C")
+# With escaped arguments
+loc_field <- "hostname"
+js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+app$get_js(js_txt)
+#> [1] "127.0.0.1"
+
+# With `glue::glue()`
+js_txt <- glue::glue_data(
+  lapply(
+    list(x = 40, y = 2),
+    jsonlite::toJSON,
+    auto_unbox = TRUE
+  ),
+  .open = "<", .close = ">",
+  "let answer = function(a, b) {\n",
+  "  return a + b;\n",
+  "};\n",
+  "answer(<x>, <y>);\n"
+)
+app$get_js(js_txt)
+#> [1] 42
+}
+
+## ------------------------------------------------
+## Method `AppDriver$run_js`
+## ------------------------------------------------
+
+\dontrun{
+library(shiny)
+shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
+app <- AppDriver$new(shiny_app)
+
+# Get JavaScript answer from the app's browser
+app$get_js("1 + 1")
+#> [1] 2
+# Execute JavaScript code in the app's browser
+app$run_js("1 + 1")
+# (Returns `app` invisibly)
+
+# With escaped arguments
+loc_field <- "hostname"
+js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+app$run_js(js_txt)
+app$get_js(js_txt)
+#> [1] "127.0.0.1"
+}
+
+## ------------------------------------------------
+## Method `AppDriver$expect_screenshot`
+## ------------------------------------------------
+
+\dontrun{
+app_path <- system.file("examples/01_hello", package = "shiny")
+app <- AppDriver$new(app_path, variant = platform_variant())
+
+# Expect a full size screenshot
+app$expect_screenshot()
+
+# Very brittle test
+app$expect_screenshot(selector = "#distPlot")
 }
 
 ## ------------------------------------------------
@@ -364,86 +506,6 @@ app$get_screenshot(selector = "#distPlot")
 tmpfile <- tempfile(fileext = ".png")
 app$get_screenshot(tmpfile)
 showimage::show_image(tmpfile)
-}
-
-## ------------------------------------------------
-## Method `AppDriver$expect_screenshot`
-## ------------------------------------------------
-
-\dontrun{
-app_path <- system.file("examples/01_hello", package = "shiny")
-app <- AppDriver$new(app_path, variant = platform_variant())
-
-# Expect a full size screenshot
-app$expect_screenshot()
-
-# Very brittle test
-app$expect_screenshot(selector = "#distPlot")
-}
-
-## ------------------------------------------------
-## Method `AppDriver$set_inputs`
-## ------------------------------------------------
-
-\dontrun{
-app_path <- system.file("examples/07_widgets", package = "shiny")
-app <- AppDriver$new(app_path)
-cat(app$get_text("#view"))
-app$set_inputs(dataset = "cars", obs = 6)
-app$click("update")
-cat(app$get_text("#view"))
-}
-
-## ------------------------------------------------
-## Method `AppDriver$click`
-## ------------------------------------------------
-
-\dontrun{
-app_path <- system.file("examples/07_widgets", package = "shiny")
-app <- AppDriver$new(app_path)
-
-tmpfile <- write.csv(cars, "cars.csv")
-app$upload_file(file1 = tmpfile)
-cat(app$get_text("#view"))
-app$set_inputs(dataset = "cars", obs = 6)
-app$click("update")
-cat(app$get_text("#view"))
-}
-
-## ------------------------------------------------
-## Method `AppDriver$upload_file`
-## ------------------------------------------------
-
-\dontrun{
-app_path <- system.file("examples/09_upload", package = "shiny")
-app <- AppDriver$new(app_path)
-
-# Save example file
-tmpfile <- tempfile(fileext = ".csv")
-write.csv(cars, tmpfile, row.names = FALSE)
-
-# Upload file to input named: file1
-app$upload_file(file1 = tmpfile)
-}
-
-## ------------------------------------------------
-## Method `AppDriver$wait_for_js`
-## ------------------------------------------------
-
-\dontrun{
-shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
-app <- AppDriver$new(shiny_app)
-
-# Contrived example:
-# Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)
-system.time(
-  app$wait_for_js("Math.floor((Date.now() / 1000) \% 10) == 5;")
-)
-
-## A second example where we run the contents of a JavaScript file
-## and use the result to wait for a condition
-app$run_js(file = "complicated_file.js")
-app$wait_for_js("complicated_condition();")
 }
 
 ## ------------------------------------------------
@@ -527,72 +589,23 @@ app$get_value(output = "total")
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_js`
+## Method `AppDriver$wait_for_js`
 ## ------------------------------------------------
 
 \dontrun{
-library(shiny)
 shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
 
-# Execute JavaScript code in the app's browser
-app$get_js("1 + 1;")
-#> [1] 2
-
-# Execute a JavaScript Promise. Return the resolved value.
-app$get_js("
-  new Promise((resolve) => {
-    setTimeout(() => resolve(1 + 1), 1000)
-  }).
-  then((value) => value + 1);
-")
-#> [1] 3
-
-# With escaped arguments
-loc_field <- "hostname"
-js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
-app$get_js(js_txt)
-#> [1] "127.0.0.1"
-
-# With `glue::glue()`
-js_txt <- glue::glue_data(
-  lapply(
-    list(x = 40, y = 2),
-    jsonlite::toJSON,
-    auto_unbox = TRUE
-  ),
-  .open = "<", .close = ">",
-  "let answer = function(a, b) {\n",
-  "  return a + b;\n",
-  "};\n",
-  "answer(<x>, <y>);\n"
+# Contrived example:
+# Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)
+system.time(
+  app$wait_for_js("Math.floor((Date.now() / 1000) \% 10) == 5;")
 )
-app$get_js(js_txt)
-#> [1] 42
-}
 
-## ------------------------------------------------
-## Method `AppDriver$run_js`
-## ------------------------------------------------
-
-\dontrun{
-library(shiny)
-shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
-app <- AppDriver$new(shiny_app)
-
-# Get JavaScript answer from the app's browser
-app$get_js("1 + 1")
-#> [1] 2
-# Execute JavaScript code in the app's browser
-app$run_js("1 + 1")
-# (Returns `app` invisibly)
-
-# With escaped arguments
-loc_field <- "hostname"
-js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
-app$run_js(js_txt)
-app$get_js(js_txt)
-#> [1] "127.0.0.1"
+## A second example where we run the contents of a JavaScript file
+## and use the result to wait for a condition
+app$run_js(file = "complicated_file.js")
+app$wait_for_js("complicated_condition();")
 }
 
 ## ------------------------------------------------
@@ -917,33 +930,33 @@ str(head(rlog, 2))
 }
 }
 \seealso{
-\code{\link[=platform_variant]{platform_variant()}}, \code{\link[=use_shinytest2]{use_shinytest2()}}
+\code{\link[=platform_variant]{platform_variant()}}, \code{\link[=use_shinytest2_test]{use_shinytest2_test()}}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{AppDriver$new()}}
 \item \href{#method-view}{\code{AppDriver$view()}}
+\item \href{#method-click}{\code{AppDriver$click()}}
+\item \href{#method-set_inputs}{\code{AppDriver$set_inputs()}}
+\item \href{#method-upload_file}{\code{AppDriver$upload_file()}}
+\item \href{#method-expect_values}{\code{AppDriver$expect_values()}}
+\item \href{#method-get_value}{\code{AppDriver$get_value()}}
+\item \href{#method-get_values}{\code{AppDriver$get_values()}}
+\item \href{#method-expect_download}{\code{AppDriver$expect_download()}}
+\item \href{#method-get_download}{\code{AppDriver$get_download()}}
 \item \href{#method-expect_text}{\code{AppDriver$expect_text()}}
 \item \href{#method-get_text}{\code{AppDriver$get_text()}}
 \item \href{#method-expect_html}{\code{AppDriver$expect_html()}}
 \item \href{#method-get_html}{\code{AppDriver$get_html()}}
 \item \href{#method-expect_js}{\code{AppDriver$expect_js()}}
-\item \href{#method-expect_download}{\code{AppDriver$expect_download()}}
-\item \href{#method-get_download}{\code{AppDriver$get_download()}}
-\item \href{#method-get_value}{\code{AppDriver$get_value()}}
-\item \href{#method-get_values}{\code{AppDriver$get_values()}}
-\item \href{#method-expect_values}{\code{AppDriver$expect_values()}}
-\item \href{#method-get_screenshot}{\code{AppDriver$get_screenshot()}}
-\item \href{#method-expect_screenshot}{\code{AppDriver$expect_screenshot()}}
-\item \href{#method-set_inputs}{\code{AppDriver$set_inputs()}}
-\item \href{#method-click}{\code{AppDriver$click()}}
-\item \href{#method-upload_file}{\code{AppDriver$upload_file()}}
-\item \href{#method-wait_for_js}{\code{AppDriver$wait_for_js()}}
-\item \href{#method-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
-\item \href{#method-wait_for_value}{\code{AppDriver$wait_for_value()}}
 \item \href{#method-get_js}{\code{AppDriver$get_js()}}
 \item \href{#method-run_js}{\code{AppDriver$run_js()}}
+\item \href{#method-expect_screenshot}{\code{AppDriver$expect_screenshot()}}
+\item \href{#method-get_screenshot}{\code{AppDriver$get_screenshot()}}
+\item \href{#method-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
+\item \href{#method-wait_for_value}{\code{AppDriver$wait_for_value()}}
+\item \href{#method-wait_for_js}{\code{AppDriver$wait_for_js()}}
 \item \href{#method-expect_unique_names}{\code{AppDriver$expect_unique_names()}}
 \item \href{#method-get_dir}{\code{AppDriver$get_dir()}}
 \item \href{#method-get_url}{\code{AppDriver$get_url()}}
@@ -1086,6 +1099,8 @@ View the Shiny application
 
 Calls \verb{$view()} on the \code{\link{ChromoteSession}} object to \emph{view} your Shiny
 application in a Chrome browser.
+
+This method is very helpful for debugging while writing your tests.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$view()}\if{html}{\out{</div>}}
 }
@@ -1103,218 +1118,35 @@ app$view()
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_text"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_text}{}}}
-\subsection{Method \code{expect_text()}}{
-Expect snapshot of UI text
+\if{html}{\out{<a id="method-click"></a>}}
+\if{latex}{\out{\hypertarget{method-click}{}}}
+\subsection{Method \code{click()}}{
+Click an element
 
-\verb{$expect_text()} will extract the text value of all matching elements via
-\code{TAG.textContent} and store them in a snapshot file. This method is more
-robust to internal package change as only the text values will be
-maintained. Note, this method will not retrieve any \verb{<input />} value's
-text content, e.g. text inputs or text areas, as the input values are not
-stored in the live HTML.
+Find a Shiny input/output value or DOM CSS selector and click it using
+the \href{https://www.w3schools.com/jsref/met_html_click.asp}{DOM method \code{TAG.click()}}.
 
-When possible, use \verb{$expect_text()} over \verb{$expect_html()} to allow
-package authors room to alter their HTML structures. The resulting array
-of \code{TAG.textContent} values found will be stored in a snapshot file.
+This method can be used to click input buttons and other elements that
+need to simulate a click action.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_text(selector, ..., cran = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{selector}}{A DOM CSS selector to be passed into \code{document.querySelectorAll()}}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-hello_app <- system.file("examples/01_hello", package = "shiny")
-app <- AppDriver$new(hello_app)
-
-# Make a snapshot of `"Hello Shiny!"`
-app$expect_text("h2")
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_text"></a>}}
-\if{latex}{\out{\hypertarget{method-get_text}{}}}
-\subsection{Method \code{get_text()}}{
-Get UI text
-
-\verb{$get_text()} will extract the text value of all matching elements via
-\code{TAG.textContent}. Note, this method will not retrieve any \verb{<input />}
-value's text content, e.g. text inputs or text areas, as the input values
-are not stored in the live HTML.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_text(selector)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{selector}}{A DOM CSS selector to be passed into \code{document.querySelectorAll()}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A vector of character values
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-hello_app <- system.file("examples/01_hello", package = "shiny")
-app <- AppDriver$new(hello_app)
-
-app$get_text("h2")
-#> [1] "Hello Shiny!"
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_html"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_html}{}}}
-\subsection{Method \code{expect_html()}}{
-Expect snapshot of UI HTML
-
-\verb{$expect_html()} will extract the full DOM structures of each matching
-element and store them in a snapshot file. This method captures internal
-DOM structure which may be brittle to changes by external authors or
-dependencies. Note, this method will not retrieve any \verb{<input />} value's
-text content, e.g. text inputs or text areas, as the input values are not
-stored in the live HTML.
-
-When possible, use \verb{$expect_text()} over \verb{$expect_html()} to allow
-package authors room to alter their HTML structures. The resulting array
-of \code{TAG.textContent} values found will be stored in a snapshot file.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_html(selector, ..., outer_html = TRUE, cran = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{selector}}{A DOM selector to be passed into \code{document.querySelectorAll()}}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{outer_html}}{If \code{TRUE} (default), the full DOM structure will be returned (\code{TAG.outerHTML}).
-If \code{FALSE}, the full DOM structure of the child elements will be returned (\code{TAG.innerHTML}).}
-
-\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/04_mpg", package = "shiny")
-app <- AppDriver$new(app_path)
-# Save a snapshot of the `caption` output
-app$expect_html("#caption")
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_html"></a>}}
-\if{latex}{\out{\hypertarget{method-get_html}{}}}
-\subsection{Method \code{get_html()}}{
-Get UI HTML
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_html(selector, ..., outer_html = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{selector}}{A DOM selector to be passed into \code{document.querySelectorAll()}}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{outer_html}}{If \code{TRUE}, the full DOM structure will be returned (\code{TAG.outerHTML}).
-If \code{FALSE}, the full DOM structure of the child elements will be returned (\code{TAG.innerHTML}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/03_reactivity", package = "shiny")
-app <- AppDriver$new(app_path, check_names = FALSE)
-app$set_inputs(caption = "Custom value!")
-cat(app$get_html(".shiny-input-container")[1])
-#> <div class="form-group shiny-input-container">
-#>   <label class="control-label" id="caption-label" for="caption">Caption:</label>
-#>   <input id="caption" type="text" class="form-control shiny-bound-input" value="Data Summary">
-#> </div>
-## ^^ No update to the DOM of `caption`
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_js"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_js}{}}}
-\subsection{Method \code{expect_js()}}{
-Expect snapshot of JavaScript script output
-
-This is a building block function that should be called by other functions.
-For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers around this function.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_js(
-  script = missing_arg(),
-  ...,
-  file = missing_arg(),
-  timeout = 15 * 1000,
-  pre_snapshot = NULL,
-  cran = FALSE
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$click(
+  input = missing_arg(),
+  output = missing_arg(),
+  selector = missing_arg(),
+  ...
 )}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{script}}{A string containing the JavaScript script to be executed.}
+\item{\code{input, output, selector}}{A name of an Shiny \code{input}/\code{output} value or
+a DOM CSS selector. Only one of these may be used.}
 
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{file}}{A file containing JavaScript code to be read and used as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
-
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
-
-\item{\code{pre_snapshot}}{A function to be called on the result of the script before taking the snapshot.
-\verb{$expect_html()} and \verb{$expect_text()} both use \code{\link[=unlist]{unlist()}}.}
-
-\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.}
+\item{\code{...}}{If \code{input} is used, all extra arguments are passed to
+\verb{$set_inputs(!!input := "click", ...)}. This means that the
+\code{AppDriver} will wait until an output has been updated within the
+specified \code{timeout_}. When clicking any other content, \code{...} must be empty.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1324,16 +1156,12 @@ because they often rely on minor details of dependencies.}
 app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
 
-# Track how many clicks are given to `#update` button
-app$run_js("
-  window.test_counter = 0;
-  $('#update').click(() => window.test_counter++);
-")
-app$set_inputs(obs = 20)
-# Click the update button, incrementing the counter
+tmpfile <- write.csv(cars, "cars.csv")
+app$upload_file(file1 = tmpfile)
+cat(app$get_text("#view"))
+app$set_inputs(dataset = "cars", obs = 6)
 app$click("update")
-# Save a snapshot of number of clicks (1)
-app$expect_js("window.test_counter;")
+cat(app$get_text("#view"))
 }
 }
 \if{html}{\out{</div>}}
@@ -1342,155 +1170,53 @@ app$expect_js("window.test_counter;")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_download"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_download}{}}}
-\subsection{Method \code{expect_download()}}{
-Expect a downloadable file
+\if{html}{\out{<a id="method-set_inputs"></a>}}
+\if{latex}{\out{\hypertarget{method-set_inputs}{}}}
+\subsection{Method \code{set_inputs()}}{
+Set input values
 
-Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}} \code{id}, the corresponding
-file will be downloaded and saved as a snapshot file.
+Set Shiny inputs by sending the value to the Chrome browser and
+programaticly updating the values. Given \code{wait_ = TRUE}, the method will
+not return until an output value has been updated.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_download(id, ..., name = NULL, cran = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{Output id of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{name}}{File name to save file to (including file name extension). The default, \code{NULL},
-generates an ascending sequence of names: \verb{001.download},
-\verb{002.download}, etc.}
-
-\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/10_download", package = "shiny")
-app <- AppDriver$new(app_path)
-
-# Save snapshot of rock.csv as 001.download
-# Save snapshot value of `rock.csv` to capture default file name
-app$expect_download("downloadData")
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_download"></a>}}
-\if{latex}{\out{\hypertarget{method-get_download}{}}}
-\subsection{Method \code{get_download()}}{
-Get downloadable file
-
-Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}} \code{id}, the corresponding
-file will be downloaded and saved as a file.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_download(id, filename = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{Output id of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
-
-\item{\code{filename}}{File path to save the downloaded file to.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\verb{$get_download()} will return the final save location of the file. This
-location can change depending on the value of \code{filename} and response
-headers.
-
-Location logic:
-\itemize{
-\item If \code{filename} is not NULL, \code{filename} will be returned.
-\item If a \href{https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition}{\code{content-disposition} \code{filename}} is provided,
-then a temp file containing this \code{filename} will be
-returned.
-\item Otherwise, a tempfile ending in \code{.download} will be returned.
-}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/10_download", package = "shiny")
-app <- AppDriver$new(app_path)
-
-# Get rock.csv as a tempfile
-app$get_download("downloadData")
-#> [1] "/TEMP/PATH/rock.csv"
-
-# Get rock.csv as a "./myfile.csv"
-app$get_download("downloadData", filename = "./myfile.csv")
-#> [1] "./myfile.csv"
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_value"></a>}}
-\if{latex}{\out{\hypertarget{method-get_value}{}}}
-\subsection{Method \code{get_value()}}{
-Get a single \code{input}, \code{output}, or \code{export} value
-
-This is a helper function around \verb{$get_values()} to retrieve a single
-\code{input}, \code{output}, or \code{export} value. Only a single \code{input}, \code{output}, or
-\code{export} value can be used.
-
-Note, values that contain environments or other values that will have
-trouble serializing may not work well. This includes R6 objects.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_value(
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_inputs(
   ...,
-  input = missing_arg(),
-  output = missing_arg(),
-  export = missing_arg(),
-  hash_images = FALSE
+  wait_ = TRUE,
+  timeout_ = 3 * 1000,
+  allow_no_input_binding_ = FALSE,
+  priority_ = c("input", "event")
 )}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+\item{\code{...}}{Name-value pairs, \verb{component_name_1 = value_1, component_name_2 = value_2} etc.
+Input with name \code{component_name_1} will be assigned value \code{value_1}.}
 
-\item{\code{input, output, export}}{One of these variable should contain a single
-string value. If more than one value is specified or no values are
-specified, an error will be thrown.}
+\item{\code{wait_}}{Wait until all reactive updates have completed?}
 
-\item{\code{hash_images}}{If \code{TRUE}, images will be hashed before being returned.
-Otherwise, all images will return their full data64 encoded value.}
+\item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).}
+
+\item{\code{allow_no_input_binding_}}{When setting the value of an input, allow
+it to set the value of an input even if that input does not have an
+input binding. This is useful to replicate behavior like hovering over
+a \pkg{plotly} plot.}
+
+\item{\code{priority_}}{Sets the event priority. For expert use only: see
+\url{https://shiny.rstudio.com/articles/communicating-with-js.html#values-vs-events} for details.}
 }
 \if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The requested \code{input}, \code{output}, or \code{export} value.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
-app_path <- system.file("examples/04_mpg", package = "shiny")
+app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
-# Retrieve a single value
-app$get_value(output = "caption")
-#> [1] "mpg ~ cyl"
-# Equivalent code using `$get_values()`
-app$get_values(output = "caption")$output$caption
-#> [1] "mpg ~ cyl"
+cat(app$get_text("#view"))
+app$set_inputs(dataset = "cars", obs = 6)
+app$click("update")
+cat(app$get_text("#view"))
 }
 }
 \if{html}{\out{</div>}}
@@ -1499,104 +1225,40 @@ app$get_values(output = "caption")$output$caption
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_values"></a>}}
-\if{latex}{\out{\hypertarget{method-get_values}{}}}
-\subsection{Method \code{get_values()}}{
-Get \code{input}, \code{output}, and \code{export} values
+\if{html}{\out{<a id="method-upload_file"></a>}}
+\if{latex}{\out{\hypertarget{method-upload_file}{}}}
+\subsection{Method \code{upload_file()}}{
+Upload a file
 
-Retrieves a list of all known \code{input}, \code{output}, or \code{export} values. This
-method is a core method when inspecting your Shiny app.
-
-Note, values that contain environments or other values that will have
-trouble serializing may not work well. This includes R6 objects.
+Uploads a file to the specified file input.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_values(
-  ...,
-  input = missing_arg(),
-  output = missing_arg(),
-  export = missing_arg(),
-  hash_images = FALSE
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$upload_file(..., wait_ = TRUE, timeout_ = 3 * 1000)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+\item{\code{...}}{Name-path pair, e.g. \code{component_name = file_path}. The file located at
+\code{file_path} will be uploaded to file input with name \code{component_name}.}
 
-\item{\code{input, output, export}}{Depending on which parameters are supplied, different return values can occur:
-* If \code{input}, \code{output}, and \code{export} are all missing, then all values are included in the snapshot.
-* If at least one \code{input}, \code{output}, or \code{export} is specified, then only the requested values are included in the snapshot.
+\item{\code{wait_}}{Wait until all reactive updates have completed?}
 
-The values supplied to each variable can be:
-* A character vector of specific names to only include in the snapshot.
-* \code{TRUE} to request that all values of that type are included in the snapshot.
-* Anything else (e.g. \code{NULL} or \code{FALSE}) will result in the parameter being ignored.}
-
-\item{\code{hash_images}}{If \code{TRUE}, images will be hashed before being returned.
-Otherwise, all images will return their full data64 encoded value.}
+\item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).}
 }
 \if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A named list of all inputs, outputs, and export values.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
-library(shiny)
-shiny_app <- shinyApp(
-  fluidPage(
-    h1("Pythagorean theorem"),
-    numericInput("A", "A", 3),
-    numericInput("B", "B", 4),
-    verbatimTextOutput("C"),
-  ),
-  function(input, output) {
-    a_squared <- reactive({ req(input$A); input$A * input$A })
-    b_squared <- reactive({ req(input$B); input$B * input$B })
-    c_squared <- reactive({ a_squared() + b_squared() })
-    c_value <- reactive({ sqrt(c_squared()) })
-    output$C <- renderText({ c_value() })
+app_path <- system.file("examples/09_upload", package = "shiny")
+app <- AppDriver$new(app_path)
 
-    exportTestValues(
-      a_squared = { a_squared() },
-      b_squared = { b_squared() },
-      c_squared = { c_squared() }
-    )
-  }
-)
+# Save example file
+tmpfile <- tempfile(fileext = ".csv")
+write.csv(cars, tmpfile, row.names = FALSE)
 
-app <- AppDriver$new(shiny_app)
-
-# Show all known values
-str(app$get_values())
-#> List of 3
-#> $ input :List of 2
-#> ..$ A: int 3
-#> ..$ B: int 4
-#> $ output:List of 1
-#> ..$ C: chr "5"
-#> $ export:List of 3
-#> ..$ a_squared: int 9
-#> ..$ b_squared: int 16
-#> ..$ c_squared: int 25
-
-# Get only `export` values
-str(app$get_values(export = TRUE))
-#> List of 1
-#> $ export:List of 3
-#> ..$ a_squared: int 9
-#> ..$ b_squared: int 16
-#> ..$ c_squared: int 25
-
-# Get values `"A"` from `input` and `"C"` from `output`
-str(app$get_values(input = "A", output = "C"))
-#> List of 2
-#> $ input :List of 1
-#> ..$ A: int 3
-#> $ output:List of 1
-#> ..$ C: chr "5"
+# Upload file to input named: file1
+app$upload_file(file1 = tmpfile)
 }
 }
 \if{html}{\out{</div>}}
@@ -1613,9 +1275,10 @@ Expect \code{input}, \code{output}, and \code{export} values
 A JSON snapshot is saved of given the results from the underlying call to \verb{$get_values()}.
 
 Note, values that contain environments or other values that will have
-trouble serializing may not work well. This includes R6 objects. Instead,
-these objects should be manually inspected and have their components
-tested individually.
+trouble serializing may not work well. Instead, these objects should be
+manually inspected and have their components tested individually.
+
+Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robust testing} for more details.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_values(
   ...,
@@ -1713,73 +1376,671 @@ app$expect_values(input = "A", output = "C")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_screenshot"></a>}}
-\if{latex}{\out{\hypertarget{method-get_screenshot}{}}}
-\subsection{Method \code{get_screenshot()}}{
-Take a screenshot
+\if{html}{\out{<a id="method-get_value"></a>}}
+\if{latex}{\out{\hypertarget{method-get_value}{}}}
+\subsection{Method \code{get_value()}}{
+Get a single \code{input}, \code{output}, or \code{export} value
 
-Take a screenshot of the Shiny application.
+This is a helper function around \verb{$get_values()} to retrieve a single
+\code{input}, \code{output}, or \code{export} value. Only a single \code{input}, \code{output}, or
+\code{export} value can be used.
+
+Note, values that contain environments or other values that will have
+trouble serializing to RDS may not work well.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_screenshot(
-  file = NULL,
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_value(
   ...,
-  screenshot_args = missing_arg(),
-  delay = missing_arg(),
-  selector = missing_arg()
+  input = missing_arg(),
+  output = missing_arg(),
+  export = missing_arg(),
+  hash_images = FALSE
 )}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{file}}{If \code{NULL}, then the image will be displayed to the current
-Graphics Device. If a file path, then the screenshot will be saved to
-that file.}
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{input, output, export}}{One of these variable should contain a single
+string value. If more than one value is specified or no values are
+specified, an error will be thrown.}
+
+\item{\code{hash_images}}{If \code{TRUE}, images will be hashed before being returned.
+Otherwise, all images will return their full data64 encoded value.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The requested \code{input}, \code{output}, or \code{export} value.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+app_path <- system.file("examples/04_mpg", package = "shiny")
+app <- AppDriver$new(app_path)
+# Retrieve a single value
+app$get_value(output = "caption")
+#> [1] "mpg ~ cyl"
+# Equivalent code using `$get_values()`
+app$get_values(output = "caption")$output$caption
+#> [1] "mpg ~ cyl"
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_values"></a>}}
+\if{latex}{\out{\hypertarget{method-get_values}{}}}
+\subsection{Method \code{get_values()}}{
+Get \code{input}, \code{output}, and \code{export} values
+
+Retrieves a list of all known \code{input}, \code{output}, or \code{export} values. This
+method is a core method when inspecting your Shiny app.
+
+Note, values that contain environments or other values that will have
+trouble serializing may not work well.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_values(
+  ...,
+  input = missing_arg(),
+  output = missing_arg(),
+  export = missing_arg(),
+  hash_images = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{input, output, export}}{Depending on which parameters are supplied, different return values can occur:
+* If \code{input}, \code{output}, and \code{export} are all missing, then all values are included in the snapshot.
+* If at least one \code{input}, \code{output}, or \code{export} is specified, then only the requested values are included in the snapshot.
+
+The values supplied to each variable can be:
+* A character vector of specific names to only include in the snapshot.
+* \code{TRUE} to request that all values of that type are included in the snapshot.
+* Anything else (e.g. \code{NULL} or \code{FALSE}) will result in the parameter being ignored.}
+
+\item{\code{hash_images}}{If \code{TRUE}, images will be hashed before being returned.
+Otherwise, all images will return their full data64 encoded value.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A named list of all inputs, outputs, and export values.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+library(shiny)
+shiny_app <- shinyApp(
+  fluidPage(
+    h1("Pythagorean theorem"),
+    numericInput("A", "A", 3),
+    numericInput("B", "B", 4),
+    verbatimTextOutput("C"),
+  ),
+  function(input, output) {
+    a_squared <- reactive({ req(input$A); input$A * input$A })
+    b_squared <- reactive({ req(input$B); input$B * input$B })
+    c_squared <- reactive({ a_squared() + b_squared() })
+    c_value <- reactive({ sqrt(c_squared()) })
+    output$C <- renderText({ c_value() })
+
+    exportTestValues(
+      a_squared = { a_squared() },
+      b_squared = { b_squared() },
+      c_squared = { c_squared() }
+    )
+  }
+)
+
+app <- AppDriver$new(shiny_app)
+
+# Show all known values
+str(app$get_values())
+#> List of 3
+#> $ input :List of 2
+#> ..$ A: int 3
+#> ..$ B: int 4
+#> $ output:List of 1
+#> ..$ C: chr "5"
+#> $ export:List of 3
+#> ..$ a_squared: int 9
+#> ..$ b_squared: int 16
+#> ..$ c_squared: int 25
+
+# Get only `export` values
+str(app$get_values(export = TRUE))
+#> List of 1
+#> $ export:List of 3
+#> ..$ a_squared: int 9
+#> ..$ b_squared: int 16
+#> ..$ c_squared: int 25
+
+# Get values `"A"` from `input` and `"C"` from `output`
+str(app$get_values(input = "A", output = "C"))
+#> List of 2
+#> $ input :List of 1
+#> ..$ A: int 3
+#> $ output:List of 1
+#> ..$ C: chr "5"
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-expect_download"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_download}{}}}
+\subsection{Method \code{expect_download()}}{
+Expect a downloadable file
+
+Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}} \code{output} ID, the corresponding
+file will be downloaded and saved as a snapshot file.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_download(output, ..., name = NULL, cran = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{output}}{\code{output} ID of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
-\item{\code{screenshot_args}}{This named list of arguments is passed along to
-\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. If missing, the
-value will default to \verb{$new(screenshot_args=)}.
+\item{\code{name}}{File name to save file to (including file name extension). The default, \code{NULL},
+generates an ascending sequence of names: \verb{001.download},
+\verb{002.download}, etc.}
 
-If the value is:
-\itemize{
-\item \code{TRUE}: A screenshot of the whole page will be taken with no delay
-\item A named list of arguments: Arguments passed directly to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
-\verb{$get_screenshot()} method. The \code{selector} and \code{delay} will default to \code{"html"} and \code{0} respectively.
-}
-
-If a \code{FALSE} value is provided, the parameter will be ignored and a
-screenshot will be taken with default behavior.}
-
-\item{\code{delay}}{The number of milliseconds to wait before taking the screenshot.
-This value can either be supplied as \code{delay} or \code{screenshot_args}'s delay
-slot. The \code{delay} parameter will have preference.}
-
-\item{\code{selector}}{The selector is a CSS selector that will be used to select a
-portion of the page to be captured. This value can either be supplied as
-\code{selector} or \code{screenshot_args}'s selector slot. The \code{selector} parameter
-will have preference.}
+\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
+they are not because snapshot tests tend to be fragile
+because they often rely on minor details of dependencies.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
-app_path <- system.file("examples/01_hello", package = "shiny")
+app_path <- system.file("examples/10_download", package = "shiny")
 app <- AppDriver$new(app_path)
 
-# Display in viewer
-app$get_screenshot()
+# Save snapshot of rock.csv as 001.download
+# Save snapshot value of `rock.csv` to capture default file name
+app$expect_download("downloadData")
+}
+}
+\if{html}{\out{</div>}}
 
-# Update bins then display `"disPlot"` in viewer
-app$set_inputs(bins = 10)
-app$get_screenshot(selector = "#distPlot")
+}
 
-# Save screenshot to file and view it
-tmpfile <- tempfile(fileext = ".png")
-app$get_screenshot(tmpfile)
-showimage::show_image(tmpfile)
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_download"></a>}}
+\if{latex}{\out{\hypertarget{method-get_download}{}}}
+\subsection{Method \code{get_download()}}{
+Get downloadable file
+
+Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}} \code{output} ID, the corresponding
+file will be downloaded and saved as a file.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_download(output, filename = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{output}}{\code{output} ID of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
+
+\item{\code{filename}}{File path to save the downloaded file to.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\verb{$get_download()} will return the final save location of the file. This
+location can change depending on the value of \code{filename} and response
+headers.
+
+Location logic:
+\itemize{
+\item If \code{filename} is not NULL, \code{filename} will be returned.
+\item If a \href{https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition}{\code{content-disposition} \code{filename}} is provided,
+then a temp file containing this \code{filename} will be
+returned.
+\item Otherwise, a tempfile ending in \code{.download} will be returned.
+}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+app_path <- system.file("examples/10_download", package = "shiny")
+app <- AppDriver$new(app_path)
+
+# Get rock.csv as a tempfile
+app$get_download("downloadData")
+#> [1] "/TEMP/PATH/rock.csv"
+
+# Get rock.csv as a "./myfile.csv"
+app$get_download("downloadData", filename = "./myfile.csv")
+#> [1] "./myfile.csv"
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-expect_text"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_text}{}}}
+\subsection{Method \code{expect_text()}}{
+Expect snapshot of UI text
+
+\verb{$expect_text()} will extract the text value of all matching elements via
+\code{TAG.textContent} and store them in a snapshot file. This method is more
+robust to internal package change as only the text values will be
+maintained. Note, this method will not retrieve any \verb{<input />} value's
+text content, e.g. text inputs or text areas, as the input values are not
+stored in the live HTML.
+
+When possible, use \verb{$expect_text()} over \verb{$expect_html()} to allow
+package authors room to alter their HTML structures. The resulting array
+of \code{TAG.textContent} values found will be stored in a snapshot file.
+
+Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robust testing} for more details.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_text(selector, ..., cran = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{selector}}{A DOM CSS selector to be passed into \code{document.querySelectorAll()}}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
+they are not because snapshot tests tend to be fragile
+because they often rely on minor details of dependencies.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+hello_app <- system.file("examples/01_hello", package = "shiny")
+app <- AppDriver$new(hello_app)
+
+# Make a snapshot of `"Hello Shiny!"`
+app$expect_text("h2")
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_text"></a>}}
+\if{latex}{\out{\hypertarget{method-get_text}{}}}
+\subsection{Method \code{get_text()}}{
+Get UI text
+
+\verb{$get_text()} will extract the text value of all matching elements via
+\code{TAG.textContent}. Note, this method will not retrieve any \verb{<input />}
+value's text content, e.g. text inputs or text areas, as the input values
+are not stored in the live HTML.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_text(selector)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{selector}}{A DOM CSS selector to be passed into \code{document.querySelectorAll()}}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A vector of character values
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+hello_app <- system.file("examples/01_hello", package = "shiny")
+app <- AppDriver$new(hello_app)
+
+app$get_text("h2")
+#> [1] "Hello Shiny!"
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-expect_html"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_html}{}}}
+\subsection{Method \code{expect_html()}}{
+Expect snapshot of UI HTML
+
+\verb{$expect_html()} will extract the full DOM structures of each matching
+element and store them in a snapshot file. This method captures internal
+DOM structure which may be brittle to changes by external authors or
+dependencies.
+
+Note, this method will not retrieve any \verb{<input />} value's
+text content, e.g. text inputs or text areas, as the input values are not
+stored in the live HTML.
+
+When possible, use \verb{$expect_text()} over \verb{$expect_html()} to allow
+package authors room to alter their HTML structures. The resulting array
+of \code{TAG.textContent} values found will be stored in a snapshot file.
+
+Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robust testing} for more details.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_html(selector, ..., outer_html = TRUE, cran = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{selector}}{A DOM selector to be passed into \code{document.querySelectorAll()}}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{outer_html}}{If \code{TRUE} (default), the full DOM structure will be returned (\code{TAG.outerHTML}).
+If \code{FALSE}, the full DOM structure of the child elements will be returned (\code{TAG.innerHTML}).}
+
+\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
+they are not because snapshot tests tend to be fragile
+because they often rely on minor details of dependencies.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+app_path <- system.file("examples/04_mpg", package = "shiny")
+app <- AppDriver$new(app_path)
+# Save a snapshot of the `caption` output
+app$expect_html("#caption")
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_html"></a>}}
+\if{latex}{\out{\hypertarget{method-get_html}{}}}
+\subsection{Method \code{get_html()}}{
+Get UI HTML
+
+\verb{$get()} will extract the full DOM structures of each matching
+element. This method captures internal
+DOM structure which may be brittle to changes by external authors or
+dependencies.
+
+Note, this method will not retrieve any \verb{<input />} value's
+text content, e.g. text inputs or text areas, as the input values are not
+stored in the live HTML.
+
+Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robust testing} for more details.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_html(selector, ..., outer_html = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{selector}}{A DOM selector to be passed into \code{document.querySelectorAll()}}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{outer_html}}{If \code{TRUE}, the full DOM structure will be returned (\code{TAG.outerHTML}).
+If \code{FALSE}, the full DOM structure of the child elements will be returned (\code{TAG.innerHTML}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+app_path <- system.file("examples/03_reactivity", package = "shiny")
+app <- AppDriver$new(app_path, check_names = FALSE)
+app$set_inputs(caption = "Custom value!")
+cat(app$get_html(".shiny-input-container")[1])
+#> <div class="form-group shiny-input-container">
+#>   <label class="control-label" id="caption-label" for="caption">Caption:</label>
+#>   <input id="caption" type="text" class="form-control shiny-bound-input" value="Data Summary">
+#> </div>
+## ^^ No update to the DOM of `caption`
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-expect_js"></a>}}
+\if{latex}{\out{\hypertarget{method-expect_js}{}}}
+\subsection{Method \code{expect_js()}}{
+Expect snapshot of JavaScript script output
+
+This is a building block function that may be called by other functions.
+For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers around this function.
+
+Once the \code{script} has executed, the JSON result will be saved to a snapshot file.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_js(
+  script = missing_arg(),
+  ...,
+  file = missing_arg(),
+  timeout = 15 * 1000,
+  pre_snapshot = NULL,
+  cran = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{script}}{A string containing the JavaScript script to be executed.}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{file}}{A file containing JavaScript code to be read and used as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
+
+\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
+
+\item{\code{pre_snapshot}}{A function to be called on the result of the script before taking the snapshot.
+\verb{$expect_html()} and \verb{$expect_text()} both use \code{\link[=unlist]{unlist()}}.}
+
+\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
+they are not because snapshot tests tend to be fragile
+because they often rely on minor details of dependencies.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+app_path <- system.file("examples/07_widgets", package = "shiny")
+app <- AppDriver$new(app_path)
+
+# Track how many clicks are given to `#update` button
+app$run_js("
+  window.test_counter = 0;
+  $('#update').click(() => window.test_counter++);
+")
+app$set_inputs(obs = 20)
+# Click the update button, incrementing the counter
+app$click("update")
+# Save a snapshot of number of clicks (1)
+app$expect_js("window.test_counter;")
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_js"></a>}}
+\if{latex}{\out{\hypertarget{method-get_js}{}}}
+\subsection{Method \code{get_js()}}{
+Execute JavaScript code in the browser and return the result
+
+This function will block the local R session until the code has finished
+executing its \emph{tick} in the browser. If a \code{Promise} is returned from the
+script, \verb{$get_js()} will wait for the promise to resolve. To have
+JavaScript code execute asynchronously, wrap the code in a Promise object
+and have the script return an atomic value.
+
+Arguments will have to be inserted into the script as there is not access
+to \code{arguments}. This can be done with commands like \code{paste()}. If using
+\code{glue::glue()}, be sure to use uncommon \code{.open} and \code{.close} values to
+avoid having to doulbe all \verb{\{} and \verb{\}}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_js(
+  script = missing_arg(),
+  ...,
+  file = missing_arg(),
+  timeout = 15 * 1000
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{script}}{JavaScript to execute. If a JavaScript Promise is returned,
+the R session will block until the promise has been resolved and return
+the value.}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{file}}{A (local) file containing JavaScript code to be read and used
+as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
+
+\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Result of the \code{script} (or \code{file} contents)
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+library(shiny)
+shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
+app <- AppDriver$new(shiny_app)
+
+# Execute JavaScript code in the app's browser
+app$get_js("1 + 1;")
+#> [1] 2
+
+# Execute a JavaScript Promise. Return the resolved value.
+app$get_js("
+  new Promise((resolve) => {
+    setTimeout(() => resolve(1 + 1), 1000)
+  }).
+  then((value) => value + 1);
+")
+#> [1] 3
+
+# With escaped arguments
+loc_field <- "hostname"
+js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+app$get_js(js_txt)
+#> [1] "127.0.0.1"
+
+# With `glue::glue()`
+js_txt <- glue::glue_data(
+  lapply(
+    list(x = 40, y = 2),
+    jsonlite::toJSON,
+    auto_unbox = TRUE
+  ),
+  .open = "<", .close = ">",
+  "let answer = function(a, b) {\n",
+  "  return a + b;\n",
+  "};\n",
+  "answer(<x>, <y>);\n"
+)
+app$get_js(js_txt)
+#> [1] 42
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-run_js"></a>}}
+\if{latex}{\out{\hypertarget{method-run_js}{}}}
+\subsection{Method \code{run_js()}}{
+Execute JavaScript code in the browser
+
+This function will block the local R session until the code has finished
+executing its \emph{tick} in the browser.
+
+The final result of the code will be ignored and not returned to the R session.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$run_js(
+  script = missing_arg(),
+  ...,
+  file = missing_arg(),
+  timeout = 15 * 1000
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{script}}{JavaScript to execute.}
+
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{file}}{A (local) file containing JavaScript code to be read and used
+as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
+
+\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+library(shiny)
+shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
+app <- AppDriver$new(shiny_app)
+
+# Get JavaScript answer from the app's browser
+app$get_js("1 + 1")
+#> [1] 2
+# Execute JavaScript code in the app's browser
+app$run_js("1 + 1")
+# (Returns `app` invisibly)
+
+# With escaped arguments
+loc_field <- "hostname"
+js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
+app$run_js(js_txt)
+app$get_js(js_txt)
+#> [1] "127.0.0.1"
 }
 }
 \if{html}{\out{</div>}}
@@ -1877,194 +2138,73 @@ app$expect_screenshot(selector = "#distPlot")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_inputs"></a>}}
-\if{latex}{\out{\hypertarget{method-set_inputs}{}}}
-\subsection{Method \code{set_inputs()}}{
-Set input values
+\if{html}{\out{<a id="method-get_screenshot"></a>}}
+\if{latex}{\out{\hypertarget{method-get_screenshot}{}}}
+\subsection{Method \code{get_screenshot()}}{
+Take a screenshot
 
-Set Shiny inputs by sending the value to the Chrome browser and programaticly updating the values. Given \code{wait_ = TRUE}, the method will not return until an output value has been updated.
+Take a screenshot of the Shiny application.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_inputs(
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_screenshot(
+  file = NULL,
   ...,
-  wait_ = TRUE,
-  timeout_ = 3 * 1000,
-  allow_no_input_binding_ = FALSE,
-  priority_ = c("input", "event")
+  screenshot_args = missing_arg(),
+  delay = missing_arg(),
+  selector = missing_arg()
 )}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Name-value pairs, \verb{component_name_1 = value_1, component_name_2 = value_2} etc.
-Input with name \code{component_name_1} will be assigned value \code{value_1}.}
+\item{\code{file}}{If \code{NULL}, then the image will be displayed to the current
+Graphics Device. If a file path, then the screenshot will be saved to
+that file.}
 
-\item{\code{wait_}}{Wait until all reactive updates have completed?}
+\item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
-\item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).}
+\item{\code{screenshot_args}}{This named list of arguments is passed along to
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. If missing, the
+value will default to \verb{$new(screenshot_args=)}.
 
-\item{\code{allow_no_input_binding_}}{When setting the value of an input, allow
-it to set the value of an input even if that input does not have an
-input binding. This is useful to replicate behavior like hovering over
-a \pkg{plotly} plot.}
+If the value is:
+\itemize{
+\item \code{TRUE}: A screenshot of the whole page will be taken with no delay
+\item A named list of arguments: Arguments passed directly to \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s
+\verb{$get_screenshot()} method. The \code{selector} and \code{delay} will default to \code{"html"} and \code{0} respectively.
+}
 
-\item{\code{priority_}}{Sets the event priority. For expert use only: see
-\url{https://shiny.rstudio.com/articles/communicating-with-js.html#values-vs-events} for details.}
+If a \code{FALSE} value is provided, the parameter will be ignored and a
+screenshot will be taken with default behavior.}
+
+\item{\code{delay}}{The number of milliseconds to wait before taking the screenshot.
+This value can either be supplied as \code{delay} or \code{screenshot_args}'s delay
+slot. The \code{delay} parameter will have preference.}
+
+\item{\code{selector}}{The selector is a CSS selector that will be used to select a
+portion of the page to be captured. This value can either be supplied as
+\code{selector} or \code{screenshot_args}'s selector slot. The \code{selector} parameter
+will have preference.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
-app_path <- system.file("examples/07_widgets", package = "shiny")
-app <- AppDriver$new(app_path)
-cat(app$get_text("#view"))
-app$set_inputs(dataset = "cars", obs = 6)
-app$click("update")
-cat(app$get_text("#view"))
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-click"></a>}}
-\if{latex}{\out{\hypertarget{method-click}{}}}
-\subsection{Method \code{click()}}{
-Click an element
-
-Find a Shiny input/output value or DOM CSS selector and click it using
-the \href{https://www.w3schools.com/jsref/met_html_click.asp}{DOM method \code{TAG.click()}}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$click(
-  input = missing_arg(),
-  output = missing_arg(),
-  selector = missing_arg(),
-  ...
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{input, output, selector}}{A name of an Shiny \code{input}/\code{output} value or
-a DOM CSS selector. Only one of these may be used.}
-
-\item{\code{...}}{If \code{input} is used, all extra arguments are passed to
-\verb{$set_inputs(!!input := "click", ...)}. By default, this means that the
-\code{AppDriver} will wait until an output has been updated within the
-specified \code{timeout_}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/07_widgets", package = "shiny")
+app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
-tmpfile <- write.csv(cars, "cars.csv")
-app$upload_file(file1 = tmpfile)
-cat(app$get_text("#view"))
-app$set_inputs(dataset = "cars", obs = 6)
-app$click("update")
-cat(app$get_text("#view"))
-}
-}
-\if{html}{\out{</div>}}
+# Display in viewer
+app$get_screenshot()
 
-}
+# Update bins then display `"disPlot"` in viewer
+app$set_inputs(bins = 10)
+app$get_screenshot(selector = "#distPlot")
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-upload_file"></a>}}
-\if{latex}{\out{\hypertarget{method-upload_file}{}}}
-\subsection{Method \code{upload_file()}}{
-Upload a file
-
-Uploads a file to the specified file input.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$upload_file(..., wait_ = TRUE, timeout_ = 3 * 1000)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{Name-path pair, e.g. \code{component_name = file_path}. The file located at
-\code{file_path} will be uploaded to file input with name \code{component_name}.}
-
-\item{\code{wait_}}{Wait until all reactive updates have completed?}
-
-\item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/09_upload", package = "shiny")
-app <- AppDriver$new(app_path)
-
-# Save example file
-tmpfile <- tempfile(fileext = ".csv")
-write.csv(cars, tmpfile, row.names = FALSE)
-
-# Upload file to input named: file1
-app$upload_file(file1 = tmpfile)
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-wait_for_js"></a>}}
-\if{latex}{\out{\hypertarget{method-wait_for_js}{}}}
-\subsection{Method \code{wait_for_js()}}{
-Wait for a JavaScript expression to be true
-
-Waits until a JavaScript \code{expr}ession evaluates to \code{true} or the
-\code{timeout} is exceeded.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_js(script, timeout = 30 * 1000, interval = 100)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{script}}{A string containing JavaScript code. This code must
-eventually return a \href{https://developer.mozilla.org/en-US/docs/Glossary/Truthy}{\code{true}thy value} or a
-timeout error will be thrown.}
-
-\item{\code{timeout}}{How long the script has to return a \code{true}thy value, in ms.}
-
-\item{\code{interval}}{How often to check for the condition, in ms.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{invisible(self)} if expression evaluates to \code{true} without error
-within the timeout. Otherwise an error will be thrown
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
-app <- AppDriver$new(shiny_app)
-
-# Contrived example:
-# Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)
-system.time(
-  app$wait_for_js("Math.floor((Date.now() / 1000) \% 10) == 5;")
-)
-
-## A second example where we run the contents of a JavaScript file
-## and use the result to wait for a condition
-app$run_js(file = "complicated_file.js")
-app$wait_for_js("complicated_condition();")
+# Save screenshot to file and view it
+tmpfile <- tempfile(fileext = ".png")
+app$get_screenshot(tmpfile)
+showimage::show_image(tmpfile)
 }
 }
 \if{html}{\out{</div>}}
@@ -2243,150 +2383,50 @@ app$get_value(output = "total")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_js"></a>}}
-\if{latex}{\out{\hypertarget{method-get_js}{}}}
-\subsection{Method \code{get_js()}}{
-Execute JavaScript code in the browser and return the result
+\if{html}{\out{<a id="method-wait_for_js"></a>}}
+\if{latex}{\out{\hypertarget{method-wait_for_js}{}}}
+\subsection{Method \code{wait_for_js()}}{
+Wait for a JavaScript expression to be true
 
-This function will block the local R session until the code has finished
-executing its \emph{tick} in the browser. If a \code{Promise} is returned from the
-script, \verb{$get_js()} will wait for the promise to resolve. To have
-JavaScript code execute asynchronously, wrap the code in a Promise object
-and have the script return an atomic value.
-
-Arguments will have to be inserted into the script as there is not access
-to \code{arguments}. This can be done with commands like \code{paste()}. If using
-\code{glue::glue()}, be sure to use uncommon \code{.open} and \code{.close} values to
-avoid having to doulbe all \verb{\{} and \verb{\}}.
+Waits until a JavaScript \code{expr}ession evaluates to \code{true} or the
+\code{timeout} is exceeded.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_js(
-  script = missing_arg(),
-  ...,
-  file = missing_arg(),
-  timeout = 15 * 1000
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_js(script, timeout = 30 * 1000, interval = 100)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{script}}{JavaScript to execute. If a JavaScript Promise is returned,
-the R session will block until the promise has been resolved and return
-the value.}
+\item{\code{script}}{A string containing JavaScript code. This code must
+eventually return a \href{https://developer.mozilla.org/en-US/docs/Glossary/Truthy}{\code{true}thy value} or a
+timeout error will be thrown.}
 
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
+\item{\code{timeout}}{How long the script has to return a \code{true}thy value, in ms.}
 
-\item{\code{file}}{A (local) file containing JavaScript code to be read and used
-as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
-
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
+\item{\code{interval}}{How often to check for the condition, in ms.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Result of the \code{script} (or \code{file} contents)
+\code{invisible(self)} if expression evaluates to \code{true} without error
+within the timeout. Otherwise an error will be thrown
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
-library(shiny)
 shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
 
-# Execute JavaScript code in the app's browser
-app$get_js("1 + 1;")
-#> [1] 2
-
-# Execute a JavaScript Promise. Return the resolved value.
-app$get_js("
-  new Promise((resolve) => {
-    setTimeout(() => resolve(1 + 1), 1000)
-  }).
-  then((value) => value + 1);
-")
-#> [1] 3
-
-# With escaped arguments
-loc_field <- "hostname"
-js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
-app$get_js(js_txt)
-#> [1] "127.0.0.1"
-
-# With `glue::glue()`
-js_txt <- glue::glue_data(
-  lapply(
-    list(x = 40, y = 2),
-    jsonlite::toJSON,
-    auto_unbox = TRUE
-  ),
-  .open = "<", .close = ">",
-  "let answer = function(a, b) {\n",
-  "  return a + b;\n",
-  "};\n",
-  "answer(<x>, <y>);\n"
+# Contrived example:
+# Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)
+system.time(
+  app$wait_for_js("Math.floor((Date.now() / 1000) \% 10) == 5;")
 )
-app$get_js(js_txt)
-#> [1] 42
-}
-}
-\if{html}{\out{</div>}}
 
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-run_js"></a>}}
-\if{latex}{\out{\hypertarget{method-run_js}{}}}
-\subsection{Method \code{run_js()}}{
-Execute JavaScript code in the browser
-
-This function will block the local R session until the code has finished
-executing its \emph{tick} in the browser.
-
-The final result of the code will be ignored and not returned to the R session.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$run_js(
-  script = missing_arg(),
-  ...,
-  file = missing_arg(),
-  timeout = 15 * 1000
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{script}}{JavaScript to execute.}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{file}}{A (local) file containing JavaScript code to be read and used
-as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
-
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-library(shiny)
-shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
-app <- AppDriver$new(shiny_app)
-
-# Get JavaScript answer from the app's browser
-app$get_js("1 + 1")
-#> [1] 2
-# Execute JavaScript code in the app's browser
-app$run_js("1 + 1")
-# (Returns `app` invisibly)
-
-# With escaped arguments
-loc_field <- "hostname"
-js_txt <- paste0("window.location[", jsonlite::toJSON(loc_field, auto_unbox = TRUE), "]")
-app$run_js(js_txt)
-app$get_js(js_txt)
-#> [1] "127.0.0.1"
+## A second example where we run the contents of a JavaScript file
+## and use the result to wait for a condition
+app$run_js(file = "complicated_file.js")
+app$wait_for_js("complicated_condition();")
 }
 }
 \if{html}{\out{</div>}}
@@ -2686,7 +2726,8 @@ for more details
 \itemize{
 \item \code{"shinytest2"}: \code{"log"}; Only log messages are captured.
 \item \code{"shiny"}: \code{"log"} or \code{"error"}; These two levels correspond to the
-\code{stdin} or \code{stdout} messages.
+\code{stdin} or \code{stdout} messages. Note, \code{message()} output is sent to
+\code{stderr} which is recorded as \code{"error"}.
 \item \code{"chromote"}: Correspond to any level of a JavaScript
 \code{console.LEVEL()} function call. Typically, these are "log"\code{and}"error"\verb{but can include}"info"\verb{, }"debug"\verb{, and }"warn"\verb{. If }options(shiny.trace = TRUE)\verb{, then the level will recorded as }"websocket"`.
 }

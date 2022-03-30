@@ -1,7 +1,7 @@
 
 app_download <- function(
   self, private,
-  id,
+  output,
   name = NULL
 ) {
   ckm8_assert_app_driver(self, private)
@@ -18,9 +18,9 @@ app_download <- function(
   self$log_message(paste0("Downloading file: ", name))
 
   # Find the URL to download from (the href of the <a> tag)
-  sub_url <- chromote_eval(self$get_chromote_session(), paste0("$('#", id, "').attr('href')"))$result$value
+  sub_url <- chromote_eval(self$get_chromote_session(), paste0("$('#", output, "').attr('href')"))$result$value
   if (identical(sub_url, "")) {
-    app_abort(self, private, paste0("Download from '#", id, "' failed"))
+    app_abort(self, private, paste0("Download from '#", output, "' failed"))
   }
   # Add the base location to the URL
   full_url <- paste0(private$shiny_url$get(), sub_url)
@@ -49,7 +49,7 @@ app_download <- function(
 app_expect_download <- function(
   self,
   private,
-  id,
+  output,
   ...,
   name = NULL,
   cran = FALSE
@@ -57,7 +57,7 @@ app_expect_download <- function(
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
 
-  snapshot_info <- app_download(self, private, id = id, name = name)
+  snapshot_info <- app_download(self, private, output = output, name = name)
 
   # Compare download_file content
   app__expect_snapshot_file(
@@ -83,13 +83,13 @@ app_expect_download <- function(
 
 app_get_download <- function(
   self, private,
-  id,
+  output,
   filename = NULL
 ) {
   ckm8_assert_app_driver(self, private)
   # ellipsis::check_dots_empty()
 
-  snapshot_info <- app_download(self, private, id = id, name = fs::path_file(tempfile()))
+  snapshot_info <- app_download(self, private, output = output, name = fs::path_file(tempfile()))
 
   filename <-
     if (!is.null(filename))

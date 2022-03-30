@@ -27,5 +27,6 @@ reference:
 - title: Setting up a test
   desc: ~
   contents:
+  - use_shinytest2_test
   - use_shinytest2
   - migrate_from_shinytest

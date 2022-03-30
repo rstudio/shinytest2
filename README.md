@@ -2,76 +2,37 @@
 
 
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN status](https://www.r-pkg.org/badges/version/shinytest2)](https://CRAN.R-project.org/package=shinytest2)
 [![R-CMD-check](https://github.com/rstudio/shinytest2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rstudio/shinytest2/actions)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
 
-> :triangular_flag_on_post::triangular_flag_on_post: {shinytest2} is in beta developement. Please report any bugs or feedback at [https://github.com/rstudio/shinytest2/issues](https://github.com/rstudio/shinytest2/issues) :triangular_flag_on_post::triangular_flag_on_post:
+> :triangular_flag_on_post::triangular_flag_on_post:<br/>
+> {shinytest2} is in beta developement.<br/>
+> Please report any bugs or feedback at [https://github.com/rstudio/shinytest2/issues](https://github.com/rstudio/shinytest2/issues) <br/>
+> :triangular_flag_on_post::triangular_flag_on_post:
 
 
-<!-- TODO-barret; Intro should mention shinytest, but link to larger comparisons -->
+Manually testing Shiny applications is often laborious, inconsistent, and doesn’t scale well. Whether you are developing new features, fixing bug(s), or simply upgrading dependencies on a serious app where mistakes have real consequences, it is critical to know when regressions are introduced. `{shinytest2}` provides a streamlined toolkit for unit testing Shiny applications and seamlessly integrates with the popular [`{testthat}`](https://testthat.r-lib.org/) framework for unit testing R code.
 
-`{shinytest2}` facilitates the testing of `{shiny}` applications using a headless Chromium web browser via `{chromote}`. Using the latest features of `{testthat}` edition 3, snapshot files are saved for each of the expected values.
+`{shinytest2}` uses [`{chromote}`](https://rstudio.github.io/chromote/) to render applications in a headless Chrome browser. `{chromote}` allows for a live preview, better debugging tools, and/or simply using modern JavaScript/CSS.
+
+By simply recording your actions as code and extending them to test the more particular aspects of your application, it will result in fewer bugs and more confidence in future Shiny application development.
+
 
 ## Installation
 
-You can install the development version of shinytest2 from [GitHub](https://github.com/) with:
+You can install the [development version of `{shinytest2}`](https://github.com/rstudio/shinytest2) from GitHub with:
 
 ``` r
 remotes::install_github("rstudio/shinytest2")
 ```
 
-<!-- TODO-barret; High level bullet take away points of `{shinytest}` vs `{shinytest2}` -->
+Please check out our [Getting Started](https://rstudio.github.io/shinytest2/articles/shinytest2.html) article for example usage.
 
+## Usage
 
-<!-- TODO-barret; First class support for cross platform / R version testing -->
-* since shinytest builds on {testthat} ed 3 snapshot testing, allows us to manage multiple variants
-* See more in Getting Started
+The easiest way to get started is by calling `shinytest2::record_test()` in your app directory. This will open a Shiny application to record your actions as code. To programmatically create a test, call `shinytest2::use_shinytest2_test()`.
 
-
-
-
-
-
-
-
-
-
-<!-- TODO-barret; Put these sections in the getting started -->
-## Recording a test
-
-To record a test for an existing `{shiny}` application, use the `record_test()` method:
-
-```r
-shinytest::record_test(".")
-```
-
-When a recording is saved, both the test file (`./tests/testthat/test-shinytest2.R`) and specialized test runner (`./tests/testthat/testthat.R`) will be saved to disk.
-
-## Test example
-
-The saved recording will look similar to
-
-``` r
-# ./tests/testthat/test-shinytest2.R
-library(shinytest2)
-
-test_that("values are captured", {
-  app <- AppDriver$new(name = "unique-name", variant = platform_varaint())
-  app$expect_values()
-  app$expect_screenshot()
-})
-```
-
-The call to `app$expect_values()` will save an expected snapshot to `./tests/testthat/_snaps/shinytest2/unique-name-001.json`.
-
-In addition to the expected snapshot, a debug screenshot file will be saved to `./tests/testthat/_snaps/shinytest2/unique-name-001_.png`. These screenshot files should be kept in version control (`GitHub`) to see how your app updates over times, but if visual differences are found, these differences will never fail a test.
-
-
-# Migrating from `{shinytest}`
-
-`{shinytest}` is the predecesor to `{shinytest2}`. `{shinytest}` was implemented using `{webdriver}` which uses [PhantomJS](https://phantomjs.org/api/). PhantomJS has been unsupported since 2017 and does not support displaying `{bslib}`'s Bootstrap v5. `{shinytest2}` uses `{chromote}` to connect to your locally installed Chrome or Chromium application. So, `{shinytest2}` is able to display `{bslib}`'s Bootstrap v5.
-
-To migrate your existing `{shinytest}` tests to `{shinytest2}`, call the helper method `shinytest2::migrate_from_shinytest(path)`.
+Call `shinytest2::use_shinytest2()` to create a initial value test file and set up any other infrastructure you may need.

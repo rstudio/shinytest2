@@ -1,0 +1,47 @@
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+name: test-actions
+
+jobs:
+  test-app:
+    runs-on: ${{ matrix.config.os }}
+
+    name: Test app ${{ matrix.config.os }} (${{ matrix.config.r }})
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: ubuntu-latest, r: release}
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages:
+            "local::."
+
+      - name: Test app
+        uses: rstudio/shinytest2/actions/test-app@main
+        # uses: rstudio/shinytest2/actions/test-app@specific_branch
+        ## Suggested usage
+        # uses: rstudio/shinytest2/actions/test-app@v1
+        with:
+          app-dir: "tests/testthat/apps/hello"
