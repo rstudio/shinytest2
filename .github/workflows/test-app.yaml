@@ -36,6 +36,9 @@ jobs:
           use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages:
+            "local::."
 
       - name: Test app
         uses: rstudio/shinytest2/actions/test-app@robust_testing
