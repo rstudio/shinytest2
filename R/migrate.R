@@ -1114,7 +1114,6 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
 
       fn_args <- list(
         matched_args$expr,
-        duration = 0,
         timeout = matched_args$timeout
       )
 
