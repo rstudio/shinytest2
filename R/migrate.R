@@ -1110,7 +1110,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
 
     "waitFor" = {
       # wait_for_js
-      matched_args <- match_shinytest_args("waitForShiny", defaults = TRUE)
+      matched_args <- match_shinytest_args("waitFor", defaults = TRUE)
 
       fn_args <- list(
         matched_args$expr,
