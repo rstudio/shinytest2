@@ -1547,7 +1547,13 @@ Expect a downloadable file
 Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}} \code{output} ID, the corresponding
 file will be downloaded and saved as a snapshot file.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_download(output, ..., name = NULL, cran = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_download(
+  output,
+  ...,
+  compare = NULL,
+  name = NULL,
+  cran = FALSE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

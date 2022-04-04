@@ -51,6 +51,7 @@ app_expect_download <- function(
   private,
   output,
   ...,
+  compare = NULL,
   name = NULL,
   cran = FALSE
 ) {
@@ -64,7 +65,7 @@ app_expect_download <- function(
     self, private,
     snapshot_info$download_path,
     cran = cran,
-    compare = testthat::compare_file_text
+    compare = compare
   )
 
   # Compare requested filename
