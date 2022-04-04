@@ -690,10 +690,15 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
         names(matched_args)[matched_args_names == "allowInputNoBinding_"] <- "allow_no_input_binding_"
       }
       # Yell about removed functionality
-      if (
-        !is_top_level || isTRUE(matched_args[["values_"]])
-      ) {
-        rlang::abort("`ShinyDriver$setInputs(values_=)` is no longer supported. Use `AppDriver$get_values()` directly. (This message was thrown because `ShinyDriver$setInputs()`'s result is possibly used.)")
+      if (!is_top_level || isTRUE(matched_args[["values_"]])) {
+        matched_args_with_defaults <- match_shinytest_args("setInputs", defaults = TRUE)
+        if (isTRUE(matched_args_with_defaults[["values_"]])) {
+          rlang::abort(c(
+            "`ShinyDriver$setInputs(values_=)` is no longer supported. Use `AppDriver$get_values()` directly.",
+            "i" = "This message was thrown because `ShinyDriver$setInputs()`'s result is possibly used.",
+            "i" = "To disable this error, set `values_ = FALSE` in your call to `ShinyDriver$setInputs()`"
+          ))
+        }
       }
       matched_args$values_ <- NULL
 
@@ -1110,11 +1115,10 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
 
     "waitFor" = {
       # wait_for_js
-      matched_args <- match_shinytest_args("waitForShiny", defaults = TRUE)
+      matched_args <- match_shinytest_args("waitFor", defaults = TRUE)
 
       fn_args <- list(
         matched_args$expr,
-        duration = 0,
         timeout = matched_args$timeout
       )
 

@@ -27,6 +27,10 @@ test_that("file contents are converted", {
     )
     app$snapshotInit(\"mytest\", screenshot = FALSE)
 
+    wrapper <- function() {
+      app$setInputs(bins = 4, values_ = FALSE)
+    }
+
     # Another comment
     app$setInputs(bins = 8, values_ = FALSE)
     app$setInputs(bins = app$getAllValues()$input$bins, values_ = FALSE)
@@ -41,6 +45,10 @@ app <- AppDriver$new(variant = paste0(\"my\", \"suffix\"), load_timeout = 10 *
   1000, check_names = FALSE, seed = 100, clean_logs = TRUE,
   shiny_args = list(launch.browser = FALSE), render_args = list(quiet = FALSE),
   options = list(shiny.trace = TRUE))
+
+wrapper <- function() {
+  app$set_inputs(bins = 4)
+}
 
     # Another comment
 app$set_inputs(bins = 8)

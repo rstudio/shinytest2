@@ -92,6 +92,22 @@ test_that("setInputs is converted", {
     app$setInputs(x = 1, values_ = TRUE),
     "Use `AppDriver$get_values()` directly."
   )
+  expect_migration_error(
+    local({
+      app$setInputs(x = 1)
+    }),
+    "Use `AppDriver$get_values()` directly."
+  )
+  expect_migration_error(
+    vals <- app$setInputs(x = 1),
+    "Use `AppDriver$get_values()` directly."
+  )
+  expect_migration_error(
+    local({
+      app$setInputs(x = 1, values_ = FALSE)
+    }),
+    NA
+  )
 })
 
 

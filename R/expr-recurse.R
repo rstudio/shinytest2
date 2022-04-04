@@ -15,8 +15,9 @@ expr_recurse <- function(expr, post_fn) {
       return(expr)
     }
     for (i in seq_len(length(expr_list))) {
-      expr_list[[i]] <-
-        expr_recurse_(expr_list[[i]], post_fn, is_top_level = FALSE)
+      val <- expr_recurse_(expr_list[[i]], post_fn, is_top_level = FALSE)
+      # Support the setting of `NULL` values
+      expr_list[i] <- list(val)
     }
 
     # By being after the for-loop, it alters from the leaf to the trunk
