@@ -22,6 +22,17 @@ Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robu
 for more details about the cost / benefits for each expectation method.
 }
 
+\section{Test mode}{
+
+
+To have your \code{AppDriver} retrieve values from your Shiny app, be sure to
+set \code{shiny::runApp(test.mode = TRUE)} when running your Shiny app.
+
+If you are deploying your Shiny app where you do not have control over
+the call to \code{shiny::runApp()}, you can set \code{options(shiny.testmode = TRUE)} in
+a \code{.Rprofile} file within your Shiny app directory.
+}
+
 \section{Start-up failure}{
 
 
@@ -1001,7 +1012,9 @@ Initialize an \code{AppDriver} object
 \describe{
 \item{\code{app_dir}}{Directory containing your Shiny application or a run-time
 Shiny R Markdown document. By default, it retrieves
-\code{test_path("../../")} to allow for interactive and testing usage.}
+\code{test_path("../../")} to allow for interactive and testing usage. A
+Shiny application URL can be provided, however snapshots will be saved
+in the current directory.}
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
@@ -2508,7 +2521,8 @@ Retrieve the Shiny app path
 
 \subsection{Returns}{
 The directory containing the Shiny application or Shiny runtime
-document.
+document. If a URL was provided to \code{app_dir} during initialization, the
+current directory will be returned.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
