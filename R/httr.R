@@ -2,8 +2,14 @@ app_httr_get <- function(self, private, url) {
   ckm8_assert_app_driver(self, private)
 
   pieces <- httr::parse_url(url)
+  # Add in port information if it's missing
+  # https://github.com/rstudio/shinytest2/issues/158
+  if (is.null(pieces$port)) {
+    pieces$port <- switch(pieces$scheme, "http" = 80, "https" = 443)
+  }
+
   if (!pingr::is_up(pieces$hostname, pieces$port)) {
-    app_abort(self, private, "Shiny app is no longer running")
+    app_abort(self, private, "Could not find Shiny server. Shiny app is no longer running")
   }
 
   withCallingHandlers(
@@ -13,7 +19,7 @@ app_httr_get <- function(self, private, url) {
     # Attempt to capture empty reply error and provide better message
     error = function(e) {
       if (grepl("Empty reply from server", as.character(e), fixed = TRUE)) {
-        app_abort(self, private, "Shiny app is no longer running", parent = e)
+        app_abort(self, private, "Empty reply received from Shiny server. Shiny app is no longer running", parent = e)
       }
       # Unknown error, rethrow
       app_abort(self, private, e)

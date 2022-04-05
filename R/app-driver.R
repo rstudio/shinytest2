@@ -608,6 +608,10 @@ AppDriver <- R6Class( # nolint
     #' @param name File name to save file to (including file name extension). The default, `NULL`,
     #'   generates an ascending sequence of names: `001.download`,
     #'   `002.download`, etc.
+    #' @param compare This value is passed through to [`testthat::expect_snapshot_file()`].
+    #'   By default it is set to `NULL` which will default to `testthat::compare_file_text` if `name`
+    #'   has extension `.r`, `.R`, `.Rmd`, `.md`, or `.txt`, and otherwise uses
+    #'   `testthat::compare_file_binary`.
     #' @examples
     #' \dontrun{
     #' app_path <- system.file("examples/10_download", package = "shiny")
@@ -615,10 +619,10 @@ AppDriver <- R6Class( # nolint
     #'
     #' # Save snapshot of rock.csv as 001.download
     #' # Save snapshot value of `rock.csv` to capture default file name
-    #' app$expect_download("downloadData")
+    #' app$expect_download("downloadData", compare = testthat::compare_file_text)
     #' }
-    expect_download = function(output, ..., name = NULL, cran = FALSE) {
-      app_expect_download(self, private, output = output, ..., name = name, cran = cran)
+    expect_download = function(output, ..., compare = NULL, name = NULL, cran = FALSE) {
+      app_expect_download(self, private, output = output, ..., compare = compare, name = name, cran = cran)
     },
     #' @description
     #' Get downloadable file
