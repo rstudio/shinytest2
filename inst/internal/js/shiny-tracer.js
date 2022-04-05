@@ -315,7 +315,7 @@ window.shinytest2 = (function() {
         }
         shinytest2.log("jQuery found");
 
-        shimCssChanges()
+        // shimCssChanges()
 
         createShinyEventHandlers();
 
@@ -367,6 +367,12 @@ window.shinytest2 = (function() {
 
 
     function shimCssChanges() {
+      // Using R 4.1, this is no longer necessary.
+      // I am not able to reproduce the problem that I had found in R 4.0.
+      // There could be many other factors that resolved the issue.
+      // For now, not executing the shimCssChanges() function above
+      // See https://github.com/rstudio/shinytest2/issues/136
+
       // # TODO-future if the * border-radius: unset is not good, look into https://stackoverflow.com/questions/55857777/why-does-chrome-always-add-a-1px-border-radius-even-when-specific-corners-are-s
       // #   as a general solution
       // # Also look into https://css-tricks.com/box-sizing/#universal-box-sizing
