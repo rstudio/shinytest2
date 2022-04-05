@@ -312,7 +312,7 @@ app <- AppDriver$new(app_path)
 
 # Save snapshot of rock.csv as 001.download
 # Save snapshot value of `rock.csv` to capture default file name
-app$expect_download("downloadData")
+app$expect_download("downloadData", compare = testthat::compare_file_text)
 }
 
 ## ------------------------------------------------
@@ -1547,7 +1547,13 @@ Expect a downloadable file
 Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}} \code{output} ID, the corresponding
 file will be downloaded and saved as a snapshot file.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_download(output, ..., name = NULL, cran = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_download(
+  output,
+  ...,
+  compare = NULL,
+  name = NULL,
+  cran = FALSE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1556,6 +1562,11 @@ file will be downloaded and saved as a snapshot file.
 \item{\code{output}}{\code{output} ID of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{compare}}{This value is passed through to \code{\link[testthat:expect_snapshot_file]{testthat::expect_snapshot_file()}}.
+By default it is set to \code{NULL} which will default to \code{testthat::compare_file_text} if \code{name}
+has extension \code{.r}, \code{.R}, \code{.Rmd}, \code{.md}, or \code{.txt}, and otherwise uses
+\code{testthat::compare_file_binary}.}
 
 \item{\code{name}}{File name to save file to (including file name extension). The default, \code{NULL},
 generates an ascending sequence of names: \verb{001.download},
@@ -1575,7 +1586,7 @@ app <- AppDriver$new(app_path)
 
 # Save snapshot of rock.csv as 001.download
 # Save snapshot value of `rock.csv` to capture default file name
-app$expect_download("downloadData")
+app$expect_download("downloadData", compare = testthat::compare_file_text)
 }
 }
 \if{html}{\out{</div>}}

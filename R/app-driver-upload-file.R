@@ -20,12 +20,28 @@ app_upload_file <- function(
     "shinytest2.outputValuesWaiter.start(", toJSON_atomic(timeout_), ", 2);"
   ))
 
-  self$log_message(paste0("Uploading file", input = inputs[[1]]))
+
+  filename <- inputs[[1]]
+  self$log_message(paste0("Uploading file for id: ", filename))
 
   node_id <- app_find_node_id(self, private, input = names(inputs)[1])
-  filename <- inputs[[1]]
+
+  withCallingHandlers(
+    # Provide fully defined file path to chromote
+    filename <- fs::path_real(filename),
+    error = function(e) {
+      app_abort(self, private,
+        c(
+          paste0("Error finding upload file at path: ", filename),
+          i = paste0("`input` id: ", filename)
+        ),
+        parent = e
+      )
+    }
+  )
+
   self$get_chromote_session()$DOM$setFileInputFiles(
-    files = list(fs::path_abs(filename)),
+    files = list(fs::path_real(filename)),
     nodeId = node_id
   )
 
