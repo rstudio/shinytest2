@@ -86,8 +86,19 @@ app_get_values <- function(
   "!DEBUG app_get_values()"
 
   url <- app_get_shiny_test_url(self, private, input, output, export, format = "rds")
+
   # Ask Shiny for info
-  req <- app_httr_get(self, private, url)
+  cur_env <- rlang::current_env()
+  req <- app_httr_get(self, private, url, fn_404 = function(req) {
+    app_abort(
+      self, private,
+      c(
+        paste0("Shiny server returned 404 for values URL: ", url),
+        "i" = "Is `shiny::runApp(test.mode = TRUE)` enabled?"
+      ),
+      call = cur_env
+    )
+  })
 
   ## Writing to memory is 2x faster than disk and produces the same result
   ## However, the `disk` approach is tried and tested in `{shinytest}`
@@ -156,7 +167,17 @@ app_expect_values <- function(
 
   url <- app_get_shiny_test_url(self, private, input, output, export, format = "json")
   # Ask Shiny for info
-  req <- app_httr_get(self, private, url)
+  cur_env <- rlang::current_env()
+  req <- app_httr_get(self, private, url, fn_404 = function(req) {
+    app_abort(
+      self, private,
+      c(
+        paste0("Shiny server returned 404 for values URL: ", url),
+        "i" = "Is `shiny::runApp(test.mode = TRUE)` enabled?"
+      ),
+      call = cur_env
+    )
+  })
 
   # Convert to text, then replace base64-encoded images with hashes.
   content <- raw_to_utf8(req$content)
