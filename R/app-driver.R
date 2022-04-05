@@ -21,6 +21,16 @@ NULL
 #' Please see [Robust testing](https://rstudio.github.io/shinytest2/articles/robust.html)
 #' for more details about the cost / benefits for each expectation method.
 #'
+#' @section Test mode:
+#'
+#' To have your `AppDriver` retrieve values from your Shiny app, be sure to
+#' set `shiny::runApp(test.mode = TRUE)` when running your Shiny app.
+#'
+#' If you are deploying your Shiny app where you do not have control over
+#' the call to `shiny::runApp()`, you can set `options(shiny.testmode = TRUE)` in
+#' a `.Rprofile` file within your Shiny app directory.
+#'
+#'
 #' @section Start-up failure:
 #'
 #' If the app throws an error during initialization, the `AppDriver` will
