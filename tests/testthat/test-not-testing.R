@@ -11,7 +11,7 @@ test_that("Running an app not in testing mode has 404 handled when getting value
 
   # Wait until Shiny server is running
   app_url <- NULL
-  for (i in 1:10) {
+  for (i in 1:100) {
     lines <- paste0(app_bg$read_error_lines(), collapse = "\n")
     if (length(lines) > 0) {
       if (grepl("http", lines, fixed = TRUE)) {
