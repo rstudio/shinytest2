@@ -1,4 +1,4 @@
-app_httr_get <- function(self, private, url) {
+app_httr_get <- function(self, private, url, fn_404 = NULL) {
   ckm8_assert_app_driver(self, private)
 
   pieces <- httr::parse_url(url)
@@ -29,6 +29,9 @@ app_httr_get <- function(self, private, url) {
   status <- httr::status_code(req)
   if (status == 200) {
     return(req)
+  }
+  if (status == 404 && is.function(fn_404)) {
+    return(fn_404(req))
   }
 
   cat("{shinytest2} query failed (", status, ")----------------------\n", sep = "")
