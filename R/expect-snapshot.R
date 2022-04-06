@@ -5,6 +5,8 @@ app__expect_snapshot_value <- function( # nolint
   ...
 ) {
   ckm8_assert_app_driver(self, private)
+  testthat::local_edition(3)
+
   testthat::expect_snapshot_value(
     x,
     cran = cran,
@@ -21,6 +23,7 @@ app__expect_snapshot_file <- function(
   compare = testthat::compare_file_binary
 ) {
   ckm8_assert_app_driver(self, private)
+  testthat::local_edition(3)
 
   # Add name prefix to saved snapshot file
   name <-
