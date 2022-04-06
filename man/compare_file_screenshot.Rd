@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare-file-screenshot.R
 \name{compare_file_screenshot}
 \alias{compare_file_screenshot}
-\title{Compare screenshots with pixel tolerance}
+\title{Compare screenshots given tolerance}
 \usage{
 compare_file_screenshot(old, new, tolerance = 1)
 }
