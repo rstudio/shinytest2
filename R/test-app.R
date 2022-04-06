@@ -116,3 +116,28 @@ test_app <- function(
 
   invisible(ret)
 }
+
+
+
+#' Load the Shiny application's support environment
+#'
+#' Executes all `./R` files and `global.R` into the current environment.
+#' This is useful when wanting access to functions or values created in the `./R` folder for testing purposes.
+#'
+#' Loading these files is not automatically performed by `test_app()` and must
+#' be called in `./tests/testthat/setup.R` if access to support file objects is
+#' desired.
+#'
+#' @seealso [`use_shinytest2_app_env()`] for creating a testing setup file that
+#'   loads your Shiny app support environment into the testing environment.
+#'
+#' @param app_dir The base directory for the Shiny application.
+#' @inheritParams shiny::loadSupport
+#' @export
+load_app_env <- function(
+  app_dir = "../../",
+  renv = rlang::caller_env(),
+  globalrenv = rlang::caller_env()
+) {
+  shiny::loadSupport(app_dir, renv = renv, globalrenv = globalrenv)
+}
