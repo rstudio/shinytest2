@@ -65,17 +65,17 @@ NULL
 #'   * If `app_dir` is missing and `test_app()` is called within the
 #'     `./tests/testthat.R` file, the parent directory (`"../"`) is used.
 #'   * Otherwise, the default path of `"."` is used.
-#' @param env Use the Shiny application's environment after sourcing the R folder
 #' @param ... Parameters passed to [`testthat::test_dir()`]
 #' @seealso
 #' * [`record_test()`] to create tests to record against your Shiny application.
 #' * [testthat::snapshot_review()] and [testthat::snapshot_accept()] if
 #'   you want to compare or update snapshots after testing.
+#' * [`load_app_env()`] to load the Shiny application's helper files.
+#'   This is only necessary if you want access to the values while testing.
+#'
 #' @export
 test_app <- function(
   app_dir = missing_arg(),
-  # Run in the app's environment containing all support methods.
-  env = shiny::loadSupport(app_dir),
   ...
 ) {
   # Inspiration from https://github.com/rstudio/shiny/blob/a8c14dab9623c984a66fcd4824d8d448afb151e7/inst/app_template/tests/testthat.R
@@ -103,15 +103,10 @@ test_app <- function(
 
   is_currently_testing <- testthat::is_testing()
 
-  # By using this envvar, the DESCRIPTION file is not needed. Yay!
-  # See `testthat::edition_get()` for usage
-  withr::with_envvar(list(TESTTHAT_EDITION = 3), {
-    ret <- testthat::test_dir(
-      path = file.path(app_dir, "tests", "testthat"),
-      env = env,
-      ...
-    )
-  })
+  ret <- testthat::test_dir(
+    path = file.path(app_dir, "tests", "testthat"),
+    ...
+  )
 
   # If we are testing and no error has been thrown,
   # then perform an expectation so that the testing chunk passes
