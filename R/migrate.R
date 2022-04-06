@@ -1,4 +1,4 @@
-#' Migrate shinytest tests
+#' Migrate \pkg{shinytest} tests
 #'
 #' This function will migrate standard shinytest test files to the new \pkg{shinytest2} + \pkg{testthat} ed 3 snapshot format.
 #'

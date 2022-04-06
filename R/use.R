@@ -1,4 +1,4 @@
-#' Use \pkg{shinytest2} test
+#' Use \pkg{shinytest2} with your Shiny application
 #'
 #' @describeIn use_shinytest2
 #' This \pkg{usethis}-style method initializes many different useful features when using
@@ -77,10 +77,36 @@ use_shinytest2_test <- function(
   )
 }
 
+#' @describeIn use_shinytest2
+#' Creates a setup file called `./tests/testthat/setup.R`. This file will contain a call to [`load_app_env()`]
+#' which will load all `./R` files and the `global.R` file into the testing environment.
+#' @export
+#' @examples
+#' # Set up app to test with local R files in testing environment
+#' \dontrun{use_shinytest2_app_env()}
+use_shinytest2_app_env <- function(app_dir = ".", quiet = FALSE) {
+  withr::with_dir(app_dir, {
+    if (
+      fs::file_exists("global.R") ||
+      (fs::dir_exists("R") && (fs::dir_ls("R", regexp = "\\.R$") > 0))
+    ) {
+      fs::dir_create("tests/testthat")
+      write_union(
+        "tests/testthat/setup.R",
+        comments = "# Load application support files into testing environment",
+        lines = "shinytest2::load_app_env()",
+        quiet = quiet
+      )
+    } else {
+      if (!quiet) {
+        rlang::inform("No global.R or R files found in app directory. Skipping `tests/testthat/setup.R` file.")
+      }
+    }
+  })
+}
 
 
 use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
-  rlang::check_installed("usethis")
   app_dir <- app_dir_value(app_dir)
   withr::with_dir(app_dir, {
     if (!fs::file_exists("DESCRIPTION")) {
@@ -97,6 +123,7 @@ use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
     ## No need for comments, usethis::use_package() provides messages
     # if (!quiet) rlang::inform(c("*" = "Adding `shinytest2` to `Suggests` in `DESCRIPTION` file"))
 
+    rlang::check_installed("usethis")
     with_this_project({
       wrapper <-
         if (quiet) function(...) {
@@ -115,18 +142,18 @@ use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
 use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
 
   # Check app_dir location?
-  rlang::check_installed("usethis")
 
   # Do not use `usethis::use_git_ignore()` or `usethis::use_build_ignore()` directly!
   # The functions have sticky paths once set. Instead, use their inner logic via
-  # `usethis::write_union(FILE, LINES)`
+  # `usethis::write_union(FILE, LINES, quiet = quiet)`
   app_dir <- app_dir_value(app_dir)
   withr::with_dir(app_dir, {
-    git_ignores <- c(
-      "# {shinytest2}: Ignore new debug snapshots for `$expect_values()`",
-      "*_.new.png"
+    wrote_lines <- write_union(
+      ".gitignore",
+      comments = c("# {shinytest2}: Ignore new debug snapshots for `$expect_values()`"),
+      lines = "*_.new.png",
+      quiet = quiet
     )
-    wrote_lines <- usethis::write_union(".gitignore", git_ignores)
     if (!quiet) {
       if (wrote_lines) {
         ## `write_union()` is verbose, do not be double verbose
@@ -140,7 +167,7 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
       build_ignores <- c(
         "_\\.new\\.png$"
       )
-      wrote_lines <- usethis::write_union(".Rbuildignore", build_ignores)
+      wrote_lines <- write_union(".Rbuildignore", lines = build_ignores, quiet = quiet)
       if (!quiet) {
         if (wrote_lines) {
           ## `write_union()` is verbose, do not be double verbose
