@@ -2,7 +2,7 @@
 % Please edit documentation in R/migrate.R
 \name{migrate_from_shinytest}
 \alias{migrate_from_shinytest}
-\title{Migrate shinytest tests}
+\title{Migrate \pkg{shinytest} tests}
 \usage{
 migrate_from_shinytest(
   app_dir,
