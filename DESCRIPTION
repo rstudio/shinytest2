@@ -42,6 +42,7 @@ Suggests:
     ggplot2,
     vdiffr (>= 1.0.0),
     plotly,
+    png,
     rstudioapi,
     shinyWidgets,
     shinytest (>= 1.5.1),
@@ -83,6 +84,7 @@ Collate:
     'app-driver-window.R'
     'app-driver.R'
     'chromote-methods.R'
+    'compare-file-screenshot.R'
     'expect-snapshot.R'
     'expr-recurse.R'
     'httr.R'
