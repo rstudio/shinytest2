@@ -66,6 +66,9 @@ NULL
 #'     `./tests/testthat.R` file, the parent directory (`"../"`) is used.
 #'   * Otherwise, the default path of `"."` is used.
 #' @param ... Parameters passed to [`testthat::test_dir()`]
+#' @param check_setup If `TRUE`, the app will be checked for the presence of
+#' `./tests/testthat/setup.R`. This file must contain a call to
+#' [`shinytest2::load_app_env()`].
 #' @seealso
 #' * [`record_test()`] to create tests to record against your Shiny application.
 #' * [testthat::snapshot_review()] and [testthat::snapshot_accept()] if
@@ -108,7 +111,7 @@ test_app <- function(
       rlang::abort(
         c(
           "No `setup.R` file found in `./tests/testthat`",
-          "i" = paste0("To create a `setup.R` file, please run `shinytest2::use_shinytest2_app_env(\"", app_dir, "\")`"),
+          "i" = paste0("To create a `setup.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
           "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
         )
       )
@@ -118,15 +121,17 @@ test_app <- function(
       rlang::abort(
         c(
           "No call to `shinytest2::load_app_env()` found in `./tests/testthat/setup.R`",
-          "i" = paste0("To create a `setup.R` file, please run `shinytest2::use_shinytest2_app_env(\"", app_dir, "\")`"),
+          "i" = paste0("To create a `setup.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
           "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
         )
       )
     }
   }
+
   is_currently_testing <- testthat::is_testing()
 
   ret <- testthat::test_dir(
+    path = fs::path(app_dir, "tests", "testthat"),
     ...
   )
 
@@ -150,7 +155,7 @@ test_app <- function(
 #' be called in `./tests/testthat/setup.R` if access to support file objects is
 #' desired.
 #'
-#' @seealso [`use_shinytest2_app_env()`] for creating a testing setup file that
+#' @seealso [`use_shinytest2()`] for creating a testing setup file that
 #'   loads your Shiny app support environment into the testing environment.
 #'
 #' @param app_dir The base directory for the Shiny application.
