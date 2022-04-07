@@ -90,12 +90,8 @@
 
     
     
-<div class="section level2">
-<h2 id="migrating-from-shinytest">Migrating from <code>{shinytest}</code><a class="anchor" aria-label="anchor" href="#migrating-from-shinytest"></a>
-</h2>
 <p><a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> is the predecesor to <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>. <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> was implemented using <a href="https://rstudio.github.io/webdriver/" class="external-link"><code>{webdriver}</code></a> which uses <a href="https://phantomjs.org/api/" class="external-link">PhantomJS</a>. PhantomJS has been unsupported since 2017 and does not support displaying <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5. <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> uses <a href="https://github.com/rstudio/chromote" class="external-link">chromote</a> to connect to your locally installed Chrome or Chromium application. So, <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> is able to display <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5.</p>
 <p>To auto migrate your existing <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> tests to <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>, call <code>shinytest2::migrate_from_shinytest(PATH_TO_APP)</code>.</p>
-</div>
 <div class="section level2">
 <h2 id="code-structure">Code structure<a class="anchor" aria-label="anchor" href="#code-structure"></a>
 </h2>

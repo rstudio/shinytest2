@@ -102,7 +102,7 @@
 <p>One way to detect these problems is with manual testing – in other words, by having a person interact with the app in a browser – but this can be time-intensive, inconsistent, and imprecise. Having automated tests can alert you to these kinds of problems quickly and with almost zero effort, after the tests have been created.</p>
 </div>
 <div class="section level2">
-<h2 id="how-testing-works-with-shinytest">How testing works with shinytest<a class="anchor" aria-label="anchor" href="#how-testing-works-with-shinytest"></a>
+<h2 id="how-testing-works-with-shinytest2">How testing works with shinytest2<a class="anchor" aria-label="anchor" href="#how-testing-works-with-shinytest2"></a>
 </h2>
 <p>The <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> package provides tools for creating and running automated tests on Shiny applications.</p>
 <p><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> uses <a href="https://testthat.r-lib.org" class="external-link">testthat</a>’s snapshot-based testing strategy. The first time it runs a set of tests for an application, it performs some scripted interactions with the app and takes one or more snapshots of the application’s state. These snapshots are saved to disk so that future runs of the tests can compare their results to them.</p>
