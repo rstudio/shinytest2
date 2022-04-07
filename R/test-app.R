@@ -76,7 +76,8 @@ NULL
 #' @export
 test_app <- function(
   app_dir = missing_arg(),
-  ...
+  ...,
+  check_setup = TRUE
 ) {
   # Inspiration from https://github.com/rstudio/shiny/blob/a8c14dab9623c984a66fcd4824d8d448afb151e7/inst/app_template/tests/testthat.R
 
@@ -101,10 +102,31 @@ test_app <- function(
 
   app_dir <- app_dir_value(app_dir)
 
+  if (isTRUE(check_setup)) {
+    setup_path <- fs::path(app_dir, "tests", "testthat", "setup.R")
+    if (!fs::file_exists(setup_path)) {
+      rlang::abort(
+        c(
+          "No `setup.R` file found in `./tests/testthat`",
+          "i" = paste0("To create a `setup.R` file, please run `shinytest2::use_shinytest2_app_env(\"", app_dir, "\")`"),
+          "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
+        )
+      )
+    }
+    lines <- read_utf8(setup_path)
+    if (!grepl("load_app_env", lines, fixed = TRUE)) {
+      rlang::abort(
+        c(
+          "No call to `shinytest2::load_app_env()` found in `./tests/testthat/setup.R`",
+          "i" = paste0("To create a `setup.R` file, please run `shinytest2::use_shinytest2_app_env(\"", app_dir, "\")`"),
+          "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
+        )
+      )
+    }
+  }
   is_currently_testing <- testthat::is_testing()
 
   ret <- testthat::test_dir(
-    path = file.path(app_dir, "tests", "testthat"),
     ...
   )
 
