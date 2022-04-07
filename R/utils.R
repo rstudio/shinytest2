@@ -165,4 +165,6 @@ write_union <- function(path, lines, comments = NULL, quiet = FALSE) {
   }
   all <- c(existing_lines, comments, new)
   write_utf8(paste0(all, collapse = "\n"), path)
+
+  return(invisible(TRUE))
 }
