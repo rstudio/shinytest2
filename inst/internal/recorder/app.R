@@ -1,5 +1,4 @@
 library(shiny)
-library(promises)
 
 target_url    <- getOption("shinytest2.recorder.url")
 app           <- getOption("shinytest2.app")
