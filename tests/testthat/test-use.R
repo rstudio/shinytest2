@@ -1,5 +1,5 @@
 
-expect_configs <- function(runner, ignore, package) {
+expect_configs <- function(runner, setup, ignore, package) {
 
   app_dir <- tempfile("st2-test")
   fs::dir_create(app_dir)
@@ -19,15 +19,18 @@ expect_configs <- function(runner, ignore, package) {
 
   info <- paste0(
     "runner = ", runner, "\n",
+    "setup = ", setup, "\n",
     "ignore = ", ignore, "\n",
     "package = ", package
   )
 
   capture.output({
-    use_shinytest2(app_dir = app_dir, runner = runner, ignore = ignore, package = package)
+    use_shinytest2(app_dir = app_dir, runner = runner, setup = setup, ignore = ignore, package = package)
   }, type = "message")
 
   testthat::expect_equal(file.exists(file.path(app_dir, "tests/testthat.R")), runner, info = info)
+
+  testthat::expect_equal(file.exists(file.path(app_dir, "tests/testthat/setup.R")), setup, info = info)
 
   testthat::expect_equal(file.exists(file.path(app_dir, ".gitignore")), ignore, info = info)
   testthat::expect_equal(file.exists(file.path(app_dir, ".Rbuildignore")), ignore, info = info)
@@ -46,9 +49,10 @@ expect_configs <- function(runner, ignore, package) {
 test_that("use_shinytest2() sets up configs for all configurations", {
   skip_if_not_installed("usethis")
 
-  dt <- expand.grid(runner = c(TRUE, FALSE), ignore = c(TRUE, FALSE), package = c(TRUE, FALSE))
+  dt <- expand.grid(runner = c(TRUE, FALSE), setup = c(TRUE, FALSE), ignore = c(TRUE, FALSE), package = c(TRUE, FALSE))
   Map(
     dt$runner,
+    dt$setup,
     dt$ignore,
     dt$package,
     f = expect_configs
