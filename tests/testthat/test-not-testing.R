@@ -15,7 +15,6 @@ test_that("Running an app not in testing mode has 404 handled when getting value
     lines <- paste0(app_bg$read_error_lines(), collapse = "\n")
     if (length(lines) > 0) {
       if (grepl("http", lines, fixed = TRUE)) {
-        print(lines)
         lines <- strsplit(lines, "\n")[[1]]
         line <- lines[grepl("http", lines, fixed = TRUE)]
         app_url <- tail(strsplit(line, " ")[[1]], 1)

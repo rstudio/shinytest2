@@ -12,21 +12,26 @@ template:
 
 
 reference:
-- title: Making a test
+- title: Making tests
   desc: ~
   contents:
   - AppDriver
-  - platform_variant
   - record_test
+  - platform_variant
 
 - title: Running tests
   desc: ~
   contents:
   - test_app
+  - load_app_env
 
-- title: Setting up a test
+- title: Setting up tests
   desc: ~
   contents:
-  - use_shinytest2_test
   - use_shinytest2
+  - use_shinytest2_test
+
+- title: Migrating tests
+  desc: ~
+  contents:
   - migrate_from_shinytest

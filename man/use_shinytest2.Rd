@@ -3,11 +3,12 @@
 \name{use_shinytest2}
 \alias{use_shinytest2}
 \alias{use_shinytest2_test}
-\title{Use \pkg{shinytest2} test}
+\title{Use \pkg{shinytest2} with your Shiny application}
 \usage{
 use_shinytest2(
   app_dir = ".",
   runner = TRUE,
+  setup = TRUE,
   ignore = TRUE,
   package = TRUE,
   ...,
@@ -27,7 +28,11 @@ use_shinytest2_test(
 
 \item{runner}{If \code{TRUE}, creates a \pkg{shinytest2} test runner at \code{./tests/testthat.R}}
 
-\item{ignore}{If \code{TRUE}, adds entries to \code{.Rbuildignore} and \code{.gitignore} to ignore new debug screenshots. (\verb{*_.new.png})}
+\item{setup}{If \code{TRUE}, creates a setup file called
+\code{./tests/testthat/setup.R} containing a call to \code{\link[=load_app_env]{load_app_env()}}}
+
+\item{ignore}{If \code{TRUE}, adds entries to \code{.Rbuildignore} and \code{.gitignore} to
+ignore new debug screenshots. (\verb{*_.new.png})}
 
 \item{package}{If \code{TRUE}, adds \pkg{shinytest2} to \code{Suggests} in the \code{DESCRIPTION} file.}
 
@@ -41,7 +46,7 @@ use_shinytest2_test(
 \code{\link[=file.edit]{file.edit()}} after saving.}
 }
 \description{
-Use \pkg{shinytest2} test
+Use \pkg{shinytest2} with your Shiny application
 }
 \section{Functions}{
 \itemize{

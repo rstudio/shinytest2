@@ -1,4 +1,4 @@
-#' Use \pkg{shinytest2} test
+#' Use \pkg{shinytest2} with your Shiny application
 #'
 #' @describeIn use_shinytest2
 #' This \pkg{usethis}-style method initializes many different useful features when using
@@ -14,7 +14,10 @@
 #'
 #' @param app_dir The base directory for the Shiny application
 #' @param runner If `TRUE`, creates a \pkg{shinytest2} test runner at `./tests/testthat.R`
-#' @param ignore If `TRUE`, adds entries to `.Rbuildignore` and `.gitignore` to ignore new debug screenshots. (`*_.new.png`)
+#' @param setup If `TRUE`, creates a setup file called
+#' `./tests/testthat/setup.R` containing a call to [`load_app_env()`]
+#' @param ignore If `TRUE`, adds entries to `.Rbuildignore` and `.gitignore` to
+#' ignore new debug screenshots. (`*_.new.png`)
 #' @param package If `TRUE`, adds \pkg{shinytest2} to `Suggests` in the `DESCRIPTION` file.
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @param quiet If `TRUE`, console output will be suppressed.
@@ -26,6 +29,7 @@
 use_shinytest2 <- function(
   app_dir = ".",
   runner = TRUE,
+  setup = TRUE,
   ignore = TRUE,
   package = TRUE,
   ...,
@@ -35,6 +39,7 @@ use_shinytest2 <- function(
   ellipsis::check_dots_empty()
 
   if (isTRUE(runner))  use_shinytest2_runner(app_dir, quiet = quiet, overwrite = overwrite)
+  if (isTRUE(setup))   use_shinytest2_setup(app_dir, quiet = quiet)
   if (isTRUE(ignore))  use_shinytest2_ignore(app_dir, quiet = quiet)
   if (isTRUE(package)) use_shinytest2_package(app_dir, quiet = quiet)
 
@@ -77,10 +82,20 @@ use_shinytest2_test <- function(
   )
 }
 
+use_shinytest2_setup <- function(app_dir = ".", quiet = FALSE) {
+  withr::with_dir(app_dir, {
+    fs::dir_create("tests/testthat")
+    write_union(
+      "tests/testthat/setup.R",
+      comments = "# Load application support files into testing environment",
+      lines = "shinytest2::load_app_env()",
+      quiet = quiet
+    )
+  })
+}
 
 
 use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
-  rlang::check_installed("usethis")
   app_dir <- app_dir_value(app_dir)
   withr::with_dir(app_dir, {
     if (!fs::file_exists("DESCRIPTION")) {
@@ -97,6 +112,7 @@ use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
     ## No need for comments, usethis::use_package() provides messages
     # if (!quiet) rlang::inform(c("*" = "Adding `shinytest2` to `Suggests` in `DESCRIPTION` file"))
 
+    rlang::check_installed("usethis")
     with_this_project({
       wrapper <-
         if (quiet) function(...) {
@@ -115,24 +131,28 @@ use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
 use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
 
   # Check app_dir location?
-  rlang::check_installed("usethis")
 
   # Do not use `usethis::use_git_ignore()` or `usethis::use_build_ignore()` directly!
   # The functions have sticky paths once set. Instead, use their inner logic via
-  # `usethis::write_union(FILE, LINES)`
+  # `usethis::write_union(FILE, LINES, quiet = quiet)`
   app_dir <- app_dir_value(app_dir)
   withr::with_dir(app_dir, {
-    git_ignores <- c(
-      "# {shinytest2}: Ignore new debug snapshots for `$expect_values()`",
-      "*_.new.png"
+    wrote_lines <- write_union(
+      ".gitignore",
+      comments = c("# {shinytest2}: Ignore new debug snapshots for `$expect_values()`"),
+      lines = "*_.new.png",
+      quiet = quiet
     )
-    wrote_lines <- usethis::write_union(".gitignore", git_ignores)
     if (!quiet) {
       if (wrote_lines) {
         ## `write_union()` is verbose, do not be double verbose
         # rlang::inform(c("*" = "Added `*_.new.png` to `", fs::path(app_dir, ".gitignore"), "`"))
       } else {
-        rlang::inform(c("!" = "`", fs::path(app_dir, ".gitignore"), "` already contains `*_.new.png`"))
+        rlang::inform(
+          c(
+            "!" = paste0("`", fs::path(app_dir, ".gitignore"), "` already contains `*_.new.png`")
+          )
+        )
       }
     }
 
@@ -140,13 +160,17 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
       build_ignores <- c(
         "_\\.new\\.png$"
       )
-      wrote_lines <- usethis::write_union(".Rbuildignore", build_ignores)
+      wrote_lines <- write_union(".Rbuildignore", lines = build_ignores, quiet = quiet)
       if (!quiet) {
         if (wrote_lines) {
           ## `write_union()` is verbose, do not be double verbose
           # rlang::inform(c("*" = "Added `_*.new.png` to `", fs::path(app_dir, ".Rbuildignore"), "`"))
         } else {
-          rlang::inform(c("!" = "`", fs::path(app_dir, ".Rbuildignore"), "` already contains `_*.new.png`"))
+          rlang::inform(
+            c(
+              "!" = paste0("`", fs::path(app_dir, ".Rbuildignore"), "` already contains `_*.new.png`")
+            )
+          )
         }
       }
     } else {

@@ -143,3 +143,28 @@ st2_temp_file <- function(fileext = "", pattern = "") {
 is_false <- function(x) {
   is.logical(x) && length(x) == 1L && !is.na(x) && !x
 }
+
+
+# If `lines` does not exist in `path` file, also add `comments` before `lines` into `path` file
+write_union <- function(path, lines, comments = NULL, quiet = FALSE) {
+  stopifnot(is.character(lines))
+
+  path <- fs::path_expand(path)
+  if (fs::file_exists(path)) {
+    existing_lines <- strsplit(read_utf8(path), "\n")[[1]]
+  } else {
+    existing_lines <- character()
+  }
+  new <- setdiff(lines, existing_lines)
+  if (length(new) == 0) {
+      return(invisible(FALSE))
+  }
+  if (!quiet) {
+    rlang::check_installed("usethis")
+    usethis::ui_done("Adding {usethis::ui_value(new)} to {usethis::ui_path(path)}")
+  }
+  all <- c(existing_lines, comments, new)
+  write_utf8(paste0(all, collapse = "\n"), path)
+
+  return(invisible(TRUE))
+}

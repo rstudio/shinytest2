@@ -65,18 +65,22 @@ NULL
 #'   * If `app_dir` is missing and `test_app()` is called within the
 #'     `./tests/testthat.R` file, the parent directory (`"../"`) is used.
 #'   * Otherwise, the default path of `"."` is used.
-#' @param env Use the Shiny application's environment after sourcing the R folder
 #' @param ... Parameters passed to [`testthat::test_dir()`]
+#' @param check_setup If `TRUE`, the app will be checked for the presence of
+#' `./tests/testthat/setup.R`. This file must contain a call to
+#' [`shinytest2::load_app_env()`].
 #' @seealso
 #' * [`record_test()`] to create tests to record against your Shiny application.
 #' * [testthat::snapshot_review()] and [testthat::snapshot_accept()] if
 #'   you want to compare or update snapshots after testing.
+#' * [`load_app_env()`] to load the Shiny application's helper files.
+#'   This is only necessary if you want access to the values while testing.
+#'
 #' @export
 test_app <- function(
   app_dir = missing_arg(),
-  # Run in the app's environment containing all support methods.
-  env = shiny::loadSupport(app_dir),
-  ...
+  ...,
+  check_setup = TRUE
 ) {
   # Inspiration from https://github.com/rstudio/shiny/blob/a8c14dab9623c984a66fcd4824d8d448afb151e7/inst/app_template/tests/testthat.R
 
@@ -101,17 +105,35 @@ test_app <- function(
 
   app_dir <- app_dir_value(app_dir)
 
+  if (isTRUE(check_setup)) {
+    setup_path <- fs::path(app_dir, "tests", "testthat", "setup.R")
+    if (!fs::file_exists(setup_path)) {
+      rlang::abort(
+        c(
+          "No `setup.R` file found in `./tests/testthat`",
+          "i" = paste0("To create a `setup.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
+          "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
+        )
+      )
+    }
+    lines <- read_utf8(setup_path)
+    if (!grepl("load_app_env", lines, fixed = TRUE)) {
+      rlang::abort(
+        c(
+          "No call to `shinytest2::load_app_env()` found in `./tests/testthat/setup.R`",
+          "i" = paste0("To create a `setup.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
+          "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
+        )
+      )
+    }
+  }
+
   is_currently_testing <- testthat::is_testing()
 
-  # By using this envvar, the DESCRIPTION file is not needed. Yay!
-  # See `testthat::edition_get()` for usage
-  withr::with_envvar(list(TESTTHAT_EDITION = 3), {
-    ret <- testthat::test_dir(
-      path = file.path(app_dir, "tests", "testthat"),
-      env = env,
-      ...
-    )
-  })
+  ret <- testthat::test_dir(
+    path = fs::path(app_dir, "tests", "testthat"),
+    ...
+  )
 
   # If we are testing and no error has been thrown,
   # then perform an expectation so that the testing chunk passes
@@ -120,4 +142,29 @@ test_app <- function(
   }
 
   invisible(ret)
+}
+
+
+
+#' Load the Shiny application's support environment
+#'
+#' Executes all `./R` files and `global.R` into the current environment.
+#' This is useful when wanting access to functions or values created in the `./R` folder for testing purposes.
+#'
+#' Loading these files is not automatically performed by `test_app()` and must
+#' be called in `./tests/testthat/setup.R` if access to support file objects is
+#' desired.
+#'
+#' @seealso [`use_shinytest2()`] for creating a testing setup file that
+#'   loads your Shiny app support environment into the testing environment.
+#'
+#' @param app_dir The base directory for the Shiny application.
+#' @inheritParams shiny::loadSupport
+#' @export
+load_app_env <- function(
+  app_dir = "../../",
+  renv = rlang::caller_env(),
+  globalrenv = rlang::caller_env()
+) {
+  shiny::loadSupport(app_dir, renv = renv, globalrenv = globalrenv)
 }

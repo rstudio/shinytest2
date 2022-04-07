@@ -4,7 +4,7 @@
 \alias{test_app}
 \title{Test Shiny applications with \pkg{testthat}}
 \usage{
-test_app(app_dir = missing_arg(), env = shiny::loadSupport(app_dir), ...)
+test_app(app_dir = missing_arg(), ..., check_setup = TRUE)
 }
 \arguments{
 \item{app_dir}{The base directory for the Shiny application.
@@ -14,9 +14,11 @@ test_app(app_dir = missing_arg(), env = shiny::loadSupport(app_dir), ...)
 \item Otherwise, the default path of \code{"."} is used.
 }}
 
-\item{env}{Use the Shiny application's environment after sourcing the R folder}
-
 \item{...}{Parameters passed to \code{\link[testthat:test_dir]{testthat::test_dir()}}}
+
+\item{check_setup}{If \code{TRUE}, the app will be checked for the presence of
+\code{./tests/testthat/setup.R}. This file must contain a call to
+\code{\link[=load_app_env]{load_app_env()}}.}
 }
 \description{
 This is a helper method that wraps around \code{\link[testthat:test_dir]{testthat::test_dir()}} to test your Shiny application or Shiny runtime document.  This is similar to how \code{\link[testthat:test_package]{testthat::test_check()}} tests your R package but for your app.
@@ -78,5 +80,7 @@ shiny::runTests()
 \item \code{\link[=record_test]{record_test()}} to create tests to record against your Shiny application.
 \item \code{\link[testthat:snapshot_accept]{testthat::snapshot_review()}} and \code{\link[testthat:snapshot_accept]{testthat::snapshot_accept()}} if
 you want to compare or update snapshots after testing.
+\item \code{\link[=load_app_env]{load_app_env()}} to load the Shiny application's helper files.
+This is only necessary if you want access to the values while testing.
 }
 }
