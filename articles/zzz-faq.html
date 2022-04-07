@@ -115,6 +115,12 @@
 <span class="op">}</span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="how-can-i-get-the-objects-from-files-in-my-the-r-folder-into-the-testing-environment">How can I get the objects from files in my the R folder into the testing environment?<a class="anchor" aria-label="anchor" href="#how-can-i-get-the-objects-from-files-in-my-the-r-folder-into-the-testing-environment"></a>
+</h2>
+<p>Loading the support environment for a Shiny application requires a call to <code><a href="../reference/load_app_env.html">shinytest2::load_app_env()</a></code> in <code>./tests/testthat/setup.R</code>. This method will load the <code>global.R</code> and all R files into the testing environment, similar to testing package R code.</p>
+<p>This is not automatically performed as it may be costly to load the support environment.</p>
+</div>
+<div class="section level2">
 <h2 id="can-i-modify-the-input-and-output-values-that-are-recorded-in-snapshots">Can I modify the <code>input</code> and <code>output</code> values that are recorded in snapshots?<a class="anchor" aria-label="anchor" href="#can-i-modify-the-input-and-output-values-that-are-recorded-in-snapshots"></a>
 </h2>
 <p>For some kinds of outputs, it is problematic to record the raw value directly in a JSON snapshot. The output might be very large (e.g., image data or a large table), or it may contain randomly-generated values for which the specific value is unimportant for testing (such as randomly-generated DOM element IDs).</p>

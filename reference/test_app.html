@@ -66,7 +66,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">test_app</span><span class="op">(</span>app_dir <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>, env <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/loadSupport.html" class="external-link">loadSupport</a></span><span class="op">(</span><span class="va">app_dir</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">test_app</span><span class="op">(</span>app_dir <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span>, check_setup <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -76,10 +76,12 @@
 <code>./tests/testthat.R</code> file, the parent directory (<code>"../"</code>) is used.</p></li>
 <li><p>Otherwise, the default path of <code>"."</code> is used.</p></li>
 </ul></dd>
-<dt>env</dt>
-<dd><p>Use the Shiny application's environment after sourcing the R folder</p></dd>
 <dt>...</dt>
 <dd><p>Parameters passed to <code><a href="https://testthat.r-lib.org/reference/test_dir.html" class="external-link">testthat::test_dir()</a></code></p></dd>
+<dt>check_setup</dt>
+<dd><p>If <code>TRUE</code>, the app will be checked for the presence of
+<code>./tests/testthat/setup.R</code>. This file must contain a call to
+<code><a href="load_app_env.html">load_app_env()</a></code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -138,6 +140,8 @@ their associated tests.</p><div class="sourceCode r"><pre><code><span class="co"
 <ul><li><p><code><a href="record_test.html">record_test()</a></code> to create tests to record against your Shiny application.</p></li>
 <li><p><code><a href="https://testthat.r-lib.org/reference/snapshot_accept.html" class="external-link">testthat::snapshot_review()</a></code> and <code><a href="https://testthat.r-lib.org/reference/snapshot_accept.html" class="external-link">testthat::snapshot_accept()</a></code> if
 you want to compare or update snapshots after testing.</p></li>
+<li><p><code><a href="load_app_env.html">load_app_env()</a></code> to load the Shiny application's helper files.
+This is only necessary if you want access to the values while testing.</p></li>
 </ul></div>
     </div>
 
