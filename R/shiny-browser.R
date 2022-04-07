@@ -11,10 +11,8 @@ with_external_shiny_browser <- function(code) {
   ##   If Chrome, open in Chrome
   ##   else If RStudio desktop, open in external
 
-  is_avail <- rstudio_is_available()
-  rstudio_mode <- is_avail && rstudioapi::versionInfo()$mode
-  is_rstudio_server <- is_avail && rstudio_mode == "server"
-  is_rstudio_desktop <- is_avail && rstudio_mode != "server"
+  is_rstudio_server <- rstudio_is_available() && rstudioapi::versionInfo()$mode == "server"
+  is_rstudio_desktop <- rstudio_is_available() && rstudioapi::versionInfo()$mode != "server"
 
   if (!is_rstudio_server) {
     # Match the same Chromote object when initializing AppDriver's Chromote session

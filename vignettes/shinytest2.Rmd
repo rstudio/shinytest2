@@ -31,7 +31,7 @@ These reasons include:
 One way to detect these problems is with manual testing -- in other words, by having a person interact with the app in a browser -- but this can be time-intensive, inconsistent, and imprecise.
 Having automated tests can alert you to these kinds of problems quickly and with almost zero effort, after the tests have been created.
 
-## How testing works with shinytest
+## How testing works with shinytest2
 
 The `{shinytest2}` package provides tools for creating and running automated tests on Shiny applications.
 
