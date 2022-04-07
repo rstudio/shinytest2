@@ -29,6 +29,6 @@ be called in \code{./tests/testthat/setup.R} if access to support file objects i
 desired.
 }
 \seealso{
-\code{\link[=use_shinytest2_app_env]{use_shinytest2_app_env()}} for creating a testing setup file that
+\code{\link[=use_shinytest2]{use_shinytest2()}} for creating a testing setup file that
 loads your Shiny app support environment into the testing environment.
 }

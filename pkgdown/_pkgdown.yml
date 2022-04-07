@@ -30,7 +30,6 @@ reference:
   contents:
   - use_shinytest2
   - use_shinytest2_test
-  - use_shinytest2_app_env
 
 - title: Migrating tests
   desc: ~

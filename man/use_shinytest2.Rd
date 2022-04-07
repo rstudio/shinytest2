@@ -3,12 +3,12 @@
 \name{use_shinytest2}
 \alias{use_shinytest2}
 \alias{use_shinytest2_test}
-\alias{use_shinytest2_app_env}
 \title{Use \pkg{shinytest2} with your Shiny application}
 \usage{
 use_shinytest2(
   app_dir = ".",
   runner = TRUE,
+  setup = TRUE,
   ignore = TRUE,
   package = TRUE,
   ...,
@@ -22,15 +22,17 @@ use_shinytest2_test(
   quiet = FALSE,
   overwrite = FALSE
 )
-
-use_shinytest2_app_env(app_dir = ".", quiet = FALSE)
 }
 \arguments{
 \item{app_dir}{The base directory for the Shiny application}
 
 \item{runner}{If \code{TRUE}, creates a \pkg{shinytest2} test runner at \code{./tests/testthat.R}}
 
-\item{ignore}{If \code{TRUE}, adds entries to \code{.Rbuildignore} and \code{.gitignore} to ignore new debug screenshots. (\verb{*_.new.png})}
+\item{setup}{If \code{TRUE}, creates a setup file called
+\code{./tests/testthat/setup.R} containing a call to \code{\link[=load_app_env]{load_app_env()}}}
+
+\item{ignore}{If \code{TRUE}, adds entries to \code{.Rbuildignore} and \code{.gitignore} to
+ignore new debug screenshots. (\verb{*_.new.png})}
 
 \item{package}{If \code{TRUE}, adds \pkg{shinytest2} to \code{Suggests} in the \code{DESCRIPTION} file.}
 
@@ -66,9 +68,6 @@ default, this file's template test will initialize your Shiny application and
 expect the initial values.
 
 This method will also set up a test runner if it does not exist.
-
-\item \code{use_shinytest2_app_env}: Creates a setup file called \code{./tests/testthat/setup.R}. This file will contain a call to \code{\link[=load_app_env]{load_app_env()}}
-which will load all \code{./R} files and the \code{global.R} file into the testing environment.
 }}
 
 \examples{
@@ -76,6 +75,4 @@ which will load all \code{./R} files and the \code{global.R} file into the testi
 \dontrun{use_shinytest2()}
 # Set up a shinytest2 test
 \dontrun{use_shinytest2_test()}
-# Set up app to test with local R files in testing environment
-\dontrun{use_shinytest2_app_env()}
 }

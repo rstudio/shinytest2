@@ -14,7 +14,10 @@
 #'
 #' @param app_dir The base directory for the Shiny application
 #' @param runner If `TRUE`, creates a \pkg{shinytest2} test runner at `./tests/testthat.R`
-#' @param ignore If `TRUE`, adds entries to `.Rbuildignore` and `.gitignore` to ignore new debug screenshots. (`*_.new.png`)
+#' @param setup If `TRUE`, creates a setup file called
+#' `./tests/testthat/setup.R` containing a call to [`load_app_env()`]
+#' @param ignore If `TRUE`, adds entries to `.Rbuildignore` and `.gitignore` to
+#' ignore new debug screenshots. (`*_.new.png`)
 #' @param package If `TRUE`, adds \pkg{shinytest2} to `Suggests` in the `DESCRIPTION` file.
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @param quiet If `TRUE`, console output will be suppressed.
@@ -26,6 +29,7 @@
 use_shinytest2 <- function(
   app_dir = ".",
   runner = TRUE,
+  setup = TRUE,
   ignore = TRUE,
   package = TRUE,
   ...,
@@ -35,6 +39,7 @@ use_shinytest2 <- function(
   ellipsis::check_dots_empty()
 
   if (isTRUE(runner))  use_shinytest2_runner(app_dir, quiet = quiet, overwrite = overwrite)
+  if (isTRUE(setup))   use_shinytest2_setup(app_dir, quiet = quiet)
   if (isTRUE(ignore))  use_shinytest2_ignore(app_dir, quiet = quiet)
   if (isTRUE(package)) use_shinytest2_package(app_dir, quiet = quiet)
 
@@ -77,31 +82,15 @@ use_shinytest2_test <- function(
   )
 }
 
-#' @describeIn use_shinytest2
-#' Creates a setup file called `./tests/testthat/setup.R`. This file will contain a call to [`load_app_env()`]
-#' which will load all `./R` files and the `global.R` file into the testing environment.
-#' @export
-#' @examples
-#' # Set up app to test with local R files in testing environment
-#' \dontrun{use_shinytest2_app_env()}
-use_shinytest2_app_env <- function(app_dir = ".", quiet = FALSE) {
+use_shinytest2_setup <- function(app_dir = ".", quiet = FALSE) {
   withr::with_dir(app_dir, {
-    if (
-      fs::file_exists("global.R") ||
-      (fs::dir_exists("R") && (fs::dir_ls("R", regexp = "\\.R$") > 0))
-    ) {
-      fs::dir_create("tests/testthat")
-      write_union(
-        "tests/testthat/setup.R",
-        comments = "# Load application support files into testing environment",
-        lines = "shinytest2::load_app_env()",
-        quiet = quiet
-      )
-    } else {
-      if (!quiet) {
-        rlang::inform("No global.R or R files found in app directory. Skipping `tests/testthat/setup.R` file.")
-      }
-    }
+    fs::dir_create("tests/testthat")
+    write_union(
+      "tests/testthat/setup.R",
+      comments = "# Load application support files into testing environment",
+      lines = "shinytest2::load_app_env()",
+      quiet = quiet
+    )
   })
 }
 
