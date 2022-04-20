@@ -164,7 +164,7 @@ write_union <- function(path, lines, comments = NULL, quiet = FALSE) {
     usethis::ui_done("Adding {usethis::ui_value(new)} to {usethis::ui_path(path)}")
   }
   all <- c(existing_lines, comments, new)
-  write_utf8(paste0(all, collapse = "\n"), path)
+  write_utf8(paste0(paste0(all, collapse = "\n"), "\n"), path)
 
   return(invisible(TRUE))
 }
