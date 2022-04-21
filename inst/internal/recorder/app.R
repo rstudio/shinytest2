@@ -558,7 +558,7 @@ shinyApp(
       if (is.null(name)) return()
       if (!fs::file_exists(test_save_file)) return()
 
-      cur_test_names <- known_app_driver_name_values(test_save_file)
+      cur_test_names <- shinytest2:::known_app_driver_name_values(test_save_file)
       # Convert names to chars
       cur_test_names <- unique(as.character(lapply(cur_test_names, function(x) {
         x %||% "`NULL`"
