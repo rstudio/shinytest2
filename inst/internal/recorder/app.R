@@ -753,6 +753,9 @@ shinyApp(
         rlang::inform(
           c("*" = paste0("Saving test file: ", fs::path_rel(test_save_file, app$get_dir())))
         )
+
+        shinytest2:::use_shinytest2_setup(app$get_dir(), quiet = FALSE)
+
         cat(code, file = test_save_file, append = TRUE)
 
         invisible(list(
