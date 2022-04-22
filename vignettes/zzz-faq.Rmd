@@ -94,3 +94,12 @@ The output in the JSON snapshot will be:
 (This example is just for illustration purposes. Note that for this example, the screenshots will still change each time the test is run, so there are better solutions, like [setting the random seed](in-depth.html#controlling-randomness).)
 
 Input values can face the same issues, and they can also be modified with `shiny::snapshotPreprocessInput()`.
+
+
+## Should I manually shut down my `AppDriver`?
+
+For code completeness, you should call `app$stop()` at the end of your tests to shut down the background Shiny process and current Chromote Session.
+
+However, `{shinytest2}` does not do this for code brevity and relies on `AppDriver$private$finalizer()` (which is called when the value is garbage collected or the R session is stopped) to call `AppDriver$stop()`.
+
+If your R session is starting to feel more sluggish, you may want to call `app$stop()` manually. Or if you are programattically creating many instances of `AppDriver`, you may want to call `app$stop()` when the specific test is compelte.

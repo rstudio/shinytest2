@@ -94,7 +94,7 @@ normalize_png_res_header <- function(self, private, file) {
   header_offset <- grepRaw("pHYs", data)
 
   if (length(header_offset) == 0) {
-    app_warn(self, private, paste0("Cannot find pHYs header in ", fs::path_file(file)))
+    # app_warn(self, private, paste0("Cannot find pHYs header in ", fs::path_file(file)))
     return(FALSE)
   }
 
