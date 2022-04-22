@@ -561,7 +561,8 @@ shinyApp(
       cur_test_names <- shinytest2:::known_app_driver_name_values(test_save_file)
       # Convert names to chars
       cur_test_names <- unique(as.character(lapply(cur_test_names, function(x) {
-        x %||% "`NULL`"
+        if (is.null(x)) return("`NULL`")
+        x
       })))
       if (name %in% cur_test_names) {
         shiny::tags$div(
@@ -747,7 +748,11 @@ shinyApp(
             TRUE
           }
         if (overwrite_test_runner) {
-          shinytest2:::use_shinytest2_runner(app$get_dir(), quiet = FALSE)
+          shinytest2:::use_shinytest2_runner(
+            app$get_dir(),
+            quiet = FALSE,
+            overwrite = TRUE
+          )
         }
 
         rlang::inform(

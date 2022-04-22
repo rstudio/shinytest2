@@ -7,10 +7,10 @@
 \usage{
 use_shinytest2(
   app_dir = ".",
-  runner = TRUE,
-  setup = TRUE,
-  ignore = TRUE,
-  package = TRUE,
+  runner = missing_arg(),
+  setup = missing_arg(),
+  ignore = missing_arg(),
+  package = missing_arg(),
   ...,
   quiet = FALSE,
   overwrite = FALSE
@@ -53,15 +53,14 @@ Use \pkg{shinytest2} with your Shiny application
 \item \code{use_shinytest2}: This \pkg{usethis}-style method initializes many different useful features when using
 \pkg{shinytest2}:
 \itemize{
-\item Creates a \pkg{shinytest2} test runner at \code{./tests/testthat.R}. This file
-will contain a call to \code{\link[=test_app]{test_app()}} which will set up the proper testing
-environment for your Shiny application, enable \pkg{testthat} edition 3, and
-execute all \pkg{testthat} tests.
-\item Add an entry to \code{./Rbuildignore} (if it exists) and \code{.gitignore} to ignore
-new debug screenshots. (\verb{*_.new.png})
-\item Adds \code{shinytest} to the \code{Suggests} packages in the \code{DESCRIPTION} file (if it
-exists).
+\item \code{runner}: Creates a \pkg{shinytest2} test runner at \code{./tests/testthat.R}. This file
+will contain a call to \code{\link[=test_app]{test_app()}}.
+\item \code{setup}: Creates \code{./tests/testthat/setup.R} to add your Shiny \code{./R} objects and functions into the testing environment. This file will run before testing begins.
+\item \code{ignore}: Add an entry to \code{./Rbuildignore} (if it exists) and \code{.gitignore} to ignore new debug screenshots. (\verb{*_.new.png})
+\item \code{package}: Adds \code{shinytest} to the \code{Suggests} packages in the \code{DESCRIPTION} file (if it exists).
 }
+
+If any of these values are \emph{not} missing, the remaining missing values will be set to \code{FALSE}. This allows \code{use_shinytest2()} to add more flags in future versions without opting into all changes inadvertently.
 
 \item \code{use_shinytest2_test}: Creates a test file called \code{./tests/testthat/test-shinytest2.R}. By
 default, this file's template test will initialize your Shiny application and
