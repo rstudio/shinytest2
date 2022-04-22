@@ -3,14 +3,13 @@
 #' @describeIn use_shinytest2
 #' This \pkg{usethis}-style method initializes many different useful features when using
 #' \pkg{shinytest2}:
-#' * Creates a \pkg{shinytest2} test runner at `./tests/testthat.R`. This file
-#' will contain a call to [`test_app()`] which will set up the proper testing
-#' environment for your Shiny application, enable \pkg{testthat} edition 3, and
-#' execute all \pkg{testthat} tests.
-#' * Add an entry to `./Rbuildignore` (if it exists) and `.gitignore` to ignore
-#' new debug screenshots. (`*_.new.png`)
-#' * Adds `shinytest` to the `Suggests` packages in the `DESCRIPTION` file (if it
-#' exists).
+#' * `runner`: Creates a \pkg{shinytest2} test runner at `./tests/testthat.R`. This file
+#' will contain a call to [`test_app()`].
+#' * `setup`: Creates `./tests/testthat/setup.R` to add your Shiny `./R` objects and functions into the testing environment. This file will run before testing begins.
+#' * `ignore`: Add an entry to `./Rbuildignore` (if it exists) and `.gitignore` to ignore new debug screenshots. (`*_.new.png`)
+#' * `package`: Adds `shinytest` to the `Suggests` packages in the `DESCRIPTION` file (if it exists).
+#'
+#' If any of these values are _not_ missing, the remaining missing values will be set to `FALSE`. This allows `use_shinytest2()` to add more flags in future versions without opting into all changes inadvertently.
 #'
 #' @param app_dir The base directory for the Shiny application
 #' @param runner If `TRUE`, creates a \pkg{shinytest2} test runner at `./tests/testthat.R`
@@ -28,20 +27,42 @@
 #' \dontrun{use_shinytest2()}
 use_shinytest2 <- function(
   app_dir = ".",
-  runner = TRUE,
-  setup = TRUE,
-  ignore = TRUE,
-  package = TRUE,
+  runner = missing_arg(),
+  setup = missing_arg(),
+  ignore = missing_arg(),
+  package = missing_arg(),
   ...,
   quiet = FALSE,
   overwrite = FALSE
 ) {
   ellipsis::check_dots_empty()
 
-  if (isTRUE(runner))  use_shinytest2_runner(app_dir, quiet = quiet, overwrite = overwrite)
-  if (isTRUE(setup))   use_shinytest2_setup(app_dir, quiet = quiet)
-  if (isTRUE(ignore))  use_shinytest2_ignore(app_dir, quiet = quiet)
-  if (isTRUE(package)) use_shinytest2_package(app_dir, quiet = quiet)
+  if (all(
+    rlang::is_missing(runner),
+    rlang::is_missing(setup),
+    rlang::is_missing(ignore),
+    rlang::is_missing(package)
+  )) {
+    runner <- TRUE
+    setup <- TRUE
+    ignore <- TRUE
+    package <- TRUE
+  } else {
+    # If something is provided, disable everything else
+    runner <- isTRUE(rlang::maybe_missing(runner, FALSE))
+    setup <- isTRUE(rlang::maybe_missing(setup, FALSE))
+    ignore <- isTRUE(rlang::maybe_missing(ignore, FALSE))
+    package <- isTRUE(rlang::maybe_missing(package, FALSE))
+  }
+
+  if (all(!runner, !setup, !ignore, !package)) {
+    stop("At least one of `runner`, `setup`, `ignore`, or `package` must be `TRUE`")
+  }
+
+  if (runner)  use_shinytest2_runner(app_dir, quiet = quiet, overwrite = overwrite)
+  if (setup)   use_shinytest2_setup(app_dir, quiet = quiet)
+  if (ignore)  use_shinytest2_ignore(app_dir, quiet = quiet)
+  if (package) use_shinytest2_package(app_dir, quiet = quiet)
 
   invisible()
 }

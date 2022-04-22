@@ -1,6 +1,20 @@
 
 expect_configs <- function(runner, setup, ignore, package) {
 
+  if (all(!runner, !setup, !ignore, !package)) {
+    expect_error(
+      use_shinytest2(
+        app_dir = ".",
+        runner = FALSE,
+        setup = FALSE,
+        ignore = FALSE,
+        package = FALSE
+      ),
+      "At least one of", fixed = TRUE
+    )
+    return()
+  }
+
   app_dir <- tempfile("st2-test")
   fs::dir_create(app_dir)
   withr::defer({fs::dir_delete(app_dir)})
@@ -58,4 +72,15 @@ test_that("use_shinytest2() sets up configs for all configurations", {
     f = expect_configs
   )
 
+})
+
+test_that("use_shinytest2_setup() creates a file with no warnings when being read", {
+  temp_dir <- tempfile("st2-test")
+  fs::dir_create(temp_dir)
+
+  expect_warning({
+
+    use_shinytest2_setup(temp_dir, quiet = TRUE)
+    readLines(file.path(temp_dir, "tests/testthat/setup.R"))
+  }, NA)
 })

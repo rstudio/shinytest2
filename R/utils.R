@@ -163,8 +163,11 @@ write_union <- function(path, lines, comments = NULL, quiet = FALSE) {
     rlang::check_installed("usethis")
     usethis::ui_done("Adding {usethis::ui_value(new)} to {usethis::ui_path(path)}")
   }
-  all <- c(existing_lines, comments, new)
-  write_utf8(paste0(paste0(all, collapse = "\n"), "\n"), path)
+  all_txt <- paste0(c(existing_lines, comments, new), collapse = "\n")
+  if (!grepl("\n$", all_txt)) {
+    all_txt <- paste0(all_txt, "\n")
+  }
+  write_utf8(all_txt, path)
 
   return(invisible(TRUE))
 }
