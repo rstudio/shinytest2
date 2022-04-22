@@ -748,7 +748,11 @@ shinyApp(
             TRUE
           }
         if (overwrite_test_runner) {
-          shinytest2:::use_shinytest2_runner(app$get_dir(), quiet = FALSE)
+          shinytest2:::use_shinytest2_runner(
+            app$get_dir(),
+            quiet = FALSE,
+            overwrite = TRUE
+          )
         }
 
         rlang::inform(
