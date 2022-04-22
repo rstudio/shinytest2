@@ -55,7 +55,7 @@ record_test <- function(
   run_test = TRUE
 ) {
   ellipsis::check_dots_empty()
-  rlang::check_installed("shinyvalidate")
+  rlang::check_installed("shinyvalidate", "0.1.2")
 
   if (inherits(app, "ShinyDriver")) {
     rlang::abort(paste0("Recording tests for `ShinyDriver` objects is not supported."))
