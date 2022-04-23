@@ -1243,7 +1243,7 @@ AppDriver <- R6Class( # nolint
     #' app <- AppDriver$new(shiny_app, check_names = TRUE)
     #' #> Warning:
     #' #> ! Shiny inputs should have unique HTML id values.
-    #' #> ℹ The following HTML id values are not unique:
+    #' #> i The following HTML id values are not unique:
     #' #> • text
     #'
     #' # Manually assert that all names are unique
@@ -1251,7 +1251,7 @@ AppDriver <- R6Class( # nolint
     #' app$expect_unique_names()
     #' #> Error: `app_check_unique_names(self, private)` threw an unexpected warning.
     #' #> Message: ! Shiny inputs should have unique HTML id values.
-    #' #> ℹ The following HTML id values are not unique:
+    #' #> i The following HTML id values are not unique:
     #' #>   • text
     #' #> Class:   rlang_warning/warning/condition
     #' }
