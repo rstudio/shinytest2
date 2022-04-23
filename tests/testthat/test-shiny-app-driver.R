@@ -10,6 +10,9 @@ test_that("AppDriver can receive a shiny.obj object", {
   app$expect_values()
 
   expect_true(fs::path_has_parent(app$get_dir(), tempdir()))
+
+  # Shut down this app to try an make CI happier about the next app
+  app$stop()
 })
 
 test_that("AppDriver can receive a shinyAppDir object", {

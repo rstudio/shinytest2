@@ -7,6 +7,9 @@ test_that("click causes input without binding to update", {
   app$click("click")
   app$click("click")
   app$expect_values()
+
+  # Shut down this app to try an make CI happier about the next app
+  app$stop()
 })
 
 test_that("Can update the input without biding individually", {

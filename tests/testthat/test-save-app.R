@@ -19,6 +19,9 @@ test_that("Saving an app has the right context", {
     app$get_value(output = "text"),
     as.character(n)
   )
+
+  # Shut down this app to try an make CI happier about the next app
+  app$stop()
 })
 
 
