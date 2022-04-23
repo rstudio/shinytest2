@@ -140,7 +140,7 @@
 <div class="section level3">
 <h3 id="making-expectations">Making expectations<a class="anchor" aria-label="anchor" href="#making-expectations"></a>
 </h3>
-<p>For an indepth discussion of expectations, see the <a href="./robust.html">Robust testing vignette</a>.</p>
+<p>For an in-depth discussion of expectations, see the <a href="./robust.html">Robust testing vignette</a>.</p>
 <p>There are a couple standard ways to make expectations from your <code>AppDriver</code> object. * <code>app$expect_values()</code>: This is the simplest way to make an expectation. It creates a list of values and compares them to the current values of the application. It also takes a debug screenshot and stores it as a snapshot. However, this snapshot will never fail an expectation test. The extra screenshot file is useful for manually determining if UI changes have happened over time while not producing numerous false-positive test failures. * <code>app$expect_screenshot()</code>: This method takes a screenshot of the application and compares it to a reference screenshot. If the screenshots are different, it fails the test.</p>
 <p>There are few ways to use <code>app$expect_values()</code>. The simplest way is to call it with no arguments:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
