@@ -2019,7 +2019,8 @@ app &lt;- AppDriver$new(
   system.file("examples/01_hello", package = "shiny"),
   options = list(shiny.trace = TRUE)
 )
-app$get_logs() # (long output lines have been truncated)
+app$get_logs()
+## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
 # {shinytest2} R  info      11:09:57.43 Start AppDriver initialization
 # {shinytest2} R  info      11:09:57.43 Starting Shiny app
 # {shinytest2} R  info      11:09:58.27 Creating new chromote session
@@ -2030,34 +2031,34 @@ app$get_logs() # (long output lines have been truncated)
 # {shinytest2} R  info      11:09:58.54 Waiting until Shiny app starts
 # {chromote}   JS info      11:09:58.61 shinytest2; jQuery found
 # {chromote}   JS info      11:09:58.61 shinytest2; Waiting for shiny session to connect
-# {chromote}   JS websocket 11:09:58.73 send {"method":"init","data":{"bins":30,|truncated
-# {chromote}   JS websocket 11:09:58.78 recv {"config":{"workerId":"","sessionId":|truncated
+# {chromote}   JS websocket 11:09:58.73 send WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:58.78 recv WEBSOCKET_MSG
 # {chromote}   JS info      11:09:58.78 shinytest2; Connected
 # {chromote}   JS info      11:09:58.78 shinytest2; Ready
-# {chromote}   JS websocket 11:09:58.85 recv {"custom":{"showcase-src":{"srcref":|truncated
-# {chromote}   JS websocket 11:09:58.85 recv {"busy":"busy"}
+# {chromote}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG
 # {chromote}   JS info      11:09:58.85 shinytest2; shiny:busy
-# {chromote}   JS websocket 11:09:58.86 recv {"custom":{"showcase-src":{"srcref":|truncated
-# {chromote}   JS websocket 11:09:58.86 recv {"recalculating":{"name":"distPlot",|truncated
+# {chromote}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG
 # {shinytest2} R  info      11:09:58.87 Shiny app started
 # {shinytest2} R  info      11:09:59.07 Setting inputs: 'bins'
-# {chromote}   JS websocket 11:09:59.08 recv {"recalculating":{"name":"distPlot",|truncated
-# {chromote}   JS websocket 11:09:59.08 recv {"busy":"idle"}
+# {chromote}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
 # {chromote}   JS info      11:09:59.08 shinytest2; shiny:idle
-# {chromote}   JS websocket 11:09:59.08 recv {"errors":{},"values":{"distPlot"|truncated
+# {chromote}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
 # {chromote}   JS info      11:09:59.08 shinytest2; shiny:value distPlot
 # {chromote}   JS info      11:09:59.08 shinytest2; inputQueue: adding bins
 # {chromote}   JS info      11:09:59.09 shinytest2; inputQueue: flushing bins
-# {chromote}   JS websocket 11:09:59.10 send {"method":"update","data":{"bins":20}}
-# {chromote}   JS websocket 11:09:59.11 recv {"progress":{"type":"binding",|truncated
-# {chromote}   JS websocket 11:09:59.11 recv {"busy":"busy"}
+# {chromote}   JS websocket 11:09:59.10 send WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG
 # {chromote}   JS info      11:09:59.11 shinytest2; shiny:busy
-# {chromote}   JS websocket 11:09:59.12 recv {"custom":{"showcase-src":{"srcref":|truncated
-# {chromote}   JS websocket 11:09:59.14 recv {"recalculating":{"name":"distPlot",|truncated
-# {chromote}   JS websocket 11:09:59.18 recv {"recalculating":{"name":"distPlot",|truncated
-# {chromote}   JS websocket 11:09:59.19 recv {"busy":"idle"}
+# {chromote}   JS websocket 11:09:59.12 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.14 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.18 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.19 recv WEBSOCKET_MSG
 # {chromote}   JS info      11:09:59.19 shinytest2; shiny:idle
-# {chromote}   JS websocket 11:09:59.21 recv {"errors":{},"values":{"distPlot"|truncated
+# {chromote}   JS websocket 11:09:59.21 recv WEBSOCKET_MSG
 # {chromote}   JS info      11:09:59.21 shinytest2; shiny:value distPlot
 # {shinytest2} R  info      11:09:59.21 Finished setting inputs. Timedout: FALSE
 # {shinytest2} R  info      11:09:59.21 Getting all values
@@ -2094,23 +2095,24 @@ tibble::glimpse(log)
 
 # It may be filtered to find desired logs
 subset(log, level == "websocket")
-# {chromote}   JS websocket 11:09:58.73 send {"method":"init","data":{"bins":30,|truncated
-# {chromote}   JS websocket 11:09:58.78 recv {"config":{"workerId":"","sessionId":|truncated
-# {chromote}   JS websocket 11:09:58.85 recv {"custom":{"showcase-src":{"srcref":|truncated
-# {chromote}   JS websocket 11:09:58.85 recv {"busy":"busy"}
-# {chromote}   JS websocket 11:09:58.86 recv {"custom":{"showcase-src":{"srcref":|truncated
-# {chromote}   JS websocket 11:09:58.86 recv {"recalculating":{"name":"distPlot",|truncated
-# {chromote}   JS websocket 11:09:59.08 recv {"recalculating":{"name":"distPlot",|truncated
-# {chromote}   JS websocket 11:09:59.08 recv {"busy":"idle"}
-# {chromote}   JS websocket 11:09:59.08 recv {"errors":{},"values":{"distPlot":{|truncated
-# {chromote}   JS websocket 11:09:59.10 send {"method":"update","data":{"bins":20}}
-# {chromote}   JS websocket 11:09:59.11 recv {"progress":{"type":"binding",|truncated
-# {chromote}   JS websocket 11:09:59.11 recv {"busy":"busy"}
-# {chromote}   JS websocket 11:09:59.12 recv {"custom":{"showcase-src":{"srcref":|truncated
-# {chromote}   JS websocket 11:09:59.14 recv {"recalculating":{"name":"distPlot",|truncated
-# {chromote}   JS websocket 11:09:59.18 recv {"recalculating":{"name":"distPlot",|truncated
-# {chromote}   JS websocket 11:09:59.19 recv {"busy":"idle"}
-# {chromote}   JS websocket 11:09:59.21 recv {"errors":{},"values":{"distPlot":{|truncated
+## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
+# {chromote}   JS websocket 11:09:58.73 send WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:58.78 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.10 send WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.12 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.14 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.18 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.19 recv WEBSOCKET_MSG
+# {chromote}   JS websocket 11:09:59.21 recv WEBSOCKET_MSG
 }
 </code></pre></div><p></p></div>
 </div>
@@ -2879,7 +2881,8 @@ str(head(rlog, 2))
 <span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/01_hello"</span>, package <span class="op">=</span> <span class="st">"shiny"</span><span class="op">)</span>,</span>
 <span class="r-in">  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>shiny.trace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_logs</span><span class="op">(</span><span class="op">)</span> <span class="co"># (long output lines have been truncated)</span></span>
+<span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">get_logs</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span class="co">## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)</span></span>
 <span class="r-in"><span class="co"># {shinytest2} R  info      11:09:57.43 Start AppDriver initialization</span></span>
 <span class="r-in"><span class="co"># {shinytest2} R  info      11:09:57.43 Starting Shiny app</span></span>
 <span class="r-in"><span class="co"># {shinytest2} R  info      11:09:58.27 Creating new chromote session</span></span>
@@ -2890,34 +2893,34 @@ str(head(rlog, 2))
 <span class="r-in"><span class="co"># {shinytest2} R  info      11:09:58.54 Waiting until Shiny app starts</span></span>
 <span class="r-in"><span class="co"># {chromote}   JS info      11:09:58.61 shinytest2; jQuery found</span></span>
 <span class="r-in"><span class="co"># {chromote}   JS info      11:09:58.61 shinytest2; Waiting for shiny session to connect</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.73 send {"method":"init","data":{"bins":30,|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.78 recv {"config":{"workerId":"","sessionId":|truncated</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.73 send WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.78 recv WEBSOCKET_MSG</span></span>
 <span class="r-in"><span class="co"># {chromote}   JS info      11:09:58.78 shinytest2; Connected</span></span>
 <span class="r-in"><span class="co"># {chromote}   JS info      11:09:58.78 shinytest2; Ready</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.85 recv {"custom":{"showcase-src":{"srcref":|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.85 recv {"busy":"busy"}</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG</span></span>
 <span class="r-in"><span class="co"># {chromote}   JS info      11:09:58.85 shinytest2; shiny:busy</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.86 recv {"custom":{"showcase-src":{"srcref":|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.86 recv {"recalculating":{"name":"distPlot",|truncated</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG</span></span>
 <span class="r-in"><span class="co"># {shinytest2} R  info      11:09:58.87 Shiny app started</span></span>
 <span class="r-in"><span class="co"># {shinytest2} R  info      11:09:59.07 Setting inputs: 'bins'</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.08 recv {"recalculating":{"name":"distPlot",|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.08 recv {"busy":"idle"}</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG</span></span>
 <span class="r-in"><span class="co"># {chromote}   JS info      11:09:59.08 shinytest2; shiny:idle</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.08 recv {"errors":{},"values":{"distPlot"|truncated</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG</span></span>
 <span class="r-in"><span class="co"># {chromote}   JS info      11:09:59.08 shinytest2; shiny:value distPlot</span></span>
 <span class="r-in"><span class="co"># {chromote}   JS info      11:09:59.08 shinytest2; inputQueue: adding bins</span></span>
 <span class="r-in"><span class="co"># {chromote}   JS info      11:09:59.09 shinytest2; inputQueue: flushing bins</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.10 send {"method":"update","data":{"bins":20}}</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.11 recv {"progress":{"type":"binding",|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.11 recv {"busy":"busy"}</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.10 send WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG</span></span>
 <span class="r-in"><span class="co"># {chromote}   JS info      11:09:59.11 shinytest2; shiny:busy</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.12 recv {"custom":{"showcase-src":{"srcref":|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.14 recv {"recalculating":{"name":"distPlot",|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.18 recv {"recalculating":{"name":"distPlot",|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.19 recv {"busy":"idle"}</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.12 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.14 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.18 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.19 recv WEBSOCKET_MSG</span></span>
 <span class="r-in"><span class="co"># {chromote}   JS info      11:09:59.19 shinytest2; shiny:idle</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.21 recv {"errors":{},"values":{"distPlot"|truncated</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.21 recv WEBSOCKET_MSG</span></span>
 <span class="r-in"><span class="co"># {chromote}   JS info      11:09:59.21 shinytest2; shiny:value distPlot</span></span>
 <span class="r-in"><span class="co"># {shinytest2} R  info      11:09:59.21 Finished setting inputs. Timedout: FALSE</span></span>
 <span class="r-in"><span class="co"># {shinytest2} R  info      11:09:59.21 Getting all values</span></span>
@@ -2954,23 +2957,24 @@ str(head(rlog, 2))
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># It may be filtered to find desired logs</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">log</span>, <span class="va">level</span> <span class="op">==</span> <span class="st">"websocket"</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.73 send {"method":"init","data":{"bins":30,|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.78 recv {"config":{"workerId":"","sessionId":|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.85 recv {"custom":{"showcase-src":{"srcref":|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.85 recv {"busy":"busy"}</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.86 recv {"custom":{"showcase-src":{"srcref":|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.86 recv {"recalculating":{"name":"distPlot",|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.08 recv {"recalculating":{"name":"distPlot",|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.08 recv {"busy":"idle"}</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.08 recv {"errors":{},"values":{"distPlot":{|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.10 send {"method":"update","data":{"bins":20}}</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.11 recv {"progress":{"type":"binding",|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.11 recv {"busy":"busy"}</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.12 recv {"custom":{"showcase-src":{"srcref":|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.14 recv {"recalculating":{"name":"distPlot",|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.18 recv {"recalculating":{"name":"distPlot",|truncated</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.19 recv {"busy":"idle"}</span></span>
-<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.21 recv {"errors":{},"values":{"distPlot":{|truncated</span></span>
+<span class="r-in"><span class="co">## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.73 send WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.78 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.10 send WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.12 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.14 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.18 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.19 recv WEBSOCKET_MSG</span></span>
+<span class="r-in"><span class="co"># {chromote}   JS websocket 11:09:59.21 recv WEBSOCKET_MSG</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
