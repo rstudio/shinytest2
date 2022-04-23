@@ -808,7 +808,7 @@ app$get_logs() # (long output lines have been truncated)
 # \{chromote\}   JS websocket 11:09:59.08 recv \{"recalculating":\{"name":"distPlot",|truncated
 # \{chromote\}   JS websocket 11:09:59.08 recv \{"busy":"idle"\}
 # \{chromote\}   JS info      11:09:59.08 shinytest2; shiny:idle
-# \{chromote\}   JS websocket 11:09:59.08 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{chromote\}   JS websocket 11:09:59.08 recv \{"errors":\{\},"values":\{"distPlot"|truncated
 # \{chromote\}   JS info      11:09:59.08 shinytest2; shiny:value distPlot
 # \{chromote\}   JS info      11:09:59.08 shinytest2; inputQueue: adding bins
 # \{chromote\}   JS info      11:09:59.09 shinytest2; inputQueue: flushing bins
@@ -821,7 +821,7 @@ app$get_logs() # (long output lines have been truncated)
 # \{chromote\}   JS websocket 11:09:59.18 recv \{"recalculating":\{"name":"distPlot",|truncated
 # \{chromote\}   JS websocket 11:09:59.19 recv \{"busy":"idle"\}
 # \{chromote\}   JS info      11:09:59.19 shinytest2; shiny:idle
-# \{chromote\}   JS websocket 11:09:59.21 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{chromote\}   JS websocket 11:09:59.21 recv \{"errors":\{\},"values":\{"distPlot"|truncated
 # \{chromote\}   JS info      11:09:59.21 shinytest2; shiny:value distPlot
 # \{shinytest2\} R  info      11:09:59.21 Finished setting inputs. Timedout: FALSE
 # \{shinytest2\} R  info      11:09:59.21 Getting all values
@@ -837,7 +837,7 @@ app$get_logs() # (long output lines have been truncated)
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"busy":"idle"\}
-# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot"|truncated
 # \{shiny\}      R  error     ----------- RECV \{"method":"update","data":\{"bins":20\}\}
 # \{shiny\}      R  error     ----------- SEND \{"progress":\{"type":"binding",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"busy":"busy"\}
@@ -845,7 +845,7 @@ app$get_logs() # (long output lines have been truncated)
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"busy":"idle"\}
-# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot"|truncated
 
 # The log that is returned is a `data.frame()`.
 log <- app$get_logs()
@@ -2815,7 +2815,7 @@ app$get_logs() # (long output lines have been truncated)
 # \{chromote\}   JS websocket 11:09:59.08 recv \{"recalculating":\{"name":"distPlot",|truncated
 # \{chromote\}   JS websocket 11:09:59.08 recv \{"busy":"idle"\}
 # \{chromote\}   JS info      11:09:59.08 shinytest2; shiny:idle
-# \{chromote\}   JS websocket 11:09:59.08 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{chromote\}   JS websocket 11:09:59.08 recv \{"errors":\{\},"values":\{"distPlot"|truncated
 # \{chromote\}   JS info      11:09:59.08 shinytest2; shiny:value distPlot
 # \{chromote\}   JS info      11:09:59.08 shinytest2; inputQueue: adding bins
 # \{chromote\}   JS info      11:09:59.09 shinytest2; inputQueue: flushing bins
@@ -2828,7 +2828,7 @@ app$get_logs() # (long output lines have been truncated)
 # \{chromote\}   JS websocket 11:09:59.18 recv \{"recalculating":\{"name":"distPlot",|truncated
 # \{chromote\}   JS websocket 11:09:59.19 recv \{"busy":"idle"\}
 # \{chromote\}   JS info      11:09:59.19 shinytest2; shiny:idle
-# \{chromote\}   JS websocket 11:09:59.21 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{chromote\}   JS websocket 11:09:59.21 recv \{"errors":\{\},"values":\{"distPlot"|truncated
 # \{chromote\}   JS info      11:09:59.21 shinytest2; shiny:value distPlot
 # \{shinytest2\} R  info      11:09:59.21 Finished setting inputs. Timedout: FALSE
 # \{shinytest2\} R  info      11:09:59.21 Getting all values
@@ -2844,7 +2844,7 @@ app$get_logs() # (long output lines have been truncated)
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"busy":"idle"\}
-# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot"|truncated
 # \{shiny\}      R  error     ----------- RECV \{"method":"update","data":\{"bins":20\}\}
 # \{shiny\}      R  error     ----------- SEND \{"progress":\{"type":"binding",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"busy":"busy"\}
@@ -2852,7 +2852,7 @@ app$get_logs() # (long output lines have been truncated)
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"busy":"idle"\}
-# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot"|truncated
 
 # The log that is returned is a `data.frame()`.
 log <- app$get_logs()
