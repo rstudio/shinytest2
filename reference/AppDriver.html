@@ -312,7 +312,7 @@ Shiny app is idle for 200ms.</p></dd>
 <dt><code>screenshot_args</code></dt>
 <dd><p>Default set of arguments to pass in to
 <code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method when taking
-screnshots within <code>$expect_screenshot()</code>. To disable screenshots by
+screenshots within <code>$expect_screenshot()</code>. To disable screenshots by
 default, set to <code>FALSE</code>.</p></dd>
 
 
@@ -457,7 +457,7 @@ cat(app$get_text("#view"))
 <h3 id="method-set-inputs-">Method <code>set_inputs()</code><a class="anchor" aria-label="anchor" href="#method-set-inputs-"></a></h3>
 <p>Set input values</p>
 <p>Set Shiny inputs by sending the value to the Chrome browser and
-programaticly updating the values. Given <code>wait_ = TRUE</code>, the method will
+programmatically updating the values. Given <code>wait_ = TRUE</code>, the method will
 not return until an output value has been updated.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>
@@ -1200,7 +1200,7 @@ and have the script return an atomic value.</p>
 <p>Arguments will have to be inserted into the script as there is not access
 to <code>arguments</code>. This can be done with commands like <code><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste()</a></code>. If using
 <code><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue()</a></code>, be sure to use uncommon <code>.open</code> and <code>.close</code> values to
-avoid having to doulbe all <code>{</code> and <code>}</code>.</p><div class="section">
+avoid having to double all <code>{</code> and <code>}</code>.</p><div class="section">
 <h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_js</span><span class="op">(</span>
   script <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,
@@ -1754,7 +1754,7 @@ shiny_app &lt;- shinyApp(
 app &lt;- AppDriver$new(shiny_app, check_names = TRUE)
 #&gt; Warning:
 #&gt; ! Shiny inputs should have unique HTML id values.
-#&gt; ℹ The following HTML id values are not unique:
+#&gt; i The following HTML id values are not unique:
 #&gt; • text
 
 # Manually assert that all names are unique
@@ -1762,7 +1762,7 @@ app &lt;- AppDriver$new(shiny_app, check_names = FALSE)
 app$expect_unique_names()
 #&gt; Error: `app_check_unique_names(self, private)` threw an unexpected warning.
 #&gt; Message: ! Shiny inputs should have unique HTML id values.
-#&gt; ℹ The following HTML id values are not unique:
+#&gt; i The following HTML id values are not unique:
 #&gt;   • text
 #&gt; Class:   rlang_warning/warning/condition
 }
@@ -2734,7 +2734,7 @@ str(head(rlog, 2))
 <span class="r-in"><span class="va">app</span> <span class="op">&lt;-</span> <span class="va">AppDriver</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">shiny_app</span>, check_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-in"><span class="co">#&gt; Warning:</span></span>
 <span class="r-in"><span class="co">#&gt; ! Shiny inputs should have unique HTML id values.</span></span>
-<span class="r-in"><span class="co">#&gt; ℹ The following HTML id values are not unique:</span></span>
+<span class="r-in"><span class="co">#&gt; i The following HTML id values are not unique:</span></span>
 <span class="r-in"><span class="co">#&gt; • text</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Manually assert that all names are unique</span></span>
@@ -2742,7 +2742,7 @@ str(head(rlog, 2))
 <span class="r-in"><span class="va">app</span><span class="op">$</span><span class="fu">expect_unique_names</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"><span class="co">#&gt; Error: `app_check_unique_names(self, private)` threw an unexpected warning.</span></span>
 <span class="r-in"><span class="co">#&gt; Message: ! Shiny inputs should have unique HTML id values.</span></span>
-<span class="r-in"><span class="co">#&gt; ℹ The following HTML id values are not unique:</span></span>
+<span class="r-in"><span class="co">#&gt; i The following HTML id values are not unique:</span></span>
 <span class="r-in"><span class="co">#&gt;   • text</span></span>
 <span class="r-in"><span class="co">#&gt; Class:   rlang_warning/warning/condition</span></span>
 <span class="r-in"><span class="op">}</span></span>

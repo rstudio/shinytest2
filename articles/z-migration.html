@@ -97,7 +97,7 @@
 
     
     
-<p><a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> is the predecesor to <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>. <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> was implemented using <a href="https://rstudio.github.io/webdriver/" class="external-link"><code>{webdriver}</code></a> which uses <a href="https://phantomjs.org/api/" class="external-link">PhantomJS</a>. PhantomJS has been unsupported since 2017 and does not support displaying <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5. <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> uses <a href="https://github.com/rstudio/chromote" class="external-link">chromote</a> to connect to your locally installed Chrome or Chromium application. So, <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> is able to display <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5.</p>
+<p><a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> is the predecessor to <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>. <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> was implemented using <a href="https://rstudio.github.io/webdriver/" class="external-link"><code>{webdriver}</code></a> which uses <a href="https://phantomjs.org/api/" class="external-link">PhantomJS</a>. PhantomJS has been unsupported since 2017 and does not support displaying <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5. <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> uses <a href="https://github.com/rstudio/chromote" class="external-link">chromote</a> to connect to your locally installed Chrome or Chromium application. So, <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> is able to display <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5.</p>
 <p>To auto migrate your existing <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> tests to <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>, call <code>shinytest2::migrate_from_shinytest(PATH_TO_APP)</code>.</p>
 <div class="section level2">
 <h2 id="code-structure">Code structure<a class="anchor" aria-label="anchor" href="#code-structure"></a>
@@ -367,7 +367,7 @@
 <code>ShinyDriver$waitFor()</code><a class="anchor" aria-label="anchor" href="#shinydriverwaitfor"></a>
 </h4>
 <p>Signature: <code>ShinyDriver$waitFor(expr, checkInterval = 100, timeout = 3000)</code></p>
-<p>This method has been renamed and had its parameters reordered to <code>AppDriver$wait_for_js(script, timeout, interval)</code>. Like other JavaScript methods in <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>, <code>script</code> needs to explicity return a value.</p>
+<p>This method has been renamed and had its parameters reordered to <code>AppDriver$wait_for_js(script, timeout, interval)</code>. Like other JavaScript methods in <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>, <code>script</code> needs to explicitly return a value.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## {shinytest}</span>
 <span class="va">old</span><span class="op">$</span><span class="fu">waitFor</span><span class="op">(</span><span class="st">"$('#myid').length &gt; 0"</span><span class="op">)</span>
@@ -526,7 +526,7 @@
 </h3>
 <ul>
 <li>
-<code>ShinyDriver$setValue(name, value, iotype)</code>: To set an output value, it must be perfomed by setting an input value and having your render methods set the output value. To set an input value, use <code>AppDriver$set_inputs()</code>.</li>
+<code>ShinyDriver$setValue(name, value, iotype)</code>: To set an output value, it must be performed by setting an input value and having your render methods set the output value. To set an input value, use <code>AppDriver$set_inputs()</code>.</li>
 </ul>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## {shinytest}</span>

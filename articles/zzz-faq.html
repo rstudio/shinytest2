@@ -163,7 +163,7 @@
 </h2>
 <p>For code completeness, you should call <code>app$stop()</code> at the end of your tests to shut down the background Shiny process and current Chromote Session.</p>
 <p>However, <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> does not do this for code brevity and relies on <code>AppDriver$private$finalizer()</code> (which is called when the value is garbage collected or the R session is stopped) to call <code>AppDriver$stop()</code>.</p>
-<p>If your R session is starting to feel more sluggish, you may want to call <code>app$stop()</code> manually. Or if you are programattically creating many instances of <code>AppDriver</code>, you may want to call <code>app$stop()</code> when the specific test is compelte.</p>
+<p>If your R session is starting to feel more sluggish, you may want to call <code>app$stop()</code> manually. Or if you are programmatically creating many instances of <code>AppDriver</code>, you may want to call <code>app$stop()</code> when the specific test is complete.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
