@@ -1,5 +1,4 @@
-# shinytest2
-
+# shinytest2 <a href="https://rstudio.github.io/shinytest2/"><img src="man/figures/logo.svg" align="right" height="139" /></a>
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/shinytest2)](https://CRAN.R-project.org/package=shinytest2)
