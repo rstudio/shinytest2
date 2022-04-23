@@ -211,7 +211,7 @@ AppDriver <- R6Class( # nolint
     #'   Shiny app is idle for 200ms.
     #' @param screenshot_args Default set of arguments to pass in to
     #'   [`chromote::ChromoteSession`]'s `$get_screenshot()` method when taking
-    #'   screnshots within `$expect_screenshot()`. To disable screenshots by
+    #'   screenshots within `$expect_screenshot()`. To disable screenshots by
     #'   default, set to `FALSE`.
     #' @param expect_values_screenshot_args The value for `screenshot_args` when
     #'   producing a debug screenshot for `$expect_values()`. To disable debug
@@ -343,7 +343,7 @@ AppDriver <- R6Class( # nolint
     #' @description Set input values
     #'
     #' Set Shiny inputs by sending the value to the Chrome browser and
-    #' programaticly updating the values. Given `wait_ = TRUE`, the method will
+    #' programmatically updating the values. Given `wait_ = TRUE`, the method will
     #' not return until an output value has been updated.
     #'
     #' @param ... Name-value pairs, `component_name_1 = value_1, component_name_2 = value_2` etc.
@@ -841,7 +841,7 @@ AppDriver <- R6Class( # nolint
     #' Arguments will have to be inserted into the script as there is not access
     #' to `arguments`. This can be done with commands like `paste()`. If using
     #' `glue::glue()`, be sure to use uncommon `.open` and `.close` values to
-    #' avoid having to doulbe all `{` and `}`.
+    #' avoid having to double all `{` and `}`.
     #' @param script JavaScript to execute. If a JavaScript Promise is returned,
     #'   the R session will block until the promise has been resolved and return
     #'   the value.

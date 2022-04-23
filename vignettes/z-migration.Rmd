@@ -19,7 +19,7 @@ library(shinytest2)
 ```
 
 
-`{shinytest}` is the predecesor to `{shinytest2}`. `{shinytest}` was implemented using [`{webdriver}`](https://rstudio.github.io/webdriver/) which uses [PhantomJS](https://phantomjs.org/api/). PhantomJS has been unsupported since 2017 and does not support displaying `{bslib}`'s Bootstrap v5. `{shinytest2}` uses `{chromote}` to connect to your locally installed Chrome or Chromium application. So, `{shinytest2}` is able to display `{bslib}`'s Bootstrap v5.
+`{shinytest}` is the predecessor to `{shinytest2}`. `{shinytest}` was implemented using [`{webdriver}`](https://rstudio.github.io/webdriver/) which uses [PhantomJS](https://phantomjs.org/api/). PhantomJS has been unsupported since 2017 and does not support displaying `{bslib}`'s Bootstrap v5. `{shinytest2}` uses `{chromote}` to connect to your locally installed Chrome or Chromium application. So, `{shinytest2}` is able to display `{bslib}`'s Bootstrap v5.
 
 To auto migrate your existing `{shinytest}` tests to `{shinytest2}`, call `shinytest2::migrate_from_shinytest(PATH_TO_APP)`.
 
@@ -307,7 +307,7 @@ new$upload_file(myFileInput = "myfile.txt")
 
 Signature: `ShinyDriver$waitFor(expr, checkInterval = 100, timeout = 3000)`
 
-This method has been renamed and had its parameters reordered to `AppDriver$wait_for_js(script, timeout, interval)`. Like other JavaScript methods in `{shinytest2}`, `script` needs to explicity return a value.
+This method has been renamed and had its parameters reordered to `AppDriver$wait_for_js(script, timeout, interval)`. Like other JavaScript methods in `{shinytest2}`, `script` needs to explicitly return a value.
 
 ```r
 ## {shinytest}
@@ -479,7 +479,7 @@ new$get_logs()
 
 ## Other removed methods
 
-* `ShinyDriver$setValue(name, value, iotype)`: To set an output value, it must be perfomed by setting an input value and having your render methods set the output value. To set an input value, use `AppDriver$set_inputs()`.
+* `ShinyDriver$setValue(name, value, iotype)`: To set an output value, it must be performed by setting an input value and having your render methods set the output value. To set an input value, use `AppDriver$set_inputs()`.
 
 ```r
 ## {shinytest}

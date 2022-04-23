@@ -1048,7 +1048,7 @@ Shiny app is idle for 200ms.}
 
 \item{\code{screenshot_args}}{Default set of arguments to pass in to
 \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method when taking
-screnshots within \verb{$expect_screenshot()}. To disable screenshots by
+screenshots within \verb{$expect_screenshot()}. To disable screenshots by
 default, set to \code{FALSE}.}
 
 \item{\code{expect_values_screenshot_args}}{The value for \code{screenshot_args} when
@@ -1189,7 +1189,7 @@ cat(app$get_text("#view"))
 Set input values
 
 Set Shiny inputs by sending the value to the Chrome browser and
-programaticly updating the values. Given \code{wait_ = TRUE}, the method will
+programmatically updating the values. Given \code{wait_ = TRUE}, the method will
 not return until an output value has been updated.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_inputs(
@@ -1935,7 +1935,7 @@ and have the script return an atomic value.
 Arguments will have to be inserted into the script as there is not access
 to \code{arguments}. This can be done with commands like \code{paste()}. If using
 \code{glue::glue()}, be sure to use uncommon \code{.open} and \code{.close} values to
-avoid having to doulbe all \verb{\{} and \verb{\}}.
+avoid having to double all \verb{\{} and \verb{\}}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_js(
   script = missing_arg(),

@@ -139,7 +139,7 @@ To create `.Rprofile` and `renv/activate.R`, call `renv::init()` within your App
 **Whenever you update packages on your development machine, you should run `renv::snapshot()` command again to make sure the packages used on GitHub stay in sync.**
 
 
-To learn more about `{renv}`, please see their [Introduction to renv](https://rstudio.github.io/renv/articles/renv.html) and [Colaborating with renv](https://rstudio.github.io/renv/articles/collaborating.html) articles.
+To learn more about `{renv}`, please see their [Introduction to renv](https://rstudio.github.io/renv/articles/renv.html) and [Collaborating with renv](https://rstudio.github.io/renv/articles/collaborating.html) articles.
 
 
 An alternative to using `{renv}` is to create a `DESCRIPTION` file. This will not lock package versions; instead, it will use the latest version of each package from CRAN.
