@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -444,7 +444,7 @@
 <h3 id="inputs-without-input-bindings">Inputs without input bindings<a class="anchor" aria-label="anchor" href="#inputs-without-input-bindings"></a>
 </h3>
 <p>Most input components in Shiny set their values by communicating through something called an <em>input binding</em>. <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> works well with <code>input</code> values that are set via input bindings.</p>
-<p>However, there are some components that set input values without using an input binding. These include some <a href="http://www.htmlwidgets.org/" class="external-link">htmlwidgets</a>, such as <a href="http://rstudio.github.io/DT/" class="external-link">DT</a> and <a href="https://github.com/ropensci/plotly/" class="external-link">plotly</a>, as well as Shiny’s built-in plot interactions with <code><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html" class="external-link">renderPlot()</a></code>.</p>
+<p>However, there are some components that set input values without using an input binding. These include some <a href="http://www.htmlwidgets.org/" class="external-link">htmlwidgets</a>, such as <a href="https://rstudio.github.io/DT/" class="external-link">DT</a> and <a href="https://github.com/plotly/plotly.R" class="external-link">plotly</a>, as well as Shiny’s built-in plot interactions with <code><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html" class="external-link">renderPlot()</a></code>.</p>
 <p>To set these unbound inputs, the resulting test script code will look something like this:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>table_rows_selected <span class="op">=</span> <span class="fl">1</span>, allow_no_input_binding_ <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>

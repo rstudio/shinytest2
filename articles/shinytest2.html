@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -282,7 +282,7 @@ Duration: 2.2 s
 <div class="section level2">
 <h2 id="interactive-r-markdown-documents">Interactive R Markdown documents<a class="anchor" aria-label="anchor" href="#interactive-r-markdown-documents"></a>
 </h2>
-<p><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> can be used with <a href="http://rmarkdown.rstudio.com/authoring_shiny.html" class="external-link">interactive R Markdown documents</a> that use <code>runtime: shiny</code> or <code>server: shiny</code> (sometimes also referred to as Shiny documents). This includes those that use the <a href="http://rmarkdown.rstudio.com/flexdashboard/" class="external-link">flexdashboard</a> package.</p>
+<p><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> can be used with <a href="https://bookdown.org/yihui/rmarkdown/shiny-documents.html" class="external-link">interactive R Markdown documents</a> that use <code>runtime: shiny</code> or <code>server: shiny</code> (sometimes also referred to as Shiny documents). This includes those that use the <a href="https://pkgs.rstudio.com/flexdashboard/" class="external-link">flexdashboard</a> package.</p>
 <p>Shiny documents have some differences compared to regular Shiny applications, and so the tests are slightly different. For an example of an interactive Rmd with tests, please follow <a href="https://github.com/rstudio/shinytest2/tree/main/tests/testthat/apps/rmd-shiny" class="external-link">this link</a>.</p>
 <div class="section level3">
 <h3 id="randomness">Randomness<a class="anchor" aria-label="anchor" href="#randomness"></a>
@@ -292,12 +292,12 @@ Duration: 2.2 s
 <div class="section level3">
 <h3 id="one--rmd-file-per-directory">One .Rmd file per directory<a class="anchor" aria-label="anchor" href="#one--rmd-file-per-directory"></a>
 </h3>
-<p>For testing Shiny documents, only one <code>.Rmd</code> file is allowed per directory. This is because of the way that the test directory is structured. (Note that if you name your Shiny document index.Rmd, then when deployed on Shiny Server, the URL can use the directory name, like <a href="http://mydomain.com/dirname/" class="external-link uri">http://mydomain.com/dirname/</a>, instead of <a href="http://mydomain.com/dirname/index.Rmd" class="external-link uri">http://mydomain.com/dirname/index.Rmd</a>. When deployed on RStudio Connect or Shinyapps.io, the filename is automatically not used in the URL.)</p>
+<p>For testing Shiny documents, only one <code>.Rmd</code> file is allowed per directory. This is because of the way that the test directory is structured. (Note that if you name your Shiny document index.Rmd, then when deployed on Shiny Server, the URL can use the directory name, like <code>"http://mydomain.com/dirname/"</code>, instead of <code>"http://mydomain.com/dirname/index.Rmd"</code>. When deployed on RStudio Connect or Shinyapps.io, the filename is automatically not used in the URL.)</p>
 </div>
 <div class="section level3">
 <h3 id="prerendered-shiny-documents">Prerendered Shiny documents<a class="anchor" aria-label="anchor" href="#prerendered-shiny-documents"></a>
 </h3>
-<p>Some Shiny documents use <a href="http://rmarkdown.rstudio.com/authoring_shiny_prerendered.html" class="external-link"><code>runtime: shiny_prerendered</code></a>, which helps speed up page loading time. Normally, the first time these applications are run, they will leave behind a generated .html file as well as a cache directory named myfile_data/.</p>
+<p>Some Shiny documents use <a href="https://rmarkdown.rstudio.com/authoring_shiny_prerendered.html" class="external-link"><code>runtime: shiny_prerendered</code></a>, which helps speed up page loading time. Normally, the first time these applications are run, they will leave behind a generated .html file as well as a cache directory named myfile_data/.</p>
 <p>You can remove these files by adding this to the end of your test script (assuming the name of your document is <code>doc.Rmd</code>):</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">rmarkdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgs.rstudio.com/rmarkdown/reference/shiny_prerendered_clean.html" class="external-link">shiny_prerendered_clean</a></span><span class="op">(</span><span class="st">"../doc.Rmd"</span><span class="op">)</span></code></pre></div>
