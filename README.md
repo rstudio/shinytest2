@@ -7,11 +7,6 @@
 <!-- badges: end -->
 
 
-> :triangular_flag_on_post::triangular_flag_on_post:<br/>
-> {shinytest2} is in beta developement.<br/>
-> Please report any bugs or feedback at [https://github.com/rstudio/shinytest2/issues](https://github.com/rstudio/shinytest2/issues) <br/>
-> :triangular_flag_on_post::triangular_flag_on_post:
-
 
 Manually testing Shiny applications is often laborious, inconsistent, and doesn’t scale well. Whether you are developing new features, fixing bug(s), or simply upgrading dependencies on a serious app where mistakes have real consequences, it is critical to know when regressions are introduced. `{shinytest2}` provides a streamlined toolkit for unit testing Shiny applications and seamlessly integrates with the popular [`{testthat}`](https://testthat.r-lib.org/) framework for unit testing R code.
 
