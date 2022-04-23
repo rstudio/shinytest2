@@ -292,7 +292,7 @@ See the section on [controlling random values](in-depth.html#controlling-random-
 
 For testing Shiny documents, only one `.Rmd` file is allowed per directory.
 This is because of the way that the test directory is structured.
-(Note that if you name your Shiny document index.Rmd, then when deployed on Shiny Server, the URL can use the directory name, like <http://mydomain.com/dirname/>, instead of <http://mydomain.com/dirname/index.Rmd>. When deployed on RStudio Connect or Shinyapps.io, the filename is automatically not used in the URL.)
+(Note that if you name your Shiny document index.Rmd, then when deployed on Shiny Server, the URL can use the directory name, like `"http://mydomain.com/dirname/"`, instead of `"http://mydomain.com/dirname/index.Rmd"`. When deployed on RStudio Connect or Shinyapps.io, the filename is automatically not used in the URL.)
 
 ### Prerendered Shiny documents
 
