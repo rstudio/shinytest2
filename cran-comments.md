@@ -12,7 +12,7 @@ Barret
 
 ## Test environments
 
-* local macOS, R 4.0.2
+* local macOS, R 4.1.3
 * GitHub Actions
   * macOS
     * 4.1
@@ -22,6 +22,7 @@ Barret
     * devel, 4.1, 4.0, 3.6, 3.5, 3.4
 * devtools::
   * check_win_devel()
+  * check_win_release()
   * check_win_oldrelease()
 
 ## R CMD check results
@@ -32,5 +33,3 @@ N  checking CRAN incoming feasibility
    Maintainer: ‘Barret Schloerke <barret@rstudio.com>’
 
    New submission
-
-   Size of tarball: 6543036 bytes
