@@ -1,3 +1,4 @@
+skip_on_cran() # CI is good enough / Uses chromote
 
 # If testthat is not a `Depends` package, then `testthat` is guarenteed to be loaded when shinytest2 is loaded.
 # This will cause confusion when only `library(shinytest2)` is called.
