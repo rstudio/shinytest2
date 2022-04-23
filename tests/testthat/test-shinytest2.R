@@ -13,7 +13,7 @@ test_that("AppDriver can print while working with `missing_arg()` values", {
 
   expect_error(
     utils::capture.output({
-      print(AppDriver$new(test_path("apps/hello")))
+      print(AppDriver$new(shinyApp("", function(input, output) {})))
     }),
     NA
   )
