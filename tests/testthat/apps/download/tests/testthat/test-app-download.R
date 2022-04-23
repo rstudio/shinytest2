@@ -9,8 +9,8 @@ test_that("download files work from link and button", {
   app$wait_for_js("$('#download_link_binary').attr('href') != ''")
   app$wait_for_js("$('#download_button_binary').attr('href') != ''")
 
-  app$expect_download("download_link_txt")
-  app$expect_download("download_button_txt")
+  app$expect_download("download_link_txt", compare = testthat::compare_file_text)
+  app$expect_download("download_button_txt", compare = testthat::compare_file_text)
 
   app$expect_download("download_link_csv", compare = testthat::compare_file_text)
   app$expect_download("download_button_csv", compare = testthat::compare_file_text)
