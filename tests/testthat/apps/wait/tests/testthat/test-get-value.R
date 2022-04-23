@@ -47,9 +47,10 @@ test_that("$get_value errors are caught", {
     app$wait_for_value(output = character(0)),
     "length 0"
   )
+
+  # Shut down this app to try an make CI happier about the next app
+  app$stop()
 })
-
-
 
 
 test_that("wait for value works on output", {
@@ -60,6 +61,9 @@ test_that("wait for value works on output", {
     app$wait_for_value(output = "txt"),
     "1 2 3"
   )
+
+  # Shut down this app to try an make CI happier about the next app
+  app$stop()
 })
 
 test_that("wait for value works on input", {
