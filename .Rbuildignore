@@ -14,3 +14,5 @@ _\.new\.png$
 ^actions$
 ^doc$
 ^Meta$
+^cran-comments\.md$
+^revdep$
