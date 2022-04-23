@@ -13,7 +13,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-`{shinytest2}` can be used not only when developing applications locally -- it can also be used with continuous integration (CI) platforms, such as [GitHub Actions](https://help.github.com/en/actions).
+`{shinytest2}` can be used not only when developing applications locally -- it can also be used with continuous integration (CI) platforms, such as [GitHub Actions](https://docs.github.com/en/actions).
 
 The rest of this document explains how to use `{shinytest2}` with GitHub in two use cases: with applications that stand alone (are not part of an R package), and with an application that are part of an R package.
 

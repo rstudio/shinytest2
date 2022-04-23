@@ -61,7 +61,7 @@ In these situations, you can use an *output preprocessor* function. This is most
 
 To add an output preprocessor, use `shiny::snapshotPreprocessOutput()` to modify an output renderer. For example, see [this section](https://github.com/rstudio/shiny/blob/81cc7c5/R/shinywrappers.R#L656-L663) of the `renderDataTable()` function. It takes the object that *would be* returned by `renderDataTable()`, and modifies it by adding an output preprocessor which removes strings that contain random values.
 
-For some outputs (notably htmlwidgets), the output value is text string containing JSON, and if you want to modify the JSON, you will have to either (1) do text processing on the JSON, or (2) convert the JSON to an R object, modify the R object, and convert the R object back to JSON. The plotly R package uses this method in [`renderPlotly()`](https://github.com/ropensci/plotly/blob/2eef4ab/R/shiny.R#L46-L53).
+For some outputs (notably htmlwidgets), the output value is text string containing JSON, and if you want to modify the JSON, you will have to either (1) do text processing on the JSON, or (2) convert the JSON to an R object, modify the R object, and convert the R object back to JSON. The plotly R package uses this method in [`renderPlotly()`](https://github.com/plotly/plotly.R/blob/2eef4ab/R/shiny.R#L46-L53).
 
 The examples above modify the output renderer from inside the output renderer function, and this would have to be done by the author of the component. It is also possible for an application author to modify a renderer with something like the following:
 

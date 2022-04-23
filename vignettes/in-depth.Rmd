@@ -459,7 +459,7 @@ All `{shinytest2}` expectation methods eventually call [`testthat::expect_snapsh
 
 Most input components in Shiny set their values by communicating through something called an *input binding*. `{shinytest2}` works well with `input` values that are set via input bindings.
 
-However, there are some components that set input values without using an input binding. These include some [htmlwidgets](http://www.htmlwidgets.org/), such as [DT](http://rstudio.github.io/DT/) and [plotly](https://github.com/ropensci/plotly/), as well as Shiny's built-in plot interactions with `renderPlot()`.
+However, there are some components that set input values without using an input binding. These include some [htmlwidgets](http://www.htmlwidgets.org/), such as [DT](https://rstudio.github.io/DT/) and [plotly](https://github.com/plotly/plotly.R), as well as Shiny's built-in plot interactions with `renderPlot()`.
 
 To set these unbound inputs, the resulting test script code will look something like this:
 
