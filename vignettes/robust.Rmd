@@ -13,20 +13,21 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 ```
 
-All tests are not created equal. Some tests are all encompassing; others are more focused.  Each approach has its own advantages and disadvantages.
+All tests are not created equal. Some tests are all encompassing; others are more focused. Each approach has its own advantages and disadvantages.
 
 Goals to have when writing tests are to
 
-* Confirm the expected behavior
-* Assert as little unnecessary information
-* Write clear, direct tests
+-   Confirm the expected behavior
+-   Assert as little unnecessary information
+-   Write clear, direct tests
 
 # Expectations
 
-Unit tests provide a sense of security by making assertions on expected behavior.  If all unit tests pass, then we can declare the object/method to be valid. 🦆
+Unit tests provide a sense of security by making assertions on expected behavior. If all unit tests pass, then we can declare the object/method to be valid. 🦆
 
 Let's look at a quick example of:
-```r
+
+``` r
 add_abs <- function(x, y) {
   abs(x + y)
 }
@@ -36,20 +37,21 @@ add_abs <- function(x, y) {
 
 If we only test positive numbers, then we can guess the answer using `+`.
 
-```r
+``` r
 x <- 50; y <- 42
 testthat::expect_equal(add_abs(x, y), x + y)
 ```
 
 However, if a negative number is used, it will have different behavior than `+`. So we must test for both situations.
-```r
+
+``` r
 x <- 50; y <- -42
 testthat::expect_equal(add_abs(x, y), x + y)
 ```
 
 Even better, let's test all four positive/negative situations:
 
-```r
+``` r
 for (info in list(
   list(x =  50, y =  42, expected =  92),
   list(x = -50, y =  42, expected =  8),
@@ -65,28 +67,27 @@ for (info in list(
 
 This concept can even be expanded to vectors of values. However, this can lead to a lot of code.
 
-
 #### Assert as little unnecessary information
 
-Tests should strive to only confirm behavior that we have control over.  For example, if the we are only interested in the behavior of `abs`, then we should not be concerned with the behavior of `+`.
+Tests should strive to only confirm behavior that we have control over. For example, if we are only interested in the behavior of `abs`, then we should not be concerned with the behavior of `+`.
 
 We can assume that `+` is working properly and adds two numbers together. We do not necessarily need to perform a multitude of nonsense input testing on `+`, but it may make sense to see how `abs()` handles a few non-number input values.
 
-```r
+``` r
 testthat::expect_equal(add_abs(1, NA), NA)
 testthat::expect_equal(add_abs(1, NULL), numeric(0))
 testthat::expect_error(add_abs(1, "string"))
 ```
 
-These test could also be repeated swapping `x` and `y`.
+These tests could also be repeated by swapping `x` and `y`.
 
 #### Write clear, direct tests
 
 When writing tests, each test can contain many expectations but each expectation should pertain to the test being run.
 
-For example, the two situations above could be included in the same test block:
+For example, the two examples above *could* be included in the same test block:
 
-```r
+``` r
 # File: tests/testthat/test-add_abs-bad.R
 
 test_that("add_abs() works", {
@@ -108,9 +109,9 @@ test_that("add_abs() works", {
 })
 ```
 
-Instead, they should be broken out into two separate tests, each with their own descriptive title.
+However, it's better to break them out into two separate tests, each with their own descriptive title.
 
-```r
+``` r
 # File: tests/testthat/test-add_abs-better.R
 
 test_that("add_abs() adds two numbers", {
@@ -135,19 +136,17 @@ test_that("add_abs() handles non-numeric input", {
 })
 ```
 
-`{testthat}` does a great job of displaying output to the user when thing go wrong. When the first test goes wrong, an error will be given like
+`{testthat}` does a great job of displaying output to the user when thing go wrong. When the first test goes wrong, an error will be given like:
 
-```
-── Failure (Line 9): add_abs() adds two numbers ────────────────────────────────
-add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
+    ── Failure (Line 9): add_abs() adds two numbers ────────────────────────────────
+    add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 
-  `actual`:  8
-`expected`: -8
-```
+      `actual`:  8
+    `expected`: -8
 
-It is great that an error was found, but it is also difficult to determine which assertion failed. Adding labels to the expectation allows you to provide more context about which test failed.
+It is great that an error was found, but it is also difficult to determine which assertion failed. Adding labels to the expectation using `label` and `expected.label` allows you to provide more context about which test failed.
 
-```r
+``` r
 # File: tests/testthat/test-add_abs-label.R
 
 test_that("add_abs() adds two numbers", {
@@ -175,7 +174,7 @@ test_that("add_abs() adds two numbers", {
 
 Another pattern that provides more context and allows for more tests is to move the for-loop around the call to `test_that()` and give the test a custom name:
 
-```r
+``` r
 # File: tests/testthat/test-add_abs-label.R
 
 for (info in list(
@@ -205,50 +204,41 @@ for (info in list(
 
 This isolates the test even more and does not let an earlier expectation stop testing a later expectation.
 
-
-
 # `{shinytest2}` expectations
 
 `{shinytest2}` has a handful of built in expectation methods:
 
-
-* `input`/`output` names:
-  * `AppDriver$expect_unqiue_names()`: Assert all `input` and `output` names are unique
-
-* Shiny value expectations:
-  * `AppDriver$expect_values()`: Expect all `input`, `output`, and `export` values are consistent
-  * `AppDriver$expect_download()`: Expect a downloaded file to downloadable
-
-* UI expectations:
-  * `AppDriver$expect_text()`: Expect the text content for a given `selector` to be consistent
-  * `AppDriver$expect_html()`: Expect the HTML content for a given `selector` to be consistent
-  * `AppDriver$expect_js()`: Expect the JavaScript return value to be consistent
-
-* UI visual expectations:
-  * `AppDriver$expect_screenshot()`: Expect a screenshot of the UI to be consistent
-
-
-
+-   `input`/`output` names:
+    -   `AppDriver$expect_unqiue_names()`: Assert all `input` and `output` names are unique
+-   Shiny value expectations:
+    -   `AppDriver$expect_values()`: Expect all `input`, `output`, and `export` values are consistent
+    -   `AppDriver$expect_download()`: Expect a downloaded file to downloadable
+-   UI expectations:
+    -   `AppDriver$expect_text()`: Expect the text content for a given `selector` to be consistent
+    -   `AppDriver$expect_html()`: Expect the HTML content for a given `selector` to be consistent
+    -   `AppDriver$expect_js()`: Expect the JavaScript return value to be consistent
+-   UI visual expectations:
+    -   `AppDriver$expect_screenshot()`: Expect a screenshot of the UI to be consistent
 
 ## `input`/`output` names
 
-A method I'd like to quickly gloss over is `AppDriver$expect_unique_names()`. This method is called (by default) by `AppDriver$new(check_names = TRUE)` and confirms that no `input` or `output` HTML names are duplicated. If duplicate values are found, this results in invalid HTML and possible failure within Shiny.
+Let's take a look at `AppDriver$expect_unique_names()`. This method is called (by default) by `AppDriver$new(check_names = TRUE)` and confirms that no `input` or `output` HTML names are duplicated. If duplicate values are found, this results in invalid HTML and possible failure within Shiny.
 
-A behavior that I use is to add `_out` to the end of any `output`, e.g. `outputs$text_out`.
+One way to help keep `input` and `output` names unique is to adopt a naming behavior such as adding `_out` to the end of any `output`, e.g. `outputs$text_out`.
 
-If you use any dynamic UI and want to reassert the names are still unique, it is perfectly acceptable to call `AppDriver$expect_unique_names()` after setting any dynamic UI values.
+If you use a dynamic UI and want to reassert the names are still unique, it is perfectly acceptable to call `AppDriver$expect_unique_names()` after setting any dynamic UI values.
 
 ## Shiny values:
 
 `AppDriver$expect_values()` is the preferred method for testing in `{shinytest2}`. This method tests different `input`, `output`, and `export` values provided by the Shiny application.
 
-* `input` corresponds to the `input` values provided by the Shiny application.
-* `output` corresponds to the `output` values provided by the Shiny application.
-* `export` corresponds to value that have been _export_ed by the Shiny application. These values are exported by [`shiny::exportTestValues()`](https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html) from within your `server` function.
+-   `input` corresponds to the `input` values provided by the Shiny application.
+-   `output` corresponds to the `output` values provided by the Shiny application.
+-   `export` corresponds to value that have been \_export_ed by the Shiny application. These values are exported by [`shiny::exportTestValues()`](https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html) from within your `server` function.
 
 When `AppDriver$expect_values()` is called, each `input`, `output`, and `export` value will be serialized to JSON and saved to a snapshot file (e.g. `001.json`) for followup expectations.
 
-In addition to this value snapshot file, a _debug_ screenshot will be saved to the snapshot directory with its file name ending in `_.png` (e.g. `001_.png`). This screenshot is useful for knowing what your application looked like when the values where captured. However, differences in the captured screenshot will never cause test failures.  It is recommended to add `_.new.png` to your `.gitignore` file to ignore any new debug screenshots that have not been accepted.
+In addition to this value snapshot file, a *debug* screenshot will be saved to the snapshot directory with its file name ending in `_.png` (e.g. `001_.png`). This screenshot is useful for knowing what your application looked like when the values where captured. However, differences in the captured screenshot will never cause test failures. It is recommended to add `_.new.png` to your `.gitignore` file to ignore any new debug screenshots that have not been accepted.
 
 For typical app testing, this method should cover most of your testing needs. (Remember, try to only test the content you have control over.)
 
@@ -257,8 +247,6 @@ For typical app testing, this method should cover most of your testing needs. (R
 When `shiny::downloadButton()` or `shiny::downloadLink()` elements are clicked, a file is downloaded. To make an expectation on the downloaded file, you can use `AppDriver$expect_download()`.
 
 In addition to the file being saved, a snapshot of the file name being downloaded will be saved if a suggested file name is used.
-
-
 
 ## UI expectations
 
@@ -272,32 +260,32 @@ Finally, both of these methods wrap around `AppDriver$expect_js(script=)`. This 
 
 ## UI visual expectations
 
-Taking a screenshot is the most brittle expectation provided by `{shinytest2}`. `AppDriver$expect_screenshot()` should only be used if it is absolutely necessary or if you willing to handle many false-positive failures.
+Taking a screenshot is the most brittle expectation provided by `{shinytest2}`. `AppDriver$expect_screenshot()` should only be used if it is absolutely necessary or if you are willing to handle many false-positive failures.
 
-There are many ways a screenshot expectation can fail that is unrelated to your code including:
-* the R version changed
-* the operating system changed (e.g. Windows vs. Linux)
-* the system font changed
-* Chrome is not consistent in how it paints some DOM elements
-* the CSS transitions did not finish in time
-* a package author (e.g. Shiny, `{bslib}`, `{htmltools}`) changed its DOM structure
+There are many ways a screenshot expectation can fail that is unrelated to your code, including:
+
+-   the R version changed
+-   the operating system changed (e.g. Windows vs. Linux)
+-   the system font changed
+-   Chrome is not consistent in how it paints some DOM elements
+-   the CSS transitions did not finish in time
+-   a package author (e.g. Shiny, `{bslib}`, `{htmltools}`) changed its DOM structure
 
 App authors who use custom CSS or JavaScript may find this method useful. But it is still strongly recommended to only test the content you have control over to avoid false-positive failures.
 
 When expecting a screenshot, a `AppDriver$new(variant=)` must be supplied. The value may be `NULL`, but it is recommended to use `shinytest2::platform_variant()`.
 
-
 # Suggested approaches
 
 ## Exported values
 
-It can not be recommended enough to use [`shiny::exportTestValues()`](https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html) to test your Shiny app's reactive values.
+It cannot be recommended enough to use [`shiny::exportTestValues()`](https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html) to test your Shiny app's reactive values.
 
-If we make the assumption that package authors create consistent render methods, then we can test the values provided to render methods using `shiny::exportTestValues()`.  Let's look at an example of a Shiny app that displays a plot of the first `n` rows of data.
+If we make the assumption that package authors create consistent render methods, then we can test the values provided to render methods using `shiny::exportTestValues()`. Let's look at an example of a Shiny app that displays a plot of the first `n` rows of data.
 
-It is recommended to make your render methods contain little logic so that the value being rendered can also be exported.
+It is recommended to make your render methods contain minimal logic so that the value being rendered can also be exported.
 
-```r
+``` r
 library(shiny)
 library(ggplot2)
 ui <- fluidPage(
@@ -331,7 +319,7 @@ knitr::include_graphics("images/plot-app.png")
 
 Both `dt` and `plot_obj` have been `export`ed. This means that they are available when executing `AppDriver$get_values()`, `AppDriver$get_value()`, and `AppDriver$expect_values()`.
 
-```r
+``` r
 app <- AppDriver$new(plot_app)
 
 values <- app$get_values()
@@ -347,11 +335,11 @@ str(values) # Output has been truncated for printing
 #>   .. ..$ alt     : chr "Plot object"
 #>   .. ..$ coordmap:List of 2 | __truncated__
 #>  $ export:List of 2
-#>   ..$ dt      :'data.frame':	10 obs. of  2 variables:
+#>   ..$ dt      :'data.frame': 10 obs. of  2 variables:
 #>   .. ..$ speed: num [1:10] 4 4 7 7 8 9 10 10 10 11
 #>   .. ..$ dist : num [1:10] 2 10 4 22 16 10 18 26 34 17
 #>   ..$ plot_obj:List of 9
-#>   .. ..$ data       :'data.frame':	10 obs. of  2 variables:
+#>   .. ..$ data       :'data.frame':   10 obs. of  2 variables:
 #>   .. .. ..$ speed: num [1:10] 4 4 7 7 8 9 10 10 10 11
 #>   .. .. ..$ dist : num [1:10] 2 10 4 22 16 10 18 26 34 17
 #>   .. ..$ layers     :List of 1 | __truncated__
@@ -369,9 +357,9 @@ str(values) # Output has been truncated for printing
 
 Plots are notoriously hard to test consistently over time and different platforms. Similar to `AppDriver$expect_screenshot()`, there are many ways outside of your code that the plot can produce a change which would fail a visual test. Some of these include:
 
-* Default system font changes. Different operating systems have different fonts.
-* Default system font size changes
-* R version changes
+-   Default system font changes, as different operating systems have different fonts
+-   Default system font size changes
+-   R version changes
 
 When possible, it is recommended to use [`{ggplot2}`](https://ggplot2.tidyverse.org/) over `base::plot()` as `{ggplot2}` is getting closer and closer to cross platform compatible. `{ggplot2}` objects can also be inspected and compared using [`{vdiffr}`](https://vdiffr.r-lib.org/) for cross platform support.
 
@@ -379,11 +367,11 @@ When possible, it is recommended to use [`{ggplot2}`](https://ggplot2.tidyverse.
 
 Snapshot testing makes the test writing minimal and quick. However, this comes with a logical risk.
 
-Snapshots are wonderful at determining if a change has occurred. But for the first execution of the snapshot there is nothing to compare, so the first value is taken as _truth_ even if it is not correct. This allows for the opportunity for invalid values to be saved as _truth_. Most of the time, it is OK to use snapshots from the beginning of your testing experience, but keeping track of each snapshot file can be tedious when testing multiple applications with having multiple variants.
+Snapshots are wonderful at determining if a change has occurred. But for the first execution of the snapshot there is nothing to compare, so the first value is taken as *truth* even if it is not correct. This allows for the opportunity for invalid values to be saved as *truth*. Most of the time, it is OK to use snapshots from the beginning of your testing experience, but keeping track of each snapshot file can be tedious when testing multiple applications with multiple variants.
 
-To remedy this possibility, app values can be tested against known static values.  For example, instead of testing the initial value of `dt()` against a snapshot, we can test it against `head(cars, 10)`.
+To remedy this possibility, app values can be tested against known static values. For example, instead of testing the initial value of `dt()` against a snapshot, we can test it against `head(cars, 10)`.
 
-```r
+``` r
 # Snapshot code
 app$expect_values(export = "dt")
 
@@ -396,14 +384,13 @@ expect_equal(
 
 If you have the time to manually inspect the snapshot files afterwards, using `AppDriver` snapshot code provides clean, minimal code. If snapshot files are unwieldy, you can use `AppDriver` to retrieve values to test against known values.
 
-
 ## Example
 
-Let's look at how we could write a `{shinytest2}` test to make sure the plot is updated after updating our numeric `input` `n`.  Assuming the Shiny app code above is saved in `app.R`, we can look at `tests/testthat/test-export.R` below.
+Let's look at how we could write a `{shinytest2}` test to make sure the plot is updated after updating our numeric `input` `n`. Assuming the Shiny app code above is saved in `app.R`, we can look at `tests/testthat/test-export.R` below.
 
 Since we are not calling `AppDriver$expect_screenshot()` or `AppDriver$get_screenshot()`, we do not need to use `AppDriver$new(variant=)`.
 
-```r
+``` r
 # File: ./tests/testthat/test-export.R
 # App file: ./app.R
 library(shinytest2)
@@ -444,7 +431,7 @@ test_that("`export`ed `plot_obj` is updated by `n`", {
 
 The second half of the test performs similar expectations to the first half of the test. This code can be pulled into a helper function and be written as:
 
-```r
+``` r
 # File: tests/testthat/test-export.R
 library(shinytest2)
 
@@ -477,52 +464,51 @@ test_that("`export`ed `plot_obj` is updated by `n`", {
 
 It should be noted that `{ggplot2}` objects can not be serialized to `JSON` and should be excluded from the `AppDriver$expect_values()` snapshots.
 
-# Cliff Notes
+# Cliffs Notes
 
 #### Retrieving values
 
-* `AppDriver$get_values()`, `AppDriver$get_value()`:
-  * **Best way to retrieve values** as they have been serialized by `saveRDS()`
-  * **Safest way to compare values** as comparisons (e.g. `expect_equal()`) will need to be explicitly stated from the beginning
-  * Pro: Supports more complex objects like `{ggplot2}` plots
-  * Con: Causes code to be more verbose
-
+-   `AppDriver$get_values()`, `AppDriver$get_value()`:
+    -   **Best way to retrieve values** as they have been serialized by `saveRDS()`
+    -   **Safest way to compare values** as comparisons (e.g. `expect_equal()`) will need to be explicitly stated from the beginning
+    -   Pro: Supports more complex objects like `{ggplot2}` plots
+    -   Con: Causes code to be more verbose
 
 #### Expectation methods
 
 All `AppDriver$expect_*()` should have their snapshots manually inspected when first created to ensure they contain expected content.
 
-* `AppDriver$expect_values()`:
-  * **Go-to expectation method** for Shiny `input`, `output`, and `export` values
-  * **Automatically recorded** in `shinytest2::record_app()`
-  * Saves a _debug_ screenshot for manual inspection
-  * Pro: Tests (almost) all Shiny values
-  * Con: Complex objects containing environments (e.g. `{ggplot2}` plots) can not be serialized to JSON
-  * Get: `AppDriver$get_value()` and `AppDriver$get_values()`
-* `AppDriver$expect_download()`:
-  * **Automatically recorded** in `shinytest2::record_app()`
-  * Pro: Will save a snapshot of the requested `filename`
-  * Get: `AppDriver$get_download()`
-* `AppDriver$expect_text()`:
-  * Safest way to retrieve text for a given `selector`
-  * More stable than than `AppDriver$expect_html()`. Gives more freedom to UI authors to make HTML structure changes
-  * Pro: Can test non-Shiny content using the `selector`
-  * Con: Can not be used to test text inputs
-  * Get: `AppDriver$get_text()`
-* `AppDriver$expect_html()`
-  * Expects all HTML to be consistently shaped for a given `selector`
-  * More stable than than `AppDriver$expect_screenshot()`. Gives more freedom to UI authors.
-  * Pro: Can test non-Shiny content using the `selector`
-  * Con: Can not be used to test text inputs
-  * Get: `AppDriver$get_html()`
-* `AppDriver$expect_js()`:
-  * Makes an expectation on the JavaScript result
-  * Building block for `AppDriver$expect_text()` and `AppDriver$expect_html()`
-  * Con: Must write own JavaScript code to test.
-  * Get: `AppDriver$get_js()`
-* `AppDriver$expect_screenshot()`:
-  * Saves a screenshot of a selector (defaults to `"html"`) for later comparison
-  * **Strongly recommended to use other testing methods when possible**
-  * Pro: A picture can be worth a thousand [tests]
-  * Con: Screenshot reproducibility is **very** brittle to non-Shiny changes
-  * Get: `AppDriver$get_screenshot()`
+-   `AppDriver$expect_values()`:
+    -   **Go-to expectation method** for Shiny `input`, `output`, and `export` values
+    -   **Automatically recorded** in `shinytest2::record_app()`
+    -   Saves a *debug* screenshot for manual inspection
+    -   Pro: Tests (almost) all Shiny values
+    -   Con: Complex objects containing environments (e.g. `{ggplot2}` plots) cannot be serialized to JSON
+    -   Get: `AppDriver$get_value()` and `AppDriver$get_values()`
+-   `AppDriver$expect_download()`:
+    -   **Automatically recorded** in `shinytest2::record_app()`
+    -   Pro: Will save a snapshot of the requested `filename`
+    -   Get: `AppDriver$get_download()`
+-   `AppDriver$expect_text()`:
+    -   Safest way to retrieve text for a given `selector`
+    -   More stable than than `AppDriver$expect_html()`, as it gives more freedom to UI authors to make HTML structure changes
+    -   Pro: Can test non-Shiny content using the `selector`
+    -   Con: Cannot be used to test text inputs
+    -   Get: `AppDriver$get_text()`
+-   `AppDriver$expect_html()`
+    -   Expects all HTML to be consistently shaped for a given `selector`
+    -   More stable than than `AppDriver$expect_screenshot()`, and gives more freedom to UI authors
+    -   Pro: Can test non-Shiny content using the `selector`
+    -   Con: Cannot be used to test text inputs
+    -   Get: `AppDriver$get_html()`
+-   `AppDriver$expect_js()`:
+    -   Makes an expectation on the JavaScript result
+    -   Building block for `AppDriver$expect_text()` and `AppDriver$expect_html()`
+    -   Con: Must write own JavaScript code to test
+    -   Get: `AppDriver$get_js()`
+-   `AppDriver$expect_screenshot()`:
+    -   Saves a screenshot of a selector (defaults to `"html"`) for later comparison
+    -   **Strongly recommended to use other testing methods when possible**
+    -   Pro: A picture can be worth a thousand [tests]
+    -   Con: Screenshot reproducibility is **very** brittle to non-Shiny changes
+    -   Get: `AppDriver$get_screenshot()`
