@@ -19,9 +19,9 @@ library(shinytest2)
 ```
 
 
-`{shinytest}` is the predecesor to `{shinytest2}`. `{shinytest}` was implemented using [`{webdriver}`](https://rstudio.github.io/webdriver/) which uses [PhantomJS](https://phantomjs.org/api/). PhantomJS has been unsupported since 2017 and does not support displaying `{bslib}`'s Bootstrap v5. `{shinytest2}` uses `{chromote}` to connect to your locally installed Chrome or Chromium application. So, `{shinytest2}` is able to display `{bslib}`'s Bootstrap v5.
+`{shinytest2}` is the successor to `{shinytest}`. `{shinytest}` was implemented using [`{webdriver}`](https://rstudio.github.io/webdriver/) which uses [PhantomJS](https://phantomjs.org/api/). PhantomJS has been unsupported since 2017 and does not support displaying `{bslib}`'s Bootstrap v5. `{shinytest2}` uses `{chromote}` to connect to your locally installed Chrome or Chromium application, allowing `{shinytest2}` to display `{bslib}`'s Bootstrap v5.
 
-To auto migrate your existing `{shinytest}` tests to `{shinytest2}`, call `shinytest2::migrate_from_shinytest(PATH_TO_APP)`.
+To auto-migrate your existing `{shinytest}` tests to `{shinytest2}`, call `shinytest2::migrate_from_shinytest(PATH_TO_APP)`.
 
 
 # Code structure
@@ -52,7 +52,7 @@ new$click(selector = "#my_id")
 
 Signature: `ShinyDriver$executeScript(script, ...)`
 
-The `...` must now be inserted into the script. You can do this with commands like `glue::glue()` or `paste()`. Extra parameters include `file` which can contain your `script` content and `timeout` which will throw an error if the `timeout` (in milliseconds) is reached before the script returns. If a promise is the last value in the `script` then the `resolve`d value will be sent back to the R session.
+The `...` must now be inserted into the script. You can do this with commands like `glue::glue()` or `paste()`. Extra parameters include `file`, which can contain your `script` content, and `timeout`, which will throw an error if the `timeout` (in milliseconds) is reached before the script returns. If a promise is the last value in the `script` then the `resolve`d value will be sent back to the R session.
 
 ```r
 ## {shinytest}
@@ -77,7 +77,8 @@ new$get_js(
 
 Signature: `ShinyDriver$executeScriptAsync(script, ...)`
 
-`ShinyDriver$executeScriptAsync()` magically made a `callback` argument available in the JavaScript code and would block the R session until `callback` was called within `script`. In `shinytest2`, your script will need to be updated to use a JavaScript Promise. The Promise's `resolve` method should be your callback that you used previously. You should also provide a maximum `timeout` (in milliseconds) that you are willing to wait before an error is thrown. Ex:
+`ShinyDriver$executeScriptAsync()` magically made a `callback` argument available in the JavaScript code and would block the R session until `callback` was called within `script`. In `shinytest2` your script will need to be updated to use a JavaScript `Promise.` The `Promise`'s `resolve` method should be the callback that you used previously. You should also provide a maximum `timeout` (in milliseconds) that you are willing to wait before an error is thrown. For example:
+
 ```r
 ## {shinytest}
 # Wait until a button is clicked
@@ -134,7 +135,7 @@ new$get_values(output = "clickcount")
 
 Signature: `ShinyDriver$getValue(name, iotype = c("auto", "input", "output"))`
 
-This method has been renamed to `AppDriver$get_value(..., input, output, export)` and had its parameters spread out into `input` and `output` while adding support for `export`.
+This method has been renamed to `AppDriver$get_value(..., input, output, export)` and its parameters have been spread out into `input` and `output`, while adding support for `export`.
 
 ```r
 ## {shinytest}
@@ -166,7 +167,7 @@ new$get_url()
 
 Signature: `ShinyDriver$setInputs(..., wait_ = TRUE, values_ = TRUE, timeout_ = 3 * 1000, allowInputNoBinding_ = FALSE, priority_ = c("input", "event"))`
 
-The method name has been renamed to `AppDriver$get_values()` and the parameters have been `snake_case`'ed. `value_` support has been removed, but the same functionality can be achieved via a call to `AppDriver$get_values()` after a call to `AppDriver$set_inputs()`.
+The method name has been renamed to `AppDriver$get_values()` and the parameters have been converted to `snake_case`. `value_` support has been removed, but the same functionality can be achieved via a call to `AppDriver$get_values()` _after_ a call to `AppDriver$set_inputs()`.
 
 ```r
 ## {shinytest}
@@ -199,7 +200,7 @@ new$set_window_size(width = 1024, height = 768)
 
 Signature: `ShinyDriver$checkUniqueWidgetNames()`
 
-This method checked to make sure all input and output names are unique. It is still run at initialization via `AppDriver$new(check_names = TRUE)` and if any issues are found during startup, only warnings will be displayed.  The exported method has been upgraded to an expectation version and renamed to `AppDriver$expect_unique_names()`.
+This method checks to make sure all input and output names are unique. It is still run at initialization via `AppDriver$new(check_names = TRUE)`, and if any issues are found during startup, only warnings will be displayed.  The exported method has been upgraded to an expectation version and renamed to `AppDriver$expect_unique_names()`.
 
 ```r
 ## {shinytest}
@@ -212,13 +213,13 @@ new$expect_unique_names()
 
 ## Snapshots
 
-Snapshots are now handled by `{testthat}`. To leverage this, use the `AppDriver$expect_*()` methods to assert the value is consistent over many testing executions.
+Snapshots are now handled by `{testthat}`. To leverage this capability, use the `AppDriver$expect_*()` methods to assert that the value is consistent over many testing executions.
 
 ### `ShinyDriver$snapshotInit()`
 
 Signature: `ShinyDriver$snapshotInit(path, screenshot = TRUE)`
 
-This method has been moved to the parameters: `AppDriver$new(name = path)`. Screenshots `{testthat}` snapshots are not allowed until a `AppDriver$new(variant=)` value is provided. `variant` is similar to the `suffix` value in `shinytest::testApp(suffix=)`.
+This method has been moved to the parameters: `AppDriver$new(name = path)`. Screenshots via `{testthat}` snapshots are not allowed until an `AppDriver$new(variant=)` value is provided. `variant` is similar to the `suffix` value in `shinytest::testApp(suffix=)`.
 
 ```r
 ## {shinytest}
@@ -234,7 +235,7 @@ new <- AppDriver$new(name = "mytest", variant = platform_variant())
 
 Signature: `ShinyDriver$snapshot(items = NULL, filename = NULL, screenshot = NULL)`
 
-This method would expect a screenshot and expect all values to be consistent. This method no longer exists in `{shinytest2}` and has been broken up into two methods that must be called independently: `AppDriver$expect_screenshot()` and `AppDriver$expect_values()`. `AppDriver$expect_values()` will (by default) take a _debug_ screenshot that will never fail in an expectation. This allows for a historical record (version control) of what the app looked like while not having to constantly battle with false-positive screenshot failures. If an single `output` value is supplied to `AppDriver$expect_values()`, then the _debug_ screenshot is zoomed in on the output value.
+In `{shinytest}` this method would expect a screenshot and expect all values to be consistent. This method no longer exists in `{shinytest2}`, and has been broken up into two methods that must be called independently: `AppDriver$expect_screenshot()` and `AppDriver$expect_values()`. `AppDriver$expect_values()` will (by default) take a _debug_ screenshot that will never fail in an expectation. This allows for a historical record (version control) of what the app looked like while not having to constantly battle with false-positive screenshot failures. If a single `output` value is supplied to `AppDriver$expect_values()`, then the _debug_ screenshot is zoomed in on the output value.
 
 ```r
 ## {shinytest}
@@ -287,7 +288,7 @@ new$expect_download("mylinkid")
 
 Signature: `ShinyDriver$stop()`
 
-This method stayed the same! 🥳. In `{shinytest2}`, this will also stop your [`ChromeSession`] instance and clean up any temporary Shiny log files.
+This method stayed the same! 🥳 In `{shinytest2}`, this will also stop your [`ChromeSession`] instance and clean up any temporary Shiny log files.
 
 ### `ShinyDriver$uploadFile()`
 
@@ -307,7 +308,7 @@ new$upload_file(myFileInput = "myfile.txt")
 
 Signature: `ShinyDriver$waitFor(expr, checkInterval = 100, timeout = 3000)`
 
-This method has been renamed and had its parameters reordered to `AppDriver$wait_for_js(script, timeout, interval)`. Like other JavaScript methods in `{shinytest2}`, `script` needs to explicity return a value.
+This method has been renamed and had its parameters reordered to `AppDriver$wait_for_js(script, timeout, interval)`. Like other JavaScript methods in `{shinytest2}`, `script` needs to explicitly return a value.
 
 ```r
 ## {shinytest}
@@ -321,7 +322,7 @@ new$wait_for_js("$('#myid').length > 0");
 
 Signature: `ShinyDriver$waitForShiny()`
 
-This method has been upgraded to `AppDriver$wait_for_idle(duration = 500, timeout = 30 * 1000)`. The `ShinyDriver$waitForShiny()` method only waited until a single instance in time stated that Shiny was no longer busy. The new method will wait until Shiny has been "idle" for a continuous stretch of time. It is useful to wait until Shiny has been idle for a set duration to avoid situations where dynamic UI needs to calculate new outputs given new input information.
+This method has been upgraded to `AppDriver$wait_for_idle(duration = 500, timeout = 30 * 1000)`. The `ShinyDriver$waitForShiny()` method only waited until a single instance in time stated that Shiny was no longer busy. The new method will wait until Shiny has been "idle" for a continuous stretch of time. It is useful to wait until Shiny has been idle for a set duration in order to avoid situations where dynamic UI needs to calculate new outputs given new input information.
 
 ```r
 ## {shinytest}
@@ -336,7 +337,7 @@ new$wait_for_idle()
 
 ### `ShinyDriver$waitForValue()`
 
-Signature: `ShinyDriver$waitForValue(name, ignore = list(NULL, ""), iotype = c("input", "output", "export"), timeout = 10000, checkInterval = 400)`: This (underutilized) method has had the `name`/`iotype` spread out into separate `input`, `output`, `export` parameters. Only one `input`/`output`/`export` value may be supplied in an `AppDriver` object. The `timeout` has been increased to 15 seconds. Both methods still poll the Shiny application at a set `interval` for the corresponding value to be something not in the `ignore`d set of values.
+Signature: `ShinyDriver$waitForValue(name, ignore = list(NULL, ""), iotype = c("input", "output", "export"), timeout = 10000, checkInterval = 400)`: This (underutilized) method has had the `name`/`iotype` spread out into separate `input`, `output`, `export` parameters. Only one `input`/`output`/`export` value may be supplied in an `AppDriver` object. The `timeout` has been increased to 15 seconds. Both methods still poll the Shiny application at a set `interval` for the corresponding value to be something _not_ in the `ignore`d set of values.
 
 ```r
 ## {shinytest}
@@ -382,7 +383,7 @@ Signatures:
 * `ShinyDriver$getSource()`
 * `ShinyDriver$getTitle()`
 
-These methods have been removed. It is suggested to use JavaScript code directly or use newer helper methods.
+These methods have been removed. It is suggested to use JavaScript code directly, or to use newer helper methods.
 
 ```r
 ## {shinytest}
@@ -397,7 +398,7 @@ new$get_js("window.document.title;")
 
 ## Testing setup
 
-`{shinytest2}` is heavily integrated with the `{testthat}` testing framework. Similar to `{shinytest}`, snapshots are recorded but are recorded via `{testthat}` snapshots. For more information on the robustness of different testing approaches, please see the [Robust testing](./robust.html) vignette.
+`{shinytest2}` is heavily integrated with the `{testthat}` testing framework. Similar to `{shinytest}`, snapshots are recorded, but they are recorded via `{testthat}` snapshots. For more information on the robustness of different testing approaches, please see the [Robust testing](./robust.html) vignette.
 
 * `ShinyDriver$new(suffix=)`: Please use `AppDriver$new(variant=)`.
 ```r
@@ -430,7 +431,7 @@ Signature: `ShinyDriver$expectUpdate(output, ..., timeout = 3000, iotype = c("au
 
 This method is no longer supported. While knowing that an output value has been updated, it is very uncertain as to what the new value is. While possibly useful, it is not robust and therefore not recommended. Other testing methods should be explored.
 
-Equivalent code has been provided below for legacy support
+Equivalent code has been provided below for legacy support.
 
 ```r
 ## {shinytest}
@@ -450,7 +451,7 @@ testthat::expect_failure(
 
 ## Debugging
 
-Debugging in `{shinytest2}` has been unified and is enabled at all times. The `{shinytest}` debugging methods have been removed in favor of `AppDriver$get_logs()` which returns a similarly shaped `tibble` as `ShinyDriver$getDebugLog()`'s `data.frame`. The columns have been altered to be more generic where `type` has been broken into two columns: `location` and `level`.
+Debugging in `{shinytest2}` has been unified and is enabled at all times. The `{shinytest}` debugging methods have been removed in favor of `AppDriver$get_logs()`, which returns a similarly shaped `tibble` as `ShinyDriver$getDebugLog()`'s `data.frame`. The columns have been altered to be more generic, where `type` has been broken into two columns: `location` and `level`.
 
 * `ShinyDriver$getDebugLog()`, `ShinyDriver$getEventLog()`: Now use `AppDriver$get_logs()`.
 * `ShinyDriver$logEvent(event, ...)`: Messages can still be recorded using `AppDriver$log_message(text)`, but `...` values are no longer supported.
@@ -466,7 +467,7 @@ new$get_logs()
 old$log_message("Creating report")
 ```
 
-If `options = list(shiny.trace = TRUE)` is set when initializing a `AppDriver` object, then all WebSocket traffic will be recorded.
+If `options = list(shiny.trace = TRUE)` is set when initializing an `AppDriver` object, then all WebSocket traffic will be recorded.
 
 ```r
 ## {shinytest2}
@@ -479,7 +480,7 @@ new$get_logs()
 
 ## Other removed methods
 
-* `ShinyDriver$setValue(name, value, iotype)`: To set an output value, it must be perfomed by setting an input value and having your render methods set the output value. To set an input value, use `AppDriver$set_inputs()`.
+* `ShinyDriver$setValue(name, value, iotype)`: To set an output value, it must be performed by setting an input value and having your render methods set the output value. To set an input value, use `AppDriver$set_inputs()`.
 
 ```r
 ## {shinytest}
@@ -499,9 +500,9 @@ old$listWidgets()
 lapply(new$get_values(), names)
 ```
 
-* `ShinyDriver$clone()`: `AppDriver` does not support cloning. (The underlying `ChromoteSession` does not support cloning, so `AppDriver` can not support cloning.)
+* `ShinyDriver$clone()`: `AppDriver` does not support cloning. (The underlying `ChromoteSession` does not support cloning, so `AppDriver` cannot support cloning.)
 
-* `ShinyDriver$goBack()`, `ShinyDriver$refresh()`: These method have been removed, but can be achieved with `AppDriver$run_js(script)`.
+* `ShinyDriver$goBack()`, `ShinyDriver$refresh()`: These methods have been removed, but can be achieved with `AppDriver$run_js(script)`.
 
 ```r
 ## {shinytest}
