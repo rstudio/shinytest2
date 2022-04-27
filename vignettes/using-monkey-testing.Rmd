@@ -18,16 +18,28 @@ library(shiny)
 
 # Monkey (headless) testing with `{shinytest2}`
 
-Most people will use `{shinytest2}` with the plug and play `record_test()` app, which is very convenient if you are
-not familiar with JavaScript. Under the hood, `record_test()` generates a R script composed of a series of
-directed instructions that manipulates the app to automate testing on CI/CD environments.
+Most people will use `{shinytest2}` with the plug and play
+`record_test()` app, which is very convenient if you are not familiar
+with JavaScript. Under the hood, `record_test()` generates an R script
+composed of a series of directed instructions that manipulates the app
+to automate testing on CI/CD environments.
 
-_Monkey testing_ is widely used by web developers to check the application robustness, particularly in apps with large
-number of inputs. The goal is ultimately to try to break the app by triggering unexpected combinations. Most available libraries
-are JS-based such as [gremlins.js](https://github.com/marmelab/gremlins.js), traditionally combined with JS-based global testing libraries like [Puppeteer](https://pptr.dev/), but can work with `{shinytest2}` as well.
+*Monkey testing*, a type of testing where random inputs are used to test
+the behavior of an app, is widely used by web developers to check
+application robustness, particularly in apps with a large number of
+inputs. The goal is ultimately to try to break the app by triggering
+unexpected combinations. Most available libraries are JS-based such as
+[gremlins.js](https://github.com/marmelab/gremlins.js), traditionally
+combined with JS-based global testing libraries like
+[Puppeteer](https://pptr.dev/), but can work with `{shinytest2}` as
+well.
 
-In this vignette, we'll provide a more thorough overview of the `AppDriver` R6 class (extending on [In depth testing](in-depth.html)),
-which allows the developer to programmatically control the app. We'll see how we can seamlessly benefit from gremlins.js with only few lines of code.
+In this vignette we'll provide a more thorough overview of the
+`AppDriver` R6 class (extending on the concepts covered in the [Testing
+in depth](in-depth.html) article), which allows the developer to
+programmatically control the app. We'll see how we can seemlessly
+benefit from gremlins.js with only few lines of code.
+
 
 ## Initialize the driver
 
@@ -178,7 +190,7 @@ horde.unleash();
 
 `createHorde()` accepts many species of gremlins capable of handling
 various events such as clicks, touch, form filling, scrolling, typing,
-and more, asdescribed in the gremlins.js
+and more, as described in the gremlins.js
 [documentation](https://github.com/marmelab/gremlins.js#advanced-usage).
 
 We don't recommend using the `scroller,` which sometimes
