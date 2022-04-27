@@ -13,8 +13,7 @@ load_app_env(
 \arguments{
 \item{app_dir}{The base directory for the Shiny application.}
 
-\item{renv}{The environmeny in which the files in the \verb{R/} directory should
-be evaluated.}
+\item{renv}{The environment in which the files in the `R/`` directory should be evaluated.}
 
 \item{globalrenv}{The environment in which \code{global.R} should be evaluated. If
 \code{NULL}, \code{global.R} will not be evaluated at all.}

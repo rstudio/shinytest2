@@ -638,7 +638,7 @@ shiny_app <- shinyApp(
 app <- AppDriver$new(shiny_app, check_names = TRUE)
 #> Warning:
 #> ! Shiny inputs should have unique HTML id values.
-#> ℹ The following HTML id values are not unique:
+#> i The following HTML id values are not unique:
 #> • text
 
 # Manually assert that all names are unique
@@ -646,7 +646,7 @@ app <- AppDriver$new(shiny_app, check_names = FALSE)
 app$expect_unique_names()
 #> Error: `app_check_unique_names(self, private)` threw an unexpected warning.
 #> Message: ! Shiny inputs should have unique HTML id values.
-#> ℹ The following HTML id values are not unique:
+#> i The following HTML id values are not unique:
 #>   • text
 #> Class:   rlang_warning/warning/condition
 }
@@ -783,7 +783,8 @@ app <- AppDriver$new(
   system.file("examples/01_hello", package = "shiny"),
   options = list(shiny.trace = TRUE)
 )
-app$get_logs() # (long output lines have been truncated)
+app$get_logs()
+## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
 # \{shinytest2\} R  info      11:09:57.43 Start AppDriver initialization
 # \{shinytest2\} R  info      11:09:57.43 Starting Shiny app
 # \{shinytest2\} R  info      11:09:58.27 Creating new chromote session
@@ -794,34 +795,34 @@ app$get_logs() # (long output lines have been truncated)
 # \{shinytest2\} R  info      11:09:58.54 Waiting until Shiny app starts
 # \{chromote\}   JS info      11:09:58.61 shinytest2; jQuery found
 # \{chromote\}   JS info      11:09:58.61 shinytest2; Waiting for shiny session to connect
-# \{chromote\}   JS websocket 11:09:58.73 send \{"method":"init","data":\{"bins":30,|truncated
-# \{chromote\}   JS websocket 11:09:58.78 recv \{"config":\{"workerId":"","sessionId":|truncated
+# \{chromote\}   JS websocket 11:09:58.73 send WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.78 recv WEBSOCKET_MSG
 # \{chromote\}   JS info      11:09:58.78 shinytest2; Connected
 # \{chromote\}   JS info      11:09:58.78 shinytest2; Ready
-# \{chromote\}   JS websocket 11:09:58.85 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
-# \{chromote\}   JS websocket 11:09:58.85 recv \{"busy":"busy"\}
+# \{chromote\}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG
 # \{chromote\}   JS info      11:09:58.85 shinytest2; shiny:busy
-# \{chromote\}   JS websocket 11:09:58.86 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
-# \{chromote\}   JS websocket 11:09:58.86 recv \{"recalculating":\{"name":"distPlot",|truncated
+# \{chromote\}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG
 # \{shinytest2\} R  info      11:09:58.87 Shiny app started
 # \{shinytest2\} R  info      11:09:59.07 Setting inputs: 'bins'
-# \{chromote\}   JS websocket 11:09:59.08 recv \{"recalculating":\{"name":"distPlot",|truncated
-# \{chromote\}   JS websocket 11:09:59.08 recv \{"busy":"idle"\}
+# \{chromote\}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
 # \{chromote\}   JS info      11:09:59.08 shinytest2; shiny:idle
-# \{chromote\}   JS websocket 11:09:59.08 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{chromote\}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
 # \{chromote\}   JS info      11:09:59.08 shinytest2; shiny:value distPlot
 # \{chromote\}   JS info      11:09:59.08 shinytest2; inputQueue: adding bins
 # \{chromote\}   JS info      11:09:59.09 shinytest2; inputQueue: flushing bins
-# \{chromote\}   JS websocket 11:09:59.10 send \{"method":"update","data":\{"bins":20\}\}
-# \{chromote\}   JS websocket 11:09:59.11 recv \{"progress":\{"type":"binding",|truncated
-# \{chromote\}   JS websocket 11:09:59.11 recv \{"busy":"busy"\}
+# \{chromote\}   JS websocket 11:09:59.10 send WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG
 # \{chromote\}   JS info      11:09:59.11 shinytest2; shiny:busy
-# \{chromote\}   JS websocket 11:09:59.12 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
-# \{chromote\}   JS websocket 11:09:59.14 recv \{"recalculating":\{"name":"distPlot",|truncated
-# \{chromote\}   JS websocket 11:09:59.18 recv \{"recalculating":\{"name":"distPlot",|truncated
-# \{chromote\}   JS websocket 11:09:59.19 recv \{"busy":"idle"\}
+# \{chromote\}   JS websocket 11:09:59.12 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.14 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.18 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.19 recv WEBSOCKET_MSG
 # \{chromote\}   JS info      11:09:59.19 shinytest2; shiny:idle
-# \{chromote\}   JS websocket 11:09:59.21 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{chromote\}   JS websocket 11:09:59.21 recv WEBSOCKET_MSG
 # \{chromote\}   JS info      11:09:59.21 shinytest2; shiny:value distPlot
 # \{shinytest2\} R  info      11:09:59.21 Finished setting inputs. Timedout: FALSE
 # \{shinytest2\} R  info      11:09:59.21 Getting all values
@@ -837,7 +838,7 @@ app$get_logs() # (long output lines have been truncated)
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"busy":"idle"\}
-# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot"|truncated
 # \{shiny\}      R  error     ----------- RECV \{"method":"update","data":\{"bins":20\}\}
 # \{shiny\}      R  error     ----------- SEND \{"progress":\{"type":"binding",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"busy":"busy"\}
@@ -845,7 +846,7 @@ app$get_logs() # (long output lines have been truncated)
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"busy":"idle"\}
-# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot"|truncated
 
 # The log that is returned is a `data.frame()`.
 log <- app$get_logs()
@@ -858,23 +859,24 @@ tibble::glimpse(log)
 
 # It may be filtered to find desired logs
 subset(log, level == "websocket")
-# \{chromote\}   JS websocket 11:09:58.73 send \{"method":"init","data":\{"bins":30,|truncated
-# \{chromote\}   JS websocket 11:09:58.78 recv \{"config":\{"workerId":"","sessionId":|truncated
-# \{chromote\}   JS websocket 11:09:58.85 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
-# \{chromote\}   JS websocket 11:09:58.85 recv \{"busy":"busy"\}
-# \{chromote\}   JS websocket 11:09:58.86 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
-# \{chromote\}   JS websocket 11:09:58.86 recv \{"recalculating":\{"name":"distPlot",|truncated
-# \{chromote\}   JS websocket 11:09:59.08 recv \{"recalculating":\{"name":"distPlot",|truncated
-# \{chromote\}   JS websocket 11:09:59.08 recv \{"busy":"idle"\}
-# \{chromote\}   JS websocket 11:09:59.08 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
-# \{chromote\}   JS websocket 11:09:59.10 send \{"method":"update","data":\{"bins":20\}\}
-# \{chromote\}   JS websocket 11:09:59.11 recv \{"progress":\{"type":"binding",|truncated
-# \{chromote\}   JS websocket 11:09:59.11 recv \{"busy":"busy"\}
-# \{chromote\}   JS websocket 11:09:59.12 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
-# \{chromote\}   JS websocket 11:09:59.14 recv \{"recalculating":\{"name":"distPlot",|truncated
-# \{chromote\}   JS websocket 11:09:59.18 recv \{"recalculating":\{"name":"distPlot",|truncated
-# \{chromote\}   JS websocket 11:09:59.19 recv \{"busy":"idle"\}
-# \{chromote\}   JS websocket 11:09:59.21 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
+## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
+# \{chromote\}   JS websocket 11:09:58.73 send WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.78 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.10 send WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.12 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.14 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.18 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.19 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.21 recv WEBSOCKET_MSG
 }
 
 ## ------------------------------------------------
@@ -1048,7 +1050,7 @@ Shiny app is idle for 200ms.}
 
 \item{\code{screenshot_args}}{Default set of arguments to pass in to
 \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method when taking
-screnshots within \verb{$expect_screenshot()}. To disable screenshots by
+screenshots within \verb{$expect_screenshot()}. To disable screenshots by
 default, set to \code{FALSE}.}
 
 \item{\code{expect_values_screenshot_args}}{The value for \code{screenshot_args} when
@@ -1189,7 +1191,7 @@ cat(app$get_text("#view"))
 Set input values
 
 Set Shiny inputs by sending the value to the Chrome browser and
-programaticly updating the values. Given \code{wait_ = TRUE}, the method will
+programmatically updating the values. Given \code{wait_ = TRUE}, the method will
 not return until an output value has been updated.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_inputs(
@@ -1935,7 +1937,7 @@ and have the script return an atomic value.
 Arguments will have to be inserted into the script as there is not access
 to \code{arguments}. This can be done with commands like \code{paste()}. If using
 \code{glue::glue()}, be sure to use uncommon \code{.open} and \code{.close} values to
-avoid having to doulbe all \verb{\{} and \verb{\}}.
+avoid having to double all \verb{\{} and \verb{\}}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_js(
   script = missing_arg(),
@@ -2492,7 +2494,7 @@ shiny_app <- shinyApp(
 app <- AppDriver$new(shiny_app, check_names = TRUE)
 #> Warning:
 #> ! Shiny inputs should have unique HTML id values.
-#> ℹ The following HTML id values are not unique:
+#> i The following HTML id values are not unique:
 #> • text
 
 # Manually assert that all names are unique
@@ -2500,7 +2502,7 @@ app <- AppDriver$new(shiny_app, check_names = FALSE)
 app$expect_unique_names()
 #> Error: `app_check_unique_names(self, private)` threw an unexpected warning.
 #> Message: ! Shiny inputs should have unique HTML id values.
-#> ℹ The following HTML id values are not unique:
+#> i The following HTML id values are not unique:
 #>   • text
 #> Class:   rlang_warning/warning/condition
 }
@@ -2790,7 +2792,8 @@ app <- AppDriver$new(
   system.file("examples/01_hello", package = "shiny"),
   options = list(shiny.trace = TRUE)
 )
-app$get_logs() # (long output lines have been truncated)
+app$get_logs()
+## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
 # \{shinytest2\} R  info      11:09:57.43 Start AppDriver initialization
 # \{shinytest2\} R  info      11:09:57.43 Starting Shiny app
 # \{shinytest2\} R  info      11:09:58.27 Creating new chromote session
@@ -2801,34 +2804,34 @@ app$get_logs() # (long output lines have been truncated)
 # \{shinytest2\} R  info      11:09:58.54 Waiting until Shiny app starts
 # \{chromote\}   JS info      11:09:58.61 shinytest2; jQuery found
 # \{chromote\}   JS info      11:09:58.61 shinytest2; Waiting for shiny session to connect
-# \{chromote\}   JS websocket 11:09:58.73 send \{"method":"init","data":\{"bins":30,|truncated
-# \{chromote\}   JS websocket 11:09:58.78 recv \{"config":\{"workerId":"","sessionId":|truncated
+# \{chromote\}   JS websocket 11:09:58.73 send WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.78 recv WEBSOCKET_MSG
 # \{chromote\}   JS info      11:09:58.78 shinytest2; Connected
 # \{chromote\}   JS info      11:09:58.78 shinytest2; Ready
-# \{chromote\}   JS websocket 11:09:58.85 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
-# \{chromote\}   JS websocket 11:09:58.85 recv \{"busy":"busy"\}
+# \{chromote\}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG
 # \{chromote\}   JS info      11:09:58.85 shinytest2; shiny:busy
-# \{chromote\}   JS websocket 11:09:58.86 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
-# \{chromote\}   JS websocket 11:09:58.86 recv \{"recalculating":\{"name":"distPlot",|truncated
+# \{chromote\}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG
 # \{shinytest2\} R  info      11:09:58.87 Shiny app started
 # \{shinytest2\} R  info      11:09:59.07 Setting inputs: 'bins'
-# \{chromote\}   JS websocket 11:09:59.08 recv \{"recalculating":\{"name":"distPlot",|truncated
-# \{chromote\}   JS websocket 11:09:59.08 recv \{"busy":"idle"\}
+# \{chromote\}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
 # \{chromote\}   JS info      11:09:59.08 shinytest2; shiny:idle
-# \{chromote\}   JS websocket 11:09:59.08 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{chromote\}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
 # \{chromote\}   JS info      11:09:59.08 shinytest2; shiny:value distPlot
 # \{chromote\}   JS info      11:09:59.08 shinytest2; inputQueue: adding bins
 # \{chromote\}   JS info      11:09:59.09 shinytest2; inputQueue: flushing bins
-# \{chromote\}   JS websocket 11:09:59.10 send \{"method":"update","data":\{"bins":20\}\}
-# \{chromote\}   JS websocket 11:09:59.11 recv \{"progress":\{"type":"binding",|truncated
-# \{chromote\}   JS websocket 11:09:59.11 recv \{"busy":"busy"\}
+# \{chromote\}   JS websocket 11:09:59.10 send WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG
 # \{chromote\}   JS info      11:09:59.11 shinytest2; shiny:busy
-# \{chromote\}   JS websocket 11:09:59.12 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
-# \{chromote\}   JS websocket 11:09:59.14 recv \{"recalculating":\{"name":"distPlot",|truncated
-# \{chromote\}   JS websocket 11:09:59.18 recv \{"recalculating":\{"name":"distPlot",|truncated
-# \{chromote\}   JS websocket 11:09:59.19 recv \{"busy":"idle"\}
+# \{chromote\}   JS websocket 11:09:59.12 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.14 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.18 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.19 recv WEBSOCKET_MSG
 # \{chromote\}   JS info      11:09:59.19 shinytest2; shiny:idle
-# \{chromote\}   JS websocket 11:09:59.21 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{chromote\}   JS websocket 11:09:59.21 recv WEBSOCKET_MSG
 # \{chromote\}   JS info      11:09:59.21 shinytest2; shiny:value distPlot
 # \{shinytest2\} R  info      11:09:59.21 Finished setting inputs. Timedout: FALSE
 # \{shinytest2\} R  info      11:09:59.21 Getting all values
@@ -2844,7 +2847,7 @@ app$get_logs() # (long output lines have been truncated)
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"busy":"idle"\}
-# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot"|truncated
 # \{shiny\}      R  error     ----------- RECV \{"method":"update","data":\{"bins":20\}\}
 # \{shiny\}      R  error     ----------- SEND \{"progress":\{"type":"binding",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"busy":"busy"\}
@@ -2852,7 +2855,7 @@ app$get_logs() # (long output lines have been truncated)
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
 # \{shiny\}      R  error     ----------- SEND \{"busy":"idle"\}
-# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot":\{|truncated
+# \{shiny\}      R  error     ----------- SEND \{"errors":\{\},"values":\{"distPlot"|truncated
 
 # The log that is returned is a `data.frame()`.
 log <- app$get_logs()
@@ -2865,23 +2868,24 @@ tibble::glimpse(log)
 
 # It may be filtered to find desired logs
 subset(log, level == "websocket")
-# \{chromote\}   JS websocket 11:09:58.73 send \{"method":"init","data":\{"bins":30,|truncated
-# \{chromote\}   JS websocket 11:09:58.78 recv \{"config":\{"workerId":"","sessionId":|truncated
-# \{chromote\}   JS websocket 11:09:58.85 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
-# \{chromote\}   JS websocket 11:09:58.85 recv \{"busy":"busy"\}
-# \{chromote\}   JS websocket 11:09:58.86 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
-# \{chromote\}   JS websocket 11:09:58.86 recv \{"recalculating":\{"name":"distPlot",|truncated
-# \{chromote\}   JS websocket 11:09:59.08 recv \{"recalculating":\{"name":"distPlot",|truncated
-# \{chromote\}   JS websocket 11:09:59.08 recv \{"busy":"idle"\}
-# \{chromote\}   JS websocket 11:09:59.08 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
-# \{chromote\}   JS websocket 11:09:59.10 send \{"method":"update","data":\{"bins":20\}\}
-# \{chromote\}   JS websocket 11:09:59.11 recv \{"progress":\{"type":"binding",|truncated
-# \{chromote\}   JS websocket 11:09:59.11 recv \{"busy":"busy"\}
-# \{chromote\}   JS websocket 11:09:59.12 recv \{"custom":\{"showcase-src":\{"srcref":|truncated
-# \{chromote\}   JS websocket 11:09:59.14 recv \{"recalculating":\{"name":"distPlot",|truncated
-# \{chromote\}   JS websocket 11:09:59.18 recv \{"recalculating":\{"name":"distPlot",|truncated
-# \{chromote\}   JS websocket 11:09:59.19 recv \{"busy":"idle"\}
-# \{chromote\}   JS websocket 11:09:59.21 recv \{"errors":\{\},"values":\{"distPlot":\{|truncated
+## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
+# \{chromote\}   JS websocket 11:09:58.73 send WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.78 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.85 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:58.86 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.08 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.10 send WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.11 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.12 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.14 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.18 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.19 recv WEBSOCKET_MSG
+# \{chromote\}   JS websocket 11:09:59.21 recv WEBSOCKET_MSG
 }
 }
 \if{html}{\out{</div>}}

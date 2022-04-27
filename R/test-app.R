@@ -159,6 +159,7 @@ test_app <- function(
 #'   loads your Shiny app support environment into the testing environment.
 #'
 #' @param app_dir The base directory for the Shiny application.
+#' @param renv The environment in which the files in the `R/`` directory should be evaluated.
 #' @inheritParams shiny::loadSupport
 #' @export
 load_app_env <- function(

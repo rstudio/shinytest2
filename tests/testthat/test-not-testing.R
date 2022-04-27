@@ -1,10 +1,15 @@
-skip_on_cran()
+skip_on_cran() # Uses chromote
 require("shiny", quietly = TRUE, character.only = TRUE)
 
 test_that("Running an app not in testing mode has 404 handled when getting values", {
 
   app_bg <- callr::r_bg(
-    function() { shiny::runApp("./apps/hello", test.mode = FALSE) },
+    function() {
+      shiny::runApp(
+        shinyApp("", function(input, output) {}),
+        test.mode = FALSE
+      )
+    },
     stderr = "|"
   )
   withr::defer({ app_bg$kill() })

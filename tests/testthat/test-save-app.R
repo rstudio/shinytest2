@@ -1,4 +1,4 @@
-skip_on_cran()
+skip_on_cran() # Uses chromote
 require("shiny", quietly = TRUE, character.only = TRUE)
 
 test_that("Saving an app has the right context", {

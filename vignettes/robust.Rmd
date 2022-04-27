@@ -266,7 +266,7 @@ Two methods are provided as a middle ground between taking a screenshots and tes
 
 `AppDriver$expect_text(selector=)` asks the Chrome browser for the current text contents within the selected elements. This method is great to test contents that are not `input` or `output` values. `AppDriver$expect_text()` is not able to retrieve pseudo elements or values such as the text inside `<text>` or `<textarea>` input elements.
 
-`AppDriver$expect_html(selector=)` asks the Chrome browser for the current DOM structures within the selected elements. This method is perfect for app authors who are contructing their own DOM structures and want to verify that they are consistently being produced. Again, `AppDriver$expect_html()` is not able to retrieve pseudo elements or values such as the text inside `<text>` or `<textarea>` input elements.
+`AppDriver$expect_html(selector=)` asks the Chrome browser for the current DOM structures within the selected elements. This method is perfect for app authors who are constructing their own DOM structures and want to verify that they are consistently being produced. Again, `AppDriver$expect_html()` is not able to retrieve pseudo elements or values such as the text inside `<text>` or `<textarea>` input elements.
 
 Finally, both of these methods wrap around `AppDriver$expect_js(script=)`. This method executes a `script` and the return value is saved as a snapshot. `AppDriver$expect_text()` and `AppDriver$expect_html()` are wrappers around `AppDriver$expect_js()`.
 
