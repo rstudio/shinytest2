@@ -190,7 +190,7 @@ horde.unleash();
 
 `createHorde()` accepts many species of gremlins capable of handling
 various events such as clicks, touch, form filling, scrolling, typing,
-and more, asdescribed in the gremlins.js
+and more, as described in the gremlins.js
 [documentation](https://github.com/marmelab/gremlins.js#advanced-usage).
 
 We don't recommend using the `scroller,` which sometimes
