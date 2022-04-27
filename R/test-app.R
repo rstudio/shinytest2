@@ -128,18 +128,24 @@ test_app <- function(
     }
   }
 
-  is_currently_testing <- testthat::is_testing()
-
+  # is_currently_testing <- testthat::is_testing()
   ret <- testthat::test_dir(
     path = fs::path(app_dir, "tests", "testthat"),
+    # # Super verbose even though it is compact
+    # reporter = testthat::default_compact_reporter(),
+
+    # # Keeps track of all tests
+    # # Deletes "unused snapshots", which is bad
+    # reporter = testthat::get_reporter(),
+
     ...
   )
 
-  # If we are testing and no error has been thrown,
-  # then perform an expectation so that the testing chunk passes
-  if (is_currently_testing) {
-    testthat::expect_equal(TRUE, TRUE)
-  }
+  # # If we are testing and no error has been thrown,
+  # # then perform an expectation so that the testing chunk passes
+  # if (is_currently_testing) {
+  #   testthat::expect_equal(TRUE, TRUE)
+  # }
 
   invisible(ret)
 }
