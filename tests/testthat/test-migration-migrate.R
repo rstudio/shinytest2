@@ -5,6 +5,9 @@ skip_on_cran()
 
 expect_migration <- function(test_app_folder, ...) {
   original_path <- testthat::test_path(test_app_folder)
+  if (!fs::dir_exists(original_path)) {
+    skip(paste0("Migration app not found: ", test_app_folder))
+  }
   new_path <- tempfile()
   fs::dir_copy(original_path, new_path)
 

@@ -276,8 +276,8 @@ The saved test can be moved to a different testing file, e.g. `tests/testthat/te
 
 ## Interactive R Markdown documents
 
-`{shinytest2}` can be used with [interactive R Markdown documents](http://rmarkdown.rstudio.com/authoring_shiny.html) that use `runtime: shiny` or `server: shiny` (sometimes also referred to as Shiny documents).
-This includes those that use the [flexdashboard](http://rmarkdown.rstudio.com/flexdashboard/) package.
+`{shinytest2}` can be used with [interactive R Markdown documents](https://bookdown.org/yihui/rmarkdown/shiny-documents.html) that use `runtime: shiny` or `server: shiny` (sometimes also referred to as Shiny documents).
+This includes those that use the [flexdashboard](https://pkgs.rstudio.com/flexdashboard/) package.
 
 Shiny documents have some differences compared to regular Shiny applications, and so the tests are slightly different.
 For an example of an interactive Rmd with tests, please follow [this link](https://github.com/rstudio/shinytest2/tree/main/tests/testthat/apps/rmd-shiny).
@@ -292,11 +292,11 @@ See the section on [controlling random values](in-depth.html#controlling-random-
 
 For testing Shiny documents, only one `.Rmd` file is allowed per directory.
 This is because of the way that the test directory is structured.
-(Note that if you name your Shiny document index.Rmd, then when deployed on Shiny Server, the URL can use the directory name, like <http://mydomain.com/dirname/>, instead of <http://mydomain.com/dirname/index.Rmd>. When deployed on RStudio Connect or Shinyapps.io, the filename is automatically not used in the URL.)
+(Note that if you name your Shiny document index.Rmd, then when deployed on Shiny Server, the URL can use the directory name, like `"http://mydomain.com/dirname/"`, instead of `"http://mydomain.com/dirname/index.Rmd"`. When deployed on RStudio Connect or Shinyapps.io, the filename is automatically not used in the URL.)
 
 ### Prerendered Shiny documents
 
-Some Shiny documents use [`runtime: shiny_prerendered`](http://rmarkdown.rstudio.com/authoring_shiny_prerendered.html), which helps speed up page loading time.
+Some Shiny documents use [`runtime: shiny_prerendered`](https://rmarkdown.rstudio.com/authoring_shiny_prerendered.html), which helps speed up page loading time.
 Normally, the first time these applications are run, they will leave behind a generated .html file as well as a cache directory named myfile_data/.
 
 You can remove these files by adding this to the end of your test script (assuming the name of your document is `doc.Rmd`):

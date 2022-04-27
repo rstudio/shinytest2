@@ -18,8 +18,8 @@ knitr::opts_chunk$set(
 library(shinytest2)
 ```
 
-
 `{shinytest2}` is the successor to `{shinytest}`. `{shinytest}` was implemented using [`{webdriver}`](https://rstudio.github.io/webdriver/) which uses [PhantomJS](https://phantomjs.org/api/). PhantomJS has been unsupported since 2017 and does not support displaying `{bslib}`'s Bootstrap v5. `{shinytest2}` uses `{chromote}` to connect to your locally installed Chrome or Chromium application, allowing `{shinytest2}` to display `{bslib}`'s Bootstrap v5.
+
 
 To auto-migrate your existing `{shinytest}` tests to `{shinytest2}`, call `shinytest2::migrate_from_shinytest(PATH_TO_APP)`.
 

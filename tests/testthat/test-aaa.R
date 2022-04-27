@@ -1,3 +1,4 @@
+skip_on_cran() # Uses chromote
 
 # Try to warm up chromote. IDK why it fails on older versions of R.
 test_that("Chromote loads", {
