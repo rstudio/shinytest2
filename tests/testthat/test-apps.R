@@ -1,4 +1,4 @@
-skip_on_cran()
+skip_on_cran() # Uses chromote
 
 
 dirs <- dir(test_path("apps"), full.names = TRUE)

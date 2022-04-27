@@ -14,3 +14,8 @@ _\.new\.png$
 ^actions$
 ^doc$
 ^Meta$
+^cran-comments\.md$
+^revdep$
+
+^tests/testthat/migrate-apps$
+^tests/testthat/apps$

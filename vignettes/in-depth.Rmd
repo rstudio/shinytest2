@@ -74,7 +74,7 @@ Multiple calls to `app$set_inputs()` should be reduced to a single line unless t
 
 ### Making expectations
 
-For an indepth discussion of expectations, see the [Robust testing vignette](./robust.html).
+For an in-depth discussion of expectations, see the [Robust testing vignette](./robust.html).
 
 There are a couple standard ways to make expectations from your `AppDriver` object.
 * `app$expect_values()`: This is the simplest way to make an expectation. It creates a list of values and compares them to the current values of the application. It also takes a debug screenshot and stores it as a snapshot. However, this snapshot will never fail an expectation test. The extra screenshot file is useful for manually determining if UI changes have happened over time while not producing numerous false-positive test failures.
@@ -459,7 +459,7 @@ All `{shinytest2}` expectation methods eventually call [`testthat::expect_snapsh
 
 Most input components in Shiny set their values by communicating through something called an *input binding*. `{shinytest2}` works well with `input` values that are set via input bindings.
 
-However, there are some components that set input values without using an input binding. These include some [htmlwidgets](http://www.htmlwidgets.org/), such as [DT](http://rstudio.github.io/DT/) and [plotly](https://github.com/ropensci/plotly/), as well as Shiny's built-in plot interactions with `renderPlot()`.
+However, there are some components that set input values without using an input binding. These include some [htmlwidgets](http://www.htmlwidgets.org/), such as [DT](https://rstudio.github.io/DT/) and [plotly](https://github.com/plotly/plotly.R), as well as Shiny's built-in plot interactions with `renderPlot()`.
 
 To set these unbound inputs, the resulting test script code will look something like this:
 
