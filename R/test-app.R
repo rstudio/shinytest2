@@ -80,6 +80,7 @@ NULL
 test_app <- function(
   app_dir = missing_arg(),
   ...,
+  reporter = testthat::get_reporter(),
   check_setup = TRUE
 ) {
   # Inspiration from https://github.com/rstudio/shiny/blob/a8c14dab9623c984a66fcd4824d8d448afb151e7/inst/app_template/tests/testthat.R
@@ -128,18 +129,40 @@ test_app <- function(
     }
   }
 
-  # is_currently_testing <- testthat::is_testing()
-  ret <- testthat::test_dir(
-    path = fs::path(app_dir, "tests", "testthat"),
-    # # Super verbose even though it is compact
-    # reporter = testthat::default_compact_reporter(),
+  is_currently_testing <- testthat::is_testing()
+  testthat::with_reporter(
+    "silent",
+    {
+      inner_reporter <- testthat::get_reporter()
+      results <- testthat::test_dir(
+        path = fs::path(app_dir, "tests", "testthat"),
+        # # Super verbose even though it is compact
+        # reporter = testthat::default_compact_reporter(),
 
-    # # Keeps track of all tests
-    # # Deletes "unused snapshots", which is bad
-    # reporter = testthat::get_reporter(),
+        # # Keeps track of all tests
+        # # Deletes "unused snapshots", which is bad
+        # reporter = testthat::get_reporter(),
 
-    ...
+        reporter = inner_reporter,
+        ...
+      )
+    },
+    start_end_reporter = FALSE
   )
+
+  if (is_currently_testing) {
+    # Set the reporter
+    testthat::with_reporter(reporter = reporter, start_end_reporter = FALSE, {
+      outer_reporter <- testthat::get_reporter()
+      # browser()
+      for (file_result in results) {
+        context <- file_result$context
+        for (result in file_result$results) {
+          outer_reporter$add_result(context, test = result$test, result = result)
+        }
+      }
+    })
+  }
 
   # # If we are testing and no error has been thrown,
   # # then perform an expectation so that the testing chunk passes
@@ -147,7 +170,7 @@ test_app <- function(
   #   testthat::expect_equal(TRUE, TRUE)
   # }
 
-  invisible(ret)
+  invisible(results)
 }
 
 
