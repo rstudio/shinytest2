@@ -141,11 +141,36 @@ test_app <- function(
     outer_reporter <- testthat::with_reporter(reporter, testthat::get_reporter(), start_end_reporter = FALSE)
 
     outer_context <- outer_reporter$.context
-    # Stop the current context
-    outer_reporter$end_context(outer_context)
+
+    # If a test is currently active, stop it and restart on exit
+    test_name <- NULL
+    if (inherits(outer_reporter, "MultiReporter")) {
+      # Find the SnapshotReporter, as the `test` value is available
+      snapshot_reporters <- Filter(outer_reporter$reporters, f = function(x) inherits(x, "SnapshotReporter"))
+      if (length(snapshot_reporters) > 0) {
+        # TODO-barret; Should an error be thrown here instead?
+        # "Please execute `test_app()` outside of your `test_that()` call" ?
+
+        snapshot_reporter <- snapshot_reporters[[1]]
+        test_name <- snapshot_reporter$test
+        # Stop the current test
+        outer_reporter$end_test(outer_context, test_name)
+      }
+    }
+
+    ## Unwravel and re-wrap file/context like https://github.com/r-lib/testthat/blob/aab0464b555c27dcb2381af5f71c395a084a8643/R/test-files.R#L269-L277
+    # Stop the current context / file
+    outer_reporter$end_context_if_started()
+    outer_reporter$end_file()
     withr::defer({
       # Restore the context when done
-      outer_reporter$start_context(outer_context)
+      outer_reporter$start_file(outer_context)
+
+      if (!is.null(test_name)) {
+        # Restore the current test
+        outer_reporter$start_test(outer_context, test_name)
+      }
+
     })
 
     name <- rlang::maybe_missing(name, fs::path_file(app_dir))
@@ -155,7 +180,8 @@ test_app <- function(
       inherit = testthat::Reporter,
       public = list(
         is_full = function(...) outer_reporter$is_full(...),
-        ## Do not perform these two methods. We want to act like a continuously integrated reporter
+        ## Do not perform these two methods.
+        ## We want to act like a continuously integrated reporter
         # start_reporter = outer_reporter$start_reporter,
         # end_reporter = outer_reporter$end_reporter,
         start_context = function(...) outer_reporter$start_context(...),
