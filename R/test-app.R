@@ -81,6 +81,7 @@ test_app <- function(
   app_dir = missing_arg(),
   ...,
   reporter = testthat::get_reporter(),
+  name = missing_arg(),
   check_setup = TRUE
 ) {
   # Inspiration from https://github.com/rstudio/shiny/blob/a8c14dab9623c984a66fcd4824d8d448afb151e7/inst/app_template/tests/testthat.R
@@ -129,7 +130,11 @@ test_app <- function(
     }
   }
 
+  outer_reporter <- testthat::get_reporter()
   is_currently_testing <- testthat::is_testing()
+  if (is_currently_testing) {
+    name <- rlang::maybe_missing(name, fs::path_file(app_dir))
+  }
   testthat::with_reporter(
     "silent",
     {
@@ -154,13 +159,29 @@ test_app <- function(
     # Set the reporter
     testthat::with_reporter(reporter = reporter, start_end_reporter = FALSE, {
       outer_reporter <- testthat::get_reporter()
-      # browser()
-      for (file_result in results) {
-        context <- file_result$context
-        for (result in file_result$results) {
-          outer_reporter$add_result(context, test = result$test, result = result)
+      outer_context <- outer_reporter$.context
+      browser()
+      # if (!is.null(outer_context)) outer_reporter$end_context()
+      if (!is.null(outer_context)) outer_reporter$end_file()
+      results_df <- as.data.frame(results, stringsAsFactors = FALSE)
+      results_by_file <- split(results, results_df$file)
+
+      for (results_for_file in results_by_file) {
+        test_file <- results_for_file[[1]]$file
+        if (!is.null(name) && length(name) == 1 && is.character(name) && nchar(name) > 0) {
+          test_file <- sub("^test-", paste0("test-Testing app: ", name, " - "), test_file)
         }
+        outer_reporter$start_file(test_file)
+        for (test_info in results_for_file) {
+          for (result in test_info$results) {
+            outer_reporter$add_result(results_for_file$context, test = result$test, result = result)
+          }
+        }
+        outer_reporter$end_file()
       }
+
+      # if (!is.null(outer_context)) outer_reporter$start_context(outer_context)
+      if (!is.null(outer_context)) outer_reporter$start_file(outer_context)
     })
   }
 

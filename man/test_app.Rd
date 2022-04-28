@@ -4,7 +4,13 @@
 \alias{test_app}
 \title{Test Shiny applications with \pkg{testthat}}
 \usage{
-test_app(app_dir = missing_arg(), ..., check_setup = TRUE)
+test_app(
+  app_dir = missing_arg(),
+  ...,
+  reporter = testthat::get_reporter(),
+  name = missing_arg(),
+  check_setup = TRUE
+)
 }
 \arguments{
 \item{app_dir}{The base directory for the Shiny application.
