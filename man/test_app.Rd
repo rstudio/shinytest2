@@ -22,16 +22,22 @@ test_app(
 
 \item{...}{Parameters passed to \code{\link[testthat:test_dir]{testthat::test_dir()}}}
 
+\item{reporter}{The reporter to use for the tests}
+
+\item{name}{Name to display in the middle of the test name. This value is only used
+when calling \code{test_app()} inside of \pkg{testhat} test. The final testing context will
+have the format of \code{"{test_context} - {name} - {app_test_context}"}.}
+
 \item{check_setup}{If \code{TRUE}, the app will be checked for the presence of
 \code{./tests/testthat/setup.R}. This file must contain a call to
 \code{\link[=load_app_env]{load_app_env()}}.}
 }
 \description{
-This is a helper method that wraps around \code{\link[testthat:test_dir]{testthat::test_dir()}} to test your Shiny application or Shiny runtime document.  This is similar to how \code{\link[testthat:test_package]{testthat::test_check()}} tests your R package but for your app.
+This is a helper method that wraps around \code{\link[testthat:test_dir]{testthat::test_dir()}} to test
+your Shiny application or Shiny runtime document.  This is similar to how
+\code{\link[testthat:test_package]{testthat::test_check()}} tests your R package but for your app.
 }
 \details{
-When setting up tests for your app,
-
 Example usage:\if{html}{\out{<div class="sourceCode r">}}\preformatted{## Interactive usage
 # Test Shiny app in current working directory
 shinytest2::test_app()

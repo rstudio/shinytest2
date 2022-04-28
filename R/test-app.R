@@ -4,9 +4,9 @@ NULL
 
 #' Test Shiny applications with \pkg{testthat}
 #'
-#' This is a helper method that wraps around [`testthat::test_dir()`] to test your Shiny application or Shiny runtime document.  This is similar to how [`testthat::test_check()`] tests your R package but for your app.
-#'
-#' When setting up tests for your app,
+#' This is a helper method that wraps around [`testthat::test_dir()`] to test
+#' your Shiny application or Shiny runtime document.  This is similar to how
+#' [`testthat::test_check()`] tests your R package but for your app.
 #'
 #' @details
 #'
@@ -66,6 +66,10 @@ NULL
 #'     `./tests/testthat.R` file, the parent directory (`"../"`) is used.
 #'   * Otherwise, the default path of `"."` is used.
 #' @param ... Parameters passed to [`testthat::test_dir()`]
+#' @param reporter The reporter to use for the tests
+#' @param name Name to display in the middle of the test name. This value is only used
+#' when calling `test_app()` inside of \pkg{testhat} test. The final testing context will
+#' have the format of `"{test_context} - {name} - {app_test_context}"`.
 #' @param check_setup If `TRUE`, the app will be checked for the presence of
 #' `./tests/testthat/setup.R`. This file must contain a call to
 #' [`shinytest2::load_app_env()`].
@@ -131,107 +135,63 @@ test_app <- function(
   }
 
 
-  outer_reporter <- testthat::get_reporter()
-  outer_context <- outer_reporter$.context
-  # Stop the current context
-  outer_reporter$end_context(outer_context)
-  withr::defer({
-    # Restore the context when done
-    outer_reporter$start_context(outer_context)
-  })
 
-  ReplayReporter <- R6Class("ReplayReporter",
-    inherit = testthat::Reporter,
-    public = list(
-      # is_full = outer_reporter$is_full,
-      # start_reporter = outer_reporter$start_reporter,
-      # end_reporter = outer_reporter$end_reporter,
-      start_context = function(...) outer_reporter$start_context(...),
-      end_context = function(...) outer_reporter$end_context(...),
-      add_result = function(...) outer_reporter$add_result(...),
-      start_file = function(test_file, ...) {
-        ## This could be done above when ending the outer context
-        ## However, by ending / starting the outer file
-        ## a hint is displayed as to what file is currently testing
-        # Close current file
-        outer_reporter$end_file()
-        if (!is.null(name) && length(name) == 1 && is.character(name) && nchar(name) > 0) {
-          # ⠏ |         0 | CURRENT_TEST_FILE - APP_NAME - APP_TEST_FILE
-          test_file <- sub("^test-", paste0("test-", outer_context, " - ", name, " - "), test_file)
-        }
-        outer_reporter$start_file(test_file, ...)
-      },
-      end_file = function(...) {
-        outer_reporter$end_file(...)
-        # Restart current file that was ended in ReplayReporter$start_file
-        outer_reporter$start_file(outer_context)
-      },
-      start_test = function(...) outer_reporter$start_test(...),
-      end_test = function(...) outer_reporter$end_test(...)
-    )
-  )
-  inner_reporter <- ReplayReporter$new()
+  if (testthat::is_testing()) {
+    # Normalize the reporter given any input
+    outer_reporter <- testthat::with_reporter(reporter, testthat::get_reporter(), start_end_reporter = FALSE)
 
+    outer_context <- outer_reporter$.context
+    # Stop the current context
+    outer_reporter$end_context(outer_context)
+    withr::defer({
+      # Restore the context when done
+      outer_reporter$start_context(outer_context)
+    })
 
-  is_currently_testing <- testthat::is_testing()
-  if (is_currently_testing) {
     name <- rlang::maybe_missing(name, fs::path_file(app_dir))
-  }
-  # testthat::with_reporter(
-  #   "silent",
-  #   {
-      # inner_reporter <- testthat::get_reporter()
-      results <- testthat::test_dir(
-        path = fs::path(app_dir, "tests", "testthat"),
-        # # Super verbose even though it is compact
-        # reporter = testthat::default_compact_reporter(),
 
-        # # Keeps track of all tests
-        # # Deletes "unused snapshots", which is bad
-        # reporter = testthat::get_reporter(),
+    ReplayReporter <- R6Class( # nolint
+      "ReplayReporter",
+      inherit = testthat::Reporter,
+      public = list(
+        is_full = function(...) outer_reporter$is_full(...),
+        ## Do not perform these two methods. We want to act like a continuously integrated reporter
+        # start_reporter = outer_reporter$start_reporter,
+        # end_reporter = outer_reporter$end_reporter,
+        start_context = function(...) outer_reporter$start_context(...),
+        end_context = function(...) outer_reporter$end_context(...),
+        add_result = function(...) outer_reporter$add_result(...),
+        start_file = function(test_file, ...) {
+          ## This could be done above when ending the outer context
+          ## However, by ending / starting the outer file
+          ## a hint is displayed as to what file is currently testing
+          # Close current file
+          outer_reporter$end_file()
 
-        reporter = inner_reporter,
-        ...
+          # Upgrade the name
+          if (!is.null(name) && length(name) == 1 && is.character(name) && nchar(name) > 0) {
+            # ⠏ |         0 | CURRENT_TEST_CONTEXT - APP_NAME - APP_TEST_FILE
+            test_file <- sub("^test-", paste0("test-", outer_context, " - ", name, " - "), test_file)
+          }
+          outer_reporter$start_file(test_file, ...)
+        },
+        end_file = function(...) {
+          outer_reporter$end_file(...)
+          # Restart current file that was ended in ReplayReporter$start_file
+          outer_reporter$start_file(outer_context)
+        },
+        start_test = function(...) outer_reporter$start_test(...),
+        end_test = function(...) outer_reporter$end_test(...)
       )
-  #   },
-  #   start_end_reporter = FALSE
-  # )
+    )
+    reporter <- ReplayReporter$new()
+  }
 
-  # if (is_currently_testing) {
-  #   # Set the reporter
-  #   testthat::with_reporter(reporter = reporter, start_end_reporter = FALSE, {
-  #     outer_reporter <- testthat::get_reporter()
-  #     outer_context <- outer_reporter$.context
-  #     browser()
-  #     # if (!is.null(outer_context)) outer_reporter$end_context()
-  #     if (!is.null(outer_context)) outer_reporter$end_file()
-  #     results_df <- as.data.frame(results, stringsAsFactors = FALSE)
-  #     results_by_file <- split(results, results_df$file)
-
-  #     for (results_for_file in results_by_file) {
-  #       test_file <- results_for_file[[1]]$file
-  #       if (!is.null(name) && length(name) == 1 && is.character(name) && nchar(name) > 0) {
-  #         test_file <- sub("^test-", paste0("test-Testing app: ", name, " - "), test_file)
-  #       }
-  #       outer_reporter$start_file(test_file)
-  #       for (test_info in results_for_file) {
-  #         for (result in test_info$results) {
-  #           outer_reporter$add_result(results_for_file$context, test = result$test, result = result)
-  #         }
-  #       }
-  #       outer_reporter$end_file()
-  #     }
-
-  #     # if (!is.null(outer_context)) outer_reporter$start_context(outer_context)
-  #     if (!is.null(outer_context)) outer_reporter$start_file(outer_context)
-  #   })
-  # }
-
-  # # If we are testing and no error has been thrown,
-  # # then perform an expectation so that the testing chunk passes
-  # if (is_currently_testing) {
-  #   testthat::expect_equal(TRUE, TRUE)
-  # }
+  results <- testthat::test_dir(
+    path = fs::path(app_dir, "tests", "testthat"),
+    reporter = reporter,
+    ...
+  )
 
   invisible(results)
 }
