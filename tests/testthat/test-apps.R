@@ -1,5 +1,11 @@
 skip_on_cran() # Uses chromote
 
+test_that("wrapper", {
+  expect_equal(1, 1)
+  test_app(test_path("apps/download"))
+  expect_equal(1, 1)
+})
+
 test_that("before", {
   expect_equal(1, 1)
   expect_equal(1, 1)
