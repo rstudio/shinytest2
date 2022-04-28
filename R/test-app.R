@@ -130,15 +130,61 @@ test_app <- function(
     }
   }
 
+
   outer_reporter <- testthat::get_reporter()
+  outer_context <- outer_reporter$.context
+
+  # ⠏ |         0 | CURRENT_TEST_FILE - APP_NAME - APP_TEST_FILE
+  ReplayReporter <- R6Class("ReplayReporter",
+    inherit = testthat::Reporter,
+    public = list(
+      start_context = function(...) {
+        outer_reporter$start_context(...)
+      },
+      end_context = function(...) {
+        outer_reporter$end_context(...)
+      },
+      add_result = function(...) {
+        # browser()
+        # str(list(context, test, result))
+        outer_reporter$add_result(...)
+      },
+      start_file = function(test_file) {
+        # browser()
+        # str(list(context, test, result))
+        outer_reporter$end_file() # close current file
+        # str(list(...))
+        if (!is.null(name) && length(name) == 1 && is.character(name) && nchar(name) > 0) {
+          test_file <- sub("^test-", paste0("test-", outer_context, " - ", name, " - "), test_file)
+        }
+        outer_reporter$start_file(test_file)
+      },
+      end_file = function() {
+        # browser()
+        # str(list(context, test, result))
+        outer_reporter$end_file()
+        outer_reporter$start_file(outer_context) # restart current file
+      },
+      start_test = function(...) {
+        outer_reporter$start_test(...)
+      },
+      end_test = function(...) {
+        outer_reporter$end_test(...)
+      }
+
+    )
+  )
+  inner_reporter <- ReplayReporter$new()
+
+
   is_currently_testing <- testthat::is_testing()
   if (is_currently_testing) {
     name <- rlang::maybe_missing(name, fs::path_file(app_dir))
   }
-  testthat::with_reporter(
-    "silent",
-    {
-      inner_reporter <- testthat::get_reporter()
+  # testthat::with_reporter(
+  #   "silent",
+  #   {
+      # inner_reporter <- testthat::get_reporter()
       results <- testthat::test_dir(
         path = fs::path(app_dir, "tests", "testthat"),
         # # Super verbose even though it is compact
@@ -151,39 +197,39 @@ test_app <- function(
         reporter = inner_reporter,
         ...
       )
-    },
-    start_end_reporter = FALSE
-  )
+  #   },
+  #   start_end_reporter = FALSE
+  # )
 
-  if (is_currently_testing) {
-    # Set the reporter
-    testthat::with_reporter(reporter = reporter, start_end_reporter = FALSE, {
-      outer_reporter <- testthat::get_reporter()
-      outer_context <- outer_reporter$.context
-      browser()
-      # if (!is.null(outer_context)) outer_reporter$end_context()
-      if (!is.null(outer_context)) outer_reporter$end_file()
-      results_df <- as.data.frame(results, stringsAsFactors = FALSE)
-      results_by_file <- split(results, results_df$file)
+  # if (is_currently_testing) {
+  #   # Set the reporter
+  #   testthat::with_reporter(reporter = reporter, start_end_reporter = FALSE, {
+  #     outer_reporter <- testthat::get_reporter()
+  #     outer_context <- outer_reporter$.context
+  #     browser()
+  #     # if (!is.null(outer_context)) outer_reporter$end_context()
+  #     if (!is.null(outer_context)) outer_reporter$end_file()
+  #     results_df <- as.data.frame(results, stringsAsFactors = FALSE)
+  #     results_by_file <- split(results, results_df$file)
 
-      for (results_for_file in results_by_file) {
-        test_file <- results_for_file[[1]]$file
-        if (!is.null(name) && length(name) == 1 && is.character(name) && nchar(name) > 0) {
-          test_file <- sub("^test-", paste0("test-Testing app: ", name, " - "), test_file)
-        }
-        outer_reporter$start_file(test_file)
-        for (test_info in results_for_file) {
-          for (result in test_info$results) {
-            outer_reporter$add_result(results_for_file$context, test = result$test, result = result)
-          }
-        }
-        outer_reporter$end_file()
-      }
+  #     for (results_for_file in results_by_file) {
+  #       test_file <- results_for_file[[1]]$file
+  #       if (!is.null(name) && length(name) == 1 && is.character(name) && nchar(name) > 0) {
+  #         test_file <- sub("^test-", paste0("test-Testing app: ", name, " - "), test_file)
+  #       }
+  #       outer_reporter$start_file(test_file)
+  #       for (test_info in results_for_file) {
+  #         for (result in test_info$results) {
+  #           outer_reporter$add_result(results_for_file$context, test = result$test, result = result)
+  #         }
+  #       }
+  #       outer_reporter$end_file()
+  #     }
 
-      # if (!is.null(outer_context)) outer_reporter$start_context(outer_context)
-      if (!is.null(outer_context)) outer_reporter$start_file(outer_context)
-    })
-  }
+  #     # if (!is.null(outer_context)) outer_reporter$start_context(outer_context)
+  #     if (!is.null(outer_context)) outer_reporter$start_file(outer_context)
+  #   })
+  # }
 
   # # If we are testing and no error has been thrown,
   # # then perform an expectation so that the testing chunk passes
