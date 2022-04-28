@@ -9,7 +9,7 @@ test_that("before", {
 dirs <- Filter(
   dir(test_path("apps"), full.names = TRUE),
   f = function(x) dir.exists(file.path(x, "tests", ""))
-) %>% head(2)
+)
 lapply(dirs, function(shiny_app_dir) {
   test_app(shiny_app_dir)
 })
