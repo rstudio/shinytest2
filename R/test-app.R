@@ -133,45 +133,41 @@ test_app <- function(
 
   outer_reporter <- testthat::get_reporter()
   outer_context <- outer_reporter$.context
+  # Stop the current context
+  outer_reporter$end_context(outer_context)
+  withr::defer({
+    # Restore the context when done
+    outer_reporter$start_context(outer_context)
+  })
 
-  # ⠏ |         0 | CURRENT_TEST_FILE - APP_NAME - APP_TEST_FILE
   ReplayReporter <- R6Class("ReplayReporter",
     inherit = testthat::Reporter,
     public = list(
-      start_context = function(...) {
-        outer_reporter$start_context(...)
-      },
-      end_context = function(...) {
-        outer_reporter$end_context(...)
-      },
-      add_result = function(...) {
-        # browser()
-        # str(list(context, test, result))
-        outer_reporter$add_result(...)
-      },
-      start_file = function(test_file) {
-        # browser()
-        # str(list(context, test, result))
-        outer_reporter$end_file() # close current file
-        # str(list(...))
+      # is_full = outer_reporter$is_full,
+      # start_reporter = outer_reporter$start_reporter,
+      # end_reporter = outer_reporter$end_reporter,
+      start_context = function(...) outer_reporter$start_context(...),
+      end_context = function(...) outer_reporter$end_context(...),
+      add_result = function(...) outer_reporter$add_result(...),
+      start_file = function(test_file, ...) {
+        ## This could be done above when ending the outer context
+        ## However, by ending / starting the outer file
+        ## a hint is displayed as to what file is currently testing
+        # Close current file
+        outer_reporter$end_file()
         if (!is.null(name) && length(name) == 1 && is.character(name) && nchar(name) > 0) {
+          # ⠏ |         0 | CURRENT_TEST_FILE - APP_NAME - APP_TEST_FILE
           test_file <- sub("^test-", paste0("test-", outer_context, " - ", name, " - "), test_file)
         }
-        outer_reporter$start_file(test_file)
+        outer_reporter$start_file(test_file, ...)
       },
-      end_file = function() {
-        # browser()
-        # str(list(context, test, result))
-        outer_reporter$end_file()
-        outer_reporter$start_file(outer_context) # restart current file
+      end_file = function(...) {
+        outer_reporter$end_file(...)
+        # Restart current file that was ended in ReplayReporter$start_file
+        outer_reporter$start_file(outer_context)
       },
-      start_test = function(...) {
-        outer_reporter$start_test(...)
-      },
-      end_test = function(...) {
-        outer_reporter$end_test(...)
-      }
-
+      start_test = function(...) outer_reporter$start_test(...),
+      end_test = function(...) outer_reporter$end_test(...)
     )
   )
   inner_reporter <- ReplayReporter$new()
