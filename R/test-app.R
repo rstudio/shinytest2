@@ -143,22 +143,25 @@ test_app <- function(
     # Normalize the reporter given any input
     outer_reporter <- testthat::with_reporter(reporter, testthat::get_reporter(), start_end_reporter = FALSE)
 
-    outer_context <- outer_reporter$.context
+    outer_context <- NULL
 
     # If a test is currently active, stop it and restart on exit
     test_name <- rlang::missing_arg()
-    if (inherits(outer_reporter, "MultiReporter")) {
+    snapshot_reporter <- NULL
+    if (inherits(outer_reporter, "SnapshotReporter")) {
+      snapshot_reporter <- outer_reporter
+    } else if (inherits(outer_reporter, "MultiReporter")) {
       # Find the SnapshotReporter, as the `test` value is available
       snapshot_reporters <- Filter(outer_reporter$reporters, f = function(x) inherits(x, "SnapshotReporter"))
       if (length(snapshot_reporters) > 0) {
-        # TODO-barret; Should an error be thrown here instead?
-        # "Please execute `test_app()` outside of your `test_that()` call" ?
-
         snapshot_reporter <- snapshot_reporters[[1]]
-        test_name <- snapshot_reporter$test
-        # Stop the current test
-        outer_reporter$end_test(outer_context, test_name)
       }
+    }
+    if (!is.null(snapshot_reporter)) {
+      test_name <- snapshot_reporter$test
+      outer_context <- snapshot_reporter$file
+      # Stop the current test
+      outer_reporter$end_test(outer_context, test_name)
     }
 
     ## Unwravel and re-wrap file/context like
@@ -201,7 +204,16 @@ test_app <- function(
           # Upgrade the name
           if (!is.null(name) && length(name) == 1 && is.character(name) && nchar(name) > 0) {
             # ⠏ |         0 | CURRENT_TEST_CONTEXT - APP_NAME - APP_TEST_FILE
-            test_file <- sub("^test-", paste0("test-", outer_context, " - ", name, " - "), test_file)
+            test_file <- sub(
+              "^test-",
+              paste0(
+                "test-",
+                if (is.null(outer_context)) "" else paste0(outer_context, " - "),,
+                name,
+                " - "
+              ),
+              test_file
+            )
           }
           outer_reporter$start_file(test_file, ...)
         },

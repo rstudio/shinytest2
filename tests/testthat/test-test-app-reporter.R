@@ -13,20 +13,19 @@ test_that(custom_test_name, {
     start_end_reporter = FALSE
   )
 
-  str(outer_reporter)
-
   # Make sure it is a multireporter
   expect_s3_class(outer_reporter, "MultiReporter")
-  expect_true(".context" %in% names(outer_reporter))
 
-  outer_context <- outer_reporter$.context
-  expect_equal(outer_context, "test-app-reporter")
 
   # Find the SnapshotReporter, as the `test` value is available
   snapshot_reporters <- Filter(outer_reporter$reporters, f = function(x) inherits(x, "SnapshotReporter"))
   expect_true(length(snapshot_reporters) > 0)
 
   snapshot_reporter <- snapshot_reporters[[1]]
+
+  expect_true("file" %in% names(snapshot_reporter))
+  expect_equal(snapshot_reporter$file, "test-app-reporter")
+
   expect_true("test" %in% names(snapshot_reporter))
   expect_equal(snapshot_reporter$test, custom_test_name)
 
