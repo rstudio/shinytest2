@@ -13,6 +13,8 @@ test_that(custom_test_name, {
     start_end_reporter = FALSE
   )
 
+  str(outer_reporter)
+
   # Make sure it is a multireporter
   expect_s3_class(outer_reporter, "MultiReporter")
   expect_true(".context" %in% names(outer_reporter))
