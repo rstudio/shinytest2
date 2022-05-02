@@ -100,6 +100,4 @@ Input values can face the same issues, and they can also be modified with `shiny
 
 For code completeness, you should call `app$stop()` at the end of your tests to shut down the background Shiny process and current Chromote Session.
 
-However, `{shinytest2}` does not do this for code brevity and relies on `AppDriver$private$finalizer()` (which is called when the value is garbage collected or the R session is stopped) to call `AppDriver$stop()`.
-
 If your R session is starting to feel more sluggish, you may want to call `app$stop()` manually. Or if you are programmatically creating many instances of `AppDriver`, you may want to call `app$stop()` when the specific test is complete.
