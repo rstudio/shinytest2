@@ -73,6 +73,8 @@ NULL
 #' @param check_setup If `TRUE`, the app will be checked for the presence of
 #' `./tests/testthat/setup.R`. This file must contain a call to
 #' [`shinytest2::load_app_env()`].
+#' @param reporter Reporter to pass through to [`testthat::test_dir()`].
+#' @param stop_on_failure If missing, the default value of `TRUE` will be used. However, if missing and currently testing, `FALSE` will be used to seamlessly integrate the app reporter to `reporter`.
 #' @seealso
 #' * [`record_test()`] to create tests to record against your Shiny application.
 #' * [testthat::snapshot_review()] and [testthat::snapshot_accept()] if
@@ -84,9 +86,10 @@ NULL
 test_app <- function(
   app_dir = missing_arg(),
   ...,
-  reporter = testthat::get_reporter(),
   name = missing_arg(),
-  check_setup = TRUE
+  check_setup = TRUE,
+  reporter = testthat::get_reporter(),
+  stop_on_failure = missing_arg()
 ) {
   # Inspiration from https://github.com/rstudio/shiny/blob/a8c14dab9623c984a66fcd4824d8d448afb151e7/inst/app_template/tests/testthat.R
 
@@ -143,7 +146,7 @@ test_app <- function(
     outer_context <- outer_reporter$.context
 
     # If a test is currently active, stop it and restart on exit
-    test_name <- NULL
+    test_name <- rlang::missing_arg()
     if (inherits(outer_reporter, "MultiReporter")) {
       # Find the SnapshotReporter, as the `test` value is available
       snapshot_reporters <- Filter(outer_reporter$reporters, f = function(x) inherits(x, "SnapshotReporter"))
@@ -158,7 +161,8 @@ test_app <- function(
       }
     }
 
-    ## Unwravel and re-wrap file/context like https://github.com/r-lib/testthat/blob/aab0464b555c27dcb2381af5f71c395a084a8643/R/test-files.R#L269-L277
+    ## Unwravel and re-wrap file/context like
+    ## https://github.com/r-lib/testthat/blob/aab0464b555c27dcb2381af5f71c395a084a8643/R/test-files.R#L269-L277
     # Stop the current context / file
     outer_reporter$end_context_if_started()
     outer_reporter$end_file()
@@ -166,7 +170,7 @@ test_app <- function(
       # Restore the context when done
       outer_reporter$start_file(outer_context)
 
-      if (!is.null(test_name)) {
+      if (!rlang::is_missing(test_name)) {
         # Restore the current test
         outer_reporter$start_test(outer_context, test_name)
       }
@@ -211,11 +215,22 @@ test_app <- function(
       )
     )
     reporter <- ReplayReporter$new()
+    # Currently testing, the inner reporter should not stop on failure
+    stop_on_failure <- rlang::maybe_missing(stop_on_failure, FALSE)
+  } else {
+    # Not currently testing
+    # Use the default stop_on_failure value
+    stop_on_failure <-
+      rlang::maybe_missing(
+        stop_on_failure,
+        formals(testthat::test_dir)$stop_on_failure
+      )
   }
 
   results <- testthat::test_dir(
     path = fs::path(app_dir, "tests", "testthat"),
     reporter = reporter,
+    stop_on_failure = stop_on_failure,
     ...
   )
 
