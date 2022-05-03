@@ -386,7 +386,7 @@ If you have the time to manually inspect the snapshot files afterwards, using `A
 
 ## Example
 
-Let's look at how we could write a `{shinytest2}` test to make sure the plot is updated after updating our numeric `input` `n`. Assuming the Shiny app code above is saved in `app.R`, we can look at `tests/testthat/test-export.R` below.
+Let's look at how we could write a `{shinytest2}` test to make sure the plot is updated after updating our numeric `input` `n`. Assuming the Shiny app code above is saved in `app.R`, we can look at `tests/testthat/test-export.R` below. To successfully run the code below, be sure to have `{vdiffr}` installed.
 
 Since we are not calling `AppDriver$expect_screenshot()` or `AppDriver$get_screenshot()`, we do not need to use `AppDriver$new(variant=)`.
 
@@ -396,6 +396,7 @@ Since we are not calling `AppDriver$expect_screenshot()` or `AppDriver$get_scree
 library(shinytest2)
 
 test_that("`export`ed `plot_obj` is updated by `n`", {
+  skip_if_not_installed("vdiffr")
 
   app <- AppDriver$new()
 
@@ -436,6 +437,7 @@ The second half of the test performs similar expectations to the first half of t
 library(shinytest2)
 
 test_that("`export`ed `plot_obj` is updated by `n`", {
+  skip_if_not_installed("vdiffr")
 
   app <- AppDriver$new(variant = platform_variant())
 
