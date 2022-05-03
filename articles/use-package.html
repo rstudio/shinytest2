@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -197,6 +197,19 @@
     <span class="va">shinytest2</span></code></pre>
 <p>When all of these items are in place, you can test your package using <code>devtools::install(); testthat::test_local()</code> or by running <code>R CMD check</code> on your package. If you are using the RStudio IDE, you can also run Build -&gt; Test Package or Build -&gt; Check Package.</p>
 <p><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> requires that your package to be <em>installed</em> when testing. <a href="https://testthat.r-lib.org/reference/test_package.html" class="external-link"><code>testthat::test_local()</code></a> (and related wrappers) eventually call <code><a href="https://rdrr.io/pkg/pkgload/man/load_all.html" class="external-link">pkgload::load_all()</a></code> to temporarily source the local R package. You can use <code><a href="https://testthat.r-lib.org/reference/test_package.html" class="external-link">test_local()</a></code> to test non-<a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> tests, but you will need to install your R package to safely execute your <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> tests. If not installed, it will create a confusing situation where your <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> tests are running on a <em>different</em> version of your R package (whichever was last installed), than the rest of your tests (the current source).</p>
+</div>
+<div class="section level2">
+<h2 id="how-should-i-test-multiple-applications">How should I test multiple applications?<a class="anchor" aria-label="anchor" href="#how-should-i-test-multiple-applications"></a>
+</h2>
+<p>You can call <code><a href="../reference/test_app.html">shinytest2::test_app()</a></code> multiple times within a test script. It does not need to be wrapped within a <code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">testthat::test_that()</a></code> call.</p>
+<p><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> tests many internal apps using the code similar to the code below:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># ./tests/testthat/test-apps.R</span>
+
+<span class="va">app_dirs</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">dir_ls</a></span><span class="op">(</span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_path.html" class="external-link">test_path</a></span><span class="op">(</span><span class="st">"apps"</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">app_dirs</span>, <span class="kw">function</span><span class="op">(</span><span class="va">app_dir</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu">shinytest2</span><span class="fu">::</span><span class="fu"><a href="../reference/test_app.html">test_app</a></span><span class="op">(</span><span class="va">app_dir</span><span class="op">)</span>
+<span class="op">}</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="continuous-integration">Continuous integration<a class="anchor" aria-label="anchor" href="#continuous-integration"></a>

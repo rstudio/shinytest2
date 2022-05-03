@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -388,6 +388,7 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <span class="op">}</span>
 <span class="va">plot_app</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span><span class="op">)</span>
 <span class="va">plot_app</span></code></pre></div>
+<p><img src="images/plot-app.png" width="100%" style="display: block; margin: auto;"></p>
 <p>Both <code>dt</code> and <code>plot_obj</code> have been <code>export</code>ed. This means that they are available when executing <code>AppDriver$get_values()</code>, <code>AppDriver$get_value()</code>, and <code>AppDriver$expect_values()</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">plot_app</span><span class="op">)</span>
@@ -451,7 +452,7 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <div class="section level3">
 <h3 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h3>
-<p>Let’s look at how we could write a <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> test to make sure the plot is updated after updating our numeric <code>input</code> <code>n</code>. Assuming the Shiny app code above is saved in <code>app.R</code>, we can look at <code>tests/testthat/test-export.R</code> below.</p>
+<p>Let’s look at how we could write a <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> test to make sure the plot is updated after updating our numeric <code>input</code> <code>n</code>. Assuming the Shiny app code above is saved in <code>app.R</code>, we can look at <code>tests/testthat/test-export.R</code> below. To successfully run the code below, be sure to have <a href="https://vdiffr.r-lib.org/" class="external-link">vdiffr</a> installed.</p>
 <p>Since we are not calling <code>AppDriver$expect_screenshot()</code> or <code>AppDriver$get_screenshot()</code>, we do not need to use <code>AppDriver$new(variant=)</code>.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># File: ./tests/testthat/test-export.R</span>
@@ -459,6 +460,7 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a></span><span class="op">)</span>
 
 <span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"`export`ed `plot_obj` is updated by `n`"</span>, <span class="op">{</span>
+  <span class="fu"><a href="https://testthat.r-lib.org/reference/skip.html" class="external-link">skip_if_not_installed</a></span><span class="op">(</span><span class="st">"vdiffr"</span><span class="op">)</span>
 
   <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
 
@@ -496,6 +498,7 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a></span><span class="op">)</span>
 
 <span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"`export`ed `plot_obj` is updated by `n`"</span>, <span class="op">{</span>
+  <span class="fu"><a href="https://testthat.r-lib.org/reference/skip.html" class="external-link">skip_if_not_installed</a></span><span class="op">(</span><span class="st">"vdiffr"</span><span class="op">)</span>
 
   <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>variant <span class="op">=</span> <span class="fu"><a href="../reference/platform_variant.html">platform_variant</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
