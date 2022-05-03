@@ -270,7 +270,7 @@ As you step through the script, you can inspect the state of the application in 
 
 The recommended way is to call `app$view()`. This will open a browser window in your default Chrome browser.
 
-Another way is to take a screenshot of your application. You can call `app$get_screenshot()` to take a screenshot of the application. This will display the screenshot as if it were a plot. (In RStudio, it will show in the Viewer pane.)
+Another way is to take a screenshot of your application. You can call `app$get_screenshot()` to take a screenshot of the application. This will display the screenshot as if it were a plot. (In RStudio, it will show in the Plots tab.)
 
 Using both methods, you can inspect the screenshot to see the state of the application.
 
