@@ -163,7 +163,7 @@ shinyApp(
 )
 ```
 
-```{r echo=FALSE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/screenshot-exports-app.png")
 ```
 
@@ -218,7 +218,7 @@ If your application uses randomly-generated values (by calling functions like `r
 
 To make such applications exactly repeatable, you can set the random seed. This can be done by specifying a random seed in the recorder. The seed can be any integer value.
 
-```{r echo=FALSE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/screenshot-recorder-random-seed.png")
 ```
 

@@ -313,7 +313,7 @@ plot_app <- shinyApp(ui = ui, server = server)
 plot_app
 ```
 
-```{r echo=FALSE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/plot-app.png")
 ```
 
