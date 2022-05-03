@@ -144,6 +144,21 @@ When all of these items are in place, you can test your package using `devtools:
 
 `{shinytest2}` requires that your package to be *installed* when testing. [`testthat::test_local()`](https://testthat.r-lib.org/reference/test_package.html) (and related wrappers) eventually call `pkgload::load_all()` to temporarily source the local R package. You can use `test_local()` to test non-`{shinytest2}` tests, but you will need to install your R package to safely execute your `{shinytest2}` tests. If not installed, it will create a confusing situation where your `{shinytest2}` tests are running on a *different* version of your R package (whichever was last installed), than the rest of your tests (the current source).
 
+## How should I test multiple applications?
+
+You can call `shinytest2::test_app()` multiple times within a test script. It does not need to be wrapped within a `testthat::test_that()` call.
+
+`{shinytest2}` tests many internal apps using the code similar to the code below:
+
+``` r
+# ./tests/testthat/test-apps.R
+
+app_dirs <- fs::dir_ls(testthat::test_path("apps"))
+lapply(app_dirs, function(app_dir) {
+  shinytest2::test_app(app_dir)
+})
+```
+
 
 ## Continuous integration
 
