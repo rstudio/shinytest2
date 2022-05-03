@@ -253,14 +253,14 @@ copy_test_file_helper <- function(
       overwrite = TRUE
     )
 
-    if (open) edit_file(to_file)
+    edit_file(to_file, open = open)
     TRUE
   })
 }
 
 
-edit_file <- function(file) {
-  if (isTRUE(file)) {
+edit_file <- function(file, open = TRUE) {
+  if (isTRUE(open)) {
     if (rlang::is_installed("usethis")) {
       usethis::edit_file(file)
     } else {
