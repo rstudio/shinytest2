@@ -248,7 +248,7 @@ If there are any differences between the latest run and the expected results, yo
 
     [ FAIL 1 | WARN 0 | SKIP 0 | PASS 0 ]
 
-To view the differences, follow the prompted code `testthat::snapshot_review('shinytest2/')` from within your application directory.
+To view the differences, follow the prompted code `testthat::snapshot_review('shinytest2/')` from within your application directory. (You may need to run `install.packages("diffviewer")` for `testthat::snapshot_review()` to successfully execute.)
 
 It will look something like this:
 
