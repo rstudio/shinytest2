@@ -1042,7 +1042,7 @@ AppDriver <- R6Class( # nolint
       delay = missing_arg(),
       selector = missing_arg()
     ) {
-      app_screenshot(
+      app_get_screenshot(
         self, private,
         file = file,
         ...,
