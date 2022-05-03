@@ -88,7 +88,7 @@ This also launches a special Shiny application in the current R process which di
 We'll refer to this as the **recorder app**.
 You will see something like this:
 
-```{r echo=FALSE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/record-simple-app.png")
 ```
 
@@ -109,7 +109,7 @@ To do this, click the `Expect values` button on the recorder app.
 
 After modifying some `input`s and making an expectation, it will look something like this:
 
-```{r echo=FALSE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/record-simple-app-2.png")
 ```
 
@@ -248,11 +248,11 @@ If there are any differences between the latest run and the expected results, yo
 
     [ FAIL 1 | WARN 0 | SKIP 0 | PASS 0 ]
 
-To view the differences, follow the prompted code `testthat::snapshot_review('shinytest2/')` from within your application directory.
+To view the differences, follow the prompted code `testthat::snapshot_review('shinytest2/')` from within your application directory. (You may need to run `install.packages("diffviewer")` for `testthat::snapshot_review()` to successfully execute.)
 
 It will look something like this:
 
-```{r echo=FALSE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/diffviewer-1.png")
 ```
 
@@ -268,7 +268,7 @@ In the example above, we had a single test script, named `test-shinytest2.R`.
 If you want to have more than one set of tests for an application, you can record new tests, each with a unique name.
 You can enter the name when recording your tests:
 
-```{r echo=FALSE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/record-name.png")
 ```
 

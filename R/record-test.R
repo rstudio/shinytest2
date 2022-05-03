@@ -138,9 +138,7 @@ record_test <- function(
     return(invisible(NULL))
   }
 
-  if (isTRUE(open_test_file)) {
-    edit_file(saved_test_file)
-  }
+  edit_file(saved_test_file, open = open_test_file)
 
   test_filter <- sub("^test-", "", fs::path_ext_remove(fs::path_file(saved_test_file)))
   # Run the test script

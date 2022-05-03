@@ -506,10 +506,10 @@ app$expect_screenshot(selector = "#distPlot")
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
-# Display in viewer
+# Display in graphics device
 app$get_screenshot()
 
-# Update bins then display `"disPlot"` in viewer
+# Update bins then display `"disPlot"` in graphics device
 app$set_inputs(bins = 10)
 app$get_screenshot(selector = "#distPlot")
 
@@ -2220,10 +2220,10 @@ will have preference.}
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
-# Display in viewer
+# Display in graphics device
 app$get_screenshot()
 
-# Update bins then display `"disPlot"` in viewer
+# Update bins then display `"disPlot"` in graphics device
 app$set_inputs(bins = 10)
 app$get_screenshot(selector = "#distPlot")
 

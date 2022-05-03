@@ -1,6 +1,7 @@
 library(shinytest2)
 
 test_that("`export`ed `plot_obj` is updated by `n`", {
+  skip_if_not_installed("vdiffr")
 
   app <- AppDriver$new()
 
