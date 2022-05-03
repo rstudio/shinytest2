@@ -208,7 +208,7 @@ test_app <- function(
               "^test-",
               paste0(
                 "test-",
-                if (is.null(outer_context)) "" else paste0(outer_context, " - "),,
+                if (is.null(outer_context)) "" else paste0(outer_context, " - "),
                 name,
                 " - "
               ),
