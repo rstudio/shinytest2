@@ -706,6 +706,8 @@ shinyApp(
     observeEvent(input$exit_save, {
       req(save_enabled())
 
+      session$sendCustomMessage("close_window", TRUE)
+      
       stopApp({
         seed <- as.integer(input$seed)
         if (is.null(seed) || is.na(seed)) {
@@ -769,6 +771,7 @@ shinyApp(
       })
     })
     observeEvent(input$exit_nosave, {
+      session$sendCustomMessage("close_window", TRUE)
       stopApp({
         invisible(list(
           test_file = NULL
