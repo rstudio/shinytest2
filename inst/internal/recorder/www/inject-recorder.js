@@ -150,6 +150,10 @@ window.recorder = (function() {
             $("#exit_save").toggleClass("disabled", !message);
         });
 
+        Shiny.addCustomMessageHandler("close_window", function(message) {
+            window.close();
+        });
+
     });
 
 
