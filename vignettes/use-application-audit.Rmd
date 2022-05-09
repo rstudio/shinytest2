@@ -1,0 +1,414 @@
+---
+title: "use-application-audit"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Monkey testing}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(shinytest2)
+library(shiny)
+library(deSolve)
+```
+
+# Audit Shiny apps with {shinytest2}
+
+Have you ever dreamt of profiling, load testing your Shiny app at each commit, without having to manually 
+run any script?
+
+In this vignette, we'll see how one can design and automate Shiny apps audit pipelines
+with `{shinytest2}`.  
+
+## Introduction
+
+This case study consists in analyzing a particularly non-optimized app, given by the 
+following code. This app simulates a stiff oscillator, also known as Van der Pol [model](https://en.wikipedia.org/wiki/Van_der_Pol_oscillator). Under the hoods, 
+this system composed of 2 differential equations is integrated with the `{deSolve}` package:
+
+``` r
+van_der_pol <- function(t, y, mu) {
+  dX <- y[2]
+  dY <- mu * (1 - y[1]^2)*y[2] - y[1]
+  list(c(X = dX, Y = dY))
+}
+
+server <- function(input, output) {
+  output$brussels <- renderPlot({
+    y0 <- c(X = input$X, Y = input$Y)
+    times <- seq(0, 1000, .01)
+    out <- ode(y0, times, van_der_pol, input$mu)
+    par(mfrow = c(1, 1))
+    plot(out[,2:3], type = "l", xlab = "X", ylab = "Y", main = "state diagram")
+  })
+}
+
+ui <- fluidPage(
+  headerPanel("Van der Pol oscillator"),
+  sidebarLayout(
+    sidebarPanel(
+      h3("Init values"),
+      numericInput("X", label = "X", min = 0.0, max = 5,  value = 1, step = 0.2),
+      numericInput("Y", label = "Y", min = 0.0, max = 5,  value = 1, step = 0.2),
+
+      h3("Parameters"),
+      numericInput("mu", label = "mu", min = 0.0, max = 5,  value = 1, step = 0.1)
+    ),
+    mainPanel(
+      h3("Simulation results"),
+      plotOutput("brussels")
+    )
+  )
+)
+
+shinyApp(ui = ui, server = server)
+```
+
+As a first test, you can run the app locally and notice how slow it is to perform one 
+computation. The next question is, how does this app scale? The answer is likely "No it doesn't", but
+we would like to know exactly how bad it is. This is where load testing comes to play.
+
+## Load testing with {shinytest2}
+
+Shiny apps [load testing](https://rstudio.github.io/shinyloadtest/index.html) 
+consists of running multiple user in parallel and measure the app response:
+
+- What is the time necessary to get to the homepage?
+- How much time does it take to perform the first computation?
+- Will all session end at the same time?
+- ...
+
+Many of the above questions can find answers thanks to `{shinyloadtest}`. A load test
+is composed a three phases:
+
+- Similarly to `{shinytest2}`, `{shinyloadtest}` records a user session with `shinyloadtest::record_session()`.
+- This session is subsequently replayed by a Java-based tool, `shinycannon`, able to simulate multiple sessions
+during a specific amount of time. 
+- Sessions are analyzed by `shinyloadtest::load_runs()` and an HTML report generated with 
+`shinyloadtest::shinyloadtest_report()`.
+
+In general, the first step is done manually, that is, you play with the app as if you were a real business user
+and stop the session when satisfied. However, because of `{shinytest2}` headless capabilities, we could
+manipulate the app with `{shinytest2}` helpers such as `set_inputs` or raw 
+JavaScript code to achieve the same goal. 
+
+There is a tiny technical subtility to overcome. By default, `{shinytest2}` starts the app on a given port and the headless browser (Chrome) is then connected to the same port. This would be an issue with
+`{shinyloadtest}` since the recorder does not listen to the same port, which is `8600`. 
+In practice, we'll have to:
+
+- Start the Shiny app as a background process on a given port. 
+- Fire the load test recorder.
+- Connect Chrome to the recorder on port `8600`. 
+
+### Launch the background app
+
+We leverage the `{callr}` package which exposes a convenient API to start R processes in the
+background, that is, without blocking the main R process. Below shows the code to start
+a Shiny app located at `path` on a specific port and run the load test recorder on the same port:
+
+``` r
+# Main shiny app
+shiny_bg <- function(path, port) {
+ # main app
+  options(shiny.port = port)
+  shiny::runApp(path)
+}
+
+# Start recorder
+recorder_bg <- function(port) {
+  shinyloadtest::record_session(
+    target_app_url = sprintf("http://127.0.0.1:%s", port),
+    host = "127.0.0.1",
+    port = 8600,
+    output_file = "recording.log",
+    open_browser = FALSE
+  )
+}
+```
+
+We can pass this function to the `start_r_bg()` function:
+
+```r
+start_r_bg <- function(fun, path = NULL, port = 3515) {
+ 
+  # remove NULL elements
+  args <- Filter(Negate(is.null), list(path = path, port = port))
+
+  process <- callr::r_bg(
+    func = fun,
+    args = args,
+    stderr= "",
+    stdout = ""
+  )
+
+  while (any(is.na(pingr::ping_port("127.0.0.1", 3515)))) {
+    message("Waiting for Shiny app to start...")
+    Sys.sleep(0.1)
+  }
+
+  attempt::stop_if_not(
+    process$is_alive(),
+    msg = "Unable to launch the subprocess"
+  )
+
+  process
+}
+```
+
+`r_bg()` starts a background R process passing the corresponding function and parameters.
+We provide some log elements and safety guard in case the app couldn't start. 
+To launch the app and recorder we simply call:
+
+``` r
+target <- start_r_bg(shiny_bg, path = "vignettes/non-optimized-app/app.R")
+# Listening on 127.0.0.1:3515
+recorder <- start_r_bg(recorder_bg)
+# Listening on 127.0.0.1:8600
+```
+
+### Connect Chrome
+
+The previous part was the most technical step. Now, we only have to start a Chrome headless
+browser on port `8600`, where the load test recorder runs. You'll notice that `{shinytest2}`
+also supports remote urls. We ensure to set a consistent load timeout which would avoid to see a `{shinytest2}` warning:
+
+```
+{shinytest2} R  info 15:25:37.36 Error while initializing AppDriver:
+                                 Shiny app did not become stable in 10000ms.
+```
+
+``` r
+# start headless chrome (points to recorder!).
+# AppDriver also support remote urls.
+chrome <- shinytest2::AppDriver$new("http://127.0.0.1:8600", load_timeout = 15000)
+```
+
+Below shows the list of R processes running so far in the background:
+
+```
+$ netstat -lntp
+
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 127.0.0.1:8600          0.0.0.0:*               LISTEN      361115/R            
+tcp        0      0 127.0.0.1:3515          0.0.0.0:*               LISTEN      361101/R            
+tcp        0      0 127.0.0.1:44179         0.0.0.0:*               LISTEN      359555/google-chrom
+```
+
+If everything is successful, you should see a __Client connected__ message in the R console. 
+We then change some inputs without forgeting the timeout:
+
+``` r
+chrome$set_inputs(mu = 4, timeout_ = 15000)
+```
+
+We can inspect the logs with the help of `chrome$get_log()`, to check whether everything run smoothly:
+
+```
+chrome$get_log()
+# {shinytest2} R  info 14:27:00.80 Start AppDriver initialization
+# {shinytest2} R  info 14:27:00.82 Creating new ChromoteSession
+# {shinytest2} R  info 14:27:02.20 Navigating to Shiny app
+# {shinytest2} R  info 14:27:02.57 Injecting shiny-tracer.js
+# {chromote}   JS info 14:27:02.61 shinytest2; jQuery not found
+# {chromote}   JS info 14:27:02.63 shinytest2; Loaded
+# {shinytest2} R  info 14:27:02.64 Waiting for Shiny to become ready
+# {chromote}   JS info 14:27:02.72 shinytest2; jQuery found
+# {chromote}   JS info 14:27:02.73 shinytest2; Waiting for shiny session to connect
+# {chromote}   JS info 14:27:03.12 shinytest2; Connected
+# {shinytest2} R  info 14:27:03.17 Waiting for Shiny to become idle for 200ms within 10000ms
+# {chromote}   JS info 14:27:03.18 shinytest2; Waiting for Shiny to be stable
+# {chromote}   JS info 14:27:03.27 shinytest2; shiny:busy
+# {chromote}   JS info 14:27:06.28 shinytest2; shiny:idle
+# {chromote}   JS info 14:27:06.30 shinytest2; shiny:value brussels
+# {chromote}   JS info 14:27:06.48 shinytest2; Shiny has been idle for 200ms
+# {shinytest2} R  info 14:27:06.48 Shiny app started
+# {shinytest2} R  info 14:30:17.79 Setting inputs: 'mu'', ''X'', ''Y'
+# {chromote}   JS info 14:30:17.81 shinytest2; inputQueue: adding mu
+# {chromote}   JS info 14:30:17.81 shinytest2; inputQueue: adding X
+# {chromote}   JS info 14:30:17.81 shinytest2; inputQueue: adding Y
+# {chromote}   JS info 14:30:17.82 shinytest2; inputQueue: flushing mu
+# {chromote}   JS info 14:30:17.83 shinytest2; inputQueue: flushing X
+# {chromote}   JS info 14:30:17.83 shinytest2; inputQueue: flushing Y
+# {chromote}   JS info 14:30:17.87 shinytest2; shiny:busy
+# {chromote}   JS info 14:30:20.42 shinytest2; shiny:idle
+# {chromote}   JS info 14:30:20.46 shinytest2; shiny:value brussels
+# {shinytest2} R  info 14:30:20.47 Finished setting inputs. Timedout: FALSE
+```
+
+Once satisifed, we may close the headless connection to stop the recorder:
+
+``` r
+# clean
+chrome$stop()
+# needed to avoid
+# java.lang.IllegalStateException: last event in log not a
+# WS_CLOSE (did you close the tab after recording?)
+Sys.sleep(2)
+```
+
+### Replay with shinycannon
+
+If you remember, the final step consists of replaying the main session in parallel. 
+We start shinycannon with `5` workers and wait:
+
+``` r
+target_url <- "http://127.0.0.1:3515"
+workers <- 5
+system(
+  sprintf(
+    "shinycannon recording.log %s --workers %s --loaded-duration-minutes 2 --output-dir run1",
+    target_url, workers
+  )
+)
+
+# shinycannon replay
+#2022-05-09 14:37:18.549 INFO [thread00] - Detected target application type: R/Shiny
+#2022-05-09 14:37:18.560 INFO [thread00] - Waiting for warmup to complete
+#2022-05-09 14:37:18.554 INFO [thread01] - Warming up
+#2022-05-09 14:37:18.562 INFO [progress] - Running: 0, Failed: 0, Done: 0
+#2022-05-09 14:37:23.563 INFO [progress] - Running: 1, Failed: 0, Done: 0
+```
+
+If you see any weird error message in the shinycannon log, we suggest to re-run the
+recording session and try again. 
+
+### Report generation
+
+The report generation is quite straightforward:
+
+``` r
+# Close the running app
+target$kill()
+
+# Treat data and generate report
+df <- shinyloadtest::load_runs("run1")
+shinyloadtest::shinyloadtest_report(
+  df,
+  "public/load-test.html",
+  self_contained = TRUE,
+  open_browser = FALSE
+)
+```
+
+We don't forget to clean the target app so as to kill the underlying process.
+
+### Automating with Github Actions
+
+Now, it is time to do all of this in CI/CD. For convenience, we wrap all the previous step in a single function:
+
+``` r
+record_loadtest <- function(path, timeout = 15, workers = 5) {
+  message("\n---- BEGIN LOAD-TEST ---- \n")
+  # start app + recorder
+  target <- start_r_bg(shiny_bg, path = path)
+  recorder <- start_r_bg(recorder_bg)
+
+  # start headless chrome (points to recorder!).
+  # AppDriver also support remote urls.
+  chrome <- shinytest2::AppDriver$new(
+    "http://127.0.0.1:8600",
+    load_timeout = timeout * 1000
+  )
+
+  chrome$set_inputs(mu = 4, timeout_ = timeout * 1000)
+
+  # clean
+  chrome$stop()
+  # needed to avoid
+  # java.lang.IllegalStateException: last event in log not a
+  # WS_CLOSE (did you close the tab after recording?)
+  Sys.sleep(2)
+
+  # shinycannon (maybe expose other params later ...)
+  target_url <- "http://127.0.0.1:3515"
+  system(
+    sprintf(
+      "shinycannon recording.log %s --workers %s --loaded-duration-minutes 2 --output-dir run1",
+      target_url, workers
+    )
+  )
+
+  target$kill()
+
+  # Treat data and generate report
+  df <- shinyloadtest::load_runs("run1")
+  shinyloadtest::shinyloadtest_report(
+    df,
+    "public/load-test.html",
+    self_contained = TRUE,
+    open_browser = FALSE
+  )
+}
+```
+
+Below is the necessary GitHub Actions yaml file:
+
+
+```yaml
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+name: shiny-loadtest-ci
+
+jobs:
+  shiny-loadtest-ci:
+    runs-on: ${{ matrix.config.os }}
+    permissions:
+      contents: write
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-latest,   r: 'release'}
+          - {os: ubuntu-latest,   r: 'oldrel-1'}
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v2
+      #- uses: r-lib/actions/setup-pandoc@v2
+      #  with:
+      #    pandoc-version: '2.17.1' # The pandoc version to download (if necessary) and use.
+      - uses: r-lib/actions/setup-r@v2
+      - name: Install libcurl
+        if: ${{ runner.os == 'Linux'  }}
+        run: sudo apt-get install -y libcurl4-openssl-dev
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          cache-version: 2
+          #extra-packages: |
+          #  any::shinyloadtest
+
+      - name: Install shinycannon 💥 and Chrome 🌐
+        run: |
+          sudo bash -c 'apt-get update; apt-get install -y default-jre-headless; apt-get clean; rm -rf /var/lib/apt/lists/*'
+          wget https://github.com/rstudio/shinycannon/releases/download/v1.1.3/shinycannon_1.1.3-dd43f6b_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          dpkg -i ./*.deb
+
+      - name: Run load test 🏥
+        shell: Rscript {0}
+        run: devtools::load_all(); record_loadtest(path = "vignettes/non-optimized-app/app.R");
+
+      - name: Deploy to GitHub pages 🚀
+        if: github.event_name != 'pull_request'
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          clean: false
+          branch: gh-pages
+          folder: public
+```
