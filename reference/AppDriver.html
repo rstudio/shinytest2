@@ -121,7 +121,8 @@ method:
 <a href="https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html" class="external-link"><code><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">shiny::exportTestValues()</a></code></a>.
 This under utilized method exposes internal values of your app
 without needing to create a corresponding input value or output value.</p>
-<p>For example:</p><div class="sourceCode r"><pre><code><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span>
+<p>For example:</p>
+<p></p><div class="sourceCode r"><pre><code><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span>
 <span class="va">shiny_app</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span>
   <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span>
     <span class="fu"><a href="https://rdrr.io/pkg/htmltools/man/builder.html" class="external-link">h1</a></span><span class="op">(</span><span class="st">"Pythagorean theorem"</span><span class="op">)</span>,
@@ -168,7 +169,8 @@ document.</p>
 
 <p>The two main expectation methods: <code>$expect_values()</code> and <code>$expect_screenshot()</code>
 eventually wrap <code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">testthat::expect_snapshot_file()</a></code>.</p>
-<p>Their underlying logic is similar to:</p><div class="sourceCode r"><pre><code><span class="co">## Expect values</span>
+<p>Their underlying logic is similar to:</p>
+<p></p><div class="sourceCode r"><pre><code><span class="co">## Expect values</span>
 <span class="va">tmpfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".json"</span><span class="op">)</span>
 <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/read_json.html" class="external-link">write_json</a></span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="fu">get_values</span><span class="op">(</span><span class="op">)</span>, <span class="va">tmpfile</span><span class="op">)</span>
 <span class="fu">expect_snapshot_file</span><span class="op">(</span>
@@ -201,39 +203,39 @@ eventually wrap <code><a href="https://testthat.r-lib.org/reference/expect_snaps
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
-<ul><li><p><a href="#method-new"><code>AppDriver$new()</code></a></p></li>
-<li><p><a href="#method-view"><code>AppDriver$view()</code></a></p></li>
-<li><p><a href="#method-click"><code>AppDriver$click()</code></a></p></li>
-<li><p><a href="#method-set_inputs"><code>AppDriver$set_inputs()</code></a></p></li>
-<li><p><a href="#method-upload_file"><code>AppDriver$upload_file()</code></a></p></li>
-<li><p><a href="#method-expect_values"><code>AppDriver$expect_values()</code></a></p></li>
-<li><p><a href="#method-get_value"><code>AppDriver$get_value()</code></a></p></li>
-<li><p><a href="#method-get_values"><code>AppDriver$get_values()</code></a></p></li>
-<li><p><a href="#method-expect_download"><code>AppDriver$expect_download()</code></a></p></li>
-<li><p><a href="#method-get_download"><code>AppDriver$get_download()</code></a></p></li>
-<li><p><a href="#method-expect_text"><code>AppDriver$expect_text()</code></a></p></li>
-<li><p><a href="#method-get_text"><code>AppDriver$get_text()</code></a></p></li>
-<li><p><a href="#method-expect_html"><code>AppDriver$expect_html()</code></a></p></li>
-<li><p><a href="#method-get_html"><code>AppDriver$get_html()</code></a></p></li>
-<li><p><a href="#method-expect_js"><code>AppDriver$expect_js()</code></a></p></li>
-<li><p><a href="#method-get_js"><code>AppDriver$get_js()</code></a></p></li>
-<li><p><a href="#method-run_js"><code>AppDriver$run_js()</code></a></p></li>
-<li><p><a href="#method-expect_screenshot"><code>AppDriver$expect_screenshot()</code></a></p></li>
-<li><p><a href="#method-get_screenshot"><code>AppDriver$get_screenshot()</code></a></p></li>
-<li><p><a href="#method-wait_for_idle"><code>AppDriver$wait_for_idle()</code></a></p></li>
-<li><p><a href="#method-wait_for_value"><code>AppDriver$wait_for_value()</code></a></p></li>
-<li><p><a href="#method-wait_for_js"><code>AppDriver$wait_for_js()</code></a></p></li>
-<li><p><a href="#method-expect_unique_names"><code>AppDriver$expect_unique_names()</code></a></p></li>
-<li><p><a href="#method-get_dir"><code>AppDriver$get_dir()</code></a></p></li>
-<li><p><a href="#method-get_url"><code>AppDriver$get_url()</code></a></p></li>
-<li><p><a href="#method-get_window_size"><code>AppDriver$get_window_size()</code></a></p></li>
-<li><p><a href="#method-set_window_size"><code>AppDriver$set_window_size()</code></a></p></li>
-<li><p><a href="#method-get_chromote_session"><code>AppDriver$get_chromote_session()</code></a></p></li>
-<li><p><a href="#method-get_variant"><code>AppDriver$get_variant()</code></a></p></li>
-<li><p><a href="#method-get_logs"><code>AppDriver$get_logs()</code></a></p></li>
-<li><p><a href="#method-log_message"><code>AppDriver$log_message()</code></a></p></li>
-<li><p><a href="#method-stop"><code>AppDriver$stop()</code></a></p></li>
-</ul></div><p></p><hr><a id="method-new"></a><div class="section">
+<ul><li><p><a href="#method-AppDriver-new"><code>AppDriver$new()</code></a></p></li>
+<li><p><a href="#method-AppDriver-view"><code>AppDriver$view()</code></a></p></li>
+<li><p><a href="#method-AppDriver-click"><code>AppDriver$click()</code></a></p></li>
+<li><p><a href="#method-AppDriver-set_inputs"><code>AppDriver$set_inputs()</code></a></p></li>
+<li><p><a href="#method-AppDriver-upload_file"><code>AppDriver$upload_file()</code></a></p></li>
+<li><p><a href="#method-AppDriver-expect_values"><code>AppDriver$expect_values()</code></a></p></li>
+<li><p><a href="#method-AppDriver-get_value"><code>AppDriver$get_value()</code></a></p></li>
+<li><p><a href="#method-AppDriver-get_values"><code>AppDriver$get_values()</code></a></p></li>
+<li><p><a href="#method-AppDriver-expect_download"><code>AppDriver$expect_download()</code></a></p></li>
+<li><p><a href="#method-AppDriver-get_download"><code>AppDriver$get_download()</code></a></p></li>
+<li><p><a href="#method-AppDriver-expect_text"><code>AppDriver$expect_text()</code></a></p></li>
+<li><p><a href="#method-AppDriver-get_text"><code>AppDriver$get_text()</code></a></p></li>
+<li><p><a href="#method-AppDriver-expect_html"><code>AppDriver$expect_html()</code></a></p></li>
+<li><p><a href="#method-AppDriver-get_html"><code>AppDriver$get_html()</code></a></p></li>
+<li><p><a href="#method-AppDriver-expect_js"><code>AppDriver$expect_js()</code></a></p></li>
+<li><p><a href="#method-AppDriver-get_js"><code>AppDriver$get_js()</code></a></p></li>
+<li><p><a href="#method-AppDriver-run_js"><code>AppDriver$run_js()</code></a></p></li>
+<li><p><a href="#method-AppDriver-expect_screenshot"><code>AppDriver$expect_screenshot()</code></a></p></li>
+<li><p><a href="#method-AppDriver-get_screenshot"><code>AppDriver$get_screenshot()</code></a></p></li>
+<li><p><a href="#method-AppDriver-wait_for_idle"><code>AppDriver$wait_for_idle()</code></a></p></li>
+<li><p><a href="#method-AppDriver-wait_for_value"><code>AppDriver$wait_for_value()</code></a></p></li>
+<li><p><a href="#method-AppDriver-wait_for_js"><code>AppDriver$wait_for_js()</code></a></p></li>
+<li><p><a href="#method-AppDriver-expect_unique_names"><code>AppDriver$expect_unique_names()</code></a></p></li>
+<li><p><a href="#method-AppDriver-get_dir"><code>AppDriver$get_dir()</code></a></p></li>
+<li><p><a href="#method-AppDriver-get_url"><code>AppDriver$get_url()</code></a></p></li>
+<li><p><a href="#method-AppDriver-get_window_size"><code>AppDriver$get_window_size()</code></a></p></li>
+<li><p><a href="#method-AppDriver-set_window_size"><code>AppDriver$set_window_size()</code></a></p></li>
+<li><p><a href="#method-AppDriver-get_chromote_session"><code>AppDriver$get_chromote_session()</code></a></p></li>
+<li><p><a href="#method-AppDriver-get_variant"><code>AppDriver$get_variant()</code></a></p></li>
+<li><p><a href="#method-AppDriver-get_logs"><code>AppDriver$get_logs()</code></a></p></li>
+<li><p><a href="#method-AppDriver-log_message"><code>AppDriver$log_message()</code></a></p></li>
+<li><p><a href="#method-AppDriver-stop"><code>AppDriver$stop()</code></a></p></li>
+</ul></div><p></p><hr><a id="method-AppDriver-new"></a><div class="section">
 <h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Initialize an <code>AppDriver</code> object</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
@@ -384,7 +386,7 @@ app$expect_values()
 </div>
 
 
-</div><p></p><hr><a id="method-view"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-view"></a><div class="section">
 <h3 id="method-view-">Method <code>view()</code><a class="anchor" aria-label="anchor" href="#method-view-"></a></h3>
 <p>View the Shiny application</p>
 <p>Calls <code>$view()</code> on the <code>ChromoteSession</code> object to <em>view</em> your Shiny
@@ -404,7 +406,7 @@ app$view()
 </div>
 
 
-</div><p></p><hr><a id="method-click"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-click"></a><div class="section">
 <h3 id="method-click-">Method <code>click()</code><a class="anchor" aria-label="anchor" href="#method-click-"></a></h3>
 <p>Click an element</p>
 <p>Find a Shiny input/output value or DOM CSS selector and click it using
@@ -453,7 +455,7 @@ cat(app$get_text("#view"))
 </div>
 
 
-</div><p></p><hr><a id="method-set_inputs"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-set_inputs"></a><div class="section">
 <h3 id="method-set-inputs-">Method <code>set_inputs()</code><a class="anchor" aria-label="anchor" href="#method-set-inputs-"></a></h3>
 <p>Set input values</p>
 <p>Set Shiny inputs by sending the value to the Chrome browser and
@@ -512,7 +514,7 @@ cat(app$get_text("#view"))
 </div>
 
 
-</div><p></p><hr><a id="method-upload_file"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-upload_file"></a><div class="section">
 <h3 id="method-upload-file-">Method <code>upload_file()</code><a class="anchor" aria-label="anchor" href="#method-upload-file-"></a></h3>
 <p>Upload a file</p>
 <p>Uploads a file to the specified file input.</p><div class="section">
@@ -554,7 +556,7 @@ app$upload_file(file1 = tmpfile)
 </div>
 
 
-</div><p></p><hr><a id="method-expect_values"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-expect_values"></a><div class="section">
 <h3 id="method-expect-values-">Method <code>expect_values()</code><a class="anchor" aria-label="anchor" href="#method-expect-values-"></a></h3>
 <p>Expect <code>input</code>, <code>output</code>, and <code>export</code> values</p>
 <p>A JSON snapshot is saved of given the results from the underlying call to <code>$get_values()</code>.</p>
@@ -662,7 +664,7 @@ app$expect_values(input = "A", output = "C")
 </div>
 
 
-</div><p></p><hr><a id="method-get_value"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-get_value"></a><div class="section">
 <h3 id="method-get-value-">Method <code>get_value()</code><a class="anchor" aria-label="anchor" href="#method-get-value-"></a></h3>
 <p>Get a single <code>input</code>, <code>output</code>, or <code>export</code> value</p>
 <p>This is a helper function around <code>$get_values()</code> to retrieve a single
@@ -719,7 +721,7 @@ app$get_values(output = "caption")$output$caption
 </div>
 
 
-</div><p></p><hr><a id="method-get_values"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-get_values"></a><div class="section">
 <h3 id="method-get-values-">Method <code>get_values()</code><a class="anchor" aria-label="anchor" href="#method-get-values-"></a></h3>
 <p>Get <code>input</code>, <code>output</code>, and <code>export</code> values</p>
 <p>Retrieves a list of all known <code>input</code>, <code>output</code>, or <code>export</code> values. This
@@ -824,7 +826,7 @@ str(app$get_values(input = "A", output = "C"))
 </div>
 
 
-</div><p></p><hr><a id="method-expect_download"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-expect_download"></a><div class="section">
 <h3 id="method-expect-download-">Method <code>expect_download()</code><a class="anchor" aria-label="anchor" href="#method-expect-download-"></a></h3>
 <p>Expect a downloadable file</p>
 <p>Given a <code><a href="https://rdrr.io/pkg/shiny/man/downloadButton.html" class="external-link">shiny::downloadButton()</a></code>/<code><a href="https://rdrr.io/pkg/shiny/man/downloadButton.html" class="external-link">shiny::downloadLink()</a></code> <code>output</code> ID, the corresponding
@@ -884,7 +886,7 @@ app$expect_download("downloadData", compare = testthat::compare_file_text)
 </div>
 
 
-</div><p></p><hr><a id="method-get_download"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-get_download"></a><div class="section">
 <h3 id="method-get-download-">Method <code>get_download()</code><a class="anchor" aria-label="anchor" href="#method-get-download-"></a></h3>
 <p>Get downloadable file</p>
 <p>Given a <code><a href="https://rdrr.io/pkg/shiny/man/downloadButton.html" class="external-link">shiny::downloadButton()</a></code>/<code><a href="https://rdrr.io/pkg/shiny/man/downloadButton.html" class="external-link">shiny::downloadLink()</a></code> <code>output</code> ID, the corresponding
@@ -934,7 +936,7 @@ app$get_download("downloadData", filename = "./myfile.csv")
 </div>
 
 
-</div><p></p><hr><a id="method-expect_text"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-expect_text"></a><div class="section">
 <h3 id="method-expect-text-">Method <code>expect_text()</code><a class="anchor" aria-label="anchor" href="#method-expect-text-"></a></h3>
 <p>Expect snapshot of UI text</p>
 <p><code>$expect_text()</code> will extract the text value of all matching elements via
@@ -982,7 +984,7 @@ app$expect_text("h2")
 </div>
 
 
-</div><p></p><hr><a id="method-get_text"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-get_text"></a><div class="section">
 <h3 id="method-get-text-">Method <code>get_text()</code><a class="anchor" aria-label="anchor" href="#method-get-text-"></a></h3>
 <p>Get UI text</p>
 <p><code>$get_text()</code> will extract the text value of all matching elements via
@@ -1018,7 +1020,7 @@ app$get_text("h2")
 </div>
 
 
-</div><p></p><hr><a id="method-expect_html"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-expect_html"></a><div class="section">
 <h3 id="method-expect-html-">Method <code>expect_html()</code><a class="anchor" aria-label="anchor" href="#method-expect-html-"></a></h3>
 <p>Expect snapshot of UI HTML</p>
 <p><code>$expect_html()</code> will extract the full DOM structures of each matching
@@ -1071,7 +1073,7 @@ app$expect_html("#caption")
 </div>
 
 
-</div><p></p><hr><a id="method-get_html"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-get_html"></a><div class="section">
 <h3 id="method-get-html-">Method <code>get_html()</code><a class="anchor" aria-label="anchor" href="#method-get-html-"></a></h3>
 <p>Get UI HTML</p>
 <p><code>$get()</code> will extract the full DOM structures of each matching
@@ -1120,7 +1122,7 @@ cat(app$get_html(".shiny-input-container")[1])
 </div>
 
 
-</div><p></p><hr><a id="method-expect_js"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-expect_js"></a><div class="section">
 <h3 id="method-expect-js-">Method <code>expect_js()</code><a class="anchor" aria-label="anchor" href="#method-expect-js-"></a></h3>
 <p>Expect snapshot of JavaScript script output</p>
 <p>This is a building block function that may be called by other functions.
@@ -1189,7 +1191,7 @@ app$expect_js("window.test_counter;")
 </div>
 
 
-</div><p></p><hr><a id="method-get_js"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-get_js"></a><div class="section">
 <h3 id="method-get-js-">Method <code>get_js()</code><a class="anchor" aria-label="anchor" href="#method-get-js-"></a></h3>
 <p>Execute JavaScript code in the browser and return the result</p>
 <p>This function will block the local R session until the code has finished
@@ -1283,7 +1285,7 @@ app$get_js(js_txt)
 </div>
 
 
-</div><p></p><hr><a id="method-run_js"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-run_js"></a><div class="section">
 <h3 id="method-run-js-">Method <code>run_js()</code><a class="anchor" aria-label="anchor" href="#method-run-js-"></a></h3>
 <p>Execute JavaScript code in the browser</p>
 <p>This function will block the local R session until the code has finished
@@ -1344,7 +1346,7 @@ app$get_js(js_txt)
 </div>
 
 
-</div><p></p><hr><a id="method-expect_screenshot"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-expect_screenshot"></a><div class="section">
 <h3 id="method-expect-screenshot-">Method <code>expect_screenshot()</code><a class="anchor" aria-label="anchor" href="#method-expect-screenshot-"></a></h3>
 <p>Expect a screenshot of the Shiny application</p>
 <p>This method takes a screenshot of the application (of only the <code>selector</code>
@@ -1429,7 +1431,7 @@ app$expect_screenshot(selector = "#distPlot")
 </div>
 
 
-</div><p></p><hr><a id="method-get_screenshot"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-get_screenshot"></a><div class="section">
 <h3 id="method-get-screenshot-">Method <code>get_screenshot()</code><a class="anchor" aria-label="anchor" href="#method-get-screenshot-"></a></h3>
 <p>Take a screenshot</p>
 <p>Take a screenshot of the Shiny application.</p><div class="section">
@@ -1503,7 +1505,7 @@ showimage::show_image(tmpfile)
 </div>
 
 
-</div><p></p><hr><a id="method-wait_for_idle"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-wait_for_idle"></a><div class="section">
 <h3 id="method-wait-for-idle-">Method <code>wait_for_idle()</code><a class="anchor" aria-label="anchor" href="#method-wait-for-idle-"></a></h3>
 <p>Wait for Shiny to not be busy (idle) for a set amount of time</p>
 <p>Waits until Shiny has not been busy for a set duration of time, e.g. no
@@ -1574,7 +1576,7 @@ identical(pre_value, post_value)
 </div>
 
 
-</div><p></p><hr><a id="method-wait_for_value"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-wait_for_value"></a><div class="section">
 <h3 id="method-wait-for-value-">Method <code>wait_for_value()</code><a class="anchor" aria-label="anchor" href="#method-wait-for-value-"></a></h3>
 <p>Wait for a new Shiny value</p>
 <p>Waits until an <code>input</code>, <code>output</code>, or <code>export</code> Shiny value is not one of
@@ -1671,7 +1673,7 @@ app$get_value(output = "total")
 </div>
 
 
-</div><p></p><hr><a id="method-wait_for_js"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-wait_for_js"></a><div class="section">
 <h3 id="method-wait-for-js-">Method <code>wait_for_js()</code><a class="anchor" aria-label="anchor" href="#method-wait-for-js-"></a></h3>
 <p>Wait for a JavaScript expression to be true</p>
 <p>Waits until a JavaScript <code>expr</code>ession evaluates to <code>true</code> or the
@@ -1724,7 +1726,7 @@ app$wait_for_js("complicated_condition();")
 </div>
 
 
-</div><p></p><hr><a id="method-expect_unique_names"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-expect_unique_names"></a><div class="section">
 <h3 id="method-expect-unique-names-">Method <code>expect_unique_names()</code><a class="anchor" aria-label="anchor" href="#method-expect-unique-names-"></a></h3>
 <p>Expect unique input and output names.</p>
 <p>If the HTML has duplicate input or output elements with matching <code>id</code>
@@ -1770,7 +1772,7 @@ app$expect_unique_names()
 </div>
 
 
-</div><p></p><hr><a id="method-get_dir"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-get_dir"></a><div class="section">
 <h3 id="method-get-dir-">Method <code>get_dir()</code><a class="anchor" aria-label="anchor" href="#method-get-dir-"></a></h3>
 <p>Retrieve the Shiny app path</p><div class="section">
 <h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
@@ -1795,7 +1797,7 @@ identical(app$get_dir(), app_path)
 </div>
 
 
-</div><p></p><hr><a id="method-get_url"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-get_url"></a><div class="section">
 <h3 id="method-get-url-">Method <code>get_url()</code><a class="anchor" aria-label="anchor" href="#method-get-url-"></a></h3>
 <p>Retrieve the Shiny app URL</p><div class="section">
 <h4 id="usage-24">Usage<a class="anchor" aria-label="anchor" href="#usage-24"></a></h4>
@@ -1817,7 +1819,7 @@ browseURL(app$get_url())
 </div>
 
 
-</div><p></p><hr><a id="method-get_window_size"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-get_window_size"></a><div class="section">
 <h3 id="method-get-window-size-">Method <code>get_window_size()</code><a class="anchor" aria-label="anchor" href="#method-get-window-size-"></a></h3>
 <p>Get window size</p>
 <p>Get current size of the browser window, as list of numeric scalars
@@ -1842,7 +1844,7 @@ app$get_window_size()
 </div>
 
 
-</div><p></p><hr><a id="method-set_window_size"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-set_window_size"></a><div class="section">
 <h3 id="method-set-window-size-">Method <code>set_window_size()</code><a class="anchor" aria-label="anchor" href="#method-set-window-size-"></a></h3>
 <p>Sets size of the browser window.</p><div class="section">
 <h4 id="usage-26">Usage<a class="anchor" aria-label="anchor" href="#usage-26"></a></h4>
@@ -1890,7 +1892,7 @@ app$get_window_size()
 </div>
 
 
-</div><p></p><hr><a id="method-get_chromote_session"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-get_chromote_session"></a><div class="section">
 <h3 id="method-get-chromote-session-">Method <code>get_chromote_session()</code><a class="anchor" aria-label="anchor" href="#method-get-chromote-session-"></a></h3>
 <p>Get Chromote Session</p>
 <p>Get the <code>ChromoteSession</code> object from the <span class="pkg">chromote</span> package.</p><div class="section">
@@ -1923,7 +1925,7 @@ b$Runtime$evaluate("1 + 1")
 </div>
 
 
-</div><p></p><hr><a id="method-get_variant"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-get_variant"></a><div class="section">
 <h3 id="method-get-variant-">Method <code>get_variant()</code><a class="anchor" aria-label="anchor" href="#method-get-variant-"></a></h3>
 <p>Get the variant</p>
 <p>Get the <code>variant</code> supplied during initialization</p><div class="section">
@@ -1953,7 +1955,7 @@ app$get_variant()
 </div>
 
 
-</div><p></p><hr><a id="method-get_logs"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-get_logs"></a><div class="section">
 <h3 id="method-get-logs-">Method <code>get_logs()</code><a class="anchor" aria-label="anchor" href="#method-get-logs-"></a></h3>
 <p>Get all logs</p>
 <p>Retrieve all of the debug logs that have been recorded.
@@ -2118,7 +2120,7 @@ subset(log, level == "websocket")
 </div>
 
 
-</div><p></p><hr><a id="method-log_message"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-log_message"></a><div class="section">
 <h3 id="method-log-message-">Method <code>log_message()</code><a class="anchor" aria-label="anchor" href="#method-log-message-"></a></h3>
 <p>Add a message to the <span class="pkg">shinytest2</span> log.</p><div class="section">
 <h4 id="usage-30">Usage<a class="anchor" aria-label="anchor" href="#usage-30"></a></h4>
@@ -2146,7 +2148,7 @@ app$get_logs()
 </div>
 
 
-</div><p></p><hr><a id="method-stop"></a><div class="section">
+</div><p></p><hr><a id="method-AppDriver-stop"></a><div class="section">
 <h3 id="method-stop-">Method <code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code><a class="anchor" aria-label="anchor" href="#method-stop-"></a></h3>
 <p>Stop the Shiny application driver</p>
 <p>This method stops all known processes:</p><ul><li><p>The Shiny application in the background R process,</p></li>
