@@ -41,7 +41,9 @@ your Shiny application or Shiny runtime document.  This is similar to how
 \code{\link[testthat:test_package]{testthat::test_check()}} tests your R package but for your app.
 }
 \details{
-Example usage:\if{html}{\out{<div class="sourceCode r">}}\preformatted{## Interactive usage
+Example usage:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{## Interactive usage
 # Test Shiny app in current working directory
 shinytest2::test_app()
 
@@ -79,7 +81,9 @@ file path has be fixed, you may remove the warning statement.
 \pkg{testthat} tests in the \code{./tests/testthat} folder. If (for some rare
 reason) you have other non-\pkg{testthat} tests to execute, you can call
 \code{\link[shiny:runTests]{shiny::runTests()}}. This method will generically run all test runners and
-their associated tests.\if{html}{\out{<div class="sourceCode r">}}\preformatted{# Execute a single Shiny app's \{testthat\} file such as `./tests/testthat/test-shinytest2.R`
+their associated tests.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{# Execute a single Shiny app's \{testthat\} file such as `./tests/testthat/test-shinytest2.R`
 test_app(filter = "shinytest2")
 
 # Execute all \{testthat\} tests
