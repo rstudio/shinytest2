@@ -7,6 +7,7 @@ load_timeout  <- getOption("shinytest2.load.timeout")
 start_seed    <- getOption("shinytest2.seed")
 shiny_args    <- getOption("shinytest2.shiny.args")
 save_file     <- getOption("shinytest2.test_file")
+record_screen_size <- getOption("shinytest2.record_screen_size")
 allow_no_input_binding <- getOption("shinytest2.allow_no_input_binding")
 
 if (is.null(target_url) || is.null(app)) {
@@ -437,6 +438,9 @@ shinyApp(
             # If two setWindowSize events sandwich an outputEvent,
             # remove the first setWindowSize
             to_remove[length(to_remove) + 1] <- i - 2
+          } else if (!record_screen_size && curr_event$type == "setWindowSize") {
+            # If we're not recording screen size, remove all setWindowSize events
+            to_remove[length(to_remove) + 1] <- i
           }
         }
 
