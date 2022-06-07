@@ -23,32 +23,32 @@ Depends:
     testthat (>= 3.1.2)
 Imports:
     R6 (>= 2.4.0),
-    chromote (>= 0.1.0),
-    fs,
     callr,
-    crayon,
-    rlang (>= 0.3.0),
     checkmate (>= 2.0.0),
+    chromote (>= 0.1.0),
+    crayon,
     ellipsis,
+    fs,
+    globals (>= 0.14.0),
     httr,
     jsonlite,
     pingr,
+    rlang (>= 0.3.0),
     rmarkdown,
     shiny,
     withr
 Suggests:
     diffobj,
-    globals (>= 0.14.0),
     ggplot2,
-    vdiffr (>= 1.0.0),
+    knitr,
     plotly,
     rstudioapi,
     shinyWidgets,
     shinytest (>= 1.5.1),
     shinyvalidate (>= 0.1.2),
     showimage,
-    knitr,
-    usethis
+    usethis,
+    vdiffr (>= 1.0.0)
 Config/Needs/check:
     rstudio/shiny
 Config/Needs/website:
