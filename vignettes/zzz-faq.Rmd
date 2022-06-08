@@ -48,7 +48,7 @@ if (isTRUE(getOption("shiny.testmode"))) {
 
 ## How can I get the objects from files in my the R folder into the testing environment?
 
-Loading the support environment for a Shiny application requires a call to `shinytest2::load_app_env()` in `./tests/testthat/setup.R`. This method will load the `global.R` and all R files into the testing environment, similar to testing package R code.
+Loading the support environment for a Shiny application requires a call to `shinytest2::load_app_env()` in `./tests/testthat/setup-shinytest2.R`. This method will load the `global.R` and all R files into the testing environment, similar to testing package R code.
 
 This is not automatically performed as it may be costly to load the support environment.
 

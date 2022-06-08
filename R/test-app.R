@@ -71,7 +71,7 @@ NULL
 #' when calling `test_app()` inside of \pkg{testhat} test. The final testing context will
 #' have the format of `"{test_context} - {name} - {app_test_context}"`.
 #' @param check_setup If `TRUE`, the app will be checked for the presence of
-#' `./tests/testthat/setup.R`. This file must contain a call to
+#' `./tests/testthat/setup-shinytest2.R`. This file must contain a call to
 #' [`shinytest2::load_app_env()`].
 #' @param reporter Reporter to pass through to [`testthat::test_dir()`].
 #' @param stop_on_failure If missing, the default value of `TRUE` will be used. However, if missing and currently testing, `FALSE` will be used to seamlessly integrate the app reporter to `reporter`.
@@ -115,22 +115,30 @@ test_app <- function(
   app_dir <- app_dir_value(app_dir)
 
   if (isTRUE(check_setup)) {
-    setup_path <- fs::path(app_dir, "tests", "testthat", "setup.R")
-    if (!fs::file_exists(setup_path)) {
+    # Legacy support for `setup.R`; Same content, just different name
+    setup_paths <- fs::path(app_dir, "tests", "testthat", c("setup-shinytest2.R", "setup.R"))
+    setup_paths_exist <- fs::file_exists(setup_paths)
+    if (!any(setup_paths_exist)) {
       rlang::abort(
         c(
-          "No `setup.R` file found in `./tests/testthat`",
-          "i" = paste0("To create a `setup.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
+          "No `setup-shinytest2.R` file found in `./tests/testthat`",
+          "i" = paste0("To create a `setup-shinytest2.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
           "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
         )
       )
     }
-    lines <- read_utf8(setup_path)
-    if (!grepl("load_app_env", lines, fixed = TRUE)) {
+    found <- FALSE
+    for (setup_path in setup_paths) {
+      if (has_load_app_env(setup_path)) {
+        found <- TRUE
+        break
+      }
+    }
+    if (!found) {
       rlang::abort(
         c(
-          "No call to `shinytest2::load_app_env()` found in `./tests/testthat/setup.R`",
-          "i" = paste0("To create a `setup.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
+          "No call to `shinytest2::load_app_env()` found in `./tests/testthat/setup-shinytest2.R`",
+          "i" = paste0("To create a `setup-shinytest2.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
           "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
         )
       )
@@ -257,7 +265,7 @@ test_app <- function(
 #' This is useful when wanting access to functions or values created in the `./R` folder for testing purposes.
 #'
 #' Loading these files is not automatically performed by `test_app()` and must
-#' be called in `./tests/testthat/setup.R` if access to support file objects is
+#' be called in `./tests/testthat/setup-shinytest2.R` if access to support file objects is
 #' desired.
 #'
 #' @seealso [`use_shinytest2()`] for creating a testing setup file that
@@ -273,4 +281,15 @@ load_app_env <- function(
   globalrenv = rlang::caller_env()
 ) {
   shiny::loadSupport(app_dir, renv = renv, globalrenv = globalrenv)
+}
+
+
+has_load_app_env <- function(file) {
+  if (!fs::file_exists(file)) {
+    return(FALSE)
+  }
+
+  lines <- read_utf8(file)
+  has_call <- grepl("load_app_env", lines, fixed = TRUE)
+  return(has_call)
 }
