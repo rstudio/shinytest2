@@ -124,7 +124,7 @@
 <div class="section level2">
 <h2 id="how-can-i-get-the-objects-from-files-in-my-the-r-folder-into-the-testing-environment">How can I get the objects from files in my the R folder into the testing environment?<a class="anchor" aria-label="anchor" href="#how-can-i-get-the-objects-from-files-in-my-the-r-folder-into-the-testing-environment"></a>
 </h2>
-<p>Loading the support environment for a Shiny application requires a call to <code><a href="../reference/load_app_env.html">shinytest2::load_app_env()</a></code> in <code>./tests/testthat/setup.R</code>. This method will load the <code>global.R</code> and all R files into the testing environment, similar to testing package R code.</p>
+<p>Loading the support environment for a Shiny application requires a call to <code><a href="../reference/load_app_env.html">shinytest2::load_app_env()</a></code> in <code>./tests/testthat/setup-shinytest2.R</code>. This method will load the <code>global.R</code> and all R files into the testing environment, similar to testing package R code.</p>
 <p>This is not automatically performed as it may be costly to load the support environment.</p>
 </div>
 <div class="section level2">
