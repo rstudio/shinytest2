@@ -12,6 +12,9 @@
 
 * When setting a date time slider value, it can now handle array inputs properly. When recording a date time slider value, numeric values will not be recorded as milliseconds instead of seconds since epoch. (#223)
 
+* The recording browser window is now closed when either the "Save test and exit" or "Exit" buttons are clicked. (@daattali, #202)
+
+
 # shinytest2 0.1.0
 
 * Initial release of package
