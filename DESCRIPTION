@@ -93,3 +93,6 @@ Collate:
     'shinytest2-logs.R'
     'test-app.R'
     'use.R'
+LinkingTo: 
+    cpp11
+SystemRequirements: C++11
