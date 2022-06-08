@@ -14,6 +14,7 @@ record_test(
   test_file = "test-shinytest2.R",
   open_test_file = rlang::is_interactive(),
   allow_no_input_binding = NULL,
+  record_screen_size = TRUE,
   run_test = TRUE
 )
 }
@@ -50,6 +51,8 @@ bindings are recorded.
 }
 
 See \code{\link{AppDriver}}\verb{$set_inputs()} for more information.}
+
+\item{record_screen_size}{If \code{TRUE}, the screen size will be recorded when initialized and changed.}
 
 \item{run_test}{If \code{TRUE}, \code{test_file} will be executed after saving the recording.}
 }
