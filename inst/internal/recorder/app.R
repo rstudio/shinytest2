@@ -153,6 +153,16 @@ input_processors <- list(
   shiny.action = function(value) {
     structure("click", class = c("st2_click", "character"))
   },
+  shiny.datetime = function(value) {
+    if (is.list(value)) {
+      value <- unlist(value, recursive = FALSE)
+    }
+    if (is.numeric(value)) {
+      # Turn seconds into milliseconds
+      value <- value * 1000
+    }
+    input_processors$default(value)
+  },
 
   shiny.fileupload = function(value) {
     # Extract filenames, then send to default processor
