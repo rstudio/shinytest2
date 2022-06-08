@@ -164,6 +164,24 @@ app_initialize_ <- function(
 app_initialize <- function(self, private, ..., view = missing_arg()) {
   ckm8_assert_app_driver(self, private)
 
+  if (testthat::is_testing()) {
+    # Make sure chromote can be started. If not, skip test
+    chromote_can_be_started <- try(silent = TRUE, {
+      chrome_path <- chromote::find_chrome()
+      if (!is.character(chrome_path)) {
+        stop("Cannot find Chrome via `chromote::find_chrome()`")
+      }
+      # Should throw an error if Chrome is not found
+      chromote::default_chromote_object()$new_session()
+    })
+    if (inherits(chromote_can_be_started, "try-error")) {
+      # Display message
+      message(as.character(chromote_can_be_started))
+      # Skip test
+      testthat::skip("`shinytest2::AppDriver` can not be initialized as {chromote} can not be started")
+    }
+  }
+
   withCallingHandlers(
     app_initialize_(self, private, ..., view = view),
     error = function(e) {
