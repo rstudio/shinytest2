@@ -14,6 +14,8 @@
 
 * The recording browser window is now closed when either the "Save test and exit" or "Exit" buttons are clicked. (@daattali, #202)
 
+* When creating a test setup file for `{shinytest2}`, use the file path `tests/testthat/setup-shinytest2.R` instead of `tests/testthat/setup.R` to provide some quick context (#224)
+
 
 # shinytest2 0.1.0
 
