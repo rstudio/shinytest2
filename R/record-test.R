@@ -35,6 +35,7 @@
 #'   * be recorded.
 #'
 #'   See [`AppDriver`]`$set_inputs()` for more information.
+#' @param record_screen_size If `TRUE`, the screen size will be recorded when initialized and changed.
 #' @param run_test If `TRUE`, `test_file` will be executed after saving the recording.
 #' @seealso [`test_app()`]
 #' @export
@@ -52,6 +53,7 @@ record_test <- function(
   test_file = "test-shinytest2.R",
   open_test_file = rlang::is_interactive(),
   allow_no_input_binding = NULL,
+  record_screen_size = TRUE,
   run_test = TRUE
 ) {
   ellipsis::check_dots_empty()
@@ -120,6 +122,7 @@ record_test <- function(
       shinytest2.seed         = seed,
       shinytest2.shiny.args   = shiny_args,
       shinytest2.test_file    = test_file,
+      shinytest2.record_screen_size = isTRUE(record_screen_size),
       shinytest2.allow_no_input_binding = allow_no_input_binding
     ),
     # Make sure the recorder opens in an external browser
