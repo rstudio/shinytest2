@@ -1016,11 +1016,20 @@ Initialize an \code{AppDriver} object
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{app_dir}}{Directory containing your Shiny application or a run-time
-Shiny R Markdown document. By default, it retrieves
-\code{test_path("../../")} to allow for interactive and testing usage. A
-Shiny application URL can be provided, however snapshots will be saved
-in the current directory.}
+\item{\code{app_dir}}{This value can be many different things:
+\itemize{
+\item A directory containing your Shiny application or a run-time Shiny R
+Markdown document.
+\item A url pointing to your shiny application. (Don't forget to set
+\code{testmode = TRUE} when running your application!)
+\item A Shiny application object which inherits from \code{"shiny.appobj"}.
+}
+
+By default, \code{app_dir} is set to \code{test_path("../../")} to work in both
+interactive and testing usage.
+
+If a file path is not provided to \code{app_dir}, snapshots will be saved as
+if the root of the Shiny application was the current directory.}
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
