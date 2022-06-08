@@ -166,14 +166,21 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
 
   if (testthat::is_testing()) {
     # Make sure chromote can be started. If not, skip test
-    chromote_can_be_started <- try(silent = TRUE, {
-      chrome_path <- chromote::find_chrome()
-      if (!is.character(chrome_path)) {
-        stop("Cannot find Chrome via `chromote::find_chrome()`")
-      }
-      # Should throw an error if Chrome is not found
-      chromote::default_chromote_object()$new_session()
-    })
+    try_chromote <- function() {
+      try(silent = TRUE, {
+        # Should throw an error if Chrome is not found
+        chromote::default_chromote_object()$new_session()
+      })
+    }
+    if (on_ci() && is_windows()) {
+      # Windows likes to have a kick start on chromote before working
+      # https://github.com/rstudio/shinytest2/issues/209
+      # Try starting it before checking for it again: https://github.com/rstudio/shinytest2/issues/209#issuecomment-1121465705
+      try_chromote()
+      # Do not care about result; Asking again should be fast
+    }
+
+    chromote_can_be_started <- try_chromote()
     if (inherits(chromote_can_be_started, "try-error")) {
       # Display message
       message(as.character(chromote_can_be_started))
