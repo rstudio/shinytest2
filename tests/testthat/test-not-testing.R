@@ -1,4 +1,3 @@
-skip_on_cran() # Uses chromote
 require("shiny", quietly = TRUE, character.only = TRUE)
 
 test_that("Running an app not in testing mode has 404 handled when getting values", {

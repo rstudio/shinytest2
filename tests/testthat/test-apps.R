@@ -1,7 +1,3 @@
-skip_on_cran() # Uses chromote
-
-# TODO-future; Have theses tests run on CI
-
 app_dir <- test_path("apps/files-app-rmd")
 if (!dir.exists(file.path(app_dir, "tests", "testthat"))) {
   skip("App test folders have been ignored")
