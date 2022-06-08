@@ -176,8 +176,9 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
       # Windows likes to have a kick start on chromote before working
       # https://github.com/rstudio/shinytest2/issues/209
       # Try starting it before checking for it again: https://github.com/rstudio/shinytest2/issues/209#issuecomment-1121465705
-      try_chromote()
+
       # Do not care about result; Asking again should be fast
+      try_chromote()
     }
 
     chromote_can_be_started <- try_chromote()
