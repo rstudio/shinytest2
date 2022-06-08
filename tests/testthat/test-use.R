@@ -44,7 +44,7 @@ expect_configs <- function(runner, setup, ignore, package) {
 
   testthat::expect_equal(file.exists(file.path(app_dir, "tests/testthat.R")), runner, info = info)
 
-  testthat::expect_equal(file.exists(file.path(app_dir, "tests/testthat/setup.R")), setup, info = info)
+  testthat::expect_equal(file.exists(file.path(app_dir, "tests/testthat/setup-shinytest2.R")), setup, info = info)
 
   testthat::expect_equal(file.exists(file.path(app_dir, ".gitignore")), ignore, info = info)
   testthat::expect_equal(file.exists(file.path(app_dir, ".Rbuildignore")), ignore, info = info)
@@ -81,6 +81,6 @@ test_that("use_shinytest2_setup() creates a file with no warnings when being rea
   expect_warning({
 
     use_shinytest2_setup(temp_dir, quiet = TRUE)
-    readLines(file.path(temp_dir, "tests/testthat/setup.R"))
+    readLines(file.path(temp_dir, "tests/testthat/setup-shinytest2.R"))
   }, NA)
 })

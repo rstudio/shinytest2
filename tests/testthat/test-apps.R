@@ -42,7 +42,7 @@ test_that("after", {
 
 # Test all apps work as expected
 lapply(
-  dir(test_path("apps"), full.names = TRUE),
+  fs::dir_ls(test_path("apps"), type = "directory"),
   function(shiny_app_dir) {
     test_app(shiny_app_dir)
   }
