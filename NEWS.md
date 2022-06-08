@@ -16,6 +16,8 @@
 
 * When creating a test setup file for `{shinytest2}`, use the file path `tests/testthat/setup-shinytest2.R` instead of `tests/testthat/setup.R` to provide some quick context (#224)
 
+* When testing and `{chromote}` can not be started, the test will be skipped. When testing on windows in CI, `{chromote}` will get an attempt to be started (#225)
+
 
 # shinytest2 0.1.0
 
