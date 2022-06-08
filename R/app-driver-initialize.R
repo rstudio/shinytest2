@@ -166,8 +166,8 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
 
   if (testthat::is_testing()) {
     # Make sure chromote can be started. If not, skip test
-    try_chromote <- function() {
-      try(silent = TRUE, {
+    try_chromote <- function(silent = FALSE) {
+      try(silent = silent, {
         # Should throw an error if Chrome is not found
         chromote::default_chromote_object()$new_session()
       })
@@ -178,13 +178,12 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
       # Try starting it before checking for it again: https://github.com/rstudio/shinytest2/issues/209#issuecomment-1121465705
 
       # Do not care about result; Asking again should be fast
-      try_chromote()
+      try_chromote(silent = TRUE)
     }
 
-    chromote_can_be_started <- try_chromote()
+    # Display error if chromote is not found
+    chromote_can_be_started <- try_chromote(silent = FALSE)
     if (inherits(chromote_can_be_started, "try-error")) {
-      # Display message
-      message(as.character(chromote_can_be_started))
       # Skip test
       testthat::skip("`shinytest2::AppDriver` can not be initialized as {chromote} can not be started")
     }
