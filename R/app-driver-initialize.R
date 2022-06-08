@@ -173,9 +173,10 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
       })
     }
     if (on_ci() && is_windows()) {
-      # Windows likes to have a kick start on chromote before working
+      # Windows GHA needs a kick start for `{chromote}` to connect
       # https://github.com/rstudio/shinytest2/issues/209
-      # Try starting it before checking for it again: https://github.com/rstudio/shinytest2/issues/209#issuecomment-1121465705
+      # Try starting it before checking for it again:
+      # https://github.com/rstudio/shinytest2/issues/209#issuecomment-1121465705
 
       # Do not care about result; Asking again should be fast
       try_chromote(silent = TRUE)
