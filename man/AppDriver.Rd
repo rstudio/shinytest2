@@ -500,6 +500,14 @@ app$expect_screenshot()
 
 # Very brittle test
 app$expect_screenshot(selector = "#distPlot")
+
+# Test with more tolerance in pixel values
+app$expect_screenshot(
+  compare = function(old, new) {
+    # Allow the image to be different by 3 units in each RGB channel
+    compare_file_screenshot(old, new, tolerance = 3)
+  }
+)
 }
 
 ## ------------------------------------------------
@@ -2114,6 +2122,7 @@ recommended to use other expectation methods.
   screenshot_args = missing_arg(),
   delay = missing_arg(),
   selector = missing_arg(),
+  compare = compare_file_screenshot,
   name = NULL,
   cran = FALSE
 )}\if{html}{\out{</div>}}
@@ -2148,6 +2157,9 @@ portion of the page to be captured. This value can either be supplied as
 \code{selector} or \code{screenshot_args}'s selector slot. The \code{selector} parameter
 will have preference.}
 
+\item{\code{compare}}{Function used to compare two screenshot files. Defaults to
+\code{\link[=compare_file_screenshot]{compare_file_screenshot()}}.}
+
 \item{\code{name}}{The file name to be used for the snapshot. The file extension
 will overwritten to \code{.png}. By default, the \code{name} supplied to
 \code{app} on initialization with a counter will be used (e.g. \code{"NAME-001.png"}).}
@@ -2169,6 +2181,14 @@ app$expect_screenshot()
 
 # Very brittle test
 app$expect_screenshot(selector = "#distPlot")
+
+# Test with more tolerance in pixel values
+app$expect_screenshot(
+  compare = function(old, new) {
+    # Allow the image to be different by 3 units in each RGB channel
+    compare_file_screenshot(old, new, tolerance = 3)
+  }
+)
 }
 }
 \if{html}{\out{</div>}}

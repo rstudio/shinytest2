@@ -67,6 +67,7 @@ app_expect_screenshot <- function(
   screenshot_args = missing_arg(),
   delay = missing_arg(),
   selector = missing_arg(),
+  compare = compare_file_screenshot,
   cran = FALSE
 ) {
   "!DEBUG app_expect_screenshot()"
@@ -88,7 +89,7 @@ app_expect_screenshot <- function(
     self, private,
     filename,
     cran = cran,
-    compare = testthat::compare_file_binary
+    compare = compare
   )
 }
 

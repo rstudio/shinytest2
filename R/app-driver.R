@@ -989,6 +989,8 @@ AppDriver <- R6Class( # nolint
     #' @param name The file name to be used for the snapshot. The file extension
     #'   will overwritten to `.png`. By default, the `name` supplied to
     #'   `app` on initialization with a counter will be used (e.g. `"NAME-001.png"`).
+    #' @param compare Function used to compare two screenshot files. Defaults to
+    #'   [`compare_file_screenshot()`].
     #' @examples
     #' \dontrun{
     #' app_path <- system.file("examples/01_hello", package = "shiny")
@@ -999,12 +1001,21 @@ AppDriver <- R6Class( # nolint
     #'
     #' # Very brittle test
     #' app$expect_screenshot(selector = "#distPlot")
+    #'
+    #' # Test with more tolerance in pixel values
+    #' app$expect_screenshot(
+    #'   compare = function(old, new) {
+    #'     # Allow the image to be different by 3 units in each RGB channel
+    #'     compare_file_screenshot(old, new, tolerance = 3)
+    #'   }
+    #' )
     #' }
     expect_screenshot = function(
       ...,
       screenshot_args = missing_arg(),
       delay = missing_arg(),
       selector = missing_arg(),
+      compare = compare_file_screenshot,
       name = NULL,
       cran = FALSE
     ) {
