@@ -6,17 +6,16 @@
 #include <R_ext/Visibility.h>
 
 // code.cpp
-void fun();
-extern "C" SEXP _shinytest2_fun() {
+bool image_diff_breaks_threshold(cpp11::doubles_matrix<> diff_matrix, int kernal_size, double threshold);
+extern "C" SEXP _shinytest2_image_diff_breaks_threshold(SEXP diff_matrix, SEXP kernal_size, SEXP threshold) {
   BEGIN_CPP11
-    fun();
-    return R_NilValue;
+    return cpp11::as_sexp(image_diff_breaks_threshold(cpp11::as_cpp<cpp11::decay_t<cpp11::doubles_matrix<>>>(diff_matrix), cpp11::as_cpp<cpp11::decay_t<int>>(kernal_size), cpp11::as_cpp<cpp11::decay_t<double>>(threshold)));
   END_CPP11
 }
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
-    {"_shinytest2_fun", (DL_FUNC) &_shinytest2_fun, 0},
+    {"_shinytest2_image_diff_breaks_threshold", (DL_FUNC) &_shinytest2_image_diff_breaks_threshold, 3},
     {NULL, NULL, 0}
 };
 }

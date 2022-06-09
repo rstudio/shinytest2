@@ -78,6 +78,7 @@ Collate:
     'app-driver-window.R'
     'app-driver.R'
     'chromote-methods.R'
+    'cpp11.R'
     'expect-snapshot.R'
     'expr-recurse.R'
     'httr.R'
@@ -91,6 +92,7 @@ Collate:
     'save-app.R'
     'shiny-browser.R'
     'shinytest2-logs.R'
+    'shinytest2-package.R'
     'test-app.R'
     'use.R'
 LinkingTo: 
