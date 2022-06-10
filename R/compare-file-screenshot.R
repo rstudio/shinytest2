@@ -13,7 +13,7 @@
 #' @param new New screenshot file
 #' @param tolerance How many units of difference to allow
 #' @export
-compare_file_screenshot <- function(old, new, tolerance = 1) {
+compare_file_screenshot <- function(old, new, tolerance = 10) {
   rlang::check_installed("png")
 
   tolerance <- as.integer(tolerance)
@@ -24,34 +24,12 @@ compare_file_screenshot <- function(old, new, tolerance = 1) {
   new_png <- suppressWarnings(png::readPNG(new))
 
   # Quit early if images are different size
-  if (
-    nrow(old_png) != nrow(new_png) ||
-    ncol(old_png) != ncol(new_png)
-  ) {
+  if (!identical(dim(old_png), dim(new_png))) {
     return(FALSE)
   }
 
+  diff_matrix <- rowSums(abs(old_png - new_png), dims = 2)
 
-  # Convert from decimal rgb hex with as.raster
-  # Convert from hex to rgb matrix with col2rgb
-  old_rgb <- grDevices::col2rgb(grDevices::as.raster(old_png), alpha = TRUE)
-  new_rgb <- grDevices::col2rgb(grDevices::as.raster(new_png), alpha = TRUE)
-
-  # If only certain channels are returned, make sure they are the same
-  if (all(rownames(old_rgb) != rownames(new_rgb))) {
-    return(FALSE)
-  }
-
-  # For each color channel...
-  for (i in seq_along(nrow(old_rgb))) {
-    abs_diff <- abs(old_rgb[i, ] - new_rgb[i, ])
-
-    # Allow a tolerance of _1_ unit in either direction (default)
-    if (any(abs_diff > tolerance)) {
-      return(FALSE)
-    }
-  }
-
-  # No bad diffs found
-  return(TRUE)
+  breaks_threshold <- image_diff_breaks_threshold(diff_matrix, kernel_size = 5, threshold = tolerance)
+  return(!breaks_threshold)
 }

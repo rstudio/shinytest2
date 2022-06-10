@@ -6,10 +6,10 @@
 #include <R_ext/Visibility.h>
 
 // code.cpp
-bool image_diff_breaks_threshold(cpp11::doubles_matrix<> diff_matrix, int kernal_size, double threshold);
-extern "C" SEXP _shinytest2_image_diff_breaks_threshold(SEXP diff_matrix, SEXP kernal_size, SEXP threshold) {
+bool image_diff_breaks_threshold(cpp11::doubles_matrix<> diff_matrix, int kernel_size, double threshold);
+extern "C" SEXP _shinytest2_image_diff_breaks_threshold(SEXP diff_matrix, SEXP kernel_size, SEXP threshold) {
   BEGIN_CPP11
-    return cpp11::as_sexp(image_diff_breaks_threshold(cpp11::as_cpp<cpp11::decay_t<cpp11::doubles_matrix<>>>(diff_matrix), cpp11::as_cpp<cpp11::decay_t<int>>(kernal_size), cpp11::as_cpp<cpp11::decay_t<double>>(threshold)));
+    return cpp11::as_sexp(image_diff_breaks_threshold(cpp11::as_cpp<cpp11::decay_t<cpp11::doubles_matrix<>>>(diff_matrix), cpp11::as_cpp<cpp11::decay_t<int>>(kernel_size), cpp11::as_cpp<cpp11::decay_t<double>>(threshold)));
   END_CPP11
 }
 

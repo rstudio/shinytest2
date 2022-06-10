@@ -4,7 +4,7 @@
 \alias{compare_file_screenshot}
 \title{Compare screenshots given tolerance}
 \usage{
-compare_file_screenshot(old, new, tolerance = 1)
+compare_file_screenshot(old, new, tolerance = 10)
 }
 \arguments{
 \item{old}{Current screenshot file}
