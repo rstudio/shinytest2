@@ -89,20 +89,31 @@ your Shiny application or Shiny runtime document.  This is similar to how
 <code>./tests/testthat.R</code> file, the parent directory (<code>"../"</code>) is used.</p></li>
 <li><p>Otherwise, the default path of <code>"."</code> is used.</p></li>
 </ul></dd>
+
+
 <dt>...</dt>
 <dd><p>Parameters passed to <code><a href="https://testthat.r-lib.org/reference/test_dir.html" class="external-link">testthat::test_dir()</a></code></p></dd>
+
+
 <dt>name</dt>
 <dd><p>Name to display in the middle of the test name. This value is only used
 when calling <code>test_app()</code> inside of <span class="pkg">testhat</span> test. The final testing context will
 have the format of <code>"{test_context} - {name} - {app_test_context}"</code>.</p></dd>
+
+
 <dt>check_setup</dt>
 <dd><p>If <code>TRUE</code>, the app will be checked for the presence of
 <code>./tests/testthat/setup-shinytest2.R</code>. This file must contain a call to
 <code><a href="load_app_env.html">load_app_env()</a></code>.</p></dd>
+
+
 <dt>reporter</dt>
 <dd><p>Reporter to pass through to <code><a href="https://testthat.r-lib.org/reference/test_dir.html" class="external-link">testthat::test_dir()</a></code>.</p></dd>
+
+
 <dt>stop_on_failure</dt>
 <dd><p>If missing, the default value of <code>TRUE</code> will be used. However, if missing and currently testing, <code>FALSE</code> will be used to seamlessly integrate the app reporter to <code>reporter</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -178,7 +189,7 @@ This is only necessary if you want access to the values while testing.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
   </div></footer></body></html>
