@@ -55,19 +55,19 @@ test_that("convolution can be performed", {
 })
 
 
-test_that("kernal size makes a difference", {
+test_that("kernel size makes a difference", {
 
   small_max_diff <-
     screenshot_max_difference(
       test_path("image_diff/bers3-1.png"),
       test_path("image_diff/bers3-2.png"),
-      kernal_size = 5
+      kernel_size = 5
     )
   big_max_diff <-
     screenshot_max_difference(
       test_path("image_diff/bers3-1.png"),
       test_path("image_diff/bers3-2.png"),
-      kernal_size = 10
+      kernel_size = 10
     )
 
   expect_lt(small_max_diff, big_max_diff)

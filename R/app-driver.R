@@ -990,38 +990,93 @@ AppDriver <- R6Class( # nolint
     #'   will overwritten to `.png`. By default, the `name` supplied to
     #'   `app` on initialization with a counter will be used (e.g. `"NAME-001.png"`).
     #' @param compare Function used to compare two screenshot files. Defaults to
-    #'   [`compare_file_screenshot()`].
+    #'   [`compare_screenshot_threshold()`].
+    #' @param threshold Parameter supplied to [`compare_screenshot_threshold()`]
+    #' when using the default `compare` method. If the value of `threshold` is
+    #' NULL`, [`compare_screenshot_threshold()`] will act like
+    #' [`testthat::compare_file_binary`]. However, if `threshold` is positive,
+    #' it will be compared against the largest convolution value found if the
+    #' two images fail a [`testthat::compare_file_binary`] comparison.
+    #'
+    #' Which value should I use? Threshold values values below 5 help deter
+    #' false-positive screenshot comparisons (such as inconsistent rounded
+    #' corners). Larger values in the 10s and 100s will help find _real_
+    #' changes. However, not all values are one size fits all and you will need
+    #' to play with a threshold that fits your needs.
+    #' @param kernel_size Parameter supplied to [`compare_screenshot_threshold()`]
+    #' when using the default `compare` method. The `kernel_size` represents the
+    #' height and width of the convolution kernel applied to the pixel
+    #' differences. This integer-like value should be relatively small.
     #' @examples
     #' \dontrun{
+    #' # These example lines should be performed in a `./tests/testthat`
+    #' # test file so that snapshot files can be saved
+    #'
     #' app_path <- system.file("examples/01_hello", package = "shiny")
     #' app <- AppDriver$new(app_path, variant = platform_variant())
     #'
-    #' # Expect a full size screenshot
+    #' # Expect a full size screenshot to be pixel perfect
     #' app$expect_screenshot()
     #'
-    #' # Very brittle test
+    #' # Images are brittle when containing plots
     #' app$expect_screenshot(selector = "#distPlot")
     #'
-    #' # Test with more tolerance in pixel values
-    #' app$expect_screenshot(
+    #' # Test with more threshold in pixel value differences
+    #' # Helps with rounded corners
+    #' app$expect_screenshot(threshold = 10)
+    #'
+    #' # Equivalent lines of test code
+    #' app$expect_screenshot()
+    #' app$expect_screenshot(threshold = NULL)
+    #' app$expect_screenshot(compare = testthat::compare_file_binary)
+    #' expect_snapshot_file(
+    #'   app$get_screenshot(),
+    #'   variant = app$get_variant(),
+    #'   compare = testthat::compare_file_binary
+    #' )
+    #'
+    #' # Equivalent lines of test code
+    #' app$expect_screenshot(threshold = 3, kernel_size = 5)
+    #' app$expect_screenshot(compare = function(old, new) {
+    #'   compare_screenshot_threshold(
+    #'     old, new,
+    #'     threshold = 3,
+    #'     kernel_size = 5
+    #'   )
+    #' })
+    #' expect_screenshot_file(
+    #'   app$get_screenshot(),
+    #'   variant = app$get_variant(),
     #'   compare = function(old, new) {
-    #'     # Allow the image to be different by 3 units in each RGB channel
-    #'     compare_file_screenshot(old, new, tolerance = 3)
+    #'     compare_screenshot_threshold(
+    #'       old, new,
+    #'       threshold = 3,
+    #'       kernel_size = 5
+    #'     )
     #'   }
     #' )
     #' }
     expect_screenshot = function(
       ...,
+      threshold = NULL,
       screenshot_args = missing_arg(),
       delay = missing_arg(),
       selector = missing_arg(),
-      compare = compare_file_screenshot,
+      compare = function(old, new) {
+        compare_screenshot_threshold(
+          old, new,
+          threshold = threshold,
+          kernel_size = kernel_size
+        )
+      },
+      kernel_size = 5,
       name = NULL,
       cran = FALSE
     ) {
       app_expect_screenshot_and_variant(
         self, private,
         ...,
+        compare = compare,
         screenshot_args = screenshot_args,
         delay = delay,
         selector = selector,

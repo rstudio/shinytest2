@@ -79,7 +79,7 @@ Collate:
     'app-driver-window.R'
     'app-driver.R'
     'chromote-methods.R'
-    'compare-file-screenshot.R'
+    'compare-screenshot-threshold.R'
     'cpp11.R'
     'expect-snapshot.R'
     'expr-recurse.R'

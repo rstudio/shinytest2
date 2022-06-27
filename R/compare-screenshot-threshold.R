@@ -13,9 +13,9 @@
 #' @param new New screenshot file
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @param threshold How many units of difference to allow
-#' @param kernal_size How many pixels tall and wide should the convolution be applied to
+#' @param kernel_size How many pixels tall and wide should the convolution be applied to
 #' @export
-compare_screenshot_threshold <- function(old, new, ..., threshold = NULL, kernal_size = 5) {
+compare_screenshot_threshold <- function(old, new, ..., threshold = NULL, kernel_size = 5) {
   ellipsis::check_dots_empty()
 
   is_same_file <- testthat::compare_file_binary(old, new)
@@ -35,7 +35,7 @@ compare_screenshot_threshold <- function(old, new, ..., threshold = NULL, kernal
   conv_max_value <- screenshot_max_difference(
     old = old,
     new = new,
-    kernel_size = kernal_size
+    kernel_size = kernel_size
   )
 
   conv_max_value < threshold
@@ -47,14 +47,14 @@ screenshot_max_difference <- function(
   old,
   new,
   ...,
-  kernal_size = 5
+  kernel_size = 5
 ) {
   checkmate::assert_file_exists(old)
   checkmate::assert_file_exists(new)
 
-  kernal_size <- as.integer(kernal_size)
+  kernel_size <- as.integer(kernel_size)
   checkmate::assert_integer(
-    kernal_size,
+    kernel_size,
     lower = 1,
     any.missing = FALSE,
     len = 1
@@ -89,7 +89,7 @@ screenshot_max_difference <- function(
   # Use cpp11!
   conv_max_value <- image_diff_convolution_max_value(
     diff_matrix,
-    kernel_size = kernal_size
+    kernel_size = kernel_size
   )
 
   conv_max_value

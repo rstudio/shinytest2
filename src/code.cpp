@@ -2,7 +2,7 @@
 using namespace cpp11;
 namespace writable = cpp11::writable;
 
-// Convolution matrix calculation where the kernal is K x K in size and full of 1s.
+// Convolution matrix calculation where the kernel is K x K in size and full of 1s.
 // Also, the incoming matrix is non-negative. Meaning that any rolling sum values found will never decrease.
 // This gives the opportunity to return early if the maximum value is found.
 // However, the max value will always be returned as resolving errors is more
