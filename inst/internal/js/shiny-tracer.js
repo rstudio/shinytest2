@@ -104,15 +104,7 @@ window.shinytest2 = (function() {
 
             "shiny.sliderInput": function(el, value) {
                 function update_date_string(x) {
-                  if (
-                    (
-                      typeof(x) === "string" &&
-                      /\d\d\d\d-\d\d-\d\d/.test(x)
-                    ) ||
-                    (
-                      typeof(x) === "number"
-                    )
-                  ) {
+                  if (typeof(x) === "string" && /\d\d\d\d-\d\d-\d\d/.test(x)) {
                     return new Date(x).getTime();
                   } else {
                     return x;
