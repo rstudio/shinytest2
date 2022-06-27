@@ -6,16 +6,16 @@
 #include <R_ext/Visibility.h>
 
 // code.cpp
-bool image_diff_breaks_threshold(cpp11::doubles_matrix<> diff_matrix, int kernel_size, double threshold);
-extern "C" SEXP _shinytest2_image_diff_breaks_threshold(SEXP diff_matrix, SEXP kernel_size, SEXP threshold) {
+double image_diff_convolution_max_value(cpp11::doubles_matrix<> diff_matrix, int kernel_size, double threshold);
+extern "C" SEXP _shinytest2_image_diff_convolution_max_value(SEXP diff_matrix, SEXP kernel_size, SEXP threshold) {
   BEGIN_CPP11
-    return cpp11::as_sexp(image_diff_breaks_threshold(cpp11::as_cpp<cpp11::decay_t<cpp11::doubles_matrix<>>>(diff_matrix), cpp11::as_cpp<cpp11::decay_t<int>>(kernel_size), cpp11::as_cpp<cpp11::decay_t<double>>(threshold)));
+    return cpp11::as_sexp(image_diff_convolution_max_value(cpp11::as_cpp<cpp11::decay_t<cpp11::doubles_matrix<>>>(diff_matrix), cpp11::as_cpp<cpp11::decay_t<int>>(kernel_size), cpp11::as_cpp<cpp11::decay_t<double>>(threshold)));
   END_CPP11
 }
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
-    {"_shinytest2_image_diff_breaks_threshold", (DL_FUNC) &_shinytest2_image_diff_breaks_threshold, 3},
+    {"_shinytest2_image_diff_convolution_max_value", (DL_FUNC) &_shinytest2_image_diff_convolution_max_value, 3},
     {NULL, NULL, 0}
 };
 }
