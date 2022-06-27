@@ -2,9 +2,12 @@
 % Please edit documentation in R/compare-screenshot-threshold.R
 \name{compare_screenshot_threshold}
 \alias{compare_screenshot_threshold}
+\alias{screenshot_max_difference}
 \title{Compare screenshots given threshold value}
 \usage{
 compare_screenshot_threshold(old, new, ..., threshold = NULL, kernel_size = 5)
+
+screenshot_max_difference(old, new, ..., kernel_size = 5)
 }
 \arguments{
 \item{old}{Current screenshot file}

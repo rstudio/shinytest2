@@ -15,6 +15,7 @@
 #' @param threshold How many units of difference to allow
 #' @param kernel_size How many pixels tall and wide should the convolution be applied to
 #' @export
+#' @rdname compare_screenshot_threshold
 compare_screenshot_threshold <- function(old, new, ..., threshold = NULL, kernel_size = 5) {
   ellipsis::check_dots_empty()
 
@@ -43,6 +44,7 @@ compare_screenshot_threshold <- function(old, new, ..., threshold = NULL, kernel
 
 
 #' @export
+#' @rdname compare_screenshot_threshold
 screenshot_max_difference <- function(
   old,
   new,
