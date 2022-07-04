@@ -195,8 +195,7 @@ Shiny app did not become stable in 10000ms.
 ```
 
 ``` r
-# start headless chrome (points to recorder!).
-# AppDriver also support remote urls.
+# Start AppDriver with recorder url
 chrome <- shinytest2::AppDriver$new("http://127.0.0.1:8600", load_timeout = 15 * 1000)
 ```
 
