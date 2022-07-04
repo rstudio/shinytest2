@@ -440,7 +440,7 @@ jobs:
 ```
 
 If you want to test it on your end, below are lines of code to setup a 
-RStudio project and link it to github:
+RStudio project and link it to GitHub:
 
 ``` r
 path <- tempdir()
