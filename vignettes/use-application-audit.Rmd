@@ -28,8 +28,7 @@ audit pipelines with `{shinytest2}`.
 ## Introduction
 
 This case study consists of analyzing a particularly non-optimized app, whose 
-code is defined below and located in [`vignettes/non-optimized-app/app.R`](https://github.com/rstudio/shinytest2/tree/main/vignettes/non-optimized-app/app.R). 
-This app simulates a stiff oscillator, also known as Van der Pol [model](https://en.wikipedia.org/wiki/Van_der_Pol_oscillator). Under the hood, 
+code is defined below. This app simulates a stiff oscillator, also known as Van der Pol [model](https://en.wikipedia.org/wiki/Van_der_Pol_oscillator). Under the hood, 
 this system (composed of 2 differential equations) is integrated with the 
 `{deSolve}` package. Stiff systems need a much smaller time step than
 classic systems, thereby requiring more time to solve:
@@ -72,7 +71,7 @@ ui <- fluidPage(
 shinyApp(ui = ui, server = server)
 ```
 
-As a first test, you can run the app locally and notice how slow it is to 
+As a first test, you can run the app by calling `runApp(system.file("vig-apps/non-optimized-app/", package = "shinytest2"))` locally and notice how slow it is to 
 perform one computation. The next question is, how does this app scale? 
 The answer is likely "No it doesn't!", but we would like to know exactly how bad 
 it is. This is where load testing comes to play.
