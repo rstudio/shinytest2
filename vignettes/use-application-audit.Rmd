@@ -79,7 +79,7 @@ it is. This is where load testing comes to play.
 
 ## Load testing with {shinytest2}
 
-Shiny apps [load testing](https://rstudio.github.io/shinyloadtest/index.html) 
+Shiny app [load testing](https://rstudio.github.io/shinyloadtest/index.html) 
 aims at running multiple identical user sessions in parallel and measure the 
 resulting app response. It allows to answer many questions, such as:
 
