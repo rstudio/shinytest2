@@ -126,7 +126,6 @@ and run the load test recorder on the same port:
 ``` r
 # Main shiny app
 shiny_bg <- function(path, port) {
- # main app
   options(shiny.port = port)
   shiny::runApp(path)
 }
