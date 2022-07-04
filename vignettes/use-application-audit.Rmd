@@ -86,7 +86,6 @@ resulting app response. It allows to answer many questions, such as:
 - What is the time necessary to get to the homepage?
 - How much time does it take to perform the first computation?
 - Will all session end at the same time?
-- ...
 
 A load test is composed a three phases:
 
