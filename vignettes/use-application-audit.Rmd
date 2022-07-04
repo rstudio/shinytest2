@@ -223,7 +223,7 @@ We can inspect the logs with the help of `chrome$get_log()`, to check whether
 everything run smoothly:
 
 ```
-chrome$get_log()
+app$get_logs()
 #> {shinytest2} R  info 14:27:00.80 Start AppDriver initialization
 #> {shinytest2} R  info 14:27:00.82 Creating new ChromoteSession
 #> {shinytest2} R  info 14:27:02.20 Navigating to Shiny app
