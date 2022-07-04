@@ -333,7 +333,7 @@ record_loadtest <- function(path, timeout = 15, workers = 5) {
     load_timeout = timeout * 1000
   )
 
-  chrome$set_inputs(mu = 4, timeout_ = timeout * 1000)
+  app$set_inputs(mu = 4, timeout_ = timeout * 1000)
 
   # clean
   app$stop()
