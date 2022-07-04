@@ -1,7 +1,3 @@
-skip_on_cran() # Uses chromote
-
-# TODO-future; Have theses tests run on CI
-
 app_dir <- test_path("apps/files-app-rmd")
 if (!dir.exists(file.path(app_dir, "tests", "testthat"))) {
   skip("App test folders have been ignored")
@@ -46,7 +42,7 @@ test_that("after", {
 
 # Test all apps work as expected
 lapply(
-  dir(test_path("apps"), full.names = TRUE),
+  fs::dir_ls(test_path("apps"), type = "directory"),
   function(shiny_app_dir) {
     test_app(shiny_app_dir)
   }

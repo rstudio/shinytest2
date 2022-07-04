@@ -24,7 +24,7 @@ This is useful when wanting access to functions or values created in the \code{.
 }
 \details{
 Loading these files is not automatically performed by \code{test_app()} and must
-be called in \code{./tests/testthat/setup.R} if access to support file objects is
+be called in \code{./tests/testthat/setup-shinytest2.R} if access to support file objects is
 desired.
 }
 \seealso{

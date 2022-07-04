@@ -190,11 +190,19 @@ AppDriver <- R6Class( # nolint
     #' @description
     #' Initialize an `AppDriver` object
     #'
-    #' @param app_dir Directory containing your Shiny application or a run-time
-    #'   Shiny R Markdown document. By default, it retrieves
-    #'   `test_path("../../")` to allow for interactive and testing usage. A
-    #'   Shiny application URL can be provided, however snapshots will be saved
-    #'   in the current directory.
+    #' @param app_dir This value can be many different things:
+    #'   * A directory containing your Shiny application or a run-time Shiny R
+    #'     Markdown document.
+    #'   * A url pointing to your shiny application. (Don't forget to set
+    #'     `testmode = TRUE` when running your application!)
+    #'   * A Shiny application object which inherits from `"shiny.appobj"`.
+    #'
+    #' By default, `app_dir` is set to `test_path("../../")` to work in both
+    #' interactive and testing usage.
+    #'
+    #' If a file path is not provided to `app_dir`, snapshots will be saved as
+    #' if the root of the Shiny application was the current directory.
+    #'
     #' @param name Prefix value to use when saving testthat snapshot files. Ex:
     #'   `NAME-001.json`. Name **must** be unique when saving multiple snapshots
     #'   from within the same testing file. Otherwise, two different `AppDriver`

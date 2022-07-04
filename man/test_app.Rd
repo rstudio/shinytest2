@@ -28,7 +28,7 @@ when calling \code{test_app()} inside of \pkg{testhat} test. The final testing c
 have the format of \code{"{test_context} - {name} - {app_test_context}"}.}
 
 \item{check_setup}{If \code{TRUE}, the app will be checked for the presence of
-\code{./tests/testthat/setup.R}. This file must contain a call to
+\code{./tests/testthat/setup-shinytest2.R}. This file must contain a call to
 \code{\link[=load_app_env]{load_app_env()}}.}
 
 \item{reporter}{Reporter to pass through to \code{\link[testthat:test_dir]{testthat::test_dir()}}.}
