@@ -258,7 +258,7 @@ Once satisfied, we may close the headless connection to stop the recorder:
 
 ``` r
 # clean
-chrome$stop()
+app$stop()
 # needed to avoid
 # java.lang.IllegalStateException: last event in log not a
 # WS_CLOSE (did you close the tab after recording?)
