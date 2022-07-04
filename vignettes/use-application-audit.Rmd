@@ -336,7 +336,7 @@ record_loadtest <- function(path, timeout = 15, workers = 5) {
   chrome$set_inputs(mu = 4, timeout_ = timeout * 1000)
 
   # clean
-  chrome$stop()
+  app$stop()
   # needed to avoid
   # java.lang.IllegalStateException: last event in log not a
   # WS_CLOSE (did you close the tab after recording?)
