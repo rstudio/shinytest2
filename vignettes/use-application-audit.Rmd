@@ -115,8 +115,7 @@ In practice, we'll have to:
 
 You may have already noticed that when launching a Shiny app, you can’t run 
 anything else in the R console while the app is live. The explanation is pretty 
-simple: since R is single threaded, it can only use one processor at a time. 
-In practice, this means that tasks are run sequentially. 
+simple: R performs tasks sequentially and can only perform one calculation at a time.
 
 How do we start the app without blocking the main R process? 
 We leverage the `{callr}` package, which exposes a convenient API to start R 
