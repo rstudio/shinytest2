@@ -186,8 +186,8 @@ recorder <- start_r_bg(recorder_bg)
 The previous part was the most technical step. Now, we only have to start a 
 Chrome headless browser on port `8600`, where the load test recorder runs. 
 You'll notice that `{shinytest2}` also supports remote urls. 
-We ensure to set a consistent load timeout, which will avoid to see this kind of 
-annoying `{shinytest2}` warning:
+We should increase the value of `load_timout` to 15 seconds to help us avoid 
+producing this annoying `{shinytest2}` warning:
 
 ```
 {shinytest2} R  info 15:25:37.36 Error while initializing AppDriver:
