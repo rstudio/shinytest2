@@ -368,8 +368,7 @@ Below is the necessary GitHub Actions yaml file. Overall, this will:
 
 - Run each time code is pushed to GitHub.
 - Run in parallel on 3 different Ubuntu flavors.
-- Install R, some system dependencies and R packages. Install Chrome and 
-shinycannon tools for the headless loadtest.
+- Install R, some system dependencies, and R packages. Install shinycannon tools for load-testing.
 - Deploy the load test report to GitHub Pages.
 
 ```yaml
