@@ -120,7 +120,7 @@ simple: R performs tasks sequentially and can only perform one calculation at a 
 How do we start the app without blocking the main R process? 
 We leverage the `{callr}` package, which exposes a convenient API to start R 
 processes in the background, that is, without blocking the main R process. 
-Below shows the code to start a Shiny app located at `path` on a specific port 
+The code below shows how to start a Shiny app located at `path` on a specific port 
 and run the load test recorder on the same port:
 
 ``` r
