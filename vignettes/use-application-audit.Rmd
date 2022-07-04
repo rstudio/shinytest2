@@ -471,7 +471,7 @@ knitr::include_graphics("images/shinytest2-loadtest.png")
 ```
 
 As shown in the above report, especially in the session duration tab, 
-the app is clearly not able to handle 5 simultaneous user:
+the app is clearly not able to handle 5 simultaneous user due to the very large computations being performed by the Shiny server:
 
 - The red area is over represented for most sessions, which means many users have 
 to wait significant amount of time before seeing the app. This is a critical 
