@@ -224,34 +224,34 @@ everything run smoothly:
 
 ```
 chrome$get_log()
-# {shinytest2} R  info 14:27:00.80 Start AppDriver initialization
-# {shinytest2} R  info 14:27:00.82 Creating new ChromoteSession
-# {shinytest2} R  info 14:27:02.20 Navigating to Shiny app
-# {shinytest2} R  info 14:27:02.57 Injecting shiny-tracer.js
-# {chromote}   JS info 14:27:02.61 shinytest2; jQuery not found
-# {chromote}   JS info 14:27:02.63 shinytest2; Loaded
-# {shinytest2} R  info 14:27:02.64 Waiting for Shiny to become ready
-# {chromote}   JS info 14:27:02.72 shinytest2; jQuery found
-# {chromote}   JS info 14:27:02.73 shinytest2; Waiting for shiny session to connect
-# {chromote}   JS info 14:27:03.12 shinytest2; Connected
-# {shinytest2} R  info 14:27:03.17 Waiting for Shiny to become idle for 200ms within 10000ms
-# {chromote}   JS info 14:27:03.18 shinytest2; Waiting for Shiny to be stable
-# {chromote}   JS info 14:27:03.27 shinytest2; shiny:busy
-# {chromote}   JS info 14:27:06.28 shinytest2; shiny:idle
-# {chromote}   JS info 14:27:06.30 shinytest2; shiny:value brussels
-# {chromote}   JS info 14:27:06.48 shinytest2; Shiny has been idle for 200ms
-# {shinytest2} R  info 14:27:06.48 Shiny app started
-# {shinytest2} R  info 14:30:17.79 Setting inputs: 'mu'', ''X'', ''Y'
-# {chromote}   JS info 14:30:17.81 shinytest2; inputQueue: adding mu
-# {chromote}   JS info 14:30:17.81 shinytest2; inputQueue: adding X
-# {chromote}   JS info 14:30:17.81 shinytest2; inputQueue: adding Y
-# {chromote}   JS info 14:30:17.82 shinytest2; inputQueue: flushing mu
-# {chromote}   JS info 14:30:17.83 shinytest2; inputQueue: flushing X
-# {chromote}   JS info 14:30:17.83 shinytest2; inputQueue: flushing Y
-# {chromote}   JS info 14:30:17.87 shinytest2; shiny:busy
-# {chromote}   JS info 14:30:20.42 shinytest2; shiny:idle
-# {chromote}   JS info 14:30:20.46 shinytest2; shiny:value brussels
-# {shinytest2} R  info 14:30:20.47 Finished setting inputs. Timedout: FALSE
+#> {shinytest2} R  info 14:27:00.80 Start AppDriver initialization
+#> {shinytest2} R  info 14:27:00.82 Creating new ChromoteSession
+#> {shinytest2} R  info 14:27:02.20 Navigating to Shiny app
+#> {shinytest2} R  info 14:27:02.57 Injecting shiny-tracer.js
+#> {chromote}   JS info 14:27:02.61 shinytest2; jQuery not found
+#> {chromote}   JS info 14:27:02.63 shinytest2; Loaded
+#> {shinytest2} R  info 14:27:02.64 Waiting for Shiny to become ready
+#> {chromote}   JS info 14:27:02.72 shinytest2; jQuery found
+#> {chromote}   JS info 14:27:02.73 shinytest2; Waiting for shiny session to connect
+#> {chromote}   JS info 14:27:03.12 shinytest2; Connected
+#> {shinytest2} R  info 14:27:03.17 Waiting for Shiny to become idle for 200ms within 10000ms
+#> {chromote}   JS info 14:27:03.18 shinytest2; Waiting for Shiny to be stable
+#> {chromote}   JS info 14:27:03.27 shinytest2; shiny:busy
+#> {chromote}   JS info 14:27:06.28 shinytest2; shiny:idle
+#> {chromote}   JS info 14:27:06.30 shinytest2; shiny:value brussels
+#> {chromote}   JS info 14:27:06.48 shinytest2; Shiny has been idle for 200ms
+#> {shinytest2} R  info 14:27:06.48 Shiny app started
+#> {shinytest2} R  info 14:30:17.79 Setting inputs: 'mu'', ''X'', ''Y'
+#> {chromote}   JS info 14:30:17.81 shinytest2; inputQueue: adding mu
+#> {chromote}   JS info 14:30:17.81 shinytest2; inputQueue: adding X
+#> {chromote}   JS info 14:30:17.81 shinytest2; inputQueue: adding Y
+#> {chromote}   JS info 14:30:17.82 shinytest2; inputQueue: flushing mu
+#> {chromote}   JS info 14:30:17.83 shinytest2; inputQueue: flushing X
+#> {chromote}   JS info 14:30:17.83 shinytest2; inputQueue: flushing Y
+#> {chromote}   JS info 14:30:17.87 shinytest2; shiny:busy
+#> {chromote}   JS info 14:30:20.42 shinytest2; shiny:idle
+#> {chromote}   JS info 14:30:20.46 shinytest2; shiny:value brussels
+#> {shinytest2} R  info 14:30:20.47 Finished setting inputs. Timedout: FALSE
 ```
 
 Once satisfied, we may close the headless connection to stop the recorder:
