@@ -175,10 +175,10 @@ and parameters. Besides, we provide some log elements and safety guard in case
 the app can't start. To launch the app and recorder we can call:
 
 ``` r
-target <- start_r_bg(shiny_bg, path = "vignettes/non-optimized-app/app.R")
-#> Listening on 127.0.0.1:3515
+target <- start_r_bg(shiny_bg, path = system.file("vig-apps/non-optimized-app/", package = "shinytest2"))
+# Listening on 127.0.0.1:3515
 recorder <- start_r_bg(recorder_bg)
-#> Listening on 127.0.0.1:8600
+# Listening on 127.0.0.1:8600
 ```
 
 ### Connect Chrome
