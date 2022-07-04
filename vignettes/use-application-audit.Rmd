@@ -454,6 +454,11 @@ file.create("app.R")
 
 ## Need to copy in your app code to `app.R`!
 
+# To test it locally
+source("R/audit-app.R")
+record_loadtest("app.R")
+
+# Test it with GitHub actions
 usethis::use_description()
 usethis::use_git()
 usethis::use_git_protocol("ssh")
@@ -461,7 +466,20 @@ usethis::use_github()
 usethis::use_github_pages()
 ```
 
-An example is available [here](https://divadnojnarg.github.io/RtmpXU8dBM/).
+If you test it locally within a package, you may want to ignore `public`, `recording.log` 
+by adding them in the `.Rbuildignore` file, which will avoid unnecessary warnings during
+any future `devtools::check()`:
+
+```r
+usethis::use_build_ignore(
+  c(
+    "public",
+    "recording.log"
+  )
+)
+```
+
+An example is available [here](https://github.com/DivadNojnarg/shinyAuditTest).
 
 ```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/shinytest2-loadtest.png")
