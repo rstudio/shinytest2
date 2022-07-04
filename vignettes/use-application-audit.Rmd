@@ -217,7 +217,7 @@ R console. We then change the `mu` parameter input without forgetting the
 timeout:
 
 ``` r
-chrome$set_inputs(mu = 4, timeout_ = 15000)
+app$set_inputs(mu = 4, timeout_ = 15 * 1000)
 ```
 
 We can inspect the logs with the help of `chrome$get_log()`, to check whether 
