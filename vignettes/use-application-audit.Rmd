@@ -423,7 +423,9 @@ jobs:
 
       - name: Run load test 🏥
         shell: Rscript {0}
-        run: source("R/audit-app.R"); record_loadtest(path = "app.R");
+        run: |
+            source("R/audit-app.R")
+            record_loadtest(path = "app.R");
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
