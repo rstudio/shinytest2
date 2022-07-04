@@ -30,9 +30,9 @@ audit pipelines with `{shinytest2}`.
 This case study consists of analyzing a particularly non-optimized app, whose 
 code is defined below and located in [`vignettes/non-optimized-app/app.R`](https://github.com/rstudio/shinytest2/tree/main/vignettes/non-optimized-app/app.R). 
 This app simulates a stiff oscillator, also known as Van der Pol [model](https://en.wikipedia.org/wiki/Van_der_Pol_oscillator). Under the hood, 
-this system composed of 2 differential equations is integrated with the 
-`{deSolve}` package. Stiff systems need much smaller time step than
-classic systems , thereby requiring more time to solve:
+this system (composed of 2 differential equations) is integrated with the 
+`{deSolve}` package. Stiff systems need a much smaller time step than
+classic systems, thereby requiring more time to solve:
 
 ``` r
 van_der_pol <- function(t, y, mu) {
