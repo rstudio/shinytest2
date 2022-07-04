@@ -4,6 +4,8 @@
 
 * Fix set of bugs found by @daattali including test files should be opened in the IDE after recording and test and replace missing images in the website (#199)
 
+* The recording browser window is now closed when either the "Save test and exit" or "Exit" buttons are clicked. (@daattali, #202)
+
 # shinytest2 0.1.0
 
 * Initial release of package

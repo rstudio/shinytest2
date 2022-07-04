@@ -28,11 +28,11 @@ audit pipelines with `{shinytest2}`.
 ## Introduction
 
 This case study consists of analyzing a particularly non-optimized app, whose 
-code is defined below and located in `vignettes/non-optimized-app/app.R`. 
-This app simulates a stiff oscillator, also known as Van der Pol [model](https://en.wikipedia.org/wiki/Van_der_Pol_oscillator). Under the hoods, 
-this system composed of 2 differential equations is integrated with the 
-`{deSolve}` package. Stiff systems need much smaller time step than
-classic systems , thereby requiring more time to solve:
+code is defined below and located in [`vignettes/non-optimized-app/app.R`](https://github.com/rstudio/shinytest2/tree/main/vignettes/non-optimized-app/app.R). 
+This app simulates a stiff oscillator, also known as Van der Pol [model](https://en.wikipedia.org/wiki/Van_der_Pol_oscillator). Under the hood, 
+this system (composed of 2 differential equations) is integrated with the 
+`{deSolve}` package. Stiff systems need a much smaller time step than
+classic systems, thereby requiring more time to solve:
 
 ``` r
 van_der_pol <- function(t, y, mu) {
@@ -79,14 +79,13 @@ it is. This is where load testing comes to play.
 
 ## Load testing with {shinytest2}
 
-Shiny apps [load testing](https://rstudio.github.io/shinyloadtest/index.html) 
+Shiny app [load testing](https://rstudio.github.io/shinyloadtest/index.html) 
 aims at running multiple identical user sessions in parallel and measure the 
 resulting app response. It allows to answer many questions, such as:
 
 - What is the time necessary to get to the homepage?
 - How much time does it take to perform the first computation?
 - Will all session end at the same time?
-- ...
 
 A load test is composed a three phases:
 
@@ -441,7 +440,7 @@ jobs:
 ```
 
 If you want to test it on your end, below are lines of code to setup a 
-RStudio project and link it to github:
+RStudio project and link it to GitHub:
 
 ``` r
 # Inside the project
@@ -469,7 +468,7 @@ knitr::include_graphics("images/shinytest2-loadtest.png")
 ```
 
 As shown in the above report, especially in the session duration tab, 
-the app is clearly not able to handle 5 simultaneous user:
+the app is clearly not able to handle 5 simultaneous user due to the very large computations being performed by the Shiny server:
 
 - The red area is over represented for most sessions, which means many users have 
 to wait significant amount of time before seeing the app. This is a critical 

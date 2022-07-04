@@ -150,6 +150,11 @@ window.recorder = (function() {
             $("#exit_save").toggleClass("disabled", !message);
         });
 
+        // Close the browser window when Shiny no longer needs it
+        Shiny.addCustomMessageHandler("close_window", function(message) {
+            window.close();
+        });
+
     });
 
 
