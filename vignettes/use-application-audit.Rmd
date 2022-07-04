@@ -328,7 +328,7 @@ record_loadtest <- function(path, timeout = 15, workers = 5) {
 
   # start headless chrome (points to recorder!).
   # AppDriver also support remote urls.
-  chrome <- shinytest2::AppDriver$new(
+  app <- shinytest2::AppDriver$new(
     "http://127.0.0.1:8600",
     load_timeout = timeout * 1000
   )
