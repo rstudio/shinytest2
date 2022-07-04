@@ -172,7 +172,7 @@ start_r_bg <- function(fun, path = NULL, port = 3515) {
 
 where `r_bg()` starts a background R process, passing the corresponding function 
 and parameters. Besides, we provide some log elements and safety guard in case 
-the app can't start. To launch the app and recorder we simply call:
+the app can't start. To launch the app and recorder we can call:
 
 ``` r
 target <- start_r_bg(shiny_bg, path = "vignettes/non-optimized-app/app.R")
