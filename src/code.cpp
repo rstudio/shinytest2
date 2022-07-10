@@ -1,6 +1,5 @@
 #include <cpp11.hpp>
 using namespace cpp11;
-namespace writable = cpp11::writable;
 
 // Convolution matrix calculation where the kernel is K x K in size and full of 1s.
 // Also, the incoming matrix is non-negative. Meaning that any rolling sum values found will never decrease.
@@ -43,7 +42,7 @@ namespace writable = cpp11::writable;
 
   // Perform rolling sum for each row, given the diff_matrix
   // Store result into conv_matrix
-  writable::doubles_matrix<by_column>
+  cpp11::writable::doubles_matrix<by_column>
       conv_matrix(diff_rows, diff_cols);
   for (int i = 0; i < diff_rows; ++i)
   {
