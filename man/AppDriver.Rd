@@ -492,14 +492,52 @@ app$get_js(js_txt)
 ## ------------------------------------------------
 
 \dontrun{
+# These example lines should be performed in a `./tests/testthat`
+# test file so that snapshot files can be saved
+
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path, variant = platform_variant())
 
-# Expect a full size screenshot
+# Expect a full size screenshot to be pixel perfect
 app$expect_screenshot()
 
-# Very brittle test
+# Images are brittle when containing plots
 app$expect_screenshot(selector = "#distPlot")
+
+# Test with more threshold in pixel value differences
+# Helps with rounded corners
+app$expect_screenshot(threshold = 10)
+
+# Equivalent lines of test code
+app$expect_screenshot()
+app$expect_screenshot(threshold = NULL)
+app$expect_screenshot(compare = testthat::compare_file_binary)
+expect_snapshot_file(
+  app$get_screenshot(),
+  variant = app$get_variant(),
+  compare = testthat::compare_file_binary
+)
+
+# Equivalent lines of test code
+app$expect_screenshot(threshold = 3, kernel_size = 5)
+app$expect_screenshot(compare = function(old, new) {
+  compare_screenshot_threshold(
+    old, new,
+    threshold = 3,
+    kernel_size = 5
+  )
+})
+expect_screenshot_file(
+  app$get_screenshot(),
+  variant = app$get_variant(),
+  compare = function(old, new) {
+    compare_screenshot_threshold(
+      old, new,
+      threshold = 3,
+      kernel_size = 5
+    )
+  }
+)
 }
 
 ## ------------------------------------------------
@@ -2111,9 +2149,16 @@ recommended to use other expectation methods.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_screenshot(
   ...,
+  threshold = NULL,
   screenshot_args = missing_arg(),
   delay = missing_arg(),
   selector = missing_arg(),
+  compare = function(old, new) {
+     compare_screenshot_threshold(old, new, threshold
+    = threshold, kernel_size = kernel_size, quiet = quiet)
+ },
+  kernel_size = 5,
+  quiet = FALSE,
   name = NULL,
   cran = FALSE
 )}\if{html}{\out{</div>}}
@@ -2123,6 +2168,16 @@ recommended to use other expectation methods.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+
+\item{\code{threshold}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
+when using the default \code{compare} method. If the value of \code{threshold} is
+NULL\verb{, [}compare_screenshot_threshold()\verb{] will act like [}testthat::compare_file_binary\verb{]. However, if }threshold\verb{ is a positive number, it will be compared against the largest convolution value found if the two images fail a [}testthat::compare_file_binary`] comparison.
+
+Which value should I use? Threshold values values below 5 help deter
+false-positive screenshot comparisons (such as inconsistent rounded
+corners). Larger values in the 10s and 100s will help find \emph{real}
+changes. However, not all values are one size fits all and you will need
+to play with a threshold that fits your needs.}
 
 \item{\code{screenshot_args}}{This named list of arguments is passed along to
 \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. If missing, the
@@ -2148,6 +2203,17 @@ portion of the page to be captured. This value can either be supplied as
 \code{selector} or \code{screenshot_args}'s selector slot. The \code{selector} parameter
 will have preference.}
 
+\item{\code{compare}}{Function used to compare two screenshot files. Defaults to
+\code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}.}
+
+\item{\code{kernel_size}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
+when using the default \code{compare} method. The \code{kernel_size} represents the
+height and width of the convolution kernel applied to the pixel
+differences. This integer-like value should be relatively small.}
+
+\item{\code{quiet}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
+when using the default \code{compare} method. If \code{FALSE}, diagnostic information will be presented when the computed value is larger than a non-\code{NULL} \code{threshold} value.}
+
 \item{\code{name}}{The file name to be used for the snapshot. The file extension
 will overwritten to \code{.png}. By default, the \code{name} supplied to
 \code{app} on initialization with a counter will be used (e.g. \code{"NAME-001.png"}).}
@@ -2161,14 +2227,52 @@ because they often rely on minor details of dependencies.}
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
+# These example lines should be performed in a `./tests/testthat`
+# test file so that snapshot files can be saved
+
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path, variant = platform_variant())
 
-# Expect a full size screenshot
+# Expect a full size screenshot to be pixel perfect
 app$expect_screenshot()
 
-# Very brittle test
+# Images are brittle when containing plots
 app$expect_screenshot(selector = "#distPlot")
+
+# Test with more threshold in pixel value differences
+# Helps with rounded corners
+app$expect_screenshot(threshold = 10)
+
+# Equivalent lines of test code
+app$expect_screenshot()
+app$expect_screenshot(threshold = NULL)
+app$expect_screenshot(compare = testthat::compare_file_binary)
+expect_snapshot_file(
+  app$get_screenshot(),
+  variant = app$get_variant(),
+  compare = testthat::compare_file_binary
+)
+
+# Equivalent lines of test code
+app$expect_screenshot(threshold = 3, kernel_size = 5)
+app$expect_screenshot(compare = function(old, new) {
+  compare_screenshot_threshold(
+    old, new,
+    threshold = 3,
+    kernel_size = 5
+  )
+})
+expect_screenshot_file(
+  app$get_screenshot(),
+  variant = app$get_variant(),
+  compare = function(old, new) {
+    compare_screenshot_threshold(
+      old, new,
+      threshold = 3,
+      kernel_size = 5
+    )
+  }
+)
 }
 }
 \if{html}{\out{</div>}}
