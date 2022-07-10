@@ -33,7 +33,7 @@ namespace writable = cpp11::writable;
 // Return value:
 //   Return max convolution value
 [[cpp11::register]] double image_diff_convolution_max_value(
-    cpp11::doubles_matrix<> diff_matrix,
+    cpp11::doubles_matrix<by_column> diff_matrix,
     int kernel_size)
 {
   double max_value = 0.0;
@@ -43,7 +43,7 @@ namespace writable = cpp11::writable;
 
   // Perform rolling sum for each row, given the diff_matrix
   // Store result into conv_matrix
-  writable::doubles_matrix<>
+  writable::doubles_matrix<by_column>
       conv_matrix(diff_rows, diff_cols);
   for (int i = 0; i < diff_rows; ++i)
   {
