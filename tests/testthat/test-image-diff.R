@@ -1,9 +1,10 @@
 
-if (!fs::file_exists(
-  test_path("image_diff/151-new-linux-3_6-446865a.png")
-)) {
-  skip("convolution test images not found")
-}
+img_folder <- system.file("example/imgs", package = "shinytest2")
+bookmark_new <- fs::path(img_folder, "bookmark-new.png")
+bookmark_old <- fs::path(img_folder, "bookmark-old.png")
+
+slider_new <- fs::path(img_folder, "slider-new.png")
+slider_old <- fs::path(img_folder, "slider-old.png")
 
 test_that("convolution can be performed", {
   # Using `brew install graphicsmagick`
@@ -13,16 +14,16 @@ test_that("convolution can be performed", {
   # Same image
   expect_true(
     compare_screenshot_threshold(
-      test_path("image_diff/151-original-linux-3_6-79bf3a4.png"),
-      test_path("image_diff/151-original-linux-3_6-79bf3a4.png"),
+      bookmark_old,
+      bookmark_old,
       threshold = NULL
     )
   )
   # Same image
   expect_true(
     compare_screenshot_threshold(
-      test_path("image_diff/151-original-linux-3_6-79bf3a4.png"),
-      test_path("image_diff/151-original-linux-3_6-79bf3a4.png"),
+      bookmark_old,
+      bookmark_old,
       threshold = 0
     )
   )
@@ -30,27 +31,32 @@ test_that("convolution can be performed", {
   # Slightly different images
   expect_true(
     compare_screenshot_threshold(
-      test_path("image_diff/151-original-linux-3_6-79bf3a4.png"),
-      test_path("image_diff/151-new-linux-3_6-446865a.png"),
+      bookmark_old,
+      bookmark_new,
       threshold = 1
     )
   )
 
+
   # Slightly different images
   expect_false(
     compare_screenshot_threshold(
-      test_path("image_diff/bers3-1.png"),
-      test_path("image_diff/bers3-2.png"),
-      threshold = 28.1
+      slider_old,
+      slider_new,
+      threshold = 28.1,
+      quiet = TRUE
     )
   )
-  expect_true(
-    compare_screenshot_threshold(
-      test_path("image_diff/bers3-1.png"),
-      test_path("image_diff/bers3-2.png"),
-      threshold = 28.2
-    )
-  )
+
+  expect_silent({
+    ans <-
+      compare_screenshot_threshold(
+        slider_old,
+        slider_new,
+        threshold = 28.2
+      )
+  })
+  expect_true(ans)
 
 })
 
@@ -59,14 +65,14 @@ test_that("kernel size makes a difference", {
 
   small_max_diff <-
     screenshot_max_difference(
-      test_path("image_diff/bers3-1.png"),
-      test_path("image_diff/bers3-2.png"),
+      slider_old,
+      slider_new,
       kernel_size = 5
     )
   big_max_diff <-
     screenshot_max_difference(
-      test_path("image_diff/bers3-1.png"),
-      test_path("image_diff/bers3-2.png"),
+      slider_old,
+      slider_new,
       kernel_size = 10
     )
 

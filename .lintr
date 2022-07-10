@@ -5,4 +5,6 @@ linters: with_defaults(
     cyclocomp_linter = NULL,
     dummy_linter = NULL
   )
-exclusions: list()
+exclusions: list(
+    "R/cpp11.R"
+  )

@@ -2155,9 +2155,10 @@ recommended to use other expectation methods.
   selector = missing_arg(),
   compare = function(old, new) {
      compare_screenshot_threshold(old, new, threshold
-    = threshold, kernel_size = kernel_size)
+    = threshold, kernel_size = kernel_size, quiet = quiet)
  },
   kernel_size = 5,
+  quiet = FALSE,
   name = NULL,
   cran = FALSE
 )}\if{html}{\out{</div>}}
@@ -2170,7 +2171,7 @@ recommended to use other expectation methods.
 
 \item{\code{threshold}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
 when using the default \code{compare} method. If the value of \code{threshold} is
-NULL\verb{, [}compare_screenshot_threshold()\verb{] will act like [}testthat::compare_file_binary\verb{]. However, if }threshold\verb{ is positive, it will be compared against the largest convolution value found if the two images fail a [}testthat::compare_file_binary`] comparison.
+NULL\verb{, [}compare_screenshot_threshold()\verb{] will act like [}testthat::compare_file_binary\verb{]. However, if }threshold\verb{ is a positive number, it will be compared against the largest convolution value found if the two images fail a [}testthat::compare_file_binary`] comparison.
 
 Which value should I use? Threshold values values below 5 help deter
 false-positive screenshot comparisons (such as inconsistent rounded
@@ -2209,6 +2210,9 @@ will have preference.}
 when using the default \code{compare} method. The \code{kernel_size} represents the
 height and width of the convolution kernel applied to the pixel
 differences. This integer-like value should be relatively small.}
+
+\item{\code{quiet}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
+when using the default \code{compare} method. If \code{FALSE}, diagnostic information will be presented when the computed value is larger than a non-\code{NULL} \code{threshold} value.}
 
 \item{\code{name}}{The file name to be used for the snapshot. The file extension
 will overwritten to \code{.png}. By default, the \code{name} supplied to

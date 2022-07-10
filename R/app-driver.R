@@ -994,7 +994,7 @@ AppDriver <- R6Class( # nolint
     #' @param threshold Parameter supplied to [`compare_screenshot_threshold()`]
     #' when using the default `compare` method. If the value of `threshold` is
     #' NULL`, [`compare_screenshot_threshold()`] will act like
-    #' [`testthat::compare_file_binary`]. However, if `threshold` is positive,
+    #' [`testthat::compare_file_binary`]. However, if `threshold` is a positive number,
     #' it will be compared against the largest convolution value found if the
     #' two images fail a [`testthat::compare_file_binary`] comparison.
     #'
@@ -1007,6 +1007,8 @@ AppDriver <- R6Class( # nolint
     #' when using the default `compare` method. The `kernel_size` represents the
     #' height and width of the convolution kernel applied to the pixel
     #' differences. This integer-like value should be relatively small.
+    #' @param quiet Parameter supplied to [`compare_screenshot_threshold()`]
+    #' when using the default `compare` method. If `FALSE`, diagnostic information will be presented when the computed value is larger than a non-`NULL` `threshold` value.
     #' @examples
     #' \dontrun{
     #' # These example lines should be performed in a `./tests/testthat`
@@ -1066,10 +1068,12 @@ AppDriver <- R6Class( # nolint
         compare_screenshot_threshold(
           old, new,
           threshold = threshold,
-          kernel_size = kernel_size
+          kernel_size = kernel_size,
+          quiet = quiet
         )
       },
       kernel_size = 5,
+      quiet = FALSE,
       name = NULL,
       cran = FALSE
     ) {
