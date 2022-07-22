@@ -331,7 +331,7 @@ m__expected_files <- function(test_path, info_env) {
 
         new_number <- 2 * cur_number - downloads_found
         switch(fs::path_ext(expected_file),
-          "png" = {},
+          "png" = {}, # nolint: brace_linter
           "json" = {
             new_number <- new_number - 1
           },
@@ -667,9 +667,6 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       # `paste0("#", selector)`
       call2_fn(paste0, ...)
     }
-  }
-  list_call <- function(...) {
-    call2_fn(list, ...)
   }
   abort_if_not_character <- function(x, fn_name, arg_name) {
     if (!is.character(x)) {

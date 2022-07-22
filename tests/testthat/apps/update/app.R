@@ -1,3 +1,4 @@
+library(shiny)
 
 ui <- fluidPage(
   tags$h1("Do not touch slider"),
