@@ -11,7 +11,9 @@ shinyApp(
 
   server = function(input, output, session) {
     vals <- reactiveValues(x = 1)
-    y <- reactive({ vals$x + 1 })
+    y <- reactive({
+      vals$x + 1
+    })
 
     observeEvent(input$inc, {
       vals$x <<- vals$x + 1

@@ -29,7 +29,7 @@ test_that("set kitchen sink of inputs", {
   # File upload
   tmpfile <- "__tmpfile.txt"
   cat("tmpfile content", file = tmpfile)
-  withr::defer({unlink(tmpfile)})
+  withr::defer(unlink(tmpfile))
   app$upload_file(file = tmpfile)
 
   app$expect_values()

@@ -22,7 +22,7 @@ app_start_shiny <- function(
         if (!is.null(seed)) {
           # Prior to R 3.6, RNGkind has 2 args, otherwise it has 3
           do.call(RNGkind, as.list(rng_kind))
-          set.seed(seed);
+          set.seed(seed)
           getNamespace("shiny")$withPrivateSeed(set.seed(seed + 11))
         }
 

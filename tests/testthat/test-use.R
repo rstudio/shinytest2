@@ -17,7 +17,7 @@ expect_configs <- function(runner, setup, ignore, package) {
 
   app_dir <- tempfile("st2-test")
   fs::dir_create(app_dir)
-  withr::defer({fs::dir_delete(app_dir)})
+  withr::defer(fs::dir_delete(app_dir))
 
   if (package || ignore) {
     # Set up DESCRIPTION file

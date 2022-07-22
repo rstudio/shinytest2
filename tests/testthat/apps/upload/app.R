@@ -1,3 +1,5 @@
+library(shiny)
+
 ui <- fluidPage(
   "Upload a file:",
   fileInput("file", label = NULL),

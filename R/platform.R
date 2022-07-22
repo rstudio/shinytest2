@@ -1,9 +1,11 @@
 
 
 #' @include utils.R
+# nolint start: brace_linter
 is_windows <- cache_fn_val(function() { .Platform$OS.type == "windows" })
 # is_mac     <- function() Sys.info()[["sysname"]] == "Darwin"
 # is_linux   <- function() Sys.info()[["sysname"]] == "Linux"
+# nolint end
 
 #' Platform specific variant
 #'
