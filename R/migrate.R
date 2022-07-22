@@ -138,7 +138,7 @@ m__find_shinydriver_new <- function(exprs, info_env) {
           defaults = TRUE
         )
       )
-      ret <<- append(ret, list(list(app_var = app_var, args = args)))
+      ret <<- append(ret, list(list(app_var = app_var, args = new_args)))
     }
     # Don't alter the expr_list, just return it
     as.call(expr_list)
