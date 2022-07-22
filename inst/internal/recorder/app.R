@@ -345,7 +345,7 @@ shinyApp(
             textInput("testname", label = "Test name:", value = app_name),
             class = "inline-input-container",
           ),
-          tooltip("The name of the test should be short, unique, and path-friendly way to describe what the set of expectations are trying to confirm."),
+          tooltip("The name of the test should be short, unique, and path-friendly way to describe what the set of expectations are trying to confirm.")
         ),
         tagAppendChild(
           tagAppendAttributes(
