@@ -1,3 +1,5 @@
+suppressPackageStartupMessages(library(shiny))
+
 make_info_env <- function(
   suffix = missing_arg(),
   compare_images = TRUE,
