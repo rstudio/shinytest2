@@ -50,7 +50,7 @@ Use \pkg{shinytest2} with your Shiny application
 }
 \section{Functions}{
 \itemize{
-\item \code{use_shinytest2}: This \pkg{usethis}-style method initializes many different useful features when using
+\item \code{use_shinytest2()}: This \pkg{usethis}-style method initializes many different useful features when using
 \pkg{shinytest2}:
 \itemize{
 \item \code{runner}: Creates a \pkg{shinytest2} test runner at \code{./tests/testthat.R}. This file
@@ -62,13 +62,13 @@ will contain a call to \code{\link[=test_app]{test_app()}}.
 
 If any of these values are \emph{not} missing, the remaining missing values will be set to \code{FALSE}. This allows \code{use_shinytest2()} to add more flags in future versions without opting into all changes inadvertently.
 
-\item \code{use_shinytest2_test}: Creates a test file called \code{./tests/testthat/test-shinytest2.R}. By
+\item \code{use_shinytest2_test()}: Creates a test file called \code{./tests/testthat/test-shinytest2.R}. By
 default, this file's template test will initialize your Shiny application and
 expect the initial values.
 
 This method will also set up a test runner if it does not exist.
-}}
 
+}}
 \examples{
 # Set up shinytest2 testing configs
 \dontrun{use_shinytest2()}
