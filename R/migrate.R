@@ -409,7 +409,7 @@ m__parse_test_text <- function(test_text, test_path, info_env) {
   # TODO-future; split the code into parts and recurse
   if (length(init_infos) > 1) rlang::abort(paste0("Can not migrate file that contains multiple calls to `ShinyDriver$new`: ", test_path))
   info_env$app_var <- init_infos[[1]]$app_var
-  info_env$init_args <- init_infos[[1]]$args
+  # info_env$init_args <- init_infos[[1]]$args
 
 
   ## Depending on the methods called (ex: $snapshotInit()),
