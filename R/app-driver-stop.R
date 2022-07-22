@@ -8,7 +8,7 @@ app_stop <- function(self, private) {
   }
 
   self$log_message("Closing chromote session")
-  withCallingHandlers(
+  tryCatch(
     self$get_chromote_session()$close(),
     error = function(e) {
       self$log_message(paste0("Error closing chromote session!\n", conditionMessage(e)))
@@ -20,7 +20,7 @@ app_stop <- function(self, private) {
     if (private$shiny_process$is_alive()) {
       self$log_message("Ending Shiny process. Ignoring Shiny process result")
 
-      withCallingHandlers(
+      tryCatch(
         {
           # Attempt soft-kill before hard-kill. This is a workaround for
           # https://github.com/r-lib/processx/issues/95
@@ -40,7 +40,7 @@ app_stop <- function(self, private) {
     } else {
       # Store the value to return later
       self$log_message("Getting Shiny process result")
-      withCallingHandlers(
+      tryCatch(
         private$shiny_proc_value <- private$shiny_process$get_result(),
         error = function(e) {
           self$log_message(paste0("Error getting Shiny process result!\n", conditionMessage(e)))
