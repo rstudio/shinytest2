@@ -115,7 +115,7 @@ app_initialize_ <- function(
   "!DEBUG waiting for Shiny to become stable"
   self$log_message("Waiting for Shiny to become ready")
 
-  withCallingHandlers(
+  withCallingHandlers( # abort() on error
     {
       self$wait_for_js(
         "window.shinytest2 && window.shinytest2.ready === true",
@@ -190,10 +190,10 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
     }
   }
 
-  withCallingHandlers(
+  withCallingHandlers( # abort() on error
     app_initialize_(self, private, ..., view = view),
     error = function(e) {
-      withCallingHandlers(
+      tryCatch(
         self$log_message(paste0("Error while initializing AppDriver:\n", conditionMessage(e))),
         error = function(ee) {
           app_inform(self, private, paste0("Could not log error message. Error: ", conditionMessage(ee)))
@@ -202,7 +202,7 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
 
       # Open chromote session if it is not already open and `view != FALSE`
       # `view` defaults to `rlang::missing_arg()`
-      withCallingHandlers(
+      tryCatch(
         {
           view_val <- rlang::maybe_missing(view, NULL)
           if (
@@ -226,7 +226,7 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
         }
       )
 
-      logs <- withCallingHandlers(
+      logs <- tryCatch(
         format(self$get_logs()),
         error = function(e) "(Error retrieving logs)"
       )
