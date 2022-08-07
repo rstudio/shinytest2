@@ -14,9 +14,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><link href="../deps/_Source%20Sans%20Pro-0.4.1/font.css" rel="stylesheet">
-<link href="../deps/_Source%20Code%20Pro-0.4.1/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.2/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.2/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Getting started with shinytest2">
@@ -111,16 +111,16 @@
 <div class="section level2">
 <h2 id="how-testing-works-with-shinytest2">How testing works with shinytest2<a class="anchor" aria-label="anchor" href="#how-testing-works-with-shinytest2"></a>
 </h2>
-<p>The <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> package provides tools for creating and running automated tests on Shiny applications.</p>
-<p><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> uses <a href="https://testthat.r-lib.org" class="external-link">testthat</a>’s snapshot-based testing strategy. The first time it runs a set of tests for an application, it performs some scripted interactions with the app and takes one or more snapshots of the application’s state. These snapshots are saved to disk so that future runs of the tests can compare their results to them.</p>
+<p>The <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> package provides tools for creating and running automated tests on Shiny applications.</p>
+<p><a href="https://rstudio.github.io/shinytest2/">shinytest2</a> uses <a href="https://testthat.r-lib.org" class="external-link">testthat</a>’s snapshot-based testing strategy. The first time it runs a set of tests for an application, it performs some scripted interactions with the app and takes one or more snapshots of the application’s state. These snapshots are saved to disk so that future runs of the tests can compare their results to them.</p>
 <p>To create tests, the easiest method is to use the <code><a href="../reference/record_test.html">record_test()</a></code> function. This launches the application in a web browser and records your interactions with the application. These interactions are saved in <code>tests/testthat/test-shinytest2.R</code> and are run using the strategy described above.</p>
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
-<p>Begin by installing <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> from CRAN:</p>
+<p>Begin by installing <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"shinytest2"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"shinytest2"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="recording-tests">Recording tests<a class="anchor" aria-label="anchor" href="#recording-tests"></a>
 </h3>
@@ -140,43 +140,43 @@
 <p>To record tests, we first need an app.</p>
 <p>Here is a simple app that I’ve placed in <code>simple-app/app.R</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span>
-<span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textInput.html" class="external-link">textInput</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"What is your name?"</span><span class="op">)</span>,
-  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"greet"</span>, <span class="st">"Greet"</span><span class="op">)</span>,
-  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html" class="external-link">textOutput</a></span><span class="op">(</span><span class="st">"greeting"</span><span class="op">)</span>
-<span class="op">)</span>
-<span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">output</span><span class="op">$</span><span class="va">greeting</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderText</a></span><span class="op">(</span><span class="op">{</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html" class="external-link">req</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">greet</span><span class="op">)</span>
-    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Hello "</span>, <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">name</span><span class="op">)</span>, <span class="st">"!"</span><span class="op">)</span>
-  <span class="op">}</span><span class="op">)</span>
-<span class="op">}</span>
-<span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span>
+<span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textInput.html" class="external-link">textInput</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"What is your name?"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"greet"</span>, <span class="st">"Greet"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html" class="external-link">textOutput</a></span><span class="op">(</span><span class="st">"greeting"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">output</span><span class="op">$</span><span class="va">greeting</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderText</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html" class="external-link">req</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">greet</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Hello "</span>, <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">name</span><span class="op">)</span>, <span class="st">"!"</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
 <p>To test it, I now load {shinytest2}, and call <code><a href="../reference/record_test.html">record_test()</a></code> with the path to my app:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a></span><span class="op">)</span>
-<span class="fu"><a href="../reference/record_test.html">record_test</a></span><span class="op">(</span><span class="st">"simple-app/"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/shinytest2/">shinytest2</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/record_test.html">record_test</a></span><span class="op">(</span><span class="st">"simple-app/"</span><span class="op">)</span></span></code></pre></div>
 <p>In a separate R process, this launches the Shiny application to be tested. We’ll refer to this as the <strong>target app</strong>. This also launches a special Shiny application in the current R process which displays the target app in an iframe and has some controls outside the iframe. We’ll refer to this as the <strong>recorder app</strong>. You will see something like this:</p>
 <p><img src="images/record-simple-app.png" width="100%" style="display: block; margin: auto;"></p>
 <p>On the left is the target app (in this case, the “What is your name” app), and on the right is the recorder app sidebar. Note that you may need to make the browser window wider because the recorder sidebar occupies some space.</p>
 <p>The sidebar on the right displays some controls for the test recorder, as well as a the set of <strong>Code</strong> for all expectations and actions. As you interact with the target app – in other words, when you set inputs on the app – you will see those actions recorded in the Code output.</p>
 <p>For testing a Shiny application, setting inputs is only one part. It’s also necessary to check that the application produces the correct <code>output</code>s. This is accomplished by taking expectations of the application’s state.</p>
-<p>There are two ways to record <code>output</code> values. One way is to take an <strong>expectation</strong> of the application’s state. This will record all <code>input</code> values, <code>output</code> values, and <code>export</code>ed values (more on exported values later). To do this, click the <code>Expect values</code> button on the recorder app.</p>
+<p>There are two ways to record <code>output</code> values. One way is to take an <strong>expectation</strong> of the application’s state. This will record all <code>input</code> values, <code>output</code> values, and <code>export</code>ed values (more on exported values later). To do this, click the <code>Expect Shiny values</code> button on the recorder app.</p>
 <p>After modifying some <code>input</code>s and making an expectation, it will look something like this:</p>
 <p><img src="images/record-simple-app-2.png" width="100%" style="display: block; margin: auto;"></p>
 <p>It is also possible to take a <em>targeted</em> value expectation. This is a snapshot of one or more specified <code>output</code> (instead of the default, which is to snapshot the entire application). To do this, hold down the Control (or Command) button on your keyboard and click on an <code>output</code>; it will snapshot just that one <code>output</code>.</p>
 <p>When you are done recording a sequence of events, click on the <code>Save test and exit</code> button. If you are in the RStudio IDE, it will open the test script <code>tests/testthat/test-shinytest2.R</code> from a subdirectory of the application.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># File: tests/testthat/test-shinytest2.R</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a></span><span class="op">)</span>
-
-<span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"{shinytest2} recording: simple-app"</span>, <span class="op">{</span>
-  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"simple-app"</span>, height <span class="op">=</span> <span class="fl">407</span>, width <span class="op">=</span> <span class="fl">348</span><span class="op">)</span>
-  <span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Barret"</span><span class="op">)</span>
-  <span class="va">app</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="st">"greet"</span><span class="op">)</span>
-  <span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span>
-<span class="op">}</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># File: tests/testthat/test-shinytest2.R</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/shinytest2/">shinytest2</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"{shinytest2} recording: simple-app"</span>, <span class="op">{</span></span>
+<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"simple-app"</span>, height <span class="op">=</span> <span class="fl">407</span>, width <span class="op">=</span> <span class="fl">348</span><span class="op">)</span></span>
+<span>  <span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Barret"</span><span class="op">)</span></span>
+<span>  <span class="va">app</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="st">"greet"</span><span class="op">)</span></span>
+<span>  <span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="running-tests">Running tests<a class="anchor" aria-label="anchor" href="#running-tests"></a>
@@ -207,7 +207,7 @@ Duration: 2.6 s
 [ FAIL 0 | WARN 2 | SKIP 0 | PASS 1 ]</code></pre>
 <p>Behind the scenes, it runs <code><a href="../reference/test_app.html">test_app()</a></code>. You can manually run the tests with this:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/test_app.html">test_app</a></span><span class="op">(</span><span class="st">"simple-app"</span>, filter <span class="op">=</span> <span class="st">"shinytest2"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/test_app.html">test_app</a></span><span class="op">(</span><span class="st">"simple-app"</span>, filter <span class="op">=</span> <span class="st">"shinytest2"</span><span class="op">)</span></span></code></pre></div>
 <p>This will play back the interactions and record snapshots, as specified in the test script. The very first time the tests are run, they will be saved in a subdirectory of the app called <code>tests/testthat/_snaps</code>. These are the expected results, and future test runs will be compared against them.</p>
 <p>The directory will contain two types of files for different expectations. For example:</p>
 <pre><code>001.json
@@ -286,7 +286,7 @@ Duration: 2.2 s
 <div class="section level2">
 <h2 id="interactive-r-markdown-documents">Interactive R Markdown documents<a class="anchor" aria-label="anchor" href="#interactive-r-markdown-documents"></a>
 </h2>
-<p><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> can be used with <a href="https://bookdown.org/yihui/rmarkdown/shiny-documents.html" class="external-link">interactive R Markdown documents</a> that use <code>runtime: shiny</code> or <code>server: shiny</code> (sometimes also referred to as Shiny documents). This includes those that use the <a href="https://pkgs.rstudio.com/flexdashboard/" class="external-link">flexdashboard</a> package.</p>
+<p><a href="https://rstudio.github.io/shinytest2/">shinytest2</a> can be used with <a href="https://bookdown.org/yihui/rmarkdown/shiny-documents.html" class="external-link">interactive R Markdown documents</a> that use <code>runtime: shiny</code> or <code>server: shiny</code> (sometimes also referred to as Shiny documents). This includes those that use the <a href="https://pkgs.rstudio.com/flexdashboard/" class="external-link">flexdashboard</a> package.</p>
 <p>Shiny documents have some differences compared to regular Shiny applications, and so the tests are slightly different. For an example of an interactive Rmd with tests, please follow <a href="https://github.com/rstudio/shinytest2/tree/main/tests/testthat/apps/rmd-shiny" class="external-link">this link</a>.</p>
 <div class="section level3">
 <h3 id="randomness">Randomness<a class="anchor" aria-label="anchor" href="#randomness"></a>
@@ -304,7 +304,7 @@ Duration: 2.2 s
 <p>Some Shiny documents use <a href="https://rmarkdown.rstudio.com/authoring_shiny_prerendered.html" class="external-link"><code>runtime: shiny_prerendered</code></a>, which helps speed up page loading time. Normally, the first time these applications are run, they will leave behind a generated .html file as well as a cache directory named myfile_data/.</p>
 <p>You can remove these files by adding this to the end of your test script (assuming the name of your document is <code>doc.Rmd</code>):</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">rmarkdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgs.rstudio.com/rmarkdown/reference/shiny_prerendered_clean.html" class="external-link">shiny_prerendered_clean</a></span><span class="op">(</span><span class="st">"../doc.Rmd"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">rmarkdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgs.rstudio.com/rmarkdown/reference/shiny_prerendered_clean.html" class="external-link">shiny_prerendered_clean</a></span><span class="op">(</span><span class="st">"../doc.Rmd"</span><span class="op">)</span></span></code></pre></div>
 <p>Alternatively, you can save the generated files, but then the tests will be run with the generated files, so the prerendering step will not be run for future tests.</p>
 <p>For an example of a prerendered .Rmd and tests, please follow <a href="https://github.com/rstudio/shinytest2/tree/61d51d9e96640bfae3eeefa12c4b685099b584c8/tests/testthat/apps/rmd-pre" class="external-link">this link</a>.</p>
 </div>
@@ -329,7 +329,7 @@ Duration: 2.2 s
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
   </div></footer>
