@@ -37,7 +37,7 @@ well.
 In this vignette we'll provide a more thorough overview of the
 `AppDriver` R6 class (extending on the concepts covered in the [Testing
 in depth](in-depth.html) article), which allows the developer to
-programmatically control the app. We'll see how we can seemlessly
+programmatically control the app. We'll see how we can seamlessly
 benefit from gremlins.js with only few lines of code.
 
 
