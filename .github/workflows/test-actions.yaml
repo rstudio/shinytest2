@@ -15,6 +15,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        step-uses: 
+        # Latest tag
+        - rstudio/shinytest2/actions/test-app@v1
+        # Current Branch (main / PR branch)
+        - ./actions/test-app
         config:
           - {os: ubuntu-latest, r: release}
 
@@ -39,9 +44,8 @@ jobs:
             "local::."
 
       - name: Test app
-        uses: rstudio/shinytest2/actions/test-app@main
-        # uses: rstudio/shinytest2/actions/test-app@specific_branch
         ## Suggested usage
         # uses: rstudio/shinytest2/actions/test-app@v1
+        uses: ${{ matrix.step-uses }}
         with:
           app-dir: "tests/testthat/apps/hello"
