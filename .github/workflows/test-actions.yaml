@@ -15,11 +15,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        step-uses: 
-        # Latest tag
-        - rstudio/shinytest2/actions/test-app@v1
-        # Current Branch (main / PR branch)
-        - ./actions/test-app
         config:
           - {os: ubuntu-latest, r: release}
 
@@ -43,9 +38,21 @@ jobs:
           extra-packages:
             "local::."
 
-      - name: Test app
-        ## Suggested usage
-        # uses: rstudio/shinytest2/actions/test-app@v1
-        uses: ${{ matrix.step-uses }}
+      # ## Suggested usage
+      # - name: Test app
+      #   uses: rstudio/shinytest2/actions/test-app@v1
+      #   with:
+      #     app-dir: "tests/testthat/apps/hello"
+
+      - name: Test app (main)
+        uses: rstudio/shinytest2/actions/test-app@v1
+        continue-on-error: true
+        with:
+          app-dir: "tests/testthat/apps/hello"
+
+      - name: Test app (PR)
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        uses: ./actions/test-app
         with:
           app-dir: "tests/testthat/apps/hello"
