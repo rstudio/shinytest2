@@ -22,6 +22,8 @@
 
 * Update {lintr} lints to v3 (#240)
 
+* Fixed GHA links for `rstudio/shinytest2/actions/test-app@v1` (#249)
+
 # shinytest2 0.1.0
 
 * Initial release of package
