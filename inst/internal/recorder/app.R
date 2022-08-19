@@ -599,7 +599,7 @@ shinyApp(
       "seed",
         ~ shiny::tagList(
           shiny::tags$p("Can not save tests for a Shiny object."),
-          shiny::tags$p("Please supply an application directory to", shiny::tags$code("record_test(app_dir =)"))
+          shiny::tags$p("Please supply an application directory to", shiny::tags$code("record_test(app =)"))
       )
     )
 
