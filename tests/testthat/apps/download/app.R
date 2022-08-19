@@ -1,3 +1,5 @@
+library(shiny)
+
 ui <- fluidPage(
   downloadButton("download_button_txt", "Download Button - Text"),
   downloadButton("download_link_txt", "Download Link - Text"),

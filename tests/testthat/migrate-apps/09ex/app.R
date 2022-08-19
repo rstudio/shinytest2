@@ -89,8 +89,7 @@ server <- function(input, output) {
 
     if (input$disp == "head") {
       return(head(df))
-    }
-    else {
+    } else {
       return(df)
     }
 
