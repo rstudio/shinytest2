@@ -138,7 +138,7 @@ m__find_shinydriver_new <- function(exprs, info_env) {
           defaults = TRUE
         )
       )
-      ret <<- append(ret, list(list(app_var = app_var, args = args)))
+      ret <<- append(ret, list(list(app_var = app_var, args = new_args)))
     }
     # Don't alter the expr_list, just return it
     as.call(expr_list)
@@ -331,7 +331,7 @@ m__expected_files <- function(test_path, info_env) {
 
         new_number <- 2 * cur_number - downloads_found
         switch(fs::path_ext(expected_file),
-          "png" = {},
+          "png" = {}, # nolint: brace_linter
           "json" = {
             new_number <- new_number - 1
           },
@@ -409,7 +409,7 @@ m__parse_test_text <- function(test_text, test_path, info_env) {
   # TODO-future; split the code into parts and recurse
   if (length(init_infos) > 1) rlang::abort(paste0("Can not migrate file that contains multiple calls to `ShinyDriver$new`: ", test_path))
   info_env$app_var <- init_infos[[1]]$app_var
-  info_env$init_args <- init_infos[[1]]$args
+  # info_env$init_args <- init_infos[[1]]$args
 
 
   ## Depending on the methods called (ex: $snapshotInit()),
@@ -667,9 +667,6 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       # `paste0("#", selector)`
       call2_fn(paste0, ...)
     }
-  }
-  list_call <- function(...) {
-    call2_fn(list, ...)
   }
   abort_if_not_character <- function(x, fn_name, arg_name) {
     if (!is.character(x)) {

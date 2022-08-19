@@ -20,6 +20,8 @@
 
 * Remove trailing comma causing render bug in recorder app (@mehrnoushmalek, #239)
 
+* Update {lintr} lints to v3 (#240)
+
 # shinytest2 0.1.0
 
 * Initial release of package

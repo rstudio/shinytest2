@@ -7,8 +7,8 @@ editor_options:
     wrap: sentence
 vignette: >
   %\VignetteIndexEntry{Getting started with shinytest2}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r setup, include=FALSE}
@@ -105,7 +105,7 @@ This is accomplished by taking expectations of the application's state.
 There are two ways to record `output` values.
 One way is to take an **expectation** of the application's state.
 This will record all `input` values, `output` values, and `export`ed values (more on exported values later).
-To do this, click the `Expect values` button on the recorder app.
+To do this, click the `Expect Shiny values` button on the recorder app.
 
 After modifying some `input`s and making an expectation, it will look something like this:
 
