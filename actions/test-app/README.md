@@ -97,7 +97,7 @@ jobs:
           extra-packages:
             shinytest2
 
-      - uses: rstudio/shinytest2/actions/test_app@v1
+      - uses: rstudio/shinytest2/actions/test-app@v1
         with:
           path: "."
 ```
@@ -155,7 +155,7 @@ jobs:
 
       - uses: r-lib/actions/setup-renv@v2
 
-      - uses: rstudio/shinytest2/actions/test_app@v1
+      - uses: rstudio/shinytest2/actions/test-app@v1
         with:
           path: "."
 ```
@@ -222,7 +222,7 @@ jobs:
             local::.
             shinytest2
 
-      - uses: rstudio/shinytest2/actions/test_app@v1
+      - uses: rstudio/shinytest2/actions/test-app@v1
         with:
           path: "."
 ```
