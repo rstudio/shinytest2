@@ -26,7 +26,7 @@ app_upload_file <- function(
 
   node_id <- app_find_node_id(self, private, input = names(inputs)[1])
 
-  withCallingHandlers(
+  withCallingHandlers( # abort() on error
     # Provide fully defined file path to chromote
     filename <- fs::path_real(filename),
     error = function(e) {

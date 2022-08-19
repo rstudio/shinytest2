@@ -35,7 +35,7 @@ app__expect_snapshot_file <- function(
   # Make it path safe so others are not created or accessed
   name_safe <- fs::path_sanitize(name, "_")
 
-  withCallingHandlers(
+  withCallingHandlers( # Display text diff when possible
     testthat::expect_snapshot_file(
       file,
       name = name_safe,

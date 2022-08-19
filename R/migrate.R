@@ -174,7 +174,7 @@ m__extract_runner_info <- function(app_info_env) {
     ))
   }
   # Store knowledge
-  withCallingHandlers(
+  withCallingHandlers( # abort() on error
     testnames <- eval(testapp_args$testnames, envir = globalenv()),
     error = function(e) {
       rlang::abort("Could not parse variable for `testnames` in `shinytest::testApp()`. Only atomic values are supported.")
