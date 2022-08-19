@@ -10,7 +10,7 @@ articles:
   using-monkey-testing: using-monkey-testing.html
   z-migration: z-migration.html
   zzz-faq: zzz-faq.html
-last_built: 2022-08-19T19:16Z
+last_built: 2022-08-19T19:17Z
 urls:
   reference: https://rstudio.github.io/shinytest2/reference
   article: https://rstudio.github.io/shinytest2/articles
