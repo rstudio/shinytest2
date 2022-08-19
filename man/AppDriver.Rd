@@ -37,7 +37,7 @@ a \code{.Rprofile} file within your Shiny app directory.
 
 
 If the app throws an error during initialization, the \code{AppDriver} will
-will be stored in \code{rlang::last_error()$app}. This allows for the "failure
+be stored in \code{rlang::last_error()$app}. This allows for the "failure
 to initialize" to be signaled while also allowing for the \code{app} to be
 retrieved after any initialization error has been thrown.
 }
@@ -48,7 +48,7 @@ retrieved after any initialization error has been thrown.
 Reactive values from within your Shiny application can be exported using the
 method:
 \href{https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html}{\code{shiny::exportTestValues()}}.
-This under utilized method exposes internal values of your app
+This underutilized method exposes internal values of your app
 without needing to create a corresponding input value or output value.
 
 For example:
@@ -1020,7 +1020,7 @@ Initialize an \code{AppDriver} object
 \itemize{
 \item A directory containing your Shiny application or a run-time Shiny R
 Markdown document.
-\item A url pointing to your shiny application. (Don't forget to set
+\item A URL pointing to your shiny application. (Don't forget to set
 \code{testmode = TRUE} when running your application!)
 \item A Shiny application object which inherits from \code{"shiny.appobj"}.
 }
