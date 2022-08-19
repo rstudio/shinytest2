@@ -34,7 +34,7 @@ NULL
 #' @section Start-up failure:
 #'
 #' If the app throws an error during initialization, the `AppDriver` will
-#' will be stored in `rlang::last_error()$app`. This allows for the "failure
+#' be stored in `rlang::last_error()$app`. This allows for the "failure
 #' to initialize" to be signaled while also allowing for the `app` to be
 #' retrieved after any initialization error has been thrown.
 #'
@@ -43,7 +43,7 @@ NULL
 #' Reactive values from within your Shiny application can be exported using the
 #' method:
 #' [`shiny::exportTestValues()`](https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html).
-#' This under utilized method exposes internal values of your app
+#' This underutilized method exposes internal values of your app
 #' without needing to create a corresponding input value or output value.
 #'
 #' For example:
@@ -193,7 +193,7 @@ AppDriver <- R6Class( # nolint
     #' @param app_dir This value can be many different things:
     #'   * A directory containing your Shiny application or a run-time Shiny R
     #'     Markdown document.
-    #'   * A url pointing to your shiny application. (Don't forget to set
+    #'   * A URL pointing to your shiny application. (Don't forget to set
     #'     `testmode = TRUE` when running your application!)
     #'   * A Shiny application object which inherits from `"shiny.appobj"`.
     #'

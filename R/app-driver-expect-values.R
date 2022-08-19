@@ -199,8 +199,8 @@ app_expect_values <- function(
         screenshot_args_
       )
     }
-    withCallingHandlers(
-      {
+    withCallingHandlers( # swallow expectation
+      { # nolint
         # `NAME.json` -> `NAME_.png`; `NAME_.new.png`
         png_path <-
           fs::path_ext_set(
@@ -333,7 +333,7 @@ hash_snapshot_image_data <- function(
   text_data  <- substring(data, text_start_idx,  text_stop_idx)
   # Hash the images
   image_hashes <- vapply(image_data, FUN.VALUE = "", function(dat) {
-    withCallingHandlers({
+    tryCatch({
       image_data <- jsonlite::base64_dec(dat)
       rlang::hash(
         image_data

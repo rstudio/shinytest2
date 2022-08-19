@@ -1,9 +1,7 @@
-linters: with_defaults(
+linters: linters_with_defaults(
     line_length_linter = NULL,
     commented_code_linter = NULL,
-    open_curly_linter = NULL,
-    cyclocomp_linter = NULL,
-    dummy_linter = NULL
+    cyclocomp_linter = NULL
   )
 exclusions: list(
     "R/cpp11.R"
