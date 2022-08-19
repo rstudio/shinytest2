@@ -142,8 +142,10 @@ use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
     rlang::check_installed("usethis")
     with_this_project({
       wrapper <-
-        if (quiet) function(...) {
-          utils::capture.output(..., type = "message")
+        if (quiet) {
+          function(...) {
+            utils::capture.output(..., type = "message")
+          }
         } else {
           force
         }

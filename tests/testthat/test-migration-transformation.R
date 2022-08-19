@@ -51,7 +51,7 @@ expect_migration_error <- function(
   info_env = make_info_env()
 ) {
   expect_msg_helper(
-    migrated_expr <-
+    # migrated_expr <-
       m__shinytest_lang(
         rlang::enexpr(original_expr),
         info_env
@@ -76,7 +76,9 @@ test_that("setInputs is converted", {
     "Use `AppDriver$get_values()` directly."
   )
   expect_migration_error(
-    local({app$setInputs(x = 1, allowInputNoBinding_ = TRUE, y = 2)}),
+    local({
+      app$setInputs(x = 1, allowInputNoBinding_ = TRUE, y = 2)
+    }),
     "Use `AppDriver$get_values()` directly."
   )
 
@@ -457,7 +459,9 @@ test_that("takeScreenshot is converted", {
     "Use `AppDriver$get_values()` directly"
   )
   expect_migration_error(
-    local({app$uploadFile(myid = "file.png")}),
+    local({
+      app$uploadFile(myid = "file.png")
+    }),
     "Use `AppDriver$get_values()` directly"
   )
   expect_migration(
