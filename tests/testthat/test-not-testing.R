@@ -5,13 +5,13 @@ test_that("Running an app not in testing mode has 404 handled when getting value
   app_bg <- callr::r_bg(
     function() {
       shiny::runApp(
-        shinyApp("", function(input, output) {}),
+        shinyApp("", function(input, output) {}), # nolint: brace_linter
         test.mode = FALSE
       )
     },
     stderr = "|"
   )
-  withr::defer({ app_bg$kill() })
+  withr::defer(app_bg$kill())
 
   # Wait until Shiny server is running
   app_url <- NULL
@@ -31,7 +31,7 @@ test_that("Running an app not in testing mode has 404 handled when getting value
   expect_true(!is.null(app_url))
 
   app <- AppDriver$new(app_url)
-  withr::defer({ app$stop() })
+  withr::defer(app$stop())
 
   expect_error(
     app$get_values(),
