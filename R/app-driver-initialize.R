@@ -116,7 +116,7 @@ app_initialize_ <- function(
   self$log_message("Waiting for Shiny to become ready")
 
   withCallingHandlers( # abort() on error
-    {
+    { # nolint
       self$wait_for_js(
         "window.shinytest2 && window.shinytest2.ready === true",
         timeout = load_timeout

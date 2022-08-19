@@ -200,7 +200,7 @@ app_expect_values <- function(
       )
     }
     withCallingHandlers( # swallow expectation
-      {
+      { # nolint
         # `NAME.json` -> `NAME_.png`; `NAME_.new.png`
         png_path <-
           fs::path_ext_set(

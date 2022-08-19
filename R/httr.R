@@ -13,7 +13,7 @@ app_httr_get <- function(self, private, url, fn_404 = NULL) {
   }
 
   withCallingHandlers( # abort() on error
-    {
+    { # nolint
       req <- httr::GET(url)
     },
     # Attempt to capture empty reply error and provide better message
