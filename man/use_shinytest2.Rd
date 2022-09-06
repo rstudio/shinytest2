@@ -29,7 +29,7 @@ use_shinytest2_test(
 \item{runner}{If \code{TRUE}, creates a \pkg{shinytest2} test runner at \code{./tests/testthat.R}}
 
 \item{setup}{If \code{TRUE}, creates a setup file called
-\code{./tests/testthat/setup.R} containing a call to \code{\link[=load_app_env]{load_app_env()}}}
+\code{./tests/testthat/setup-shinytest2.R} containing a call to \code{\link[=load_app_env]{load_app_env()}}}
 
 \item{ignore}{If \code{TRUE}, adds entries to \code{.Rbuildignore} and \code{.gitignore} to
 ignore new debug screenshots. (\verb{*_.new.png})}
@@ -55,7 +55,7 @@ Use \pkg{shinytest2} with your Shiny application
 \itemize{
 \item \code{runner}: Creates a \pkg{shinytest2} test runner at \code{./tests/testthat.R}. This file
 will contain a call to \code{\link[=test_app]{test_app()}}.
-\item \code{setup}: Creates \code{./tests/testthat/setup.R} to add your Shiny \code{./R} objects and functions into the testing environment. This file will run before testing begins.
+\item \code{setup}: Creates \code{./tests/testthat/setup-shinytest2.R} to add your Shiny \code{./R} objects and functions into the testing environment. This file will run before testing begins.
 \item \code{ignore}: Add an entry to \code{./Rbuildignore} (if it exists) and \code{.gitignore} to ignore new debug screenshots. (\verb{*_.new.png})
 \item \code{package}: Adds \code{shinytest} to the \code{Suggests} packages in the \code{DESCRIPTION} file (if it exists).
 }

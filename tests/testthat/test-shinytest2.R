@@ -1,4 +1,4 @@
-skip_on_cran() # CI is good enough / Uses chromote
+skip_on_cran() # CI is good enough
 
 # If testthat is not a `Depends` package, then `testthat` is guarenteed to be loaded when shinytest2 is loaded.
 # This will cause confusion when only `library(shinytest2)` is called.
@@ -10,11 +10,13 @@ test_that("testthat is a depends package", {
 
 
 test_that("AppDriver can print while working with `missing_arg()` values", {
-  skip_on_cran()
-
   expect_error(
     utils::capture.output({
-      print(AppDriver$new(shinyApp("", function(input, output) {})))
+      print(
+        AppDriver$new(
+          shinyApp("", function(input, output) {}) # nolint: brace_linter
+        )
+      )
     }),
     NA
   )

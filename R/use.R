@@ -5,7 +5,7 @@
 #' \pkg{shinytest2}:
 #' * `runner`: Creates a \pkg{shinytest2} test runner at `./tests/testthat.R`. This file
 #' will contain a call to [`test_app()`].
-#' * `setup`: Creates `./tests/testthat/setup.R` to add your Shiny `./R` objects and functions into the testing environment. This file will run before testing begins.
+#' * `setup`: Creates `./tests/testthat/setup-shinytest2.R` to add your Shiny `./R` objects and functions into the testing environment. This file will run before testing begins.
 #' * `ignore`: Add an entry to `./Rbuildignore` (if it exists) and `.gitignore` to ignore new debug screenshots. (`*_.new.png`)
 #' * `package`: Adds `shinytest` to the `Suggests` packages in the `DESCRIPTION` file (if it exists).
 #'
@@ -14,7 +14,7 @@
 #' @param app_dir The base directory for the Shiny application
 #' @param runner If `TRUE`, creates a \pkg{shinytest2} test runner at `./tests/testthat.R`
 #' @param setup If `TRUE`, creates a setup file called
-#' `./tests/testthat/setup.R` containing a call to [`load_app_env()`]
+#' `./tests/testthat/setup-shinytest2.R` containing a call to [`load_app_env()`]
 #' @param ignore If `TRUE`, adds entries to `.Rbuildignore` and `.gitignore` to
 #' ignore new debug screenshots. (`*_.new.png`)
 #' @param package If `TRUE`, adds \pkg{shinytest2} to `Suggests` in the `DESCRIPTION` file.
@@ -105,9 +105,15 @@ use_shinytest2_test <- function(
 
 use_shinytest2_setup <- function(app_dir = ".", quiet = FALSE) {
   withr::with_dir(app_dir, {
+    # Legacy support for old setup.R files.
+    # Should be using `setup-shinytest2.R`
+    if (has_load_app_env("tests/testthat/setup.R")) {
+      return(FALSE)
+    }
+
     fs::dir_create("tests/testthat")
     write_union(
-      "tests/testthat/setup.R",
+      "tests/testthat/setup-shinytest2.R",
       comments = "# Load application support files into testing environment",
       lines = "shinytest2::load_app_env()",
       quiet = quiet
@@ -136,8 +142,10 @@ use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
     rlang::check_installed("usethis")
     with_this_project({
       wrapper <-
-        if (quiet) function(...) {
-          utils::capture.output(..., type = "message")
+        if (quiet) {
+          function(...) {
+            utils::capture.output(..., type = "message")
+          }
         } else {
           force
         }
@@ -253,14 +261,14 @@ copy_test_file_helper <- function(
       overwrite = TRUE
     )
 
-    if (open) edit_file(to_file)
+    edit_file(to_file, open = open)
     TRUE
   })
 }
 
 
-edit_file <- function(file) {
-  if (isTRUE(file)) {
+edit_file <- function(file, open = TRUE) {
+  if (isTRUE(open)) {
     if (rlang::is_installed("usethis")) {
       usethis::edit_file(file)
     } else {

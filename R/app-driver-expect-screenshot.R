@@ -5,7 +5,7 @@ default_screenshot_args <- function(screenshot_args) {
   screenshot_args
 }
 
-app_screenshot <- function(
+app_get_screenshot <- function(
   self, private,
   file = NULL,
   ...,
@@ -13,7 +13,7 @@ app_screenshot <- function(
   delay = missing_arg(),
   selector = missing_arg()
 ) {
-  "!DEBUG app_screenshot()"
+  "!DEBUG app_get_screenshot()"
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
 
@@ -69,7 +69,7 @@ app_expect_screenshot <- function(
   selector = missing_arg(),
   cran = FALSE
 ) {
-  "!DEBUG app_screenshot()"
+  "!DEBUG app_expect_screenshot()"
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
 

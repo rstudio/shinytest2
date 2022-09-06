@@ -1,3 +1,4 @@
+# Testing that `./setup-shinytest2.R` is loaded
 
 test_that("wait for idle works", {
 

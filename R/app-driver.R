@@ -34,7 +34,7 @@ NULL
 #' @section Start-up failure:
 #'
 #' If the app throws an error during initialization, the `AppDriver` will
-#' will be stored in `rlang::last_error()$app`. This allows for the "failure
+#' be stored in `rlang::last_error()$app`. This allows for the "failure
 #' to initialize" to be signaled while also allowing for the `app` to be
 #' retrieved after any initialization error has been thrown.
 #'
@@ -43,7 +43,7 @@ NULL
 #' Reactive values from within your Shiny application can be exported using the
 #' method:
 #' [`shiny::exportTestValues()`](https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html).
-#' This under utilized method exposes internal values of your app
+#' This underutilized method exposes internal values of your app
 #' without needing to create a corresponding input value or output value.
 #'
 #' For example:
@@ -190,11 +190,19 @@ AppDriver <- R6Class( # nolint
     #' @description
     #' Initialize an `AppDriver` object
     #'
-    #' @param app_dir Directory containing your Shiny application or a run-time
-    #'   Shiny R Markdown document. By default, it retrieves
-    #'   `test_path("../../")` to allow for interactive and testing usage. A
-    #'   Shiny application URL can be provided, however snapshots will be saved
-    #'   in the current directory.
+    #' @param app_dir This value can be many different things:
+    #'   * A directory containing your Shiny application or a run-time Shiny R
+    #'     Markdown document.
+    #'   * A URL pointing to your shiny application. (Don't forget to set
+    #'     `testmode = TRUE` when running your application!)
+    #'   * A Shiny application object which inherits from `"shiny.appobj"`.
+    #'
+    #' By default, `app_dir` is set to `test_path("../../")` to work in both
+    #' interactive and testing usage.
+    #'
+    #' If a file path is not provided to `app_dir`, snapshots will be saved as
+    #' if the root of the Shiny application was the current directory.
+    #'
     #' @param name Prefix value to use when saving testthat snapshot files. Ex:
     #'   `NAME-001.json`. Name **must** be unique when saving multiple snapshots
     #'   from within the same testing file. Otherwise, two different `AppDriver`
@@ -1023,10 +1031,10 @@ AppDriver <- R6Class( # nolint
     #' app_path <- system.file("examples/01_hello", package = "shiny")
     #' app <- AppDriver$new(app_path)
     #'
-    #' # Display in viewer
+    #' # Display in graphics device
     #' app$get_screenshot()
     #'
-    #' # Update bins then display `"disPlot"` in viewer
+    #' # Update bins then display `"disPlot"` in graphics device
     #' app$set_inputs(bins = 10)
     #' app$get_screenshot(selector = "#distPlot")
     #'
@@ -1042,7 +1050,7 @@ AppDriver <- R6Class( # nolint
       delay = missing_arg(),
       selector = missing_arg()
     ) {
-      app_screenshot(
+      app_get_screenshot(
         self, private,
         file = file,
         ...,

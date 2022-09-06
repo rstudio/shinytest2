@@ -7,6 +7,7 @@ load_timeout  <- getOption("shinytest2.load.timeout")
 start_seed    <- getOption("shinytest2.seed")
 shiny_args    <- getOption("shinytest2.shiny.args")
 save_file     <- getOption("shinytest2.test_file")
+record_screen_size <- getOption("shinytest2.record_screen_size")
 allow_no_input_binding <- getOption("shinytest2.allow_no_input_binding")
 
 if (is.null(target_url) || is.null(app)) {
@@ -151,6 +152,16 @@ input_processors <- list(
 
   shiny.action = function(value) {
     structure("click", class = c("st2_click", "character"))
+  },
+  shiny.datetime = function(value) {
+    if (is.list(value)) {
+      value <- unlist(value, recursive = FALSE)
+    }
+    if (is.numeric(value)) {
+      # Turn seconds into milliseconds
+      value <- value * 1000
+    }
+    input_processors$default(value)
   },
 
   shiny.fileupload = function(value) {
@@ -334,7 +345,7 @@ shinyApp(
             textInput("testname", label = "Test name:", value = app_name),
             class = "inline-input-container",
           ),
-          tooltip("The name of the test should be short, unique, and path-friendly way to describe what the set of expectations are trying to confirm."),
+          tooltip("The name of the test should be short, unique, and path-friendly way to describe what the set of expectations are trying to confirm.")
         ),
         tagAppendChild(
           tagAppendAttributes(
@@ -437,6 +448,9 @@ shinyApp(
             # If two setWindowSize events sandwich an outputEvent,
             # remove the first setWindowSize
             to_remove[length(to_remove) + 1] <- i - 2
+          } else if (!record_screen_size && curr_event$type == "setWindowSize") {
+            # If we're not recording screen size, remove all setWindowSize events
+            to_remove[length(to_remove) + 1] <- i
           }
         }
 
@@ -585,7 +599,7 @@ shinyApp(
       "seed",
         ~ shiny::tagList(
           shiny::tags$p("Can not save tests for a Shiny object."),
-          shiny::tags$p("Please supply an application directory to", shiny::tags$code("record_test(app_dir =)"))
+          shiny::tags$p("Please supply an application directory to", shiny::tags$code("record_test(app =)"))
       )
     )
 
@@ -606,9 +620,11 @@ shinyApp(
     no_binding_obs[[1]] <- observeEvent(trim_testevents(), {
       if (!is.null(allow_no_input_binding_react())) {
         # Cancel the observers and return
-        lapply(no_binding_obs, function(ob) { ob$destroy() })
+        lapply(no_binding_obs, function(ob) {
+          ob$destroy()
+        })
         no_binding_obs <<- list()
-        return();
+        return()
       }
 
       # Don't do anything if there is no unbound input event
@@ -706,6 +722,9 @@ shinyApp(
     observeEvent(input$exit_save, {
       req(save_enabled())
 
+      # Close the browser window when Shiny no longer needs it
+      session$sendCustomMessage("close_window", TRUE)
+
       stopApp({
         seed <- as.integer(input$seed)
         if (is.null(seed) || is.na(seed)) {
@@ -769,6 +788,9 @@ shinyApp(
       })
     })
     observeEvent(input$exit_nosave, {
+      # Close the browser window when Shiny no longer needs it
+      session$sendCustomMessage("close_window", TRUE)
+
       stopApp({
         invisible(list(
           test_file = NULL
