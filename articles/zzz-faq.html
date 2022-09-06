@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,14 +103,14 @@
 <p>The full message is this:</p>
 <pre><code>Server did not update any output values within 3 seconds. If this is expected, use `wait_ = FALSE` or increase the value of `timeout_`.</code></pre>
 <p>This happens when setting an <code>input</code> value does <em>not</em> result in an output changing.</p>
-<p><a href="https://rstudio.github.io/shinytest2/">shinytest2</a> normally assumes that when you call <code>app$set_inputs()</code>, the setting of an input will also result in a changed output, so the test driver process will wait for an output to change before moving on to the next step in a test script. If no outputs change within the timeout period (which defaults to 3 seconds), it prints that message.</p>
+<p><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> normally assumes that when you call <code>app$set_inputs()</code>, the setting of an input will also result in a changed output, so the test driver process will wait for an output to change before moving on to the next step in a test script. If no outputs change within the timeout period (which defaults to 3 seconds), it prints that message.</p>
 <p>If, in your application, you expect that setting a particular input does not immediately result in any output changes, then you should call <code>app$set_inputs()</code> with <code>wait_=FALSE</code>.</p>
 <p>On the other hand, if you expect that setting the input should result in an output change, but the time exceeds the timeout, then you can call <code>app$set_inputs()</code> with, for example, <code>timeout_ = 10 * 1000</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="some-input-values-are-not-set-right-after-calling-appset_inputs--how-do-i-wait-for-them">Some input values are not set right after calling <code>app$set_inputs()</code>. How do I wait for them?<a class="anchor" aria-label="anchor" href="#some-input-values-are-not-set-right-after-calling-appset_inputs--how-do-i-wait-for-them"></a>
 </h2>
-<p>In most situations, when an <code>input</code> value is set, <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> will wait for the next value to be sent to the server. (See question above and <a href="in-depth.html#wait-for-value">this section in Testing in depth</a>. However, when dealing with dynamic UI inputs, htmlwidgets, or even selectize inputs, <code>input</code> values are not set on the first <code>output</code> change. Use <code>app$wait_for_value(input = NAME, ignore = list(VALUE_1, ...., VALUE_N))</code> to wait until a particular <code>input</code> (or <code>output</code>) value is available (or has a non-invalid value).</p>
+<p>In most situations, when an <code>input</code> value is set, <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> will wait for the next value to be sent to the server. (See question above and <a href="in-depth.html#wait-for-value">this section in Testing in depth</a>. However, when dealing with dynamic UI inputs, htmlwidgets, or even selectize inputs, <code>input</code> values are not set on the first <code>output</code> change. Use <code>app$wait_for_value(input = NAME, ignore = list(VALUE_1, ...., VALUE_N))</code> to wait until a particular <code>input</code> (or <code>output</code>) value is available (or has a non-invalid value).</p>
 </div>
 <div class="section level2">
 <h2 id="how-can-my-app-detect-if-its-running-in-shinytest2">How can my app detect if it’s running in <code>{shinytest2}</code>?<a class="anchor" aria-label="anchor" href="#how-can-my-app-detect-if-its-running-in-shinytest2"></a>
@@ -124,7 +124,7 @@
 <div class="section level2">
 <h2 id="how-can-i-get-the-objects-from-files-in-my-the-r-folder-into-the-testing-environment">How can I get the objects from files in my the R folder into the testing environment?<a class="anchor" aria-label="anchor" href="#how-can-i-get-the-objects-from-files-in-my-the-r-folder-into-the-testing-environment"></a>
 </h2>
-<p>Loading the support environment for a Shiny application requires a call to <code><a href="../reference/load_app_env.html">shinytest2::load_app_env()</a></code> in <code>./tests/testthat/setup-shinytest2.R</code>. This method will load the <code>global.R</code> and all R files into the testing environment, similar to testing package R code.</p>
+<p>Loading the support environment for a Shiny application requires a call to <code><a href="../reference/load_app_env.html">shinytest2::load_app_env()</a></code> in <code>./tests/testthat/setup.R</code>. This method will load the <code>global.R</code> and all R files into the testing environment, similar to testing package R code.</p>
 <p>This is not automatically performed as it may be costly to load the support environment.</p>
 </div>
 <div class="section level2">
@@ -162,6 +162,7 @@
 <h2 id="should-i-manually-shut-down-my-appdriver">Should I manually shut down my <code>AppDriver</code>?<a class="anchor" aria-label="anchor" href="#should-i-manually-shut-down-my-appdriver"></a>
 </h2>
 <p>For code completeness, you should call <code>app$stop()</code> at the end of your tests to shut down the background Shiny process and current Chromote Session.</p>
+<p>However, <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> does not do this for code brevity and relies on <code>AppDriver$private$finalizer()</code> (which is called when the value is garbage collected or the R session is stopped) to call <code>AppDriver$stop()</code>.</p>
 <p>If your R session is starting to feel more sluggish, you may want to call <code>app$stop()</code> manually. Or if you are programmatically creating many instances of <code>AppDriver</code>, you may want to call <code>app$stop()</code> when the specific test is complete.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

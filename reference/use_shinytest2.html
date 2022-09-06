@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,7 +97,7 @@
 
 <dt>setup</dt>
 <dd><p>If <code>TRUE</code>, creates a setup file called
-<code>./tests/testthat/setup-shinytest2.R</code> containing a call to <code><a href="load_app_env.html">load_app_env()</a></code></p></dd>
+<code>./tests/testthat/setup.R</code> containing a call to <code><a href="load_app_env.html">load_app_env()</a></code></p></dd>
 
 
 <dt>ignore</dt>
@@ -129,14 +129,14 @@ ignore new debug screenshots. (<code>*_.new.png</code>)</p></dd>
     <div class="section level2">
     <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>
     
-<ul><li><p><code>use_shinytest2()</code>: This <span class="pkg">usethis</span>-style method initializes many different useful features when using
+<ul><li><p><code>use_shinytest2</code>: This <span class="pkg">usethis</span>-style method initializes many different useful features when using
 <span class="pkg">shinytest2</span>:</p><ul><li><p><code>runner</code>: Creates a <span class="pkg">shinytest2</span> test runner at <code>./tests/testthat.R</code>. This file
 will contain a call to <code><a href="test_app.html">test_app()</a></code>.</p></li>
-<li><p><code>setup</code>: Creates <code>./tests/testthat/setup-shinytest2.R</code> to add your Shiny <code>./R</code> objects and functions into the testing environment. This file will run before testing begins.</p></li>
+<li><p><code>setup</code>: Creates <code>./tests/testthat/setup.R</code> to add your Shiny <code>./R</code> objects and functions into the testing environment. This file will run before testing begins.</p></li>
 <li><p><code>ignore</code>: Add an entry to <code>./Rbuildignore</code> (if it exists) and <code>.gitignore</code> to ignore new debug screenshots. (<code>*_.new.png</code>)</p></li>
 <li><p><code>package</code>: Adds <code>shinytest</code> to the <code>Suggests</code> packages in the <code>DESCRIPTION</code> file (if it exists).</p></li>
 </ul><p>If any of these values are <em>not</em> missing, the remaining missing values will be set to <code>FALSE</code>. This allows <code>use_shinytest2()</code> to add more flags in future versions without opting into all changes inadvertently.</p></li>
-<li><p><code>use_shinytest2_test()</code>: Creates a test file called <code>./tests/testthat/test-shinytest2.R</code>. By
+<li><p><code>use_shinytest2_test</code>: Creates a test file called <code>./tests/testthat/test-shinytest2.R</code>. By
 default, this file's template test will initialize your Shiny application and
 expect the initial values.</p>
 <p>This method will also set up a test runner if it does not exist.</p></li>
