@@ -4,9 +4,9 @@ NULL
 
 #' Test Shiny applications with \pkg{testthat}
 #'
-#' This is a helper method that wraps around [`testthat::test_dir()`] to test your Shiny application or Shiny runtime document.  This is similar to how [`testthat::test_check()`] tests your R package but for your app.
-#'
-#' When setting up tests for your app,
+#' This is a helper method that wraps around [`testthat::test_dir()`] to test
+#' your Shiny application or Shiny runtime document.  This is similar to how
+#' [`testthat::test_check()`] tests your R package but for your app.
 #'
 #' @details
 #'
@@ -66,9 +66,15 @@ NULL
 #'     `./tests/testthat.R` file, the parent directory (`"../"`) is used.
 #'   * Otherwise, the default path of `"."` is used.
 #' @param ... Parameters passed to [`testthat::test_dir()`]
+#' @param reporter The reporter to use for the tests
+#' @param name Name to display in the middle of the test name. This value is only used
+#' when calling `test_app()` inside of \pkg{testhat} test. The final testing context will
+#' have the format of `"{test_context} - {name} - {app_test_context}"`.
 #' @param check_setup If `TRUE`, the app will be checked for the presence of
-#' `./tests/testthat/setup.R`. This file must contain a call to
+#' `./tests/testthat/setup-shinytest2.R`. This file must contain a call to
 #' [`shinytest2::load_app_env()`].
+#' @param reporter Reporter to pass through to [`testthat::test_dir()`].
+#' @param stop_on_failure If missing, the default value of `TRUE` will be used. However, if missing and currently testing, `FALSE` will be used to seamlessly integrate the app reporter to `reporter`.
 #' @seealso
 #' * [`record_test()`] to create tests to record against your Shiny application.
 #' * [testthat::snapshot_review()] and [testthat::snapshot_accept()] if
@@ -80,7 +86,10 @@ NULL
 test_app <- function(
   app_dir = missing_arg(),
   ...,
-  check_setup = TRUE
+  name = missing_arg(),
+  check_setup = TRUE,
+  reporter = testthat::get_reporter(),
+  stop_on_failure = missing_arg()
 ) {
   # Inspiration from https://github.com/rstudio/shiny/blob/a8c14dab9623c984a66fcd4824d8d448afb151e7/inst/app_template/tests/testthat.R
 
@@ -106,42 +115,146 @@ test_app <- function(
   app_dir <- app_dir_value(app_dir)
 
   if (isTRUE(check_setup)) {
-    setup_path <- fs::path(app_dir, "tests", "testthat", "setup.R")
-    if (!fs::file_exists(setup_path)) {
+    # Legacy support for `setup.R`; Same content, just different name
+    setup_paths <- fs::path(app_dir, "tests", "testthat", c("setup-shinytest2.R", "setup.R"))
+    setup_paths_exist <- fs::file_exists(setup_paths)
+    if (!any(setup_paths_exist)) {
       rlang::abort(
         c(
-          "No `setup.R` file found in `./tests/testthat`",
-          "i" = paste0("To create a `setup.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
+          "No `setup-shinytest2.R` file found in `./tests/testthat`",
+          "i" = paste0("To create a `setup-shinytest2.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
           "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
         )
       )
     }
-    lines <- read_utf8(setup_path)
-    if (!grepl("load_app_env", lines, fixed = TRUE)) {
+    found <- FALSE
+    for (setup_path in setup_paths) {
+      if (has_load_app_env(setup_path)) {
+        found <- TRUE
+        break
+      }
+    }
+    if (!found) {
       rlang::abort(
         c(
-          "No call to `shinytest2::load_app_env()` found in `./tests/testthat/setup.R`",
-          "i" = paste0("To create a `setup.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
+          "No call to `shinytest2::load_app_env()` found in `./tests/testthat/setup-shinytest2.R`",
+          "i" = paste0("To create a `setup-shinytest2.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
           "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
         )
       )
     }
   }
 
-  is_currently_testing <- testthat::is_testing()
 
-  ret <- testthat::test_dir(
+
+  if (testthat::is_testing()) {
+    # Normalize the reporter given any input
+    outer_reporter <- testthat::with_reporter(reporter, testthat::get_reporter(), start_end_reporter = FALSE)
+
+    outer_context <- NULL
+
+    # If a test is currently active, stop it and restart on exit
+    test_name <- rlang::missing_arg()
+    snapshot_reporter <- NULL
+    if (inherits(outer_reporter, "SnapshotReporter")) {
+      snapshot_reporter <- outer_reporter
+    } else if (inherits(outer_reporter, "MultiReporter")) {
+      # Find the SnapshotReporter, as the `test` value is available
+      snapshot_reporters <- Filter(outer_reporter$reporters, f = function(x) inherits(x, "SnapshotReporter"))
+      if (length(snapshot_reporters) > 0) {
+        snapshot_reporter <- snapshot_reporters[[1]]
+      }
+    }
+    if (!is.null(snapshot_reporter)) {
+      test_name <- snapshot_reporter$test
+      outer_context <- snapshot_reporter$file
+      # Stop the current test
+      outer_reporter$end_test(outer_context, test_name)
+    }
+
+    ## Unwravel and re-wrap file/context like
+    ## https://github.com/r-lib/testthat/blob/aab0464b555c27dcb2381af5f71c395a084a8643/R/test-files.R#L269-L277
+    # Stop the current context / file
+    outer_reporter$end_context_if_started()
+    outer_reporter$end_file()
+    withr::defer({
+      # Restore the context when done
+      outer_reporter$start_file(outer_context)
+
+      if (!rlang::is_missing(test_name)) {
+        # Restore the current test
+        outer_reporter$start_test(outer_context, test_name)
+      }
+
+    })
+
+    name <- rlang::maybe_missing(name, fs::path_file(app_dir))
+
+    ReplayReporter <- R6Class( # nolint
+      "ReplayReporter",
+      inherit = testthat::Reporter,
+      public = list(
+        is_full = function(...) outer_reporter$is_full(...),
+        ## Do not perform these two methods.
+        ## We want to act like a continuously integrated reporter
+        # start_reporter = outer_reporter$start_reporter,
+        # end_reporter = outer_reporter$end_reporter,
+        start_context = function(...) outer_reporter$start_context(...),
+        end_context = function(...) outer_reporter$end_context(...),
+        add_result = function(...) outer_reporter$add_result(...),
+        start_file = function(test_file, ...) {
+          ## This could be done above when ending the outer context
+          ## However, by ending / starting the outer file
+          ## a hint is displayed as to what file is currently testing
+          # Close current file
+          outer_reporter$end_file()
+
+          # Upgrade the name
+          if (!is.null(name) && length(name) == 1 && is.character(name) && nchar(name) > 0) {
+            # ⠏ |         0 | CURRENT_TEST_CONTEXT - APP_NAME - APP_TEST_FILE
+            test_file <- sub(
+              "^test-",
+              paste0(
+                "test-",
+                if (is.null(outer_context)) "" else paste0(outer_context, " - "),
+                name,
+                " - "
+              ),
+              test_file
+            )
+          }
+          outer_reporter$start_file(test_file, ...)
+        },
+        end_file = function(...) {
+          outer_reporter$end_file(...)
+          # Restart current file that was ended in ReplayReporter$start_file
+          outer_reporter$start_file(outer_context)
+        },
+        start_test = function(...) outer_reporter$start_test(...),
+        end_test = function(...) outer_reporter$end_test(...)
+      )
+    )
+    reporter <- ReplayReporter$new()
+    # Currently testing, the inner reporter should not stop on failure
+    stop_on_failure <- rlang::maybe_missing(stop_on_failure, FALSE)
+  } else {
+    # Not currently testing
+    # Use the default stop_on_failure value
+    stop_on_failure <-
+      rlang::maybe_missing(
+        stop_on_failure,
+        formals(testthat::test_dir)$stop_on_failure
+      )
+  }
+
+  results <- testthat::test_dir(
     path = fs::path(app_dir, "tests", "testthat"),
+    reporter = reporter,
+    stop_on_failure = stop_on_failure,
     ...
   )
 
-  # If we are testing and no error has been thrown,
-  # then perform an expectation so that the testing chunk passes
-  if (is_currently_testing) {
-    testthat::expect_equal(TRUE, TRUE)
-  }
-
-  invisible(ret)
+  invisible(results)
 }
 
 
@@ -152,7 +265,7 @@ test_app <- function(
 #' This is useful when wanting access to functions or values created in the `./R` folder for testing purposes.
 #'
 #' Loading these files is not automatically performed by `test_app()` and must
-#' be called in `./tests/testthat/setup.R` if access to support file objects is
+#' be called in `./tests/testthat/setup-shinytest2.R` if access to support file objects is
 #' desired.
 #'
 #' @seealso [`use_shinytest2()`] for creating a testing setup file that
@@ -168,4 +281,15 @@ load_app_env <- function(
   globalrenv = rlang::caller_env()
 ) {
   shiny::loadSupport(app_dir, renv = renv, globalrenv = globalrenv)
+}
+
+
+has_load_app_env <- function(file) {
+  if (!fs::file_exists(file)) {
+    return(FALSE)
+  }
+
+  lines <- read_utf8(file)
+  has_call <- grepl("load_app_env", lines, fixed = TRUE)
+  return(has_call)
 }

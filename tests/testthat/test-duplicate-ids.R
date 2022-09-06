@@ -1,5 +1,3 @@
-skip_on_cran() # Uses chromote
-
 require("shiny", quietly = TRUE, character.only = TRUE)
 
 test_that("Duplicate input ids are found", {

@@ -1,5 +1,8 @@
 url: https://rstudio.github.io/shinytest2/
 
+# development:
+#   mode: auto
+
 template:
   package: tidytemplate
   bootstrap: 5

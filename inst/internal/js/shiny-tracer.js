@@ -103,12 +103,18 @@ window.shinytest2 = (function() {
             },
 
             "shiny.sliderInput": function(el, value) {
-                if (typeof(value) === "string" &&
-                    /\d\d\d\d-\d\d-\d\d/.test(value))
-                {
-                    return new Date(value).getTime();
+                function update_date_string(x) {
+                  if (typeof(x) === "string" && /\d\d\d\d-\d\d-\d\d/.test(x)) {
+                    return new Date(x).getTime();
+                  } else {
+                    return x;
+                  }
+                }
+
+                if (value instanceof Array) {
+                  return value.map(update_date_string);
                 } else {
-                    return value;
+                  return update_date_string(value);
                 }
             }
         };

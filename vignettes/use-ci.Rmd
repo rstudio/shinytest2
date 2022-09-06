@@ -75,7 +75,7 @@ The files that you will need to add are described below.
 This file contains information for GitHub Actions to build and test your application. It should look similar to this:
 
 ```yml
-# Workflow derived from https://github.com/r-lib/actions/blob/v2-branch/examples/check-standard.yaml
+# Workflow derived from https://github.com/rstudio/shinytest2/tree/main/actions/test-app/example-test-app-description.yaml
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
   push:
@@ -83,7 +83,7 @@ on:
   pull_request:
     branches: [main, master]
 
-name: test-app
+name: Test app w/ {renv}
 
 jobs:
   test-app:
@@ -95,7 +95,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-20.04, r: '4.1'}
+          - {os: ubuntu-latest, r: release}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -114,12 +114,12 @@ jobs:
 
       - uses: r-lib/actions/setup-renv@v2
 
-      - uses: rstudio/shinytest2/actions/test_app@v1
+      - uses: rstudio/shinytest2/actions/test-app@v1
         with:
           path: "."
 ```
 
-You should change the `os` and `r` version (set to `ubuntu-20.04` and `4.1` above) to whatever operating system and R version is being used on the platform that your application will be deployed to.
+You should change the `os` and `r` version to whatever operating system and R version is being used on the platform that your application will be deployed to.
 
 
 ### `renv.lock`, `renv/activate.R`, `.Rprofile`
@@ -204,10 +204,10 @@ For a repository with this structure, the configuration is largely the same as a
 The `check-app.yaml` should have a step for each application in the respective directory, instead of testing just one application in the current directory.
 
 ```R
-      - uses: rstudio/shinytest2/check_app@v2
+      - uses: rstudio/shinytest2/actions/test-app@v1
         with:
           path: "01_hello"
-      - uses: rstudio/shinytest2/check_app@v2
+      - uses: rstudio/shinytest2/actions/test-app@v1
         with:
           path: "06_tabsets"
 ```
@@ -269,3 +269,8 @@ Remotes:
 ```
 
 This tells GitHub to install the `{shiny}` package from the `main` branch of https://github.com/rstudio/shiny, the `{shinytest2}` package from the `dev` branch of https://github.com/rstudio/shinytest2. In addition to branch names like `dev`, you can use commit hashes or tags.
+
+
+# Example workflows
+
+To view example workflows and more description about the `test-app` GitHub Actions step, please see https://github.com/rstudio/shinytest2/tree/main/actions/test-app for more information examples.
