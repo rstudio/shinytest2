@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -141,7 +141,11 @@
 <h3 id="making-expectations">Making expectations<a class="anchor" aria-label="anchor" href="#making-expectations"></a>
 </h3>
 <p>For an in-depth discussion of expectations, see the <a href="./robust.html">Robust testing vignette</a>.</p>
-<p>There are a couple standard ways to make expectations from your <code>AppDriver</code> object. * <code>app$expect_values()</code>: This is the simplest way to make an expectation. It creates a list of values and compares them to the current values of the application. It also takes a debug screenshot and stores it as a snapshot. However, this snapshot will never fail an expectation test. The extra screenshot file is useful for manually determining if UI changes have happened over time while not producing numerous false-positive test failures. * <code>app$expect_screenshot()</code>: This method takes a screenshot of the application and compares it to a reference screenshot. If the screenshots are different, it fails the test.</p>
+<p>There are a couple standard ways to make expectations from your <code>AppDriver</code> object.</p>
+<ul>
+<li><p><code>app$expect_values()</code>: This is the simplest way to make an expectation. It creates a list of values and compares them to the current values of the application. It also takes a debug screenshot and stores it as a snapshot. However, this snapshot will never fail an expectation test. The extra screenshot file is useful for manually determining if UI changes have happened over time while not producing numerous false-positive test failures.</p></li>
+<li><p><code>app$expect_screenshot()</code>: This method takes a screenshot of the application and compares it to a reference screenshot. If the screenshots are different, it fails the test.</p></li>
+</ul>
 <p>There are few ways to use <code>app$expect_values()</code>. The simplest way is to call it with no arguments:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -200,6 +204,7 @@
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p><img src="images/screenshot-exports-app.png" width="100%" style="display: block; margin: auto;"></p>
 <p>Notice these lines:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
@@ -238,8 +243,9 @@
 <div class="section level3">
 <h3 id="controlling-random-values">Controlling random values<a class="anchor" aria-label="anchor" href="#controlling-random-values"></a>
 </h3>
-<p>If your application uses randomly-generated values (by calling functions like <code>rnorm</code>, <code>runif</code>, <code>sample</code> directly or indirectly), then, in normal operation, it will produce different results on each run. Because <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> works by comparing the current state of an application to a previous state, these random changes will cause test failures.</p>
+<p>If your application uses randomly-generated values (by calling functions like <code>rnorm</code>, <code>runif</code>, <code>sample</code> directly or indirectly), then, in normal operation, it will produce different results on each run. Because <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> works by comparing the current state of an application to a previous state, these random changes will cause test failures.</p>
 <p>To make such applications exactly repeatable, you can set the random seed. This can be done by specifying a random seed in the recorder. The seed can be any integer value.</p>
+<p><img src="images/screenshot-recorder-random-seed.png" width="100%" style="display: block; margin: auto;"></p>
 <p>If your test script has already been created, you can set the random seed by editing the test script so that the <code>AppDriver$new()</code> call has a value for <code>seed</code>. Moreover, if you need these tests to pass on multiple versions of R with different <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">RNGkind()</a></code> defaults (e.g., 3.5 and 3.6), you may want to set a fixed <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">RNGkind()</a></code> across your tests (perhaps via <code>RNGversion("3.5.0")</code>). However, using a <code>AppDriver$new(variant=)</code> value that contains the R version can also remedy this situation.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>seed <span class="op">=</span> <span class="fl">4323</span><span class="op">)</span></span></code></pre></div>
@@ -252,7 +258,7 @@
 <div class="section level3">
 <h3 id="tabs">Tabs<a class="anchor" aria-label="anchor" href="#tabs"></a>
 </h3>
-<p>With tabbed views, such as <code><a href="https://rdrr.io/pkg/shiny/man/tabsetPanel.html" class="external-link">tabsetPanel()</a></code> and <code><a href="https://rdrr.io/pkg/shiny/man/navbarPage.html" class="external-link">navbarPage()</a></code>, in order for <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> to keep track of which tab is currently selected, they must have an <code>id</code>. For example:</p>
+<p>With tabbed views, such as <code><a href="https://rdrr.io/pkg/shiny/man/tabsetPanel.html" class="external-link">tabsetPanel()</a></code> and <code><a href="https://rdrr.io/pkg/shiny/man/navbarPage.html" class="external-link">navbarPage()</a></code>, in order for <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> to keep track of which tab is currently selected, they must have an <code>id</code>. For example:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tabsetPanel.html" class="external-link">tabsetPanel</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"tabs"</span>, <span class="va">....</span><span class="op">)</span></span></code></pre></div>
 <p>or</p>
@@ -274,7 +280,7 @@
 </h3>
 <p>As you step through the script, you can inspect the state of the application in a few different ways.</p>
 <p>The recommended way is to call <code>app$view()</code>. This will open a browser window in your default Chrome browser.</p>
-<p>Another way is to take a screenshot of your application. You can call <code>app$get_screenshot()</code> to take a screenshot of the application. This will display the screenshot as if it were a plot. (In RStudio, it will show in the Viewer pane.)</p>
+<p>Another way is to take a screenshot of your application. You can call <code>app$get_screenshot()</code> to take a screenshot of the application. This will display the screenshot as if it were a plot. (In RStudio, it will show in the Plots tab.)</p>
 <p>Using both methods, you can inspect the screenshot to see the state of the application.</p>
 </div>
 <div class="section level3">
@@ -352,7 +358,7 @@
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span><span class="op">)</span></span></code></pre></div>
-<p>Naively, we could add <code><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep()</a></code> function calls to slow down <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> testing to hope that the Shiny application is in a stable state.</p>
+<p>Naively, we could add <code><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep()</a></code> function calls to slow down <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> testing to hope that the Shiny application is in a stable state.</p>
 <p><strong><code>./tests/testthat/test-use-sleep-bad.R</code>:</strong></p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">test_that</span><span class="op">(</span><span class="st">"Sleeping can work to wait for an app to stabilize"</span>, <span class="op">{</span></span>
@@ -435,7 +441,7 @@
 <p>You can variants to deal with cases where the snapshot output varies and you want to capture and test the variations. Common use cases include variations for operating system, R version, or version of key dependency. Variants are an advanced feature.</p>
 <p>When you use them, you’ll need to carefully think about your testing strategy to ensure that all important variants are covered by automated tests, and ensure that you have a way to get snapshot changes out of your CI system and back into the repo.</p>
 <p>It is recommended to use <code>AppDriver$new(variant= platform_variant())</code> to capture the operating system and R version where the test is running. Variants are required when calling <code>$expect_screenshot()</code>. A <code>NULL</code> value may be used, but is not recommended for testing reproducibility.</p>
-<p>All <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> expectation methods eventually call <a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link"><code>testthat::expect_snapshot_file()</code></a> to save the snapshot files. Snapshot expectations will only compare to their variant’s version of the snapshot file.</p>
+<p>All <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> expectation methods eventually call <a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link"><code>testthat::expect_snapshot_file()</code></a> to save the snapshot files. Snapshot expectations will only compare to their variant’s version of the snapshot file.</p>
 </div>
 <div class="section level2">
 <h2 id="limitations">Limitations<a class="anchor" aria-label="anchor" href="#limitations"></a>
@@ -443,13 +449,13 @@
 <div class="section level3">
 <h3 id="inputs-without-input-bindings">Inputs without input bindings<a class="anchor" aria-label="anchor" href="#inputs-without-input-bindings"></a>
 </h3>
-<p>Most input components in Shiny set their values by communicating through something called an <em>input binding</em>. <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> works well with <code>input</code> values that are set via input bindings.</p>
+<p>Most input components in Shiny set their values by communicating through something called an <em>input binding</em>. <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> works well with <code>input</code> values that are set via input bindings.</p>
 <p>However, there are some components that set input values without using an input binding. These include some <a href="http://www.htmlwidgets.org/" class="external-link">htmlwidgets</a>, such as <a href="https://rstudio.github.io/DT/" class="external-link">DT</a> and <a href="https://github.com/plotly/plotly.R" class="external-link">plotly</a>, as well as Shiny’s built-in plot interactions with <code><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html" class="external-link">renderPlot()</a></code>.</p>
 <p>To set these unbound inputs, the resulting test script code will look something like this:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>table_rows_selected <span class="op">=</span> <span class="fl">1</span>, allow_no_input_binding_ <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>table_row_last_clicked <span class="op">=</span> <span class="fl">1</span>, allow_no_input_binding_ <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>When the test script is replayed, the headless browser will set these inputs to the specified values and send them to the server running Shiny in R. However, the browser will not be able to tell the input object to do the exact same behaviors. For example, with DT, when a row is selected, the mouse click event in the browser triggers the DataTable to highlight the row in the browser and also set the input value for Shiny. When <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> plays the script, it can only do the latter part, setting the input value. The result is that when a screenshot is taken, it <strong>will not</strong> have highlighted rows. For components that have internal state that is updated in response to user interaction, that internal state will not be updated when the test script is played. In some cases, this may mean that when the script is played, the behavior when the script is played will not be the same as when a user actually interacts with the application.</p>
+<p>When the test script is replayed, the headless browser will set these inputs to the specified values and send them to the server running Shiny in R. However, the browser will not be able to tell the input object to do the exact same behaviors. For example, with DT, when a row is selected, the mouse click event in the browser triggers the DataTable to highlight the row in the browser and also set the input value for Shiny. When <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> plays the script, it can only do the latter part, setting the input value. The result is that when a screenshot is taken, it <strong>will not</strong> have highlighted rows. For components that have internal state that is updated in response to user interaction, that internal state will not be updated when the test script is played. In some cases, this may mean that when the script is played, the behavior when the script is played will not be the same as when a user actually interacts with the application.</p>
 <p>If the input component sets multiple input values (without bindings) in response to a single user event, it may make sense to coalesce them into a single <code>set_inputs</code> call, such as this:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span></span>
