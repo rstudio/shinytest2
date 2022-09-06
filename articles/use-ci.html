@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,11 +97,11 @@
 
     
     
-<p><a href="https://rstudio.github.io/shinytest2/">shinytest2</a> can be used not only when developing applications locally – it can also be used with continuous integration (CI) platforms, such as <a href="https://docs.github.com/en/actions" class="external-link">GitHub Actions</a>.</p>
-<p>The rest of this document explains how to use <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> with GitHub in two use cases: with applications that stand alone (are not part of an R package), and with an application that are part of an R package.</p>
-<div class="section level3">
-<h3 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
-</h3>
+<p><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> can be used not only when developing applications locally – it can also be used with continuous integration (CI) platforms, such as <a href="https://docs.github.com/en/actions" class="external-link">GitHub Actions</a>.</p>
+<p>The rest of this document explains how to use <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> with GitHub in two use cases: with applications that stand alone (are not part of an R package), and with an application that are part of an R package.</p>
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
 <p>The overall procedure for enabling tests on a CI platform is this:</p>
 <ul>
 <li>First create tests locally (on your development machine) and save the expected results.</li>
@@ -115,9 +115,9 @@
 </ul>
 <p>As you develop your application, it may also be appropriate to add, remove, or modify tests, or re-run tests and save new expected results.</p>
 </div>
-<div class="section level3">
-<h3 id="a-repository-with-a-single-application">A repository with a single application<a class="anchor" aria-label="anchor" href="#a-repository-with-a-single-application"></a>
-</h3>
+<div class="section level2">
+<h2 id="a-repository-with-a-single-application">A repository with a single application<a class="anchor" aria-label="anchor" href="#a-repository-with-a-single-application"></a>
+</h2>
 <p>For Shiny applications that aren’t part of an R package, there are two common ways that the repository will be set up:</p>
 <ol style="list-style-type: decimal">
 <li>The repository contains one application, and the application files (like <code>app.R</code> and <code>global.R</code>) are contained at the top level of the repository.</li>
@@ -145,12 +145,12 @@
         │       └── 004.png
         └── test-shinytest2.R</code></pre>
 <p>The files that you will need to add are described below.</p>
-<div class="section level4">
-<h4 id="check-app-yaml">
+<div class="section level3">
+<h3 id="check-app-yaml">
 <code>check-app.yaml</code><a class="anchor" aria-label="anchor" href="#check-app-yaml"></a>
-</h4>
+</h3>
 <p>This file contains information for GitHub Actions to build and test your application. It should look similar to this:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Workflow derived from https://github.com/rstudio/shinytest2/tree/main/actions/test-app/example-test-app-description.yaml</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Workflow derived from https://github.com/r-lib/actions/blob/v2-branch/examples/check-standard.yaml</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="co"># Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help</span></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="fu">on</span><span class="kw">:</span></span>
 <span id="cb2-4"><a href="#cb2-4"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
@@ -158,7 +158,7 @@
 <span id="cb2-6"><a href="#cb2-6"></a><span class="at">  </span><span class="fu">pull_request</span><span class="kw">:</span></span>
 <span id="cb2-7"><a href="#cb2-7"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">main</span><span class="kw">,</span><span class="at"> master</span><span class="kw">]</span></span>
 <span id="cb2-8"><a href="#cb2-8"></a></span>
-<span id="cb2-9"><a href="#cb2-9"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Test app w/ {renv}</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> test-app</span></span>
 <span id="cb2-10"><a href="#cb2-10"></a></span>
 <span id="cb2-11"><a href="#cb2-11"></a><span class="fu">jobs</span><span class="kw">:</span></span>
 <span id="cb2-12"><a href="#cb2-12"></a><span class="at">  </span><span class="fu">test-app</span><span class="kw">:</span></span>
@@ -170,7 +170,7 @@
 <span id="cb2-18"><a href="#cb2-18"></a><span class="at">      </span><span class="fu">fail-fast</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
 <span id="cb2-19"><a href="#cb2-19"></a><span class="at">      </span><span class="fu">matrix</span><span class="kw">:</span></span>
 <span id="cb2-20"><a href="#cb2-20"></a><span class="at">        </span><span class="fu">config</span><span class="kw">:</span></span>
-<span id="cb2-21"><a href="#cb2-21"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="kw">{</span><span class="fu">os</span><span class="kw">:</span><span class="at"> ubuntu-latest</span><span class="kw">,</span><span class="at"> </span><span class="fu">r</span><span class="kw">:</span><span class="at"> release</span><span class="kw">}</span></span>
+<span id="cb2-21"><a href="#cb2-21"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="kw">{</span><span class="fu">os</span><span class="kw">:</span><span class="at"> ubuntu-20.04</span><span class="kw">,</span><span class="at"> </span><span class="fu">r</span><span class="kw">:</span><span class="at"> </span><span class="st">'4.1'</span><span class="kw">}</span></span>
 <span id="cb2-22"><a href="#cb2-22"></a></span>
 <span id="cb2-23"><a href="#cb2-23"></a><span class="at">    </span><span class="fu">env</span><span class="kw">:</span></span>
 <span id="cb2-24"><a href="#cb2-24"></a><span class="at">      </span><span class="fu">GITHUB_PAT</span><span class="kw">:</span><span class="at"> ${{ secrets.GITHUB_TOKEN }}</span></span>
@@ -189,15 +189,15 @@
 <span id="cb2-37"><a href="#cb2-37"></a></span>
 <span id="cb2-38"><a href="#cb2-38"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-renv@v2</span></span>
 <span id="cb2-39"><a href="#cb2-39"></a></span>
-<span id="cb2-40"><a href="#cb2-40"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> rstudio/shinytest2/actions/test-app@v1</span></span>
+<span id="cb2-40"><a href="#cb2-40"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> rstudio/shinytest2/actions/test_app@v1</span></span>
 <span id="cb2-41"><a href="#cb2-41"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
 <span id="cb2-42"><a href="#cb2-42"></a><span class="at">          </span><span class="fu">path</span><span class="kw">:</span><span class="at"> </span><span class="st">"."</span></span></code></pre></div>
-<p>You should change the <code>os</code> and <code>r</code> version to whatever operating system and R version is being used on the platform that your application will be deployed to.</p>
+<p>You should change the <code>os</code> and <code>r</code> version (set to <code>ubuntu-20.04</code> and <code>4.1</code> above) to whatever operating system and R version is being used on the platform that your application will be deployed to.</p>
 </div>
-<div class="section level4">
-<h4 id="renv-lock-renvactivate-r--rprofile">
+<div class="section level3">
+<h3 id="renv-lock-renvactivate-r--rprofile">
 <code>renv.lock</code>, <code>renv/activate.R</code>, <code>.Rprofile</code><a class="anchor" aria-label="anchor" href="#renv-lock-renvactivate-r--rprofile"></a>
-</h4>
+</h3>
 <p><a href="https://rstudio.github.io/renv/" class="external-link">renv</a> project-local dependency management system for projects. This is useful for Shiny applications where using specific package versions for all of your Shiny app dependencies. <a href="https://rstudio.github.io/renv/" class="external-link">renv</a> uses the same mechanism that is used by shinyapps.io and RStudio Connect.</p>
 <p><a href="https://rstudio.github.io/renv/" class="external-link">renv</a> auto-generates these three files using is<code>renv::init()</code> and <code>renv::snapshot()</code>.</p>
 <table class="table">
@@ -229,16 +229,16 @@
 <p>To learn more about <a href="https://rstudio.github.io/renv/" class="external-link">renv</a>, please see their <a href="https://rstudio.github.io/renv/articles/renv.html" class="external-link">Introduction to renv</a> and <a href="https://rstudio.github.io/renv/articles/collaborating.html" class="external-link">Collaborating with renv</a> articles.</p>
 <p>An alternative to using <a href="https://rstudio.github.io/renv/" class="external-link">renv</a> is to create a <code>DESCRIPTION</code> file. This will not lock package versions; instead, it will use the latest version of each package from CRAN.</p>
 </div>
-<div class="section level4">
-<h4 id="running-the-first-build">Running the first build<a class="anchor" aria-label="anchor" href="#running-the-first-build"></a>
-</h4>
+<div class="section level3">
+<h3 id="running-the-first-build">Running the first build<a class="anchor" aria-label="anchor" href="#running-the-first-build"></a>
+</h3>
 <p>Once you’ve added these files, commit them and push to GitHub. This will trigger a build on GitHub Actions (GHA).</p>
 <p>The first successful run of your workflow on GHA will generally take much longer than subsequent runs, because it needs to install all the R packages the first time. After a successful run, the packages are cached, so the builds should be much faster.</p>
 </div>
 </div>
-<div class="section level3">
-<h3 id="a-repository-with-multiple-applications">A repository with multiple applications<a class="anchor" aria-label="anchor" href="#a-repository-with-multiple-applications"></a>
-</h3>
+<div class="section level2">
+<h2 id="a-repository-with-multiple-applications">A repository with multiple applications<a class="anchor" aria-label="anchor" href="#a-repository-with-multiple-applications"></a>
+</h2>
 <p>Another way to run your tests is using a repository with multiple applications, each in its own subdirectory. <!-- See https://github.com/rstudio/shinytest-ci-example-multi for an example. --></p>
 <p>The directory structure would look something like this:</p>
 <pre><code>/
@@ -276,39 +276,39 @@
             │       └── 006.png
             └── test-shinytest2.R</code></pre>
 <p>For a repository with this structure, the configuration is largely the same as a repository with a single app, as described above. The only difference is in the <code>check-app.yaml</code> file.</p>
-<div class="section level4">
-<h4 id="check-app-yaml-1">
+<div class="section level3">
+<h3 id="check-app-yaml-1">
 <code>check-app.yaml</code><a class="anchor" aria-label="anchor" href="#check-app-yaml-1"></a>
-</h4>
+</h3>
 <p>The <code>check-app.yaml</code> should have a step for each application in the respective directory, instead of testing just one application in the current directory.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>      <span class="op">-</span> <span class="va">uses</span><span class="op">:</span> <span class="va">rstudio</span><span class="op">/</span><span class="va">shinytest2</span><span class="op">/</span><span class="va">actions</span><span class="op">/</span><span class="va">test</span><span class="op">-</span><span class="va">app</span><span class="op">@</span><span class="va">v1</span></span>
+<code class="sourceCode R"><span>      <span class="op">-</span> <span class="va">uses</span><span class="op">:</span> <span class="va">rstudio</span><span class="op">/</span><span class="va">shinytest2</span><span class="op">/</span><span class="va">check_app</span><span class="op">@</span><span class="va">v2</span></span>
 <span>        <span class="va">with</span><span class="op">:</span></span>
 <span>          <span class="va">path</span><span class="op">:</span> <span class="st">"01_hello"</span></span>
-<span>      <span class="op">-</span> <span class="va">uses</span><span class="op">:</span> <span class="va">rstudio</span><span class="op">/</span><span class="va">shinytest2</span><span class="op">/</span><span class="va">actions</span><span class="op">/</span><span class="va">test</span><span class="op">-</span><span class="va">app</span><span class="op">@</span><span class="va">v1</span></span>
+<span>      <span class="op">-</span> <span class="va">uses</span><span class="op">:</span> <span class="va">rstudio</span><span class="op">/</span><span class="va">shinytest2</span><span class="op">/</span><span class="va">check_app</span><span class="op">@</span><span class="va">v2</span></span>
 <span>        <span class="va">with</span><span class="op">:</span></span>
 <span>          <span class="va">path</span><span class="op">:</span> <span class="st">"06_tabsets"</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level3">
-<h3 id="testing-applications-in-a-package">Testing applications in a package<a class="anchor" aria-label="anchor" href="#testing-applications-in-a-package"></a>
-</h3>
+<div class="section level2">
+<h2 id="testing-applications-in-a-package">Testing applications in a package<a class="anchor" aria-label="anchor" href="#testing-applications-in-a-package"></a>
+</h2>
 <p>See the <a href="./use-package.html">Using shinytest2 with R packages</a> article.</p>
 </div>
+<div class="section level2">
+<h2 id="frequently-asked-questions">Frequently asked questions<a class="anchor" aria-label="anchor" href="#frequently-asked-questions"></a>
+</h2>
 <div class="section level3">
-<h3 id="frequently-asked-questions">Frequently asked questions<a class="anchor" aria-label="anchor" href="#frequently-asked-questions"></a>
+<h3 id="how-do-i-add-a-status-badge-to-my-project">How do I add a status badge to my project?<a class="anchor" aria-label="anchor" href="#how-do-i-add-a-status-badge-to-my-project"></a>
 </h3>
-<div class="section level4">
-<h4 id="how-do-i-add-a-status-badge-to-my-project">How do I add a status badge to my project?<a class="anchor" aria-label="anchor" href="#how-do-i-add-a-status-badge-to-my-project"></a>
-</h4>
 <p>See GitHub’s docs on <a href="https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/adding-a-workflow-status-badge" class="external-link">adding a badge</a>.</p>
 <p>If your workflow file is named <code>check-app.yaml</code> in the <code>schloerke/example-app</code> repo, you can add a status badge to your GitHub to your README.md with the following line:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1"></a><span class="al">![check-app](https://github.com/schloerke/example-app/actions/workflows/check-app.yml/badge.svg)</span></span></code></pre></div>
 <p>In your <code>README.md</code> file, you can add a build status badge, like the one below, so that you can see the status of your code at a glance:</p>
 </div>
-<div class="section level4">
-<h4 id="how-do-i-use-a-description-file-instead-of-renv">How do I use a <code>DESCRIPTION</code> file instead of <code>{renv}</code>?<a class="anchor" aria-label="anchor" href="#how-do-i-use-a-description-file-instead-of-renv"></a>
-</h4>
+<div class="section level3">
+<h3 id="how-do-i-use-a-description-file-instead-of-renv">How do I use a <code>DESCRIPTION</code> file instead of <code>{renv}</code>?<a class="anchor" aria-label="anchor" href="#how-do-i-use-a-description-file-instead-of-renv"></a>
+</h3>
 <p>Instead of using <a href="https://rstudio.github.io/renv/" class="external-link">renv</a>, you can use a <code>DESCRIPTION</code> file can be used to tell GHA which packages are needed to test the application. Instead of locking each package to a specific version like <a href="https://rstudio.github.io/renv/" class="external-link">renv</a>, this will result in the latest version of each package being downloaded from CRAN. This may be appropriate if you want to make sure your application works with the latest version of each package, instead of a frozen set of packages.</p>
 <p>To use a <code>DESCRIPTION</code> file, you need to modify your <code>check-app.yaml</code> file to use <code>r-lib/actions</code> default package installation system instead of <a href="https://rstudio.github.io/renv/" class="external-link">renv</a>. Replace this line from the template provided above:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-renv@v2</span></span></code></pre></div>
@@ -324,13 +324,8 @@
 <pre><code>Remotes:
   rstudio/shiny,
   rstudio/shinytest2@dev</code></pre>
-<p>This tells GitHub to install the <a href="https://shiny.rstudio.com/" class="external-link">shiny</a> package from the <code>main</code> branch of <a href="https://github.com/rstudio/shiny" class="external-link uri">https://github.com/rstudio/shiny</a>, the <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> package from the <code>dev</code> branch of <a href="https://github.com/rstudio/shinytest2" class="external-link uri">https://github.com/rstudio/shinytest2</a>. In addition to branch names like <code>dev</code>, you can use commit hashes or tags.</p>
+<p>This tells GitHub to install the <a href="https://shiny.rstudio.com/" class="external-link">shiny</a> package from the <code>main</code> branch of <a href="https://github.com/rstudio/shiny" class="external-link uri">https://github.com/rstudio/shiny</a>, the <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> package from the <code>dev</code> branch of <a href="https://github.com/rstudio/shinytest2" class="external-link uri">https://github.com/rstudio/shinytest2</a>. In addition to branch names like <code>dev</code>, you can use commit hashes or tags.</p>
 </div>
-</div>
-<div class="section level2">
-<h2 id="example-workflows">Example workflows<a class="anchor" aria-label="anchor" href="#example-workflows"></a>
-</h2>
-<p>To view example workflows and more description about the <code>test-app</code> GitHub Actions step, please see <a href="https://github.com/rstudio/shinytest2/tree/main/actions/test-app" class="external-link uri">https://github.com/rstudio/shinytest2/tree/main/actions/test-app</a> for more information examples.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
