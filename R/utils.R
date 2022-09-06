@@ -160,8 +160,14 @@ write_union <- function(path, lines, comments = NULL, quiet = FALSE) {
       return(invisible(FALSE))
   }
   if (!quiet) {
-    rlang::check_installed("usethis")
-    usethis::ui_done("Adding {usethis::ui_value(new)} to {usethis::ui_path(path)}")
+    # Try to not depend on usethis if possible
+    if (rlang::is_installed("usethis")) {
+      usethis::ui_done("Adding {usethis::ui_value(new)} to {usethis::ui_path(path)}")
+    } else {
+      rlang::inform(c("*" = paste0(
+        "Adding ", new, " to ", path
+      )))
+    }
   }
   all_txt <- paste0(c(existing_lines, comments, new), collapse = "\n")
   if (!grepl("\n$", all_txt)) {

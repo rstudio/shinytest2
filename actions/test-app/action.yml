@@ -6,10 +6,10 @@ inputs:
     description: 'Directory of Shiny application (or Shiny-based document) to test'
     default: '.'
     required: false
-  # upload-snapshots:
-  #   description: 'Whether to upload all testthat snapshots as an artifact.'
-  #   default: false
-  #   required: false
+  upload-snapshots:
+    description: 'Whether to upload all testthat snapshots as an artifact.'
+    default: false
+    required: false
 runs:
   using: "composite"
   steps:
@@ -37,12 +37,12 @@ runs:
         find check -name 'testthat.Rout*' -exec cat '{}' \; || true
         echo ::endgroup::
       shell: bash
-      working-directory: ${{ inputs.working-directory }}
+      working-directory: ${{ inputs.app-dir }}
 
     - name: Upload snapshots
-      if: always()
+      if: inputs.upload-snapshots != 'false'
       uses: actions/upload-artifact@main
       with:
         name: ${{ runner.os }}-r${{ steps.st2-r-version.outputs.version }}-testthat-snapshots
-        path: ${{ inputs.working-directory }}/tests*/testthat/_snaps
+        path: ${{ inputs.app-dir }}/tests*/testthat/_snaps
         if-no-files-found: ignore

@@ -4,7 +4,14 @@
 \alias{test_app}
 \title{Test Shiny applications with \pkg{testthat}}
 \usage{
-test_app(app_dir = missing_arg(), ..., check_setup = TRUE)
+test_app(
+  app_dir = missing_arg(),
+  ...,
+  name = missing_arg(),
+  check_setup = TRUE,
+  reporter = testthat::get_reporter(),
+  stop_on_failure = missing_arg()
+)
 }
 \arguments{
 \item{app_dir}{The base directory for the Shiny application.
@@ -16,16 +23,24 @@ test_app(app_dir = missing_arg(), ..., check_setup = TRUE)
 
 \item{...}{Parameters passed to \code{\link[testthat:test_dir]{testthat::test_dir()}}}
 
+\item{name}{Name to display in the middle of the test name. This value is only used
+when calling \code{test_app()} inside of \pkg{testhat} test. The final testing context will
+have the format of \code{"{test_context} - {name} - {app_test_context}"}.}
+
 \item{check_setup}{If \code{TRUE}, the app will be checked for the presence of
-\code{./tests/testthat/setup.R}. This file must contain a call to
+\code{./tests/testthat/setup-shinytest2.R}. This file must contain a call to
 \code{\link[=load_app_env]{load_app_env()}}.}
+
+\item{reporter}{Reporter to pass through to \code{\link[testthat:test_dir]{testthat::test_dir()}}.}
+
+\item{stop_on_failure}{If missing, the default value of \code{TRUE} will be used. However, if missing and currently testing, \code{FALSE} will be used to seamlessly integrate the app reporter to \code{reporter}.}
 }
 \description{
-This is a helper method that wraps around \code{\link[testthat:test_dir]{testthat::test_dir()}} to test your Shiny application or Shiny runtime document.  This is similar to how \code{\link[testthat:test_package]{testthat::test_check()}} tests your R package but for your app.
+This is a helper method that wraps around \code{\link[testthat:test_dir]{testthat::test_dir()}} to test
+your Shiny application or Shiny runtime document.  This is similar to how
+\code{\link[testthat:test_package]{testthat::test_check()}} tests your R package but for your app.
 }
 \details{
-When setting up tests for your app,
-
 Example usage:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{## Interactive usage

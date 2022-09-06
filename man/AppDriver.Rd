@@ -37,7 +37,7 @@ a \code{.Rprofile} file within your Shiny app directory.
 
 
 If the app throws an error during initialization, the \code{AppDriver} will
-will be stored in \code{rlang::last_error()$app}. This allows for the "failure
+be stored in \code{rlang::last_error()$app}. This allows for the "failure
 to initialize" to be signaled while also allowing for the \code{app} to be
 retrieved after any initialization error has been thrown.
 }
@@ -48,7 +48,7 @@ retrieved after any initialization error has been thrown.
 Reactive values from within your Shiny application can be exported using the
 method:
 \href{https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html}{\code{shiny::exportTestValues()}}.
-This under utilized method exposes internal values of your app
+This underutilized method exposes internal values of your app
 without needing to create a corresponding input value or output value.
 
 For example:
@@ -510,10 +510,10 @@ app$expect_screenshot(selector = "#distPlot")
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
-# Display in viewer
+# Display in graphics device
 app$get_screenshot()
 
-# Update bins then display `"disPlot"` in viewer
+# Update bins then display `"disPlot"` in graphics device
 app$set_inputs(bins = 10)
 app$get_screenshot(selector = "#distPlot")
 
@@ -1016,11 +1016,20 @@ Initialize an \code{AppDriver} object
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{app_dir}}{Directory containing your Shiny application or a run-time
-Shiny R Markdown document. By default, it retrieves
-\code{test_path("../../")} to allow for interactive and testing usage. A
-Shiny application URL can be provided, however snapshots will be saved
-in the current directory.}
+\item{\code{app_dir}}{This value can be many different things:
+\itemize{
+\item A directory containing your Shiny application or a run-time Shiny R
+Markdown document.
+\item A URL pointing to your shiny application. (Don't forget to set
+\code{testmode = TRUE} when running your application!)
+\item A Shiny application object which inherits from \code{"shiny.appobj"}.
+}
+
+By default, \code{app_dir} is set to \code{test_path("../../")} to work in both
+interactive and testing usage.
+
+If a file path is not provided to \code{app_dir}, snapshots will be saved as
+if the root of the Shiny application was the current directory.}
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
@@ -2224,10 +2233,10 @@ will have preference.}
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
-# Display in viewer
+# Display in graphics device
 app$get_screenshot()
 
-# Update bins then display `"disPlot"` in viewer
+# Update bins then display `"disPlot"` in graphics device
 app$set_inputs(bins = 10)
 app$get_screenshot(selector = "#distPlot")
 

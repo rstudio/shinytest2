@@ -5,8 +5,8 @@ editor_options:
   chunk_output_type: console
 vignette: >
   %\VignetteIndexEntry{Testing in depth}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r setup, include=FALSE}
@@ -77,7 +77,9 @@ Multiple calls to `app$set_inputs()` should be reduced to a single line unless t
 For an in-depth discussion of expectations, see the [Robust testing vignette](./robust.html).
 
 There are a couple standard ways to make expectations from your `AppDriver` object.
+
 * `app$expect_values()`: This is the simplest way to make an expectation. It creates a list of values and compares them to the current values of the application. It also takes a debug screenshot and stores it as a snapshot. However, this snapshot will never fail an expectation test. The extra screenshot file is useful for manually determining if UI changes have happened over time while not producing numerous false-positive test failures.
+
 * `app$expect_screenshot()`: This method takes a screenshot of the application and compares it to a reference screenshot. If the screenshots are different, it fails the test.
 
 There are few ways to use `app$expect_values()`. The simplest way is to call it with no arguments:
@@ -163,7 +165,7 @@ shinyApp(
 )
 ```
 
-```{r echo=FALSE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/screenshot-exports-app.png")
 ```
 
@@ -218,7 +220,7 @@ If your application uses randomly-generated values (by calling functions like `r
 
 To make such applications exactly repeatable, you can set the random seed. This can be done by specifying a random seed in the recorder. The seed can be any integer value.
 
-```{r echo=FALSE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
 knitr::include_graphics("images/screenshot-recorder-random-seed.png")
 ```
 
@@ -270,7 +272,7 @@ As you step through the script, you can inspect the state of the application in 
 
 The recommended way is to call `app$view()`. This will open a browser window in your default Chrome browser.
 
-Another way is to take a screenshot of your application. You can call `app$get_screenshot()` to take a screenshot of the application. This will display the screenshot as if it were a plot. (In RStudio, it will show in the Viewer pane.)
+Another way is to take a screenshot of your application. You can call `app$get_screenshot()` to take a screenshot of the application. This will display the screenshot as if it were a plot. (In RStudio, it will show in the Plots tab.)
 
 Using both methods, you can inspect the screenshot to see the state of the application.
 

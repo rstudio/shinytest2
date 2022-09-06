@@ -115,8 +115,8 @@ app_initialize_ <- function(
   "!DEBUG waiting for Shiny to become stable"
   self$log_message("Waiting for Shiny to become ready")
 
-  withCallingHandlers(
-    {
+  withCallingHandlers( # abort() on error
+    { # nolint
       self$wait_for_js(
         "window.shinytest2 && window.shinytest2.ready === true",
         timeout = load_timeout
@@ -164,10 +164,36 @@ app_initialize_ <- function(
 app_initialize <- function(self, private, ..., view = missing_arg()) {
   ckm8_assert_app_driver(self, private)
 
-  withCallingHandlers(
+  if (testthat::is_testing()) {
+    # Make sure chromote can be started. If not, skip test
+    try_chromote <- function(silent = FALSE) {
+      try(silent = silent, {
+        # Should throw an error if Chrome is not found
+        chromote::default_chromote_object()$new_session()
+      })
+    }
+    if (on_ci() && is_windows()) {
+      # Windows GHA needs a kick start for `{chromote}` to connect
+      # https://github.com/rstudio/shinytest2/issues/209
+      # Try starting it before checking for it again:
+      # https://github.com/rstudio/shinytest2/issues/209#issuecomment-1121465705
+
+      # Do not care about result; Asking again should be fast
+      try_chromote(silent = TRUE)
+    }
+
+    # Display error if chromote is not found
+    chromote_can_be_started <- try_chromote(silent = FALSE)
+    if (inherits(chromote_can_be_started, "try-error")) {
+      # Skip test
+      testthat::skip("`shinytest2::AppDriver` can not be initialized as {chromote} can not be started")
+    }
+  }
+
+  withCallingHandlers( # abort() on error
     app_initialize_(self, private, ..., view = view),
     error = function(e) {
-      withCallingHandlers(
+      tryCatch(
         self$log_message(paste0("Error while initializing AppDriver:\n", conditionMessage(e))),
         error = function(ee) {
           app_inform(self, private, paste0("Could not log error message. Error: ", conditionMessage(ee)))
@@ -176,7 +202,7 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
 
       # Open chromote session if it is not already open and `view != FALSE`
       # `view` defaults to `rlang::missing_arg()`
-      withCallingHandlers(
+      tryCatch(
         {
           view_val <- rlang::maybe_missing(view, NULL)
           if (
@@ -200,7 +226,7 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
         }
       )
 
-      logs <- withCallingHandlers(
+      logs <- tryCatch(
         format(self$get_logs()),
         error = function(e) "(Error retrieving logs)"
       )

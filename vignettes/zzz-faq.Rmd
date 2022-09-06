@@ -48,7 +48,7 @@ if (isTRUE(getOption("shiny.testmode"))) {
 
 ## How can I get the objects from files in my the R folder into the testing environment?
 
-Loading the support environment for a Shiny application requires a call to `shinytest2::load_app_env()` in `./tests/testthat/setup.R`. This method will load the `global.R` and all R files into the testing environment, similar to testing package R code.
+Loading the support environment for a Shiny application requires a call to `shinytest2::load_app_env()` in `./tests/testthat/setup-shinytest2.R`. This method will load the `global.R` and all R files into the testing environment, similar to testing package R code.
 
 This is not automatically performed as it may be costly to load the support environment.
 
@@ -99,7 +99,5 @@ Input values can face the same issues, and they can also be modified with `shiny
 ## Should I manually shut down my `AppDriver`?
 
 For code completeness, you should call `app$stop()` at the end of your tests to shut down the background Shiny process and current Chromote Session.
-
-However, `{shinytest2}` does not do this for code brevity and relies on `AppDriver$private$finalizer()` (which is called when the value is garbage collected or the R session is stopped) to call `AppDriver$stop()`.
 
 If your R session is starting to feel more sluggish, you may want to call `app$stop()` manually. Or if you are programmatically creating many instances of `AppDriver`, you may want to call `app$stop()` when the specific test is complete.
