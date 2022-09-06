@@ -1,4 +1,4 @@
-# shinytest2 (development version)
+# shinytest2 0.1.1
 
 * Update docs for CRAN (#253)
 
