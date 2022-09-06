@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,8 +97,8 @@
 
     
     
-<p><a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> is the predecessor to <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>. <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> was implemented using <a href="https://rstudio.github.io/webdriver/" class="external-link"><code>{webdriver}</code></a> which uses <a href="https://phantomjs.org/api/" class="external-link">PhantomJS</a>. PhantomJS has been unsupported since 2017 and does not support displaying <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5. <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> uses <a href="https://github.com/rstudio/chromote" class="external-link">chromote</a> to connect to your locally installed Chrome or Chromium application. So, <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> is able to display <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5.</p>
-<p>To auto migrate your existing <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> tests to <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>, call <code>shinytest2::migrate_from_shinytest(PATH_TO_APP)</code>.</p>
+<p><a href="https://rstudio.github.io/shinytest2/">shinytest2</a> is the successor to <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a>. <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> was implemented using <a href="https://rstudio.github.io/webdriver/" class="external-link"><code>{webdriver}</code></a> which uses <a href="https://phantomjs.org/api/" class="external-link">PhantomJS</a>. PhantomJS has been unsupported since 2017 and does not support displaying <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5. <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> uses <a href="https://github.com/rstudio/chromote" class="external-link">chromote</a> to connect to your locally installed Chrome or Chromium application, allowing <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> to display <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>’s Bootstrap v5.</p>
+<p>To auto-migrate your existing <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> tests to <a href="https://rstudio.github.io/shinytest2/">shinytest2</a>, call <code>shinytest2::migrate_from_shinytest(PATH_TO_APP)</code>.</p>
 <div class="section level2">
 <h2 id="code-structure">Code structure<a class="anchor" aria-label="anchor" href="#code-structure"></a>
 </h2>
@@ -128,7 +128,7 @@
 <code>ShinyDriver$executeScript()</code><a class="anchor" aria-label="anchor" href="#shinydriverexecutescript"></a>
 </h4>
 <p>Signature: <code>ShinyDriver$executeScript(script, ...)</code></p>
-<p>The <code>...</code> must now be inserted into the script. You can do this with commands like <code><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue()</a></code> or <code><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste()</a></code>. Extra parameters include <code>file</code> which can contain your <code>script</code> content and <code>timeout</code> which will throw an error if the <code>timeout</code> (in milliseconds) is reached before the script returns. If a promise is the last value in the <code>script</code> then the <code>resolve</code>d value will be sent back to the R session.</p>
+<p>The <code>...</code> must now be inserted into the script. You can do this with commands like <code><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue()</a></code> or <code><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste()</a></code>. Extra parameters include <code>file</code>, which can contain your <code>script</code> content, and <code>timeout</code>, which will throw an error if the <code>timeout</code> (in milliseconds) is reached before the script returns. If a promise is the last value in the <code>script</code> then the <code>resolve</code>d value will be sent back to the R session.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## {shinytest}</span></span>
 <span><span class="va">life</span> <span class="op">&lt;-</span> <span class="fl">42</span></span>
@@ -152,7 +152,7 @@
 <code>ShinyDriver$executeScriptAsync()</code><a class="anchor" aria-label="anchor" href="#shinydriverexecutescriptasync"></a>
 </h4>
 <p>Signature: <code>ShinyDriver$executeScriptAsync(script, ...)</code></p>
-<p><code>ShinyDriver$executeScriptAsync()</code> magically made a <code>callback</code> argument available in the JavaScript code and would block the R session until <code>callback</code> was called within <code>script</code>. In <code>shinytest2</code>, your script will need to be updated to use a JavaScript Promise. The Promise’s <code>resolve</code> method should be your callback that you used previously. You should also provide a maximum <code>timeout</code> (in milliseconds) that you are willing to wait before an error is thrown. Ex:</p>
+<p><code>ShinyDriver$executeScriptAsync()</code> magically made a <code>callback</code> argument available in the JavaScript code and would block the R session until <code>callback</code> was called within <code>script</code>. In <code>shinytest2</code> your script will need to be updated to use a JavaScript <code>Promise.</code> The <code>Promise</code>’s <code>resolve</code> method should be the callback that you used previously. You should also provide a maximum <code>timeout</code> (in milliseconds) that you are willing to wait before an error is thrown. For example:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## {shinytest}</span></span>
 <span><span class="co"># Wait until a button is clicked</span></span>
@@ -207,7 +207,7 @@
 <code>ShinyDriver$getValue()</code><a class="anchor" aria-label="anchor" href="#shinydrivergetvalue"></a>
 </h4>
 <p>Signature: <code>ShinyDriver$getValue(name, iotype = c("auto", "input", "output"))</code></p>
-<p>This method has been renamed to <code>AppDriver$get_value(..., input, output, export)</code> and had its parameters spread out into <code>input</code> and <code>output</code> while adding support for <code>export</code>.</p>
+<p>This method has been renamed to <code>AppDriver$get_value(..., input, output, export)</code> and its parameters have been spread out into <code>input</code> and <code>output</code>, while adding support for <code>export</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## {shinytest}</span></span>
 <span><span class="va">old</span><span class="op">$</span><span class="fu">getValue</span><span class="op">(</span><span class="st">"myinput"</span><span class="op">)</span></span>
@@ -235,7 +235,7 @@
 <code>ShinyDriver$setInputs()</code><a class="anchor" aria-label="anchor" href="#shinydriversetinputs"></a>
 </h4>
 <p>Signature: <code>ShinyDriver$setInputs(..., wait_ = TRUE, values_ = TRUE, timeout_ = 3 * 1000, allowInputNoBinding_ = FALSE, priority_ = c("input", "event"))</code></p>
-<p>The method name has been renamed to <code>AppDriver$get_values()</code> and the parameters have been <code>snake_case</code>’ed. <code>value_</code> support has been removed, but the same functionality can be achieved via a call to <code>AppDriver$get_values()</code> after a call to <code>AppDriver$set_inputs()</code>.</p>
+<p>The method name has been renamed to <code>AppDriver$get_values()</code> and the parameters have been converted to <code>snake_case</code>. <code>value_</code> support has been removed, but the same functionality can be achieved via a call to <code>AppDriver$get_values()</code> <em>after</em> a call to <code>AppDriver$set_inputs()</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## {shinytest}</span></span>
 <span><span class="va">getValuesResult</span> <span class="op">&lt;-</span> <span class="va">old</span><span class="op">$</span><span class="fu">setInputs</span><span class="op">(</span>life <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
@@ -264,7 +264,7 @@
 <code>ShinyDriver$checkUniqueWidgetNames()</code><a class="anchor" aria-label="anchor" href="#shinydrivercheckuniquewidgetnames"></a>
 </h4>
 <p>Signature: <code>ShinyDriver$checkUniqueWidgetNames()</code></p>
-<p>This method checked to make sure all input and output names are unique. It is still run at initialization via <code>AppDriver$new(check_names = TRUE)</code> and if any issues are found during startup, only warnings will be displayed. The exported method has been upgraded to an expectation version and renamed to <code>AppDriver$expect_unique_names()</code>.</p>
+<p>This method checks to make sure all input and output names are unique. It is still run at initialization via <code>AppDriver$new(check_names = TRUE)</code>, and if any issues are found during startup, only warnings will be displayed. The exported method has been upgraded to an expectation version and renamed to <code>AppDriver$expect_unique_names()</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## {shinytest}</span></span>
 <span><span class="va">old</span><span class="op">$</span><span class="fu">checkUniqueWidgetNames</span><span class="op">(</span><span class="op">)</span></span>
@@ -276,13 +276,13 @@
 <div class="section level3">
 <h3 id="snapshots">Snapshots<a class="anchor" aria-label="anchor" href="#snapshots"></a>
 </h3>
-<p>Snapshots are now handled by <a href="https://testthat.r-lib.org" class="external-link">testthat</a>. To leverage this, use the <code>AppDriver$expect_*()</code> methods to assert the value is consistent over many testing executions.</p>
+<p>Snapshots are now handled by <a href="https://testthat.r-lib.org" class="external-link">testthat</a>. To leverage this capability, use the <code>AppDriver$expect_*()</code> methods to assert that the value is consistent over many testing executions.</p>
 <div class="section level4">
 <h4 id="shinydriversnapshotinit">
 <code>ShinyDriver$snapshotInit()</code><a class="anchor" aria-label="anchor" href="#shinydriversnapshotinit"></a>
 </h4>
 <p>Signature: <code>ShinyDriver$snapshotInit(path, screenshot = TRUE)</code></p>
-<p>This method has been moved to the parameters: <code>AppDriver$new(name = path)</code>. Screenshots <a href="https://testthat.r-lib.org" class="external-link">testthat</a> snapshots are not allowed until a <code>AppDriver$new(variant=)</code> value is provided. <code>variant</code> is similar to the <code>suffix</code> value in <code>shinytest::testApp(suffix=)</code>.</p>
+<p>This method has been moved to the parameters: <code>AppDriver$new(name = path)</code>. Screenshots via <a href="https://testthat.r-lib.org" class="external-link">testthat</a> snapshots are not allowed until an <code>AppDriver$new(variant=)</code> value is provided. <code>variant</code> is similar to the <code>suffix</code> value in <code>shinytest::testApp(suffix=)</code>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## {shinytest}</span></span>
 <span><span class="va">old</span><span class="op">$</span><span class="fu">snapshotInit</span><span class="op">(</span><span class="st">"mytest"</span><span class="op">)</span></span>
@@ -297,7 +297,7 @@
 <code>ShinyDriver$snapshot()</code><a class="anchor" aria-label="anchor" href="#shinydriversnapshot"></a>
 </h4>
 <p>Signature: <code>ShinyDriver$snapshot(items = NULL, filename = NULL, screenshot = NULL)</code></p>
-<p>This method would expect a screenshot and expect all values to be consistent. This method no longer exists in <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> and has been broken up into two methods that must be called independently: <code>AppDriver$expect_screenshot()</code> and <code>AppDriver$expect_values()</code>. <code>AppDriver$expect_values()</code> will (by default) take a <em>debug</em> screenshot that will never fail in an expectation. This allows for a historical record (version control) of what the app looked like while not having to constantly battle with false-positive screenshot failures. If an single <code>output</code> value is supplied to <code>AppDriver$expect_values()</code>, then the <em>debug</em> screenshot is zoomed in on the output value.</p>
+<p>In <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> this method would expect a screenshot and expect all values to be consistent. This method no longer exists in <a href="https://rstudio.github.io/shinytest2/">shinytest2</a>, and has been broken up into two methods that must be called independently: <code>AppDriver$expect_screenshot()</code> and <code>AppDriver$expect_values()</code>. <code>AppDriver$expect_values()</code> will (by default) take a <em>debug</em> screenshot that will never fail in an expectation. This allows for a historical record (version control) of what the app looked like while not having to constantly battle with false-positive screenshot failures. If a single <code>output</code> value is supplied to <code>AppDriver$expect_values()</code>, then the <em>debug</em> screenshot is zoomed in on the output value.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## {shinytest}</span></span>
 <span><span class="va">old</span><span class="op">$</span><span class="fu">snapshot</span><span class="op">(</span><span class="op">)</span></span>
@@ -347,7 +347,7 @@
 <code>ShinyDriver$stop()</code><a class="anchor" aria-label="anchor" href="#shinydriverstop"></a>
 </h4>
 <p>Signature: <code>ShinyDriver$stop()</code></p>
-<p>This method stayed the same! 🥳. In <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>, this will also stop your [<code>ChromeSession</code>] instance and clean up any temporary Shiny log files.</p>
+<p>This method stayed the same! 🥳 In <a href="https://rstudio.github.io/shinytest2/">shinytest2</a>, this will also stop your [<code>ChromeSession</code>] instance and clean up any temporary Shiny log files.</p>
 </div>
 <div class="section level4">
 <h4 id="shinydriveruploadfile">
@@ -367,7 +367,7 @@
 <code>ShinyDriver$waitFor()</code><a class="anchor" aria-label="anchor" href="#shinydriverwaitfor"></a>
 </h4>
 <p>Signature: <code>ShinyDriver$waitFor(expr, checkInterval = 100, timeout = 3000)</code></p>
-<p>This method has been renamed and had its parameters reordered to <code>AppDriver$wait_for_js(script, timeout, interval)</code>. Like other JavaScript methods in <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>, <code>script</code> needs to explicitly return a value.</p>
+<p>This method has been renamed and had its parameters reordered to <code>AppDriver$wait_for_js(script, timeout, interval)</code>. Like other JavaScript methods in <a href="https://rstudio.github.io/shinytest2/">shinytest2</a>, <code>script</code> needs to explicitly return a value.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## {shinytest}</span></span>
 <span><span class="va">old</span><span class="op">$</span><span class="fu">waitFor</span><span class="op">(</span><span class="st">"$('#myid').length &gt; 0"</span><span class="op">)</span></span>
@@ -380,7 +380,7 @@
 <code>ShinyDriver$waitForShiny()</code><a class="anchor" aria-label="anchor" href="#shinydriverwaitforshiny"></a>
 </h4>
 <p>Signature: <code>ShinyDriver$waitForShiny()</code></p>
-<p>This method has been upgraded to <code>AppDriver$wait_for_idle(duration = 500, timeout = 30 * 1000)</code>. The <code>ShinyDriver$waitForShiny()</code> method only waited until a single instance in time stated that Shiny was no longer busy. The new method will wait until Shiny has been “idle” for a continuous stretch of time. It is useful to wait until Shiny has been idle for a set duration to avoid situations where dynamic UI needs to calculate new outputs given new input information.</p>
+<p>This method has been upgraded to <code>AppDriver$wait_for_idle(duration = 500, timeout = 30 * 1000)</code>. The <code>ShinyDriver$waitForShiny()</code> method only waited until a single instance in time stated that Shiny was no longer busy. The new method will wait until Shiny has been “idle” for a continuous stretch of time. It is useful to wait until Shiny has been idle for a set duration in order to avoid situations where dynamic UI needs to calculate new outputs given new input information.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## {shinytest}</span></span>
 <span><span class="va">old</span><span class="op">$</span><span class="fu">waitForShiny</span><span class="op">(</span><span class="op">)</span></span>
@@ -395,7 +395,7 @@
 <h4 id="shinydriverwaitforvalue">
 <code>ShinyDriver$waitForValue()</code><a class="anchor" aria-label="anchor" href="#shinydriverwaitforvalue"></a>
 </h4>
-<p>Signature: <code>ShinyDriver$waitForValue(name, ignore = list(NULL, ""), iotype = c("input", "output", "export"), timeout = 10000, checkInterval = 400)</code>: This (underutilized) method has had the <code>name</code>/<code>iotype</code> spread out into separate <code>input</code>, <code>output</code>, <code>export</code> parameters. Only one <code>input</code>/<code>output</code>/<code>export</code> value may be supplied in an <code>AppDriver</code> object. The <code>timeout</code> has been increased to 15 seconds. Both methods still poll the Shiny application at a set <code>interval</code> for the corresponding value to be something not in the <code>ignore</code>d set of values.</p>
+<p>Signature: <code>ShinyDriver$waitForValue(name, ignore = list(NULL, ""), iotype = c("input", "output", "export"), timeout = 10000, checkInterval = 400)</code>: This (underutilized) method has had the <code>name</code>/<code>iotype</code> spread out into separate <code>input</code>, <code>output</code>, <code>export</code> parameters. Only one <code>input</code>/<code>output</code>/<code>export</code> value may be supplied in an <code>AppDriver</code> object. The <code>timeout</code> has been increased to 15 seconds. Both methods still poll the Shiny application at a set <code>interval</code> for the corresponding value to be something <em>not</em> in the <code>ignore</code>d set of values.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## {shinytest}</span></span>
 <span><span class="va">old</span><span class="op">$</span><span class="fu">waitForValue</span><span class="op">(</span><span class="st">"myslider"</span><span class="op">)</span></span>
@@ -409,7 +409,7 @@
 <div class="section level3">
 <h3 id="elements-widgets">Elements / Widgets<a class="anchor" aria-label="anchor" href="#elements-widgets"></a>
 </h3>
-<p>Direct element or Widget support for <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> has been drastically reduced. With the ability to execute any JavaScript function via <code>$get_js(script)</code> and <code>$run_js(script)</code>, it is now possible to reproduce many of the methods that were provided in <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a>.</p>
+<p>Direct element or Widget support for <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> has been drastically reduced. With the ability to execute any JavaScript function via <code>$get_js(script)</code> and <code>$run_js(script)</code>, it is now possible to reproduce many of the methods that were provided in <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a>.</p>
 <div class="section level4">
 <h4 id="shinydriverfindelement-shinydriverfindelements-shinydriverfindwidget">
 <code>ShinyDriver$findElement()</code>, <code>ShinyDriver$findElements()</code>, <code>ShinyDriver$findWidget()</code><a class="anchor" aria-label="anchor" href="#shinydriverfindelement-shinydriverfindelements-shinydriverfindwidget"></a>
@@ -433,7 +433,7 @@
 <code>ShinyDriver$getSource()</code>, <code>ShinyDriver$getTitle()</code><a class="anchor" aria-label="anchor" href="#shinydrivergetsource-shinydrivergettitle"></a>
 </h4>
 <p>Signatures: * <code>ShinyDriver$getSource()</code> * <code>ShinyDriver$getTitle()</code></p>
-<p>These methods have been removed. It is suggested to use JavaScript code directly or use newer helper methods.</p>
+<p>These methods have been removed. It is suggested to use JavaScript code directly, or to use newer helper methods.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## {shinytest}</span></span>
 <span><span class="va">old</span><span class="op">$</span><span class="fu">getSource</span><span class="op">(</span><span class="op">)</span></span>
@@ -447,7 +447,7 @@
 <div class="section level3">
 <h3 id="testing-setup">Testing setup<a class="anchor" aria-label="anchor" href="#testing-setup"></a>
 </h3>
-<p><a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> is heavily integrated with the <a href="https://testthat.r-lib.org" class="external-link">testthat</a> testing framework. Similar to <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a>, snapshots are recorded but are recorded via <a href="https://testthat.r-lib.org" class="external-link">testthat</a> snapshots. For more information on the robustness of different testing approaches, please see the <a href="./robust.html">Robust testing</a> vignette.</p>
+<p><a href="https://rstudio.github.io/shinytest2/">shinytest2</a> is heavily integrated with the <a href="https://testthat.r-lib.org" class="external-link">testthat</a> testing framework. Similar to <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a>, snapshots are recorded, but they are recorded via <a href="https://testthat.r-lib.org" class="external-link">testthat</a> snapshots. For more information on the robustness of different testing approaches, please see the <a href="./robust.html">Robust testing</a> vignette.</p>
 <ul>
 <li>
 <code>ShinyDriver$new(suffix=)</code>: Please use <code>AppDriver$new(variant=)</code>.</li>
@@ -463,7 +463,7 @@
 <code>ShinyDriver$getRelativePathToApp()</code>, <code>ShinyDriver$getTestsDir()</code><a class="anchor" aria-label="anchor" href="#shinydrivergetrelativepathtoapp-shinydrivergettestsdir"></a>
 </h4>
 <p>Signatures: * <code>ShinyDriver$getRelativePathToApp()</code> * <code>ShinyDriver$getTestsDir()</code></p>
-<p>These methods have been removed as they are no longer needed given execution <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> testing is always done within the <a href="https://testthat.r-lib.org" class="external-link">testthat</a> testing framework.</p>
+<p>These methods have been removed as they are no longer needed given execution <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> testing is always done within the <a href="https://testthat.r-lib.org" class="external-link">testthat</a> testing framework.</p>
 </div>
 <div class="section level4">
 <h4 id="shinydrivergetsnapshotdir">
@@ -478,7 +478,7 @@
 </h4>
 <p>Signature: <code>ShinyDriver$expectUpdate(output, ..., timeout = 3000, iotype = c("auto", "input", "output"))</code></p>
 <p>This method is no longer supported. While knowing that an output value has been updated, it is very uncertain as to what the new value is. While possibly useful, it is not robust and therefore not recommended. Other testing methods should be explored.</p>
-<p>Equivalent code has been provided below for legacy support</p>
+<p>Equivalent code has been provided below for legacy support.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## {shinytest}</span></span>
 <span><span class="va">old</span><span class="op">$</span><span class="fu">expectUpdate</span><span class="op">(</span><span class="st">"myoutput"</span>, myinput <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
@@ -497,7 +497,7 @@
 <div class="section level3">
 <h3 id="debugging">Debugging<a class="anchor" aria-label="anchor" href="#debugging"></a>
 </h3>
-<p>Debugging in <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a> has been unified and is enabled at all times. The <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> debugging methods have been removed in favor of <code>AppDriver$get_logs()</code> which returns a similarly shaped <code>tibble</code> as <code>ShinyDriver$getDebugLog()</code>’s <code>data.frame</code>. The columns have been altered to be more generic where <code>type</code> has been broken into two columns: <code>location</code> and <code>level</code>.</p>
+<p>Debugging in <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> has been unified and is enabled at all times. The <a href="https://github.com/rstudio/shinytest" class="external-link">shinytest</a> debugging methods have been removed in favor of <code>AppDriver$get_logs()</code>, which returns a similarly shaped <code>tibble</code> as <code>ShinyDriver$getDebugLog()</code>’s <code>data.frame</code>. The columns have been altered to be more generic, where <code>type</code> has been broken into two columns: <code>location</code> and <code>level</code>.</p>
 <ul>
 <li>
 <code>ShinyDriver$getDebugLog()</code>, <code>ShinyDriver$getEventLog()</code>: Now use <code>AppDriver$get_logs()</code>.</li>
@@ -514,7 +514,7 @@
 <span><span class="co">## {shinytest2}</span></span>
 <span><span class="va">new</span><span class="op">$</span><span class="fu">get_logs</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">old</span><span class="op">$</span><span class="fu">log_message</span><span class="op">(</span><span class="st">"Creating report"</span><span class="op">)</span></span></code></pre></div>
-<p>If <code>options = list(shiny.trace = TRUE)</code> is set when initializing a <code>AppDriver</code> object, then all WebSocket traffic will be recorded.</p>
+<p>If <code>options = list(shiny.trace = TRUE)</code> is set when initializing an <code>AppDriver</code> object, then all WebSocket traffic will be recorded.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## {shinytest2}</span></span>
 <span><span class="co"># Record all websocket traffic. Caution!! This is very verbose!!</span></span>
@@ -545,8 +545,8 @@
 <span><span class="co">## {shinytest2}</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">new</span><span class="op">$</span><span class="fu">get_values</span><span class="op">(</span><span class="op">)</span>, <span class="va">names</span><span class="op">)</span></span></code></pre></div>
 <ul>
-<li><p><code>ShinyDriver$clone()</code>: <code>AppDriver</code> does not support cloning. (The underlying <code>ChromoteSession</code> does not support cloning, so <code>AppDriver</code> can not support cloning.)</p></li>
-<li><p><code>ShinyDriver$goBack()</code>, <code>ShinyDriver$refresh()</code>: These method have been removed, but can be achieved with <code>AppDriver$run_js(script)</code>.</p></li>
+<li><p><code>ShinyDriver$clone()</code>: <code>AppDriver</code> does not support cloning. (The underlying <code>ChromoteSession</code> does not support cloning, so <code>AppDriver</code> cannot support cloning.)</p></li>
+<li><p><code>ShinyDriver$goBack()</code>, <code>ShinyDriver$refresh()</code>: These methods have been removed, but can be achieved with <code>AppDriver$run_js(script)</code>.</p></li>
 </ul>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## {shinytest}</span></span>
@@ -560,7 +560,7 @@
 <span><span class="va">new</span><span class="op">$</span><span class="fu">run_js</span><span class="op">(</span><span class="st">"window.location.reload();"</span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>
-<code>ShinyDriver$getAppDir()</code>, <code>ShinyDriver$getAppFilename()</code>, <code>ShinyDriver$isRmd()</code>: <code>AppDriver$get_dir()</code> is the only method still supported given <code>AppDriver$new(app_dir=)</code> is a single directory path. The other methods have been removed as their functionality does not make sense within <a href="https://github.com/rstudio/shinytest2" class="external-link">shinytest2</a>.</li>
+<code>ShinyDriver$getAppDir()</code>, <code>ShinyDriver$getAppFilename()</code>, <code>ShinyDriver$isRmd()</code>: <code>AppDriver$get_dir()</code> is the only method still supported given <code>AppDriver$new(app_dir=)</code> is a single directory path. The other methods have been removed as their functionality does not make sense within <a href="https://rstudio.github.io/shinytest2/">shinytest2</a>.</li>
 </ul>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## {shinytest}</span></span>

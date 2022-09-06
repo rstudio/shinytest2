@@ -12,7 +12,7 @@ shinytest2 test to the testthat test_file."><meta property="og:image" content="h
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,6 +79,7 @@ shinytest2 test to the testthat test_file."><meta property="og:image" content="h
 <span>  test_file <span class="op">=</span> <span class="st">"test-shinytest2.R"</span>,</span>
 <span>  open_test_file <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/is_interactive.html" class="external-link">is_interactive</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  allow_no_input_binding <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  record_screen_size <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  run_test <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -130,6 +131,10 @@ bindings are recorded.</p><ul><li><p>If <code>TRUE</code>, events without input 
 <li><p>input, a modal dialog will be shown asking if unbound input events should</p></li>
 <li><p>be recorded.</p></li>
 </ul><p>See <code><a href="AppDriver.html">AppDriver</a></code><code>$set_inputs()</code> for more information.</p></dd>
+
+
+<dt>record_screen_size</dt>
+<dd><p>If <code>TRUE</code>, the screen size will be recorded when initialized and changed.</p></dd>
 
 
 <dt>run_test</dt>
