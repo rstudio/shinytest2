@@ -51,7 +51,9 @@ method:
 This under utilized method exposes internal values of your app
 without needing to create a corresponding input value or output value.
 
-For example:\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(shiny)
+For example:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(shiny)
 shiny_app <- shinyApp(
   fluidPage(
     h1("Pythagorean theorem"),
@@ -100,7 +102,9 @@ document.
 The two main expectation methods: \verb{$expect_values()} and \verb{$expect_screenshot()}
 eventually wrap \code{\link[testthat:expect_snapshot_file]{testthat::expect_snapshot_file()}}.
 
-Their underlying logic is similar to:\if{html}{\out{<div class="sourceCode r">}}\preformatted{## Expect values
+Their underlying logic is similar to:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{## Expect values
 tmpfile <- tempfile(fileext = ".json")
 jsonlite::write_json(app$get_values(), tmpfile)
 expect_snapshot_file(
@@ -948,43 +952,43 @@ str(head(rlog, 2))
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{AppDriver$new()}}
-\item \href{#method-view}{\code{AppDriver$view()}}
-\item \href{#method-click}{\code{AppDriver$click()}}
-\item \href{#method-set_inputs}{\code{AppDriver$set_inputs()}}
-\item \href{#method-upload_file}{\code{AppDriver$upload_file()}}
-\item \href{#method-expect_values}{\code{AppDriver$expect_values()}}
-\item \href{#method-get_value}{\code{AppDriver$get_value()}}
-\item \href{#method-get_values}{\code{AppDriver$get_values()}}
-\item \href{#method-expect_download}{\code{AppDriver$expect_download()}}
-\item \href{#method-get_download}{\code{AppDriver$get_download()}}
-\item \href{#method-expect_text}{\code{AppDriver$expect_text()}}
-\item \href{#method-get_text}{\code{AppDriver$get_text()}}
-\item \href{#method-expect_html}{\code{AppDriver$expect_html()}}
-\item \href{#method-get_html}{\code{AppDriver$get_html()}}
-\item \href{#method-expect_js}{\code{AppDriver$expect_js()}}
-\item \href{#method-get_js}{\code{AppDriver$get_js()}}
-\item \href{#method-run_js}{\code{AppDriver$run_js()}}
-\item \href{#method-expect_screenshot}{\code{AppDriver$expect_screenshot()}}
-\item \href{#method-get_screenshot}{\code{AppDriver$get_screenshot()}}
-\item \href{#method-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
-\item \href{#method-wait_for_value}{\code{AppDriver$wait_for_value()}}
-\item \href{#method-wait_for_js}{\code{AppDriver$wait_for_js()}}
-\item \href{#method-expect_unique_names}{\code{AppDriver$expect_unique_names()}}
-\item \href{#method-get_dir}{\code{AppDriver$get_dir()}}
-\item \href{#method-get_url}{\code{AppDriver$get_url()}}
-\item \href{#method-get_window_size}{\code{AppDriver$get_window_size()}}
-\item \href{#method-set_window_size}{\code{AppDriver$set_window_size()}}
-\item \href{#method-get_chromote_session}{\code{AppDriver$get_chromote_session()}}
-\item \href{#method-get_variant}{\code{AppDriver$get_variant()}}
-\item \href{#method-get_logs}{\code{AppDriver$get_logs()}}
-\item \href{#method-log_message}{\code{AppDriver$log_message()}}
-\item \href{#method-stop}{\code{AppDriver$stop()}}
+\item \href{#method-AppDriver-new}{\code{AppDriver$new()}}
+\item \href{#method-AppDriver-view}{\code{AppDriver$view()}}
+\item \href{#method-AppDriver-click}{\code{AppDriver$click()}}
+\item \href{#method-AppDriver-set_inputs}{\code{AppDriver$set_inputs()}}
+\item \href{#method-AppDriver-upload_file}{\code{AppDriver$upload_file()}}
+\item \href{#method-AppDriver-expect_values}{\code{AppDriver$expect_values()}}
+\item \href{#method-AppDriver-get_value}{\code{AppDriver$get_value()}}
+\item \href{#method-AppDriver-get_values}{\code{AppDriver$get_values()}}
+\item \href{#method-AppDriver-expect_download}{\code{AppDriver$expect_download()}}
+\item \href{#method-AppDriver-get_download}{\code{AppDriver$get_download()}}
+\item \href{#method-AppDriver-expect_text}{\code{AppDriver$expect_text()}}
+\item \href{#method-AppDriver-get_text}{\code{AppDriver$get_text()}}
+\item \href{#method-AppDriver-expect_html}{\code{AppDriver$expect_html()}}
+\item \href{#method-AppDriver-get_html}{\code{AppDriver$get_html()}}
+\item \href{#method-AppDriver-expect_js}{\code{AppDriver$expect_js()}}
+\item \href{#method-AppDriver-get_js}{\code{AppDriver$get_js()}}
+\item \href{#method-AppDriver-run_js}{\code{AppDriver$run_js()}}
+\item \href{#method-AppDriver-expect_screenshot}{\code{AppDriver$expect_screenshot()}}
+\item \href{#method-AppDriver-get_screenshot}{\code{AppDriver$get_screenshot()}}
+\item \href{#method-AppDriver-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
+\item \href{#method-AppDriver-wait_for_value}{\code{AppDriver$wait_for_value()}}
+\item \href{#method-AppDriver-wait_for_js}{\code{AppDriver$wait_for_js()}}
+\item \href{#method-AppDriver-expect_unique_names}{\code{AppDriver$expect_unique_names()}}
+\item \href{#method-AppDriver-get_dir}{\code{AppDriver$get_dir()}}
+\item \href{#method-AppDriver-get_url}{\code{AppDriver$get_url()}}
+\item \href{#method-AppDriver-get_window_size}{\code{AppDriver$get_window_size()}}
+\item \href{#method-AppDriver-set_window_size}{\code{AppDriver$set_window_size()}}
+\item \href{#method-AppDriver-get_chromote_session}{\code{AppDriver$get_chromote_session()}}
+\item \href{#method-AppDriver-get_variant}{\code{AppDriver$get_variant()}}
+\item \href{#method-AppDriver-get_logs}{\code{AppDriver$get_logs()}}
+\item \href{#method-AppDriver-log_message}{\code{AppDriver$log_message()}}
+\item \href{#method-AppDriver-stop}{\code{AppDriver$stop()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-AppDriver-new"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-new}{}}}
 \subsection{Method \code{new()}}{
 Initialize an \code{AppDriver} object
 \subsection{Usage}{
@@ -1107,8 +1111,8 @@ app$expect_values()
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-view"></a>}}
-\if{latex}{\out{\hypertarget{method-view}{}}}
+\if{html}{\out{<a id="method-AppDriver-view"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-view}{}}}
 \subsection{Method \code{view()}}{
 View the Shiny application
 
@@ -1133,8 +1137,8 @@ app$view()
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-click"></a>}}
-\if{latex}{\out{\hypertarget{method-click}{}}}
+\if{html}{\out{<a id="method-AppDriver-click"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-click}{}}}
 \subsection{Method \code{click()}}{
 Click an element
 
@@ -1185,8 +1189,8 @@ cat(app$get_text("#view"))
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_inputs"></a>}}
-\if{latex}{\out{\hypertarget{method-set_inputs}{}}}
+\if{html}{\out{<a id="method-AppDriver-set_inputs"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-set_inputs}{}}}
 \subsection{Method \code{set_inputs()}}{
 Set input values
 
@@ -1240,8 +1244,8 @@ cat(app$get_text("#view"))
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-upload_file"></a>}}
-\if{latex}{\out{\hypertarget{method-upload_file}{}}}
+\if{html}{\out{<a id="method-AppDriver-upload_file"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-upload_file}{}}}
 \subsection{Method \code{upload_file()}}{
 Upload a file
 
@@ -1282,8 +1286,8 @@ app$upload_file(file1 = tmpfile)
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_values"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_values}{}}}
+\if{html}{\out{<a id="method-AppDriver-expect_values"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-expect_values}{}}}
 \subsection{Method \code{expect_values()}}{
 Expect \code{input}, \code{output}, and \code{export} values
 
@@ -1391,8 +1395,8 @@ app$expect_values(input = "A", output = "C")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_value"></a>}}
-\if{latex}{\out{\hypertarget{method-get_value}{}}}
+\if{html}{\out{<a id="method-AppDriver-get_value"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-get_value}{}}}
 \subsection{Method \code{get_value()}}{
 Get a single \code{input}, \code{output}, or \code{export} value
 
@@ -1448,8 +1452,8 @@ app$get_values(output = "caption")$output$caption
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_values"></a>}}
-\if{latex}{\out{\hypertarget{method-get_values}{}}}
+\if{html}{\out{<a id="method-AppDriver-get_values"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-get_values}{}}}
 \subsection{Method \code{get_values()}}{
 Get \code{input}, \code{output}, and \code{export} values
 
@@ -1554,8 +1558,8 @@ str(app$get_values(input = "A", output = "C"))
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_download"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_download}{}}}
+\if{html}{\out{<a id="method-AppDriver-expect_download"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-expect_download}{}}}
 \subsection{Method \code{expect_download()}}{
 Expect a downloadable file
 
@@ -1610,8 +1614,8 @@ app$expect_download("downloadData", compare = testthat::compare_file_text)
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_download"></a>}}
-\if{latex}{\out{\hypertarget{method-get_download}{}}}
+\if{html}{\out{<a id="method-AppDriver-get_download"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-get_download}{}}}
 \subsection{Method \code{get_download()}}{
 Get downloadable file
 
@@ -1665,8 +1669,8 @@ app$get_download("downloadData", filename = "./myfile.csv")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_text"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_text}{}}}
+\if{html}{\out{<a id="method-AppDriver-expect_text"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-expect_text}{}}}
 \subsection{Method \code{expect_text()}}{
 Expect snapshot of UI text
 
@@ -1715,8 +1719,8 @@ app$expect_text("h2")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_text"></a>}}
-\if{latex}{\out{\hypertarget{method-get_text}{}}}
+\if{html}{\out{<a id="method-AppDriver-get_text"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-get_text}{}}}
 \subsection{Method \code{get_text()}}{
 Get UI text
 
@@ -1754,8 +1758,8 @@ app$get_text("h2")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_html"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_html}{}}}
+\if{html}{\out{<a id="method-AppDriver-expect_html"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-expect_html}{}}}
 \subsection{Method \code{expect_html()}}{
 Expect snapshot of UI HTML
 
@@ -1808,8 +1812,8 @@ app$expect_html("#caption")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_html"></a>}}
-\if{latex}{\out{\hypertarget{method-get_html}{}}}
+\if{html}{\out{<a id="method-AppDriver-get_html"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-get_html}{}}}
 \subsection{Method \code{get_html()}}{
 Get UI HTML
 
@@ -1859,8 +1863,8 @@ cat(app$get_html(".shiny-input-container")[1])
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_js"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_js}{}}}
+\if{html}{\out{<a id="method-AppDriver-expect_js"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-expect_js}{}}}
 \subsection{Method \code{expect_js()}}{
 Expect snapshot of JavaScript script output
 
@@ -1923,8 +1927,8 @@ app$expect_js("window.test_counter;")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_js"></a>}}
-\if{latex}{\out{\hypertarget{method-get_js}{}}}
+\if{html}{\out{<a id="method-AppDriver-get_js"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-get_js}{}}}
 \subsection{Method \code{get_js()}}{
 Execute JavaScript code in the browser and return the result
 
@@ -2015,8 +2019,8 @@ app$get_js(js_txt)
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-run_js"></a>}}
-\if{latex}{\out{\hypertarget{method-run_js}{}}}
+\if{html}{\out{<a id="method-AppDriver-run_js"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-run_js}{}}}
 \subsection{Method \code{run_js()}}{
 Execute JavaScript code in the browser
 
@@ -2075,8 +2079,8 @@ app$get_js(js_txt)
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_screenshot"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_screenshot}{}}}
+\if{html}{\out{<a id="method-AppDriver-expect_screenshot"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-expect_screenshot}{}}}
 \subsection{Method \code{expect_screenshot()}}{
 Expect a screenshot of the Shiny application
 
@@ -2164,8 +2168,8 @@ app$expect_screenshot(selector = "#distPlot")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_screenshot"></a>}}
-\if{latex}{\out{\hypertarget{method-get_screenshot}{}}}
+\if{html}{\out{<a id="method-AppDriver-get_screenshot"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-get_screenshot}{}}}
 \subsection{Method \code{get_screenshot()}}{
 Take a screenshot
 
@@ -2239,8 +2243,8 @@ showimage::show_image(tmpfile)
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-wait_for_idle"></a>}}
-\if{latex}{\out{\hypertarget{method-wait_for_idle}{}}}
+\if{html}{\out{<a id="method-AppDriver-wait_for_idle"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-wait_for_idle}{}}}
 \subsection{Method \code{wait_for_idle()}}{
 Wait for Shiny to not be busy (idle) for a set amount of time
 
@@ -2315,8 +2319,8 @@ identical(pre_value, post_value)
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-wait_for_value"></a>}}
-\if{latex}{\out{\hypertarget{method-wait_for_value}{}}}
+\if{html}{\out{<a id="method-AppDriver-wait_for_value"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-wait_for_value}{}}}
 \subsection{Method \code{wait_for_value()}}{
 Wait for a new Shiny value
 
@@ -2409,8 +2413,8 @@ app$get_value(output = "total")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-wait_for_js"></a>}}
-\if{latex}{\out{\hypertarget{method-wait_for_js}{}}}
+\if{html}{\out{<a id="method-AppDriver-wait_for_js"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-wait_for_js}{}}}
 \subsection{Method \code{wait_for_js()}}{
 Wait for a JavaScript expression to be true
 
@@ -2461,8 +2465,8 @@ app$wait_for_js("complicated_condition();")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-expect_unique_names"></a>}}
-\if{latex}{\out{\hypertarget{method-expect_unique_names}{}}}
+\if{html}{\out{<a id="method-AppDriver-expect_unique_names"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-expect_unique_names}{}}}
 \subsection{Method \code{expect_unique_names()}}{
 Expect unique input and output names.
 
@@ -2513,8 +2517,8 @@ app$expect_unique_names()
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_dir"></a>}}
-\if{latex}{\out{\hypertarget{method-get_dir}{}}}
+\if{html}{\out{<a id="method-AppDriver-get_dir"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-get_dir}{}}}
 \subsection{Method \code{get_dir()}}{
 Retrieve the Shiny app path
 \subsection{Usage}{
@@ -2541,8 +2545,8 @@ identical(app$get_dir(), app_path)
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_url"></a>}}
-\if{latex}{\out{\hypertarget{method-get_url}{}}}
+\if{html}{\out{<a id="method-AppDriver-get_url"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-get_url}{}}}
 \subsection{Method \code{get_url()}}{
 Retrieve the Shiny app URL
 \subsection{Usage}{
@@ -2566,8 +2570,8 @@ browseURL(app$get_url())
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_window_size"></a>}}
-\if{latex}{\out{\hypertarget{method-get_window_size}{}}}
+\if{html}{\out{<a id="method-AppDriver-get_window_size"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-get_window_size}{}}}
 \subsection{Method \code{get_window_size()}}{
 Get window size
 
@@ -2596,8 +2600,8 @@ app$get_window_size()
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_window_size"></a>}}
-\if{latex}{\out{\hypertarget{method-set_window_size}{}}}
+\if{html}{\out{<a id="method-AppDriver-set_window_size"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-set_window_size}{}}}
 \subsection{Method \code{set_window_size()}}{
 Sets size of the browser window.
 \subsection{Usage}{
@@ -2645,8 +2649,8 @@ app$get_window_size()
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_chromote_session"></a>}}
-\if{latex}{\out{\hypertarget{method-get_chromote_session}{}}}
+\if{html}{\out{<a id="method-AppDriver-get_chromote_session"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-get_chromote_session}{}}}
 \subsection{Method \code{get_chromote_session()}}{
 Get Chromote Session
 
@@ -2682,8 +2686,8 @@ b$Runtime$evaluate("1 + 1")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_variant"></a>}}
-\if{latex}{\out{\hypertarget{method-get_variant}{}}}
+\if{html}{\out{<a id="method-AppDriver-get_variant"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-get_variant}{}}}
 \subsection{Method \code{get_variant()}}{
 Get the variant
 
@@ -2716,8 +2720,8 @@ app$get_variant()
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_logs"></a>}}
-\if{latex}{\out{\hypertarget{method-get_logs}{}}}
+\if{html}{\out{<a id="method-AppDriver-get_logs"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-get_logs}{}}}
 \subsection{Method \code{get_logs()}}{
 Get all logs
 
@@ -2894,8 +2898,8 @@ subset(log, level == "websocket")
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-log_message"></a>}}
-\if{latex}{\out{\hypertarget{method-log_message}{}}}
+\if{html}{\out{<a id="method-AppDriver-log_message"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-log_message}{}}}
 \subsection{Method \code{log_message()}}{
 Add a message to the \pkg{shinytest2} log.
 \subsection{Usage}{
@@ -2925,8 +2929,8 @@ app$get_logs()
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-stop"></a>}}
-\if{latex}{\out{\hypertarget{method-stop}{}}}
+\if{html}{\out{<a id="method-AppDriver-stop"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-stop}{}}}
 \subsection{Method \code{stop()}}{
 Stop the Shiny application driver
 
