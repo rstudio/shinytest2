@@ -56,7 +56,7 @@ kernel (\code{kernel_size}) can be set to tune the false positive rate.
 }
 \section{Functions}{
 \itemize{
-\item \code{compare_screenshot_threshold}: Compares two images and allows for a \code{threshold} difference of \emph{so many}
+\item \code{compare_screenshot_threshold()}: Compares two images and allows for a \code{threshold} difference of \emph{so many}
 units in each RGBA color channel.
 
 It is suggested to use this method with
@@ -64,13 +64,13 @@ It is suggested to use this method with
 expectations on screenshots given particular \code{threshold} and \code{kernel_size}
 values.
 
-\item \code{screenshot_max_difference}: Finds the difference between two screenshots.
+\item \code{screenshot_max_difference()}: Finds the difference between two screenshots.
 
 This value can be used in \code{compare_screenshot_threshold(threshold=)}. It is recommended that the value sent to \code{compare_screenshot_threshold(threshold=)} is larger than the difference found to tolerate allow for random rounding.
 
 If \code{new} is missing, it will use the file value of \code{old} (\code{FILE.png}) and default to \code{FILE.new.png}
-}}
 
+}}
 \section{Algorithm for the difference between two screenshots}{
 
 \enumerate{

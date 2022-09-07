@@ -2154,8 +2154,8 @@ recommended to use other expectation methods.
   delay = missing_arg(),
   selector = missing_arg(),
   compare = function(old, new) {
-     compare_screenshot_threshold(old, new, threshold
-    = threshold, kernel_size = kernel_size, quiet = quiet)
+     compare_screenshot_threshold(old, new, threshold =
+    threshold, kernel_size = kernel_size, quiet = quiet)
  },
   kernel_size = 5,
   quiet = FALSE,
