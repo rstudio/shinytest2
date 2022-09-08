@@ -34,11 +34,12 @@
 #' @param old Current screenshot file path
 #' @param new New screenshot file path
 #' @param ... Must be empty. Allows for parameter expansion.
-#' @param threshold If the value of `threshold` is NULL`,
+#' @param threshold If the value of `threshold` is `NULL`,
 #' `compare_screenshot_threshold()` will act like
 #' [`testthat::compare_file_binary`]. However, if `threshold` is a positive
 #' number, it will be compared against the largest convolution value found if
-#' the two images fail a [`testthat::compare_file_binary`] comparison.
+#' the two images fail a [`testthat::compare_file_binary`] comparison. The max
+#' value that can be found is `4 * kernel_size ^ 2`.
 #'
 #' Threshold values values below 5 help deter
 #' false-positive screenshot comparisons (such as inconsistent rounded
@@ -127,7 +128,14 @@ compare_screenshot_threshold <- function(old, new, ..., threshold = NULL, kernel
   # A threshold value is provided, convolve the images
 
   threshold <- as.double(threshold)
-  checkmate::assert_double(threshold, lower = 0, finite = TRUE, any.missing = FALSE, len = 1)
+  checkmate::assert_double(
+    threshold,
+    lower = 0,
+    # Kernel size is maxed out when the full kernel is wrong on all four channels (RGBA) containing `1` values
+    upper = kernel_size * kernel_size * 4,
+    any.missing = FALSE,
+    len = 1
+  )
 
   conv_max_value <- screenshot_max_difference(
     old = old,
@@ -211,6 +219,8 @@ screenshot_max_difference <- function(
 
   # Per pixel location, sum up each channel diff
   diff_matrix <- rowSums(abs(old_png - new_png), dims = 2)
+
+  # diff_matrix <- matrix(sample(as.double(1:144)), nrow = 12, ncol = 12, byrow = TRUE)
 
   # Use cpp11! Complexity: Theta(nrow * ncol * 2 * kernel_size)
   conv_max_value <- image_diff_convolution_max_value(

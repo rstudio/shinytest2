@@ -23,7 +23,12 @@ screenshot_max_difference(old, new = missing_arg(), ..., kernel_size = 5)
 
 \item{...}{Must be empty. Allows for parameter expansion.}
 
-\item{threshold}{If the value of \code{threshold} is NULL\verb{, }compare_screenshot_threshold()\verb{ will act like [}testthat::compare_file_binary\verb{]. However, if }threshold\verb{ is a positive number, it will be compared against the largest convolution value found if the two images fail a [}testthat::compare_file_binary`] comparison.
+\item{threshold}{If the value of \code{threshold} is \code{NULL},
+\code{compare_screenshot_threshold()} will act like
+\code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}}. However, if \code{threshold} is a positive
+number, it will be compared against the largest convolution value found if
+the two images fail a \code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}} comparison. The max
+value that can be found is \code{4 * kernel_size ^ 2}.
 
 Threshold values values below 5 help deter
 false-positive screenshot comparisons (such as inconsistent rounded

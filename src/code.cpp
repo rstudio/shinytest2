@@ -12,8 +12,8 @@ using namespace cpp11;
 //
 // Thought process:
 // Because our kernel is all `1`s, we can use a rolling sum of the kernel size to perform the convolution.
-// First we perform a rolling sum using the kernel size for each row (store as conv_matrix). O(i * (j + k))
-// Then, for each column in conv_matrix, we can perform a rolling sum using the kernel size. O((i + k) * j)
+// First we perform a rolling sum using the kernel size for each row (store as conv_matrix). O(i * j)
+// Then, for each column in conv_matrix, we can perform a rolling sum using the kernel size. O(i * j)
 //
 // Ideally, we should return the max value found to inform the user of how different the images are.
 //  By returning the number, we can give more information such as
@@ -25,8 +25,7 @@ using namespace cpp11;
 // k = kernel width / height
 // k << i; k << j;
 // i + j << i * j
-// Total complexity is O(2 * i * j + k * (i + j)) which fully reduces to O(i * j);
-// Typically this is O(2 * i * j + 5 * (i + j)) which is close to O(2 * i * j);
+// Total complexity is O(2 * i * j);
 // Our method is better than O(i * j * k * k) which in practice is ~ O(25 * i * j) if k = 5;
 //
 // Return value:
@@ -42,52 +41,66 @@ using namespace cpp11;
 
   // Perform rolling sum for each row, given the diff_matrix
   // Store result into conv_matrix
+  // Since we are using a non-negative kernel,
+  // the max value will never be larger when summing over a partial kernel.
+  // So we can stop the row's rolling sums once the kernel reaches the end of the row.
   cpp11::writable::doubles_matrix<by_column>
-      conv_matrix(diff_rows, diff_cols);
+      conv_matrix(diff_rows, diff_cols - (kernel_size - 1));
+
+  // printf("\n\n\n");
+  // printf("diff_rows: %d\n", diff_rows);
+  // printf("diff_cols: %d\n", diff_cols);
+  // printf("conv_matrix rows: %d\n", conv_matrix.nrow());
+  // printf("conv_matrix cols: %d\n", conv_matrix.ncol());
+  // printf("kernel_size: %d\n", kernel_size);
+
+  int result_cols = conv_matrix.ncol();
+
   for (int i = 0; i < diff_rows; ++i)
   {
     double row_rolling_sum = 0.0;
-    // int i_pos = i - kernel_size;
-    for (int j = 0; j < diff_cols + kernel_size - 1; ++j)
+    for (int j = 0; j < diff_cols; ++j)
     {
-      int j_prev = j - kernel_size;
+      // Add to the rolling sum
+      row_rolling_sum += diff_matrix(i, j);
+      // printf("row_rolling_sum @ (%d, %d) = %f\n", i, j, diff_matrix(i, j));
 
-      // Add to end of rolling sum
-      if (j < diff_cols)
-        row_rolling_sum += diff_matrix(i, j);
-
+      // Store the value only where the rolling sum started its calculation
+      int j_prev = j - (kernel_size - 1);
       if (j_prev >= 0) {
-        // Remove from beginning of rolling sum
-        row_rolling_sum -= diff_matrix(i, j_prev);
-
         // Store result
         conv_matrix(i, j_prev) = row_rolling_sum;
+        // printf("conv_matrix(%d, %d) = %f\n", i, j_prev, row_rolling_sum);
+
+        // Remove from beginning of rolling sum
+        row_rolling_sum -= diff_matrix(i, j_prev);
       }
     }
   }
 
   // Perform rolling sum for each column, given the conv_matrix
-  for (int j = 0; j < diff_cols; ++j)
+  for (int j = 0; j < result_cols; ++j)
   {
     double col_rolling_sum = 0.0;
-    for (int i = 0; i < diff_rows + kernel_size - 1; ++i)
+    for (int i = 0; i < diff_rows; ++i)
     {
-      int i_prev = i - kernel_size;
-
       // Add to end of rolling sum
-      if (i < diff_rows)
-        col_rolling_sum += conv_matrix(i, j);
+      col_rolling_sum += conv_matrix(i, j);
+      // printf("col_rolling_sum @ (%d, %d) = %f\n", i, j, conv_matrix(i, j));
 
+      // Find the max value of the intermediate rolling sum
+      int i_prev = i - (kernel_size - 1);
       if (i_prev >= 0) {
-        // Remove from beginning of rolling sum
-        col_rolling_sum -= conv_matrix(i_prev, j);
-
         // No need to store result
         // out_matrix(i_prev, j) = col_rolling_sum;
 
         // Update the max value
         if (max_value < col_rolling_sum)
           max_value = col_rolling_sum;
+        // printf("max value (%d, %d) = %f\n", i_prev, j, col_rolling_sum);
+
+        // Remove from beginning of rolling sum
+        col_rolling_sum -= conv_matrix(i_prev, j);
       }
     }
   }
