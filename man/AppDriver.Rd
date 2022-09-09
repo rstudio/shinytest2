@@ -493,7 +493,7 @@ app$get_js(js_txt)
 
 \dontrun{
 # These example lines should be performed in a `./tests/testthat`
-# test file so that snapshot files can be saved
+# test file so that snapshot files can be properly saved
 
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path, variant = platform_variant())
@@ -508,8 +508,8 @@ app$expect_screenshot(selector = "#distPlot")
 # Helps with rounded corners
 app$expect_screenshot(threshold = 10)
 
-# Equivalent lines of test code
-app$expect_screenshot()
+# Equivalent expectations
+app$expect_screenshot() # default
 app$expect_screenshot(threshold = NULL)
 app$expect_screenshot(compare = testthat::compare_file_binary)
 expect_snapshot_file(
@@ -518,7 +518,7 @@ expect_snapshot_file(
   compare = testthat::compare_file_binary
 )
 
-# Equivalent lines of test code
+# Equivalent expectations
 app$expect_screenshot(threshold = 3, kernel_size = 5)
 app$expect_screenshot(compare = function(old, new) {
   compare_screenshot_threshold(
@@ -2150,6 +2150,7 @@ recommended to use other expectation methods.
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_screenshot(
   ...,
   threshold = NULL,
+  kernel_size = 5,
   screenshot_args = missing_arg(),
   delay = missing_arg(),
   selector = missing_arg(),
@@ -2157,7 +2158,6 @@ recommended to use other expectation methods.
      compare_screenshot_threshold(old, new, threshold =
     threshold, kernel_size = kernel_size, quiet = quiet)
  },
-  kernel_size = 5,
   quiet = FALSE,
   name = NULL,
   cran = FALSE
@@ -2178,6 +2178,11 @@ false-positive screenshot comparisons (such as inconsistent rounded
 corners). Larger values in the 10s and 100s will help find \emph{real}
 changes. However, not all values are one size fits all and you will need
 to play with a threshold that fits your needs.}
+
+\item{\code{kernel_size}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
+when using the default \code{compare} method. The \code{kernel_size} represents the
+height and width of the convolution kernel applied to the pixel
+differences. This integer-like value should be relatively small.}
 
 \item{\code{screenshot_args}}{This named list of arguments is passed along to
 \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. If missing, the
@@ -2206,13 +2211,10 @@ will have preference.}
 \item{\code{compare}}{Function used to compare two screenshot files. Defaults to
 \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}.}
 
-\item{\code{kernel_size}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
-when using the default \code{compare} method. The \code{kernel_size} represents the
-height and width of the convolution kernel applied to the pixel
-differences. This integer-like value should be relatively small.}
-
 \item{\code{quiet}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
-when using the default \code{compare} method. If \code{FALSE}, diagnostic information will be presented when the computed value is larger than a non-\code{NULL} \code{threshold} value.}
+when using the default \code{compare} method. If \code{FALSE}, diagnostic
+information will be presented when the computed value is larger than a
+non-\code{NULL} \code{threshold} value.}
 
 \item{\code{name}}{The file name to be used for the snapshot. The file extension
 will overwritten to \code{.png}. By default, the \code{name} supplied to
@@ -2228,7 +2230,7 @@ because they often rely on minor details of dependencies.}
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
 # These example lines should be performed in a `./tests/testthat`
-# test file so that snapshot files can be saved
+# test file so that snapshot files can be properly saved
 
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path, variant = platform_variant())
@@ -2243,8 +2245,8 @@ app$expect_screenshot(selector = "#distPlot")
 # Helps with rounded corners
 app$expect_screenshot(threshold = 10)
 
-# Equivalent lines of test code
-app$expect_screenshot()
+# Equivalent expectations
+app$expect_screenshot() # default
 app$expect_screenshot(threshold = NULL)
 app$expect_screenshot(compare = testthat::compare_file_binary)
 expect_snapshot_file(
@@ -2253,7 +2255,7 @@ expect_snapshot_file(
   compare = testthat::compare_file_binary
 )
 
-# Equivalent lines of test code
+# Equivalent expectations
 app$expect_screenshot(threshold = 3, kernel_size = 5)
 app$expect_screenshot(compare = function(old, new) {
   compare_screenshot_threshold(

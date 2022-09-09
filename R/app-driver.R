@@ -1008,11 +1008,13 @@ AppDriver <- R6Class( # nolint
     #' height and width of the convolution kernel applied to the pixel
     #' differences. This integer-like value should be relatively small.
     #' @param quiet Parameter supplied to [`compare_screenshot_threshold()`]
-    #' when using the default `compare` method. If `FALSE`, diagnostic information will be presented when the computed value is larger than a non-`NULL` `threshold` value.
+    #' when using the default `compare` method. If `FALSE`, diagnostic
+    #' information will be presented when the computed value is larger than a
+    #' non-`NULL` `threshold` value.
     #' @examples
     #' \dontrun{
     #' # These example lines should be performed in a `./tests/testthat`
-    #' # test file so that snapshot files can be saved
+    #' # test file so that snapshot files can be properly saved
     #'
     #' app_path <- system.file("examples/01_hello", package = "shiny")
     #' app <- AppDriver$new(app_path, variant = platform_variant())
@@ -1027,8 +1029,8 @@ AppDriver <- R6Class( # nolint
     #' # Helps with rounded corners
     #' app$expect_screenshot(threshold = 10)
     #'
-    #' # Equivalent lines of test code
-    #' app$expect_screenshot()
+    #' # Equivalent expectations
+    #' app$expect_screenshot() # default
     #' app$expect_screenshot(threshold = NULL)
     #' app$expect_screenshot(compare = testthat::compare_file_binary)
     #' expect_snapshot_file(
@@ -1037,7 +1039,7 @@ AppDriver <- R6Class( # nolint
     #'   compare = testthat::compare_file_binary
     #' )
     #'
-    #' # Equivalent lines of test code
+    #' # Equivalent expectations
     #' app$expect_screenshot(threshold = 3, kernel_size = 5)
     #' app$expect_screenshot(compare = function(old, new) {
     #'   compare_screenshot_threshold(
@@ -1061,6 +1063,7 @@ AppDriver <- R6Class( # nolint
     expect_screenshot = function(
       ...,
       threshold = NULL,
+      kernel_size = 5,
       screenshot_args = missing_arg(),
       delay = missing_arg(),
       selector = missing_arg(),
@@ -1072,11 +1075,11 @@ AppDriver <- R6Class( # nolint
           quiet = quiet
         )
       },
-      kernel_size = 5,
       quiet = FALSE,
       name = NULL,
       cran = FALSE
     ) {
+      force(compare)
       app_expect_screenshot_and_variant(
         self, private,
         ...,

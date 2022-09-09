@@ -52,7 +52,10 @@
 #' @param kernel_size The `kernel_size` represents the height and width of the
 #' convolution kernel applied to the matrix of pixel differences. This
 #' integer-like value should be relatively small, such as 5.
-#' @param quiet If `FALSE` and the value is larger than `threshold`, then a message is printed to the console. This is helpful when getting a failing image and being informed about how different the `new` image is from the `old` image.
+#' @param quiet If `FALSE` and the value is larger than `threshold`, then a
+#' message is printed to the console. This is helpful when getting a failing
+#' image and being informed about how different the `new` image is from the
+#' `old` image.
 #' @export
 #' @describeIn compare_screenshot_threshold
 #' Compares two images and allows for a `threshold` difference of _so many_
@@ -112,7 +115,13 @@
 #' #> FALSE # Images are not identical
 #' compare_screenshot_threshold(bookmark_old, bookmark_new, threshold = 5)
 #' #> TRUE # Images are not as different than 5 units
-compare_screenshot_threshold <- function(old, new, ..., threshold = NULL, kernel_size = 5, quiet = FALSE) {
+compare_screenshot_threshold <- function(
+  old,
+  new, ...,
+  threshold = NULL,
+  kernel_size = 5,
+  quiet = FALSE
+) {
   ellipsis::check_dots_empty()
 
   is_same_file <- testthat::compare_file_binary(old, new)
@@ -131,7 +140,8 @@ compare_screenshot_threshold <- function(old, new, ..., threshold = NULL, kernel
   checkmate::assert_double(
     threshold,
     lower = 0,
-    # Kernel size is maxed out when the full kernel is wrong on all four channels (RGBA) containing `1` values
+    # Kernel size is maxed out when the full kernel is wrong on all four
+    # channels (RGBA) containing `1` values
     upper = kernel_size * kernel_size * 4,
     any.missing = FALSE,
     len = 1
@@ -163,9 +173,13 @@ compare_screenshot_threshold <- function(old, new, ..., threshold = NULL, kernel
 #' @describeIn compare_screenshot_threshold
 #' Finds the difference between two screenshots.
 #'
-#' This value can be used in `compare_screenshot_threshold(threshold=)`. It is recommended that the value sent to `compare_screenshot_threshold(threshold=)` is larger than the difference found to tolerate allow for random rounding.
+#' This value can be used in `compare_screenshot_threshold(threshold=)`. It is
+#' recommended that the value used for `compare_screenshot_threshold(threshold=)`
+#' is larger than the immediate max difference found. This allows for random
+#' fluctuations when rounding sub pixels.
 #'
-#' If `new` is missing, it will use the file value of `old` (`FILE.png`) and default to `FILE.new.png`
+#' If `new` is missing, it will use the file value of `old` (`FILE.png`) and
+#' default to `FILE.new.png`
 screenshot_max_difference <- function(
   old,
   new = missing_arg(),
@@ -220,9 +234,7 @@ screenshot_max_difference <- function(
   # Per pixel location, sum up each channel diff
   diff_matrix <- rowSums(abs(old_png - new_png), dims = 2)
 
-  # diff_matrix <- matrix(sample(as.double(1:144)), nrow = 12, ncol = 12, byrow = TRUE)
-
-  # Use cpp11! Complexity: Theta(nrow * ncol * 2 * kernel_size)
+  # Use cpp11! Complexity: Theta(2 * nrow * ncol)
   conv_max_value <- image_diff_convolution_max_value(
     diff_matrix,
     kernel_size = kernel_size

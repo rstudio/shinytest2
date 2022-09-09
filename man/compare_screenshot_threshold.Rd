@@ -43,7 +43,10 @@ To find the current difference between two images, use
 convolution kernel applied to the matrix of pixel differences. This
 integer-like value should be relatively small, such as 5.}
 
-\item{quiet}{If \code{FALSE} and the value is larger than \code{threshold}, then a message is printed to the console. This is helpful when getting a failing image and being informed about how different the \code{new} image is from the \code{old} image.}
+\item{quiet}{If \code{FALSE} and the value is larger than \code{threshold}, then a
+message is printed to the console. This is helpful when getting a failing
+image and being informed about how different the \code{new} image is from the
+\code{old} image.}
 }
 \description{
 \pkg{chromote} can sometimes produce screenshot images with non-deterministic
@@ -71,9 +74,13 @@ values.
 
 \item \code{screenshot_max_difference()}: Finds the difference between two screenshots.
 
-This value can be used in \code{compare_screenshot_threshold(threshold=)}. It is recommended that the value sent to \code{compare_screenshot_threshold(threshold=)} is larger than the difference found to tolerate allow for random rounding.
+This value can be used in \code{compare_screenshot_threshold(threshold=)}. It is
+recommended that the value used for \code{compare_screenshot_threshold(threshold=)}
+is larger than the immediate max difference found. This allows for random
+fluctuations when rounding sub pixels.
 
-If \code{new} is missing, it will use the file value of \code{old} (\code{FILE.png}) and default to \code{FILE.new.png}
+If \code{new} is missing, it will use the file value of \code{old} (\code{FILE.png}) and
+default to \code{FILE.new.png}
 
 }}
 \section{Algorithm for the difference between two screenshots}{
