@@ -989,8 +989,16 @@ AppDriver <- R6Class( # nolint
     #' @param name The file name to be used for the snapshot. The file extension
     #'   will overwritten to `.png`. By default, the `name` supplied to
     #'   `app` on initialization with a counter will be used (e.g. `"NAME-001.png"`).
-    #' @param compare Function used to compare two screenshot files. Defaults to
-    #'   [`compare_screenshot_threshold()`].
+    #' @param compare A function used to compare the screenshot snapshot files.
+    #' The function should take two inputs, the paths to the `old` and `new`
+    #' snapshot, and return either `TRUE` or `FALSE`.
+    #'
+    #' `compare` defaults to a function that wraps around
+    #' [`compare_screenshot_threshold(old, new, threshold = threshold,
+    #' kernel_size = kernel_size, quiet = quiet)`]. Note: if `threshold` is
+    #' `NULL` (default), `compare` will behave as if
+    #' [`testthat::compare_file_binary()`] was provided, comparing the two
+    #' images byte-by-byte.
     #' @param threshold Parameter supplied to [`compare_screenshot_threshold()`]
     #' when using the default `compare` method. If the value of `threshold` is
     #' NULL`, [`compare_screenshot_threshold()`] will act like
@@ -1067,22 +1075,17 @@ AppDriver <- R6Class( # nolint
       screenshot_args = missing_arg(),
       delay = missing_arg(),
       selector = missing_arg(),
-      compare = function(old, new) {
-        compare_screenshot_threshold(
-          old, new,
-          threshold = threshold,
-          kernel_size = kernel_size,
-          quiet = quiet
-        )
-      },
+      compare = missing_arg(),
       quiet = FALSE,
       name = NULL,
       cran = FALSE
     ) {
-      force(compare)
       app_expect_screenshot_and_variant(
         self, private,
         ...,
+        threshold = threshold,
+        kernel_size = kernel_size,
+        quiet = quiet,
         compare = compare,
         screenshot_args = screenshot_args,
         delay = delay,

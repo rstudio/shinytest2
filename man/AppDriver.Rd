@@ -2154,10 +2154,7 @@ recommended to use other expectation methods.
   screenshot_args = missing_arg(),
   delay = missing_arg(),
   selector = missing_arg(),
-  compare = function(old, new) {
-     compare_screenshot_threshold(old, new, threshold =
-    threshold, kernel_size = kernel_size, quiet = quiet)
- },
+  compare = missing_arg(),
   quiet = FALSE,
   name = NULL,
   cran = FALSE
@@ -2208,8 +2205,16 @@ portion of the page to be captured. This value can either be supplied as
 \code{selector} or \code{screenshot_args}'s selector slot. The \code{selector} parameter
 will have preference.}
 
-\item{\code{compare}}{Function used to compare two screenshot files. Defaults to
-\code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}.}
+\item{\code{compare}}{A function used to compare the screenshot snapshot files.
+The function should take two inputs, the paths to the \code{old} and \code{new}
+snapshot, and return either \code{TRUE} or \code{FALSE}.
+
+\code{compare} defaults to a function that wraps around
+\code{\link[=compare_screenshot_threshold(old, new, threshold = threshold,
+kernel_size = kernel_size, quiet = quiet)]{compare_screenshot_threshold(old, new, threshold = threshold, kernel_size = kernel_size, quiet = quiet)}}. Note: if \code{threshold} is
+\code{NULL} (default), \code{compare} will behave as if
+\code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary()}} was provided, comparing the two
+images byte-by-byte.}
 
 \item{\code{quiet}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
 when using the default \code{compare} method. If \code{FALSE}, diagnostic
