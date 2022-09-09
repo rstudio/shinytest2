@@ -994,8 +994,8 @@ AppDriver <- R6Class( # nolint
     #' snapshot, and return either `TRUE` or `FALSE`.
     #'
     #' `compare` defaults to a function that wraps around
-    #' [`compare_screenshot_threshold(old, new, threshold = threshold,
-    #' kernel_size = kernel_size, quiet = quiet)`]. Note: if `threshold` is
+    #' `compare_screenshot_threshold(old, new, threshold = threshold,
+    #' kernel_size = kernel_size, quiet = quiet)`. Note: if `threshold` is
     #' `NULL` (default), `compare` will behave as if
     #' [`testthat::compare_file_binary()`] was provided, comparing the two
     #' images byte-by-byte.

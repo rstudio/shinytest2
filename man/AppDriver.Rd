@@ -2210,8 +2210,7 @@ The function should take two inputs, the paths to the \code{old} and \code{new}
 snapshot, and return either \code{TRUE} or \code{FALSE}.
 
 \code{compare} defaults to a function that wraps around
-\code{\link[=compare_screenshot_threshold(old, new, threshold = threshold,
-kernel_size = kernel_size, quiet = quiet)]{compare_screenshot_threshold(old, new, threshold = threshold, kernel_size = kernel_size, quiet = quiet)}}. Note: if \code{threshold} is
+\code{compare_screenshot_threshold(old, new, threshold = threshold, kernel_size = kernel_size, quiet = quiet)}. Note: if \code{threshold} is
 \code{NULL} (default), \code{compare} will behave as if
 \code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary()}} was provided, comparing the two
 images byte-by-byte.}
