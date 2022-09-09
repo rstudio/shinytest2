@@ -2,6 +2,10 @@
 
 ## New Features
 
+* `compare_screenshot_threshold()` is a new method to compare screenshots and allow small differences between two screenshots. This method checks every subset matrix of the pixel differences between the two images. If any total difference is larger than the `threshold` value, the two images are considered to be different. The subset matrix size can be increased by setting `kernel_size`. (#231)
+
+* Support for supply your own compare method to `AppDriver$expect_screenshot(compare=)` has been added. By default, `AppDriver$expect_screenshot(compare=)` is set to `compare_screenshot_threshold(threshold = NULL)` which in turn calls `testthat::compare_file_binary()`. So no default screenshot expectation behavior has changed. (#231)
+
 * `test_app()` now inherits the existing test reporter when testing multiple apps within a package test file. This allows for a seamless, single reporter output instead of nested reporters being displayed. (#192)
 
 * The recording browser window is now closed when either the "Save test and exit" or "Exit" buttons are clicked. (@daattali, #202)
