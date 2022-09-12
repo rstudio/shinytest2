@@ -95,14 +95,18 @@ chromote_wait_for_condition <- function(
   checkmate::assert_number(timeout, lower = 0)
   checkmate::assert_number(interval, lower = 0)
 
+  # Escape the user's JS text so that it can be run as is within `eval()`.
+  # While `eval(user_txt)` is a security risk, we already allow any user js code to be run via `AppDriver$run_js()`
+  # https://github.com/rstudio/shinytest2/issues/236
+  escaped_condition_js <- paste0(deparse(condition_js, width.cutoff = 500L), collapse = " ")
+
   # Must use manual calulation of timeout, as `chromote_session` does not have a
   # way to cancel the `setTimeout` that has already been submitted. (Which will never stop resubmitting)
   script <- paste0(
-# `callback` provided by chromote_execute_script_callback()
 "new Promise((resolve, reject) => {
   let start = Date.now();
   const condition = () => {
-    return eval(", condition_js, ");
+    return eval(", escaped_condition_js, ");
   };\n",
   # Use `chromote_wait_for_condition` as the error message matches the R method
   "chromote_wait_for_condition = () => {
