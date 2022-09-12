@@ -26,6 +26,8 @@
 
 * Fix documentation on on `AppDriver`'s `delay` parameter being in **seconds**, not *milli*seconds (#255)
 
+* When recording tests, `withr::defer(app$stop())` is called immediately after `app` initialization. All documentation and vignettes also shut down the `app` after initialization. (#256)
+
 
 # shinytest2 0.1.1
 
