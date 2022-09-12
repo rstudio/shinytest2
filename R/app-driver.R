@@ -144,13 +144,13 @@ NULL
 #'
 #' If a `FALSE` value is provided, the parameter will be ignored and a
 #' screenshot will be taken with default behavior.
-#' @param delay The number of milliseconds to wait before taking the screenshot.
-#'   This value can either be supplied as `delay` or `screenshot_args`'s delay
-#'   slot. The `delay` parameter will have preference.
+#' @param delay The number of **seconds** to wait before taking the screenshot.
+#'   This value can be supplied as `delay` or `screenshot_args$delay`, with the
+#'   `delay` parameter having preference.
 #' @param selector The selector is a CSS selector that will be used to select a
-#'   portion of the page to be captured. This value can either be supplied as
-#'   `selector` or `screenshot_args`'s selector slot. The `selector` parameter
-#'   will have preference.
+#'   portion of the page to be captured. This value can be supplied as
+#'   `selector` or `screenshot_args$selector`, with the `selector` parameter
+#'   having preference.
 #' @importFrom R6 R6Class
 #' @seealso [`platform_variant()`], [`use_shinytest2_test()`]
 #' @export
