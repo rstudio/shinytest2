@@ -1,0 +1,11 @@
+{
+  "input": {
+    "kg": 100
+  },
+  "output": {
+    "g": "Weight (in g): 1e+05"
+  },
+  "export": {
+
+  }
+}
