@@ -26,6 +26,8 @@
 
 * Fix documentation on on `AppDriver`'s `delay` parameter being in **seconds**, not *milli*seconds (#255)
 
+* Fix incorrect code coverage when using `{covr}`. Increased the timeout when sending `SIGINT` and `SIGTERM` signals to the `{shiny}` process. (#259)
+
 
 # shinytest2 0.1.1
 
