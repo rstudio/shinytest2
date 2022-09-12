@@ -24,6 +24,8 @@
 
 * Fixed GHA links for `rstudio/shinytest2/actions/test-app@v1` (#249)
 
+* Fix documentation on on `AppDriver`'s `delay` parameter being in **seconds**, not *milli*seconds (#255)
+
 
 # shinytest2 0.1.1
 
