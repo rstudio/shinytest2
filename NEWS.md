@@ -26,6 +26,8 @@
 
 * Fix documentation on on `AppDriver`'s `delay` parameter being in **seconds**, not *milli*seconds (#255)
 
+* Escape JS text supplied to `AppDriver$wait_for_js(script=)` (#258)
+
 
 # shinytest2 0.1.1
 
