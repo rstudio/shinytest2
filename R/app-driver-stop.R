@@ -27,10 +27,20 @@ app_stop <- function(self, private) {
           # SIGINT quits the Shiny application, SIGTERM tells R to quit.
           # Unfortunately, SIGTERM isn't quite the same as `q()`, because
           # finalizers with onexit=TRUE don't seem to run.
-          private$shiny_process$signal(tools::SIGINT)
-          private$shiny_process$wait(500)
+
+          # Using private$shiny_process$interrupt() to send SIGNAL 2 (SIGINT) to the process
+          # https://github.com/r-lib/processx/blob/84301784382296217e7f5d11e1116dc4e24da809/R/process.R#L276-L283
+          # https://github.com/r-lib/covr/issues/277#issuecomment-555502769
+          # https://github.com/rstudio/shinytest2/issues/250
+
+          # Increased the timeout for packages like covr to upload their results:
+          #   https://github.com/rstudio/shinytest2/issues/250
+          private$shiny_process$interrupt()
+          private$shiny_process$wait(10 * 1000)
+
           private$shiny_process$signal(tools::SIGTERM)
-          private$shiny_process$wait(250)
+          private$shiny_process$wait(10 * 1000)
+
           private$shiny_process$kill()
         },
         error = function(e) {
