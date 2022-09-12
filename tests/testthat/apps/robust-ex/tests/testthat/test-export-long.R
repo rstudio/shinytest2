@@ -4,6 +4,7 @@ test_that("`export`ed `plot_obj` is updated by `n`", {
   skip_if_not_installed("vdiffr")
 
   app <- AppDriver$new()
+  withr::defer(app$stop())
 
   # Verify `dt()` uses first 10 lines of `cars`
   n10 <- app$get_value(input = "n")

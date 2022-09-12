@@ -77,6 +77,8 @@ shiny_app <- shinyApp(
 )
 
 app <- AppDriver$new(shiny_app)
+withr::defer(app$stop())
+
 init_vals <- app$get_values()
 str(init_vals)
 #> List of 3
@@ -164,6 +166,7 @@ app$view()
 \dontrun{
 app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
 
 tmpfile <- write.csv(cars, "cars.csv")
 app$upload_file(file1 = tmpfile)
@@ -180,6 +183,8 @@ cat(app$get_text("#view"))
 \dontrun{
 app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 cat(app$get_text("#view"))
 app$set_inputs(dataset = "cars", obs = 6)
 app$click("update")
@@ -193,6 +198,7 @@ cat(app$get_text("#view"))
 \dontrun{
 app_path <- system.file("examples/09_upload", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
 
 # Save example file
 tmpfile <- tempfile(fileext = ".csv")
@@ -231,6 +237,7 @@ shiny_app <- shinyApp(
 )
 
 app <- AppDriver$new(shiny_app)
+withr::defer(app$stop())
 
 # Snapshot all known values
 app$expect_values()
@@ -249,6 +256,8 @@ app$expect_values(input = "A", output = "C")
 \dontrun{
 app_path <- system.file("examples/04_mpg", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 # Retrieve a single value
 app$get_value(output = "caption")
 #> [1] "mpg ~ cyl"
@@ -286,6 +295,7 @@ shiny_app <- shinyApp(
 )
 
 app <- AppDriver$new(shiny_app)
+withr::defer(app$stop())
 
 # Show all known values
 str(app$get_values())
@@ -324,6 +334,7 @@ str(app$get_values(input = "A", output = "C"))
 \dontrun{
 app_path <- system.file("examples/10_download", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
 
 # Save snapshot of rock.csv as 001.download
 # Save snapshot value of `rock.csv` to capture default file name
@@ -337,6 +348,7 @@ app$expect_download("downloadData", compare = testthat::compare_file_text)
 \dontrun{
 app_path <- system.file("examples/10_download", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
 
 # Get rock.csv as a tempfile
 app$get_download("downloadData")
@@ -354,6 +366,7 @@ app$get_download("downloadData", filename = "./myfile.csv")
 \dontrun{
 hello_app <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(hello_app)
+withr::defer(app$stop())
 
 # Make a snapshot of `"Hello Shiny!"`
 app$expect_text("h2")
@@ -366,6 +379,7 @@ app$expect_text("h2")
 \dontrun{
 hello_app <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(hello_app)
+withr::defer(app$stop())
 
 app$get_text("h2")
 #> [1] "Hello Shiny!"
@@ -378,6 +392,8 @@ app$get_text("h2")
 \dontrun{
 app_path <- system.file("examples/04_mpg", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 # Save a snapshot of the `caption` output
 app$expect_html("#caption")
 }
@@ -389,6 +405,8 @@ app$expect_html("#caption")
 \dontrun{
 app_path <- system.file("examples/03_reactivity", package = "shiny")
 app <- AppDriver$new(app_path, check_names = FALSE)
+withr::defer(app$stop())
+
 app$set_inputs(caption = "Custom value!")
 cat(app$get_html(".shiny-input-container")[1])
 #> <div class="form-group shiny-input-container">
@@ -405,6 +423,7 @@ cat(app$get_html(".shiny-input-container")[1])
 \dontrun{
 app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
 
 # Track how many clicks are given to `#update` button
 app$run_js("
@@ -426,6 +445,7 @@ app$expect_js("window.test_counter;")
 library(shiny)
 shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
+withr::defer(app$stop())
 
 # Execute JavaScript code in the app's browser
 app$get_js("1 + 1;")
@@ -471,6 +491,7 @@ app$get_js(js_txt)
 library(shiny)
 shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
+withr::defer(app$stop())
 
 # Get JavaScript answer from the app's browser
 app$get_js("1 + 1")
@@ -494,6 +515,7 @@ app$get_js(js_txt)
 \dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path, variant = platform_variant())
+withr::defer(app$stop())
 
 # Expect a full size screenshot
 app$expect_screenshot()
@@ -509,6 +531,7 @@ app$expect_screenshot(selector = "#distPlot")
 \dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
 
 # Display in graphics device
 app$get_screenshot()
@@ -530,6 +553,7 @@ showimage::show_image(tmpfile)
 \dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
 
 pre_value <- app$get_value(output = "distPlot")
 # Update bins value
@@ -593,6 +617,7 @@ shiny_app <- shinyApp(
 )
 
 app <- AppDriver$new(shiny_app)
+withr::defer(app$stop())
 
 # Create UI / output values
 app$click("display")
@@ -610,6 +635,7 @@ app$get_value(output = "total")
 \dontrun{
 shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
+withr::defer(app$stop())
 
 # Contrived example:
 # Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)
@@ -644,6 +670,7 @@ app <- AppDriver$new(shiny_app, check_names = TRUE)
 #> ! Shiny inputs should have unique HTML id values.
 #> i The following HTML id values are not unique:
 #> • text
+app$stop()
 
 # Manually assert that all names are unique
 app <- AppDriver$new(shiny_app, check_names = FALSE)
@@ -653,6 +680,7 @@ app$expect_unique_names()
 #> i The following HTML id values are not unique:
 #>   • text
 #> Class:   rlang_warning/warning/condition
+app$stop()
 }
 
 ## ------------------------------------------------
@@ -662,6 +690,8 @@ app$expect_unique_names()
 \dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 identical(app$get_dir(), app_path)
 #> [1] TRUE
 }
@@ -673,6 +703,8 @@ identical(app$get_dir(), app_path)
 \dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 browseURL(app$get_url())
 }
 
@@ -683,6 +715,8 @@ browseURL(app$get_url())
 \dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 app$get_window_size()
 #> $width
 #> [1] 992
@@ -699,6 +733,7 @@ app$get_window_size()
 app_path <- system.file("examples/01_hello", package = "shiny")
 # Set init window size
 app <- AppDriver$new(app_path, height = 1400, width = 1000)
+withr::defer(app$stop())
 
 app$get_window_size()
 #> $width
@@ -724,6 +759,8 @@ app$get_window_size()
 \dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 b <- app$get_chromote_session()
 b$Runtime$evaluate("1 + 1")
 #> $result
@@ -745,6 +782,8 @@ b$Runtime$evaluate("1 + 1")
 app_path <- system.file("examples/01_hello", package = "shiny")
 
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 app$get_variant()
 #> NULL
 
@@ -758,8 +797,10 @@ app$get_variant()
 ## ------------------------------------------------
 
 \dontrun{
-app <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-app$get_logs()
+app1 <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
+withr::defer(app1$stop())
+
+app1$get_logs()
 # \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
 # \{shinytest2\} R  info  11:15:20.11 Starting Shiny app
 # \{shinytest2\} R  info  11:15:20.99 Creating new chromote session
@@ -783,11 +824,13 @@ app$get_logs()
 
 
 # To capture all websocket traffic, set `options = list(shiny.trace = TRUE)`
-app <- AppDriver$new(
+app2 <- AppDriver$new(
   system.file("examples/01_hello", package = "shiny"),
   options = list(shiny.trace = TRUE)
 )
-app$get_logs()
+withr::defer(app2$stop())
+
+app2$get_logs()
 ## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
 # \{shinytest2\} R  info      11:09:57.43 Start AppDriver initialization
 # \{shinytest2\} R  info      11:09:57.43 Starting Shiny app
@@ -890,6 +933,8 @@ subset(log, level == "websocket")
 \dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 app$log_message("Setting bins to smaller value")
 app$set_inputs(bins = 10)
 app$get_logs()
@@ -922,6 +967,8 @@ app <- AppDriver$new(
   # Enable reactlog in background R session
   options = list(shiny.reactlog = TRUE)
 )
+withr::defer(app$stop())
+
 app$click("button")
 rlog <- app$stop()
 str(head(rlog, 2))
@@ -1183,6 +1230,7 @@ specified \code{timeout_}. When clicking any other content, \code{...} must be e
 \preformatted{\dontrun{
 app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
 
 tmpfile <- write.csv(cars, "cars.csv")
 app$upload_file(file1 = tmpfile)
@@ -1241,6 +1289,8 @@ a \pkg{plotly} plot.}
 \preformatted{\dontrun{
 app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 cat(app$get_text("#view"))
 app$set_inputs(dataset = "cars", obs = 6)
 app$click("update")
@@ -1280,6 +1330,7 @@ Uploads a file to the specified file input.
 \preformatted{\dontrun{
 app_path <- system.file("examples/09_upload", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
 
 # Save example file
 tmpfile <- tempfile(fileext = ".csv")
@@ -1387,6 +1438,7 @@ shiny_app <- shinyApp(
 )
 
 app <- AppDriver$new(shiny_app)
+withr::defer(app$stop())
 
 # Snapshot all known values
 app$expect_values()
@@ -1447,6 +1499,8 @@ The requested \code{input}, \code{output}, or \code{export} value.
 \preformatted{\dontrun{
 app_path <- system.file("examples/04_mpg", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 # Retrieve a single value
 app$get_value(output = "caption")
 #> [1] "mpg ~ cyl"
@@ -1530,6 +1584,7 @@ shiny_app <- shinyApp(
 )
 
 app <- AppDriver$new(shiny_app)
+withr::defer(app$stop())
 
 # Show all known values
 str(app$get_values())
@@ -1611,6 +1666,7 @@ because they often rely on minor details of dependencies.}
 \preformatted{\dontrun{
 app_path <- system.file("examples/10_download", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
 
 # Save snapshot of rock.csv as 001.download
 # Save snapshot value of `rock.csv` to capture default file name
@@ -1662,6 +1718,7 @@ returned.
 \preformatted{\dontrun{
 app_path <- system.file("examples/10_download", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
 
 # Get rock.csv as a tempfile
 app$get_download("downloadData")
@@ -1717,6 +1774,7 @@ because they often rely on minor details of dependencies.}
 \preformatted{\dontrun{
 hello_app <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(hello_app)
+withr::defer(app$stop())
 
 # Make a snapshot of `"Hello Shiny!"`
 app$expect_text("h2")
@@ -1756,6 +1814,7 @@ A vector of character values
 \preformatted{\dontrun{
 hello_app <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(hello_app)
+withr::defer(app$stop())
 
 app$get_text("h2")
 #> [1] "Hello Shiny!"
@@ -1811,6 +1870,8 @@ because they often rely on minor details of dependencies.}
 \preformatted{\dontrun{
 app_path <- system.file("examples/04_mpg", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 # Save a snapshot of the `caption` output
 app$expect_html("#caption")
 }
@@ -1857,6 +1918,8 @@ If \code{FALSE}, the full DOM structure of the child elements will be returned (
 \preformatted{\dontrun{
 app_path <- system.file("examples/03_reactivity", package = "shiny")
 app <- AppDriver$new(app_path, check_names = FALSE)
+withr::defer(app$stop())
+
 app$set_inputs(caption = "Custom value!")
 cat(app$get_html(".shiny-input-container")[1])
 #> <div class="form-group shiny-input-container">
@@ -1917,6 +1980,7 @@ because they often rely on minor details of dependencies.}
 \preformatted{\dontrun{
 app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
 
 # Track how many clicks are given to `#update` button
 app$run_js("
@@ -1985,6 +2049,7 @@ Result of the \code{script} (or \code{file} contents)
 library(shiny)
 shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
+withr::defer(app$stop())
 
 # Execute JavaScript code in the app's browser
 app$get_js("1 + 1;")
@@ -2066,6 +2131,7 @@ as the \code{script}. Only one of \code{script} or \code{file} can be specified.
 library(shiny)
 shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
+withr::defer(app$stop())
 
 # Get JavaScript answer from the app's browser
 app$get_js("1 + 1")
@@ -2163,6 +2229,7 @@ because they often rely on minor details of dependencies.}
 \preformatted{\dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path, variant = platform_variant())
+withr::defer(app$stop())
 
 # Expect a full size screenshot
 app$expect_screenshot()
@@ -2232,6 +2299,7 @@ having preference.}
 \preformatted{\dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
 
 # Display in graphics device
 app$get_screenshot()
@@ -2295,6 +2363,7 @@ Otherwise an error will be thrown
 \preformatted{\dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
 
 pre_value <- app$get_value(output = "distPlot")
 # Update bins value
@@ -2406,6 +2475,7 @@ shiny_app <- shinyApp(
 )
 
 app <- AppDriver$new(shiny_app)
+withr::defer(app$stop())
 
 # Create UI / output values
 app$click("display")
@@ -2455,6 +2525,7 @@ within the timeout. Otherwise an error will be thrown
 \preformatted{\dontrun{
 shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
+withr::defer(app$stop())
 
 # Contrived example:
 # Wait until `Date.now()` returns a number that ends in a 5. (0 - 10 seconds)
@@ -2509,6 +2580,7 @@ app <- AppDriver$new(shiny_app, check_names = TRUE)
 #> ! Shiny inputs should have unique HTML id values.
 #> i The following HTML id values are not unique:
 #> • text
+app$stop()
 
 # Manually assert that all names are unique
 app <- AppDriver$new(shiny_app, check_names = FALSE)
@@ -2518,6 +2590,7 @@ app$expect_unique_names()
 #> i The following HTML id values are not unique:
 #>   • text
 #> Class:   rlang_warning/warning/condition
+app$stop()
 }
 }
 \if{html}{\out{</div>}}
@@ -2544,6 +2617,8 @@ current directory will be returned.
 \preformatted{\dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 identical(app$get_dir(), app_path)
 #> [1] TRUE
 }
@@ -2570,6 +2645,8 @@ URL where the Shiny app is being hosted
 \preformatted{\dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 browseURL(app$get_url())
 }
 }
@@ -2595,6 +2672,8 @@ named \code{width} and \code{height}.
 \preformatted{\dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 app$get_window_size()
 #> $width
 #> [1] 992
@@ -2634,6 +2713,7 @@ as plots) that need to be re-rendered.}
 app_path <- system.file("examples/01_hello", package = "shiny")
 # Set init window size
 app <- AppDriver$new(app_path, height = 1400, width = 1000)
+withr::defer(app$stop())
 
 app$get_window_size()
 #> $width
@@ -2676,6 +2756,8 @@ Get the \code{\link{ChromoteSession}} object from the \pkg{chromote} package.
 \preformatted{\dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 b <- app$get_chromote_session()
 b$Runtime$evaluate("1 + 1")
 #> $result
@@ -2715,6 +2797,8 @@ no value was supplied.
 app_path <- system.file("examples/01_hello", package = "shiny")
 
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 app$get_variant()
 #> NULL
 
@@ -2776,8 +2860,10 @@ for more details
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
-app <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-app$get_logs()
+app1 <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
+withr::defer(app1$stop())
+
+app1$get_logs()
 # \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
 # \{shinytest2\} R  info  11:15:20.11 Starting Shiny app
 # \{shinytest2\} R  info  11:15:20.99 Creating new chromote session
@@ -2801,11 +2887,13 @@ app$get_logs()
 
 
 # To capture all websocket traffic, set `options = list(shiny.trace = TRUE)`
-app <- AppDriver$new(
+app2 <- AppDriver$new(
   system.file("examples/01_hello", package = "shiny"),
   options = list(shiny.trace = TRUE)
 )
-app$get_logs()
+withr::defer(app2$stop())
+
+app2$get_logs()
 ## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
 # \{shinytest2\} R  info      11:09:57.43 Start AppDriver initialization
 # \{shinytest2\} R  info      11:09:57.43 Starting Shiny app
@@ -2927,6 +3015,8 @@ Add a message to the \pkg{shinytest2} log.
 \preformatted{\dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+withr::defer(app$stop())
+
 app$log_message("Setting bins to smaller value")
 app$set_inputs(bins = 10)
 app$get_logs()
@@ -2990,6 +3080,8 @@ app <- AppDriver$new(
   # Enable reactlog in background R session
   options = list(shiny.reactlog = TRUE)
 )
+withr::defer(app$stop())
+
 app$click("button")
 rlog <- app$stop()
 str(head(rlog, 2))

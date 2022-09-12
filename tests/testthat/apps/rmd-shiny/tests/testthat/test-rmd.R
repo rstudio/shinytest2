@@ -2,6 +2,8 @@ library(shinytest2)
 
 test_that("Shiny R Markdown documents can test", {
   app <- AppDriver$new(seed = 9767)
+  withr::defer(app$stop())
+
   app$set_inputs(name = "barret")
   app$click("greet")
   app$expect_values(input = TRUE, output = "greeting")

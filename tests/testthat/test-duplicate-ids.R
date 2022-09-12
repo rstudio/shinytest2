@@ -17,14 +17,12 @@ test_that("Duplicate input ids are found", {
     app <- AppDriver$new(shiny_app, check_names = TRUE),
     "text"
   )
+  withr::defer(app$stop())
 
   expect_failure(
     app$expect_unique_names(),
     "text"
   )
-
-  # Shut down this app to try an make CI happier about the next app
-  app$stop()
 })
 
 test_that("Duplicate input/output ids are found", {
@@ -44,14 +42,12 @@ test_that("Duplicate input/output ids are found", {
     app <- AppDriver$new(shiny_app, check_names = TRUE),
     "select"
   )
+  withr::defer(app$stop())
 
   expect_failure(
     app$expect_unique_names(),
     "select"
   )
-
-  # Shut down this app to try an make CI happier about the next app
-  app$stop()
 })
 
 
@@ -72,14 +68,12 @@ test_that("Duplicate output ids are found", {
     app <- AppDriver$new(shiny_app, check_names = TRUE),
     "custom"
   )
+  withr::defer(app$stop())
 
   expect_failure(
     app$expect_unique_names(),
     "custom"
   )
-
-  # Shut down this app to try an make CI happier about the next app
-  app$stop()
 })
 
 

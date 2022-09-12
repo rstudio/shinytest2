@@ -57,6 +57,7 @@ expect_log_tests <- function(log) {
 
 test_that("App captures known debug messages", {
   app <- AppDriver$new()
+  withr::defer(app$stop())
 
   log_df <- app$get_logs()
 
@@ -98,14 +99,12 @@ test_that("App captures known debug messages", {
   expect_failure(
     expect_match(log, "websocket", all = FALSE, fixed = TRUE)
   )
-
-  # Shut down this app to try an make CI happier about the next app
-  app$stop()
 })
 
 
 test_that("App captures known debug messages", {
   app <- AppDriver$new(options = list(shiny.trace = TRUE))
+  withr::defer(app$stop())
 
   log_df <- app$get_logs()
 

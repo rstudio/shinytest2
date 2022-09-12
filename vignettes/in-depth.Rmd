@@ -23,6 +23,8 @@ The final product would look something like:
 # File: ./tests/testthat/test-shinytest2.R
 test_that("App initialization is consistent", {
   app <- AppDriver$new()
+  withr::defer(app$stop())
+
   app$expect_values()
 })
 ```
@@ -30,10 +32,11 @@ test_that("App initialization is consistent", {
 
 A test script has this basic structure: first, there is an initialization, then the expectations are performed.
 
-In the initialization, the script creates a new `AppDriver` object.
+In the initialization, the script creates a new `AppDriver` object and makes sure the `AppDriver` is stopped when the test exits.
 
 ```{r}
 app <- AppDriver$new()
+withr::defer(app$stop())
 ```
 
 Next, define some interactions with the application and makes expectations via snapshots.
@@ -367,6 +370,7 @@ Naively, we could add `Sys.sleep()` function calls to slow down `{shinytest2}` t
 ```r
 test_that("Sleeping can work to wait for an app to stabilize", {
   app <- AppDriver$new()
+  withr::defer(app$stop())
 
   # Check the box to display the slider and plot
   app$set_inputs('chkbx' = TRUE)
@@ -390,6 +394,7 @@ The above pattern will probably fail if executed on a slower machine. This patte
 ```r
 test_that("Use $wait_for_idle() for app to stabilize", {
   app <- AppDriver$new()
+  withr::defer(app$stop())
 
   # Check the box to display the slider and plot
   app$set_inputs(chkbx = TRUE)
@@ -411,6 +416,7 @@ test_that("Use $wait_for_idle() for app to stabilize", {
 
 test_that("Use $wait_for_value() for app to stabilize", {
   app <- AppDriver$new()
+  withr::defer(app$stop())
 
   # Check the box to display the slider and plot
   app$set_inputs(chkbx = TRUE)

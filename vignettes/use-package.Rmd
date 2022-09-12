@@ -118,6 +118,8 @@ test_that("hello-world app initial values are consistent", {
 
   shiny_app <- hello_world_app()
   app <- AppDriver$new(shiny_app, name = "hello")
+  withr::defer(app$stop())
+
   app$expect_values()
 })
 ```

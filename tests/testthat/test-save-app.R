@@ -14,13 +14,12 @@ test_that("Saving an app has the right context", {
   )
 
   app <- AppDriver$new(shiny_app)
+  withr::defer(app$stop())
+
   expect_equal(
     app$get_value(output = "text"),
     as.character(n)
   )
-
-  # Shut down this app to try an make CI happier about the next app
-  app$stop()
 })
 
 
@@ -36,6 +35,8 @@ test_that("can run saved app", {
   path <- app_save(shinyApp(ui, server))
 
   app <- AppDriver$new(path)
+  withr::defer(app$stop())
+
   expect_equal(app$get_value(output = "x"), as.character(x))
 })
 

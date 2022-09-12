@@ -126,6 +126,7 @@ library(shinytest2)
 
 test_that("{shinytest2} recording: simple-app", {
   app <- AppDriver$new(name = "simple-app", height = 407, width = 348)
+  withr::defer(app$stop())
   app$set_inputs(name = "Barret")
   app$click("greet")
   app$expect_values()

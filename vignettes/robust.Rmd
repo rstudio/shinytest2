@@ -321,6 +321,7 @@ Both `dt` and `plot_obj` have been `export`ed. This means that they are availabl
 
 ``` r
 app <- AppDriver$new(plot_app)
+withr::defer(app$stop())
 
 values <- app$get_values()
 str(values) # Output has been truncated for printing
@@ -399,6 +400,7 @@ test_that("`export`ed `plot_obj` is updated by `n`", {
   skip_if_not_installed("vdiffr")
 
   app <- AppDriver$new()
+  withr::defer(app$stop())
 
   # Verify `dt()` uses first 10 lines of `cars`
   n10 <- app$get_value(input = "n")
@@ -440,6 +442,7 @@ test_that("`export`ed `plot_obj` is updated by `n`", {
   skip_if_not_installed("vdiffr")
 
   app <- AppDriver$new(variant = platform_variant())
+  withr::defer(app$stop())
 
   expect_n_and_plot <- function(n) {
     # Verify `n` input equals `n`

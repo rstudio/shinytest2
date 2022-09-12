@@ -6,6 +6,7 @@ test_that("set kitchen sink of inputs", {
     # variant = platform_variant()
     variant = NULL
   )
+  withr::defer(app$stop())
 
   app$expect_values()
 

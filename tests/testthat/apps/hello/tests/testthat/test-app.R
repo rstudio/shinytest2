@@ -12,6 +12,8 @@
 # shinytest2 code using `app$**()`:
 test_that("basic website example works using shinytest", {
   app <- AppDriver$new(variant = platform_variant())
+  withr::defer(app$stop())
+
   app$set_inputs(name = "Hadley")
   app$set_inputs(greet = "click")
 
@@ -25,15 +27,13 @@ test_that("basic website example works using shinytest", {
 
   # Only record `output[c("greeting")]`
   app$expect_values(output = "greeting")
-
-  # Similar to `test-wait-for-idle.R`,
-  # Shut down this app to try an make CI happier about the next app
-  app$stop()
 })
 
 # shinytest2 code using `app$**()`:
 test_that("basic website example works using testthat", {
   app <- AppDriver$new(variant = platform_variant(), name = "manual")
+  withr::defer(app$stop())
+
   app$set_inputs(name = "Hadley")
   app$set_inputs(greet = "click")
 

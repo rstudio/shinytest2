@@ -6,9 +6,6 @@ test_that("App returns value from script", {
 
   meaning_of_life <- app$stop()
   expect_equal(meaning_of_life, 42)
-
-  # Shut down this app to try an make CI happier about the next app
-  app$stop()
 })
 
 test_that("App returns value from script", {

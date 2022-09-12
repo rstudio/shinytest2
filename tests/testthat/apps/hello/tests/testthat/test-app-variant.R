@@ -1,6 +1,8 @@
 # shinytest2 code using `app$**()`:
 test_that("screenshots need a variant", {
   app <- AppDriver$new()
+  withr::defer(app$stop())
+
   app$set_inputs(name = "Hadley")
   app$set_inputs(greet = "click")
 
