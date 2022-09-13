@@ -37,7 +37,7 @@ a \code{.Rprofile} file within your Shiny app directory.
 
 
 If the app throws an error during initialization, the \code{AppDriver} will
-will be stored in \code{rlang::last_error()$app}. This allows for the "failure
+be stored in \code{rlang::last_error()$app}. This allows for the "failure
 to initialize" to be signaled while also allowing for the \code{app} to be
 retrieved after any initialization error has been thrown.
 }
@@ -48,7 +48,7 @@ retrieved after any initialization error has been thrown.
 Reactive values from within your Shiny application can be exported using the
 method:
 \href{https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html}{\code{shiny::exportTestValues()}}.
-This under utilized method exposes internal values of your app
+This underutilized method exposes internal values of your app
 without needing to create a corresponding input value or output value.
 
 For example:
@@ -1020,7 +1020,7 @@ Initialize an \code{AppDriver} object
 \itemize{
 \item A directory containing your Shiny application or a run-time Shiny R
 Markdown document.
-\item A url pointing to your shiny application. (Don't forget to set
+\item A URL pointing to your shiny application. (Don't forget to set
 \code{testmode = TRUE} when running your application!)
 \item A Shiny application object which inherits from \code{"shiny.appobj"}.
 }
@@ -2139,14 +2139,14 @@ and \code{delay} will default to \code{"html"} and \code{0} respectively.
 If \code{FALSE} is provided, the parameter will be ignored and a
 screenshot will be taken with default behavior.}
 
-\item{\code{delay}}{The number of milliseconds to wait before taking the screenshot.
-This value can either be supplied as \code{delay} or \code{screenshot_args}'s delay
-slot. The \code{delay} parameter will have preference.}
+\item{\code{delay}}{The number of \strong{seconds} to wait before taking the screenshot.
+This value can be supplied as \code{delay} or \code{screenshot_args$delay}, with the
+\code{delay} parameter having preference.}
 
 \item{\code{selector}}{The selector is a CSS selector that will be used to select a
-portion of the page to be captured. This value can either be supplied as
-\code{selector} or \code{screenshot_args}'s selector slot. The \code{selector} parameter
-will have preference.}
+portion of the page to be captured. This value can be supplied as
+\code{selector} or \code{screenshot_args$selector}, with the \code{selector} parameter
+having preference.}
 
 \item{\code{name}}{The file name to be used for the snapshot. The file extension
 will overwritten to \code{.png}. By default, the \code{name} supplied to
@@ -2216,14 +2216,14 @@ If the value is:
 If a \code{FALSE} value is provided, the parameter will be ignored and a
 screenshot will be taken with default behavior.}
 
-\item{\code{delay}}{The number of milliseconds to wait before taking the screenshot.
-This value can either be supplied as \code{delay} or \code{screenshot_args}'s delay
-slot. The \code{delay} parameter will have preference.}
+\item{\code{delay}}{The number of \strong{seconds} to wait before taking the screenshot.
+This value can be supplied as \code{delay} or \code{screenshot_args$delay}, with the
+\code{delay} parameter having preference.}
 
 \item{\code{selector}}{The selector is a CSS selector that will be used to select a
-portion of the page to be captured. This value can either be supplied as
-\code{selector} or \code{screenshot_args}'s selector slot. The \code{selector} parameter
-will have preference.}
+portion of the page to be captured. This value can be supplied as
+\code{selector} or \code{screenshot_args$selector}, with the \code{selector} parameter
+having preference.}
 }
 \if{html}{\out{</div>}}
 }

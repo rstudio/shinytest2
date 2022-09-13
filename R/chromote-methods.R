@@ -43,7 +43,7 @@ chromote_eval <- function(
   # cat("\n", js, "\n")
 
   result <-
-    withCallingHandlers(
+    tryCatch(
       {
         # https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#method-evaluate
         chromote_session$

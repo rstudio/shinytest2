@@ -18,6 +18,19 @@
 
 * When testing and `{chromote}` can not be started, the test will be skipped. When testing on windows in CI, `{chromote}` will get an attempt to be started (#225)
 
+* Remove trailing comma causing render bug in recorder app (@mehrnoushmalek, #239)
+
+* Update {lintr} lints to v3 (#240)
+
+* Fixed GHA links for `rstudio/shinytest2/actions/test-app@v1` (#249)
+
+* Fix documentation on on `AppDriver`'s `delay` parameter being in **seconds**, not *milli*seconds (#255)
+
+
+# shinytest2 0.1.1
+
+* Update docs for CRAN (#253)
+
 
 # shinytest2 0.1.0
 

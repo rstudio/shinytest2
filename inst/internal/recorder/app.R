@@ -345,7 +345,7 @@ shinyApp(
             textInput("testname", label = "Test name:", value = app_name),
             class = "inline-input-container",
           ),
-          tooltip("The name of the test should be short, unique, and path-friendly way to describe what the set of expectations are trying to confirm."),
+          tooltip("The name of the test should be short, unique, and path-friendly way to describe what the set of expectations are trying to confirm.")
         ),
         tagAppendChild(
           tagAppendAttributes(
@@ -599,7 +599,7 @@ shinyApp(
       "seed",
         ~ shiny::tagList(
           shiny::tags$p("Can not save tests for a Shiny object."),
-          shiny::tags$p("Please supply an application directory to", shiny::tags$code("record_test(app_dir =)"))
+          shiny::tags$p("Please supply an application directory to", shiny::tags$code("record_test(app =)"))
       )
     )
 
@@ -620,9 +620,11 @@ shinyApp(
     no_binding_obs[[1]] <- observeEvent(trim_testevents(), {
       if (!is.null(allow_no_input_binding_react())) {
         # Cancel the observers and return
-        lapply(no_binding_obs, function(ob) { ob$destroy() })
+        lapply(no_binding_obs, function(ob) {
+          ob$destroy()
+        })
         no_binding_obs <<- list()
-        return();
+        return()
       }
 
       # Don't do anything if there is no unbound input event

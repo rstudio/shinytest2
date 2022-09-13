@@ -1,13 +1,25 @@
 ## Comments
 
-#### 2022-04-23
+#### 2022-09-06
 
-Releasing a new package `{shinytest2}`.
+Releasing a patch to `{shinytest2}` which has documentation by the latest version of `{roxygen2}`.
 
-Please let me know if there is any more information I can provide.
-
-Thank you,
+Best,
 Barret
+
+#### 2022-08-19
+
+....
+R 4.2.0 switched to use HTML5 for documentation pages.  Now validation
+using HTML Tidy finds problems in the HTML generated from your Rd
+files.
+
+To fix, in most cases it suffices to re-generate the Rd files using the
+current CRAN version of roxygen2.
+....
+
+Best,
+-k
 
 
 ## Test environments
@@ -22,14 +34,15 @@ Barret
     * devel, 4.1, 4.0, 3.6, 3.5, 3.4
 * devtools::
   * check_win_devel()
-  * check_win_release()
-  * check_win_oldrelease()
 
 ## R CMD check results
 
-0 errors ✔ | 0 warnings ✔ | 1 note
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
-N  checking CRAN incoming feasibility
-   Maintainer: ‘Barret Schloerke <barret@rstudio.com>’
 
-   New submission
+## revdepcheck results
+
+We checked 7 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+
+ * We saw 0 new problems
+ * We failed to check 0 packages

@@ -12,8 +12,8 @@ app_httr_get <- function(self, private, url, fn_404 = NULL) {
     app_abort(self, private, "Could not find Shiny server. Shiny app is no longer running")
   }
 
-  withCallingHandlers(
-    {
+  withCallingHandlers( # abort() on error
+    { # nolint
       req <- httr::GET(url)
     },
     # Attempt to capture empty reply error and provide better message

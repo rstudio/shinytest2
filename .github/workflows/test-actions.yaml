@@ -38,10 +38,21 @@ jobs:
           extra-packages:
             "local::."
 
-      - name: Test app
-        uses: rstudio/shinytest2/actions/test-app@main
-        # uses: rstudio/shinytest2/actions/test-app@specific_branch
-        ## Suggested usage
-        # uses: rstudio/shinytest2/actions/test-app@v1
+      # ## Suggested usage
+      # - name: Test app
+      #   uses: rstudio/shinytest2/actions/test-app@v1
+      #   with:
+      #     app-dir: "tests/testthat/apps/hello"
+
+      - name: Test app (main)
+        uses: rstudio/shinytest2/actions/test-app@v1
+        continue-on-error: true
+        with:
+          app-dir: "tests/testthat/apps/hello"
+
+      - name: Test app (PR)
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        uses: ./actions/test-app
         with:
           app-dir: "tests/testthat/apps/hello"
