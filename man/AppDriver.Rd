@@ -2958,9 +2958,19 @@ Typically, this can be paired with a button that when clicked will call
 \code{shiny::stopApp(info)} to return \code{info} from the test app back to the
 main R session.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$stop()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$stop(timeout = missing_arg())}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{timeout}}{Milliseconds to wait between sending a SIGINT, SIGTERM,
+and SIGKILL to the Shiny process. Defaults to 500ms. However, if
+\pkg{covr} is currently executing, then the \code{timeout} is set to
+20,000ms to allow for the coverage report to be generated.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 The result of the background process if the Shiny application has
 already been terminated.
