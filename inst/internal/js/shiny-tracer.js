@@ -45,6 +45,7 @@ window.shinytest2 = (function() {
                 if (binding) {
                     var value = preprocess(item.name, item.value);
                     var $el = $("#" + escapeSelector(item.name));
+                    console.log("change!", value, $el, binding);
 
                     binding.setValue($el[0], value);
                     $el.trigger("change");
