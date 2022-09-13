@@ -1662,6 +1662,10 @@ AppDriver <- R6Class( # nolint
     #' Typically, this can be paired with a button that when clicked will call
     #' `shiny::stopApp(info)` to return `info` from the test app back to the
     #' main R session.
+    #' @param timeout Milliseconds to wait between sending a SIGINT, SIGTERM,
+    #'   and SIGKILL to the Shiny process. Defaults to 500ms. However, if
+    #'   \pkg{covr} is currently executing, then the `timeout` is set to
+    #'   20,000ms to allow for the coverage report to be generated.
     #' @return The result of the background process if the Shiny application has
     #'   already been terminated.
     #' @examples
@@ -1711,8 +1715,8 @@ AppDriver <- R6Class( # nolint
     #' #> ..$ session: chr "bdc7417f2fc8c84fc05c9518e36fdc44"
     #' #> ..$ time   : num 1.65e+09
     #' }
-    stop = function() {
-      app_stop(self, private)
+    stop = function(timeout = missing_arg()) {
+      app_stop(self, private, timeout = timeout)
     }
   )
 )
