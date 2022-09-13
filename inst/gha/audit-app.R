@@ -48,7 +48,7 @@ start_r_bg <- function(fun, path = NULL, port = 3515) {
   process <- callr::r_bg(
     func = fun,
     args = args,
-    stderr= "",
+    stderr = "",
     stdout = ""
   )
 
@@ -80,7 +80,7 @@ record_loadtest <- function(path, timeout = 15, workers = 5) {
   target <- start_r_bg(shiny_bg, path = path)
   recorder <- start_r_bg(recorder_bg)
 
-  # start headless chrome (points to recorder!).
+  # start headless chrome (points to `recorder`!).
   # AppDriver also support remote urls.
   chrome <- shinytest2::AppDriver$new(
     "http://127.0.0.1:8600",

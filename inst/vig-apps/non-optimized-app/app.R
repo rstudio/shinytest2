@@ -2,9 +2,9 @@ library(deSolve)
 library(shiny)
 
 van_der_pol <- function(t, y, mu) {
-  dX <- y[2]
-  dY <- mu * (1 - y[1]^2)*y[2] - y[1]
-  list(c(X = dX, Y = dY))
+  d_x <- y[2]
+  d_y <- mu * (1 - y[1] ^ 2) * y[2] - y[1]
+  list(c(X = d_x, Y = d_y))
 }
 
 server <- function(input, output) {
@@ -14,7 +14,7 @@ server <- function(input, output) {
     times <- seq(0, 1000, .001)
     out <- ode(y0, times, van_der_pol, input$mu)
     par(mfrow = c(1, 1))
-    plot(out[,2:3], type = "l", xlab = "X", ylab = "Y", main = "state diagram")
+    plot(out[, 2:3], type = "l", xlab = "X", ylab = "Y", main = "state diagram")
   })
 }
 
