@@ -321,6 +321,7 @@ Now, it is time to integrate the current pipeline in a CI/CD workflow.
 For convenience, we wrap all the previous steps in a single function:
 
 ``` r
+## File: R/audit-app.R
 record_loadtest <- function(path, timeout = 15, workers = 5) {
   message("\n---- BEGIN LOAD-TEST ---- \n")
   # start app + recorder
@@ -445,12 +446,12 @@ RStudio project and link it to GitHub:
 # Use audit GitHub Actions workflow
 usethis::use_github_action(url = "https://raw.githubusercontent.com/rstudio/shinytest2/main/.github/workflows/app-audit.yaml")
 # Copy audit script
-dir.create("R")
+dir.create("R", showWarnings = FALSE)
 file.copy(system.file("gha/audit-app.R", package = "shinytest2"), "R/audit-app.R")
 # Create your app.R file
 file.create("app.R")
 
-## Need to copy in your app code to `app.R`!
+message("TODO: User - Copy in your app code to `app.R`!")
 
 # To test it locally
 source("R/audit-app.R")
