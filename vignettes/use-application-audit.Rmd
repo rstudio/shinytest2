@@ -1,9 +1,9 @@
 ---
-title: "use-application-audit"
+title: "Auditing Shiny apps"
 author: David Granjon
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Monkey testing}
+  %\VignetteIndexEntry{Auditing Shiny apps}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
