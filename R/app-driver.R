@@ -989,28 +989,104 @@ AppDriver <- R6Class( # nolint
     #' @param name The file name to be used for the snapshot. The file extension
     #'   will overwritten to `.png`. By default, the `name` supplied to
     #'   `app` on initialization with a counter will be used (e.g. `"NAME-001.png"`).
+    #' @param compare A function used to compare the screenshot snapshot files.
+    #' The function should take two inputs, the paths to the `old` and `new`
+    #' snapshot, and return either `TRUE` or `FALSE`.
+    #'
+    #' `compare` defaults to a function that wraps around
+    #' `compare_screenshot_threshold(old, new, threshold = threshold,
+    #' kernel_size = kernel_size, quiet = quiet)`. Note: if `threshold` is
+    #' `NULL` (default), `compare` will behave as if
+    #' [`testthat::compare_file_binary()`] was provided, comparing the two
+    #' images byte-by-byte.
+    #' @param threshold Parameter supplied to [`compare_screenshot_threshold()`]
+    #' when using the default `compare` method. If the value of `threshold` is
+    #' NULL`, [`compare_screenshot_threshold()`] will act like
+    #' [`testthat::compare_file_binary`]. However, if `threshold` is a positive number,
+    #' it will be compared against the largest convolution value found if the
+    #' two images fail a [`testthat::compare_file_binary`] comparison.
+    #'
+    #' Which value should I use? Threshold values values below 5 help deter
+    #' false-positive screenshot comparisons (such as inconsistent rounded
+    #' corners). Larger values in the 10s and 100s will help find _real_
+    #' changes. However, not all values are one size fits all and you will need
+    #' to play with a threshold that fits your needs.
+    #' @param kernel_size Parameter supplied to [`compare_screenshot_threshold()`]
+    #' when using the default `compare` method. The `kernel_size` represents the
+    #' height and width of the convolution kernel applied to the pixel
+    #' differences. This integer-like value should be relatively small.
+    #' @param quiet Parameter supplied to [`compare_screenshot_threshold()`]
+    #' when using the default `compare` method. If `FALSE`, diagnostic
+    #' information will be presented when the computed value is larger than a
+    #' non-`NULL` `threshold` value.
     #' @examples
     #' \dontrun{
+    #' # These example lines should be performed in a `./tests/testthat`
+    #' # test file so that snapshot files can be properly saved
+    #'
     #' app_path <- system.file("examples/01_hello", package = "shiny")
     #' app <- AppDriver$new(app_path, variant = platform_variant())
     #'
-    #' # Expect a full size screenshot
+    #' # Expect a full size screenshot to be pixel perfect
     #' app$expect_screenshot()
     #'
-    #' # Very brittle test
+    #' # Images are brittle when containing plots
     #' app$expect_screenshot(selector = "#distPlot")
+    #'
+    #' # Test with more threshold in pixel value differences
+    #' # Helps with rounded corners
+    #' app$expect_screenshot(threshold = 10)
+    #'
+    #' # Equivalent expectations
+    #' app$expect_screenshot() # default
+    #' app$expect_screenshot(threshold = NULL)
+    #' app$expect_screenshot(compare = testthat::compare_file_binary)
+    #' expect_snapshot_file(
+    #'   app$get_screenshot(),
+    #'   variant = app$get_variant(),
+    #'   compare = testthat::compare_file_binary
+    #' )
+    #'
+    #' # Equivalent expectations
+    #' app$expect_screenshot(threshold = 3, kernel_size = 5)
+    #' app$expect_screenshot(compare = function(old, new) {
+    #'   compare_screenshot_threshold(
+    #'     old, new,
+    #'     threshold = 3,
+    #'     kernel_size = 5
+    #'   )
+    #' })
+    #' expect_screenshot_file(
+    #'   app$get_screenshot(),
+    #'   variant = app$get_variant(),
+    #'   compare = function(old, new) {
+    #'     compare_screenshot_threshold(
+    #'       old, new,
+    #'       threshold = 3,
+    #'       kernel_size = 5
+    #'     )
+    #'   }
+    #' )
     #' }
     expect_screenshot = function(
       ...,
+      threshold = NULL,
+      kernel_size = 5,
       screenshot_args = missing_arg(),
       delay = missing_arg(),
       selector = missing_arg(),
+      compare = missing_arg(),
+      quiet = FALSE,
       name = NULL,
       cran = FALSE
     ) {
       app_expect_screenshot_and_variant(
         self, private,
         ...,
+        threshold = threshold,
+        kernel_size = kernel_size,
+        quiet = quiet,
+        compare = compare,
         screenshot_args = screenshot_args,
         delay = delay,
         selector = selector,
@@ -1586,6 +1662,10 @@ AppDriver <- R6Class( # nolint
     #' Typically, this can be paired with a button that when clicked will call
     #' `shiny::stopApp(info)` to return `info` from the test app back to the
     #' main R session.
+    #' @param timeout Milliseconds to wait between sending a SIGINT, SIGTERM,
+    #'   and SIGKILL to the Shiny process. Defaults to 500ms. However, if
+    #'   \pkg{covr} is currently executing, then the `timeout` is set to
+    #'   20,000ms to allow for the coverage report to be generated.
     #' @return The result of the background process if the Shiny application has
     #'   already been terminated.
     #' @examples
@@ -1635,8 +1715,8 @@ AppDriver <- R6Class( # nolint
     #' #> ..$ session: chr "bdc7417f2fc8c84fc05c9518e36fdc44"
     #' #> ..$ time   : num 1.65e+09
     #' }
-    stop = function() {
-      app_stop(self, private)
+    stop = function(timeout = missing_arg()) {
+      app_stop(self, private, timeout = timeout)
     }
   )
 )
