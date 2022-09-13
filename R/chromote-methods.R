@@ -106,7 +106,12 @@ chromote_wait_for_condition <- function(
 "new Promise((resolve, reject) => {
   let start = Date.now();
   const condition = () => {
-    return eval(", escaped_condition_js, ");
+    try {
+      return eval(", escaped_condition_js, ");
+    } catch (e) {
+      window.console.error(e);
+      return false;
+    }
   };\n",
   # Use `chromote_wait_for_condition` as the error message matches the R method
   "chromote_wait_for_condition = () => {
