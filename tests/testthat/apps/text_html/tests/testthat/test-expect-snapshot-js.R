@@ -1,6 +1,5 @@
 test_that("basic text and dom outputs are expected", {
   app <- AppDriver$new(variant = NULL)
-  withr::defer(app$stop())
 
   app$set_inputs(val = "<div id='custom'><p>My Custom Output</p></div>")
 
@@ -13,7 +12,6 @@ test_that("basic text and dom outputs are expected", {
 
 test_that("basic text and dom outputs are captured", {
   app <- AppDriver$new(variant = NULL)
-  withr::defer(app$stop())
 
   app$set_inputs(val = "<div id='custom'><p>My Custom Output</p></div>")
 

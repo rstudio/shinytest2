@@ -6,7 +6,6 @@ test_that("`export`ed `plot_obj` is updated by `n`", {
   skip_if_not_installed("vdiffr")
 
   app <- AppDriver$new()
-  withr::defer(app$stop())
 
   expect_n_and_plot <- function(n) {
     # Verify `n` input equals `n`

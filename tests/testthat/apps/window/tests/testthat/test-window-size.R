@@ -7,7 +7,6 @@ test_that("Init and Set window size", {
     height = 100,
     width = 150
   )
-  withr::defer(app$stop())
 
   expect_equal(app$get_js("let size = {height: window.innerHeight, width: window.innerWidth}; size"), list(height = 100, width = 150))
 

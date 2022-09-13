@@ -31,7 +31,6 @@ test_that("Running an app not in testing mode has 404 handled when getting value
   expect_true(!is.null(app_url))
 
   app <- AppDriver$new(app_url)
-  withr::defer(app$stop())
 
   expect_error(
     app$get_values(),

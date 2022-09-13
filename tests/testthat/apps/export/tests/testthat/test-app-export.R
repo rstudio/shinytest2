@@ -1,7 +1,6 @@
 
 test_that("Exported values", {
   app <- AppDriver$new()
-  withr::defer(app$stop())
 
   x <- app$get_values()
   expect_identical(x$export$x, 1)

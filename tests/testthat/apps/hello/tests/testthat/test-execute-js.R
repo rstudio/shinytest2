@@ -1,6 +1,5 @@
 test_that("JS can take a file or script", {
   app <- AppDriver$new()
-  withr::defer(app$stop())
 
   app$set_inputs(name = "Hadley")
   app$run_js("window.testVal = 'testLocal';")

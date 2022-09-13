@@ -1,6 +1,5 @@
 test_that("basic website example works", {
   app <- AppDriver$new(variant = NULL)
-  withr::defer(app$stop())
 
   app$set_inputs(name = "Hadley")
   app$set_inputs(greet = "click")

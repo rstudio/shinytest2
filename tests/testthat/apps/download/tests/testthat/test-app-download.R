@@ -1,7 +1,6 @@
 
 test_that("download files work from link and button", {
   app <- AppDriver$new(variant = NULL)
-  withr::defer(app$stop())
 
   app$wait_for_js("$('#download_link_csv').attr('href') != ''")
   app$wait_for_js("$('#download_button_csv').attr('href') != ''")
@@ -29,7 +28,6 @@ test_that("download files can be retrieved", {
   }, add = TRUE)
 
   app <- AppDriver$new(variant = NULL)
-  withr::defer(app$stop())
 
   app$wait_for_js("$('#download_link_csv').attr('href') != ''")
   app$wait_for_js("$('#download_button_csv').attr('href') != ''")

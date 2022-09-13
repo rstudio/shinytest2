@@ -5,7 +5,6 @@ test_that("images are captured via expect_values", {
     variant = platform_variant()
     # name = "values-image"
   )
-  withr::defer(app$stop())
 
   app$click("rawr")
   app$expect_values()
@@ -30,7 +29,6 @@ test_that("Values screenshot args are used", {
     name = "sa-values",
     expect_values_screenshot_args = list(selector = "#green")
   )
-  withr::defer(app$stop())
 
   # should take a picture of `#green`, not app
   app$expect_values()
@@ -42,7 +40,6 @@ test_that("User screenshot args are used instead of auto defined screenshot args
     name = "sa-user",
     expect_values_screenshot_args = list(selector = "#red")
   )
-  withr::defer(app$stop())
 
   # should take a picture of `#green`, not `#red` or app
   app$expect_values(screenshot_args = list(selector = "#green"))
@@ -57,7 +54,6 @@ test_that("No screenshot is taken", {
     name = "no-pic1",
     expect_values_screenshot_args = FALSE
   )
-  withr::defer(app$stop())
 
   # No picture
   app$expect_values()
@@ -78,7 +74,6 @@ test_that("screenshot can be expected", {
     name = "screen1",
     screenshot_args = list(selector = "#green")
   )
-  withr::defer(app$stop())
 
   # This directly calls `app$get_screenshot()`, no need for extra testing
   # Should take a picture of `#green`, not app
@@ -89,7 +84,6 @@ test_that("screenshot can be expected", {
     variant = NULL,
     name = "screen2"
   )
-  withr::defer(app$stop())
 
   # This directly calls `app$get_screenshot()`, no need for extra testing
   # Should take a picture of `#green`, not app

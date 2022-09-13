@@ -57,7 +57,6 @@ expect_log_tests <- function(log) {
 
 test_that("App captures known debug messages", {
   app <- AppDriver$new()
-  withr::defer(app$stop())
 
   log_df <- app$get_logs()
 
@@ -104,7 +103,6 @@ test_that("App captures known debug messages", {
 
 test_that("App captures known debug messages", {
   app <- AppDriver$new(options = list(shiny.trace = TRUE))
-  withr::defer(app$stop())
 
   log_df <- app$get_logs()
 

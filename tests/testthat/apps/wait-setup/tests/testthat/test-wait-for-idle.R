@@ -4,7 +4,6 @@
 test_that("wait for idle works", {
 
   app <- AppDriver$new()
-  withr::defer(app$stop())
 
   app$wait_for_idle(duration = 2 * n)
 

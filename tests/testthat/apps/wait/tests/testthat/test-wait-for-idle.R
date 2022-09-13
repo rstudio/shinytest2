@@ -3,7 +3,6 @@
 test_that("wait for idle works", {
 
   app <- AppDriver$new()
-  withr::defer(app$stop())
 
   app$wait_for_idle(duration = 2 * n)
 
@@ -14,7 +13,6 @@ test_that("wait for idle works", {
 test_that("waiting a lesser value will not be enough", {
 
   app <- AppDriver$new()
-  withr::defer(app$stop())
 
   app$wait_for_idle(duration = n / 2)
 

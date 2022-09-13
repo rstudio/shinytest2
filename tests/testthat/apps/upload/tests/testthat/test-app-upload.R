@@ -2,7 +2,6 @@ library(shinytest2)
 
 test_that("Make sure upload can use a local file", {
   app <- AppDriver$new(name = "upload")
-  withr::defer(app$stop())
 
   app$upload_file(file = "cars.csv")
   app$expect_values()

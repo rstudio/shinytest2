@@ -25,7 +25,6 @@ hello_app <- shinyApp(
 test_that("AppDriver can receive a shiny.obj object", {
 
   app <- AppDriver$new(hello_app, name = "app", expect_values_screenshot_args = FALSE)
-  withr::defer(app$stop())
 
   app$set_inputs(name = "Barret")
   app$click("greet")
@@ -38,7 +37,6 @@ test_that("AppDriver can receive a shiny.obj object", {
 test_that("AppDriver can receive a shinyAppDir object", {
 
   app <- AppDriver$new(hello_app, name = "app-dir", expect_values_screenshot_args = FALSE)
-  withr::defer(app$stop())
 
   app$set_inputs(name = "Barret")
   app$click("greet")
