@@ -1,5 +1,6 @@
 ---
 title: "use-application-audit"
+author: David Granjon
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Monkey testing}
