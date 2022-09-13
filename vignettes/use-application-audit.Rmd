@@ -456,10 +456,9 @@ file.create("app.R")
 source("R/audit-app.R")
 record_loadtest("app.R")
 
-# Test it with GitHub actions
+# Test the audit with GitHub Actions
 usethis::use_description()
 usethis::use_git()
-usethis::use_git_protocol("ssh")
 usethis::use_github()
 usethis::use_github_pages()
 ```
