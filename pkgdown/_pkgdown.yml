@@ -21,6 +21,7 @@ reference:
   - AppDriver
   - record_test
   - platform_variant
+  - compare_screenshot_threshold
 
 - title: Running tests
   desc: ~

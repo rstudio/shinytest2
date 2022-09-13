@@ -3,4 +3,6 @@ linters: linters_with_defaults(
     commented_code_linter = NULL,
     cyclocomp_linter = NULL
   )
-exclusions: list()
+exclusions: list(
+    "R/cpp11.R"
+  )

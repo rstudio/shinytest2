@@ -63,15 +63,31 @@ app_get_screenshot <- function(
 app_expect_screenshot <- function(
   self, private,
   ...,
+  threshold = NULL,
+  kernel_size = 5,
+  quiet = FALSE,
   name = NULL,
   screenshot_args = missing_arg(),
   delay = missing_arg(),
   selector = missing_arg(),
+  compare = missing_arg(),
   cran = FALSE
 ) {
   "!DEBUG app_expect_screenshot()"
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
+
+  compare <- rlang::maybe_missing(
+    compare,
+    function(old, new) {
+      compare_screenshot_threshold(
+        old, new,
+        threshold = threshold,
+        kernel_size = kernel_size,
+        quiet = quiet
+      )
+    }
+  )
 
   filename <- app_next_temp_snapshot_path(self, private, name, "png")
 
@@ -88,7 +104,7 @@ app_expect_screenshot <- function(
     self, private,
     filename,
     cran = cran,
-    compare = testthat::compare_file_binary
+    compare = compare
   )
 }
 
