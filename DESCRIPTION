@@ -43,6 +43,7 @@ Suggests:
     ggplot2,
     knitr,
     plotly,
+    png,
     rstudioapi,
     shinyWidgets,
     shinytest (>= 1.5.1),
@@ -79,6 +80,8 @@ Collate:
     'app-driver-window.R'
     'app-driver.R'
     'chromote-methods.R'
+    'compare-screenshot-threshold.R'
+    'cpp11.R'
     'expect-snapshot.R'
     'expr-recurse.R'
     'httr.R'
@@ -92,5 +95,9 @@ Collate:
     'save-app.R'
     'shiny-browser.R'
     'shinytest2-logs.R'
+    'shinytest2-package.R'
     'test-app.R'
     'use.R'
+LinkingTo:
+    cpp11
+SystemRequirements: C++11

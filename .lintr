@@ -4,8 +4,8 @@ linters: linters_with_defaults(
     cyclocomp_linter = NULL
   )
 exclusions: list(
-    "temp",
     "inst/gha/audit-app.R" = list(
       "object_usage_linter" = 81
-    )
+    ),
+    "R/cpp11.R"
   )
