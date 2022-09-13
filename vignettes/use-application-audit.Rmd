@@ -184,10 +184,10 @@ recorder <- start_r_bg(recorder_bg)
 
 ### Connect Chrome
 
-The previous part was the most technical step. Now, we only have to start a 
-Chrome headless browser on port `8600`, where the load test recorder runs. 
-You'll notice that `{shinytest2}` also supports remote urls. 
-We should increase the value of `load_timout` to 15 seconds to help us avoid 
+The previous part was the most technical step. Now, we only have to start a
+Chrome headless browser on port `8600`, where the load test recorder runs.
+You'll notice that `{shinytest2}` also supports remote urls.
+We should increase the value of `load_timout` to 15 seconds to help us avoid
 producing this annoying `{shinytest2}` warning:
 
 ```
@@ -212,8 +212,8 @@ tcp        0      0 127.0.0.1:3515          0.0.0.0:*               LISTEN      
 tcp        0      0 127.0.0.1:44179         0.0.0.0:*               LISTEN      359555/google-chrom
 ```
 
-If everything is successful, you should see a __Client connected__ message in the 
-R console. We then change the `mu` parameter input without forgetting the 
+If everything is successful, you should see a __Client connected__ message in the
+R console. We then change the `mu` parameter input without forgetting the
 timeout:
 
 ``` r
