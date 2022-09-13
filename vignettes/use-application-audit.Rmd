@@ -468,12 +468,7 @@ by adding them in the `.Rbuildignore` file, which will avoid unnecessary warning
 any future `devtools::check()`:
 
 ```r
-usethis::use_build_ignore(
-  c(
-    "public",
-    "recording.log"
-  )
-)
+usethis::use_build_ignore(c("public", "recording.log"))
 ```
 
 An example is available [here](https://github.com/DivadNojnarg/shinyAuditTest).
