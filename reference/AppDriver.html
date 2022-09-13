@@ -1366,9 +1366,13 @@ recommended to use other expectation methods.</p><div class="section">
 <h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">expect_screenshot</span><span class="op">(</span></span>
 <span>  <span class="va">...</span>,</span>
+<span>  threshold <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  kernel_size <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  screenshot_args <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  delay <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  selector <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  compare <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cran <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
@@ -1378,6 +1382,24 @@ recommended to use other expectation methods.</p><div class="section">
 <h4 id="arguments-16">Arguments<a class="anchor" aria-label="anchor" href="#arguments-16"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>Must be empty. Allows for parameter expansion.</p></dd>
+
+
+<dt><code>threshold</code></dt>
+<dd><p>Parameter supplied to <code><a href="compare_screenshot_threshold.html">compare_screenshot_threshold()</a></code>
+when using the default <code>compare</code> method. If the value of <code>threshold</code> is
+NULL<code>, [</code>compare_screenshot_threshold()<code>] will act like [</code>testthat::compare_file_binary<code>]. However, if </code>threshold<code> is a positive number, it will be compared against the largest convolution value found if the two images fail a [</code>testthat::compare_file_binary`] comparison.</p>
+<p>Which value should I use? Threshold values values below 5 help deter
+false-positive screenshot comparisons (such as inconsistent rounded
+corners). Larger values in the 10s and 100s will help find <em>real</em>
+changes. However, not all values are one size fits all and you will need
+to play with a threshold that fits your needs.</p></dd>
+
+
+<dt><code>kernel_size</code></dt>
+<dd><p>Parameter supplied to <code><a href="compare_screenshot_threshold.html">compare_screenshot_threshold()</a></code>
+when using the default <code>compare</code> method. The <code>kernel_size</code> represents the
+height and width of the convolution kernel applied to the pixel
+differences. This integer-like value should be relatively small.</p></dd>
 
 
 <dt><code>screenshot_args</code></dt>
@@ -1405,6 +1427,24 @@ portion of the page to be captured. This value can be supplied as
 having preference.</p></dd>
 
 
+<dt><code>compare</code></dt>
+<dd><p>A function used to compare the screenshot snapshot files.
+The function should take two inputs, the paths to the <code>old</code> and <code>new</code>
+snapshot, and return either <code>TRUE</code> or <code>FALSE</code>.</p>
+<p><code>compare</code> defaults to a function that wraps around
+<code>compare_screenshot_threshold(old, new, threshold = threshold, kernel_size = kernel_size, quiet = quiet)</code>. Note: if <code>threshold</code> is
+<code>NULL</code> (default), <code>compare</code> will behave as if
+<code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">testthat::compare_file_binary()</a></code> was provided, comparing the two
+images byte-by-byte.</p></dd>
+
+
+<dt><code>quiet</code></dt>
+<dd><p>Parameter supplied to <code><a href="compare_screenshot_threshold.html">compare_screenshot_threshold()</a></code>
+when using the default <code>compare</code> method. If <code>FALSE</code>, diagnostic
+information will be presented when the computed value is larger than a
+non-<code>NULL</code> <code>threshold</code> value.</p></dd>
+
+
 <dt><code>name</code></dt>
 <dd><p>The file name to be used for the snapshot. The file extension
 will overwritten to <code>.png</code>. By default, the <code>name</code> supplied to
@@ -1422,14 +1462,52 @@ because they often rely on minor details of dependencies.</p></dd>
 <div class="section">
 <h4 id="examples-17">Examples<a class="anchor" aria-label="anchor" href="#examples-17"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code>\dontrun{
+# These example lines should be performed in a `./tests/testthat`
+# test file so that snapshot files can be properly saved
+
 app_path &lt;- system.file("examples/01_hello", package = "shiny")
 app &lt;- AppDriver$new(app_path, variant = platform_variant())
 
-# Expect a full size screenshot
+# Expect a full size screenshot to be pixel perfect
 app$expect_screenshot()
 
-# Very brittle test
+# Images are brittle when containing plots
 app$expect_screenshot(selector = "#distPlot")
+
+# Test with more threshold in pixel value differences
+# Helps with rounded corners
+app$expect_screenshot(threshold = 10)
+
+# Equivalent expectations
+app$expect_screenshot() # default
+app$expect_screenshot(threshold = NULL)
+app$expect_screenshot(compare = testthat::compare_file_binary)
+expect_snapshot_file(
+  app$get_screenshot(),
+  variant = app$get_variant(),
+  compare = testthat::compare_file_binary
+)
+
+# Equivalent expectations
+app$expect_screenshot(threshold = 3, kernel_size = 5)
+app$expect_screenshot(compare = function(old, new) {
+  compare_screenshot_threshold(
+    old, new,
+    threshold = 3,
+    kernel_size = 5
+  )
+})
+expect_screenshot_file(
+  app$get_screenshot(),
+  variant = app$get_variant(),
+  compare = function(old, new) {
+    compare_screenshot_threshold(
+      old, new,
+      threshold = 3,
+      kernel_size = 5
+    )
+  }
+)
 }
 </code></pre></div><p></p></div>
 </div>
@@ -2592,14 +2670,52 @@ str(head(rlog, 2))
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># These example lines should be performed in a `./tests/testthat`</span></span></span>
+<span class="r-in"><span><span class="co"># test file so that snapshot files can be properly saved</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">app_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/01_hello"</span>, package <span class="op">=</span> <span class="st">"shiny"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va">AppDriver</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">app_path</span>, variant <span class="op">=</span> <span class="fu"><a href="platform_variant.html">platform_variant</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Expect a full size screenshot</span></span></span>
+<span class="r-in"><span><span class="co"># Expect a full size screenshot to be pixel perfect</span></span></span>
 <span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_screenshot</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Very brittle test</span></span></span>
+<span class="r-in"><span><span class="co"># Images are brittle when containing plots</span></span></span>
 <span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_screenshot</span><span class="op">(</span>selector <span class="op">=</span> <span class="st">"#distPlot"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Test with more threshold in pixel value differences</span></span></span>
+<span class="r-in"><span><span class="co"># Helps with rounded corners</span></span></span>
+<span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_screenshot</span><span class="op">(</span>threshold <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Equivalent expectations</span></span></span>
+<span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_screenshot</span><span class="op">(</span><span class="op">)</span> <span class="co"># default</span></span></span>
+<span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_screenshot</span><span class="op">(</span>threshold <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_screenshot</span><span class="op">(</span>compare <span class="op">=</span> <span class="fu">testthat</span><span class="fu">::</span><span class="va"><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">compare_file_binary</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">expect_snapshot_file</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">app</span><span class="op">$</span><span class="fu">get_screenshot</span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  variant <span class="op">=</span> <span class="va">app</span><span class="op">$</span><span class="fu">get_variant</span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  compare <span class="op">=</span> <span class="fu">testthat</span><span class="fu">::</span><span class="va"><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">compare_file_binary</a></span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Equivalent expectations</span></span></span>
+<span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_screenshot</span><span class="op">(</span>threshold <span class="op">=</span> <span class="fl">3</span>, kernel_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_screenshot</span><span class="op">(</span>compare <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">old</span>, <span class="va">new</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="compare_screenshot_threshold.html">compare_screenshot_threshold</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">old</span>, <span class="va">new</span>,</span></span>
+<span class="r-in"><span>    threshold <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>    kernel_size <span class="op">=</span> <span class="fl">5</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">expect_screenshot_file</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">app</span><span class="op">$</span><span class="fu">get_screenshot</span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  variant <span class="op">=</span> <span class="va">app</span><span class="op">$</span><span class="fu">get_variant</span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  compare <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">old</span>, <span class="va">new</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="compare_screenshot_threshold.html">compare_screenshot_threshold</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="va">old</span>, <span class="va">new</span>,</span></span>
+<span class="r-in"><span>      threshold <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>      kernel_size <span class="op">=</span> <span class="fl">5</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
