@@ -38,6 +38,7 @@ Imports:
     shiny,
     withr
 Suggests:
+    deSolve,
     diffobj,
     ggplot2,
     knitr,
