@@ -16,7 +16,6 @@
 
 * Add support for _not_ recording the screen size when recording a test (#223)
 
-
 ## Bug / Improvements
 
 * Fix set of bugs found by @daattali including test files should be opened in the IDE after recording and test and replace missing images in the website (#199)
@@ -38,6 +37,8 @@
 * Escape JS text supplied to `AppDriver$wait_for_js(script=)` (#258)
 
 * Added support for `AppDriver$stop(timeout=)`. The default timeout when sending `SIGINT`, `SIGTERM`, and `SIGKILL` signals to the `{shiny}` process is now 500ms. However, if `{covr}` is running, the default timeout is 20,000 ms to allow time for the report to generate. (#259)
+
+* Add example and FAQ entry on how to test bookmarking (#262)
 
 
 # shinytest2 0.1.1
