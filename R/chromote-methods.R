@@ -114,8 +114,12 @@ chromote_wait_for_condition <- function(
     if (diffTime > 0) {
       return reject('Timed out waiting for JavaScript script to return `true`');
     }
-    if (condition()) {
-      return resolve();
+    try {
+      if (condition()) {
+        return resolve();
+      }
+    } catch (e) {
+      reject(e);
     }
     setTimeout(chromote_wait_for_condition, ", interval, ");
   }
