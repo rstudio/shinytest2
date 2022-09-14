@@ -1517,7 +1517,6 @@ AppDriver <- R6Class( # nolint
     #' @examples
     #' \dontrun{
     #' app1 <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-    #' withr::defer(app1$stop())
     #'
     #' app1$get_logs()
     #' # \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
@@ -1547,7 +1546,6 @@ AppDriver <- R6Class( # nolint
     #'   system.file("examples/01_hello", package = "shiny"),
     #'   options = list(shiny.trace = TRUE)
     #' )
-    #' withr::defer(app2$stop())
     #'
     #' app2$get_logs()
     #' ## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)

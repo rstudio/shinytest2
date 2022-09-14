@@ -809,7 +809,6 @@ app$get_variant()
 
 \dontrun{
 app1 <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-withr::defer(app1$stop())
 
 app1$get_logs()
 # \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
@@ -839,7 +838,6 @@ app2 <- AppDriver$new(
   system.file("examples/01_hello", package = "shiny"),
   options = list(shiny.trace = TRUE)
 )
-withr::defer(app2$stop())
 
 app2$get_logs()
 ## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
@@ -2916,7 +2914,6 @@ for more details
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
 app1 <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-withr::defer(app1$stop())
 
 app1$get_logs()
 # \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
@@ -2946,7 +2943,6 @@ app2 <- AppDriver$new(
   system.file("examples/01_hello", package = "shiny"),
   options = list(shiny.trace = TRUE)
 )
-withr::defer(app2$stop())
 
 app2$get_logs()
 ## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)

@@ -31,7 +31,7 @@ test_that("App initialization is consistent", {
 
 A test script has this basic structure: first, there is an initialization, then the expectations are performed.
 
-In the initialization, the script creates a new `AppDriver` object and makes sure the `AppDriver` is stopped when the test exits.
+In the initialization, the script creates a new `AppDriver` object.
 
 ```{r}
 app <- AppDriver$new()
