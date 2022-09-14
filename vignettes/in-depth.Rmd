@@ -23,6 +23,7 @@ The final product would look something like:
 # File: ./tests/testthat/test-shinytest2.R
 test_that("App initialization is consistent", {
   app <- AppDriver$new()
+
   app$expect_values()
 })
 ```

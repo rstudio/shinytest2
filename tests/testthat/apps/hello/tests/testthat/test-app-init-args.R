@@ -4,6 +4,7 @@ test_that("name arg works", {
     name = "test",
     variant = NULL
   )
+
   app$set_inputs(name = "Hadley")
   app$set_inputs(greet = "click")
   app$expect_values(output = "greeting", screenshot_args = FALSE)

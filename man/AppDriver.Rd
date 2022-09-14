@@ -77,6 +77,7 @@ shiny_app <- shinyApp(
 )
 
 app <- AppDriver$new(shiny_app)
+
 init_vals <- app$get_values()
 str(init_vals)
 #> List of 3
@@ -180,6 +181,7 @@ cat(app$get_text("#view"))
 \dontrun{
 app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
+
 cat(app$get_text("#view"))
 app$set_inputs(dataset = "cars", obs = 6)
 app$click("update")
@@ -249,6 +251,7 @@ app$expect_values(input = "A", output = "C")
 \dontrun{
 app_path <- system.file("examples/04_mpg", package = "shiny")
 app <- AppDriver$new(app_path)
+
 # Retrieve a single value
 app$get_value(output = "caption")
 #> [1] "mpg ~ cyl"
@@ -378,6 +381,7 @@ app$get_text("h2")
 \dontrun{
 app_path <- system.file("examples/04_mpg", package = "shiny")
 app <- AppDriver$new(app_path)
+
 # Save a snapshot of the `caption` output
 app$expect_html("#caption")
 }
@@ -389,6 +393,7 @@ app$expect_html("#caption")
 \dontrun{
 app_path <- system.file("examples/03_reactivity", package = "shiny")
 app <- AppDriver$new(app_path, check_names = FALSE)
+
 app$set_inputs(caption = "Custom value!")
 cat(app$get_html(".shiny-input-container")[1])
 #> <div class="form-group shiny-input-container">
@@ -682,6 +687,7 @@ app <- AppDriver$new(shiny_app, check_names = TRUE)
 #> ! Shiny inputs should have unique HTML id values.
 #> i The following HTML id values are not unique:
 #> • text
+app$stop()
 
 # Manually assert that all names are unique
 app <- AppDriver$new(shiny_app, check_names = FALSE)
@@ -691,6 +697,7 @@ app$expect_unique_names()
 #> i The following HTML id values are not unique:
 #>   • text
 #> Class:   rlang_warning/warning/condition
+app$stop()
 }
 
 ## ------------------------------------------------
@@ -700,6 +707,7 @@ app$expect_unique_names()
 \dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+
 identical(app$get_dir(), app_path)
 #> [1] TRUE
 }
@@ -711,6 +719,7 @@ identical(app$get_dir(), app_path)
 \dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+
 browseURL(app$get_url())
 }
 
@@ -721,6 +730,7 @@ browseURL(app$get_url())
 \dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+
 app$get_window_size()
 #> $width
 #> [1] 992
@@ -762,6 +772,7 @@ app$get_window_size()
 \dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+
 b <- app$get_chromote_session()
 b$Runtime$evaluate("1 + 1")
 #> $result
@@ -783,6 +794,7 @@ b$Runtime$evaluate("1 + 1")
 app_path <- system.file("examples/01_hello", package = "shiny")
 
 app <- AppDriver$new(app_path)
+
 app$get_variant()
 #> NULL
 
@@ -796,8 +808,9 @@ app$get_variant()
 ## ------------------------------------------------
 
 \dontrun{
-app <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-app$get_logs()
+app1 <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
+
+app1$get_logs()
 # \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
 # \{shinytest2\} R  info  11:15:20.11 Starting Shiny app
 # \{shinytest2\} R  info  11:15:20.99 Creating new chromote session
@@ -821,11 +834,12 @@ app$get_logs()
 
 
 # To capture all websocket traffic, set `options = list(shiny.trace = TRUE)`
-app <- AppDriver$new(
+app2 <- AppDriver$new(
   system.file("examples/01_hello", package = "shiny"),
   options = list(shiny.trace = TRUE)
 )
-app$get_logs()
+
+app2$get_logs()
 ## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
 # \{shinytest2\} R  info      11:09:57.43 Start AppDriver initialization
 # \{shinytest2\} R  info      11:09:57.43 Starting Shiny app
@@ -928,6 +942,7 @@ subset(log, level == "websocket")
 \dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+
 app$log_message("Setting bins to smaller value")
 app$set_inputs(bins = 10)
 app$get_logs()
@@ -960,6 +975,7 @@ app <- AppDriver$new(
   # Enable reactlog in background R session
   options = list(shiny.reactlog = TRUE)
 )
+
 app$click("button")
 rlog <- app$stop()
 str(head(rlog, 2))
@@ -1279,6 +1295,7 @@ a \pkg{plotly} plot.}
 \preformatted{\dontrun{
 app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
+
 cat(app$get_text("#view"))
 app$set_inputs(dataset = "cars", obs = 6)
 app$click("update")
@@ -1485,6 +1502,7 @@ The requested \code{input}, \code{output}, or \code{export} value.
 \preformatted{\dontrun{
 app_path <- system.file("examples/04_mpg", package = "shiny")
 app <- AppDriver$new(app_path)
+
 # Retrieve a single value
 app$get_value(output = "caption")
 #> [1] "mpg ~ cyl"
@@ -1849,6 +1867,7 @@ because they often rely on minor details of dependencies.}
 \preformatted{\dontrun{
 app_path <- system.file("examples/04_mpg", package = "shiny")
 app <- AppDriver$new(app_path)
+
 # Save a snapshot of the `caption` output
 app$expect_html("#caption")
 }
@@ -1895,6 +1914,7 @@ If \code{FALSE}, the full DOM structure of the child elements will be returned (
 \preformatted{\dontrun{
 app_path <- system.file("examples/03_reactivity", package = "shiny")
 app <- AppDriver$new(app_path, check_names = FALSE)
+
 app$set_inputs(caption = "Custom value!")
 cat(app$get_html(".shiny-input-container")[1])
 #> <div class="form-group shiny-input-container">
@@ -2619,6 +2639,7 @@ app <- AppDriver$new(shiny_app, check_names = TRUE)
 #> ! Shiny inputs should have unique HTML id values.
 #> i The following HTML id values are not unique:
 #> • text
+app$stop()
 
 # Manually assert that all names are unique
 app <- AppDriver$new(shiny_app, check_names = FALSE)
@@ -2628,6 +2649,7 @@ app$expect_unique_names()
 #> i The following HTML id values are not unique:
 #>   • text
 #> Class:   rlang_warning/warning/condition
+app$stop()
 }
 }
 \if{html}{\out{</div>}}
@@ -2654,6 +2676,7 @@ current directory will be returned.
 \preformatted{\dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+
 identical(app$get_dir(), app_path)
 #> [1] TRUE
 }
@@ -2680,6 +2703,7 @@ URL where the Shiny app is being hosted
 \preformatted{\dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+
 browseURL(app$get_url())
 }
 }
@@ -2705,6 +2729,7 @@ named \code{width} and \code{height}.
 \preformatted{\dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+
 app$get_window_size()
 #> $width
 #> [1] 992
@@ -2786,6 +2811,7 @@ Get the \code{\link{ChromoteSession}} object from the \pkg{chromote} package.
 \preformatted{\dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+
 b <- app$get_chromote_session()
 b$Runtime$evaluate("1 + 1")
 #> $result
@@ -2825,6 +2851,7 @@ no value was supplied.
 app_path <- system.file("examples/01_hello", package = "shiny")
 
 app <- AppDriver$new(app_path)
+
 app$get_variant()
 #> NULL
 
@@ -2886,8 +2913,9 @@ for more details
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
-app <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-app$get_logs()
+app1 <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
+
+app1$get_logs()
 # \{shinytest2\} R  info  11:15:20.11 Start AppDriver initialization
 # \{shinytest2\} R  info  11:15:20.11 Starting Shiny app
 # \{shinytest2\} R  info  11:15:20.99 Creating new chromote session
@@ -2911,11 +2939,12 @@ app$get_logs()
 
 
 # To capture all websocket traffic, set `options = list(shiny.trace = TRUE)`
-app <- AppDriver$new(
+app2 <- AppDriver$new(
   system.file("examples/01_hello", package = "shiny"),
   options = list(shiny.trace = TRUE)
 )
-app$get_logs()
+
+app2$get_logs()
 ## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
 # \{shinytest2\} R  info      11:09:57.43 Start AppDriver initialization
 # \{shinytest2\} R  info      11:09:57.43 Starting Shiny app
@@ -3037,6 +3066,7 @@ Add a message to the \pkg{shinytest2} log.
 \preformatted{\dontrun{
 app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
+
 app$log_message("Setting bins to smaller value")
 app$set_inputs(bins = 10)
 app$get_logs()
@@ -3110,6 +3140,7 @@ app <- AppDriver$new(
   # Enable reactlog in background R session
   options = list(shiny.reactlog = TRUE)
 )
+
 app$click("button")
 rlog <- app$stop()
 str(head(rlog, 2))

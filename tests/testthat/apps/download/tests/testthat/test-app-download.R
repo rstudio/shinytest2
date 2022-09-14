@@ -20,9 +20,6 @@ test_that("download files work from link and button", {
 
   # Try custom name
   app$expect_download("download_button_txt", name = "my/custom/name.txt")
-
-  # Shut down this app to try an make CI happier about the next app
-  app$stop()
 })
 
 
