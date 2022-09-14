@@ -183,6 +183,7 @@
 <span></span>
 <span>  <span class="va">shiny_app</span> <span class="op">&lt;-</span> <span class="fu">hello_world_app</span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">shiny_app</span>, name <span class="op">=</span> <span class="st">"hello"</span><span class="op">)</span></span>
+<span></span>
 <span>  <span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <p>To help create tests, you can call <code><a href="../reference/record_test.html">record_test()</a></code> on your shiny application object directly. Unfortunately, the test file will not be able to be saved. Instead, the test commands can be copied into a test script manually.</p>

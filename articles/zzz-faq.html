@@ -163,7 +163,7 @@
 <h2 id="should-i-manually-shut-down-my-appdriver">Should I manually shut down my <code>AppDriver</code>?<a class="anchor" aria-label="anchor" href="#should-i-manually-shut-down-my-appdriver"></a>
 </h2>
 <p>For code completeness, you should call <code>app$stop()</code> at the end of your tests to shut down the background Shiny process and current Chromote Session.</p>
-<p>If your R session is starting to feel more sluggish, you may want to call <code>app$stop()</code> manually. Or if you are programmatically creating many instances of <code>AppDriver</code>, you may want to call <code>app$stop()</code> when the specific test is complete.</p>
+<p>If your R session is starting to feel more sluggish, you may want to call <code>app$stop()</code> manually. Or if you are programmatically creating many instances of <code>AppDriver</code>, you may want to call <code>app$stop()</code> when the specific test is complete via <code>withr::defer(app$stop())</code> right after initialization.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
