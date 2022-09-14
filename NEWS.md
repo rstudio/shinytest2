@@ -35,6 +35,8 @@
 
 * Fix documentation on on `AppDriver`'s `delay` parameter being in **seconds**, not *milli*seconds (#255)
 
+* Escape JS text supplied to `AppDriver$wait_for_js(script=)` (#258)
+
 * Added support for `AppDriver$stop(timeout=)`. The default timeout when sending `SIGINT`, `SIGTERM`, and `SIGKILL` signals to the `{shiny}` process is now 500ms. However, if `{covr}` is running, the default timeout is 20,000 ms to allow time for the report to generate. (#259)
 
 
