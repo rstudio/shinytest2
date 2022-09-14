@@ -1,0 +1,13 @@
+{
+  "input": {
+    "._bookmark_": 0,
+    "caps": true,
+    "txt": "abcd"
+  },
+  "output": {
+    "out": "ABCD"
+  },
+  "export": {
+
+  }
+}
