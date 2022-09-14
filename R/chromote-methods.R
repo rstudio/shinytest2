@@ -135,7 +135,16 @@ chromote_wait_for_condition <- function(
 
   if (length(ret$exceptionDetails) > 0) {
     # Must match JS txt above!
-    if (isTRUE(grepl("Timed out waiting for JavaScript script", ret$exceptionDetails$exception$description, fixed = TRUE))) {
+    exception <- ret$exceptionDetails$exception
+    if (
+      exception$type == "string" &&
+      length(exception$value) == 1 &&
+      isTRUE(grepl(
+        "Timed out waiting for JavaScript script",
+        exception$value,
+        fixed = TRUE
+      ))
+    ) {
       ## Example `ret`:
       # List of 2
       #  $ result          :List of 2
