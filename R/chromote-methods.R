@@ -95,14 +95,18 @@ chromote_wait_for_condition <- function(
   checkmate::assert_number(timeout, lower = 0)
   checkmate::assert_number(interval, lower = 0)
 
+  # Escape the user's JS text so that it can be run as is within `eval()`.
+  # While `eval(user_txt)` is a security risk, we already allow any user js code to be run via `AppDriver$run_js()`
+  # https://github.com/rstudio/shinytest2/issues/236
+  escaped_condition_js <- paste0(deparse(condition_js, width.cutoff = 500L), collapse = " ")
+
   # Must use manual calulation of timeout, as `chromote_session` does not have a
   # way to cancel the `setTimeout` that has already been submitted. (Which will never stop resubmitting)
   script <- paste0(
-# `callback` provided by chromote_execute_script_callback()
 "new Promise((resolve, reject) => {
   let start = Date.now();
   const condition = () => {
-    return eval(", condition_js, ");
+    return eval(", escaped_condition_js, ");
   };\n",
   # Use `chromote_wait_for_condition` as the error message matches the R method
   "chromote_wait_for_condition = () => {
@@ -110,8 +114,12 @@ chromote_wait_for_condition <- function(
     if (diffTime > 0) {
       return reject('Timed out waiting for JavaScript script to return `true`');
     }
-    if (condition()) {
-      return resolve();
+    try {
+      if (condition()) {
+        return resolve();
+      }
+    } catch (e) {
+      reject(e);
     }
     setTimeout(chromote_wait_for_condition, ", interval, ");
   }
@@ -127,7 +135,16 @@ chromote_wait_for_condition <- function(
 
   if (length(ret$exceptionDetails) > 0) {
     # Must match JS txt above!
-    if (isTRUE(grepl("Timed out waiting for JavaScript script", ret$exceptionDetails$exception$description, fixed = TRUE))) {
+    exception <- ret$exceptionDetails$exception
+    if (
+      exception$type == "string" &&
+      length(exception$value) == 1 &&
+      isTRUE(grepl(
+        "Timed out waiting for JavaScript script",
+        exception$value,
+        fixed = TRUE
+      ))
+    ) {
       ## Example `ret`:
       # List of 2
       #  $ result          :List of 2
@@ -143,7 +160,8 @@ chromote_wait_for_condition <- function(
       #   .. ..$ value: chr "Timeout waiting for JS condition to be `true`"
       rlang::abort(c(
         "Timed out waiting for JavaScript script to return `true`",
-        "*" = paste0("Script:\n", condition_js)
+        "i" = paste0("`timeout`: ", timeout),
+        "i" = paste0("`script`:\n", condition_js)
       ))
     }
 
@@ -169,8 +187,8 @@ chromote_wait_for_condition <- function(
     #   .. ..$ objectId   : chr "7228422962995412097.4.2"
     rlang::abort(c(
       "Error found while waiting for JavaScript script to return `true`.",
-      "*" = paste0("Script:\n", condition_js),
-      "*" = paste0("Exception:\n", obj_to_string(ret$exceptionDetails$exception))
+      "i" = paste0("`script`:\n", condition_js),
+      "i" = paste0("Error:\n", obj_to_string(exception))
     ))
   }
 
