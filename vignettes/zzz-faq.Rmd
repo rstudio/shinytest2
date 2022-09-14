@@ -101,3 +101,38 @@ Input values can face the same issues, and they can also be modified with `shiny
 For code completeness, you should call `app$stop()` at the end of your tests to shut down the background Shiny process and current Chromote Session.
 
 If your R session is starting to feel more sluggish, you may want to call `app$stop()` manually. Or if you are programmatically creating many instances of `AppDriver`, you may want to call `app$stop()` when the specific test is complete via `withr::defer(app$stop())` right after initialization.
+
+## How can I open the test to see if bookmarks are working?
+
+Testing Shiny bookmarks requires the browser to be loaded with specific query parameters. Luckily, you can use `{shinytest2}` to help you achieve this by running a local `AppDriver` and another `AppDriver` that uses a url with your specific query parameters! ([Original code](https://github.com/rstudio/shinytest2/issues/219#issuecomment-1149162328), [Working example](https://github.com/rstudio/shinytest2/blob/v0.2.0/tests/testthat/apps/download))
+
+File: `tests/testthat//test-bookmark.R`
+```{r}
+test_that("Bookmark works", {
+  # Start local app in the background in test mode
+  bg_app <- shinytest2::AppDriver$new("path/to/shiny/app")
+  # Capture the background app's URL and add appropriate query parameters
+  bookmark_url <- paste0(bg_app$get_url(), "?_inputs_&n=10")
+  # Open the bookmark URL in a new AppDriver object
+  app <- shinytest2::AppDriver$new(bookmark_url)
+
+  # Run your tests on the bookmarked `app`
+  app$expect_values()
+})
+```
+
+File: `tests/testthat/_snaps/bookmark/001.json`
+```json
+{
+  "input": {
+    "._bookmark_": 0,
+    "caps": true,
+    "txt": "abcd"
+  },
+  "output": {
+    "out": "ABCD"
+  },
+  "export": {
+  }
+}
+```
