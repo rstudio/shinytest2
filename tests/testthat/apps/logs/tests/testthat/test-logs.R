@@ -98,9 +98,6 @@ test_that("App captures known debug messages", {
   expect_failure(
     expect_match(log, "websocket", all = FALSE, fixed = TRUE)
   )
-
-  # Shut down this app to try an make CI happier about the next app
-  app$stop()
 })
 
 

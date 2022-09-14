@@ -19,9 +19,6 @@ test_that("images are captured via expect_values", {
 
   # # Uncomment to test always new screenshot via `$expect_values()`
   # app$expect_values()
-
-  # Shut down this app to try an make CI happier about the next app
-  app$stop()
 })
 
 
@@ -32,11 +29,9 @@ test_that("Values screenshot args are used", {
     name = "sa-values",
     expect_values_screenshot_args = list(selector = "#green")
   )
+
   # should take a picture of `#green`, not app
   app$expect_values()
-
-  # Shut down this app to try an make CI happier about the next app
-  app$stop()
 })
 
 test_that("User screenshot args are used instead of auto defined screenshot args", {
@@ -45,11 +40,9 @@ test_that("User screenshot args are used instead of auto defined screenshot args
     name = "sa-user",
     expect_values_screenshot_args = list(selector = "#red")
   )
+
   # should take a picture of `#green`, not `#red` or app
   app$expect_values(screenshot_args = list(selector = "#green"))
-
-  # Shut down this app to try an make CI happier about the next app
-  app$stop()
 })
 
 
@@ -61,6 +54,7 @@ test_that("No screenshot is taken", {
     name = "no-pic1",
     expect_values_screenshot_args = FALSE
   )
+
   # No picture
   app$expect_values()
 
@@ -71,9 +65,6 @@ test_that("No screenshot is taken", {
   )
   # No picture
   app$expect_values(screenshot_args = FALSE)
-
-  # Shut down this app to try an make CI happier about the next app
-  app$stop()
 })
 
 
@@ -87,9 +78,6 @@ test_that("screenshot can be expected", {
   # This directly calls `app$get_screenshot()`, no need for extra testing
   # Should take a picture of `#green`, not app
   app$expect_screenshot()
-
-  # Shut down this app to try an make CI happier about the next app
-  app$stop()
 })
 test_that("screenshot can be expected", {
   app <- AppDriver$new(

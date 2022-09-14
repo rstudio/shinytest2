@@ -10,13 +10,12 @@ test_that("testthat is a depends package", {
 
 
 test_that("AppDriver can print while working with `missing_arg()` values", {
-  expect_error(
+  app <- AppDriver$new(
+    shinyApp("", function(input, output) {}) # nolint: brace_linter
+  )
+    expect_error(
     utils::capture.output({
-      print(
-        AppDriver$new(
-          shinyApp("", function(input, output) {}) # nolint: brace_linter
-        )
-      )
+      print(app)
     }),
     NA
   )

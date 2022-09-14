@@ -17,9 +17,6 @@ test_that("download files work from link and button", {
 
   app$expect_download("download_link_binary", compare = testthat::compare_file_binary)
   app$expect_download("download_button_binary", compare = testthat::compare_file_binary)
-
-  # Shut down this app to try an make CI happier about the next app
-  app$stop()
 })
 
 

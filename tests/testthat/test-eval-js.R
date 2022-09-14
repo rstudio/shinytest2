@@ -21,7 +21,6 @@ shiny_app <- shinyApp(
 
 test_that("Duplicate input ids are found", {
   app <- AppDriver$new(shiny_app)
-  withr::defer(app$stop())
 
   app$wait_for_js("test_value === 42")
   app$wait_for_js("let a = test_value; let b = 42; a === b")
@@ -43,7 +42,6 @@ test_that("Duplicate input ids are found", {
 
 test_that("Errors are caught in $wait_for_js()", {
   app <- AppDriver$new(shiny_app)
-  withr::defer(app$stop())
 
   expect_error(
     app$wait_for_js("test_value === /"),
