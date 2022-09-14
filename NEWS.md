@@ -46,6 +46,8 @@
 
 * Added support for `AppDriver$stop(timeout=)`. The default timeout when sending `SIGINT`, `SIGTERM`, and `SIGKILL` signals to the `{shiny}` process is now 500ms. However, if `{covr}` is running, the default timeout is 20,000 ms to allow time for the report to generate. (#259)
 
+* Add example and FAQ entry on how to test bookmarking (#262)
+
 
 # shinytest2 0.1.1
 
