@@ -45,7 +45,8 @@ app_stop <- function(self, private, timeout = missing_arg()) {
           # https://github.com/r-lib/processx/blob/84301784382296217e7f5d11e1116dc4e24da809/R/process.R#L276-L283
           # https://github.com/r-lib/covr/issues/277#issuecomment-555502769
           # https://github.com/rstudio/shinytest2/issues/250
-          private$shiny_process$interrupt()
+          # private$shiny_process$interrupt()
+          private$shiny_process$signal(tools::SIGINT) # See if this closes Shiny apps on Windows
           private$shiny_process$wait(timeout)
 
           private$shiny_process$signal(tools::SIGTERM)
