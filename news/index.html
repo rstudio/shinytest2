@@ -82,6 +82,7 @@
 <li><p>Update {lintr} lints to v3 (<a href="https://github.com/rstudio/shinytest2/issues/240" class="external-link">#240</a>)</p></li>
 <li><p>Fixed GHA links for <code>rstudio/shinytest2/actions/test-app@v1</code> (<a href="https://github.com/rstudio/shinytest2/issues/249" class="external-link">#249</a>)</p></li>
 <li><p>Fix documentation on on <code>AppDriver</code>’s <code>delay</code> parameter being in <strong>seconds</strong>, not <em>milli</em>seconds (<a href="https://github.com/rstudio/shinytest2/issues/255" class="external-link">#255</a>)</p></li>
+<li><p>Escape JS text supplied to <code>AppDriver$wait_for_js(script=)</code> (<a href="https://github.com/rstudio/shinytest2/issues/258" class="external-link">#258</a>)</p></li>
 <li><p>Added support for <code>AppDriver$stop(timeout=)</code>. The default timeout when sending <code>SIGINT</code>, <code>SIGTERM</code>, and <code>SIGKILL</code> signals to the <a href="https://shiny.rstudio.com/" class="external-link">shiny</a> process is now 500ms. However, if <a href="https://covr.r-lib.org" class="external-link">covr</a> is running, the default timeout is 20,000 ms to allow time for the report to generate. (<a href="https://github.com/rstudio/shinytest2/issues/259" class="external-link">#259</a>)</p></li>
 </ul></div>
 </div>
