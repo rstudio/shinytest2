@@ -160,7 +160,8 @@ chromote_wait_for_condition <- function(
       #   .. ..$ value: chr "Timeout waiting for JS condition to be `true`"
       rlang::abort(c(
         "Timed out waiting for JavaScript script to return `true`",
-        "*" = paste0("Script:\n", condition_js)
+        "i" = paste0("`timeout`: ", timeout),
+        "i" = paste0("`script`:\n", condition_js)
       ))
     }
 
@@ -186,8 +187,8 @@ chromote_wait_for_condition <- function(
     #   .. ..$ objectId   : chr "7228422962995412097.4.2"
     rlang::abort(c(
       "Error found while waiting for JavaScript script to return `true`.",
-      "*" = paste0("Script:\n", condition_js),
-      "*" = paste0("Exception:\n", obj_to_string(ret$exceptionDetails$exception))
+      "i" = paste0("`script`:\n", condition_js),
+      "i" = paste0("Error:\n", obj_to_string(exception))
     ))
   }
 
