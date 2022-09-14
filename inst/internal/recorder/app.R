@@ -269,9 +269,6 @@ generate_test_code <- function(events, name, seed) {
       ), "\n",
       ")"
     ),
-    # Make sure app stops once it has been started
-    # https://github.com/rstudio/shinytest2/issues/241
-    "withr::defer(app$stop())",
     event_code,
     sep = "\n"
   )
