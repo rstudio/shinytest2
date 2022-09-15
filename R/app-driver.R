@@ -166,6 +166,8 @@ AppDriver <- R6Class( # nolint
     counter = "<Count>",
     shiny_url = "<Url>",
 
+    timeout_stepsize = 1000, # milliseconds
+
     logs = list(), # List of all log messages added via `$log_message()`
 
     clean_logs = TRUE, # Whether to clean logs when GC'd
@@ -213,8 +215,20 @@ AppDriver <- R6Class( # nolint
     #'   For apps that use R's random number generator, this can make their
     #'   behavior repeatable.
     #' @param load_timeout How long to wait for the app to load, in ms.
-    #'   This includes the time to start R. Defaults to 10s when running
-    #'   locally and 20s when running on CI.
+    #'   This includes the time to start R. Defaults to 15s when running
+    #'   locally and 30s when running on CI.
+    #' @param timeout_stepsize Number of milliseconds that a single timeout step represents.
+    #'
+    #'   If `timeout_stepsize` is missing (default),
+    #'   `getOption("shinytest2.timeout.stepsize")` will be used. If no option
+    #'   value value is found, a default value of `2 * 1000` will be used on
+    #'   CI otherwise `timeout_stepsize` will be set to `1000` milliseconds.
+    #'
+    #'   Having the different mechanisms to initialize the timeout_stepsize
+    #'   allows for users to:
+    #'   * set a default timeout directly (`AppDriver$new(timeout_stepsize = 500)`)
+    #'   * set a default timeout indirectly before creating a new `AppDriver` (`options(shinytest2.timeout.stepsize = 500)`)
+    #'   * or naturally allow for more execution time on CI (when `as.logical(Sys.getenv("CI"))` is `TRUE`).
     #' @param wait If `TRUE`, `$wait_for_idle(duration = 200, timeout = load_timeout)`
     #'   will be called once the app has connected a new session, blocking until the
     #'   Shiny app is idle for 200ms.
@@ -262,7 +276,8 @@ AppDriver <- R6Class( # nolint
       name = NULL,
       variant = missing_arg(),
       seed = NULL,
-      load_timeout = NULL,
+      load_timeout = self$get_timeout(15),
+      timeout_stepsize = missing_arg(),
       wait = TRUE,
       screenshot_args = missing_arg(),
       expect_values_screenshot_args = TRUE,
@@ -280,6 +295,7 @@ AppDriver <- R6Class( # nolint
         app_dir = app_dir,
         ...,
         load_timeout = load_timeout,
+        timeout_stepsize = timeout_stepsize,
         wait = wait,
         expect_values_screenshot_args = expect_values_screenshot_args,
         screenshot_args = screenshot_args,
@@ -376,7 +392,7 @@ AppDriver <- R6Class( # nolint
     set_inputs = function(
       ...,
       wait_ = TRUE,
-      timeout_ = 3 * 1000,
+      timeout_ = self$get_timeout(4),
       allow_no_input_binding_ = FALSE,
       priority_ = c("input", "event")
     ) {
@@ -404,7 +420,7 @@ AppDriver <- R6Class( # nolint
     #' # Upload file to input named: file1
     #' app$upload_file(file1 = tmpfile)
     #' }
-    upload_file = function(..., wait_ = TRUE, timeout_ = 3 * 1000) {
+    upload_file = function(..., wait_ = TRUE, timeout_ = self$get_timeout(4)) {
       app_upload_file(self, private, ..., wait_ = wait_, timeout_ = timeout_)
     },
 
@@ -830,7 +846,7 @@ AppDriver <- R6Class( # nolint
       script = missing_arg(),
       ...,
       file = missing_arg(),
-      timeout = 15 * 1000,
+      timeout = self$get_timeout(4),
       pre_snapshot = NULL,
       cran = FALSE
     ) {
@@ -906,7 +922,7 @@ AppDriver <- R6Class( # nolint
       script = missing_arg(),
       ...,
       file = missing_arg(),
-      timeout = 15 * 1000
+      timeout = self$get_timeout(4)
     ) {
       app_get_js(
         self, private,
@@ -950,7 +966,7 @@ AppDriver <- R6Class( # nolint
       script = missing_arg(),
       ...,
       file = missing_arg(),
-      timeout = 15 * 1000
+      timeout = self$get_timeout(4)
     ) {
       app_run_js(
         self, private,
@@ -1192,7 +1208,7 @@ AppDriver <- R6Class( # nolint
     #' # Will not be equal
     #' identical(pre_value, post_value)
     #' }
-    wait_for_idle = function(duration = 500, timeout = 30 * 1000) {
+    wait_for_idle = function(duration = 500, timeout = self$get_timeout(4)) {
       app_wait_for_idle(self, private, duration = duration, timeout = timeout)
     },
 
@@ -1260,7 +1276,7 @@ AppDriver <- R6Class( # nolint
       output = missing_arg(),
       export = missing_arg(),
       ignore = list(NULL, ""),
-      timeout = 15 * 1000,
+      timeout = self$get_timeout(4),
       interval = 400
     ) {
       app_wait_for_value(
@@ -1300,7 +1316,7 @@ AppDriver <- R6Class( # nolint
     #' app$run_js(file = "complicated_file.js")
     #' app$wait_for_js("complicated_condition();")
     #' }
-    wait_for_js = function(script, timeout = 30 * 1000, interval = 100) {
+    wait_for_js = function(script, timeout = self$get_timeout(4), interval = 100) {
       app_wait_for_js(self, private, script = script, timeout = timeout, interval = interval)
     },
 
@@ -1481,6 +1497,51 @@ AppDriver <- R6Class( # nolint
     #' }
     get_variant = function() {
       app_get_variant(self, private)
+    },
+
+    #' @description
+    #' Get timeout value
+    #'
+    #' Retrieves the AppDriver's relative timeout value. The number of steps is multiplied by the internal `stepsize` value set in `$set_timeout(stepsize=)`.
+    #' @param steps A numeric multiplier to apply to the timeout value.
+    #' @return The number of milliseconds equal to `steps * stepsize` where `stepsize` is set from `$set_timeout(stepsize=)`
+    #' @examples
+    #' \dontrun{
+    #' app_path <- system.file("examples/01_hello", package = "shiny")
+    #'
+    #' app <- AppDriver$new(app_path)
+    #'
+    #' app$get_timeout()
+    #' #> [1] 1000
+    #' app$get_timeout(5)
+    #' #> [1] 5000
+    #' }
+    get_timeout = function(steps = 1) {
+      app_get_timeout(self, private, steps = steps)
+    },
+    #' @description
+    #' Set timeout value stepsize
+    #'
+    #' @param stepsize The number of milliseconds that one timeout _step_ should represent.
+    #' @examples
+    #' \dontrun{
+    #' app_path <- system.file("examples/01_hello", package = "shiny")
+    #'
+    #' app <- AppDriver$new(app_path, stepsize = 500)
+    #'
+    #' app$get_timeout()
+    #' #> [1] 500
+    #' app$get_timeout(5)
+    #' #> [1] 2500
+    #'
+    #' app$set_timeout(1000)
+    #' app$get_timeout()
+    #' #> [1] 1000
+    #' app$get_timeout(5)
+    #' #> [1] 5000
+    #' }
+    set_timeout = function(stepsize) {
+      app_set_timeout(self, private, stepsize = stepsize)
     },
 
     #' @description

@@ -3,6 +3,7 @@ app_initialize_ <- function(
   app_dir = testthat::test_path("../../"),
   ...,
   load_timeout = NULL,
+  timeout_stepsize = 1000,
   wait = TRUE,
   expect_values_screenshot_args = TRUE,
   screenshot_args = missing_arg(),
@@ -33,6 +34,8 @@ app_initialize_ <- function(
 
   private$counter <- Count$new()
   private$shiny_url <- Url$new()
+
+  app_init_timeout(self, private, stepsize = timeout_stepsize)
 
   private$save_dir <- st2_temp_file()
   # Clear out any prior files

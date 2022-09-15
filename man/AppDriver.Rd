@@ -804,6 +804,42 @@ app$get_variant()
 }
 
 ## ------------------------------------------------
+## Method `AppDriver$get_timeout`
+## ------------------------------------------------
+
+\dontrun{
+app_path <- system.file("examples/01_hello", package = "shiny")
+
+app <- AppDriver$new(app_path)
+
+app$get_timeout()
+#> [1] 1000
+app$get_timeout(5)
+#> [1] 5000
+}
+
+## ------------------------------------------------
+## Method `AppDriver$set_timeout`
+## ------------------------------------------------
+
+\dontrun{
+app_path <- system.file("examples/01_hello", package = "shiny")
+
+app <- AppDriver$new(app_path, stepsize = 500)
+
+app$get_timeout()
+#> [1] 500
+app$get_timeout(5)
+#> [1] 2500
+
+app$set_timeout(1000)
+app$get_timeout()
+#> [1] 1000
+app$get_timeout(5)
+#> [1] 5000
+}
+
+## ------------------------------------------------
 ## Method `AppDriver$get_logs`
 ## ------------------------------------------------
 
@@ -1035,6 +1071,8 @@ str(head(rlog, 2))
 \item \href{#method-AppDriver-set_window_size}{\code{AppDriver$set_window_size()}}
 \item \href{#method-AppDriver-get_chromote_session}{\code{AppDriver$get_chromote_session()}}
 \item \href{#method-AppDriver-get_variant}{\code{AppDriver$get_variant()}}
+\item \href{#method-AppDriver-get_timeout}{\code{AppDriver$get_timeout()}}
+\item \href{#method-AppDriver-set_timeout}{\code{AppDriver$set_timeout()}}
 \item \href{#method-AppDriver-get_logs}{\code{AppDriver$get_logs()}}
 \item \href{#method-AppDriver-log_message}{\code{AppDriver$log_message()}}
 \item \href{#method-AppDriver-stop}{\code{AppDriver$stop()}}
@@ -1052,7 +1090,8 @@ Initialize an \code{AppDriver} object
   name = NULL,
   variant = missing_arg(),
   seed = NULL,
-  load_timeout = NULL,
+  load_timeout = self$get_timeout(15),
+  timeout_stepsize = missing_arg(),
   wait = TRUE,
   screenshot_args = missing_arg(),
   expect_values_screenshot_args = TRUE,
@@ -1108,8 +1147,23 @@ For apps that use R's random number generator, this can make their
 behavior repeatable.}
 
 \item{\code{load_timeout}}{How long to wait for the app to load, in ms.
-This includes the time to start R. Defaults to 10s when running
-locally and 20s when running on CI.}
+This includes the time to start R. Defaults to 15s when running
+locally and 30s when running on CI.}
+
+\item{\code{timeout_stepsize}}{Number of milliseconds that a single timeout step represents.
+
+If \code{timeout_stepsize} is missing (default),
+\code{getOption("shinytest2.timeout.stepsize")} will be used. If no option
+value value is found, a default value of \code{2 * 1000} will be used on
+CI otherwise \code{timeout_stepsize} will be set to \code{1000} milliseconds.
+
+Having the different mechanisms to initialize the timeout_stepsize
+allows for users to:
+\itemize{
+\item set a default timeout directly (\code{AppDriver$new(timeout_stepsize = 500)})
+\item set a default timeout indirectly before creating a new \code{AppDriver} (\code{options(shinytest2.timeout.stepsize = 500)})
+\item or naturally allow for more execution time on CI (when \code{as.logical(Sys.getenv("CI"))} is \code{TRUE}).
+}}
 
 \item{\code{wait}}{If \code{TRUE}, \verb{$wait_for_idle(duration = 200, timeout = load_timeout)}
 will be called once the app has connected a new session, blocking until the
@@ -1264,7 +1318,7 @@ not return until an output value has been updated.
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_inputs(
   ...,
   wait_ = TRUE,
-  timeout_ = 3 * 1000,
+  timeout_ = self$get_timeout(4),
   allow_no_input_binding_ = FALSE,
   priority_ = c("input", "event")
 )}\if{html}{\out{</div>}}
@@ -1315,7 +1369,7 @@ Upload a file
 
 Uploads a file to the specified file input.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$upload_file(..., wait_ = TRUE, timeout_ = 3 * 1000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$upload_file(..., wait_ = TRUE, timeout_ = self$get_timeout(4))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1944,7 +1998,7 @@ Once the \code{script} has executed, the JSON result will be saved to a snapshot
   script = missing_arg(),
   ...,
   file = missing_arg(),
-  timeout = 15 * 1000,
+  timeout = self$get_timeout(4),
   pre_snapshot = NULL,
   cran = FALSE
 )}\if{html}{\out{</div>}}
@@ -2014,7 +2068,7 @@ avoid having to double all \verb{\{} and \verb{\}}.
   script = missing_arg(),
   ...,
   file = missing_arg(),
-  timeout = 15 * 1000
+  timeout = self$get_timeout(4)
 )}\if{html}{\out{</div>}}
 }
 
@@ -2100,7 +2154,7 @@ The final result of the code will be ignored and not returned to the R session.
   script = missing_arg(),
   ...,
   file = missing_arg(),
-  timeout = 15 * 1000
+  timeout = self$get_timeout(4)
 )}\if{html}{\out{</div>}}
 }
 
@@ -2403,7 +2457,7 @@ the application
 resizing the window.)
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_idle(duration = 500, timeout = 30 * 1000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_idle(duration = 500, timeout = self$get_timeout(4))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -2477,7 +2531,7 @@ has finished processing a complex reactive situation.
   output = missing_arg(),
   export = missing_arg(),
   ignore = list(NULL, ""),
-  timeout = 15 * 1000,
+  timeout = self$get_timeout(4),
   interval = 400
 )}\if{html}{\out{</div>}}
 }
@@ -2560,7 +2614,7 @@ Wait for a JavaScript expression to be true
 Waits until a JavaScript \code{expr}ession evaluates to \code{true} or the
 \code{timeout} is exceeded.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_js(script, timeout = 30 * 1000, interval = 100)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_js(script, timeout = self$get_timeout(4), interval = 100)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -2858,6 +2912,85 @@ app$get_variant()
 app <- AppDriver$new(app_path, variant = platform_variant())
 app$get_variant()
 #> [1] "mac-4.1"
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AppDriver-get_timeout"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-get_timeout}{}}}
+\subsection{Method \code{get_timeout()}}{
+Get timeout value
+
+Retrieves the AppDriver's relative timeout value. The number of steps is multiplied by the internal \code{stepsize} value set in \verb{$set_timeout(stepsize=)}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_timeout(steps = 1)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{steps}}{A numeric multiplier to apply to the timeout value.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The number of milliseconds equal to \code{steps * stepsize} where \code{stepsize} is set from \verb{$set_timeout(stepsize=)}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+app_path <- system.file("examples/01_hello", package = "shiny")
+
+app <- AppDriver$new(app_path)
+
+app$get_timeout()
+#> [1] 1000
+app$get_timeout(5)
+#> [1] 5000
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AppDriver-set_timeout"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-set_timeout}{}}}
+\subsection{Method \code{set_timeout()}}{
+Set timeout value stepsize
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_timeout(stepsize)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{stepsize}}{The number of milliseconds that one timeout \emph{step} should represent.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+app_path <- system.file("examples/01_hello", package = "shiny")
+
+app <- AppDriver$new(app_path, stepsize = 500)
+
+app$get_timeout()
+#> [1] 500
+app$get_timeout(5)
+#> [1] 2500
+
+app$set_timeout(1000)
+app$get_timeout()
+#> [1] 1000
+app$get_timeout(5)
+#> [1] 5000
 }
 }
 \if{html}{\out{</div>}}
