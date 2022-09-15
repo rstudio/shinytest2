@@ -8,11 +8,27 @@
 * If a `content-disposition` header is provided and `AppDriver$expect_download(name = NULL)` (default), the snapshot file will try to be saved using the `content-disposition` header value. When paired with `compare = NULL` (default), `{testthat}` will choose the proper `compare` method between `compare_file_text()` and `compare_file_binary()`. See `?testthat::expect_snapshot_file` for more details. (#261)
 * `AppDriver$expect_download()` will now download snapshot files using a sanitized file name, e.g. `AppDriver$expect_download(name = "my/custom/name.txt")` will be stored in the file `tests/testthat/_snaps/003-my_custom_name.txt`. (#261)
 
+### Timeout values
+
+The default timeout values for many `AppDriver` methods have been altered. All timeout values will be doubled on CI if no `stepsize` option or value has been directly set. (#263)
+
+* `AppDriver$new(load_timeout=)` increased from 10 seconds to 15 seconds
+* `AppDriver$set_inputs(timeout=)` increased from 3 seconds to 4 seconds
+* `AppDriver$upload_file(timeout=)` increased from 3 seconds to 4 seconds
+* `AppDriver$expect_js(timeout=)` decreased from 15 seconds to 4 seconds
+* `AppDriver$get_js(timeout=)` decreased from 15 seconds to 4 seconds
+* `AppDriver$run_js(timeout=)` decreased from 15 seconds to 4 seconds
+* `AppDriver$wait_for_idle(timeout=)` decreased from 30 seconds to 4 seconds
+* `AppDriver$wait_for_value(timeout=)` decreased from 15 seconds to 4 seconds
+* `AppDriver$wait_for_js(timeout=)` decreased from 30 seconds to 4 seconds
+
 ## New Features
 
 * `compare_screenshot_threshold()` is a new method to compare screenshots and allow small differences between two screenshots. This method checks every subset matrix of the pixel differences between the two images. If any total difference is larger than the `threshold` value, the two images are considered to be different. The subset matrix size can be increased by setting `kernel_size`. (#231)
 
 * Support for supply your own compare method to `AppDriver$expect_screenshot(compare=)` has been added. By default, `AppDriver$expect_screenshot(compare=)` is set to `compare_screenshot_threshold(threshold = NULL)` which in turn calls `testthat::compare_file_binary()`. So no default screenshot expectation behavior has changed. (#231)
+
+* Added relative timeout values throughout `AppDriver` to allow users to set the timeout value from a single location. The timeout stepsize can be set during `AppDriver` initialization via `AppDriver$new(timeout_stepsize=)`. If `timeout_stepsize` is missing, the default step size is 2000 milliseconds on CI and otherwise it is 1000 milliseconds. This default value can be overwritten using the option `shinytest2.timeout.stepsize`. The `stepsize` can be set after initialization using `AppDriver$set_timeout(stepsize=)`. The relative timeout value can be retrieved using `AppDriver$get_timeout(steps=)`. This method allows for users to set a relative amount of time for the timeout value given the app's internal `stepsize` value (`timeout = steps * private$stepsize`). (#263)
 
 * `test_app()` now inherits the existing test reporter when testing multiple apps within a package test file. This allows for a seamless, single reporter output instead of nested reporters being displayed. (#192)
 
