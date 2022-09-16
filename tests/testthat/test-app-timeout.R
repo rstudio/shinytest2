@@ -35,22 +35,15 @@ expect_timeouts <- function(
         shinytest2.timeout = timeout_option
       ),
       {
-        load_timeout_value <-
-          timeout_value(
-            load_timeout,
-            option_key = "shinytest2.load_timeout",
-            env_key = "SHINYTEST2_LOAD_TIMEOUT",
-            default_value = 15 * 1000,
-            timeout_name = "load_timeout"
-          )
-        expect_equal(load_timeout_value, expected_load_timeout)
         # Make sure values can be set
         expect_silent(
           AppDriver$new(app_url, load_timeout = load_timeout, timeout = timeout)
         )
-        # # Test values without doing R6 hackery
-        # private_env <- new.env(parent = emptyenv())
-        # app_init_timeouts(app, private_env, load_timeout = load_timeout, timeout = timeout)
+        # Test values without R6 hackery
+        private_env <- new.env(parent = emptyenv())
+        app_init_timeouts(app, private_env, load_timeout = load_timeout, timeout = timeout)
+        expect_equal(private_env$load_timeout, expected_load_timeout)
+        expect_equal(private_env$timeout, expected_timeout)
       }
     )
   )
