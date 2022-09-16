@@ -1296,7 +1296,7 @@ Input with name \code{component_name_1} will be assigned value \code{value_1}.}
 \item{\code{wait_}}{Wait until all reactive updates have completed?}
 
 \item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).
-Defaults to the resolved value of \code{AppDriver$new(timeout=)}}
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 
 \item{\code{allow_no_input_binding_}}{When setting the value of an input, allow
 it to set the value of an input even if that input does not have an
@@ -1345,7 +1345,7 @@ Uploads a file to the specified file input.
 \item{\code{wait_}}{Wait until all reactive updates have completed?}
 
 \item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).
-Defaults to the resolved value of \code{AppDriver$new(timeout=)}}
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1979,7 +1979,7 @@ Once the \code{script} has executed, the JSON result will be saved to a snapshot
 \item{\code{file}}{A file containing JavaScript code to be read and used as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
 
 \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
-Defaults to the resolved value of \code{AppDriver$new(timeout=)}}
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 
 \item{\code{pre_snapshot}}{A function to be called on the result of the script before taking the snapshot.
 \verb{$expect_html()} and \verb{$expect_text()} both use \code{\link[=unlist]{unlist()}}.}
@@ -2051,7 +2051,7 @@ the value.}
 as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
 
 \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
-Defaults to the resolved value of \code{AppDriver$new(timeout=)}}
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2136,7 +2136,7 @@ The final result of the code will be ignored and not returned to the R session.
 as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
 
 \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
-Defaults to the resolved value of \code{AppDriver$new(timeout=)}}
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2435,10 +2435,10 @@ resizing the window.)
 R session.}
 
 \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
-Defaults to the resolved value of \code{AppDriver$new(timeout=)}}
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 
 \item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).
-Defaults to the resolved value of \code{AppDriver$new(timeout=)}}
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2520,12 +2520,12 @@ Only one of these parameters may be used.}
 updates.}
 
 \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
-Defaults to the resolved value of \code{AppDriver$new(timeout=)}}
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 
 \item{\code{interval}}{How often to check for the condition, in ms.}
 
 \item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).
-Defaults to the resolved value of \code{AppDriver$new(timeout=)}}
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2601,7 +2601,7 @@ eventually return a \href{https://developer.mozilla.org/en-US/docs/Glossary/Trut
 timeout error will be thrown.}
 
 \item{\code{timeout}}{How long the script has to return a \code{true}thy value, in ms.
-Defaults to the resolved value of \code{AppDriver$new(timeout=)}}
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 
 \item{\code{interval}}{How often to check for the condition, in ms.}
 }
