@@ -10,19 +10,34 @@
 
 ### Timeout values
 
-The **default** timeout values for many `AppDriver` methods have been altered. All timeout values will be doubled on CI if no initial `AppDriver$new(timeout_stepsize=)` or `options(shinytest2.timeout.stepsize=)` have been set. Non-CI default timeout changes are shown in the table below. (#263)
+The **default** timeout values for many `AppDriver` methods have been altered and are shown in the table below. (#263)
 
 Method | Previous value (ms) | New value (ms)
 ---|---:|---:
 `AppDriver$new(load_timeout=)` | `10 * 1000` | `15 * 1000`
-`AppDriver$set_inputs(timeout=)` | `3 * 1000` | `4 * 1000`
-`AppDriver$upload_file(timeout=)` | `3 * 1000` | `4 * 1000`
+`AppDriver$set_inputs(timeout_=)` | `3 * 1000` | `4 * 1000`
+`AppDriver$upload_file(timeout_=)` | `3 * 1000` | `4 * 1000`
 `AppDriver$expect_js(timeout=)` | `15 * 1000` | `4 * 1000`
 `AppDriver$get_js(timeout=)` | `15 * 1000` | `4 * 1000`
 `AppDriver$run_js(timeout=)` | `15 * 1000` | `4 * 1000`
 `AppDriver$wait_for_idle(timeout=)` | `30 * 1000` | `4 * 1000`
 `AppDriver$wait_for_value(timeout=)` | `15 * 1000` | `4 * 1000`
 `AppDriver$wait_for_js(timeout=)` | `30 * 1000` | `4 * 1000`
+
+`AppDriver$new(load_timeout=)` is initialized using the first numeric value found:
+1. Supplied directly: `AppDriver$new(load_timeout=)`
+2. Locally defined option: `options(shinytest2.load_timeout=)`
+3. System environment variable: `SHINYTEST2_LOAD_TIMEOUT`
+4. 15 seconds; `15 * 1000`
+
+`AppDriver$new(timeout=)` is initialized using the first numeric value found:
+1. Supplied directly: `AppDriver$new(timeout=)`
+2. Locally defined option: `options(shinytest2.timeout=)`
+3. System environment variable: `SHINYTEST2_TIMEOUT`
+4. 4 seconds; `4 * 1000`
+
+All remaining `AppDriver` methods (except `AppDriver$stop(timeout=)`) will default their `timeout` and `timeout_` parameters to the initialized `AppDriver$new(timeout=)` value. For example, if `app <- AppDriver$new(timeout = 500)` then `app$get_js(timeout=)` will default to `500` milliseconds.
+
 
 ## New Features
 

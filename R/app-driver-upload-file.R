@@ -5,6 +5,7 @@ app_upload_file <- function(
   timeout_ = 3000
 ) {
   ckm8_assert_app_driver(self, private)
+  timeout_ <- app_get_timeout(self, private, timeout = timeout_)
 
   inputs <- list2(...)
   if (length(inputs) != 1 || !rlang::is_named(inputs)) {
