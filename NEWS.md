@@ -2,6 +2,10 @@
 
 ## Breaking changes
 
+### R log levels
+
+* `AppDriver$get_logs()` has changed the `level` values when `location` equals `"shiny"`. The levels of `"error"` and `"info"` have been renamed to `"stderr"` and `"stdout"`. (#265)
+
 ### `AppDriver$expect_download()`
 
 * All downloaded snapshots will contain a counter prefix (e.g. `003-` in `003-my_custom_name.txt`) to avoid having two files point to the same snapshot file location. Sharing the same snapshot file is dangerous as the last file written is stored as truth, overwriting any knowledge of the original file. (#261)
