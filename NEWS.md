@@ -2,7 +2,7 @@
 
 ## Breaking changes
 
-### R log levels
+### Shiny log levels
 
 * `AppDriver$get_logs()` has changed the `level` values when `location` equals `"shiny"`. The levels of `"error"` and `"info"` have been renamed to `"stderr"` and `"stdout"`. (#265)
 
