@@ -1,20 +1,11 @@
 
-app_stop <- function(self, private, timeout = missing_arg()) {
+
+
+app_stop <- function(self, private, signal_timeout = missing_arg()) {
   "!DEBUG AppDriver$stop"
   ckm8_assert_app_driver(self, private)
 
-  timeout <- rlang::maybe_missing(timeout, {
-    # Increased the timeout for packages like covr to upload their results:
-    #   https://github.com/rstudio/shinytest2/issues/250
-    # Taken from `covr::in_covr()`
-    in_covr <- identical(Sys.getenv("R_COVR"), "true")
-    if (in_covr) {
-      20 * 1000
-    } else {
-      500
-    }
-  })
-  ckm8_assert_single_number(timeout, lower = 0, finite = TRUE)
+  signal_timeout <- resolve_signal_timeout(signal_timeout)
 
   if (private$state == "stopped") {
     return(invisible(private$shiny_proc_value))
@@ -46,10 +37,10 @@ app_stop <- function(self, private, timeout = missing_arg()) {
           # https://github.com/r-lib/covr/issues/277#issuecomment-555502769
           # https://github.com/rstudio/shinytest2/issues/250
           private$shiny_process$interrupt()
-          private$shiny_process$wait(timeout)
+          private$shiny_process$wait(signal_timeout)
 
           private$shiny_process$signal(tools::SIGTERM)
-          private$shiny_process$wait(timeout)
+          private$shiny_process$wait(signal_timeout)
 
           private$shiny_process$kill()
         },

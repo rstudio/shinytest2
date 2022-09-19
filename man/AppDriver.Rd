@@ -1052,7 +1052,8 @@ Initialize an \code{AppDriver} object
   name = NULL,
   variant = missing_arg(),
   seed = NULL,
-  load_timeout = NULL,
+  load_timeout = missing_arg(),
+  timeout = missing_arg(),
   wait = TRUE,
   screenshot_args = missing_arg(),
   expect_values_screenshot_args = TRUE,
@@ -1108,8 +1109,24 @@ For apps that use R's random number generator, this can make their
 behavior repeatable.}
 
 \item{\code{load_timeout}}{How long to wait for the app to load, in ms.
-This includes the time to start R. Defaults to 10s when running
-locally and 20s when running on CI.}
+This includes the time to start R. Defaults to 15s.
+
+If \code{load_timeout} is missing, the first numeric value found will be used:
+\itemize{
+\item R option \code{options(shinytest2.load_timeout=)}
+\item System environment variable \code{SHINYTEST2_LOAD_TIMEOUT}
+\item \code{15 * 1000} (15 seconds)
+}}
+
+\item{\code{timeout}}{Default number of milliseconds for any \code{timeout} or
+\code{timeout_} parameter in the \code{AppDriver} class. Defaults to 4s.
+
+If \code{timeout} is missing, the first numeric value found will be used:
+\itemize{
+\item R option \code{options(shinytest2.timeout=)}
+\item System environment variable \code{SHINYTEST2_TIMEOUT}
+\item \code{4 * 1000} (4 seconds)
+}}
 
 \item{\code{wait}}{If \code{TRUE}, \verb{$wait_for_idle(duration = 200, timeout = load_timeout)}
 will be called once the app has connected a new session, blocking until the
@@ -1264,7 +1281,7 @@ not return until an output value has been updated.
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_inputs(
   ...,
   wait_ = TRUE,
-  timeout_ = 3 * 1000,
+  timeout_ = missing_arg(),
   allow_no_input_binding_ = FALSE,
   priority_ = c("input", "event")
 )}\if{html}{\out{</div>}}
@@ -1278,7 +1295,8 @@ Input with name \code{component_name_1} will be assigned value \code{value_1}.}
 
 \item{\code{wait_}}{Wait until all reactive updates have completed?}
 
-\item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).}
+\item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 
 \item{\code{allow_no_input_binding_}}{When setting the value of an input, allow
 it to set the value of an input even if that input does not have an
@@ -1315,7 +1333,7 @@ Upload a file
 
 Uploads a file to the specified file input.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$upload_file(..., wait_ = TRUE, timeout_ = 3 * 1000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$upload_file(..., wait_ = TRUE, timeout_ = missing_arg())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1326,7 +1344,8 @@ Uploads a file to the specified file input.
 
 \item{\code{wait_}}{Wait until all reactive updates have completed?}
 
-\item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).}
+\item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1944,7 +1963,7 @@ Once the \code{script} has executed, the JSON result will be saved to a snapshot
   script = missing_arg(),
   ...,
   file = missing_arg(),
-  timeout = 15 * 1000,
+  timeout = missing_arg(),
   pre_snapshot = NULL,
   cran = FALSE
 )}\if{html}{\out{</div>}}
@@ -1959,7 +1978,8 @@ Once the \code{script} has executed, the JSON result will be saved to a snapshot
 
 \item{\code{file}}{A file containing JavaScript code to be read and used as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
 
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
+\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 
 \item{\code{pre_snapshot}}{A function to be called on the result of the script before taking the snapshot.
 \verb{$expect_html()} and \verb{$expect_text()} both use \code{\link[=unlist]{unlist()}}.}
@@ -2014,7 +2034,7 @@ avoid having to double all \verb{\{} and \verb{\}}.
   script = missing_arg(),
   ...,
   file = missing_arg(),
-  timeout = 15 * 1000
+  timeout = missing_arg()
 )}\if{html}{\out{</div>}}
 }
 
@@ -2030,7 +2050,8 @@ the value.}
 \item{\code{file}}{A (local) file containing JavaScript code to be read and used
 as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
 
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
+\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2100,7 +2121,7 @@ The final result of the code will be ignored and not returned to the R session.
   script = missing_arg(),
   ...,
   file = missing_arg(),
-  timeout = 15 * 1000
+  timeout = missing_arg()
 )}\if{html}{\out{</div>}}
 }
 
@@ -2114,7 +2135,8 @@ The final result of the code will be ignored and not returned to the R session.
 \item{\code{file}}{A (local) file containing JavaScript code to be read and used
 as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
 
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).}
+\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2403,7 +2425,7 @@ the application
 resizing the window.)
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_idle(duration = 500, timeout = 30 * 1000)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_idle(duration = 500, timeout = missing_arg())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -2412,7 +2434,8 @@ resizing the window.)
 \item{\code{duration}}{How long Shiny must be idle (in ms) before unblocking the
 R session.}
 
-\item{\code{timeout}}{How often to check for the condition, in ms.}
+\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2477,7 +2500,7 @@ has finished processing a complex reactive situation.
   output = missing_arg(),
   export = missing_arg(),
   ignore = list(NULL, ""),
-  timeout = 15 * 1000,
+  timeout = missing_arg(),
   interval = 400
 )}\if{html}{\out{</div>}}
 }
@@ -2493,9 +2516,13 @@ Only one of these parameters may be used.}
 \item{\code{ignore}}{List of possible values to ignore when checking for
 updates.}
 
-\item{\code{timeout}}{How long to wait (in ms) before throwing an error.}
+\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 
 \item{\code{interval}}{How often to check for the condition, in ms.}
+
+\item{\code{timeout_}}{Amount of time to wait for a new \code{output} value before giving up (milliseconds).
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2560,7 +2587,7 @@ Wait for a JavaScript expression to be true
 Waits until a JavaScript \code{expr}ession evaluates to \code{true} or the
 \code{timeout} is exceeded.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_js(script, timeout = 30 * 1000, interval = 100)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_js(script, timeout = missing_arg(), interval = 100)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -2570,9 +2597,10 @@ Waits until a JavaScript \code{expr}ession evaluates to \code{true} or the
 eventually return a \href{https://developer.mozilla.org/en-US/docs/Glossary/Truthy}{\code{true}thy value} or a
 timeout error will be thrown.}
 
-\item{\code{timeout}}{How long the script has to return a \code{true}thy value, in ms.}
+\item{\code{timeout}}{How long the script has to return a \code{true}thy value (milliseconds).
+Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 
-\item{\code{interval}}{How often to check for the condition, in ms.}
+\item{\code{interval}}{How often to check for the condition (milliseconds).}
 }
 \if{html}{\out{</div>}}
 }
@@ -3098,15 +3126,16 @@ Typically, this can be paired with a button that when clicked will call
 \code{shiny::stopApp(info)} to return \code{info} from the test app back to the
 main R session.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$stop(timeout = missing_arg())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$stop(signal_timeout = missing_arg())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{timeout}}{Milliseconds to wait between sending a SIGINT, SIGTERM,
-and SIGKILL to the Shiny process. Defaults to 500ms. However, if
-\pkg{covr} is currently executing, then the \code{timeout} is set to
+\item{\code{signal_timeout}}{Milliseconds to wait between sending a SIGINT,
+SIGTERM, and SIGKILL to the Shiny process. Defaults to 500ms and does
+not utilize the resolved valur from \code{AppDriver$new(timeout=)}. However,
+if \pkg{covr} is currently executing, then the \code{timeout} is set to
 20,000ms to allow for the coverage report to be generated.}
 }
 \if{html}{\out{</div>}}
