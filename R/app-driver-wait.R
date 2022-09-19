@@ -3,11 +3,12 @@
 app_wait_for_js <- function(
   self, private,
   script,
-  timeout = 30 * 1000,
+  timeout = missing_arg(),
   interval = 100
 ) {
   "!DEBUG app_wait_for_js()"
   ckm8_assert_app_driver(self, private)
+  timeout <- app_get_timeout(self, private, timeout = timeout)
 
   # Will throw error if timeout is exceeded
   chromote_wait_for_condition(
@@ -19,11 +20,11 @@ app_wait_for_js <- function(
   invisible(self)
 }
 
-app_wait_for_idle <- function(self, private, duration = 500, timeout = 30 * 1000) {
+app_wait_for_idle <- function(self, private, duration = 500, timeout = missing_arg()) {
   ckm8_assert_app_driver(self, private)
+  timeout <- app_get_timeout(self, private, timeout = timeout)
 
   checkmate::assert_number(duration, lower = 0, finite = TRUE)
-  checkmate::assert_number(timeout, lower = 0, finite = TRUE)
 
   self$log_message(paste0("Waiting for Shiny to become idle for ", duration, "ms within ", timeout, "ms"))
 
@@ -98,14 +99,14 @@ app_wait_for_value <- function(
   export = missing_arg(),
   ...,
   ignore = list(NULL, ""),
-  timeout = 10 * 1000,
+  timeout = 4 * 1000,
   interval = 400
 ) {
   "!DEBUG app_wait_for_value()"
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
+  timeout <- app_get_timeout(self, private, timeout = timeout)
 
-  checkmate::assert_number(timeout, lower = 0, finite = FALSE, na.ok = FALSE)
   checkmate::assert_number(interval, lower = 0, finite = FALSE, na.ok = FALSE)
 
   timeoute_sec <- timeout / 1000

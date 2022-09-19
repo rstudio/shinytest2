@@ -2,7 +2,8 @@ app_initialize_ <- function(
   self, private,
   app_dir = testthat::test_path("../../"),
   ...,
-  load_timeout = NULL,
+  load_timeout = missing_arg(),
+  timeout = missing_arg(),
   wait = TRUE,
   expect_values_screenshot_args = TRUE,
   screenshot_args = missing_arg(),
@@ -34,6 +35,8 @@ app_initialize_ <- function(
   private$counter <- Count$new()
   private$shiny_url <- Url$new()
 
+  app_init_timeouts(self, private, load_timeout = load_timeout, timeout = timeout)
+
   private$save_dir <- st2_temp_file()
   # Clear out any prior files
   if (fs::dir_exists(private$save_dir)) {
@@ -44,9 +47,6 @@ app_initialize_ <- function(
   # NULL values are ok! (default)
   private$name <- name
   private$clean_logs <- isTRUE(clean_logs)
-  if (is.null(load_timeout)) {
-    load_timeout <- if (on_ci()) 20 * 1000 else 10 * 1000
-  }
 
   self$log_message("Start AppDriver initialization")
 
@@ -67,7 +67,7 @@ app_initialize_ <- function(
     app_start_shiny(
       self, private,
       seed = seed,
-      load_timeout = load_timeout,
+      load_timeout = private$load_timeout,
       shiny_args = shiny_args,
       render_args = render_args,
       options = options
@@ -119,17 +119,17 @@ app_initialize_ <- function(
     { # nolint
       self$wait_for_js(
         "window.shinytest2 && window.shinytest2.ready === true",
-        timeout = load_timeout
+        timeout = private$load_timeout
       )
       if (isTRUE(wait)) {
         # Use value less than the common 250ms/500ms timeout of watching a file for changes
-        self$wait_for_idle(duration = 200, timeout = load_timeout)
+        self$wait_for_idle(duration = 200, timeout = private$load_timeout)
       }
     },
     error = function(e) {
       app_abort(self, private,
         paste0(
-          "Shiny app did not become stable in ", load_timeout, "ms.\n",
+          "Shiny app did not become stable in ", private$load_timeout, "ms.\n",
           "Message: ", conditionMessage(e)
         ),
         parent = e

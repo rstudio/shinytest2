@@ -127,11 +127,13 @@ NULL
 #'
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @param timeout Amount of time to wait before giving up (milliseconds).
+#'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
+#' @param timeout_ Amount of time to wait before giving up (milliseconds).
+#'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
 #' @param cran Should these expectations be verified on CRAN? By default,
 #'        they are not because snapshot tests tend to be fragile
 #'        because they often rely on minor details of dependencies.
 #' @param wait_ Wait until all reactive updates have completed?
-#' @param timeout_ Amount of time to wait before giving up (milliseconds).
 #' @param hash_images If `TRUE`, images will be hashed before being returned.
 #'   Otherwise, all images will return their full data64 encoded value.
 #' @param screenshot_args This named list of arguments is passed along to
@@ -165,6 +167,9 @@ AppDriver <- R6Class( # nolint
 
     counter = "<Count>",
     shiny_url = "<Url>",
+
+    load_timeout = 15 * 1000, # Time for shiny app to load; ms
+    timeout = 4 * 1000, # Default timeout value; ms
 
     logs = list(), # List of all log messages added via `$log_message()`
 
@@ -213,8 +218,19 @@ AppDriver <- R6Class( # nolint
     #'   For apps that use R's random number generator, this can make their
     #'   behavior repeatable.
     #' @param load_timeout How long to wait for the app to load, in ms.
-    #'   This includes the time to start R. Defaults to 10s when running
-    #'   locally and 20s when running on CI.
+    #'   This includes the time to start R. Defaults to 15s.
+    #'
+    #'   If `load_timeout` is missing, the first numeric value found will be used:
+    #'   * R option `options(shinytest2.load_timeout=)`
+    #'   * System environment variable `SHINYTEST2_LOAD_TIMEOUT`
+    #'   * `15 * 1000` (15 seconds)
+    #' @param timeout Default number of milliseconds for any `timeout` or
+    #'   `timeout_` parameter in the `AppDriver` class. Defaults to 4s.
+    #'
+    #'   If `timeout` is missing, the first numeric value found will be used:
+    #'   * R option `options(shinytest2.timeout=)`
+    #'   * System environment variable `SHINYTEST2_TIMEOUT`
+    #'   * `4 * 1000` (4 seconds)
     #' @param wait If `TRUE`, `$wait_for_idle(duration = 200, timeout = load_timeout)`
     #'   will be called once the app has connected a new session, blocking until the
     #'   Shiny app is idle for 200ms.
@@ -262,7 +278,8 @@ AppDriver <- R6Class( # nolint
       name = NULL,
       variant = missing_arg(),
       seed = NULL,
-      load_timeout = NULL,
+      load_timeout = missing_arg(),
+      timeout = missing_arg(),
       wait = TRUE,
       screenshot_args = missing_arg(),
       expect_values_screenshot_args = TRUE,
@@ -280,6 +297,7 @@ AppDriver <- R6Class( # nolint
         app_dir = app_dir,
         ...,
         load_timeout = load_timeout,
+        timeout = timeout,
         wait = wait,
         expect_values_screenshot_args = expect_values_screenshot_args,
         screenshot_args = screenshot_args,
@@ -376,7 +394,7 @@ AppDriver <- R6Class( # nolint
     set_inputs = function(
       ...,
       wait_ = TRUE,
-      timeout_ = 3 * 1000,
+      timeout_ = missing_arg(),
       allow_no_input_binding_ = FALSE,
       priority_ = c("input", "event")
     ) {
@@ -404,7 +422,7 @@ AppDriver <- R6Class( # nolint
     #' # Upload file to input named: file1
     #' app$upload_file(file1 = tmpfile)
     #' }
-    upload_file = function(..., wait_ = TRUE, timeout_ = 3 * 1000) {
+    upload_file = function(..., wait_ = TRUE, timeout_ = missing_arg()) {
       app_upload_file(self, private, ..., wait_ = wait_, timeout_ = timeout_)
     },
 
@@ -830,7 +848,7 @@ AppDriver <- R6Class( # nolint
       script = missing_arg(),
       ...,
       file = missing_arg(),
-      timeout = 15 * 1000,
+      timeout = missing_arg(),
       pre_snapshot = NULL,
       cran = FALSE
     ) {
@@ -906,7 +924,7 @@ AppDriver <- R6Class( # nolint
       script = missing_arg(),
       ...,
       file = missing_arg(),
-      timeout = 15 * 1000
+      timeout = missing_arg()
     ) {
       app_get_js(
         self, private,
@@ -950,7 +968,7 @@ AppDriver <- R6Class( # nolint
       script = missing_arg(),
       ...,
       file = missing_arg(),
-      timeout = 15 * 1000
+      timeout = missing_arg()
     ) {
       app_run_js(
         self, private,
@@ -1159,7 +1177,6 @@ AppDriver <- R6Class( # nolint
     #' resizing the window.)
     #' @param duration How long Shiny must be idle (in ms) before unblocking the
     #'   R session.
-    #' @param timeout How often to check for the condition, in ms.
     #' @return `invisible(self)` if Shiny stabilizes within the `timeout`.
     #'   Otherwise an error will be thrown
     #' @examples
@@ -1192,7 +1209,7 @@ AppDriver <- R6Class( # nolint
     #' # Will not be equal
     #' identical(pre_value, post_value)
     #' }
-    wait_for_idle = function(duration = 500, timeout = 30 * 1000) {
+    wait_for_idle = function(duration = 500, timeout = missing_arg()) {
       app_wait_for_idle(self, private, duration = duration, timeout = timeout)
     },
 
@@ -1209,7 +1226,8 @@ AppDriver <- R6Class( # nolint
     #'   Only one of these parameters may be used.
     #' @param ignore List of possible values to ignore when checking for
     #'   updates.
-    #' @param timeout How long to wait (in ms) before throwing an error.
+    #' @param timeout_ Amount of time to wait for a new `output` value before giving up (milliseconds).
+    #'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
     #' @param interval How often to check for the condition, in ms.
     #' @return Newly found value
     #' @examples
@@ -1260,7 +1278,7 @@ AppDriver <- R6Class( # nolint
       output = missing_arg(),
       export = missing_arg(),
       ignore = list(NULL, ""),
-      timeout = 15 * 1000,
+      timeout = missing_arg(),
       interval = 400
     ) {
       app_wait_for_value(
@@ -1280,8 +1298,9 @@ AppDriver <- R6Class( # nolint
     #'   eventually return a [`true`thy
     #'   value](https://developer.mozilla.org/en-US/docs/Glossary/Truthy) or a
     #'   timeout error will be thrown.
-    #' @param timeout How long the script has to return a `true`thy value, in ms.
-    #' @param interval How often to check for the condition, in ms.
+    #' @param timeout How long the script has to return a `true`thy value (milliseconds).
+    #'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
+    #' @param interval How often to check for the condition (milliseconds).
     #' @return `invisible(self)` if expression evaluates to `true` without error
     #'   within the timeout. Otherwise an error will be thrown
     #' @examples
@@ -1300,8 +1319,17 @@ AppDriver <- R6Class( # nolint
     #' app$run_js(file = "complicated_file.js")
     #' app$wait_for_js("complicated_condition();")
     #' }
-    wait_for_js = function(script, timeout = 30 * 1000, interval = 100) {
-      app_wait_for_js(self, private, script = script, timeout = timeout, interval = interval)
+    wait_for_js = function(
+      script,
+      timeout = missing_arg(),
+      interval = 100
+    ) {
+      app_wait_for_js(
+        self, private,
+        script = script,
+        timeout = timeout,
+        interval = interval
+      )
     },
 
 
@@ -1649,9 +1677,10 @@ AppDriver <- R6Class( # nolint
     #' Typically, this can be paired with a button that when clicked will call
     #' `shiny::stopApp(info)` to return `info` from the test app back to the
     #' main R session.
-    #' @param timeout Milliseconds to wait between sending a SIGINT, SIGTERM,
-    #'   and SIGKILL to the Shiny process. Defaults to 500ms. However, if
-    #'   \pkg{covr} is currently executing, then the `timeout` is set to
+    #' @param signal_timeout Milliseconds to wait between sending a SIGINT,
+    #'   SIGTERM, and SIGKILL to the Shiny process. Defaults to 500ms and does
+    #'   not utilize the resolved valur from `AppDriver$new(timeout=)`. However,
+    #'   if \pkg{covr} is currently executing, then the `timeout` is set to
     #'   20,000ms to allow for the coverage report to be generated.
     #' @return The result of the background process if the Shiny application has
     #'   already been terminated.
@@ -1703,8 +1732,8 @@ AppDriver <- R6Class( # nolint
     #' #> ..$ session: chr "bdc7417f2fc8c84fc05c9518e36fdc44"
     #' #> ..$ time   : num 1.65e+09
     #' }
-    stop = function(timeout = missing_arg()) {
-      app_stop(self, private, timeout = timeout)
+    stop = function(signal_timeout = missing_arg()) {
+      app_stop(self, private, signal_timeout = signal_timeout)
     }
   )
 )
