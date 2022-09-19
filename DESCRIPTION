@@ -50,7 +50,8 @@ Suggests:
     shinyvalidate (>= 0.1.2),
     showimage,
     usethis,
-    vdiffr (>= 1.0.0)
+    vdiffr (>= 1.0.0),
+    spelling
 Config/Needs/check:
     rstudio/shiny
 Config/Needs/website:
