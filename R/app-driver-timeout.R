@@ -70,6 +70,44 @@ timeout_value <- function(
     timeout_default(default_value, timeout_name) # default value
 }
 
+resolve_load_timeout <- function(load_timeout) {
+  timeout_value(
+    load_timeout,
+    option_key = "shinytest2.load_timeout",
+    env_key = "SHINYTEST2_LOAD_TIMEOUT",
+    default_value = 15 * 1000,
+    timeout_name = "load_timeout"
+  )
+}
+resolve_timeout <- function(timeout) {
+  timeout_value(
+    timeout,
+    option_key = "shinytest2.timeout",
+    env_key = "SHINYTEST2_TIMEOUT",
+    default_value = 4 * 1000,
+    timeout_name = "timeout"
+  )
+}
+resolve_signal_timeout <- function(signal_timeout) {
+  timeout_value(
+    timeout = signal_timeout,
+    option_key = "shinytest2.signal_timeout",
+    env_key = "SHINYTEST2_SIGNAL_TIMEOUT",
+    default_value = {
+      # Increased the timeout for packages like covr to upload their results:
+      #   https://github.com/rstudio/shinytest2/issues/250
+      # Taken from `covr::in_covr()`
+      in_covr <- identical(Sys.getenv("R_COVR"), "true")
+      if (in_covr) {
+        20 * 1000
+      } else {
+        500
+      }
+    }
+  )
+}
+
+
 app_init_timeouts <- function(
   self, private,
   ...,
@@ -79,19 +117,7 @@ app_init_timeouts <- function(
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
 
-  private$load_timeout <- timeout_value(
-    load_timeout,
-    option_key = "shinytest2.load_timeout",
-    env_key = "SHINYTEST2_LOAD_TIMEOUT",
-    default_value = 15 * 1000,
-    timeout_name = "load_timeout"
-  )
+  private$load_timeout <- resolve_load_timeout(load_timeout)
 
-  private$timeout <- timeout_value(
-    timeout,
-    option_key = "shinytest2.timeout",
-    env_key = "SHINYTEST2_TIMEOUT",
-    default_value = 4 * 1000,
-    timeout_name = "timeout"
-  )
+  private$timeout <- resolve_timeout(timeout)
 }

@@ -23,6 +23,7 @@ Method | Previous value (ms) | New value (ms)
 `AppDriver$wait_for_idle(timeout=)` | `30 * 1000` | `4 * 1000`
 `AppDriver$wait_for_value(timeout=)` | `15 * 1000` | `4 * 1000`
 `AppDriver$wait_for_js(timeout=)` | `30 * 1000` | `4 * 1000`
+`AppDriver$stop(signal_timeout=)` | `250` | `500`
 
 `AppDriver$new(load_timeout=)` is initialized using the first numeric value found:
 1. Supplied directly: `AppDriver$new(load_timeout=)`
@@ -36,7 +37,14 @@ Method | Previous value (ms) | New value (ms)
 3. System environment variable: `SHINYTEST2_TIMEOUT`
 4. 4 seconds; `4 * 1000`
 
-All remaining `AppDriver` methods (except `AppDriver$stop(timeout=)`) will default their `timeout` and `timeout_` parameters to the initialized `AppDriver$new(timeout=)` value. For example, if `app <- AppDriver$new(timeout = 500)` then `app$get_js(timeout=)` will default to `500` milliseconds.
+`AppDriver$stop(signal_timeout=)` is initialized using the first numeric value found:
+1. Supplied directly: `AppDriver$stop(signal_timeout=)`
+2. Locally defined option: `options(shinytest2.signal_timeout=)`
+3. System environment variable: `SHINYTEST2_SIGNAL_TIMEOUT`
+4. If the system environment variable `R_COVR` is `"TRUE"`, then 20 seconds; `20 * 1000`
+5. 500 milliseconds; `500`
+
+All remaining `AppDriver` methods will default their `timeout` and `timeout_` parameters to the initialized `AppDriver$new(timeout=)` value. For example, if `app <- AppDriver$new(timeout = 500)` then `app$get_js(timeout=)` will default to `500` milliseconds.
 
 
 ## New Features
@@ -75,7 +83,7 @@ All remaining `AppDriver` methods (except `AppDriver$stop(timeout=)`) will defau
 
 * Escape JS text supplied to `AppDriver$wait_for_js(script=)` (#258)
 
-* Added support for `AppDriver$stop(timeout=)`. The default timeout when sending `SIGINT`, `SIGTERM`, and `SIGKILL` signals to the `{shiny}` process is now 500ms. However, if `{covr}` is running, the default timeout is 20,000 ms to allow time for the report to generate. (#259)
+* Added support for `AppDriver$stop(signal_timeout=)`. The default timeout when sending `SIGINT`, `SIGTERM`, and `SIGKILL` signals to the `{shiny}` process is now 500ms. However, if `{covr}` is running, the default timeout is 20,000 ms to allow time for the report to generate. (#259, #263)
 
 * Add example and FAQ entry on how to test bookmarking (#262)
 
