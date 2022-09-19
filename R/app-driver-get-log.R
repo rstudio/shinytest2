@@ -201,7 +201,7 @@ app_make_shiny_log <- function(self, private, out, err) {
         self,
         private,
         location = "shiny",
-        level = "error",
+        level = "stderr",
         message = filter_log_text(err_val),
         timestamp = as.POSIXct(NA)
       )
@@ -211,7 +211,7 @@ app_make_shiny_log <- function(self, private, out, err) {
         self,
         private,
         location = "shiny",
-        level = "info",
+        level = "stdout",
         message = filter_log_text(out_val),
         timestamp = as.POSIXct(NA)
       )

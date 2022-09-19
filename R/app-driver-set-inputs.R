@@ -2,11 +2,12 @@ app_set_inputs <- function(
   self, private,
   ...,
   wait_ = TRUE,
-  timeout_ = 3 * 1000,
+  timeout_ = missing_arg(),
   allow_no_input_binding_ = FALSE,
   priority_ = c("input", "event")
 ) {
   ckm8_assert_app_driver(self, private)
+  timeout_ <- app_get_timeout(self, private, timeout = timeout_)
 
   priority_ <- match.arg(priority_)
 

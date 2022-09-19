@@ -15,10 +15,11 @@ app_get_js <- function(
   script,
   ...,
   file = missing_arg(),
-  timeout = 15 * 1000
+  timeout = missing_arg()
 ) {
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
+  timeout <- app_get_timeout(self, private, timeout = timeout)
 
   "!DEBUG app_get_js()"
   chromote_eval(
@@ -34,10 +35,11 @@ app_run_js <- function(
   script,
   ...,
   file = missing_arg(),
-  timeout = 15 * 1000
+  timeout = missing_arg()
 ) {
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
+  timeout <- app_get_timeout(self, private, timeout = timeout)
 
   "!DEBUG app_run_js()"
   chromote_eval(
@@ -58,12 +60,13 @@ app_expect_js <- function(
   script,
   ...,
   file = missing_arg(),
-  timeout = 15 * 1000,
+  timeout = missing_arg(),
   pre_snapshot = NULL,
   cran = FALSE
 ) {
   ckm8_assert_app_driver(self, private)
   ellipsis::check_dots_empty()
+  timeout <- app_get_timeout(self, private, timeout = timeout)
 
   result <- self$get_js(
     script = script,

@@ -19,7 +19,7 @@ chromote_eval <- function(
   chromote_session,
   js,
   ...,
-  timeout = 10 * 1000, # milliseconds for chrome devtools protocol
+  timeout = 4 * 1000, # milliseconds for chrome devtools protocol
   # https://github.com/rstudio/chromote/pull/69
   timeout_ = missing_arg(),
   # nolint start

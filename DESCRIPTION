@@ -74,6 +74,7 @@ Collate:
     'app-driver-set-inputs.R'
     'app-driver-start.R'
     'app-driver-stop.R'
+    'app-driver-timeout.R'
     'app-driver-upload-file.R'
     'app-driver-variant.R'
     'app-driver-wait.R'
