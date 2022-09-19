@@ -29,8 +29,6 @@ test_that("AppDriver can receive a shiny.obj object", {
   app$set_inputs(name = "Barret")
   app$click("greet")
 
-  app$expect_values()
-
   expect_true(fs::path_has_parent(app$get_dir(), tempdir()))
 })
 
@@ -41,8 +39,6 @@ test_that("AppDriver can receive a shinyAppDir object", {
   app <- AppDriver$new(ex_app_dir, name = "app-shiny_dir", expect_values_screenshot_args = FALSE)
 
   app$set_inputs(bins = 20)
-
-  app$expect_values(input = TRUE)
 
   expect_true(fs::path_has_parent(app$get_dir(), tempdir()))
 })
