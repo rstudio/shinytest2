@@ -2436,9 +2436,6 @@ R session.}
 
 \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
 Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
-
-\item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).
-Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2524,7 +2521,7 @@ Defaults to the resolved \code{timeout} value during the \code{AppDriver} initia
 
 \item{\code{interval}}{How often to check for the condition, in ms.}
 
-\item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).
+\item{\code{timeout_}}{Amount of time to wait for a new \code{output} value before giving up (milliseconds).
 Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 }
 \if{html}{\out{</div>}}
@@ -2600,10 +2597,10 @@ Waits until a JavaScript \code{expr}ession evaluates to \code{true} or the
 eventually return a \href{https://developer.mozilla.org/en-US/docs/Glossary/Truthy}{\code{true}thy value} or a
 timeout error will be thrown.}
 
-\item{\code{timeout}}{How long the script has to return a \code{true}thy value, in ms.
+\item{\code{timeout}}{How long the script has to return a \code{true}thy value (milliseconds).
 Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
 
-\item{\code{interval}}{How often to check for the condition, in ms.}
+\item{\code{interval}}{How often to check for the condition (milliseconds).}
 }
 \if{html}{\out{</div>}}
 }

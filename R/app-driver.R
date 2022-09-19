@@ -128,12 +128,12 @@ NULL
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @param timeout Amount of time to wait before giving up (milliseconds).
 #'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
+#' @param timeout_ Amount of time to wait before giving up (milliseconds).
+#'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
 #' @param cran Should these expectations be verified on CRAN? By default,
 #'        they are not because snapshot tests tend to be fragile
 #'        because they often rely on minor details of dependencies.
 #' @param wait_ Wait until all reactive updates have completed?
-#' @param timeout_ Amount of time to wait before giving up (milliseconds).
-#'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
 #' @param hash_images If `TRUE`, images will be hashed before being returned.
 #'   Otherwise, all images will return their full data64 encoded value.
 #' @param screenshot_args This named list of arguments is passed along to
@@ -1177,8 +1177,6 @@ AppDriver <- R6Class( # nolint
     #' resizing the window.)
     #' @param duration How long Shiny must be idle (in ms) before unblocking the
     #'   R session.
-    #' @param timeout_ Amount of time to wait before giving up (milliseconds).
-#'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
     #' @return `invisible(self)` if Shiny stabilizes within the `timeout`.
     #'   Otherwise an error will be thrown
     #' @examples
@@ -1228,7 +1226,7 @@ AppDriver <- R6Class( # nolint
     #'   Only one of these parameters may be used.
     #' @param ignore List of possible values to ignore when checking for
     #'   updates.
-    #' @param timeout_ Amount of time to wait before giving up (milliseconds).
+    #' @param timeout_ Amount of time to wait for a new `output` value before giving up (milliseconds).
     #'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
     #' @param interval How often to check for the condition, in ms.
     #' @return Newly found value
@@ -1300,9 +1298,9 @@ AppDriver <- R6Class( # nolint
     #'   eventually return a [`true`thy
     #'   value](https://developer.mozilla.org/en-US/docs/Glossary/Truthy) or a
     #'   timeout error will be thrown.
-    #' @param timeout How long the script has to return a `true`thy value, in ms.
+    #' @param timeout How long the script has to return a `true`thy value (milliseconds).
     #'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
-    #' @param interval How often to check for the condition, in ms.
+    #' @param interval How often to check for the condition (milliseconds).
     #' @return `invisible(self)` if expression evaluates to `true` without error
     #'   within the timeout. Otherwise an error will be thrown
     #' @examples
