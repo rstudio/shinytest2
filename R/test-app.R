@@ -87,7 +87,7 @@ test_app <- function(
   app_dir = missing_arg(),
   ...,
   name = missing_arg(),
-  check_setup = TRUE,
+  check_setup = missing_arg(),
   reporter = testthat::get_reporter(),
   stop_on_failure = missing_arg()
 ) {
@@ -113,6 +113,11 @@ test_app <- function(
   })
 
   app_dir <- app_dir_value(app_dir)
+
+  if (rlang::missing_arg(check_setup)) {
+    # Only check for setup file if no NAMEPSACE file exists
+    check_setup <- !has_namespace_file(app_dir)
+  }
 
   if (isTRUE(check_setup)) {
     # Legacy support for `setup.R`; Same content, just different name
