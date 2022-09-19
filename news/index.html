@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,11 +61,11 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="shinytest2-development-version">shinytest2 (development version)<a class="anchor" aria-label="anchor" href="#shinytest2-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="shinytest2-020">shinytest2 0.2.0<a class="anchor" aria-label="anchor" href="#shinytest2-020"></a></h2>
 <div class="section level3">
-<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<h3 id="breaking-changes-0-2-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-2-0"></a></h3>
 <div class="section level4">
-<h4 id="appdriverexpect_download-development-version"><code>AppDriver$expect_download()</code><a class="anchor" aria-label="anchor" href="#appdriverexpect_download-development-version"></a></h4>
+<h4 id="appdriverexpect_download-0-2-0"><code>AppDriver$expect_download()</code><a class="anchor" aria-label="anchor" href="#appdriverexpect_download-0-2-0"></a></h4>
 <ul><li>All downloaded snapshots will contain a counter prefix (e.g. <code>003-</code> in <code>003-my_custom_name.txt</code>) to avoid having two files point to the same snapshot file location. Sharing the same snapshot file is dangerous as the last file written is stored as truth, overwriting any knowledge of the original file. (<a href="https://github.com/rstudio/shinytest2/issues/261" class="external-link">#261</a>)</li>
 <li>If a <code>content-disposition</code> header is provided and <code>AppDriver$expect_download(name = NULL)</code> (default), the snapshot file will try to be saved using the <code>content-disposition</code> header value. When paired with <code>compare = NULL</code> (default), <a href="https://testthat.r-lib.org" class="external-link">testthat</a> will choose the proper <code>compare</code> method between <code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">compare_file_text()</a></code> and <code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">compare_file_binary()</a></code>. See <code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">?testthat::expect_snapshot_file</a></code> for more details. (<a href="https://github.com/rstudio/shinytest2/issues/261" class="external-link">#261</a>)</li>
 <li>
@@ -73,7 +73,7 @@
 </ul></div>
 </div>
 <div class="section level3">
-<h3 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-0-2-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-2-0"></a></h3>
 <ul><li><p><code><a href="../reference/compare_screenshot_threshold.html">compare_screenshot_threshold()</a></code> is a new method to compare screenshots and allow small differences between two screenshots. This method checks every subset matrix of the pixel differences between the two images. If any total difference is larger than the <code>threshold</code> value, the two images are considered to be different. The subset matrix size can be increased by setting <code>kernel_size</code>. (<a href="https://github.com/rstudio/shinytest2/issues/231" class="external-link">#231</a>)</p></li>
 <li><p>Support for supply your own compare method to <code>AppDriver$expect_screenshot(compare=)</code> has been added. By default, <code>AppDriver$expect_screenshot(compare=)</code> is set to <code>compare_screenshot_threshold(threshold = NULL)</code> which in turn calls <code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">testthat::compare_file_binary()</a></code>. So no default screenshot expectation behavior has changed. (<a href="https://github.com/rstudio/shinytest2/issues/231" class="external-link">#231</a>)</p></li>
 <li><p><code><a href="../reference/test_app.html">test_app()</a></code> now inherits the existing test reporter when testing multiple apps within a package test file. This allows for a seamless, single reporter output instead of nested reporters being displayed. (<a href="https://github.com/rstudio/shinytest2/issues/192" class="external-link">#192</a>)</p></li>
@@ -83,7 +83,7 @@
 <li><p>Add support for <em>not</em> recording the screen size when recording a test (<a href="https://github.com/rstudio/shinytest2/issues/223" class="external-link">#223</a>)</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug--improvements-development-version">Bug / Improvements<a class="anchor" aria-label="anchor" href="#bug--improvements-development-version"></a></h3>
+<h3 id="bug--improvements-0-2-0">Bug / Improvements<a class="anchor" aria-label="anchor" href="#bug--improvements-0-2-0"></a></h3>
 <ul><li><p>Fix set of bugs found by <a href="https://github.com/daattali" class="external-link">@daattali</a> including test files should be opened in the IDE after recording and test and replace missing images in the website (<a href="https://github.com/rstudio/shinytest2/issues/199" class="external-link">#199</a>)</p></li>
 <li><p>Provide example workflows on how to use <code>rstudio/shinytest2/actions/test-app</code> GHA action (<a href="https://github.com/rstudio/shinytest2/issues/217" class="external-link">#217</a>)</p></li>
 <li><p>When setting a date time slider value, it can now handle array inputs properly. When recording a date time slider value, numeric values will not be recorded as milliseconds instead of seconds since epoch. (<a href="https://github.com/rstudio/shinytest2/issues/223" class="external-link">#223</a>)</p></li>
