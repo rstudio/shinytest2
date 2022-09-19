@@ -29,20 +29,20 @@ Method | Previous value (ms) | New value (ms)
 1. Supplied directly: `AppDriver$new(load_timeout=)`
 2. Locally defined option: `options(shinytest2.load_timeout=)`
 3. System environment variable: `SHINYTEST2_LOAD_TIMEOUT`
-4. 15 seconds; `15 * 1000`
+4. `15 * 1000` (15s)
 
 `AppDriver$new(timeout=)` is initialized using the first numeric value found:
 1. Supplied directly: `AppDriver$new(timeout=)`
 2. Locally defined option: `options(shinytest2.timeout=)`
 3. System environment variable: `SHINYTEST2_TIMEOUT`
-4. 4 seconds; `4 * 1000`
+4. `4 * 1000` (4s)
 
 `AppDriver$stop(signal_timeout=)` is initialized using the first numeric value found:
 1. Supplied directly: `AppDriver$stop(signal_timeout=)`
 2. Locally defined option: `options(shinytest2.signal_timeout=)`
 3. System environment variable: `SHINYTEST2_SIGNAL_TIMEOUT`
-4. If the system environment variable `R_COVR` is `"TRUE"`, then 20 seconds; `20 * 1000`
-5. 500 milliseconds; `500`
+4. If the system environment variable `R_COVR=true`: `20 * 1000` (20s)
+5. `500` (0.5s)
 
 All remaining `AppDriver` methods will default their `timeout` and `timeout_` parameters to the initialized `AppDriver$new(timeout=)` value. For example, if `app <- AppDriver$new(timeout = 500)` then `app$get_js(timeout=)` will default to `500` milliseconds.
 
