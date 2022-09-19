@@ -3,13 +3,21 @@
 #' @describeIn use_shinytest2
 #' This \pkg{usethis}-style method initializes many different useful features when using
 #' \pkg{shinytest2}:
-#' * `runner`: Creates a \pkg{shinytest2} test runner at `./tests/testthat.R`. This file
-#' will contain a call to [`test_app()`].
-#' * `setup`: Creates `./tests/testthat/setup-shinytest2.R` to add your Shiny `./R` objects and functions into the testing environment. This file will run before testing begins.
-#' * `ignore`: Add an entry to `./Rbuildignore` (if it exists) and `.gitignore` to ignore new debug screenshots. (`*_.new.png`)
-#' * `package`: Adds `shinytest` to the `Suggests` packages in the `DESCRIPTION` file (if it exists).
+#' * `runner`: Creates a \pkg{shinytest2} test runner at `./tests/testthat.R`.
+#'   This file will contain a call to [`test_app()`].
+#' * `setup`: Creates `./tests/testthat/setup-shinytest2.R` to add your Shiny
+#'   `./R` objects and functions into the testing environment. This file will
+#'   run before testing begins. This setup file will only be added if a `NAMESPACE`
+#'   file is not found in your Shiny application directory and assumes you will
+#'   be using an R package or \pkg{golem} to load your R folder.
+#' * `ignore`: Add an entry to `./Rbuildignore` (if it exists) and `.gitignore`
+#'   to ignore new debug screenshots. (`*_.new.png`)
+#' * `package`: Adds `shinytest` to the `Suggests` packages in the `DESCRIPTION`
+#'   file (if it exists).
 #'
-#' If any of these values are _not_ missing, the remaining missing values will be set to `FALSE`. This allows `use_shinytest2()` to add more flags in future versions without opting into all changes inadvertently.
+#' If any of these values are _not_ missing, the remaining missing values will
+#' be set to `FALSE`. This allows `use_shinytest2()` to add more flags in future
+#' versions without opting into all changes inadvertently.
 #'
 #' @param app_dir The base directory for the Shiny application
 #' @param runner If `TRUE`, creates a \pkg{shinytest2} test runner at `./tests/testthat.R`
@@ -104,6 +112,19 @@ use_shinytest2_test <- function(
 }
 
 use_shinytest2_setup <- function(app_dir = ".", quiet = FALSE) {
+
+  if (has_namespace_file(app_dir)) {
+    if (!quiet) {
+      rlang::inform(c(
+        "!" = paste0(
+          "NAMESPACE file found.",
+          " Skipping adding `./tests/testthat/setup-shinytest2.R` file"
+        )
+      ))
+    }
+    return(FALSE)
+  }
+
   withr::with_dir(app_dir, {
     # Legacy support for old setup.R files.
     # Should be using `setup-shinytest2.R`
