@@ -404,8 +404,8 @@ shinyApp(
         n_sub
       }
 
-      n_console_err_lines <<- print_logs(level == "error", n = n_console_err_lines)
-      n_console_std_lines <<- print_logs(level != "error", n = n_console_std_lines)
+      n_console_err_lines <<- print_logs(level == "stderr", n = n_console_err_lines)
+      n_console_std_lines <<- print_logs(level != "stderr", n = n_console_std_lines)
     })
 
     allow_no_input_binding_react <- reactiveVal(allow_no_input_binding)
