@@ -36,14 +36,14 @@ expect_timeouts <- function(
       ),
       {
         # Make sure values can be set
-        expect_silent(
+        testthat::expect_silent(
           AppDriver$new(app_url, load_timeout = load_timeout, timeout = timeout)
         )
         # Test values without R6 hackery
         private_env <- new.env(parent = emptyenv())
         app_init_timeouts(app, private_env, load_timeout = load_timeout, timeout = timeout)
-        expect_equal(private_env$load_timeout, expected_load_timeout)
-        expect_equal(private_env$timeout, expected_timeout)
+        testthat::expect_equal(private_env$load_timeout, expected_load_timeout)
+        testthat::expect_equal(private_env$timeout, expected_timeout)
       }
     )
   )
