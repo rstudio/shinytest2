@@ -1,4 +1,4 @@
-# shinytest2 (development version)
+# shinytest2 0.2.0
 
 ## Breaking changes
 
