@@ -20,7 +20,7 @@ Expect methods are grouped next to their corresponding get methods."><meta prope
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -247,7 +247,8 @@ eventually wrap <code><a href="https://testthat.r-lib.org/reference/expect_snaps
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variant <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  load_timeout <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  load_timeout <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  timeout <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  wait <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  screenshot_args <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  expect_values_screenshot_args <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -307,8 +308,20 @@ behavior repeatable.</p></dd>
 
 <dt><code>load_timeout</code></dt>
 <dd><p>How long to wait for the app to load, in ms.
-This includes the time to start R. Defaults to 10s when running
-locally and 20s when running on CI.</p></dd>
+This includes the time to start R. Defaults to 15s.</p>
+<p>If <code>load_timeout</code> is missing, the first numeric value found will be used:</p><ul><li><p>R option <code>options(shinytest2.load_timeout=)</code></p></li>
+<li><p>System environment variable <code>SHINYTEST2_LOAD_TIMEOUT</code></p></li>
+<li><p><code>15 * 1000</code> (15 seconds)</p></li>
+</ul></dd>
+
+
+<dt><code>timeout</code></dt>
+<dd><p>Default number of milliseconds for any <code>timeout</code> or
+<code>timeout_</code> parameter in the <code>AppDriver</code> class. Defaults to 4s.</p>
+<p>If <code>timeout</code> is missing, the first numeric value found will be used:</p><ul><li><p>R option <code>options(shinytest2.timeout=)</code></p></li>
+<li><p>System environment variable <code>SHINYTEST2_TIMEOUT</code></p></li>
+<li><p><code>4 * 1000</code> (4 seconds)</p></li>
+</ul></dd>
 
 
 <dt><code>wait</code></dt>
@@ -471,7 +484,7 @@ not return until an output value has been updated.</p><div class="section">
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span></span>
 <span>  <span class="va">...</span>,</span>
 <span>  wait_ <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  timeout_ <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">1000</span>,</span>
+<span>  timeout_ <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  allow_no_input_binding_ <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  priority_ <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"input"</span>, <span class="st">"event"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
@@ -489,7 +502,8 @@ Input with name <code>component_name_1</code> will be assigned value <code>value
 
 
 <dt><code>timeout_</code></dt>
-<dd><p>Amount of time to wait before giving up (milliseconds).</p></dd>
+<dd><p>Amount of time to wait before giving up (milliseconds).
+Defaults to the resolved <code>timeout</code> value during the <code>AppDriver</code> initialization.</p></dd>
 
 
 <dt><code>allow_no_input_binding_</code></dt>
@@ -526,7 +540,7 @@ cat(app$get_text("#view"))
 <p>Upload a file</p>
 <p>Uploads a file to the specified file input.</p><div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">upload_file</span><span class="op">(</span><span class="va">...</span>, wait_ <span class="op">=</span> <span class="cn">TRUE</span>, timeout_ <span class="op">=</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">1000</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">upload_file</span><span class="op">(</span><span class="va">...</span>, wait_ <span class="op">=</span> <span class="cn">TRUE</span>, timeout_ <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -541,7 +555,8 @@ cat(app$get_text("#view"))
 
 
 <dt><code>timeout_</code></dt>
-<dd><p>Amount of time to wait before giving up (milliseconds).</p></dd>
+<dd><p>Amount of time to wait before giving up (milliseconds).
+Defaults to the resolved <code>timeout</code> value during the <code>AppDriver</code> initialization.</p></dd>
 
 
 </dl><p></p></div>
@@ -1143,7 +1158,7 @@ For example, <code>$expect_text()</code> and <code>$expect_html()</code> are thi
 <span>  script <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  file <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span>,</span>
+<span>  timeout <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  pre_snapshot <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cran <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
@@ -1164,7 +1179,8 @@ For example, <code>$expect_text()</code> and <code>$expect_html()</code> are thi
 
 
 <dt><code>timeout</code></dt>
-<dd><p>Amount of time to wait before giving up (milliseconds).</p></dd>
+<dd><p>Amount of time to wait before giving up (milliseconds).
+Defaults to the resolved <code>timeout</code> value during the <code>AppDriver</code> initialization.</p></dd>
 
 
 <dt><code>pre_snapshot</code></dt>
@@ -1218,7 +1234,7 @@ avoid having to double all <code>{</code> and <code>}</code>.</p><div class="sec
 <span>  script <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  file <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span></span>
+<span>  timeout <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -1240,7 +1256,8 @@ as the <code>script</code>. Only one of <code>script</code> or <code>file</code>
 
 
 <dt><code>timeout</code></dt>
-<dd><p>Amount of time to wait before giving up (milliseconds).</p></dd>
+<dd><p>Amount of time to wait before giving up (milliseconds).
+Defaults to the resolved <code>timeout</code> value during the <code>AppDriver</code> initialization.</p></dd>
 
 
 </dl><p></p></div>
@@ -1306,7 +1323,7 @@ executing its <em>tick</em> in the browser.</p>
 <span>  script <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  file <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span></span>
+<span>  timeout <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -1326,7 +1343,8 @@ as the <code>script</code>. Only one of <code>script</code> or <code>file</code>
 
 
 <dt><code>timeout</code></dt>
-<dd><p>Amount of time to wait before giving up (milliseconds).</p></dd>
+<dd><p>Amount of time to wait before giving up (milliseconds).
+Defaults to the resolved <code>timeout</code> value during the <code>AppDriver</code> initialization.</p></dd>
 
 
 </dl><p></p></div>
@@ -1608,7 +1626,7 @@ the application</p></li>
 resizing the window.)</p></li>
 </ul><div class="section">
 <h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_idle</span><span class="op">(</span>duration <span class="op">=</span> <span class="fl">500</span>, timeout <span class="op">=</span> <span class="fl">30</span> <span class="op">*</span> <span class="fl">1000</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_idle</span><span class="op">(</span>duration <span class="op">=</span> <span class="fl">500</span>, timeout <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -1619,7 +1637,8 @@ R session.</p></dd>
 
 
 <dt><code>timeout</code></dt>
-<dd><p>How often to check for the condition, in ms.</p></dd>
+<dd><p>Amount of time to wait before giving up (milliseconds).
+Defaults to the resolved <code>timeout</code> value during the <code>AppDriver</code> initialization.</p></dd>
 
 
 </dl><p></p></div>
@@ -1679,7 +1698,7 @@ has finished processing a complex reactive situation.</p><div class="section">
 <span>  output <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  export <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  ignore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="st">""</span><span class="op">)</span>,</span>
-<span>  timeout <span class="op">=</span> <span class="fl">15</span> <span class="op">*</span> <span class="fl">1000</span>,</span>
+<span>  timeout <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  interval <span class="op">=</span> <span class="fl">400</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -1701,11 +1720,17 @@ updates.</p></dd>
 
 
 <dt><code>timeout</code></dt>
-<dd><p>How long to wait (in ms) before throwing an error.</p></dd>
+<dd><p>Amount of time to wait before giving up (milliseconds).
+Defaults to the resolved <code>timeout</code> value during the <code>AppDriver</code> initialization.</p></dd>
 
 
 <dt><code>interval</code></dt>
 <dd><p>How often to check for the condition, in ms.</p></dd>
+
+
+<dt><code>timeout_</code></dt>
+<dd><p>Amount of time to wait for a new <code>output</code> value before giving up (milliseconds).
+Defaults to the resolved <code>timeout</code> value during the <code>AppDriver</code> initialization.</p></dd>
 
 
 </dl><p></p></div>
@@ -1767,7 +1792,7 @@ app$get_value(output = "total")
 <p>Waits until a JavaScript <code>expr</code>ession evaluates to <code>true</code> or the
 <code>timeout</code> is exceeded.</p><div class="section">
 <h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_js</span><span class="op">(</span><span class="va">script</span>, timeout <span class="op">=</span> <span class="fl">30</span> <span class="op">*</span> <span class="fl">1000</span>, interval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">wait_for_js</span><span class="op">(</span><span class="va">script</span>, timeout <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>, interval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -1779,11 +1804,12 @@ timeout error will be thrown.</p></dd>
 
 
 <dt><code>timeout</code></dt>
-<dd><p>How long the script has to return a <code>true</code>thy value, in ms.</p></dd>
+<dd><p>How long the script has to return a <code>true</code>thy value (milliseconds).
+Defaults to the resolved <code>timeout</code> value during the <code>AppDriver</code> initialization.</p></dd>
 
 
 <dt><code>interval</code></dt>
-<dd><p>How often to check for the condition, in ms.</p></dd>
+<dd><p>How often to check for the condition (milliseconds).</p></dd>
 
 
 </dl><p></p></div>
@@ -2259,15 +2285,16 @@ information.</p>
 <code>shiny::stopApp(info)</code> to return <code>info</code> from the test app back to the
 main R session.</p><div class="section">
 <h4 id="usage-31">Usage<a class="anchor" aria-label="anchor" href="#usage-31"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="kw">stop</span><span class="op">(</span>timeout <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="kw">stop</span><span class="op">(</span>signal_timeout <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-23">Arguments<a class="anchor" aria-label="anchor" href="#arguments-23"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>timeout</code></dt>
-<dd><p>Milliseconds to wait between sending a SIGINT, SIGTERM,
-and SIGKILL to the Shiny process. Defaults to 500ms. However, if
-<span class="pkg">covr</span> is currently executing, then the <code>timeout</code> is set to
+<p></p><div class="arguments"><dl><dt><code>signal_timeout</code></dt>
+<dd><p>Milliseconds to wait between sending a SIGINT,
+SIGTERM, and SIGKILL to the Shiny process. Defaults to 500ms and does
+not utilize the resolved valur from <code>AppDriver$new(timeout=)</code>. However,
+if <span class="pkg">covr</span> is currently executing, then the <code>timeout</code> is set to
 20,000ms to allow for the coverage report to be generated.</p></dd>
 
 

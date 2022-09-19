@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,21 +61,62 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.0" id="shinytest2-020">shinytest2 0.2.0<a class="anchor" aria-label="anchor" href="#shinytest2-020"></a></h2>
+<h2 class="pkg-version" data-toc-text="development version" id="shinytest2-development-version">shinytest2 (development version)<a class="anchor" aria-label="anchor" href="#shinytest2-development-version"></a></h2>
 <div class="section level3">
-<h3 id="breaking-changes-0-2-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-2-0"></a></h3>
+<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
 <div class="section level4">
-<h4 id="appdriverexpect_download-0-2-0"><code>AppDriver$expect_download()</code><a class="anchor" aria-label="anchor" href="#appdriverexpect_download-0-2-0"></a></h4>
+<h4 id="download-snapshot-files-development-version">Download snapshot files<a class="anchor" aria-label="anchor" href="#download-snapshot-files-development-version"></a></h4>
 <ul><li>All downloaded snapshots will contain a counter prefix (e.g. <code>003-</code> in <code>003-my_custom_name.txt</code>) to avoid having two files point to the same snapshot file location. Sharing the same snapshot file is dangerous as the last file written is stored as truth, overwriting any knowledge of the original file. (<a href="https://github.com/rstudio/shinytest2/issues/261" class="external-link">#261</a>)</li>
 <li>If a <code>content-disposition</code> header is provided and <code>AppDriver$expect_download(name = NULL)</code> (default), the snapshot file will try to be saved using the <code>content-disposition</code> header value. When paired with <code>compare = NULL</code> (default), <a href="https://testthat.r-lib.org" class="external-link">testthat</a> will choose the proper <code>compare</code> method between <code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">compare_file_text()</a></code> and <code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">compare_file_binary()</a></code>. See <code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">?testthat::expect_snapshot_file</a></code> for more details. (<a href="https://github.com/rstudio/shinytest2/issues/261" class="external-link">#261</a>)</li>
 <li>
 <code>AppDriver$expect_download()</code> will now download snapshot files using a sanitized file name, e.g. <code>AppDriver$expect_download(name = "my/custom/name.txt")</code> will be stored in the file <code>tests/testthat/_snaps/003-my_custom_name.txt</code>. (<a href="https://github.com/rstudio/shinytest2/issues/261" class="external-link">#261</a>)</li>
 </ul></div>
+<div class="section level4">
+<h4 id="timeout-values-development-version">Timeout values<a class="anchor" aria-label="anchor" href="#timeout-values-development-version"></a></h4>
+<p>The <strong>default</strong> timeout values for many <code>AppDriver</code> methods have been altered and are shown in the table below. (<a href="https://github.com/rstudio/shinytest2/issues/263" class="external-link">#263</a>)</p>
+<table class="table"><thead><tr class="header"><th>Method</th>
+<th align="right">Previous value (ms)</th>
+<th align="right">New value (ms)</th>
+</tr></thead><tbody><tr class="odd"><td><code>AppDriver$new(load_timeout=)</code></td>
+<td align="right"><code>10 * 1000</code></td>
+<td align="right"><code>15 * 1000</code></td>
+</tr><tr class="even"><td><code>AppDriver$set_inputs(timeout_=)</code></td>
+<td align="right"><code>3 * 1000</code></td>
+<td align="right"><code>4 * 1000</code></td>
+</tr><tr class="odd"><td><code>AppDriver$upload_file(timeout_=)</code></td>
+<td align="right"><code>3 * 1000</code></td>
+<td align="right"><code>4 * 1000</code></td>
+</tr><tr class="even"><td><code>AppDriver$expect_js(timeout=)</code></td>
+<td align="right"><code>15 * 1000</code></td>
+<td align="right"><code>4 * 1000</code></td>
+</tr><tr class="odd"><td><code>AppDriver$get_js(timeout=)</code></td>
+<td align="right"><code>15 * 1000</code></td>
+<td align="right"><code>4 * 1000</code></td>
+</tr><tr class="even"><td><code>AppDriver$run_js(timeout=)</code></td>
+<td align="right"><code>15 * 1000</code></td>
+<td align="right"><code>4 * 1000</code></td>
+</tr><tr class="odd"><td><code>AppDriver$wait_for_idle(timeout=)</code></td>
+<td align="right"><code>30 * 1000</code></td>
+<td align="right"><code>4 * 1000</code></td>
+</tr><tr class="even"><td><code>AppDriver$wait_for_value(timeout=)</code></td>
+<td align="right"><code>15 * 1000</code></td>
+<td align="right"><code>4 * 1000</code></td>
+</tr><tr class="odd"><td><code>AppDriver$wait_for_js(timeout=)</code></td>
+<td align="right"><code>30 * 1000</code></td>
+<td align="right"><code>4 * 1000</code></td>
+</tr><tr class="even"><td><code>AppDriver$stop(signal_timeout=)</code></td>
+<td align="right"><code>250</code></td>
+<td align="right"><code>500</code></td>
+</tr></tbody></table><p><code>AppDriver$new(load_timeout=)</code> is initialized using the first numeric value found: 1. Supplied directly: <code>AppDriver$new(load_timeout=)</code> 2. Locally defined option: <code>options(shinytest2.load_timeout=)</code> 3. System environment variable: <code>SHINYTEST2_LOAD_TIMEOUT</code> 4. <code>15 * 1000</code> (15s)</p>
+<p><code>AppDriver$new(timeout=)</code> is initialized using the first numeric value found: 1. Supplied directly: <code>AppDriver$new(timeout=)</code> 2. Locally defined option: <code>options(shinytest2.timeout=)</code> 3. System environment variable: <code>SHINYTEST2_TIMEOUT</code> 4. <code>4 * 1000</code> (4s)</p>
+<p><code>AppDriver$stop(signal_timeout=)</code> is initialized using the first numeric value found: 1. Supplied directly: <code>AppDriver$stop(signal_timeout=)</code> 2. Locally defined option: <code>options(shinytest2.signal_timeout=)</code> 3. System environment variable: <code>SHINYTEST2_SIGNAL_TIMEOUT</code> 4. If the system environment variable <code>R_COVR=true</code>: <code>20 * 1000</code> (20s) 5. <code>500</code> (0.5s)</p>
+<p>All remaining <code>AppDriver</code> methods will default their <code>timeout</code> and <code>timeout_</code> parameters to the initialized <code>AppDriver$new(timeout=)</code> value. For example, if <code>app &lt;- AppDriver$new(timeout = 500)</code> then <code>app$get_js(timeout=)</code> will default to <code>500</code> milliseconds.</p>
+</div>
 </div>
 <div class="section level3">
-<h3 id="new-features-0-2-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-2-0"></a></h3>
+<h3 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
 <ul><li><p><code><a href="../reference/compare_screenshot_threshold.html">compare_screenshot_threshold()</a></code> is a new method to compare screenshots and allow small differences between two screenshots. This method checks every subset matrix of the pixel differences between the two images. If any total difference is larger than the <code>threshold</code> value, the two images are considered to be different. The subset matrix size can be increased by setting <code>kernel_size</code>. (<a href="https://github.com/rstudio/shinytest2/issues/231" class="external-link">#231</a>)</p></li>
-<li><p>Support for supply your own compare method to <code>AppDriver$expect_screenshot(compare=)</code> has been added. By default, <code>AppDriver$expect_screenshot(compare=)</code> is set to <code>compare_screenshot_threshold(threshold = NULL)</code> which in turn calls <code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">testthat::compare_file_binary()</a></code>. So no default screenshot expectation behavior has changed. (<a href="https://github.com/rstudio/shinytest2/issues/231" class="external-link">#231</a>)</p></li>
+<li><p>Support for supplying your own compare method to <code>AppDriver$expect_screenshot(compare=)</code> has been added. By default, <code>AppDriver$expect_screenshot(compare=)</code> is set to <code>compare_screenshot_threshold(threshold = NULL)</code> which is equivalent to <code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">testthat::compare_file_binary()</a></code>. No default screenshot expectation behavior has changed. (<a href="https://github.com/rstudio/shinytest2/issues/231" class="external-link">#231</a>)</p></li>
 <li><p><code><a href="../reference/test_app.html">test_app()</a></code> now inherits the existing test reporter when testing multiple apps within a package test file. This allows for a seamless, single reporter output instead of nested reporters being displayed. (<a href="https://github.com/rstudio/shinytest2/issues/192" class="external-link">#192</a>)</p></li>
 <li><p>The recording browser window is now closed when either the “Save test and exit” or “Exit” buttons are clicked. (<a href="https://github.com/daattali" class="external-link">@daattali</a>, <a href="https://github.com/rstudio/shinytest2/issues/202" class="external-link">#202</a>)</p></li>
 <li><p>When testing and <a href="https://github.com/rstudio/chromote" class="external-link">chromote</a> can not be started, the test will be skipped. When testing on windows in CI, <a href="https://github.com/rstudio/chromote" class="external-link">chromote</a> will get an extra attempt to be started (<a href="https://github.com/rstudio/shinytest2/issues/225" class="external-link">#225</a>)</p></li>
@@ -83,7 +124,7 @@
 <li><p>Add support for <em>not</em> recording the screen size when recording a test (<a href="https://github.com/rstudio/shinytest2/issues/223" class="external-link">#223</a>)</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug--improvements-0-2-0">Bug / Improvements<a class="anchor" aria-label="anchor" href="#bug--improvements-0-2-0"></a></h3>
+<h3 id="bug--improvements-development-version">Bug / Improvements<a class="anchor" aria-label="anchor" href="#bug--improvements-development-version"></a></h3>
 <ul><li><p>Fix set of bugs found by <a href="https://github.com/daattali" class="external-link">@daattali</a> including test files should be opened in the IDE after recording and test and replace missing images in the website (<a href="https://github.com/rstudio/shinytest2/issues/199" class="external-link">#199</a>)</p></li>
 <li><p>Provide example workflows on how to use <code>rstudio/shinytest2/actions/test-app</code> GHA action (<a href="https://github.com/rstudio/shinytest2/issues/217" class="external-link">#217</a>)</p></li>
 <li><p>When setting a date time slider value, it can now handle array inputs properly. When recording a date time slider value, numeric values will not be recorded as milliseconds instead of seconds since epoch. (<a href="https://github.com/rstudio/shinytest2/issues/223" class="external-link">#223</a>)</p></li>
@@ -91,9 +132,9 @@
 <li><p>Remove trailing comma causing render bug in recorder app (<a href="https://github.com/mehrnoushmalek" class="external-link">@mehrnoushmalek</a>, <a href="https://github.com/rstudio/shinytest2/issues/239" class="external-link">#239</a>)</p></li>
 <li><p>Update {lintr} lints to v3 (<a href="https://github.com/rstudio/shinytest2/issues/240" class="external-link">#240</a>)</p></li>
 <li><p>Fixed GHA links for <code>rstudio/shinytest2/actions/test-app@v1</code> (<a href="https://github.com/rstudio/shinytest2/issues/249" class="external-link">#249</a>)</p></li>
-<li><p>Fix documentation on on <code>AppDriver</code>’s <code>delay</code> parameter being in <strong>seconds</strong>, not <em>milli</em>seconds (<a href="https://github.com/rstudio/shinytest2/issues/255" class="external-link">#255</a>)</p></li>
+<li><p>Fix documentation on on <code>AppDriver</code>’s <code>delay</code> parameter being in seconds, not <em>milli</em>seconds (<a href="https://github.com/rstudio/shinytest2/issues/255" class="external-link">#255</a>)</p></li>
 <li><p>Escape JS text supplied to <code>AppDriver$wait_for_js(script=)</code> (<a href="https://github.com/rstudio/shinytest2/issues/258" class="external-link">#258</a>)</p></li>
-<li><p>Added support for <code>AppDriver$stop(timeout=)</code>. The default timeout when sending <code>SIGINT</code>, <code>SIGTERM</code>, and <code>SIGKILL</code> signals to the <a href="https://shiny.rstudio.com/" class="external-link">shiny</a> process is now 500ms. However, if <a href="https://covr.r-lib.org" class="external-link">covr</a> is running, the default timeout is 20,000 ms to allow time for the report to generate. (<a href="https://github.com/rstudio/shinytest2/issues/259" class="external-link">#259</a>)</p></li>
+<li><p>Added support for <code>AppDriver$stop(signal_timeout=)</code>. The default timeout when sending <code>SIGINT</code>, <code>SIGTERM</code>, and <code>SIGKILL</code> signals to the <a href="https://shiny.rstudio.com/" class="external-link">shiny</a> process is now 500ms. However, if <a href="https://covr.r-lib.org" class="external-link">covr</a> is running, the default timeout is 20,000 ms to allow time for the report to generate. (<a href="https://github.com/rstudio/shinytest2/issues/259" class="external-link">#259</a>, <a href="https://github.com/rstudio/shinytest2/issues/263" class="external-link">#263</a>)</p></li>
 <li><p>Add example and FAQ entry on how to test bookmarking (<a href="https://github.com/rstudio/shinytest2/issues/262" class="external-link">#262</a>)</p></li>
 </ul></div>
 </div>
