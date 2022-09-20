@@ -8,7 +8,7 @@ test_app(
   app_dir = missing_arg(),
   ...,
   name = missing_arg(),
-  check_setup = TRUE,
+  check_setup = missing_arg(),
   reporter = testthat::get_reporter(),
   stop_on_failure = missing_arg()
 )
@@ -24,16 +24,19 @@ test_app(
 \item{...}{Parameters passed to \code{\link[testthat:test_dir]{testthat::test_dir()}}}
 
 \item{name}{Name to display in the middle of the test name. This value is only used
-when calling \code{test_app()} inside of \pkg{testhat} test. The final testing context will
-have the format of \code{"{test_context} - {name} - {app_test_context}"}.}
+when calling \code{test_app()} inside of \pkg{testhat} test. The final testing
+context will have the format of \code{"{test_context} - {name} - {app_test_context}"}.}
 
 \item{check_setup}{If \code{TRUE}, the app will be checked for the presence of
 \code{./tests/testthat/setup-shinytest2.R}. This file must contain a call to
-\code{\link[=load_app_env]{load_app_env()}}.}
+\code{\link[=load_app_env]{load_app_env()}}. Defaults to \code{TRUE} if no \code{NAMESPACE} file
+is found in the Shiny application directory}
 
 \item{reporter}{Reporter to pass through to \code{\link[testthat:test_dir]{testthat::test_dir()}}.}
 
-\item{stop_on_failure}{If missing, the default value of \code{TRUE} will be used. However, if missing and currently testing, \code{FALSE} will be used to seamlessly integrate the app reporter to \code{reporter}.}
+\item{stop_on_failure}{If missing, the default value of \code{TRUE} will be used.
+However, if missing and currently testing, \code{FALSE} will be used to
+seamlessly integrate the app reporter to \code{reporter}.}
 }
 \description{
 This is a helper method that wraps around \code{\link[testthat:test_dir]{testthat::test_dir()}} to test

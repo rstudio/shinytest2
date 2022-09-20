@@ -68,13 +68,17 @@ NULL
 #' @param ... Parameters passed to [`testthat::test_dir()`]
 #' @param reporter The reporter to use for the tests
 #' @param name Name to display in the middle of the test name. This value is only used
-#' when calling `test_app()` inside of \pkg{testhat} test. The final testing context will
-#' have the format of `"{test_context} - {name} - {app_test_context}"`.
+#'   when calling `test_app()` inside of \pkg{testhat} test. The final testing
+#'   context will have the format of `"{test_context} - {name} -
+#'   {app_test_context}"`.
 #' @param check_setup If `TRUE`, the app will be checked for the presence of
-#' `./tests/testthat/setup-shinytest2.R`. This file must contain a call to
-#' [`shinytest2::load_app_env()`].
+#'   `./tests/testthat/setup-shinytest2.R`. This file must contain a call to
+#'   [`shinytest2::load_app_env()`]. Defaults to `TRUE` if no `NAMESPACE` file
+#'   is found in the Shiny application directory
 #' @param reporter Reporter to pass through to [`testthat::test_dir()`].
-#' @param stop_on_failure If missing, the default value of `TRUE` will be used. However, if missing and currently testing, `FALSE` will be used to seamlessly integrate the app reporter to `reporter`.
+#' @param stop_on_failure If missing, the default value of `TRUE` will be used.
+#'   However, if missing and currently testing, `FALSE` will be used to
+#'   seamlessly integrate the app reporter to `reporter`.
 #' @seealso
 #' * [`record_test()`] to create tests to record against your Shiny application.
 #' * [testthat::snapshot_review()] and [testthat::snapshot_accept()] if
@@ -273,18 +277,40 @@ test_app <- function(
 #' be called in `./tests/testthat/setup-shinytest2.R` if access to support file objects is
 #' desired.
 #'
+#' @section \pkg{golem} and R packages:
+#'
+#' When using an R package like structure (including \pkg{golem}), the `./R`
+#' folder is loaded using pre-existing mechanisms and `global.R` should not be
+#' used.
+#'
+#' `load_app_env()` should only be called when Shiny support environments are
+#' not naturally loaded.
+#'
 #' @seealso [`use_shinytest2()`] for creating a testing setup file that
 #'   loads your Shiny app support environment into the testing environment.
 #'
 #' @param app_dir The base directory for the Shiny application.
-#' @param renv The environment in which the files in the `R/`` directory should be evaluated.
+#' @param renv The environment in which the files in the `R/` directory should be evaluated.
+#' @param force If `TRUE`, [`shiny::loadSupport()`] will always be called. If
+#' `FALSE` (default), [`shiny::loadSupport()`] will only be called if no
+#' `NAMESPACE` file exists.
 #' @inheritParams shiny::loadSupport
 #' @export
 load_app_env <- function(
   app_dir = "../../",
+  ...,
   renv = rlang::caller_env(),
-  globalrenv = rlang::caller_env()
+  globalrenv = rlang::caller_env(),
+  force = FALSE
 ) {
+  if ((is_false(force)) && has_namespace_file(app_dir)) {
+    rlang::warn(c(
+      "`NAMESPACE` file found. Skipping support environment from `NAMESPACE`.",
+      "i" = "To suppress this message and NOT load the Shiny support environments, delete the {shinytest2} test setup file.",
+      "i" = "To suppress this message and load the Shiny support environments, set `force = TRUE`."
+    ))
+    return(invisible(NULL))
+  }
   shiny::loadSupport(app_dir, renv = renv, globalrenv = globalrenv)
 }
 
@@ -297,4 +323,9 @@ has_load_app_env <- function(file) {
   lines <- read_utf8(file)
   has_call <- grepl("load_app_env", lines, fixed = TRUE)
   return(has_call)
+}
+
+has_namespace_file <- function(app_dir) {
+  file <- fs::path(app_dir, "NAMESPACE")
+  return(fs::file_exists(file))
 }

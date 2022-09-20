@@ -6,17 +6,23 @@
 \usage{
 load_app_env(
   app_dir = "../../",
+  ...,
   renv = rlang::caller_env(),
-  globalrenv = rlang::caller_env()
+  globalrenv = rlang::caller_env(),
+  force = FALSE
 )
 }
 \arguments{
 \item{app_dir}{The base directory for the Shiny application.}
 
-\item{renv}{The environment in which the files in the `R/`` directory should be evaluated.}
+\item{renv}{The environment in which the files in the \verb{R/} directory should be evaluated.}
 
 \item{globalrenv}{The environment in which \code{global.R} should be evaluated. If
 \code{NULL}, \code{global.R} will not be evaluated at all.}
+
+\item{force}{If \code{TRUE}, \code{\link[shiny:loadSupport]{shiny::loadSupport()}} will always be called. If
+\code{FALSE} (default), \code{\link[shiny:loadSupport]{shiny::loadSupport()}} will only be called if no
+\code{NAMESPACE} file exists.}
 }
 \description{
 Executes all \code{./R} files and \code{global.R} into the current environment.
