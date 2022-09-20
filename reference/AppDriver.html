@@ -939,7 +939,7 @@ headers.</p>
 <li><p>If a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition" class="external-link"><code>content-disposition</code> <code>filename</code></a> is provided,
 then a temp file containing this <code>filename</code> will be
 returned.</p></li>
-<li><p>Otherwise, a tempfile ending in <code>.download</code> will be returned.</p></li>
+<li><p>Otherwise, a temp file ending in <code>.download</code> will be returned.</p></li>
 </ul></div>
 <div class="section">
 <h4 id="examples-9">Examples<a class="anchor" aria-label="anchor" href="#examples-9"></a></h4>
@@ -2263,9 +2263,9 @@ main R session.</p><div class="section">
 <div class="section">
 <h4 id="arguments-23">Arguments<a class="anchor" aria-label="anchor" href="#arguments-23"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>signal_timeout</code></dt>
-<dd><p>Milliseconds to wait between sending a SIGINT,
-SIGTERM, and SIGKILL to the Shiny process. Defaults to 500ms and does
-not utilize the resolved valur from <code>AppDriver$new(timeout=)</code>. However,
+<dd><p>Milliseconds to wait between sending a <code>SIGINT</code>,
+<code>SIGTERM</code>, and <code>SIGKILL</code> to the Shiny process. Defaults to 500ms and does
+not utilize the resolved value from <code>AppDriver$new(timeout=)</code>. However,
 if <span class="pkg">covr</span> is currently executing, then the <code>timeout</code> is set to
 20,000ms to allow for the coverage report to be generated.</p></dd>
 
