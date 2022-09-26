@@ -4,6 +4,7 @@
 [![CRAN status](https://www.r-pkg.org/badges/version/shinytest2)](https://CRAN.R-project.org/package=shinytest2)
 [![R-CMD-check](https://github.com/rstudio/shinytest2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rstudio/shinytest2/actions)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![DOI](https://zenodo.org/badge/383580925.svg)](https://zenodo.org/badge/latestdoi/383580925)
 <!-- badges: end -->
 
 Manually testing Shiny applications is often laborious, inconsistent, and doesn’t scale well. Whether you are developing new features, fixing bug(s), or simply upgrading dependencies on a serious app where mistakes have real consequences, it is critical to know when regressions are introduced. `{shinytest2}` provides a streamlined toolkit for unit testing Shiny applications and seamlessly integrates with the popular `{testthat}` framework for unit testing R code.
