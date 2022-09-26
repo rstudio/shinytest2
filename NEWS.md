@@ -91,6 +91,8 @@ All remaining `AppDriver` methods will default their `timeout` and `timeout_` pa
 
 * Add example and FAQ entry on how to test bookmarking (#262)
 
+* Added a DOI badge to README.md (#267)
+
 
 # shinytest2 0.1.1
 
