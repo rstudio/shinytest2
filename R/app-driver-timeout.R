@@ -61,7 +61,7 @@ timeout_value <- function(
   option_key,
   env_key,
   default_value,
-  timeout_name = checkmate::vname(x)
+  timeout_name = checkmate::vname(timeout)
 ) {
   # Handle both missing an NULL values
   rlang::maybe_missing(timeout, NULL) %||%       # user provided

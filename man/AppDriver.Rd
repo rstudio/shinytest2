@@ -1707,7 +1707,7 @@ Location logic:
 \item If a \href{https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition}{\code{content-disposition} \code{filename}} is provided,
 then a temp file containing this \code{filename} will be
 returned.
-\item Otherwise, a tempfile ending in \code{.download} will be returned.
+\item Otherwise, a temp file ending in \code{.download} will be returned.
 }
 }
 \subsection{Examples}{
@@ -3080,9 +3080,9 @@ main R session.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{signal_timeout}}{Milliseconds to wait between sending a SIGINT,
-SIGTERM, and SIGKILL to the Shiny process. Defaults to 500ms and does
-not utilize the resolved valur from \code{AppDriver$new(timeout=)}. However,
+\item{\code{signal_timeout}}{Milliseconds to wait between sending a \code{SIGINT},
+\code{SIGTERM}, and \code{SIGKILL} to the Shiny process. Defaults to 500ms and does
+not utilize the resolved value from \code{AppDriver$new(timeout=)}. However,
 if \pkg{covr} is currently executing, then the \code{timeout} is set to
 20,000ms to allow for the coverage report to be generated.}
 }

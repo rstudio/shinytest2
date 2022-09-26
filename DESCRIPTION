@@ -1,6 +1,6 @@
 Package: shinytest2
 Title: Testing for Shiny Applications
-Version: 0.1.1.9000
+Version: 0.2.0
 Authors@R:
     c(
         person("Barret", "Schloerke", role = c("cre", "aut"), email = "barret@rstudio.com", comment = c(ORCID = "0000-0001-9986-114X")),
@@ -50,7 +50,8 @@ Suggests:
     shinyvalidate (>= 0.1.2),
     showimage,
     usethis,
-    vdiffr (>= 1.0.0)
+    vdiffr (>= 1.0.0),
+    spelling
 Config/Needs/check:
     rstudio/shiny
 Config/Needs/website:

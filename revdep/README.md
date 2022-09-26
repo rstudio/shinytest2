@@ -10,14 +10,14 @@
 |collate  |en_US.UTF-8                    |
 |ctype    |en_US.UTF-8                    |
 |tz       |America/New_York               |
-|date     |2022-09-06                     |
+|date     |2022-09-19                     |
 |pandoc   |2.19.2 @ /usr/local/bin/pandoc |
 
 # Dependencies
 
 |package     |old   |new      |Δ  |
 |:-----------|:-----|:--------|:--|
-|shinytest2  |0.1.0 |0.1.1    |*  |
+|shinytest2  |0.1.1 |0.2.0    |*  |
 |AsioHeaders |NA    |1.22.1-1 |*  |
 
 # Revdeps

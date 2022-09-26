@@ -683,7 +683,7 @@ AppDriver <- R6Class( # nolint
     #' * If a [\code{content-disposition} \code{filename}](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition) is provided,
     #' then a temp file containing this `filename` will be
     #' returned.
-    #' * Otherwise, a tempfile ending in `.download` will be returned.
+    #' * Otherwise, a temp file ending in `.download` will be returned.
     #' @examples
     #' \dontrun{
     #' app_path <- system.file("examples/10_download", package = "shiny")
@@ -1677,9 +1677,9 @@ AppDriver <- R6Class( # nolint
     #' Typically, this can be paired with a button that when clicked will call
     #' `shiny::stopApp(info)` to return `info` from the test app back to the
     #' main R session.
-    #' @param signal_timeout Milliseconds to wait between sending a SIGINT,
-    #'   SIGTERM, and SIGKILL to the Shiny process. Defaults to 500ms and does
-    #'   not utilize the resolved valur from `AppDriver$new(timeout=)`. However,
+    #' @param signal_timeout Milliseconds to wait between sending a `SIGINT`,
+    #'   `SIGTERM`, and `SIGKILL` to the Shiny process. Defaults to 500ms and does
+    #'   not utilize the resolved value from `AppDriver$new(timeout=)`. However,
     #'   if \pkg{covr} is currently executing, then the `timeout` is set to
     #'   20,000ms to allow for the coverage report to be generated.
     #' @return The result of the background process if the Shiny application has

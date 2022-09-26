@@ -91,7 +91,7 @@ A load test is composed a three phases:
 
 - Similarly to `{shinytest2}`, `{shinyloadtest}` records a user session with `shinyloadtest::record_session()`.
 - This session is subsequently replayed by a Java-based tool, `shinycannon`,
-able to simulate multiple sessions during a choosen amount of time.
+able to simulate multiple sessions during a chosen amount of time.
 - Sessions are analyzed by `shinyloadtest::load_runs()` and an HTML report
 generated with `shinyloadtest::shinyloadtest_report()`.
 
@@ -315,7 +315,7 @@ We don't forget to clean the target app so as to kill the underlying process.
 Note that if you want to deploy the report on GitHub Pages, you have to name it
 `index.html`.
 
-### Automating with Github Actions
+### Automating with GitHub Actions
 
 Now, it is time to integrate the current pipeline in a CI/CD workflow.
 For convenience, we wrap all the previous steps in a single function:
