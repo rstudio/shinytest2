@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -158,7 +158,7 @@
 <p>A load test is composed a three phases:</p>
 <ul>
 <li>Similarly to <a href="https://rstudio.github.io/shinytest2/">shinytest2</a>, <a href="https://rstudio.github.io/shinyloadtest/" class="external-link">shinyloadtest</a> records a user session with <code>shinyloadtest::record_session()</code>.</li>
-<li>This session is subsequently replayed by a Java-based tool, <code>shinycannon</code>, able to simulate multiple sessions during a choosen amount of time.</li>
+<li>This session is subsequently replayed by a Java-based tool, <code>shinycannon</code>, able to simulate multiple sessions during a chosen amount of time.</li>
 <li>Sessions are analyzed by <code>shinyloadtest::load_runs()</code> and an HTML report generated with <code>shinyloadtest::shinyloadtest_report()</code>.</li>
 </ul>
 <p>In general, the first step is done manually, that is, you play with the app as if you were a real business user and stop the session when satisfied. However, because of <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> headless capabilities, we could manipulate the app with <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> helpers such as <code>set_inputs</code> or raw JavaScript code to achieve the same goal.</p>
@@ -322,7 +322,7 @@ tcp        0      0 127.0.0.1:44179         0.0.0.0:*               LISTEN      
 <p>We don’t forget to clean the target app so as to kill the underlying process. Note that if you want to deploy the report on GitHub Pages, you have to name it <code>index.html</code>.</p>
 </div>
 <div class="section level4">
-<h4 id="automating-with-github-actions">Automating with Github Actions<a class="anchor" aria-label="anchor" href="#automating-with-github-actions"></a>
+<h4 id="automating-with-github-actions">Automating with GitHub Actions<a class="anchor" aria-label="anchor" href="#automating-with-github-actions"></a>
 </h4>
 <p>Now, it is time to integrate the current pipeline in a CI/CD workflow. For convenience, we wrap all the previous steps in a single function:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
