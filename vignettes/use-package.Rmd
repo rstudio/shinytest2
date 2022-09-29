@@ -133,7 +133,7 @@ To help create tests, you can call `record_test()` on your shiny application obj
 
 There are a few steps that are needed for both types of tests.
 
-It is recommended to call `shinytest2::use_shinytest()` to enable different test config set-ups.
+It is recommended to call `shinytest2::use_shinytest2()` to enable different test config set-ups.
 
 You will need to add `{shinytest2}` to the `Suggests` section in your `DESCRIPTION` file.
 
