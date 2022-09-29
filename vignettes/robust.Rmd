@@ -209,7 +209,7 @@ This isolates the test even more and does not let an earlier expectation stop te
 `{shinytest2}` has a handful of built in expectation methods:
 
 -   `input`/`output` names:
-    -   `AppDriver$expect_unqiue_names()`: Assert all `input` and `output` names are unique
+    -   `AppDriver$expect_unique_names()`: Assert all `input` and `output` names are unique
 -   Shiny value expectations:
     -   `AppDriver$expect_values()`: Expect all `input`, `output`, and `export` values are consistent
     -   `AppDriver$expect_download()`: Expect a downloaded file to downloadable
