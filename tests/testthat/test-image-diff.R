@@ -81,3 +81,17 @@ test_that("kernel size makes a difference", {
   expect_gt(big_max_diff, 44)
   expect_lt(big_max_diff, 50)
 })
+
+
+test_that("Errors in screenshot_max_difference do not cause errors in compare_screenshot_threshold", {
+  expect_silent({
+    comp_val <-
+      compare_screenshot_threshold(
+        slider_old,
+        bookmark_old,
+        threshold = 5
+      )
+  })
+  expect_false(comp_val)
+
+})
