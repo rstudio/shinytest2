@@ -1,3 +1,8 @@
+# shinytest2 (development version)
+
+* Set the directory to the Shiny App directory before starting the background R process. This allows for local `.Rprofile` and `.Renviron` files to be found naturally. (#275)
+
+
 # shinytest2 0.2.0
 
 ## Breaking changes
