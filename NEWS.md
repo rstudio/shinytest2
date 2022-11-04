@@ -2,6 +2,8 @@
 
 * Set the directory to the Shiny App directory before starting the background R process. This allows for local `.Rprofile` and `.Renviron` files to be found naturally. (#275)
 
+* Fixed bug where `compare_screenshot_threshold()` did not safe guard against errors thrown by `screenshot_max_difference()`. (#276)
+
 
 # shinytest2 0.2.0
 
