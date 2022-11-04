@@ -147,11 +147,20 @@ compare_screenshot_threshold <- function(
     len = 1
   )
 
-  conv_max_value <- screenshot_max_difference(
-    old = old,
-    new = new,
-    kernel_size = kernel_size
+  conv_max_value <- try(
+    # If errors occur, this means the images are very different.
+    # No need to replay the error message
+    silent = TRUE,
+    screenshot_max_difference(
+      old = old,
+      new = new,
+      kernel_size = kernel_size
+    )
   )
+  if (inherits(conv_max_value, "try-error")) {
+    # If the screenshot_max_difference calculation, the images are not the same
+    return(FALSE)
+  }
 
   ret <- conv_max_value < threshold
 
