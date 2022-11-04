@@ -17,6 +17,8 @@ app_start_shiny <- function(
   p <- local({
     # https://github.com/r-lib/testthat/issues/603
     withr::local_envvar(c("R_TESTS" = NA))
+    # Load the app's .Rprofile / .Renviron if possible
+    withr::local_dir(self$get_dir())
 
     callr::r_bg(
       stdout = sprintf(tempfile_format, "shiny-stdout"),
