@@ -1,5 +1,7 @@
 # shinytest2 0.2.1
 
+* Fixed bug where `compare_screenshot_threshold()` did not safe guard against errors thrown by `screenshot_max_difference()`. (#276)
+
 # shinytest2 0.2.0
 
 ## Breaking changes
