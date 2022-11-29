@@ -29,6 +29,7 @@ chromote_eval <- function(
   allow_no_response = FALSE # Allows for `awaitPromise` and `returnByValue` to be `FALSE`. No function should use this except for: `$run_js()`
 ) {
   assert_chromote_session(chromote_session)
+  js <- as.character(js) # {glue} support
   checkmate::assert_character(js, any.missing = FALSE, len = 1)
   if (isTRUE(allow_no_response)) {
     checkmate::assert_false(awaitPromise)
@@ -91,6 +92,7 @@ chromote_wait_for_condition <- function(
   interval = 100
 ) {
   ellipsis::check_dots_empty()
+  condition_js <- as.character(condition_js) # {glue} support
   checkmate::assert_character(condition_js, any.missing = FALSE, len = 1)
   checkmate::assert_number(timeout, lower = 0)
   checkmate::assert_number(interval, lower = 0)
