@@ -20,7 +20,7 @@ obj_to_string <- function(obj) {
         },
         "array" = {
           vals <- vapply(obj$preview$properties, obj_to_string, character(1))
-          if (obj$preview$overflow) {
+          if (isTRUE(obj$preview$overflow)) {
             vals[length(vals) + 1] <- "..."
           }
           paste0("[", paste0(vals, collapse = ","), "]")
