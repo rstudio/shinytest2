@@ -4,6 +4,8 @@
 
 * Fixed bug where `compare_screenshot_threshold()` did not safe guard against errors thrown by `screenshot_max_difference()`. (#276)
 
+* Fixed bug where preview overflow did not have length of 1. (@cpsievert #291)
+
 
 # shinytest2 0.2.0
 
