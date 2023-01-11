@@ -1,5 +1,20 @@
 require("shiny", quietly = TRUE, character.only = TRUE)
 
+# App from: https://github.com/rstudio/shinytest2/issues/303#issuecomment-1377950984
+test_that("Make sure global vars are set", {
+  logs <- source("scripts/issue_303.R")$value
+  formatted_logs <- format(logs)
+  expect_equal(
+    any(grepl("object 'foo' not found", formatted_logs, fixed = TRUE)),
+    FALSE
+  )
+  expect_equal(
+    any(grepl("object 'foo3' not found", formatted_logs, fixed = TRUE)),
+    FALSE
+  )
+})
+
+
 test_that("Saving an app has the right context", {
   n <- 5
   shiny_app <- shinyApp(
