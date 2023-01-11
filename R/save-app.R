@@ -19,7 +19,10 @@ app_data <- function(app) {
   server <- app$serverFuncSource()
   globals <- app_server_globals(server)
 
-  data <- globals$globals
+  data <- list(
+    globals = globals$globals
+  )
+  # data <- globals$globals
   data$ui <- environment(app$httpHandler)$ui
   # If the app is made from shinyAppDir with a wrapper around the handler...
   # See https://github.com/rstudio/shiny/blob/fd7518018cbb2ec0b89960c922e34576d5dbc1e7/R/shinyapp.R#L407
