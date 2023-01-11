@@ -24,22 +24,26 @@ app_set_dir <- function(
     )
   }
 
-  generic_abort <- function() {
-    app_abort(self, private,
-      c(
-        "`app_dir` must be a directory containing:",
-        "",
-        "*" = "an `./app.R` Shiny application",
-        "",
-        " " = "or",
-        "",
-        "*" = "a Shiny R Markdown file",
-        "*" = "a `./server.R` Shiny server",
-        "",
-        "i" = "If a Shiny R Markdown document is found, it will be the prefered document.",
-        "i" = "`./app.R` is not compatible with Shiny R Markdown files."
-      )
-    )
+  shiny_app_and_rmd_abort <- function() {
+    app_abort(self, private, c(
+      "`app_dir` must be a directory containing:",
+      "",
+      "*" = "an `./app.R` Shiny application",
+      "",
+      " " = "or",
+      "",
+      "*" = "a Shiny R Markdown file",
+      "*" = "a `./server.R` Shiny server",
+      "",
+      "i" = "If a Shiny R Markdown document is found, it will be the prefered document.",
+      "i" = "`./app.R` is not compatible with Shiny R Markdown files."
+    ))
+  }
+  shiny_app_and_server_abort <- function() {
+    app_abort(self, private, c(
+      "`app_dir` contains both `app.R` and `server.R`. Unintented behavior may occur.",
+      "!" = "Please either use `app.R` or `server.R`, but not both."
+    ))
   }
 
   if (!fs::dir_exists(app_dir)) {
@@ -55,13 +59,13 @@ app_set_dir <- function(
   # }
   if (length(rmds) > 0 && has_app_path) {
     # Has an Rmd and an app.R
-    generic_abort()
+    shiny_app_and_rmd_abort()
   }
   # Rmd + server.R is allowed! Use Rmd path
 
   # No Rmd, but has app.R or server.R
   if (has_app_path && has_server_path) {
-    generic_abort()
+    shiny_app_and_server_abort()
   }
 
   # Single app.R, server.R, or Rmd file
