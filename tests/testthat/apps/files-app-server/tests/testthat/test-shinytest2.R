@@ -1,9 +1,9 @@
 library(shinytest2)
 
-test_that("server.R and app.R are not compatible", {
+test_that("rmarkdown and app.R are not compatible", {
   expect_error(
-    AppDriver$new()$stop(),
-    "Unintented behavior may occur",
+    AppDriver$new(),
+    "`app_dir` must be a directory containing",
     fixed = TRUE
   )
 })
