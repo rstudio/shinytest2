@@ -5,6 +5,11 @@
 # However, it would break if run in the R console
 # https://github.com/rstudio/shinytest2/issues/303#issuecomment-1377950984
 
+# It does not work if run in a `callr::r{_bg}()` process as that is not executed the in their respective global environments
+# The only way this error is found is if the code is executed in the global env
+# Using `callr::rscript()` requires `{shinytest2}` to be installed
+# Therefore, only test on CI as the package is not installed for CRAN testing
+
 # driver$get_logs()
 #> {shiny}      R  stderr ----------- Warning: Error in server: object 'foo' not found
 #> {shiny}      R  stderr -----------   60: server [dean.R#11]
@@ -27,16 +32,18 @@ app <- local({
   foo3 <- 19
 
   shiny::shinyApp(
-    ui <- shiny::fluidPage(textOutput("foo")),
+    ui <- shiny::fluidPage(shiny::textOutput("foo")),
     server = function(input, output, session) {
       foo3
       foo2 <- foo + 1
-      output$foo <- renderText({
+      output$foo <- shiny::renderText({
         foo2
       })
     }
   )
 })
 
-driver <- AppDriver$new(app)
-driver$get_logs()
+driver <- shinytest2::AppDriver$new(app)
+
+# Keep here to print to `stdout`
+print(driver$get_logs())
