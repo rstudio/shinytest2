@@ -23,7 +23,7 @@ app_globals_env <- list2env(`_data`$globals, envir = NULL) # make a new environm
 # Must be first; Don't want to disconnect the global env if run second
 parent.env(app_globals_env) <- server_parent_env
 # Must be second
-parent.env(environment(`_data`$server)) <- app_globals_env
+parent.env(environment(`_data`$server)) <- app_globals_env # nolint
 
 # ## Great for debugging
 # cat("globals env:\n")
