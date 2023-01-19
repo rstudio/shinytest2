@@ -25,7 +25,20 @@ test_that("Make sure global vars are set - pr307", {
   # Run the script in a global environment that does not polute this global environment
   p <- callr::rscript("scripts/pr_307.R", show = FALSE)
   expect_equal(
-    any(grepl("mod_server", p$stdout, fixed = TRUE)),
+    any(grepl("could not find function", p$stdout, fixed = TRUE)),
+    FALSE
+  )
+})
+
+# App from: https://github.com/rstudio/shinytest2/pull/307#issuecomment-1381391531
+test_that("Make sure global vars are set - issue295", {
+  # Only run on CI. CRAN requires package to be installed to run `callr::rscript()
+  skip_on_cran()
+
+  # Run the script in a global environment that does not polute this global environment
+  p <- callr::rscript("scripts/issue_295.R", show = FALSE)
+  expect_equal(
+    any(grepl("could not find function", p$stdout, fixed = TRUE)),
     FALSE
   )
 })
