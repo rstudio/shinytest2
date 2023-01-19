@@ -42,7 +42,7 @@ app_server_globals <- function(server) {
   # https://github.com/HenrikBengtsson/globals/issues/61#issuecomment-731777640
   rlang::check_installed("globals", version = "0.14.0")
 
-  globals <- globals::globalsOf(server, envir = environment(server), recursive = FALSE)
+  globals <- globals::globalsOf(server, envir = environment(server), recursive = TRUE)
   globals <- globals::cleanup(globals)
 
   # remove globals found in packages
