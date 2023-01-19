@@ -3,7 +3,7 @@ require("shiny", quietly = TRUE, character.only = TRUE)
 # App from: https://github.com/rstudio/shinytest2/issues/303#issuecomment-1377950984
 test_that("Make sure global vars are set - issue303", {
   # Only run on CI. CRAN requires package to be installed to run `callr::rscript()
-  skip_on_cran()
+  skip_if(!on_ci(), "Only run on CI")
 
   # Run the script in a global environment that does not polute this global environment
   p <- callr::rscript("scripts/issue_303.R", show = FALSE)
@@ -20,7 +20,7 @@ test_that("Make sure global vars are set - issue303", {
 # App from: https://github.com/rstudio/shinytest2/pull/307#issuecomment-1381391531
 test_that("Make sure global vars are set - pr307", {
   # Only run on CI. CRAN requires package to be installed to run `callr::rscript()
-  skip_on_cran()
+  skip_if(!on_ci(), "Only run on CI")
 
   # Run the script in a global environment that does not polute this global environment
   p <- callr::rscript("scripts/pr_307.R", show = FALSE)
@@ -33,7 +33,7 @@ test_that("Make sure global vars are set - pr307", {
 # App from: https://github.com/rstudio/shinytest2/pull/307#issuecomment-1381391531
 test_that("Make sure global vars are set - issue295", {
   # Only run on CI. CRAN requires package to be installed to run `callr::rscript()
-  skip_on_cran()
+  skip_if(!on_ci(), "Only run on CI")
 
   # Run the script in a global environment that does not polute this global environment
   p <- callr::rscript("scripts/issue_295.R", show = FALSE)
