@@ -22,7 +22,12 @@ make_app2 <- function(mod_ui, mod_server_gen) {
   )
 }
 
-app <- make_app2(my_mod_ui("test"), function() { my_mod_server("test") })
+app <- make_app2(
+  my_mod_ui("test"),
+  function() {
+    my_mod_server("test")
+  }
+)
 
 driver <- shinytest2::AppDriver$new(app)
 
