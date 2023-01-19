@@ -4,6 +4,8 @@
 
 * Fixed bug where preview overflow did not have length of 1. (@cpsievert #291)
 
+* Better support for saving global variables for a Shiny server function (#307)
+
 
 # shinytest2 0.2.0
 

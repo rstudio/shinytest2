@@ -77,6 +77,7 @@ app_start_shiny <- function(
   "!DEBUG finding shiny port"
   ## Try to read out the port. Try 5 times/sec, until timeout.
   max_i <- floor(load_timeout / 1000 * 5)
+  err_lines <- ""
   for (i in seq_len(max_i)) {
     err_lines <- readLines(p$get_error_file())
 
