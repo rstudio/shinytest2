@@ -3,6 +3,7 @@ test_that("set kitchen sink of inputs", {
   skip_if_not_installed("shinyWidgets")
 
   app <- AppDriver$new(
+    test_path("apps/widgets"),
     # variant = platform_variant()
     variant = NULL
   )
