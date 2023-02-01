@@ -1,6 +1,6 @@
 test_that("name arg works", {
   app <- AppDriver$new(
-    test_path("../../."),
+    test_path("apps/hello"),
     name = "test",
     variant = NULL
   )

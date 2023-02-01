@@ -11,7 +11,7 @@
 
 # shinytest2 code using `app$**()`:
 test_that("basic website example works using shinytest", {
-  app <- AppDriver$new(variant = platform_variant())
+  app <- AppDriver$new(test_path("apps/hello"), variant = platform_variant())
 
   app$set_inputs(name = "Hadley")
   app$set_inputs(greet = "click")
@@ -30,7 +30,7 @@ test_that("basic website example works using shinytest", {
 
 # shinytest2 code using `app$**()`:
 test_that("basic website example works using testthat", {
-  app <- AppDriver$new(variant = platform_variant(), name = "manual")
+  app <- AppDriver$new(test_path("apps/hello"), variant = platform_variant(), name = "manual")
 
   app$set_inputs(name = "Hadley")
   app$set_inputs(greet = "click")

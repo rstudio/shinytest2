@@ -1,5 +1,5 @@
 test_that("basic website example works", {
-  app <- AppDriver$new(variant = NULL)
+  app <- AppDriver$new(test_path("apps/hello"), variant = NULL)
 
   app$set_inputs(name = "Hadley")
   app$set_inputs(greet = "click")
