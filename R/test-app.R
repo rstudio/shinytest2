@@ -116,6 +116,7 @@ test_app <- function(
 
   if (isTRUE(check_setup)) {
     stop("TODO-barret; This should be deprecated. If users want it, they can add the file themselves. Or, we can only check if not currently within an R package.")
+    stop("TODO-barret; Test that these files are loaded")
     # Legacy support for `setup.R`; Same content, just different name
     setup_paths <- fs::path(app_dir, "tests", "testthat", c("setup-shinytest2.R", "setup.R"))
     setup_paths_exist <- fs::file_exists(setup_paths)
