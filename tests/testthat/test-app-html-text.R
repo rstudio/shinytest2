@@ -1,5 +1,25 @@
+library(shiny)
+
+ui <- fluidPage(
+  textInput("val", "UI Output", "<code>Insert HTML here</code>"),
+  uiOutput("html"),
+  verbatimTextOutput("text")
+)
+server <- function(input, output, session) {
+  output$html <- renderText({
+    shiny::req(input$val)
+    shiny::HTML(input$val)
+  })
+  output$text <- renderText({
+    shiny::req(input$val)
+    input$val
+  })
+}
+shiny_app <- shinyApp(ui, server)
+
+
 test_that("basic text and dom outputs are expected", {
-  app <- AppDriver$new(variant = NULL)
+  app <- AppDriver$new(shiny_app, variant = NULL)
 
   app$set_inputs(val = "<div id='custom'><p>My Custom Output</p></div>")
 
@@ -11,7 +31,7 @@ test_that("basic text and dom outputs are expected", {
 })
 
 test_that("basic text and dom outputs are captured", {
-  app <- AppDriver$new(variant = NULL)
+  app <- AppDriver$new(shiny_app, variant = NULL)
 
   app$set_inputs(val = "<div id='custom'><p>My Custom Output</p></div>")
 
