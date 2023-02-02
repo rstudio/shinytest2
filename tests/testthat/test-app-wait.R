@@ -1,18 +1,18 @@
-# Testing that `./setup-shinytest2.R` is loaded
-
+# Testing that the app helper files can be loaded
 test_that("wait for idle works", {
 
-  app <- AppDriver$new()
+  load_app_env(test_path("apps/wait"))
+  app <- AppDriver$new(test_path("apps/wait"))
 
   app$wait_for_idle(duration = 2 * n)
 
   expect_equal(app$get_value(output = "txt"), "1 2 3")
 })
 
-
 test_that("waiting a lesser value will not be enough", {
 
-  app <- AppDriver$new()
+  load_app_env(test_path("apps/wait"))
+  app <- AppDriver$new(test_path("apps/wait"))
 
   app$wait_for_idle(duration = n / 2)
 

@@ -1,6 +1,6 @@
 test_that("$get_value errors are caught", {
 
-  app <- AppDriver$new()
+  app <- AppDriver$new(test_path("apps/wait"))
 
   expect_error(
     app$get_value("txt"),
@@ -53,7 +53,7 @@ test_that("$get_value errors are caught", {
 
 test_that("wait for value works on output", {
 
-  app <- AppDriver$new()
+  app <- AppDriver$new(test_path("apps/wait"))
 
   expect_equal(
     app$wait_for_value(output = "txt"),
@@ -63,7 +63,7 @@ test_that("wait for value works on output", {
 
 test_that("wait for value works on input", {
 
-  app <- AppDriver$new()
+  app <- AppDriver$new(test_path("apps/wait"))
 
   expect_equal(
     app$wait_for_value(input = "slider3"),

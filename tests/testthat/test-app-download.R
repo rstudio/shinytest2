@@ -1,6 +1,6 @@
 library(shiny)
 
-bear_img <- fs::path_abs(test_path("images/bear.png"))
+bear_img <- fs::path_abs(test_path("app-files/bear.png"))
 
 ui <- fluidPage(
   downloadButton("download_button_txt", "Download Button - Text"),

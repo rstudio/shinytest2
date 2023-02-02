@@ -18,4 +18,16 @@ server <- function(input, output) {
   })
 }
 
-shinyApp(ui, server)
+shiny_app <- shinyApp(ui, server)
+
+test_that("Make sure upload can use a local file", {
+  app <- AppDriver$new(shiny_app)
+
+  app$upload_file(file = test_path("app-files/cars.csv"))
+  app$expect_values()
+
+  expect_error(
+    app$upload_file(file = "missing_file.csv"),
+    "Error finding upload file at path", fixed = TRUE
+  )
+})
