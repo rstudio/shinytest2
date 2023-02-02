@@ -8,7 +8,7 @@ test_app(
   app_dir = missing_arg(),
   ...,
   name = missing_arg(),
-  check_setup = TRUE,
+  check_setup = FALSE,
   reporter = testthat::get_reporter(),
   stop_on_failure = missing_arg()
 )
