@@ -1,63 +1,31 @@
-test_that("Stopping the app listens to the signals", {
-  expect_signal_timeout <- function(
-    expected_signal_timeout,
-    signal_timeout = missing_arg(),
-    signal_timeout_env = NULL,
-    signal_timeout_option = NULL,
-    covr_is_set = FALSE
-  ) {
-    withr::with_envvar(
-      list(
-        "SHINYTEST2_SIGNAL_TIMEOUT" = signal_timeout_env,
-        "R_COVR" = if (covr_is_set) "true" else NULL
-      ),
-      withr::with_options(
-        list(
-          shinytest2.signal_timeout = signal_timeout_option
-        ),
-        {
-          # Use init method to avoid timing issues while testing
-          signal_timeout_val <- resolve_signal_timeout(signal_timeout)
-          testthat::expect_equal(signal_timeout_val, expected_signal_timeout)
-        }
-      )
-    )
-  }
+library(shiny)
 
-  # Respect given value
-  expect_signal_timeout(
-    expected_signal_timeout = 1 * 1001,
-    signal_timeout          = 1 * 1001,
-    signal_timeout_env      = 2 * 1001,
-    signal_timeout_option   = 3 * 1001
-  )
-  # Respect option value
-  expect_signal_timeout(
-    expected_signal_timeout = 3 * 1001,
-    signal_timeout          = missing_arg(),
-    signal_timeout_env      = 2 * 1001,
-    signal_timeout_option   = 3 * 1001
-  )
-  # Respect env value
-  expect_signal_timeout(
-    expected_signal_timeout = 2 * 1001,
-    signal_timeout          = missing_arg(),
-    signal_timeout_env      = 2 * 1001,
-    signal_timeout_option   = NULL
-  )
-  # Default values
-  expect_signal_timeout(
-    expected_signal_timeout = 500,
-    signal_timeout          = missing_arg(),
-    signal_timeout_env      = NULL,
-    signal_timeout_option   = NULL
-  )
-  expect_signal_timeout(
-    expected_signal_timeout = 20 * 1000,
-    signal_timeout          = missing_arg(),
-    signal_timeout_env      = NULL,
-    signal_timeout_option   = NULL,
-    covr_is_set             = TRUE
-  )
+ui <- fluidPage(
+  h1("Click the button and the app dies and returns `42`"),
+  actionButton("button", "What is the meaning of life?")
+)
+server <- function(input, output, session) {
+  observeEvent(input$button, {
+    shiny::stopApp(42)
+  })
+}
 
+shiny_app <- shinyApp(ui, server)
+
+
+test_that("App returns value from script", {
+  app <- AppDriver$new(shiny_app)
+  app$click("button")
+  app$wait_for_idle() # Wait for the app to stop
+
+  meaning_of_life <- app$stop()
+  expect_equal(meaning_of_life, 42)
+})
+
+test_that("App returns value from script", {
+  app <- AppDriver$new(shiny_app)
+  # app$click("button")
+
+  normal_return <- app$stop()
+  expect_equal(normal_return, NULL)
 })
