@@ -1,3 +1,38 @@
+library(shiny)
+
+ui <- fluidPage(
+  "For testing logging purposes only",
+  verbatimTextOutput("time"),
+  # Print all known types
+  tags$script("console.log('Nullish', null, undefined)"),
+  tags$script("console.log('Boolean', false, true)"),
+  tags$script("console.log('Character', 'abc')"),
+  tags$script("console.log('Number', 123)"),
+  tags$script("console.log('BigInt', 10n)"),
+  tags$script("console.log('Object', {'a': 'b'})"),
+  tags$script("console.log('Math', Math)"),
+  tags$script("console.log('Symbol', Symbol('abc'))"),
+  tags$script("console.log('Array', [1,2, 3])"),
+  tags$script("console.log('Function', Date)"),
+  # Capture throw
+  tags$script("setTimeout(function() { throw 'Exception msg' }, 2)"),
+  # Capture exception
+  tags$script("setTimeout(function() { window.test_method(); }, 4)"),
+)
+server <- function(input, output, session) {
+  cat("Cat msg!\n")
+
+  message("Message msg!")
+
+  output$time <- renderText({
+    shiny::invalidateLater(3 * 1000)
+    Sys.time()
+  })
+}
+
+shiny_app <- shinyApp(ui, server)
+
+
 ## Trouble finding `testthat::expect_match()
 # nolint start
 
@@ -56,7 +91,7 @@ expect_log_tests <- function(log) {
 }
 
 test_that("App captures known debug messages", {
-  app <- AppDriver$new()
+  app <- AppDriver$new(shiny_app)
 
   log_df <- app$get_logs()
 
@@ -102,7 +137,7 @@ test_that("App captures known debug messages", {
 
 
 test_that("App captures known debug messages", {
-  app <- AppDriver$new(options = list(shiny.trace = TRUE))
+  app <- AppDriver$new(shiny_app, options = list(shiny.trace = TRUE))
 
   log_df <- app$get_logs()
 
