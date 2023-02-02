@@ -88,3 +88,55 @@ test_that("`export`ed `plot_obj` is updated by `n`", {
   expect_equal(plot_obj_20$data, dt20)
   vdiffr::expect_doppelganger("cars-points-20", plot_obj_20)
 })
+
+
+test_that("Exported values", {
+  shiny_app <-
+    shinyApp(
+      ui = basicPage(
+        h4("Snapshot URL: "),
+        uiOutput("url"),
+        h4("Current values:"),
+        verbatimTextOutput("values"),
+        actionButton("inc", "Increment x")
+      ),
+
+      server = function(input, output, session) {
+        vals <- reactiveValues(x = 1)
+        y <- reactive({
+          vals$x + 1
+        })
+
+        observeEvent(input$inc, {
+          vals$x <<- vals$x + 1
+        })
+
+        exportTestValues(
+          x = vals$x,
+          y = y()
+        )
+
+        output$url <- renderUI({
+          url <- session$getTestSnapshotUrl(format = "json")
+          a(href = url, url)
+        })
+
+        output$values <- renderText({
+          paste0("vals$x: ", vals$x, "\ny: ", y())
+        })
+      }
+    )
+
+  app <- AppDriver$new(shiny_app)
+
+  x <- app$get_values()
+  expect_identical(x$export$x, 1)
+  expect_identical(x$export$y, 2)
+
+  app$set_inputs(inc = "click")
+  app$set_inputs(inc = "click")
+
+  x <- app$get_values()
+  expect_identical(x$export$x, 3)
+  expect_identical(x$export$y, 4)
+})
