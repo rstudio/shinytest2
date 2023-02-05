@@ -206,10 +206,10 @@ The `check-app.yaml` should have a step for each application in the respective d
 ```R
       - uses: rstudio/shinytest2/actions/test-app@v1
         with:
-          path: "01_hello"
+          app-dir: "01_hello"
       - uses: rstudio/shinytest2/actions/test-app@v1
         with:
-          path: "06_tabsets"
+          app-dir: "06_tabsets"
 ```
 
 
