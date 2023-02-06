@@ -1,6 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+<!-- README.Rmd is not auto compiled. Please compile before pushing -->
+
 # test-app
 
 [![RStudio
@@ -99,7 +101,7 @@ jobs:
 
       - uses: rstudio/shinytest2/actions/test-app@v1
         with:
-          path: "."
+          app-dir: "."
 ```
 
 ## Dependencies managed by `{renv}`
@@ -157,7 +159,7 @@ jobs:
 
       - uses: rstudio/shinytest2/actions/test-app@v1
         with:
-          path: "."
+          app-dir: "."
 ```
 
 ## App within Package structure
@@ -224,7 +226,7 @@ jobs:
 
       - uses: rstudio/shinytest2/actions/test-app@v1
         with:
-          path: "."
+          app-dir: "."
 ```
 
 # License
