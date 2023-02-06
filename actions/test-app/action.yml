@@ -28,16 +28,6 @@ runs:
         options(crayon.enabled = TRUE)
         shinytest2::test_app("${{ inputs.app-dir }}")
 
-    - name: Show testthat output
-      if: always()
-      run: |
-        ## --------------------------------------------------------------------
-        echo ::group::Show testthat output
-        find check -name 'testthat.Rout*' -exec cat '{}' \; || true
-        echo ::endgroup::
-      shell: bash
-      working-directory: ${{ inputs.app-dir }}
-
     - name: Upload snapshots
       if: inputs.upload-snapshots != 'false'
       uses: actions/upload-artifact@main
