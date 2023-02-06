@@ -19,15 +19,14 @@ runs:
       run: |
         ## --------------------------------------------------------------------
         v <- paste0(version$major, ".", version$minor)
-        cat(paste0("::set-output name=version::", v, "\n"))
+        cat("version=", v, "\n", file = Sys.getenv("GITHUB_OUTPUT"), sep = "", append = TRUE)
 
     - name: Test app
       shell: Rscript {0}
-      working-directory: ${{ inputs.app-dir }}
       run: |
         ## --------------------------------------------------------------------
         options(crayon.enabled = TRUE)
-        shinytest2::test_app()
+        shinytest2::test_app("${{ inputs.app-dir }}")
 
     - name: Show testthat output
       if: always()
