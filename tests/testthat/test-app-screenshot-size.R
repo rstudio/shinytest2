@@ -89,3 +89,31 @@ test_that("images are captured via expect_values", {
   }
 })
 
+
+test_that("app with no `html` height can get a screenshot", {
+  shiny_app <- shinyApp(div(
+    style = htmltools::css(height = "400px", background = "red"),
+    tags$head(tags$style("html {height: 0}"))
+  ), function(...){ })
+
+  height <- 750
+  width <- 850
+
+  app <- AppDriver$new(shiny_app, height = height, width = width)
+
+  expect_no_screenshot_error <- function(selector, error_msg = NA) {
+    tmpfile <- withr::local_tempfile(fileext=".png")
+    withr::local_options(list(warn = 2))
+    expect_error(
+      app$get_screenshot(tmpfile, selector = selector),
+      error_msg
+    )
+  }
+  # No error
+  expect_no_screenshot_error(rlang::missing_arg())
+  expect_no_screenshot_error("scroll")
+  expect_no_screenshot_error("viewport")
+  # Produces error
+  expect_no_screenshot_error("html", error_msg = "with 0 height")
+
+})
