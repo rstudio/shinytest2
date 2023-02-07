@@ -147,7 +147,7 @@ maybe_set_screenshot_args_cliprect <- function(self, private, screenshot_args) {
   screenshot_args$cliprect <-
     switch(selector,
       "viewport" = {
-        message("Using viewport height and width!")
+        # message("Using viewport height and width!")
         # Get the window height and width
         window_size <- self$get_window_size()
         scroll_start <- self$get_js("(function() {
@@ -165,7 +165,7 @@ maybe_set_screenshot_args_cliprect <- function(self, private, screenshot_args) {
         )
       },
       "scroll" = {
-        message("Using scroll height and width!")
+        # message("Using scroll height and width!")
         scroll_size <- self$get_js("(function() {
           const html = document.querySelector('html')
           return {
@@ -178,8 +178,6 @@ maybe_set_screenshot_args_cliprect <- function(self, private, screenshot_args) {
       # Safety
       stop("Can not create cliprect for unknown selector: ", selector)
     )
-
-  str(screenshot_args$cliprect)
 
   return(screenshot_args)
 }
