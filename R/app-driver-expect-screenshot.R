@@ -27,9 +27,10 @@ app_get_screenshot <- function(
   checkmate::assert_list(screenshot_args)
 
   screenshot_args$delay <- maybe_missing_value(delay, screenshot_args$delay) %||% 0
-  screenshot_args$selector <- maybe_missing_value(selector, screenshot_args$selector) %||% "html"
-
   checkmate::assert_number(screenshot_args$delay, lower = 0, finite = TRUE, null.ok = TRUE)
+
+  screenshot_args$selector <- maybe_missing_value(selector, screenshot_args$selector) %||% "scroll"
+  screenshot_args <- maybe_set_screenshot_args_cliprect(self, private, screenshot_args)
 
   if (is.null(file)) {
     self$log_message("Taking screenshot")
@@ -121,4 +122,64 @@ app_expect_screenshot_and_variant <- function( # nolint
   }
   # Expect screenshot
   app_expect_screenshot(self, private, ...)
+}
+
+
+maybe_set_screenshot_args_cliprect <- function(self, private, screenshot_args) {
+  ckm8_assert_app_driver(self, private)
+
+  selector <- screenshot_args$selector
+
+  # Quit early
+  if (length(selector) != 1 || !is.character(selector)) {
+    return(screenshot_args)
+  }
+  # If not an option, quit early
+  if (!(selector == "viewport" || selector == "scroll")) {
+    return(screenshot_args)
+  }
+
+  ## Make a cliprect that is the maximum of the window size and the root node size
+  # Resolved: https://github.com/rstudio/shinytest2/issues/293
+  ## https://github.com/rstudio/chromote/blob/e1d2997932671642d12bef0b4c58611e322035c7/R/screenshot.R#L28
+  # > a numeric vector with 4 elements (for left, top, width, and height)
+  # Related: set `html` height to viewport size https://github.com/rstudio/shinycoreci/blob/de7676a9eca61e4dd191c0eb2e6f5c65b9119c8a/inst/apps/303-bslib-html-template/template.html#L9
+  screenshot_args$cliprect <-
+    switch(selector,
+      "viewport" = {
+        message("Using viewport height and width!")
+        # Get the window height and width
+        window_size <- self$get_window_size()
+        scroll_start <- self$get_js("(function() {
+          return {
+            scrollX: window.scrollX,
+            scrollY: window.scrollY
+          }
+        })()")
+        # > a numeric vector with 4 elements (for left, top, width, and height)
+        c(
+          scroll_start$scrollX,
+          scroll_start$scrollY,
+          window_size$width,
+          window_size$height
+        )
+      },
+      "scroll" = {
+        message("Using scroll height and width!")
+        scroll_size <- self$get_js("(function() {
+          const html = document.querySelector('html')
+          return {
+            height: html.scrollHeight,
+            width: html.scrollWidth
+          }
+        })()")
+        c(0, 0, scroll_size$width, scroll_size$height)
+      },
+      # Safety
+      stop("Can not create cliprect for unknown selector: ", selector)
+    )
+
+  str(screenshot_args$cliprect)
+
+  return(screenshot_args)
 }
