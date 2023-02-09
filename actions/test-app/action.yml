@@ -33,14 +33,21 @@ runs:
         snap_paths_json <- jsonlite::toJSON(snap_paths)
         cat("paths_json=", snap_paths_json, "\n", file = Sys.getenv("GITHUB_OUTPUT"), sep = "", append = TRUE)
 
-        lapply(app_dirs, function(app_dir) {
+        ans <- lapply(app_dirs, function(app_dir) {
           cat("::group::Testing {shinytest2} App dir: ", app_dir, "\n", sep = "")
           on.exit({
             cat("::endgroup::\n")
           }, add = TRUE)
 
-          shinytest2::test_app(app_dir)
+          try(shinytest2::test_app(app_dir), silent = FALSE)
         })
+
+        # Display that an error was found
+        is_error <- vapply(ans, inherits, logical(1), "try-error")
+        if (any(is_error)) {
+          stop("At least one error found while testing Apps above. Check previous logs for more information")
+        }
+        invisible()
 
     - name: Upload snapshots
       if: inputs.upload-snapshots != 'false'
