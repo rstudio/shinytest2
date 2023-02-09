@@ -3,7 +3,7 @@ description: 'Test a Shiny application or document with shinytest2'
 author: 'Barret Schloerke'
 inputs:
   app-dir:
-    description: 'Directory of Shiny application (or Shiny-based document) to test'
+    description: 'One or more paths to Shiny applications (or Shiny-based document) to test. Separate each path by newlines or commas when submitting more than one path. `app-dir` paths should not contain spaces.'
     default: '.'
     required: false
   upload-snapshots:
@@ -23,15 +23,30 @@ runs:
 
     - name: Test app
       shell: Rscript {0}
+      id: test-app
       run: |
         ## --------------------------------------------------------------------
         options(crayon.enabled = TRUE)
-        shinytest2::test_app("${{ inputs.app-dir }}")
+        app_dirs <- strsplit("${{ inputs.app-dir }}", "[[:space:],]+")[[1]]
+
+        snap_paths <- paste0(app_dirs, "/tests/testthat/_snaps")
+        snap_paths_json <- jsonlite::toJSON(snap_paths)
+        cat("paths_json=", snap_paths_json, "\n", file = Sys.getenv("GITHUB_OUTPUT"), sep = "", append = TRUE)
+
+        lapply(app_dirs, function(app_dir) {
+          cat("::group::Testing {shinytest2} App dir: ", app_dir, "\n", sep = "")
+          on.exit({
+            cat("::endgroup::\n")
+          }, add = TRUE)
+
+          shinytest2::test_app(app_dir)
+        })
 
     - name: Upload snapshots
       if: inputs.upload-snapshots != 'false'
-      uses: actions/upload-artifact@main
+      uses: actions/upload-artifact@v3
       with:
         name: ${{ runner.os }}-r${{ steps.st2-r-version.outputs.version }}-testthat-snapshots
-        path: ${{ inputs.app-dir }}/tests*/testthat/_snaps
+        # path: ${{ inputs.app-dir }}/tests*/testthat/_snaps
+        path: ${{ join(fromJSON(steps.test-app.outputs.paths_json), '\n') }}
         if-no-files-found: ignore

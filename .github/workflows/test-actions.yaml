@@ -55,4 +55,6 @@ jobs:
         continue-on-error: true
         uses: ./actions/test-app
         with:
-          app-dir: "tests/testthat/apps/hello"
+          app-dir: |
+            tests/testthat/apps/hello
+            tests/testthat/apps/bookmark
