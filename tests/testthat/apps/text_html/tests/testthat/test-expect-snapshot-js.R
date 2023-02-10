@@ -1,5 +1,8 @@
 test_that("basic text and dom outputs are expected", {
+  stop("boom")
+
   app <- AppDriver$new(variant = NULL)
+
 
   app$set_inputs(val = "<div id='custom'><p>My Custom Output</p></div>")
 

@@ -4,8 +4,6 @@ test_that("Bookmark works", {
   # Start local app in the background in test mode
   bg_app <- shinytest2::AppDriver$new()
 
-  stop("boom")
-
   # Capture the background app's URL and add appropriate query parameters
   bookmark_url <- paste0(bg_app$get_url(), "?_inputs_&txt=%22abcd%22&caps=true")
   # Open the bookmark URL in a new AppDriver object
