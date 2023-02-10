@@ -13,26 +13,24 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: R version
-      shell: Rscript {0}
-      id: st2-r-version
-      run: |
-        ## --------------------------------------------------------------------
-        v <- paste0(version$major, ".", version$minor)
-        cat("version=", v, "\n", file = Sys.getenv("GITHUB_OUTPUT"), sep = "", append = TRUE)
-
     - name: Test app
       shell: Rscript {0}
       id: test-app
       run: |
-        ## --------------------------------------------------------------------
+        ## -- rstudio/shinytest2/actions/test-app --------------------------------------
         options(crayon.enabled = TRUE)
         app_dirs <- strsplit("${{ inputs.app-dir }}", "[[:space:],]+")[[1]]
 
+        ## Outputs
+        # `paths-json`
         snap_paths <- paste0(app_dirs, "/tests/testthat/_snaps")
         snap_paths_json <- jsonlite::toJSON(snap_paths)
-        cat("paths_json=", snap_paths_json, "\n", file = Sys.getenv("GITHUB_OUTPUT"), sep = "", append = TRUE)
+        cat("paths-json=", snap_paths_json, "\n", file = Sys.getenv("GITHUB_OUTPUT"), sep = "", append = TRUE)
+        # `r-version`
+        v <- paste0(version$major, ".", version$minor)
+        cat("r-version=", v, "\n", file = Sys.getenv("GITHUB_OUTPUT"), sep = "", append = TRUE)
 
+        ## Test apps
         ans <- lapply(app_dirs, function(app_dir) {
           cat("::group::Testing {shinytest2} App dir: ", app_dir, "\n", sep = "")
           on.exit({
@@ -53,7 +51,7 @@ runs:
       if: inputs.upload-snapshots != 'false'
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ runner.os }}-r${{ steps.st2-r-version.outputs.version }}-testthat-snapshots
+        name: ${{ runner.os }}-r${{ steps.test-app.outputs.r-version }}-testthat-snapshots
         # path: ${{ inputs.app-dir }}/tests*/testthat/_snaps
         path: ${{ join(fromJSON(steps.test-app.outputs.paths_json), '\n') }}
         if-no-files-found: ignore
