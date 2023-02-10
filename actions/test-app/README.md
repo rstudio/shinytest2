@@ -15,12 +15,22 @@ if enabled (default).
 
 Inputs available:
 
-- `app-dir` - default `"."`. Directory of Shiny application (or
-  Shiny-based document) to test
-- `upload-snapshots` - default `true`. Whether to upload all testthat
-  snapshots as an artifact.
+  - `app-dir` - default `"."`. Directory of Shiny application (or
+    Shiny-based document) to test
+  - `upload-snapshots` - default `true`. Whether to upload all testthat
+    snapshots as an artifact.
 
-GitHub Actions step usage:
+Typical (single app testing) GHA step usage:
+
+``` yaml
+- uses: rstudio/shinytest2/actions/test-app@v1
+  with:
+    app-dir: |
+      dir/to/app
+```
+
+Multiple Apps can be tested by supplying multiple directories to
+`app-dir` separated by a newline:
 
 ``` yaml
 - uses: rstudio/shinytest2/actions/test-app@v1
@@ -36,16 +46,16 @@ These workflows are a good building block / starting point for testing
 your Shiny applications. You may need to alter what is actually executed
 to fit your needs.
 
-- [`test-app-description`](#dependencies-in-description-file) - An
-  example CI workflow to test your Shiny application given you are using
-  a `DESCRIPTION` file to state your dependencies.
-- [`test-app-renv`](#dependencies-managed-by-renv) - An example CI
-  workflow to test your Shiny application given you are using `{renv}`
-  to manage your dependencies.
-- [`test-app-package`](#app-within-package-structure) - An example CI
-  workflow to test a Shiny application within your local R package. It
-  is recommended to use `app-dir` input to set the location of your
-  Shiny application.
+  - [`test-app-description`](#dependencies-in-description-file) - An
+    example CI workflow to test your Shiny application given you are
+    using a `DESCRIPTION` file to state your dependencies.
+  - [`test-app-renv`](#dependencies-managed-by-renv) - An example CI
+    workflow to test your Shiny application given you are using `{renv}`
+    to manage your dependencies.
+  - [`test-app-package`](#app-within-package-structure) - An example CI
+    workflow to test a Shiny application within your local R package. It
+    is recommended to use `app-dir` input to set the location of your
+    Shiny application.
 
 ## Dependencies in DESCRIPTION file
 
@@ -240,4 +250,4 @@ The scripts and documentation in this project are released under the
 
 # Contributions
 
-Contributions are welcome!
+Contributions are welcome\!
