@@ -4,6 +4,10 @@
 
 ## New features
 
+* GitHub Action `rstudio/shinytest2/actions/test-app` added support for multiple directories in `app-dir`. These can be supplied using multiline string yaml syntax. See [use-ci vignette](https://rstudio.github.io/shinytest2/articles/use-ci.html#check-app-yaml-1>) for more details. (#332)
+
+* GitHub Action `rstudio/shinytest2/actions/test-app` changed the default value of `upload-snapshots` from `false` to `true`. This is in preparation for automated snapshot handling. (#332)
+
 ## Bug / Improvements
 
 * Set the directory to the Shiny App directory before starting the background R process. This allows for local `.Rprofile` and `.Renviron` files to be found naturally. (#275)

@@ -5,7 +5,6 @@ output:
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<!-- README.Rmd is not auto compiled. Please compile before pushing -->
 
 ````{r setup, include = FALSE}
 print_yaml <- function(filename) {
@@ -23,13 +22,27 @@ This action tests a Shiny application (or Shiny-based document) using the [`{shi
 # Usage
 
 Inputs available:
-- app-dir - default `"."`. Directory of Shiny application (or Shiny-based document) to test
 
-Typical GHA step usage:
+- `app-dir` - default `"."`. Directory of Shiny application (or Shiny-based document) to test
+- `upload-snapshots` - default `true`. Whether to upload all testthat snapshots as an artifact.
+
+Typical (single app testing) GHA step usage:
+
+``` yaml
+- uses: rstudio/shinytest2/actions/test-app@v1
+  with:
+    app-dir: |
+      dir/to/app
+```
+
+Multiple Apps can be tested by supplying multiple directories to `app-dir` separated by a newline:
+
 ```yaml
 - uses: rstudio/shinytest2/actions/test-app@v1
   with:
-    app-dir: "."
+    app-dir: |
+      dir/to/app1
+      dir/to/app2
 ```
 
 
