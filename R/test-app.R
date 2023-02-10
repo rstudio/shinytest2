@@ -1,3 +1,6 @@
+warning("TODO-barret; test check_setup values")
+warning("TODO-barret; requires R file loading")
+
 # Import something from testthat to avoid a check error that nothing is imported from a `Depends` package
 #' @importFrom testthat default_reporter
 NULL
@@ -70,11 +73,9 @@ NULL
 #' @param name Name to display in the middle of the test name. This value is only used
 #' when calling `test_app()` inside of \pkg{testhat} test. The final testing context will
 #' have the format of `"{test_context} - {name} - {app_test_context}"`.
-#' @param check_setup If `TRUE`, the app will be checked for the presence of
-#' `./tests/testthat/setup-shinytest2.R`. This file must contain a call to
-#' [`shinytest2::load_app_env()`].
 #' @param reporter Reporter to pass through to [`testthat::test_dir()`].
 #' @param stop_on_failure If missing, the default value of `TRUE` will be used. However, if missing and currently testing, `FALSE` will be used to seamlessly integrate the app reporter to `reporter`.
+#' @param check_setup [Deprecated]. Parameter ignored.
 #' @seealso
 #' * [`record_test()`] to create tests to record against your Shiny application.
 #' * [testthat::snapshot_review()] and [testthat::snapshot_accept()] if
@@ -83,13 +84,15 @@ NULL
 #'   This is only necessary if you want access to the values while testing.
 #'
 #' @export
+#' @importFrom lifecycle deprecated
 test_app <- function(
   app_dir = missing_arg(),
   ...,
   name = missing_arg(),
-  check_setup = FALSE,
   reporter = testthat::get_reporter(),
-  stop_on_failure = missing_arg()
+  # TODO-v0.4.0; Remove this argument and let `...` handle it
+  stop_on_failure = missing_arg(),
+  check_setup = deprecated()
 ) {
   # Inspiration from https://github.com/rstudio/shiny/blob/a8c14dab9623c984a66fcd4824d8d448afb151e7/inst/app_template/tests/testthat.R
 
@@ -114,41 +117,29 @@ test_app <- function(
 
   app_dir <- app_dir_value(app_dir)
 
-  if (isTRUE(check_setup)) {
-    stop("TODO-barret; This should be deprecated. If users want it, they can add the file themselves. Or, we can only check if not currently within an R package.")
-    stop("TODO-barret; Test that these files are loaded")
-    # Legacy support for `setup.R`; Same content, just different name
-    setup_paths <- fs::path(app_dir, "tests", "testthat", c("setup-shinytest2.R", "setup.R"))
-    setup_paths_exist <- fs::file_exists(setup_paths)
-    if (!any(setup_paths_exist)) {
-      rlang::abort(
-        c(
-          "No `setup-shinytest2.R` file found in `./tests/testthat`",
-          "i" = paste0("To create a `setup-shinytest2.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
-          "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
-        )
-      )
-    }
-    found <- FALSE
-    for (setup_path in setup_paths) {
-      if (has_load_app_env(setup_path)) {
-        found <- TRUE
-        break
-      }
-    }
-    if (!found) {
-      rlang::abort(
-        c(
-          "No call to `shinytest2::load_app_env()` found in `./tests/testthat/setup-shinytest2.R`",
-          "i" = paste0("To create a `setup-shinytest2.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
-          "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
+  # If value is provided and `TRUE`...
+  if (lifecycle::is_present(check_setup)) {
+    if (isTRUE(check_setup)) {
+      lifecycle::deprecate_warn(
+        "0.1.0",
+        "shinytest2::test_app(check_setup = 'is no longer used')",
+        details = c(
+          "To manually load an app's support files, call `shinytest2::local_app_support(app_dir=)` within your {testthat} test",
+          i = "Please see `?shinytest2::local_app_support` for more information"
         )
       )
     }
   }
 
   if (testthat::is_testing()) {
-    stop("TODO-barret; This should be an error; Nested testing is not allowed.")
+    warning("TODO-barret; missing url for migration warning")
+    rlang::warn(c(
+      "x" = "Calling `shinytest2::test_app()` within a {testthat} test has been deprecated in {shinytest2} v0.3.0",
+      "!" = "Calling `shinytest2::test_app()` within a {testthat} test will be hard deprecated in {shinytest2} v0.4.0",
+      "i" = "If you are testing within a package, please see URL on how to migrate your App tests to be located in your package tests.",
+      "i" = "If you are using CI, don't forget to collect your new snapshots after your initial run."
+    ))
+
     # Normalize the reporter given any input
     outer_reporter <- testthat::with_reporter(reporter, testthat::get_reporter(), start_end_reporter = FALSE)
 
@@ -283,6 +274,30 @@ load_app_env <- function(
 ) {
   shiny::loadSupport(app_dir, renv = renv, globalrenv = globalrenv)
 }
+
+warning("load_app_env() is deprecated. Use `load_app_support()` / `with_app_support()` instead.")
+# # #' @export
+# # local_app_env <- function(
+# local_app_support <- function(
+#   app_dir,
+#   envir = rlang::caller_env()
+# ) {
+#   shiny::loadSupport(app_dir, renv = envir, globalrenv = envir)
+# }
+
+# with_app_support <- function(
+#   app_dir,
+#   expr,
+#   envir = rlang::caller_env()
+# ) {
+
+#   # Make new environment
+#   tmp_envir <- rlang::new_environment(parent = envir)
+#   # Load support files into new environment
+#   local_app_support(app_dir, envir = tmp_envir)
+#   # Evaluate expression in new environment
+#   withr::with_environment(tmp_envir, expr, name = "app_support")
+# }
 
 
 has_load_app_env <- function(file) {

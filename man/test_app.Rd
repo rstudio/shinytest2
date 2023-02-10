@@ -8,9 +8,9 @@ test_app(
   app_dir = missing_arg(),
   ...,
   name = missing_arg(),
-  check_setup = FALSE,
   reporter = testthat::get_reporter(),
-  stop_on_failure = missing_arg()
+  stop_on_failure = missing_arg(),
+  check_setup = deprecated()
 )
 }
 \arguments{
@@ -27,13 +27,11 @@ test_app(
 when calling \code{test_app()} inside of \pkg{testhat} test. The final testing context will
 have the format of \code{"{test_context} - {name} - {app_test_context}"}.}
 
-\item{check_setup}{If \code{TRUE}, the app will be checked for the presence of
-\code{./tests/testthat/setup-shinytest2.R}. This file must contain a call to
-\code{\link[=load_app_env]{load_app_env()}}.}
-
 \item{reporter}{Reporter to pass through to \code{\link[testthat:test_dir]{testthat::test_dir()}}.}
 
 \item{stop_on_failure}{If missing, the default value of \code{TRUE} will be used. However, if missing and currently testing, \code{FALSE} will be used to seamlessly integrate the app reporter to \code{reporter}.}
+
+\item{check_setup}{\link{Deprecated}. Parameter ignored.}
 }
 \description{
 This is a helper method that wraps around \code{\link[testthat:test_dir]{testthat::test_dir()}} to test
