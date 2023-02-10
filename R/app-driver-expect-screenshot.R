@@ -29,7 +29,7 @@ app_get_screenshot <- function(
   screenshot_args$delay <- maybe_missing_value(delay, screenshot_args$delay) %||% 0
   checkmate::assert_number(screenshot_args$delay, lower = 0, finite = TRUE, null.ok = TRUE)
 
-  screenshot_args$selector <- maybe_missing_value(selector, screenshot_args$selector) %||% "scroll"
+  screenshot_args$selector <- maybe_missing_value(selector, screenshot_args$selector) %||% "scrollable_area"
   screenshot_args <- maybe_set_screenshot_args_cliprect(self, private, screenshot_args)
 
   if (is.null(file)) {
@@ -135,7 +135,10 @@ maybe_set_screenshot_args_cliprect <- function(self, private, screenshot_args) {
     return(screenshot_args)
   }
   # If not an option, quit early
-  if (!(selector == "viewport" || selector == "scroll")) {
+  if (!(
+    selector == "viewport" ||
+    selector == "scrollable_area"
+  )) {
     return(screenshot_args)
   }
 
@@ -164,7 +167,7 @@ maybe_set_screenshot_args_cliprect <- function(self, private, screenshot_args) {
           window_size$height
         )
       },
-      "scroll" = {
+      "scrollable_area" = {
         # message("Using scroll height and width!")
         scroll_size <- self$get_js("(function() {
           const html = document.querySelector('html')

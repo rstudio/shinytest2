@@ -54,7 +54,7 @@ test_that("images are captured via expect_values", {
         app$run_js("window.scroll(5, 20)")
 
         # Scroll value (default)
-        imgS2 <- expect_screenshot(app, "scroll", c(
+        imgS2 <- expect_screenshot(app, "scrollable_area", c(
           max(c(img_height, window_size$height)),
           # Image width + 15 px margin left from container
           max(c(img_width + 15, window_size$width))
@@ -111,7 +111,7 @@ test_that("app with no `html` height can get a screenshot", {
   }
   # No error
   expect_no_screenshot_error(rlang::missing_arg())
-  expect_no_screenshot_error("scroll")
+  expect_no_screenshot_error("scrollable_area")
   expect_no_screenshot_error("viewport")
   # Produces error
   expect_no_screenshot_error("html", error_msg = "with 0 height")

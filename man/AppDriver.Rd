@@ -546,7 +546,7 @@ expect_screenshot_file(
 
 # Take a screenshot of the entire scrollable area
 app$expect_screenshot()
-app$expect_screenshot(selector = "scroll")
+app$expect_screenshot(selector = "scrollable_area")
 
 ## Take a screenshot of the current viewport
 # Shrink the window to be smaller than the app
@@ -2225,7 +2225,7 @@ If \code{screenshot_args} is:
 argument will default to \code{0} seconds. The \code{selector} argument can take two
 special values in addition to being a CSS DOM selector.
 \itemize{
-\item \code{"scroll"} (default): The entire scrollable area will be captured.
+\item \code{"scrollable_area"} (default): The entire scrollable area will be captured.
 Typically this is your browser's viewport size, but it can be larger if
 the page is scrollable. This value works really well with elements whose
 calculated height is not as large as
@@ -2235,7 +2235,7 @@ currently being seen with \verb{$view()}.
 }
 
 In \code{v0.3.0}, the default \code{selector} value was changed from the HTML DOM
-selector (\code{"html"}) to entire scrollable area (\code{"scroll"}).
+selector (\code{"html"}) to entire scrollable area (\code{"scrollable_area"}).
 }}
 
 \item{\code{delay}}{The number of \strong{seconds} to wait before taking the screenshot.
@@ -2249,7 +2249,7 @@ having preference.
 
 In \code{v0.3.0}, two special \code{selector} values were added:
 \itemize{
-\item \code{"scroll"} (default): The entire scrollable area will be captured.
+\item \code{"scrollable_area"} (default): The entire scrollable area will be captured.
 Typically this is your browser's viewport size, but it can be larger if
 the page is scrollable. This value works really well with elements whose
 calculated height is not as large as
@@ -2259,7 +2259,7 @@ currently being seen with \verb{$view()}
 }
 
 In \code{v0.3.0}, the default \code{selector} value was changed from the HTML DOM
-selector (\code{"html"}) to entire scrollable area (\code{"scroll"}).}
+selector (\code{"html"}) to entire scrollable area (\code{"scrollable_area"}).}
 
 \item{\code{compare}}{A function used to compare the screenshot snapshot files.
 The function should take two inputs, the paths to the \code{old} and \code{new}
@@ -2338,7 +2338,7 @@ expect_screenshot_file(
 
 # Take a screenshot of the entire scrollable area
 app$expect_screenshot()
-app$expect_screenshot(selector = "scroll")
+app$expect_screenshot(selector = "scrollable_area")
 
 ## Take a screenshot of the current viewport
 # Shrink the window to be smaller than the app
@@ -2392,7 +2392,7 @@ If \code{screenshot_args} is:
 argument will default to \code{0} seconds. The \code{selector} argument can take two
 special values in addition to being a CSS DOM selector.
 \itemize{
-\item \code{"scroll"} (default): The entire scrollable area will be captured.
+\item \code{"scrollable_area"} (default): The entire scrollable area will be captured.
 Typically this is your browser's viewport size, but it can be larger if
 the page is scrollable. This value works really well with elements whose
 calculated height is not as large as
@@ -2402,7 +2402,7 @@ currently being seen with \verb{$view()}.
 }
 
 In \code{v0.3.0}, the default \code{selector} value was changed from the HTML DOM
-selector (\code{"html"}) to entire scrollable area (\code{"scroll"}).
+selector (\code{"html"}) to entire scrollable area (\code{"scrollable_area"}).
 }
 
 If \code{screenshot_args=FALSE} is provided, the parameter will be ignored and a
@@ -2419,7 +2419,7 @@ having preference.
 
 In \code{v0.3.0}, two special \code{selector} values were added:
 \itemize{
-\item \code{"scroll"} (default): The entire scrollable area will be captured.
+\item \code{"scrollable_area"} (default): The entire scrollable area will be captured.
 Typically this is your browser's viewport size, but it can be larger if
 the page is scrollable. This value works really well with elements whose
 calculated height is not as large as
@@ -2429,7 +2429,7 @@ currently being seen with \verb{$view()}
 }
 
 In \code{v0.3.0}, the default \code{selector} value was changed from the HTML DOM
-selector (\code{"html"}) to entire scrollable area (\code{"scroll"}).}
+selector (\code{"html"}) to entire scrollable area (\code{"scrollable_area"}).}
 }
 \if{html}{\out{</div>}}
 }

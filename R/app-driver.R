@@ -147,7 +147,7 @@ NULL
 #' argument will default to `0` seconds. The `selector` argument can take two
 #' special values in addition to being a CSS DOM selector.
 #'
-#'     * `"scroll"` (default): The entire scrollable area will be captured.
+#'     * `"scrollable_area"` (default): The entire scrollable area will be captured.
 #'       Typically this is your browser's viewport size, but it can be larger if
 #'       the page is scrollable. This value works really well with elements whose
 #'       calculated height is not as large as
@@ -156,7 +156,7 @@ NULL
 #'       currently being seen with `$view()`.
 #'
 #'     In `v0.3.0`, the default `selector` value was changed from the HTML DOM
-#'     selector (`"html"`) to entire scrollable area (`"scroll"`).
+#'     selector (`"html"`) to entire scrollable area (`"scrollable_area"`).
 #'
 #' If `screenshot_args=FALSE` is provided, the parameter will be ignored and a
 #' screenshot will be taken with default behavior.
@@ -169,7 +169,7 @@ NULL
 #'   having preference.
 #'
 #'   In `v0.3.0`, two special `selector` values were added:
-#'   * `"scroll"` (default): The entire scrollable area will be captured.
+#'   * `"scrollable_area"` (default): The entire scrollable area will be captured.
 #'     Typically this is your browser's viewport size, but it can be larger if
 #'     the page is scrollable. This value works really well with elements whose
 #'     calculated height is not as large as
@@ -178,7 +178,7 @@ NULL
 #'     currently being seen with `$view()`
 #'
 #'   In `v0.3.0`, the default `selector` value was changed from the HTML DOM
-#'   selector (`"html"`) to entire scrollable area (`"scroll"`).
+#'   selector (`"html"`) to entire scrollable area (`"scrollable_area"`).
 #' @importFrom R6 R6Class
 #' @seealso [`platform_variant()`], [`use_shinytest2_test()`]
 #' @export
@@ -1033,7 +1033,7 @@ AppDriver <- R6Class( # nolint
     #' argument will default to `0` seconds. The `selector` argument can take two
     #' special values in addition to being a CSS DOM selector.
     #'
-    #'     * `"scroll"` (default): The entire scrollable area will be captured.
+    #'     * `"scrollable_area"` (default): The entire scrollable area will be captured.
     #'       Typically this is your browser's viewport size, but it can be larger if
     #'       the page is scrollable. This value works really well with elements whose
     #'       calculated height is not as large as
@@ -1042,7 +1042,7 @@ AppDriver <- R6Class( # nolint
     #'       currently being seen with `$view()`.
     #'
     #'     In `v0.3.0`, the default `selector` value was changed from the HTML DOM
-    #'   selector (`"html"`) to entire scrollable area (`"scroll"`).
+    #'   selector (`"html"`) to entire scrollable area (`"scrollable_area"`).
     #' @param name The file name to be used for the snapshot. The file extension
     #'   will overwritten to `.png`. By default, the `name` supplied to
     #'   `app` on initialization with a counter will be used (e.g. `"NAME-001.png"`).
@@ -1127,7 +1127,7 @@ AppDriver <- R6Class( # nolint
     #'
     #' # Take a screenshot of the entire scrollable area
     #' app$expect_screenshot()
-    #' app$expect_screenshot(selector = "scroll")
+    #' app$expect_screenshot(selector = "scrollable_area")
     #'
     #' ## Take a screenshot of the current viewport
     #' # Shrink the window to be smaller than the app
