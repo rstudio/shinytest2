@@ -38,7 +38,10 @@ runs:
           callr::r(
             function(app_dir, i) {
               options(crayon.enabled = TRUE)
-              cat(if (i > 1) "\n\n", "Testing {shinytest2} App dir: ", app_dir, "\n", sep = "")
+              if (i > 1) cat("\n\n")
+              # Wrap in try for the rare chance `cli` isn't installed
+              try(cli::cat_rule(paste0("{shinytest2}: ", app_dir), line = "bar3"))
+              # Test app
               try(shinytest2::test_app(app_dir), silent = FALSE)
             },
             list(app_dir = app_dir, i = i),
