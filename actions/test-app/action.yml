@@ -62,5 +62,5 @@ runs:
       with:
         name: ${{ runner.os }}-r${{ steps.test-app.outputs.r-version }}-testthat-snapshots
         # path: ${{ inputs.app-dir }}/tests*/testthat/_snaps
-        path: ${{ join(fromJSON(steps.test-app.outputs.paths_json), '\n') }}
+        path: ${{ join(fromJSON(steps.test-app.outputs.paths-json), '\n') }}
         if-no-files-found: ignore
