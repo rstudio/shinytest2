@@ -7,6 +7,7 @@
 ## New features
 
 * `AppDriver$get_screenshot(selector=)`, `AppDriver$expect_screenshot(selector=)`, and their corresponding `selector` values inside `screenshot_args=`, gained two custom `{shinytest2}` values: `"scroll"` and `"viewport"`. `"scroll"` is the new default value and it takes a screenshot of the entire scrollable area. This is more intuitive than the previous value of the HTML DOM selector `"html"` which may result in a surprising height and width. `"viewport"` will take a screenshot of the current browser viewport. This means it will take a screenshot of whatever `$view()` is currently looking at. (#325)
+
 * GitHub Action `rstudio/shinytest2/actions/test-app` added support for multiple directories in `app-dir`. These can be supplied using multiline string yaml syntax. See [use-ci vignette](https://rstudio.github.io/shinytest2/articles/use-ci.html#check-app-yaml-1>) for more details. (#332)
 
 * GitHub Action `rstudio/shinytest2/actions/test-app` changed the default value of `upload-snapshots` from `false` to `true`. This is in preparation for automated snapshot handling. (#332)
