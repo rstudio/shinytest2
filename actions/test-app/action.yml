@@ -31,7 +31,7 @@ runs:
         cat("r-version=", v, "\n", file = Sys.getenv("GITHUB_OUTPUT"), sep = "", append = TRUE)
 
         ## Test apps
-        ans <- Map(app_dirs, seq_along(app_dirs), function(app_dir, i) {
+        test_results <- Map(app_dirs, seq_along(app_dirs), f = function(app_dir, i) {
           # Test each app in a different R process to test each app in an
           # independent environment. We do not want one app to have an effect on
           # the next app.
@@ -41,12 +41,13 @@ runs:
               cat(if (i > 1) "\n\n", "Testing {shinytest2} App dir: ", app_dir, "\n", sep = "")
               try(shinytest2::test_app(app_dir), silent = FALSE)
             },
-            list(app_dir = app_dir, i = i)
+            list(app_dir = app_dir, i = i),
+            show = TRUE
           )
         })
 
         # Display that an error was found
-        is_error <- vapply(ans, inherits, logical(1), "try-error")
+        is_error <- vapply(test_results, inherits, logical(1), "try-error")
         if (any(is_error)) {
           stop("At least one error found while testing Apps above. Check previous logs for more information")
         }
