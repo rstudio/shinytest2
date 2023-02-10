@@ -8,6 +8,7 @@ test_that("set kitchen sink of inputs", {
   )
 
   app$expect_values()
+  # app$expect_screenshot()
 
   app$set_inputs(
     "action" = "click",
@@ -27,16 +28,20 @@ test_that("set kitchen sink of inputs", {
     "text" = "Text entered",
   )
   # File upload
-  tmpfile <- "__tmpfile.txt"
-  cat("tmpfile content", file = tmpfile)
-  withr::defer(unlink(tmpfile))
-  app$upload_file(file = tmpfile)
+  local({
+    tmpfile <- "__tmpfile.txt"
+    cat("tmpfile content", file = tmpfile)
+    withr::defer(unlink(tmpfile))
+    app$upload_file(file = tmpfile)
+  })
 
   app$expect_values()
+  # app$expect_screenshot()
 
   app$set_inputs(tabset = "shinyWidgets")
 
   app$expect_values()
+  # app$expect_screenshot()
 
   app$set_inputs(
     "bsSwitch" = TRUE,
@@ -53,4 +58,5 @@ test_that("set kitchen sink of inputs", {
 
   Sys.sleep(0.5) # css animations
   app$expect_values()
+  # app$expect_screenshot()
 })
