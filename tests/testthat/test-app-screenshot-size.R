@@ -17,7 +17,7 @@ test_that("images are captured via expect_values", {
   shiny_app <- shinyApp(ui, server)
 
   expect_screenshot <- function(app, selector, size) {
-    tmpfile <- withr::local_tempfile(fileext=".png")
+    tmpfile <- withr::local_tempfile(fileext = ".png")
     app$get_screenshot(tmpfile, selector = selector)
     pngdata <- png::readPNG(tmpfile)
     expect_equal(dim(pngdata)[1:2], size)
@@ -40,50 +40,50 @@ test_that("images are captured via expect_values", {
       # app$wait_for_idle()
 
       # Default value
-      imgS1 <- expect_screenshot(app, rlang::missing_arg(), c(
+      img_s1 <- expect_screenshot(app, rlang::missing_arg(), c(
         max(c(img_height, window_size$height)),
         # Image width + 15 px margin left from container
         max(c(img_width + 15, window_size$width))
       ))
 
       # Browser Viewport
-      imgV1 <- expect_screenshot(app, "viewport", c(window_size$height, window_size$width))
+      img_v1 <- expect_screenshot(app, "viewport", c(window_size$height, window_size$width))
 
       if (window_size$scroll) {
         # Introduce a scroll
         app$run_js("window.scroll(5, 20)")
 
         # Scroll value (default)
-        imgS2 <- expect_screenshot(app, "scrollable_area", c(
+        img_s2 <- expect_screenshot(app, "scrollable_area", c(
           max(c(img_height, window_size$height)),
           # Image width + 15 px margin left from container
           max(c(img_width + 15, window_size$width))
         ))
 
         # Browser Viewport
-        imgV2 <- expect_screenshot(app, "viewport", c(window_size$height, window_size$width))
+        img_v2 <- expect_screenshot(app, "viewport", c(window_size$height, window_size$width))
       }
 
       if (window_size$scroll) {
         # Make sure the images are not shifted
-        expect_true(imgS1[86, 203, 1] == 1)
-        expect_true(imgS1[106, 208, 1] < 1)
-        expect_true(imgS2[86, 203, 1] == 1)
-        expect_true(imgS2[106, 208, 1] < 1)
-        expect_equal(imgS1[106, 208, 1], imgS2[106, 208, 1])
+        expect_true(img_s1[86, 203, 1] == 1)
+        expect_true(img_s1[106, 208, 1] < 1)
+        expect_true(img_s2[86, 203, 1] == 1)
+        expect_true(img_s2[106, 208, 1] < 1)
+        expect_equal(img_s1[106, 208, 1], img_s2[106, 208, 1])
 
-        # Make sure imgV1 is the same as imgS1 and imgS2
-        expect_true(imgV1[86, 203, 1] == 1)
-        expect_true(imgV1[106, 208, 1] < 1)
-        expect_equal(imgV1[106, 208, 1], imgS1[106, 208, 1])
-        expect_equal(imgV1[106, 208, 1], imgS2[106, 208, 1])
+        # Make sure img_v1 is the same as img_s1 and img_s2
+        expect_true(img_v1[86, 203, 1] == 1)
+        expect_true(img_v1[106, 208, 1] < 1)
+        expect_equal(img_v1[106, 208, 1], img_s1[106, 208, 1])
+        expect_equal(img_v1[106, 208, 1], img_s2[106, 208, 1])
 
-        # Make sure imgV2 has new (shifted) pixel value
-        expect_true(imgV2[86, 203, 1] < 1)
-        expect_true(imgV2[86, 203, 1] != imgV2[106, 208, 1])
-        # Make sure the imgV has the same shifted value as the original images
-        expect_equal(imgV2[86, 203, 1], imgS1[106, 208, 1])
-        expect_equal(imgV2[86, 203, 1], imgS2[106, 208, 1])
+        # Make sure img_v2 has new (shifted) pixel value
+        expect_true(img_v2[86, 203, 1] < 1)
+        expect_true(img_v2[86, 203, 1] != img_v2[106, 208, 1])
+        # Make sure the img_v has the same shifted value as the original images
+        expect_equal(img_v2[86, 203, 1], img_s1[106, 208, 1])
+        expect_equal(img_v2[86, 203, 1], img_s2[106, 208, 1])
       }
     })
   }
@@ -91,10 +91,15 @@ test_that("images are captured via expect_values", {
 
 
 test_that("app with no `html` height can get a screenshot", {
-  shiny_app <- shinyApp(div(
-    style = htmltools::css(height = "400px", background = "red"),
-    tags$head(tags$style("html {height: 0}"))
-  ), function(...){ })
+  shiny_app <- shinyApp(
+    div(
+      style = htmltools::css(height = "400px", background = "red"),
+      tags$head(tags$style("html {height: 0}"))
+    ),
+    function(...) {
+      # No server code
+    }
+  )
 
   height <- 750
   width <- 850
@@ -102,7 +107,7 @@ test_that("app with no `html` height can get a screenshot", {
   app <- AppDriver$new(shiny_app, height = height, width = width)
 
   expect_no_screenshot_error <- function(selector, error_msg = NA) {
-    tmpfile <- withr::local_tempfile(fileext=".png")
+    tmpfile <- withr::local_tempfile(fileext = ".png")
     withr::local_options(list(warn = 2))
     expect_error(
       app$get_screenshot(tmpfile, selector = selector),

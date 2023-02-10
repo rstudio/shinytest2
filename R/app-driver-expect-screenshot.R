@@ -30,7 +30,7 @@ app_get_screenshot <- function(
   checkmate::assert_number(screenshot_args$delay, lower = 0, finite = TRUE, null.ok = TRUE)
 
   screenshot_args$selector <- maybe_missing_value(selector, screenshot_args$selector) %||% "scrollable_area"
-  screenshot_args <- maybe_set_screenshot_args_cliprect(self, private, screenshot_args)
+  screenshot_args <- handle_custom_selector(self, private, screenshot_args)
 
   if (is.null(file)) {
     self$log_message("Taking screenshot")
@@ -125,7 +125,7 @@ app_expect_screenshot_and_variant <- function( # nolint
 }
 
 
-maybe_set_screenshot_args_cliprect <- function(self, private, screenshot_args) {
+handle_custom_selector <- function(self, private, screenshot_args) {
   ckm8_assert_app_driver(self, private)
 
   selector <- screenshot_args$selector
