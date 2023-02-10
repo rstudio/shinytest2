@@ -1404,7 +1404,7 @@ missing, the default value will be
 
 The final value can either be:
 \itemize{
-\item \code{TRUE}: A screenshot of the whole page will be taken with no delay
+\item \code{TRUE}: A screenshot of the browser's scrollable area will be taken with no delay
 \item \code{FALSE}: No screenshot will be taken
 \item A named list of arguments. These arguments are passed directly to
 \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. The \code{selector}
@@ -2219,19 +2219,20 @@ value will default to \verb{$new(screenshot_args=)}.
 
 If \code{screenshot_args} is:
 \itemize{
-\item \code{TRUE}: A screenshot of the whole page will be taken with no delay
+\item \code{TRUE}: A screenshot of the browser's scrollable area will be taken with no delay
 \item A named list of arguments: Arguments passed directly to
 \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. The \code{delay}
 argument will default to \code{0} seconds. The \code{selector} argument can take two
 special values in addition to being a CSS DOM selector.
 \itemize{
-\item \code{"scrollable_area"} (default): The entire scrollable area will be captured.
-Typically this is your browser's viewport size, but it can be larger if
-the page is scrollable. This value works really well with elements whose
-calculated height is not as large as
+\item \code{"scrollable_area"} (default): The entire scrollable area will be
+captured. Typically this is your browser's viewport size, but it
+can be larger if the page is scrollable. This value works well with
+Apps that contain elements whose calculated dimensions may be
+different than their presented size.
 \item \code{"viewport"}: This value will capture the browser's viewport in its
-current viewing location, height, and width. It will only capture was is
-currently being seen with \verb{$view()}.
+current viewing location, height, and width. It will only capture
+what is currently being seen with \verb{$view()}.
 }
 
 In \code{v0.3.0}, the default \code{selector} value was changed from the HTML DOM
@@ -2249,13 +2250,14 @@ having preference.
 
 In \code{v0.3.0}, two special \code{selector} values were added:
 \itemize{
-\item \code{"scrollable_area"} (default): The entire scrollable area will be captured.
-Typically this is your browser's viewport size, but it can be larger if
-the page is scrollable. This value works really well with elements whose
-calculated height is not as large as
+\item \code{"scrollable_area"} (default): The entire scrollable area will be
+captured. Typically this is your browser's viewport size, but it can be
+larger if the page is scrollable. This value works well with Apps that
+contain elements whose calculated dimensions may be different than their
+presented size.
 \item \code{"viewport"}: This value will capture the browser's viewport in its
-current viewing location, height, and width. It will only capture was is
-currently being seen with \verb{$view()}
+current viewing location, height, and width. It will only capture
+what is currently being seen with \verb{$view()}.
 }
 
 In \code{v0.3.0}, the default \code{selector} value was changed from the HTML DOM
@@ -2386,19 +2388,20 @@ value will default to \verb{$new(screenshot_args=)}.
 
 If \code{screenshot_args} is:
 \itemize{
-\item \code{TRUE}: A screenshot of the whole page will be taken with no delay
+\item \code{TRUE}: A screenshot of the browser's scrollable area will be taken with no delay
 \item A named list of arguments: Arguments passed directly to
 \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. The \code{delay}
 argument will default to \code{0} seconds. The \code{selector} argument can take two
 special values in addition to being a CSS DOM selector.
 \itemize{
-\item \code{"scrollable_area"} (default): The entire scrollable area will be captured.
-Typically this is your browser's viewport size, but it can be larger if
-the page is scrollable. This value works really well with elements whose
-calculated height is not as large as
+\item \code{"scrollable_area"} (default): The entire scrollable area will be
+captured. Typically this is your browser's viewport size, but it can be
+larger if the page is scrollable. This value works well with Apps that
+contain elements whose calculated dimensions may be different than
+their presented size.
 \item \code{"viewport"}: This value will capture the browser's viewport in its
-current viewing location, height, and width. It will only capture what is
-currently being seen with \verb{$view()}.
+current viewing location, height, and width. It will only capture
+what is currently being seen with \verb{$view()}.
 }
 
 In \code{v0.3.0}, the default \code{selector} value was changed from the HTML DOM
@@ -2419,13 +2422,14 @@ having preference.
 
 In \code{v0.3.0}, two special \code{selector} values were added:
 \itemize{
-\item \code{"scrollable_area"} (default): The entire scrollable area will be captured.
-Typically this is your browser's viewport size, but it can be larger if
-the page is scrollable. This value works really well with elements whose
-calculated height is not as large as
+\item \code{"scrollable_area"} (default): The entire scrollable area will be
+captured. Typically this is your browser's viewport size, but it can be
+larger if the page is scrollable. This value works well with Apps that
+contain elements whose calculated dimensions may be different than their
+presented size.
 \item \code{"viewport"}: This value will capture the browser's viewport in its
-current viewing location, height, and width. It will only capture was is
-currently being seen with \verb{$view()}
+current viewing location, height, and width. It will only capture
+what is currently being seen with \verb{$view()}.
 }
 
 In \code{v0.3.0}, the default \code{selector} value was changed from the HTML DOM

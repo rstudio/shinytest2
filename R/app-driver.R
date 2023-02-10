@@ -141,19 +141,21 @@ NULL
 #'   value will default to `$new(screenshot_args=)`.
 #'
 #' If `screenshot_args` is:
-#'   * `TRUE`: A screenshot of the whole page will be taken with no delay
+#'   * `TRUE`: A screenshot of the browser's scrollable area will be taken with no delay
 #'   * A named list of arguments: Arguments passed directly to
 #' [`chromote::ChromoteSession`]'s `$get_screenshot()` method. The `delay`
 #' argument will default to `0` seconds. The `selector` argument can take two
 #' special values in addition to being a CSS DOM selector.
 #'
-#'     * `"scrollable_area"` (default): The entire scrollable area will be captured.
-#'       Typically this is your browser's viewport size, but it can be larger if
-#'       the page is scrollable. This value works really well with elements whose
-#'       calculated height is not as large as
+#'     * `"scrollable_area"` (default): The entire scrollable area will be
+#'       captured. Typically this is your browser's viewport size, but it can be
+#'       larger if the page is scrollable. This value works well with Apps that
+#'       contain elements whose calculated dimensions may be different than
+#'       their presented size.
+#'
 #'     * `"viewport"`: This value will capture the browser's viewport in its
-#'       current viewing location, height, and width. It will only capture what is
-#'       currently being seen with `$view()`.
+#'       current viewing location, height, and width. It will only capture
+#'       what is currently being seen with `$view()`.
 #'
 #'     In `v0.3.0`, the default `selector` value was changed from the HTML DOM
 #'     selector (`"html"`) to entire scrollable area (`"scrollable_area"`).
@@ -169,13 +171,15 @@ NULL
 #'   having preference.
 #'
 #'   In `v0.3.0`, two special `selector` values were added:
-#'   * `"scrollable_area"` (default): The entire scrollable area will be captured.
-#'     Typically this is your browser's viewport size, but it can be larger if
-#'     the page is scrollable. This value works really well with elements whose
-#'     calculated height is not as large as
+#'   * `"scrollable_area"` (default): The entire scrollable area will be
+#'     captured. Typically this is your browser's viewport size, but it can be
+#'     larger if the page is scrollable. This value works well with Apps that
+#'     contain elements whose calculated dimensions may be different than their
+#'     presented size.
+#'
 #'   * `"viewport"`: This value will capture the browser's viewport in its
-#'     current viewing location, height, and width. It will only capture was is
-#'     currently being seen with `$view()`
+#'     current viewing location, height, and width. It will only capture
+#'     what is currently being seen with `$view()`.
 #'
 #'   In `v0.3.0`, the default `selector` value was changed from the HTML DOM
 #'   selector (`"html"`) to entire scrollable area (`"scrollable_area"`).
@@ -480,7 +484,7 @@ AppDriver <- R6Class( # nolint
     #'   `$new(expect_values_screenshot_args=)`.
     #'
     #'   The final value can either be:
-    #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
+    #'   * `TRUE`: A screenshot of the browser's scrollable area will be taken with no delay
     #'   * `FALSE`: No screenshot will be taken
     #'   * A named list of arguments. These arguments are passed directly to
     #'     [`chromote::ChromoteSession`]'s `$get_screenshot()` method. The `selector`
@@ -1027,19 +1031,21 @@ AppDriver <- R6Class( # nolint
     #'   value will default to `$new(screenshot_args=)`.
     #'
     #' If `screenshot_args` is:
-    #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
+    #'   * `TRUE`: A screenshot of the browser's scrollable area will be taken with no delay
     #'   * A named list of arguments: Arguments passed directly to
     #' [`chromote::ChromoteSession`]'s `$get_screenshot()` method. The `delay`
     #' argument will default to `0` seconds. The `selector` argument can take two
     #' special values in addition to being a CSS DOM selector.
     #'
-    #'     * `"scrollable_area"` (default): The entire scrollable area will be captured.
-    #'       Typically this is your browser's viewport size, but it can be larger if
-    #'       the page is scrollable. This value works really well with elements whose
-    #'       calculated height is not as large as
+    #'     * `"scrollable_area"` (default): The entire scrollable area will be
+    #'       captured. Typically this is your browser's viewport size, but it
+    #'       can be larger if the page is scrollable. This value works well with
+    #'       Apps that contain elements whose calculated dimensions may be
+    #'       different than their presented size.
+    #'
     #'     * `"viewport"`: This value will capture the browser's viewport in its
-    #'       current viewing location, height, and width. It will only capture was is
-    #'       currently being seen with `$view()`.
+    #'       current viewing location, height, and width. It will only capture
+    #'       what is currently being seen with `$view()`.
     #'
     #'     In `v0.3.0`, the default `selector` value was changed from the HTML DOM
     #'   selector (`"html"`) to entire scrollable area (`"scrollable_area"`).
