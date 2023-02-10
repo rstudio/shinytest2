@@ -32,11 +32,7 @@ runs:
 
         ## Test apps
         ans <- lapply(app_dirs, function(app_dir) {
-          cat("::group::Testing {shinytest2} App dir: ", app_dir, "\n", sep = "")
-          on.exit({
-            cat("::endgroup::\n")
-          }, add = TRUE)
-
+          cat("\n\nTesting {shinytest2} App dir: ", app_dir, "\n", sep = "")
           try(shinytest2::test_app(app_dir), silent = FALSE)
         })
 
