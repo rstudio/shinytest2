@@ -6,7 +6,7 @@
 
 ## New features
 
-* `AppDriver$get_screenshot(selector=)`, `AppDriver$expect_screenshot(selector=)`, and their corresponding `selector` values inside `screenshot_args=`, gained two custom `{shinytest2}` values: `"scroll"` and `"viewport"`. `"scroll"` is the new default value and it takes a screenshot of the entire scrollable area. This is more intuitive than the previous value of the HTML DOM selector `"html"` which may calculate to incorrect height and width. `"viewport"` will take a screenshot of the current browser viewport. This means it will take a screenshot of whatever `$view()` is currently looking at. (#325)
+* `AppDriver$get_screenshot(selector=)`, `AppDriver$expect_screenshot(selector=)`, and their corresponding `selector` values inside `screenshot_args=`, gained two custom `{shinytest2}` values: `"scroll"` and `"viewport"`. `"scroll"` is the new default value and it takes a screenshot of the entire scrollable area. This is more intuitive than the previous value of the HTML DOM selector `"html"` which may result in a surprising height and width. `"viewport"` will take a screenshot of the current browser viewport. This means it will take a screenshot of whatever `$view()` is currently looking at. (#325)
 
 ## Bug / Improvements
 

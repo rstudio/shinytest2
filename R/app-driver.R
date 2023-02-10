@@ -152,7 +152,7 @@ NULL
 #'       the page is scrollable. This value works really well with elements whose
 #'       calculated height is not as large as
 #'     * `"viewport"`: This value will capture the browser's viewport in its
-#'       current viewing location, height, and width. It will only capture was is
+#'       current viewing location, height, and width. It will only capture what is
 #'       currently being seen with `$view()`.
 #'
 #'     In `v0.3.0`, the default `selector` value was changed from the HTML DOM
