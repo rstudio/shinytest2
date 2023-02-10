@@ -31,9 +31,18 @@ runs:
         cat("r-version=", v, "\n", file = Sys.getenv("GITHUB_OUTPUT"), sep = "", append = TRUE)
 
         ## Test apps
-        ans <- lapply(app_dirs, function(app_dir) {
-          cat("\n\nTesting {shinytest2} App dir: ", app_dir, "\n", sep = "")
-          try(shinytest2::test_app(app_dir), silent = FALSE)
+        ans <- Map(app_dirs, seq_along(app_dirs), function(app_dir, i) {
+          # Test each app in a different R process to test each app in an
+          # independent environment. We do not want one app to have an effect on
+          # the next app.
+          callr::r(
+            function(app_dir) {
+              options(crayon.enabled = TRUE)
+              cat(if (i > 1) "\n\n", "Testing {shinytest2} App dir: ", app_dir, "\n", sep = "")
+              try(shinytest2::test_app(app_dir), silent = FALSE)
+            },
+            list(app_dir = app_dir, i = i)
+          )
         })
 
         # Display that an error was found
