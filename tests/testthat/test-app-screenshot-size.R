@@ -93,7 +93,7 @@ test_that("images are captured via expect_values", {
 test_that("app with no `html` height can get a screenshot", {
   shiny_app <- shinyApp(
     div(
-      style = htmltools::css(height = "400px", background = "red"),
+      style = "height:400px; background:red;",
       tags$head(tags$style("html {height: 0}"))
     ),
     function(...) {
