@@ -36,7 +36,7 @@ runs:
           # independent environment. We do not want one app to have an effect on
           # the next app.
           callr::r(
-            function(app_dir) {
+            function(app_dir, i) {
               options(crayon.enabled = TRUE)
               cat(if (i > 1) "\n\n", "Testing {shinytest2} App dir: ", app_dir, "\n", sep = "")
               try(shinytest2::test_app(app_dir), silent = FALSE)
