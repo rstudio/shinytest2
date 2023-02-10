@@ -2397,7 +2397,7 @@ Typically this is your browser's viewport size, but it can be larger if
 the page is scrollable. This value works really well with elements whose
 calculated height is not as large as
 \item \code{"viewport"}: This value will capture the browser's viewport in its
-current viewing location, height, and width. It will only capture was is
+current viewing location, height, and width. It will only capture what is
 currently being seen with \verb{$view()}.
 }
 
