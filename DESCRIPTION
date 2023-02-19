@@ -102,4 +102,3 @@ Collate:
     'use.R'
 LinkingTo:
     cpp11
-SystemRequirements: C++11
