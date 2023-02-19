@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,6 +60,14 @@
       <small>Source: <a href="https://github.com/rstudio/shinytest2/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.1" id="shinytest2-021">shinytest2 0.2.1<a class="anchor" aria-label="anchor" href="#shinytest2-021"></a></h2>
+<ul><li><p>Fixed bug where <code><a href="../reference/compare_screenshot_threshold.html">compare_screenshot_threshold()</a></code> did not safe guard against errors thrown by <code><a href="../reference/compare_screenshot_threshold.html">screenshot_max_difference()</a></code>. (<a href="https://github.com/rstudio/shinytest2/issues/276" class="external-link">#276</a>)</p></li>
+<li><p>Fixed bug where preview overflow did not have length of 1. (<a href="https://github.com/cpsievert" class="external-link">@cpsievert</a> <a href="https://github.com/rstudio/shinytest2/issues/291" class="external-link">#291</a>)</p></li>
+<li><p>Better support for saving global variables for a Shiny server function (<a href="https://github.com/rstudio/shinytest2/issues/307" class="external-link">#307</a>)</p></li>
+<li><p>Better error message when both app.R and server.R are found (<a href="https://github.com/rstudio/shinytest2/issues/284" class="external-link">#284</a>)</p></li>
+<li><p>Force JS code to be a character for <a href="https://github.com/tidyverse/glue" class="external-link">glue</a> support (<a href="https://github.com/rstudio/shinytest2/issues/288" class="external-link">#288</a>)</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="shinytest2-020">shinytest2 0.2.0<a class="anchor" aria-label="anchor" href="#shinytest2-020"></a></h2><p class="text-muted">CRAN release: 2022-09-26</p>
 <div class="section level3">
