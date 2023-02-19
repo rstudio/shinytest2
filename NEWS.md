@@ -6,6 +6,10 @@
 
 * Better support for saving global variables for a Shiny server function (#307)
 
+* Better error message when both app.R and server.R are found (#284)
+
+* Force JS code to be a character for `{glue}` support (#288)
+
 
 # shinytest2 0.2.0
 
