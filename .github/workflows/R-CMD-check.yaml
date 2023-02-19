@@ -17,11 +17,6 @@ jobs:
     uses: rstudio/shiny-workflows/.github/workflows/website.yaml@v1
   routine:
     uses: rstudio/shiny-workflows/.github/workflows/routine.yaml@v1
-    with:
-      # {lintr} needed for https://github.com/r-lib/lintr/pull/1447
-      extra-packages: |
-        r-lib/lintr
-        any::decor
   R-CMD-check:
     uses: rstudio/shiny-workflows/.github/workflows/R-CMD-check.yaml@v1
     with:
