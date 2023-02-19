@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -185,14 +185,14 @@
 <span id="cb2-32"><a href="#cb2-32"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-r@v2</span></span>
 <span id="cb2-33"><a href="#cb2-33"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
 <span id="cb2-34"><a href="#cb2-34"></a><span class="at">          </span><span class="fu">r-version</span><span class="kw">:</span><span class="at"> ${{ matrix.config.r }}</span></span>
-<span id="cb2-35"><a href="#cb2-35"></a><span class="at">          </span><span class="fu">use-public-rspm</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
-<span id="cb2-36"><a href="#cb2-36"></a></span>
-<span id="cb2-37"><a href="#cb2-37"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-renv@v2</span></span>
-<span id="cb2-38"><a href="#cb2-38"></a></span>
-<span id="cb2-39"><a href="#cb2-39"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> rstudio/shinytest2/actions/test-app@v1</span></span>
-<span id="cb2-40"><a href="#cb2-40"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb2-41"><a href="#cb2-41"></a><span class="at">          </span><span class="fu">app-dir</span><span class="kw">:</span><span class="at"> </span><span class="st">"."</span></span>
-<span id="cb2-42"><a href="#cb2-42"></a><span class="at">          </span><span class="fu">upload-snapshots</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div>
+<span id="cb2-35"><a href="#cb2-35"></a><span class="at">          </span><span class="fu">http-user-agent</span><span class="kw">:</span><span class="at"> ${{ matrix.config.http-user-agent }}</span></span>
+<span id="cb2-36"><a href="#cb2-36"></a><span class="at">          </span><span class="fu">use-public-rspm</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb2-37"><a href="#cb2-37"></a></span>
+<span id="cb2-38"><a href="#cb2-38"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-renv@v2</span></span>
+<span id="cb2-39"><a href="#cb2-39"></a></span>
+<span id="cb2-40"><a href="#cb2-40"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> rstudio/shinytest2/actions/test-app@v1</span></span>
+<span id="cb2-41"><a href="#cb2-41"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb2-42"><a href="#cb2-42"></a><span class="at">          </span><span class="fu">path</span><span class="kw">:</span><span class="at"> </span><span class="st">"."</span></span></code></pre></div>
 <p>You should change the <code>os</code> and <code>r</code> version to whatever operating system and R version is being used on the platform that your application will be deployed to.</p>
 </div>
 <div class="section level4">
@@ -281,12 +281,14 @@
 <h4 id="check-app-yaml-1">
 <code>check-app.yaml</code><a class="anchor" aria-label="anchor" href="#check-app-yaml-1"></a>
 </h4>
-<p>The <code>check-app.yaml</code> have all App dir locations supplied to <code>app-dir</code> using the multiline yaml string syntax.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> rstudio/shinytest2/actions/test-app@v1</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="fu">          app-dir</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb4-4"><a href="#cb4-4"></a>            01_hello</span>
-<span id="cb4-5"><a href="#cb4-5"></a>            06_tabsets</span></code></pre></div>
+<p>The <code>check-app.yaml</code> should have a step for each application in the respective directory, instead of testing just one application in the current directory.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span>      <span class="op">-</span> <span class="va">uses</span><span class="op">:</span> <span class="va">rstudio</span><span class="op">/</span><span class="va">shinytest2</span><span class="op">/</span><span class="va">actions</span><span class="op">/</span><span class="va">test</span><span class="op">-</span><span class="va">app</span><span class="op">@</span><span class="va">v1</span></span>
+<span>        <span class="va">with</span><span class="op">:</span></span>
+<span>          <span class="va">path</span><span class="op">:</span> <span class="st">"01_hello"</span></span>
+<span>      <span class="op">-</span> <span class="va">uses</span><span class="op">:</span> <span class="va">rstudio</span><span class="op">/</span><span class="va">shinytest2</span><span class="op">/</span><span class="va">actions</span><span class="op">/</span><span class="va">test</span><span class="op">-</span><span class="va">app</span><span class="op">@</span><span class="va">v1</span></span>
+<span>        <span class="va">with</span><span class="op">:</span></span>
+<span>          <span class="va">path</span><span class="op">:</span> <span class="st">"06_tabsets"</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
