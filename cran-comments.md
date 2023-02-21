@@ -11,6 +11,7 @@ Please correct before 2023-02-21 to safely retain your package on CRAN.
 
 The CRAN Team
 
+
 #### 2023-02-19
 
 Check Details from https://cran.r-project.org/web/checks/check_results_shinytest2.html
@@ -46,6 +47,7 @@ I believe the installation error is a false-positve as it is a permission issue:
 Error: ERROR: no permission to install to directory ‘/home/hornik/tmp/R.check/r-devel-gcc/Work/build/Packages’
 ```
 
+
 #### 2023-02-19
 
 * Addressed the NOTE about C++11 by dropping the System Requirements field from the DESCRIPTION file.
@@ -75,6 +77,7 @@ Check: tests
 New result: ERROR
 ```
 
+
 #### 2023-02-20
 
 Thanks, we see:
@@ -89,6 +92,7 @@ Please fix and resubmit.
 
 Best,
 Uwe Ligges
+
 
 #### 2023-02-21
 
