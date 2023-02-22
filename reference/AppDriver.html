@@ -20,7 +20,7 @@ Expect methods are grouped next to their corresponding get methods."><meta prope
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -619,7 +619,7 @@ manually inspected and have their components tested individually.</p>
 <code>$expect_screenshot()</code> where the resulting snapshot expectation is ignored. If
 missing, the default value will be
 <code>$new(expect_values_screenshot_args=)</code>.</p>
-<p>The final value can either be:</p><ul><li><p><code>TRUE</code>: A screenshot of the whole page will be taken with no delay</p></li>
+<p>The final value can either be:</p><ul><li><p><code>TRUE</code>: A screenshot of the browser's scrollable area will be taken with no delay</p></li>
 <li><p><code>FALSE</code>: No screenshot will be taken</p></li>
 <li><p>A named list of arguments. These arguments are passed directly to
 <code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. The <code>selector</code>
@@ -1430,12 +1430,21 @@ differences. This integer-like value should be relatively small.</p></dd>
 <dd><p>This named list of arguments is passed along to
 <code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. If missing, the
 value will default to <code>$new(screenshot_args=)</code>.</p>
-<p>If the value is:</p><ul><li><p><code>TRUE</code>: A screenshot of the whole page will be taken with no delay</p></li>
+<p>If <code>screenshot_args</code> is:</p><ul><li><p><code>TRUE</code>: A screenshot of the browser's scrollable area will be taken with no delay</p></li>
 <li><p>A named list of arguments: Arguments passed directly to
-<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. The <code>selector</code>
-and <code>delay</code> will default to <code>"html"</code> and <code>0</code> respectively.</p></li>
-</ul><p>If <code>FALSE</code> is provided, the parameter will be ignored and a
-screenshot will be taken with default behavior.</p></dd>
+<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. The <code>delay</code>
+argument will default to <code>0</code> seconds. The <code>selector</code> argument can take two
+special values in addition to being a CSS DOM selector.</p><ul><li><p><code>"scrollable_area"</code> (default): The entire scrollable area will be
+captured. Typically this is your browser's viewport size, but it
+can be larger if the page is scrollable. This value works well with
+Apps that contain elements whose calculated dimensions may be
+different than their presented size.</p></li>
+<li><p><code>"viewport"</code>: This value will capture the browser's viewport in its
+current viewing location, height, and width. It will only capture
+what is currently being seen with <code>$view()</code>.</p></li>
+</ul><p>In <code>v0.3.0</code>, the default <code>selector</code> value was changed from the HTML DOM
+selector (<code>"html"</code>) to entire scrollable area (<code>"scrollable_area"</code>).</p></li>
+</ul></dd>
 
 
 <dt><code>delay</code></dt>
@@ -1448,7 +1457,17 @@ This value can be supplied as <code>delay</code> or <code>screenshot_args$delay<
 <dd><p>The selector is a CSS selector that will be used to select a
 portion of the page to be captured. This value can be supplied as
 <code>selector</code> or <code>screenshot_args$selector</code>, with the <code>selector</code> parameter
-having preference.</p></dd>
+having preference.</p>
+<p>In <code>v0.3.0</code>, two special <code>selector</code> values were added:</p><ul><li><p><code>"scrollable_area"</code> (default): The entire scrollable area will be
+captured. Typically this is your browser's viewport size, but it can be
+larger if the page is scrollable. This value works well with Apps that
+contain elements whose calculated dimensions may be different than their
+presented size.</p></li>
+<li><p><code>"viewport"</code>: This value will capture the browser's viewport in its
+current viewing location, height, and width. It will only capture
+what is currently being seen with <code>$view()</code>.</p></li>
+</ul><p>In <code>v0.3.0</code>, the default <code>selector</code> value was changed from the HTML DOM
+selector (<code>"html"</code>) to entire scrollable area (<code>"scrollable_area"</code>).</p></dd>
 
 
 <dt><code>compare</code></dt>
@@ -1532,6 +1551,18 @@ expect_screenshot_file(
     )
   }
 )
+
+# Take a screenshot of the entire scrollable area
+app$expect_screenshot()
+app$expect_screenshot(selector = "scrollable_area")
+
+## Take a screenshot of the current viewport
+# Shrink the window to be smaller than the app
+app$set_window_size(400, 500)
+# Scroll the viewport just a bit
+app$run_js("window.scroll(30, 70)")
+# Take screenshot of browser viewport
+app$expect_screenshot(selector = "viewport")
 }
 </code></pre></div><p></p></div>
 </div>
@@ -1567,10 +1598,21 @@ that file.</p></dd>
 <dd><p>This named list of arguments is passed along to
 <code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. If missing, the
 value will default to <code>$new(screenshot_args=)</code>.</p>
-<p>If the value is:</p><ul><li><p><code>TRUE</code>: A screenshot of the whole page will be taken with no delay</p></li>
-<li><p>A named list of arguments: Arguments passed directly to <code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s
-<code>$get_screenshot()</code> method. The <code>selector</code> and <code>delay</code> will default to <code>"html"</code> and <code>0</code> respectively.</p></li>
-</ul><p>If a <code>FALSE</code> value is provided, the parameter will be ignored and a
+<p>If <code>screenshot_args</code> is:</p><ul><li><p><code>TRUE</code>: A screenshot of the browser's scrollable area will be taken with no delay</p></li>
+<li><p>A named list of arguments: Arguments passed directly to
+<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. The <code>delay</code>
+argument will default to <code>0</code> seconds. The <code>selector</code> argument can take two
+special values in addition to being a CSS DOM selector.</p><ul><li><p><code>"scrollable_area"</code> (default): The entire scrollable area will be
+captured. Typically this is your browser's viewport size, but it can be
+larger if the page is scrollable. This value works well with Apps that
+contain elements whose calculated dimensions may be different than
+their presented size.</p></li>
+<li><p><code>"viewport"</code>: This value will capture the browser's viewport in its
+current viewing location, height, and width. It will only capture
+what is currently being seen with <code>$view()</code>.</p></li>
+</ul><p>In <code>v0.3.0</code>, the default <code>selector</code> value was changed from the HTML DOM
+selector (<code>"html"</code>) to entire scrollable area (<code>"scrollable_area"</code>).</p></li>
+</ul><p>If <code>screenshot_args=FALSE</code> is provided, the parameter will be ignored and a
 screenshot will be taken with default behavior.</p></dd>
 
 
@@ -1584,7 +1626,17 @@ This value can be supplied as <code>delay</code> or <code>screenshot_args$delay<
 <dd><p>The selector is a CSS selector that will be used to select a
 portion of the page to be captured. This value can be supplied as
 <code>selector</code> or <code>screenshot_args$selector</code>, with the <code>selector</code> parameter
-having preference.</p></dd>
+having preference.</p>
+<p>In <code>v0.3.0</code>, two special <code>selector</code> values were added:</p><ul><li><p><code>"scrollable_area"</code> (default): The entire scrollable area will be
+captured. Typically this is your browser's viewport size, but it can be
+larger if the page is scrollable. This value works well with Apps that
+contain elements whose calculated dimensions may be different than their
+presented size.</p></li>
+<li><p><code>"viewport"</code>: This value will capture the browser's viewport in its
+current viewing location, height, and width. It will only capture
+what is currently being seen with <code>$view()</code>.</p></li>
+</ul><p>In <code>v0.3.0</code>, the default <code>selector</code> value was changed from the HTML DOM
+selector (<code>"html"</code>) to entire scrollable area (<code>"scrollable_area"</code>).</p></dd>
 
 
 </dl><p></p></div>
@@ -2747,6 +2799,18 @@ str(head(rlog, 2))
 <span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Take a screenshot of the entire scrollable area</span></span></span>
+<span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_screenshot</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_screenshot</span><span class="op">(</span>selector <span class="op">=</span> <span class="st">"scrollable_area"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Take a screenshot of the current viewport</span></span></span>
+<span class="r-in"><span><span class="co"># Shrink the window to be smaller than the app</span></span></span>
+<span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="fu">set_window_size</span><span class="op">(</span><span class="fl">400</span>, <span class="fl">500</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Scroll the viewport just a bit</span></span></span>
+<span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="fu">run_js</span><span class="op">(</span><span class="st">"window.scroll(30, 70)"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Take screenshot of browser viewport</span></span></span>
+<span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_screenshot</span><span class="op">(</span>selector <span class="op">=</span> <span class="st">"viewport"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
