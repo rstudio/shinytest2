@@ -3,46 +3,64 @@ description: 'Test a Shiny application or document with shinytest2'
 author: 'Barret Schloerke'
 inputs:
   app-dir:
-    description: 'Directory of Shiny application (or Shiny-based document) to test'
+    description: 'One or more paths to Shiny applications (or Shiny-based document) to test. Separate each path by newlines or commas when submitting more than one path. `app-dir` paths should not contain spaces.'
     default: '.'
     required: false
   upload-snapshots:
     description: 'Whether to upload all testthat snapshots as an artifact.'
-    default: false
+    default: true
     required: false
 runs:
   using: "composite"
   steps:
-    - name: R version
-      shell: Rscript {0}
-      id: st2-r-version
-      run: |
-        ## --------------------------------------------------------------------
-        v <- paste0(version$major, ".", version$minor)
-        cat(paste0("::set-output name=version::", v, "\n"))
-
     - name: Test app
       shell: Rscript {0}
-      working-directory: ${{ inputs.app-dir }}
+      id: test-app
       run: |
-        ## --------------------------------------------------------------------
+        ## -- rstudio/shinytest2/actions/test-app --------------------------------------
         options(crayon.enabled = TRUE)
-        shinytest2::test_app()
+        app_dirs <- strsplit("${{ inputs.app-dir }}", "[[:space:],]+")[[1]]
 
-    - name: Show testthat output
-      if: always()
-      run: |
-        ## --------------------------------------------------------------------
-        echo ::group::Show testthat output
-        find check -name 'testthat.Rout*' -exec cat '{}' \; || true
-        echo ::endgroup::
-      shell: bash
-      working-directory: ${{ inputs.app-dir }}
+        ## Outputs
+        # `paths-json`
+        snap_paths <- paste0(app_dirs, "/tests/testthat/_snaps")
+        snap_paths_json <- jsonlite::toJSON(snap_paths)
+        cat("paths-json=", snap_paths_json, "\n", file = Sys.getenv("GITHUB_OUTPUT"), sep = "", append = TRUE)
+        # `r-version`
+        v <- paste0(version$major, ".", version$minor)
+        cat("r-version=", v, "\n", file = Sys.getenv("GITHUB_OUTPUT"), sep = "", append = TRUE)
+
+        ## Test apps
+        test_results <- Map(app_dirs, seq_along(app_dirs), f = function(app_dir, i) {
+          # Test each app in a different R process to test each app in an
+          # independent environment. We do not want one app to have an effect on
+          # the next app.
+          callr::r(
+            function(app_dir, i) {
+              options(crayon.enabled = TRUE)
+              if (i > 1) cat("\n\n")
+              # Wrap in try for the rare chance `cli` isn't installed
+              try(cli::cat_rule(paste0("{shinytest2}: ", app_dir), line = "bar3"))
+              # Test app
+              try(shinytest2::test_app(app_dir), silent = FALSE)
+            },
+            list(app_dir = app_dir, i = i),
+            show = TRUE
+          )
+        })
+
+        # Display that an error was found
+        is_error <- vapply(test_results, inherits, logical(1), "try-error")
+        if (any(is_error)) {
+          stop("At least one error found while testing Apps above. Check previous logs for more information")
+        }
+        invisible()
 
     - name: Upload snapshots
       if: inputs.upload-snapshots != 'false'
-      uses: actions/upload-artifact@main
+      uses: actions/upload-artifact@v3
       with:
-        name: ${{ runner.os }}-r${{ steps.st2-r-version.outputs.version }}-testthat-snapshots
-        path: ${{ inputs.app-dir }}/tests*/testthat/_snaps
+        name: ${{ runner.os }}-r${{ steps.test-app.outputs.r-version }}-testthat-snapshots
+        # path: ${{ inputs.app-dir }}/tests*/testthat/_snaps
+        path: ${{ join(fromJSON(steps.test-app.outputs.paths-json), '\n') }}
         if-no-files-found: ignore

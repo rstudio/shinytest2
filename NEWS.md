@@ -2,17 +2,34 @@
 
 ## Breaking changes
 
+* `AppDriver$get_screenshot(selector=)`, `AppDriver$expect_screenshot(selector=)`'s default `selector` value changed from the HTML DOM selector `"html"` to `"scrollable_area"`. `"scrollable_area"` is a custom `{shinytest2}` selector that will take a screenshot of the entire scrollable area. While a breaking change, this new default value is more intuitive and robust to non-standard CSS height and width values that fail with `"html"`. (#325)
+
 ## New features
+
+* `AppDriver$get_screenshot(selector=)`, `AppDriver$expect_screenshot(selector=)`, and their corresponding `selector` values inside `screenshot_args=`, gained two custom `{shinytest2}` values: `"scrollable_area"` and `"viewport"`. `"scrollable_area"` is the new default value and it takes a screenshot of the entire scrollable area. This is more intuitive than the previous value of the HTML DOM selector `"html"` which may result in a surprising height and width. `"viewport"` will take a screenshot of the current browser viewport. This means it will take a screenshot of whatever `$view()` is currently looking at. (#325)
+
+* GitHub Action `rstudio/shinytest2/actions/test-app` added support for multiple directories in `app-dir`. These can be supplied using multiline string yaml syntax. See [use-ci vignette](https://rstudio.github.io/shinytest2/articles/use-ci.html#check-app-yaml-1>) for more details. (#332)
+
+* GitHub Action `rstudio/shinytest2/actions/test-app` changed the default value of `upload-snapshots` from `false` to `true`. This is in preparation for automated snapshot handling. (#332)
 
 ## Bug / Improvements
 
 * Set the directory to the Shiny App directory before starting the background R process. This allows for local `.Rprofile` and `.Renviron` files to be found naturally. (#275)
 
-* Fixed bug where `compare_screenshot_threshold()` did not safe guard against errors thrown by `screenshot_max_difference()`. (#276)
 
-* Fixed bug where preview overflow did not have length of 1. (@cpsievert #291)
+# shinytest2 0.2.1
+
+* Fixed request from CRAN to correct C++11 problems in web checks (#326)
+
+* Fixed bug where `compare_screenshot_threshold()` did not safe guard against errors thrown by `screenshot_max_difference()` (#276)
+
+* Fixed bug where preview overflow did not have length of 1 (@cpsievert #291)
 
 * Better support for saving global variables for a Shiny server function (#307)
+
+* Better error message when both app.R and server.R are found (#284)
+
+* Force JS code to be a character for `{glue}` support (#288)
 
 
 # shinytest2 0.2.0

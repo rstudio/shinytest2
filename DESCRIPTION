@@ -1,6 +1,6 @@
 Package: shinytest2
 Title: Testing for Shiny Applications
-Version: 0.2.0.9001
+Version: 0.2.1.9001
 Authors@R:
     c(
         person("Barret", "Schloerke", role = c("cre", "aut"), email = "barret@rstudio.com", comment = c(ORCID = "0000-0001-9986-114X")),
@@ -103,4 +103,3 @@ Collate:
     'use.R'
 LinkingTo:
     cpp11
-SystemRequirements: C++11

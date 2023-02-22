@@ -61,3 +61,6 @@ tempfile
 testthat
 websocket
 yaml
+ci
+dir
+scrollable

@@ -13,15 +13,31 @@ if enabled (default).
 
 # Usage
 
-Inputs available: - app-dir - default `"."`. Directory of Shiny
-application (or Shiny-based document) to test
+Inputs available:
 
-Typical GHA step usage:
+  - `app-dir` - default `"."`. Directory of Shiny application (or
+    Shiny-based document) to test
+  - `upload-snapshots` - default `true`. Whether to upload all testthat
+    snapshots as an artifact.
+
+Typical (single app testing) GHA step usage:
 
 ``` yaml
 - uses: rstudio/shinytest2/actions/test-app@v1
   with:
-    app-dir: "."
+    app-dir: |
+      dir/to/app
+```
+
+Multiple Apps can be tested by supplying multiple directories to
+`app-dir` separated by a newline:
+
+``` yaml
+- uses: rstudio/shinytest2/actions/test-app@v1
+  with:
+    app-dir: |
+      dir/to/app1
+      dir/to/app2
 ```
 
 # Example workflows
@@ -99,7 +115,7 @@ jobs:
 
       - uses: rstudio/shinytest2/actions/test-app@v1
         with:
-          path: "."
+          app-dir: "."
 ```
 
 ## Dependencies managed by `{renv}`
@@ -157,7 +173,7 @@ jobs:
 
       - uses: rstudio/shinytest2/actions/test-app@v1
         with:
-          path: "."
+          app-dir: "."
 ```
 
 ## App within Package structure
@@ -224,7 +240,7 @@ jobs:
 
       - uses: rstudio/shinytest2/actions/test-app@v1
         with:
-          path: "."
+          app-dir: "."
 ```
 
 # License
