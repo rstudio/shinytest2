@@ -39,4 +39,4 @@ jobs:
 
       - uses: rstudio/shinytest2/actions/test-app@v1
         with:
-          path: "."
+          app-dir: "."

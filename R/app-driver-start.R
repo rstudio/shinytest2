@@ -14,9 +14,25 @@ app_start_shiny <- function(
   # the RNG kind should inherit from the parent process
   rng_kind <- RNGkind()
 
-  p <- withr::with_envvar(
-    c("R_TESTS" = NA),
+  p <- local({
+    # https://github.com/r-lib/testthat/issues/603
+    withr::local_envvar(c("R_TESTS" = NA))
+    # Load the app's .Rprofile / .Renviron if possible
+    withr::local_dir(self$get_dir())
+
     callr::r_bg(
+      stdout = sprintf(tempfile_format, "shiny-stdout"),
+      stderr = sprintf(tempfile_format, "shiny-stderr"),
+      supervise = TRUE,
+      args = list(
+        app_dir = self$get_dir(),
+        shiny_args = shiny_args,
+        has_rmd = app_dir_has_rmd(self, private),
+        seed = seed,
+        rng_kind = rng_kind,
+        render_args = render_args,
+        options = options
+      ),
       function(app_dir, shiny_args, has_rmd, seed, rng_kind, render_args, options) {
 
         if (!is.null(seed)) {
@@ -49,21 +65,10 @@ app_start_shiny <- function(
           # Normal shiny app
           do.call(shiny::runApp, c(app_dir, shiny_args))
         }
-      },
-      args = list(
-        app_dir = self$get_dir(),
-        shiny_args = shiny_args,
-        has_rmd = app_dir_has_rmd(self, private),
-        seed = seed,
-        rng_kind = rng_kind,
-        render_args = render_args,
-        options = options
-      ),
-      stdout = sprintf(tempfile_format, "shiny-stdout"),
-      stderr = sprintf(tempfile_format, "shiny-stderr"),
-      supervise = TRUE
+      }
     )
-  )
+  })
+
   private$shiny_process <- p # nolint
 
   "!DEBUG waiting for shiny to start"

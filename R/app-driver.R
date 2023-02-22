@@ -140,12 +140,27 @@ NULL
 #'   [`chromote::ChromoteSession`]'s `$get_screenshot()` method. If missing, the
 #'   value will default to `$new(screenshot_args=)`.
 #'
-#' If the value is:
-#'   * `TRUE`: A screenshot of the whole page will be taken with no delay
-#'   * A named list of arguments: Arguments passed directly to [`chromote::ChromoteSession`]'s
-#' `$get_screenshot()` method. The `selector` and `delay` will default to `"html"` and `0` respectively.
+#' If `screenshot_args` is:
+#'   * `TRUE`: A screenshot of the browser's scrollable area will be taken with no delay
+#'   * A named list of arguments: Arguments passed directly to
+#' [`chromote::ChromoteSession`]'s `$get_screenshot()` method. The `delay`
+#' argument will default to `0` seconds. The `selector` argument can take two
+#' special values in addition to being a CSS DOM selector.
 #'
-#' If a `FALSE` value is provided, the parameter will be ignored and a
+#'     * `"scrollable_area"` (default): The entire scrollable area will be
+#'       captured. Typically this is your browser's viewport size, but it can be
+#'       larger if the page is scrollable. This value works well with Apps that
+#'       contain elements whose calculated dimensions may be different than
+#'       their presented size.
+#'
+#'     * `"viewport"`: This value will capture the browser's viewport in its
+#'       current viewing location, height, and width. It will only capture
+#'       what is currently being seen with `$view()`.
+#'
+#'     In `v0.3.0`, the default `selector` value was changed from the HTML DOM
+#'     selector (`"html"`) to entire scrollable area (`"scrollable_area"`).
+#'
+#' If `screenshot_args=FALSE` is provided, the parameter will be ignored and a
 #' screenshot will be taken with default behavior.
 #' @param delay The number of **seconds** to wait before taking the screenshot.
 #'   This value can be supplied as `delay` or `screenshot_args$delay`, with the
@@ -154,6 +169,20 @@ NULL
 #'   portion of the page to be captured. This value can be supplied as
 #'   `selector` or `screenshot_args$selector`, with the `selector` parameter
 #'   having preference.
+#'
+#'   In `v0.3.0`, two special `selector` values were added:
+#'   * `"scrollable_area"` (default): The entire scrollable area will be
+#'     captured. Typically this is your browser's viewport size, but it can be
+#'     larger if the page is scrollable. This value works well with Apps that
+#'     contain elements whose calculated dimensions may be different than their
+#'     presented size.
+#'
+#'   * `"viewport"`: This value will capture the browser's viewport in its
+#'     current viewing location, height, and width. It will only capture
+#'     what is currently being seen with `$view()`.
+#'
+#'   In `v0.3.0`, the default `selector` value was changed from the HTML DOM
+#'   selector (`"html"`) to entire scrollable area (`"scrollable_area"`).
 #' @importFrom R6 R6Class
 #' @seealso [`platform_variant()`], [`use_shinytest2_test()`]
 #' @export
@@ -455,7 +484,7 @@ AppDriver <- R6Class( # nolint
     #'   `$new(expect_values_screenshot_args=)`.
     #'
     #'   The final value can either be:
-    #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
+    #'   * `TRUE`: A screenshot of the browser's scrollable area will be taken with no delay
     #'   * `FALSE`: No screenshot will be taken
     #'   * A named list of arguments. These arguments are passed directly to
     #'     [`chromote::ChromoteSession`]'s `$get_screenshot()` method. The `selector`
@@ -1001,14 +1030,25 @@ AppDriver <- R6Class( # nolint
     #'   [`chromote::ChromoteSession`]'s `$get_screenshot()` method. If missing, the
     #'   value will default to `$new(screenshot_args=)`.
     #'
-    #' If the value is:
-    #'   * `TRUE`: A screenshot of the whole page will be taken with no delay
+    #' If `screenshot_args` is:
+    #'   * `TRUE`: A screenshot of the browser's scrollable area will be taken with no delay
     #'   * A named list of arguments: Arguments passed directly to
-    #'     [`chromote::ChromoteSession`]'s `$get_screenshot()` method. The `selector`
-    #'     and `delay` will default to `"html"` and `0` respectively.
+    #' [`chromote::ChromoteSession`]'s `$get_screenshot()` method. The `delay`
+    #' argument will default to `0` seconds. The `selector` argument can take two
+    #' special values in addition to being a CSS DOM selector.
     #'
-    #' If `FALSE` is provided, the parameter will be ignored and a
-    #' screenshot will be taken with default behavior.
+    #'     * `"scrollable_area"` (default): The entire scrollable area will be
+    #'       captured. Typically this is your browser's viewport size, but it
+    #'       can be larger if the page is scrollable. This value works well with
+    #'       Apps that contain elements whose calculated dimensions may be
+    #'       different than their presented size.
+    #'
+    #'     * `"viewport"`: This value will capture the browser's viewport in its
+    #'       current viewing location, height, and width. It will only capture
+    #'       what is currently being seen with `$view()`.
+    #'
+    #'     In `v0.3.0`, the default `selector` value was changed from the HTML DOM
+    #'   selector (`"html"`) to entire scrollable area (`"scrollable_area"`).
     #' @param name The file name to be used for the snapshot. The file extension
     #'   will overwritten to `.png`. By default, the `name` supplied to
     #'   `app` on initialization with a counter will be used (e.g. `"NAME-001.png"`).
@@ -1090,6 +1130,18 @@ AppDriver <- R6Class( # nolint
     #'     )
     #'   }
     #' )
+    #'
+    #' # Take a screenshot of the entire scrollable area
+    #' app$expect_screenshot()
+    #' app$expect_screenshot(selector = "scrollable_area")
+    #'
+    #' ## Take a screenshot of the current viewport
+    #' # Shrink the window to be smaller than the app
+    #' app$set_window_size(400, 500)
+    #' # Scroll the viewport just a bit
+    #' app$run_js("window.scroll(30, 70)")
+    #' # Take screenshot of browser viewport
+    #' app$expect_screenshot(selector = "viewport")
     #' }
     expect_screenshot = function(
       ...,
