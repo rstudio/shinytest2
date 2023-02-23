@@ -276,7 +276,9 @@ load_app_env <- function(
   shiny::loadSupport(app_dir, renv = renv, globalrenv = globalrenv)
 }
 
-warning("load_app_env() is deprecated. Use `load_app_support()` / `with_app_support()` instead.")
+warning("Document how to use load_app_env() in both an app testing context and a package testing context.")
+
+# warning("load_app_env() is deprecated. Use `load_app_support()` / `with_app_support()` instead.")
 # # #' @export
 # # local_app_env <- function(
 # local_app_support <- function(
