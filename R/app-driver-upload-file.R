@@ -21,9 +21,9 @@ app_upload_file <- function(
     "shinytest2.outputValuesWaiter.start(", toJSON_atomic(timeout_), ", 2);"
   ))
 
-
   filename <- inputs[[1]]
-  self$log_message(paste0("Uploading file for id: ", filename))
+  self$log_message(paste0("Uploading file(s) for id: ",
+                          paste(filename, collapse = ", ")))
 
   node_id <- app_find_node_id(self, private, input = names(inputs)[1])
 
@@ -42,7 +42,7 @@ app_upload_file <- function(
   )
 
   self$get_chromote_session()$DOM$setFileInputFiles(
-    files = list(fs::path_real(filename)),
+    files = as.list(fs::path_real(filename)),
     nodeId = node_id
   )
 
