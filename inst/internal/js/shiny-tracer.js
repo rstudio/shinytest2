@@ -99,7 +99,7 @@ window.shinytest2 = (function() {
             },
 
             "shiny.fileInputBinding": function(el, value) {
-                throw "Setting value of fileInput is not supported. Use app$uploadFile() instead";
+                throw "Setting value of fileInput is not supported. Use app$upload_file() instead";
             },
 
             "shiny.sliderInput": function(el, value) {
