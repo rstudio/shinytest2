@@ -1,6 +1,6 @@
 Package: shinytest2
 Title: Testing for Shiny Applications
-Version: 0.2.1.9000
+Version: 0.2.1.9001
 Authors@R:
     c(
         person("Barret", "Schloerke", role = c("cre", "aut"), email = "barret@rstudio.com", comment = c(ORCID = "0000-0001-9986-114X")),
@@ -32,6 +32,7 @@ Imports:
     globals (>= 0.14.0),
     httr,
     jsonlite,
+    lifecycle (>= 1.0.3),
     pingr,
     rlang (>= 0.3.0),
     rmarkdown,
