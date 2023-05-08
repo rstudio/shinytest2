@@ -1064,7 +1064,7 @@ AppDriver <- R6Class( # nolint
     #' images byte-by-byte.
     #' @param threshold Parameter supplied to [`compare_screenshot_threshold()`]
     #' when using the default `compare` method. If the value of `threshold` is
-    #' NULL`, [`compare_screenshot_threshold()`] will act like
+    #' `NULL`, [`compare_screenshot_threshold()`] will act like
     #' [`testthat::compare_file_binary`]. However, if `threshold` is a positive number,
     #' it will be compared against the largest convolution value found if the
     #' two images fail a [`testthat::compare_file_binary`] comparison.
