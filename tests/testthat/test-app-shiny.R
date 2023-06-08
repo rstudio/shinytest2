@@ -42,3 +42,19 @@ test_that("AppDriver can receive a shinyAppDir object", {
 
   expect_true(fs::path_has_parent(app$get_dir(), tempdir()))
 })
+
+test_that("AppDriver can accept inputs provided as a list via `inputs` parameter", {
+  
+  ex_app_dir <- shinyAppDir(system.file("examples/01_hello", package = "shiny"))
+
+  app <- AppDriver$new(ex_app_dir, name = "app-shiny_dir", expect_values_screenshot_args = FALSE)
+
+  component_id <- "bins"
+  value <- 20
+  inputs <- list2()
+  inputs[[component_id]] <- value
+  app$set_inputs(inputs = inputs)
+
+  expect_true(fs::path_has_parent(app$get_dir(), tempdir()))
+
+})
