@@ -483,6 +483,26 @@ app$set_inputs(
 )
 ```
 
+### Input component(s) provided as variable(s)
+
+In some cases there might be a need to provide the input components using the variables (not hard-coded). One can use the `inputs` parameter, expected to be the `rlang::list2` object with component-value pairs.
+```{r}
+
+# helper function that wraps `set_inputs`, with  the default value for the 'dataset' component
+update_dataset <- function(app, value, component_id = "dataset") {
+  
+  checkmate::assert_choice(value, c("rock", "pressure", "cars"))
+  ml <- rlang::list2()
+  ml[[component_id]] <- value
+  app$set_inputs(inputs = ml)
+}
+
+appDir <- system.file("examples/02_text", package = "shiny")
+app <- shinytest2::AppDriver$new(appDir)
+update_dataset(app, "rock")
+
+```
+
 ## Next
 
 Learn about using shinytest2 with [continuous integration](use-ci.html).
