@@ -1,7 +1,6 @@
 app_set_inputs <- function(
   self, private,
   ...,
-  inputs = NULL,
   wait_ = TRUE,
   timeout_ = missing_arg(),
   allow_no_input_binding_ = FALSE,
@@ -11,21 +10,8 @@ app_set_inputs <- function(
   timeout_ <- app_get_timeout(self, private, timeout = timeout_)
 
   priority_ <- match.arg(priority_)
-  
-  # inputs can be provided either via ... or via `inputs` param, but not both
-  dot_inputs <- list2(...)
-  empty_dot_inputs <- length(dot_inputs) == 0
-  empty_inputs <- is.null(inputs)
-  if (sum(empty_dot_inputs, empty_inputs) != 1) {
-    stop(
-      "Inputs should be provided via name-value pairs (...) or via `inputs` parameter"
-    )
-  }
- 
-  if (!empty_dot_inputs) {
-    inputs <- dot_inputs
-  }
-  
+
+  inputs <- list2(...)
   input_values <- lapply(inputs, function(value) {
     list(
       value = value,

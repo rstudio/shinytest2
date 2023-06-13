@@ -1270,7 +1270,6 @@ not return until an output value has been updated.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_inputs(
   ...,
-  inputs = NULL,
   wait_ = TRUE,
   timeout_ = missing_arg(),
   allow_no_input_binding_ = FALSE,
@@ -1283,9 +1282,6 @@ not return until an output value has been updated.
 \describe{
 \item{\code{...}}{Name-value pairs, \verb{component_name_1 = value_1, component_name_2 = value_2} etc.
 Input with name \code{component_name_1} will be assigned value \code{value_1}.}
-
-\item{\code{inputs}}{list with components-value pairs, alternative way for setting the inputs
-either ... or inputs can be used but not both at the same time}
 
 \item{\code{wait_}}{Wait until all reactive updates have completed?}
 

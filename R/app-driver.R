@@ -404,8 +404,6 @@ AppDriver <- R6Class( # nolint
     #'
     #' @param ... Name-value pairs, `component_name_1 = value_1, component_name_2 = value_2` etc.
     #'   Input with name `component_name_1` will be assigned value `value_1`.
-    #' @param inputs list with components-value pairs, alternative way for setting the inputs
-    #'        either ... or inputs can be used but not both at the same time
     #' @param allow_no_input_binding_ When setting the value of an input, allow
     #'   it to set the value of an input even if that input does not have an
     #'   input binding. This is useful to replicate behavior like hovering over
@@ -424,14 +422,13 @@ AppDriver <- R6Class( # nolint
     #' }
     set_inputs = function(
       ...,
-      inputs = NULL,
       wait_ = TRUE,
       timeout_ = missing_arg(),
       allow_no_input_binding_ = FALSE,
       priority_ = c("input", "event")
     ) {
       app_set_inputs(
-        self, private, ..., inputs = inputs, wait_ = wait_, timeout_ = timeout_,
+        self, private, ..., wait_ = wait_, timeout_ = timeout_,
         allow_no_input_binding_ = allow_no_input_binding_, priority_ = priority_
       )
     },
