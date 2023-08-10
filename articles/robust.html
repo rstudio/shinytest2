@@ -15,8 +15,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.6/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.6/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.7/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.7/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Robust testing">
@@ -87,7 +87,8 @@
 
 
 
-<script src="robust_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+
+<div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Robust testing</h1>
             
@@ -98,7 +99,9 @@
 
     
     
-<p>All tests are not created equal. Some tests are all encompassing; others are more focused. Each approach has its own advantages and disadvantages.</p>
+<p>All tests are not created equal. Some tests are all encompassing;
+others are more focused. Each approach has its own advantages and
+disadvantages.</p>
 <p>Goals to have when writing tests are to</p>
 <ul>
 <li>Confirm the expected behavior</li>
@@ -108,7 +111,9 @@
 <div class="section level2">
 <h2 id="expectations">Expectations<a class="anchor" aria-label="anchor" href="#expectations"></a>
 </h2>
-<p>Unit tests provide a sense of security by making assertions on expected behavior. If all unit tests pass, then we can declare the object/method to be valid. 🦆</p>
+<p>Unit tests provide a sense of security by making assertions on
+expected behavior. If all unit tests pass, then we can declare the
+object/method to be valid. 🦆</p>
 <p>Let’s look at a quick example of:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">add_abs</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
@@ -117,11 +122,13 @@
 <div class="section level5">
 <h5 id="confirm-the-expected-behavior">Confirm the expected behavior<a class="anchor" aria-label="anchor" href="#confirm-the-expected-behavior"></a>
 </h5>
-<p>If we only test positive numbers, then we can guess the answer using <code>+</code>.</p>
+<p>If we only test positive numbers, then we can guess the answer using
+<code>+</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">50</span>; <span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">42</span></span>
 <span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, <span class="va">x</span> <span class="op">+</span> <span class="va">y</span><span class="op">)</span></span></code></pre></div>
-<p>However, if a negative number is used, it will have different behavior than <code>+</code>. So we must test for both situations.</p>
+<p>However, if a negative number is used, it will have different
+behavior than <code>+</code>. So we must test for both situations.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">50</span>; <span class="va">y</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">42</span></span>
 <span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, <span class="va">x</span> <span class="op">+</span> <span class="va">y</span><span class="op">)</span></span></code></pre></div>
@@ -138,24 +145,34 @@
 <span>    <span class="va">info</span><span class="op">$</span><span class="va">expected</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>This concept can even be expanded to vectors of values. However, this can lead to a lot of code.</p>
+<p>This concept can even be expanded to vectors of values. However, this
+can lead to a lot of code.</p>
 </div>
 <div class="section level5">
 <h5 id="assert-as-little-unnecessary-information">Assert as little unnecessary information<a class="anchor" aria-label="anchor" href="#assert-as-little-unnecessary-information"></a>
 </h5>
-<p>Tests should strive to only confirm behavior that we have control over. For example, if we are only interested in the behavior of <code>abs</code>, then we should not be concerned with the behavior of <code>+</code>.</p>
-<p>We can assume that <code>+</code> is working properly and adds two numbers together. We do not necessarily need to perform a multitude of nonsense input testing on <code>+</code>, but it may make sense to see how <code><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs()</a></code> handles a few non-number input values.</p>
+<p>Tests should strive to only confirm behavior that we have control
+over. For example, if we are only interested in the behavior of
+<code>abs</code>, then we should not be concerned with the behavior of
+<code>+</code>.</p>
+<p>We can assume that <code>+</code> is working properly and adds two
+numbers together. We do not necessarily need to perform a multitude of
+nonsense input testing on <code>+</code>, but it may make sense to see
+how <code><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs()</a></code> handles a few non-number input values.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span>, <span class="cn">NA</span><span class="op">)</span></span>
 <span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="cn">NULL</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/expect_error.html" class="external-link">expect_error</a></span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"string"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>These tests could also be repeated by swapping <code>x</code> and <code>y</code>.</p>
+<p>These tests could also be repeated by swapping <code>x</code> and
+<code>y</code>.</p>
 </div>
 <div class="section level5">
 <h5 id="write-clear-direct-tests">Write clear, direct tests<a class="anchor" aria-label="anchor" href="#write-clear-direct-tests"></a>
 </h5>
-<p>When writing tests, each test can contain many expectations but each expectation should pertain to the test being run.</p>
-<p>For example, the two examples above <em>could</em> be included in the same test block:</p>
+<p>When writing tests, each test can contain many expectations but each
+expectation should pertain to the test being run.</p>
+<p>For example, the two examples above <em>could</em> be included in the
+same test block:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># File: tests/testthat/test-add_abs-bad.R</span></span>
 <span></span>
@@ -176,7 +193,8 @@
 <span>  <span class="fu">expect_equal</span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="cn">NULL</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu">expect_error</span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"string"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<p>However, it’s better to break them out into two separate tests, each with their own descriptive title.</p>
+<p>However, it’s better to break them out into two separate tests, each
+with their own descriptive title.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># File: tests/testthat/test-add_abs-better.R</span></span>
 <span></span>
@@ -200,13 +218,18 @@
 <span>  <span class="fu">expect_equal</span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="cn">NULL</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu">expect_error</span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"string"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<p><a href="https://testthat.r-lib.org" class="external-link">testthat</a> does a great job of displaying output to the user when thing go wrong. When the first test goes wrong, an error will be given like:</p>
+<p><a href="https://testthat.r-lib.org" class="external-link">testthat</a> does a great job of displaying output to the
+user when thing go wrong. When the first test goes wrong, an error will
+be given like:</p>
 <pre><code>── Failure (Line 9): add_abs() adds two numbers ────────────────────────────────
 add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 
   `actual`:  8
 `expected`: -8</code></pre>
-<p>It is great that an error was found, but it is also difficult to determine which assertion failed. Adding labels to the expectation using <code>label</code> and <code>expected.label</code> allows you to provide more context about which test failed.</p>
+<p>It is great that an error was found, but it is also difficult to
+determine which assertion failed. Adding labels to the expectation using
+<code>label</code> and <code>expected.label</code> allows you to provide
+more context about which test failed.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># File: tests/testthat/test-add_abs-label.R</span></span>
 <span></span>
@@ -231,7 +254,9 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <span><span class="co">#&gt;</span></span>
 <span><span class="co">#&gt;   `actual`:  8</span></span>
 <span><span class="co">#&gt; `expected`: -8</span></span></code></pre></div>
-<p>Another pattern that provides more context and allows for more tests is to move the for-loop around the call to <code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that()</a></code> and give the test a custom name:</p>
+<p>Another pattern that provides more context and allows for more tests
+is to move the for-loop around the call to <code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that()</a></code> and
+give the test a custom name:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># File: tests/testthat/test-add_abs-label.R</span></span>
 <span></span>
@@ -258,44 +283,54 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <span><span class="co">#&gt;   `actual`:  8</span></span>
 <span><span class="co">#&gt; `expected`: -8</span></span>
 <span><span class="co">#&gt; Test passed 🥇</span></span></code></pre></div>
-<p>This isolates the test even more and does not let an earlier expectation stop testing a later expectation.</p>
+<p>This isolates the test even more and does not let an earlier
+expectation stop testing a later expectation.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="shinytest2-expectations">
 <code>{shinytest2}</code> expectations<a class="anchor" aria-label="anchor" href="#shinytest2-expectations"></a>
 </h2>
-<p><a href="https://rstudio.github.io/shinytest2/">shinytest2</a> has a handful of built in expectation methods:</p>
+<p><a href="https://rstudio.github.io/shinytest2/">shinytest2</a> has a handful of built in expectation
+methods:</p>
 <ul>
 <li>
 <code>input</code>/<code>output</code> names:
 <ul>
 <li>
-<code>AppDriver$expect_unique_names()</code>: Assert all <code>input</code> and <code>output</code> names are unique</li>
+<code>AppDriver$expect_unique_names()</code>: Assert all
+<code>input</code> and <code>output</code> names are unique</li>
 </ul>
 </li>
 <li>Shiny value expectations:
 <ul>
 <li>
-<code>AppDriver$expect_values()</code>: Expect all <code>input</code>, <code>output</code>, and <code>export</code> values are consistent</li>
+<code>AppDriver$expect_values()</code>: Expect all
+<code>input</code>, <code>output</code>, and <code>export</code> values
+are consistent</li>
 <li>
-<code>AppDriver$expect_download()</code>: Expect a downloaded file to downloadable</li>
+<code>AppDriver$expect_download()</code>: Expect a downloaded file
+to downloadable</li>
 </ul>
 </li>
 <li>UI expectations:
 <ul>
 <li>
-<code>AppDriver$expect_text()</code>: Expect the text content for a given <code>selector</code> to be consistent</li>
+<code>AppDriver$expect_text()</code>: Expect the text content for a
+given <code>selector</code> to be consistent</li>
 <li>
-<code>AppDriver$expect_html()</code>: Expect the HTML content for a given <code>selector</code> to be consistent</li>
+<code>AppDriver$expect_html()</code>: Expect the HTML content for a
+given <code>selector</code> to be consistent</li>
 <li>
-<code>AppDriver$expect_js()</code>: Expect the JavaScript return value to be consistent</li>
+<code>AppDriver$expect_js()</code>: Expect the JavaScript return
+value to be consistent</li>
 </ul>
 </li>
 <li>UI visual expectations:
 <ul>
 <li>
-<code>AppDriver$expect_screenshot()</code>: Expect a screenshot of the UI to be consistent</li>
+<code>AppDriver$expect_screenshot()</code>: Expect a screenshot of
+the UI to be consistent</li>
 </ul>
 </li>
 </ul>
@@ -303,55 +338,118 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <h3 id="inputoutput-names">
 <code>input</code>/<code>output</code> names<a class="anchor" aria-label="anchor" href="#inputoutput-names"></a>
 </h3>
-<p>Let’s take a look at <code>AppDriver$expect_unique_names()</code>. This method is called (by default) by <code>AppDriver$new(check_names = TRUE)</code> and confirms that no <code>input</code> or <code>output</code> HTML names are duplicated. If duplicate values are found, this results in invalid HTML and possible failure within Shiny.</p>
-<p>One way to help keep <code>input</code> and <code>output</code> names unique is to adopt a naming behavior such as adding <code>_out</code> to the end of any <code>output</code>, e.g. <code>outputs$text_out</code>.</p>
-<p>If you use a dynamic UI and want to reassert the names are still unique, it is perfectly acceptable to call <code>AppDriver$expect_unique_names()</code> after setting any dynamic UI values.</p>
+<p>Let’s take a look at <code>AppDriver$expect_unique_names()</code>.
+This method is called (by default) by
+<code>AppDriver$new(check_names = TRUE)</code> and confirms that no
+<code>input</code> or <code>output</code> HTML names are duplicated. If
+duplicate values are found, this results in invalid HTML and possible
+failure within Shiny.</p>
+<p>One way to help keep <code>input</code> and <code>output</code> names
+unique is to adopt a naming behavior such as adding <code>_out</code> to
+the end of any <code>output</code>,
+e.g. <code>outputs$text_out</code>.</p>
+<p>If you use a dynamic UI and want to reassert the names are still
+unique, it is perfectly acceptable to call
+<code>AppDriver$expect_unique_names()</code> after setting any dynamic
+UI values.</p>
 </div>
 <div class="section level3">
 <h3 id="shiny-values">Shiny values:<a class="anchor" aria-label="anchor" href="#shiny-values"></a>
 </h3>
-<p><code>AppDriver$expect_values()</code> is the preferred method for testing in <a href="https://rstudio.github.io/shinytest2/">shinytest2</a>. This method tests different <code>input</code>, <code>output</code>, and <code>export</code> values provided by the Shiny application.</p>
+<p><code>AppDriver$expect_values()</code> is the preferred method for
+testing in <a href="https://rstudio.github.io/shinytest2/">shinytest2</a>. This method tests different
+<code>input</code>, <code>output</code>, and <code>export</code> values
+provided by the Shiny application.</p>
 <ul>
 <li>
-<code>input</code> corresponds to the <code>input</code> values provided by the Shiny application.</li>
+<code>input</code> corresponds to the <code>input</code> values
+provided by the Shiny application.</li>
 <li>
-<code>output</code> corresponds to the <code>output</code> values provided by the Shiny application.</li>
+<code>output</code> corresponds to the <code>output</code> values
+provided by the Shiny application.</li>
 <li>
-<code>export</code> corresponds to value that have been _export_ed by the Shiny application. These values are exported by <a href="https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html" class="external-link"><code>shiny::exportTestValues()</code></a> from within your <code>server</code> function.</li>
+<code>export</code> corresponds to value that have been _export_ed
+by the Shiny application. These values are exported by <a href="https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html" class="external-link"><code>shiny::exportTestValues()</code></a>
+from within your <code>server</code> function.</li>
 </ul>
-<p>When <code>AppDriver$expect_values()</code> is called, each <code>input</code>, <code>output</code>, and <code>export</code> value will be serialized to JSON and saved to a snapshot file (e.g. <code>001.json</code>) for followup expectations.</p>
-<p>In addition to this value snapshot file, a <em>debug</em> screenshot will be saved to the snapshot directory with its file name ending in <code>_.png</code> (e.g. <code>001_.png</code>). This screenshot is useful for knowing what your application looked like when the values where captured. However, differences in the captured screenshot will never cause test failures. It is recommended to add <code>_.new.png</code> to your <code>.gitignore</code> file to ignore any new debug screenshots that have not been accepted.</p>
-<p>For typical app testing, this method should cover most of your testing needs. (Remember, try to only test the content you have control over.)</p>
+<p>When <code>AppDriver$expect_values()</code> is called, each
+<code>input</code>, <code>output</code>, and <code>export</code> value
+will be serialized to JSON and saved to a snapshot file
+(e.g. <code>001.json</code>) for followup expectations.</p>
+<p>In addition to this value snapshot file, a <em>debug</em> screenshot
+will be saved to the snapshot directory with its file name ending in
+<code>_.png</code> (e.g. <code>001_.png</code>). This screenshot is
+useful for knowing what your application looked like when the values
+where captured. However, differences in the captured screenshot will
+never cause test failures. It is recommended to add
+<code>_.new.png</code> to your <code>.gitignore</code> file to ignore
+any new debug screenshots that have not been accepted.</p>
+<p>For typical app testing, this method should cover most of your
+testing needs. (Remember, try to only test the content you have control
+over.)</p>
 <div class="section level4">
 <h4 id="downloads">Downloads<a class="anchor" aria-label="anchor" href="#downloads"></a>
 </h4>
-<p>When <code><a href="https://shiny.rstudio.com/reference/shiny/latest/downloadButton.html" class="external-link">shiny::downloadButton()</a></code> or <code><a href="https://shiny.rstudio.com/reference/shiny/latest/downloadButton.html" class="external-link">shiny::downloadLink()</a></code> elements are clicked, a file is downloaded. To make an expectation on the downloaded file, you can use <code>AppDriver$expect_download()</code>.</p>
-<p>In addition to the file being saved, a snapshot of the file name being downloaded will be saved if a suggested file name is used.</p>
+<p>When <code><a href="https://rdrr.io/pkg/shiny/man/downloadButton.html" class="external-link">shiny::downloadButton()</a></code> or
+<code><a href="https://rdrr.io/pkg/shiny/man/downloadButton.html" class="external-link">shiny::downloadLink()</a></code> elements are clicked, a file is
+downloaded. To make an expectation on the downloaded file, you can use
+<code>AppDriver$expect_download()</code>.</p>
+<p>In addition to the file being saved, a snapshot of the file name
+being downloaded will be saved if a suggested file name is used.</p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="ui-expectations">UI expectations<a class="anchor" aria-label="anchor" href="#ui-expectations"></a>
 </h3>
-<p>Two methods are provided as a middle ground between taking a screenshots and testing Shiny app values: <code>AppDriver$expect_text()</code> and <code>AppDriver$expect_html()</code>.</p>
-<p><code>AppDriver$expect_text(selector=)</code> asks the Chrome browser for the current text contents within the selected elements. This method is great to test contents that are not <code>input</code> or <code>output</code> values. <code>AppDriver$expect_text()</code> is not able to retrieve pseudo elements or values such as the text inside <code>&lt;text&gt;</code> or <code>&lt;textarea&gt;</code> input elements.</p>
-<p><code>AppDriver$expect_html(selector=)</code> asks the Chrome browser for the current DOM structures within the selected elements. This method is perfect for app authors who are constructing their own DOM structures and want to verify that they are consistently being produced. Again, <code>AppDriver$expect_html()</code> is not able to retrieve pseudo elements or values such as the text inside <code>&lt;text&gt;</code> or <code>&lt;textarea&gt;</code> input elements.</p>
-<p>Finally, both of these methods wrap around <code>AppDriver$expect_js(script=)</code>. This method executes a <code>script</code> and the return value is saved as a snapshot. <code>AppDriver$expect_text()</code> and <code>AppDriver$expect_html()</code> are wrappers around <code>AppDriver$expect_js()</code>.</p>
+<p>Two methods are provided as a middle ground between taking a
+screenshots and testing Shiny app values:
+<code>AppDriver$expect_text()</code> and
+<code>AppDriver$expect_html()</code>.</p>
+<p><code>AppDriver$expect_text(selector=)</code> asks the Chrome browser
+for the current text contents within the selected elements. This method
+is great to test contents that are not <code>input</code> or
+<code>output</code> values. <code>AppDriver$expect_text()</code> is not
+able to retrieve pseudo elements or values such as the text inside
+<code>&lt;text&gt;</code> or <code>&lt;textarea&gt;</code> input
+elements.</p>
+<p><code>AppDriver$expect_html(selector=)</code> asks the Chrome browser
+for the current DOM structures within the selected elements. This method
+is perfect for app authors who are constructing their own DOM structures
+and want to verify that they are consistently being produced. Again,
+<code>AppDriver$expect_html()</code> is not able to retrieve pseudo
+elements or values such as the text inside <code>&lt;text&gt;</code> or
+<code>&lt;textarea&gt;</code> input elements.</p>
+<p>Finally, both of these methods wrap around
+<code>AppDriver$expect_js(script=)</code>. This method executes a
+<code>script</code> and the return value is saved as a snapshot.
+<code>AppDriver$expect_text()</code> and
+<code>AppDriver$expect_html()</code> are wrappers around
+<code>AppDriver$expect_js()</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="ui-visual-expectations">UI visual expectations<a class="anchor" aria-label="anchor" href="#ui-visual-expectations"></a>
 </h3>
-<p>Taking a screenshot is the most brittle expectation provided by <a href="https://rstudio.github.io/shinytest2/">shinytest2</a>. <code>AppDriver$expect_screenshot()</code> should only be used if it is absolutely necessary or if you are willing to handle many false-positive failures.</p>
-<p>There are many ways a screenshot expectation can fail that is unrelated to your code, including:</p>
+<p>Taking a screenshot is the most brittle expectation provided by
+<a href="https://rstudio.github.io/shinytest2/">shinytest2</a>. <code>AppDriver$expect_screenshot()</code>
+should only be used if it is absolutely necessary or if you are willing
+to handle many false-positive failures.</p>
+<p>There are many ways a screenshot expectation can fail that is
+unrelated to your code, including:</p>
 <ul>
 <li>the R version changed</li>
 <li>the operating system changed (e.g. Windows vs. Linux)</li>
 <li>the system font changed</li>
 <li>Chrome is not consistent in how it paints some DOM elements</li>
 <li>the CSS transitions did not finish in time</li>
-<li>a package author (e.g. Shiny, <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>, <a href="https://github.com/rstudio/htmltools" class="external-link">htmltools</a>) changed its DOM structure</li>
+<li>a package author (e.g. Shiny, <a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a>,
+<a href="https://github.com/rstudio/htmltools" class="external-link">htmltools</a>) changed its DOM structure</li>
 </ul>
-<p>App authors who use custom CSS or JavaScript may find this method useful. But it is still strongly recommended to only test the content you have control over to avoid false-positive failures.</p>
-<p>When expecting a screenshot, a <code>AppDriver$new(variant=)</code> must be supplied. The value may be <code>NULL</code>, but it is recommended to use <code><a href="../reference/platform_variant.html">shinytest2::platform_variant()</a></code>.</p>
+<p>App authors who use custom CSS or JavaScript may find this method
+useful. But it is still strongly recommended to only test the content
+you have control over to avoid false-positive failures.</p>
+<p>When expecting a screenshot, a <code>AppDriver$new(variant=)</code>
+must be supplied. The value may be <code>NULL</code>, but it is
+recommended to use <code><a href="../reference/platform_variant.html">shinytest2::platform_variant()</a></code>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -360,37 +458,46 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <div class="section level3">
 <h3 id="exported-values">Exported values<a class="anchor" aria-label="anchor" href="#exported-values"></a>
 </h3>
-<p>It cannot be recommended enough to use <a href="https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html" class="external-link"><code>shiny::exportTestValues()</code></a> to test your Shiny app’s reactive values.</p>
-<p>If we make the assumption that package authors create consistent render methods, then we can test the values provided to render methods using <code><a href="https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html" class="external-link">shiny::exportTestValues()</a></code>. Let’s look at an example of a Shiny app that displays a plot of the first <code>n</code> rows of data.</p>
-<p>It is recommended to make your render methods contain minimal logic so that the value being rendered can also be exported.</p>
+<p>It cannot be recommended enough to use <a href="https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html" class="external-link"><code>shiny::exportTestValues()</code></a>
+to test your Shiny app’s reactive values.</p>
+<p>If we make the assumption that package authors create consistent
+render methods, then we can test the values provided to render methods
+using <code><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">shiny::exportTestValues()</a></code>. Let’s look at an example
+of a Shiny app that displays a plot of the first <code>n</code> rows of
+data.</p>
+<p>It is recommended to make your render methods contain minimal logic
+so that the value being rendered can also be exported.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/numericInput.html" class="external-link">numericInput</a></span><span class="op">(</span><span class="st">"n"</span>, <span class="st">"Number of rows"</span>, <span class="fl">10</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">cars</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/plotOutput.html" class="external-link">plotOutput</a></span><span class="op">(</span><span class="st">"plot"</span><span class="op">)</span></span>
+<span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/numericInput.html" class="external-link">numericInput</a></span><span class="op">(</span><span class="st">"n"</span>, <span class="st">"Number of rows"</span>, <span class="fl">10</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">cars</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/plotOutput.html" class="external-link">plotOutput</a></span><span class="op">(</span><span class="st">"plot"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">dt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">dt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cars</span>, <span class="va">input</span><span class="op">$</span><span class="va">n</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
-<span>  <span class="va">plot_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">plot_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">dt</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_.html" class="external-link">aes_string</a></span><span class="op">(</span><span class="st">"speed"</span>, <span class="st">"dist"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="va">output</span><span class="op">$</span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/renderPlot.html" class="external-link">renderPlot</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">output</span><span class="op">$</span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html" class="external-link">renderPlot</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="fu">plot_obj</span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
 <span>    dt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">dt</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    plot_obj <span class="op">=</span> <span class="fu">plot_obj</span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="va">plot_app</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span><span class="op">)</span></span>
+<span><span class="va">plot_app</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span><span class="op">)</span></span>
 <span><span class="va">plot_app</span></span></code></pre></div>
 <p><img src="images/plot-app.png" width="100%" style="display: block; margin: auto;"></p>
-<p>Both <code>dt</code> and <code>plot_obj</code> have been <code>export</code>ed. This means that they are available when executing <code>AppDriver$get_values()</code>, <code>AppDriver$get_value()</code>, and <code>AppDriver$expect_values()</code>.</p>
+<p>Both <code>dt</code> and <code>plot_obj</code> have been
+<code>export</code>ed. This means that they are available when executing
+<code>AppDriver$get_values()</code>, <code>AppDriver$get_value()</code>,
+and <code>AppDriver$expect_values()</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">plot_app</span><span class="op">)</span></span>
 <span></span>
@@ -425,20 +532,40 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <span><span class="co">#&gt;   .. .. ..$ x: chr "speed"</span></span>
 <span><span class="co">#&gt;   .. .. ..$ y: chr "dist"</span></span>
 <span><span class="co">#&gt;   .. ..- attr(*, "class")= chr [1:2] "gg" "ggplot"</span></span></code></pre></div>
-<p>Plots are notoriously hard to test consistently over time and different platforms. Similar to <code>AppDriver$expect_screenshot()</code>, there are many ways outside of your code that the plot can produce a change which would fail a visual test. Some of these include:</p>
+<p>Plots are notoriously hard to test consistently over time and
+different platforms. Similar to
+<code>AppDriver$expect_screenshot()</code>, there are many ways outside
+of your code that the plot can produce a change which would fail a
+visual test. Some of these include:</p>
 <ul>
-<li>Default system font changes, as different operating systems have different fonts</li>
+<li>Default system font changes, as different operating systems have
+different fonts</li>
 <li>Default system font size changes</li>
 <li>R version changes</li>
 </ul>
-<p>When possible, it is recommended to use <a href="https://ggplot2.tidyverse.org/" class="external-link"><code>{ggplot2}</code></a> over <code><a href="https://rdrr.io/r/base/plot.html" class="external-link">base::plot()</a></code> as <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> is getting closer and closer to cross platform compatible. <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> objects can also be inspected and compared using <a href="https://vdiffr.r-lib.org/" class="external-link"><code>{vdiffr}</code></a> for cross platform support.</p>
+<p>When possible, it is recommended to use <a href="https://ggplot2.tidyverse.org/" class="external-link"><code>{ggplot2}</code></a> over
+<code><a href="https://rdrr.io/r/base/plot.html" class="external-link">base::plot()</a></code> as <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> is getting closer
+and closer to cross platform compatible. <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> objects
+can also be inspected and compared using <a href="https://vdiffr.r-lib.org/" class="external-link"><code>{vdiffr}</code></a> for cross
+platform support.</p>
 </div>
 <div class="section level3">
 <h3 id="snapshots-vs-values">Snapshots vs values<a class="anchor" aria-label="anchor" href="#snapshots-vs-values"></a>
 </h3>
-<p>Snapshot testing makes the test writing minimal and quick. However, this comes with a logical risk.</p>
-<p>Snapshots are wonderful at determining if a change has occurred. But for the first execution of the snapshot there is nothing to compare, so the first value is taken as <em>truth</em> even if it is not correct. This allows for the opportunity for invalid values to be saved as <em>truth</em>. Most of the time, it is OK to use snapshots from the beginning of your testing experience, but keeping track of each snapshot file can be tedious when testing multiple applications with multiple variants.</p>
-<p>To remedy this possibility, app values can be tested against known static values. For example, instead of testing the initial value of <code><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">dt()</a></code> against a snapshot, we can test it against <code>head(cars, 10)</code>.</p>
+<p>Snapshot testing makes the test writing minimal and quick. However,
+this comes with a logical risk.</p>
+<p>Snapshots are wonderful at determining if a change has occurred. But
+for the first execution of the snapshot there is nothing to compare, so
+the first value is taken as <em>truth</em> even if it is not correct.
+This allows for the opportunity for invalid values to be saved as
+<em>truth</em>. Most of the time, it is OK to use snapshots from the
+beginning of your testing experience, but keeping track of each snapshot
+file can be tedious when testing multiple applications with multiple
+variants.</p>
+<p>To remedy this possibility, app values can be tested against known
+static values. For example, instead of testing the initial value of
+<code><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">dt()</a></code> against a snapshot, we can test it against
+<code>head(cars, 10)</code>.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Snapshot code</span></span>
 <span><span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span>export <span class="op">=</span> <span class="st">"dt"</span><span class="op">)</span></span>
@@ -448,13 +575,24 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <span>  <span class="va">app</span><span class="op">$</span><span class="fu">get_value</span><span class="op">(</span>export <span class="op">=</span> <span class="st">"dt"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cars</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>If you have the time to manually inspect the snapshot files afterwards, using <code>AppDriver</code> snapshot code provides clean, minimal code. If snapshot files are unwieldy, you can use <code>AppDriver</code> to retrieve values to test against known values.</p>
+<p>If you have the time to manually inspect the snapshot files
+afterwards, using <code>AppDriver</code> snapshot code provides clean,
+minimal code. If snapshot files are unwieldy, you can use
+<code>AppDriver</code> to retrieve values to test against known
+values.</p>
 </div>
 <div class="section level3">
 <h3 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h3>
-<p>Let’s look at how we could write a <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> test to make sure the plot is updated after updating our numeric <code>input</code> <code>n</code>. Assuming the Shiny app code above is saved in <code>app.R</code>, we can look at <code>tests/testthat/test-export.R</code> below. To successfully run the code below, be sure to have <a href="https://vdiffr.r-lib.org/" class="external-link">vdiffr</a> installed.</p>
-<p>Since we are not calling <code>AppDriver$expect_screenshot()</code> or <code>AppDriver$get_screenshot()</code>, we do not need to use <code>AppDriver$new(variant=)</code>.</p>
+<p>Let’s look at how we could write a <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> test to
+make sure the plot is updated after updating our numeric
+<code>input</code> <code>n</code>. Assuming the Shiny app code above is
+saved in <code>app.R</code>, we can look at
+<code>tests/testthat/test-export.R</code> below. To successfully run the
+code below, be sure to have <a href="https://vdiffr.r-lib.org/" class="external-link">vdiffr</a> installed.</p>
+<p>Since we are not calling <code>AppDriver$expect_screenshot()</code>
+or <code>AppDriver$get_screenshot()</code>, we do not need to use
+<code>AppDriver$new(variant=)</code>.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># File: ./tests/testthat/test-export.R</span></span>
 <span><span class="co"># App file: ./app.R</span></span>
@@ -493,7 +631,9 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span><span class="va">plot_obj_20</span><span class="op">$</span><span class="va">data</span>, <span class="va">dt20</span><span class="op">)</span></span>
 <span>  <span class="fu">vdiffr</span><span class="fu">::</span><span class="fu"><a href="https://vdiffr.r-lib.org/reference/expect_doppelganger.html" class="external-link">expect_doppelganger</a></span><span class="op">(</span><span class="st">"cars-points-20"</span>, <span class="va">plot_obj_20</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<p>The second half of the test performs similar expectations to the first half of the test. This code can be pulled into a helper function and be written as:</p>
+<p>The second half of the test performs similar expectations to the
+first half of the test. This code can be pulled into a helper function
+and be written as:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># File: tests/testthat/test-export.R</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/shinytest2/">shinytest2</a></span><span class="op">)</span></span>
@@ -524,7 +664,9 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <span>  <span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span>  <span class="fu">expect_n_and_plot</span><span class="op">(</span><span class="fl">20</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<p>It should be noted that <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> objects can not be serialized to <code>JSON</code> and should be excluded from the <code>AppDriver$expect_values()</code> snapshots.</p>
+<p>It should be noted that <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> objects can not be
+serialized to <code>JSON</code> and should be excluded from the
+<code>AppDriver$expect_values()</code> snapshots.</p>
 </div>
 </div>
 <div class="section level2">
@@ -535,14 +677,19 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 </h5>
 <ul>
 <li>
-<code>AppDriver$get_values()</code>, <code>AppDriver$get_value()</code>:
+<code>AppDriver$get_values()</code>,
+<code>AppDriver$get_value()</code>:
 <ul>
 <li>
-<strong>Best way to retrieve values</strong> as they have been serialized by <code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS()</a></code>
+<strong>Best way to retrieve values</strong> as they have been
+serialized by <code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS()</a></code>
 </li>
 <li>
-<strong>Safest way to compare values</strong> as comparisons (e.g. <code><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal()</a></code>) will need to be explicitly stated from the beginning</li>
-<li>Pro: Supports more complex objects like <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> plots</li>
+<strong>Safest way to compare values</strong> as comparisons
+(e.g. <code><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal()</a></code>) will need to be explicitly stated
+from the beginning</li>
+<li>Pro: Supports more complex objects like <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a>
+plots</li>
 <li>Con: Causes code to be more verbose</li>
 </ul>
 </li>
@@ -551,20 +698,27 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <div class="section level5">
 <h5 id="expectation-methods">Expectation methods<a class="anchor" aria-label="anchor" href="#expectation-methods"></a>
 </h5>
-<p>All <code>AppDriver$expect_*()</code> should have their snapshots manually inspected when first created to ensure they contain expected content.</p>
+<p>All <code>AppDriver$expect_*()</code> should have their snapshots
+manually inspected when first created to ensure they contain expected
+content.</p>
 <ul>
 <li>
 <code>AppDriver$expect_values()</code>:
 <ul>
 <li>
-<strong>Go-to expectation method</strong> for Shiny <code>input</code>, <code>output</code>, and <code>export</code> values</li>
+<strong>Go-to expectation method</strong> for Shiny
+<code>input</code>, <code>output</code>, and <code>export</code>
+values</li>
 <li>
-<strong>Automatically recorded</strong> in <code>shinytest2::record_app()</code>
+<strong>Automatically recorded</strong> in
+<code>shinytest2::record_app()</code>
 </li>
 <li>Saves a <em>debug</em> screenshot for manual inspection</li>
 <li>Pro: Tests (almost) all Shiny values</li>
-<li>Con: Complex objects containing environments (e.g. <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> plots) cannot be serialized to JSON</li>
-<li>Get: <code>AppDriver$get_value()</code> and <code>AppDriver$get_values()</code>
+<li>Con: Complex objects containing environments
+(e.g. <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> plots) cannot be serialized to JSON</li>
+<li>Get: <code>AppDriver$get_value()</code> and
+<code>AppDriver$get_values()</code>
 </li>
 </ul>
 </li>
@@ -572,9 +726,11 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <code>AppDriver$expect_download()</code>:
 <ul>
 <li>
-<strong>Automatically recorded</strong> in <code>shinytest2::record_app()</code>
+<strong>Automatically recorded</strong> in
+<code>shinytest2::record_app()</code>
 </li>
-<li>Pro: Will save a snapshot of the requested <code>filename</code>
+<li>Pro: Will save a snapshot of the requested
+<code>filename</code>
 </li>
 <li>Get: <code>AppDriver$get_download()</code>
 </li>
@@ -585,7 +741,8 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <ul>
 <li>Safest way to retrieve text for a given <code>selector</code>
 </li>
-<li>More stable than than <code>AppDriver$expect_html()</code>, as it gives more freedom to UI authors to make HTML structure changes</li>
+<li>More stable than than <code>AppDriver$expect_html()</code>, as it
+gives more freedom to UI authors to make HTML structure changes</li>
 <li>Pro: Can test non-Shiny content using the <code>selector</code>
 </li>
 <li>Con: Cannot be used to test text inputs</li>
@@ -596,9 +753,11 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <li>
 <code>AppDriver$expect_html()</code>
 <ul>
-<li>Expects all HTML to be consistently shaped for a given <code>selector</code>
+<li>Expects all HTML to be consistently shaped for a given
+<code>selector</code>
 </li>
-<li>More stable than than <code>AppDriver$expect_screenshot()</code>, and gives more freedom to UI authors</li>
+<li>More stable than than <code>AppDriver$expect_screenshot()</code>,
+and gives more freedom to UI authors</li>
 <li>Pro: Can test non-Shiny content using the <code>selector</code>
 </li>
 <li>Con: Cannot be used to test text inputs</li>
@@ -610,7 +769,8 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <code>AppDriver$expect_js()</code>:
 <ul>
 <li>Makes an expectation on the JavaScript result</li>
-<li>Building block for <code>AppDriver$expect_text()</code> and <code>AppDriver$expect_html()</code>
+<li>Building block for <code>AppDriver$expect_text()</code> and
+<code>AppDriver$expect_html()</code>
 </li>
 <li>Con: Must write own JavaScript code to test</li>
 <li>Get: <code>AppDriver$get_js()</code>
@@ -620,10 +780,13 @@ add_abs(info$x, info$y) (`actual`) not equal to info$expected (`expected`).
 <li>
 <code>AppDriver$expect_screenshot()</code>:
 <ul>
-<li>Saves a screenshot of a selector (defaults to <code>"html"</code>) for later comparison</li>
-<li><strong>Strongly recommended to use other testing methods when possible</strong></li>
+<li>Saves a screenshot of a selector (defaults to <code>"html"</code>)
+for later comparison</li>
+<li><strong>Strongly recommended to use other testing methods when
+possible</strong></li>
 <li>Pro: A picture can be worth a thousand [tests]</li>
-<li>Con: Screenshot reproducibility is <strong>very</strong> brittle to non-Shiny changes</li>
+<li>Con: Screenshot reproducibility is <strong>very</strong> brittle to
+non-Shiny changes</li>
 <li>Get: <code>AppDriver$get_screenshot()</code>
 </li>
 </ul>

@@ -15,8 +15,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.6/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.6/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.7/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.7/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Testing in depth">
@@ -87,7 +87,8 @@
 
 
 
-<script src="in-depth_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+
+<div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Testing in depth</h1>
             
@@ -101,7 +102,8 @@
 <div class="section level2">
 <h2 id="customizing-test-scripts">Customizing test scripts<a class="anchor" aria-label="anchor" href="#customizing-test-scripts"></a>
 </h2>
-<p>The test recorder is the easiest way to create test scripts, but it is not the only way. You can create and edit test scripts manually.</p>
+<p>The test recorder is the easiest way to create test scripts, but it
+is not the only way. You can create and edit test scripts manually.</p>
 <p>The final product would look something like:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># File: ./tests/testthat/test-shinytest2.R</span></span>
@@ -110,11 +112,14 @@
 <span></span>
 <span>  <span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<p>A test script has this basic structure: first, there is an initialization, then the expectations are performed.</p>
-<p>In the initialization, the script creates a new <code>AppDriver</code> object.</p>
+<p>A test script has this basic structure: first, there is an
+initialization, then the expectations are performed.</p>
+<p>In the initialization, the script creates a new
+<code>AppDriver</code> object.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>Next, define some interactions with the application and makes expectations via snapshots.</p>
+<p>Next, define some interactions with the application and makes
+expectations via snapshots.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>check_group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span>, <span class="st">"2"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>check_group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"3"</span><span class="op">)</span><span class="op">)</span></span>
@@ -123,42 +128,84 @@
 <span></span>
 <span><span class="va">app</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="st">"action"</span><span class="op">)</span></span>
 <span><span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>For customizing a script, the second portion – the interactions and expectations – is the part you will want to modify.</p>
+<p>For customizing a script, the second portion – the interactions and
+expectations – is the part you will want to modify.</p>
 <div class="section level3">
-<h3 id="setting-inputs-with-appset_inputs-and-appclick">Setting inputs with <code>app$set_inputs()</code> and <code>app$click()</code><a class="anchor" aria-label="anchor" href="#setting-inputs-with-appset_inputs-and-appclick"></a>
+<h3 id="setting-inputs-with-appset_inputs-and-appclick">Setting inputs with <code>app$set_inputs()</code> and
+<code>app$click()</code><a class="anchor" aria-label="anchor" href="#setting-inputs-with-appset_inputs-and-appclick"></a>
 </h3>
-<p>With <code>app$set_inputs()</code>, you provide the name of one or more inputs and corresponding values to set them to. Consider this set of directives:</p>
+<p>With <code>app$set_inputs()</code>, you provide the name of one or
+more inputs and corresponding values to set them to. Consider this set
+of directives:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>check_group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span>, <span class="st">"2"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>check_group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"3"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">app</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="st">"action"</span><span class="op">)</span></span></code></pre></div>
-<p>Notice that we set the value of <code>check_group</code> two times in a row. When we recorded this test script, it started with the value <code>"1"</code>, and then we checked the <code>"2"</code> and <code>"3"</code> boxes. The recorded script set the value to <code>c("1", "2")</code>, and then <code>c("1", "2", "3")</code>. The <code>c("1", "2")</code> value was simply an intermediate step.</p>
-<p>It is possible to simplify and speed up the tests by dropping the intermediate step, which leaves us with this:</p>
+<p>Notice that we set the value of <code>check_group</code> two times in
+a row. When we recorded this test script, it started with the value
+<code>"1"</code>, and then we checked the <code>"2"</code> and
+<code>"3"</code> boxes. The recorded script set the value to
+<code>c("1", "2")</code>, and then <code>c("1", "2", "3")</code>. The
+<code>c("1", "2")</code> value was simply an intermediate step.</p>
+<p>It is possible to simplify and speed up the tests by dropping the
+intermediate step, which leaves us with this:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>check_group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"3"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">app</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="st">"action"</span><span class="op">)</span></span></code></pre></div>
-<p>Multiple calls to <code>app$set_inputs()</code> should be reduced to a single line unless the side effects of setting inputs multiple times is desired. When <code>app$set_inputs()</code> is called, it normally returns control and moves on to the next step only after the server sends a response to the client. The reason it waits for a response is so that a subsequent call to <code>app$snapshot()</code> will be sure to capture the updated output values. If <code>app$set_inputs()</code> did not wait for a update, then, if the output update did not happen very quickly, a snapshot might capture the state of the application before the outputs are updated.</p>
+<p>Multiple calls to <code>app$set_inputs()</code> should be reduced to
+a single line unless the side effects of setting inputs multiple times
+is desired. When <code>app$set_inputs()</code> is called, it normally
+returns control and moves on to the next step only after the server
+sends a response to the client. The reason it waits for a response is so
+that a subsequent call to <code>app$snapshot()</code> will be sure to
+capture the updated output values. If <code>app$set_inputs()</code> did
+not wait for a update, then, if the output update did not happen very
+quickly, a snapshot might capture the state of the application before
+the outputs are updated.</p>
 </div>
 <div class="section level3">
 <h3 id="making-expectations">Making expectations<a class="anchor" aria-label="anchor" href="#making-expectations"></a>
 </h3>
 <p>For an in-depth discussion of expectations, see the <a href="./robust.html">Robust testing vignette</a>.</p>
-<p>There are a couple standard ways to make expectations from your <code>AppDriver</code> object.</p>
+<p>There are a couple standard ways to make expectations from your
+<code>AppDriver</code> object.</p>
 <ul>
-<li><p><code>app$expect_values()</code>: This is the simplest way to make an expectation. It creates a list of values and compares them to the current values of the application. It also takes a debug screenshot and stores it as a snapshot. However, this snapshot will never fail an expectation test. The extra screenshot file is useful for manually determining if UI changes have happened over time while not producing numerous false-positive test failures.</p></li>
-<li><p><code>app$expect_screenshot()</code>: This method takes a screenshot of the application and compares it to a reference screenshot. If the screenshots are different, it fails the test.</p></li>
+<li><p><code>app$expect_values()</code>: This is the simplest way to
+make an expectation. It creates a list of values and compares them to
+the current values of the application. It also takes a debug screenshot
+and stores it as a snapshot. However, this snapshot will never fail an
+expectation test. The extra screenshot file is useful for manually
+determining if UI changes have happened over time while not producing
+numerous false-positive test failures.</p></li>
+<li><p><code>app$expect_screenshot()</code>: This method takes a
+screenshot of the application and compares it to a reference screenshot.
+If the screenshots are different, it fails the test.</p></li>
 </ul>
-<p>There are few ways to use <code>app$expect_values()</code>. The simplest way is to call it with no arguments:</p>
+<p>There are few ways to use <code>app$expect_values()</code>. The
+simplest way is to call it with no arguments:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>The first time this is called in a test script, it will record all <code>input</code>, <code>output</code>, and <code>export</code> values from the application, in a file called <code>001.json</code>. The next call will save the values in <code>002.json</code>, and so on.</p>
-<p>Each time you call <code>app$expect_values()</code>, it will also save a debug screenshot of the web browser, in a file <code>001_.png</code>, <code>002_.png</code>, and so on. These screen shots are useful for debugging your tests and inspecting what they’re doing. You can tell it to not take screen shots, to save space and make the tests run slightly faster, in the initialization step, with:</p>
+<p>The first time this is called in a test script, it will record all
+<code>input</code>, <code>output</code>, and <code>export</code> values
+from the application, in a file called <code>001.json</code>. The next
+call will save the values in <code>002.json</code>, and so on.</p>
+<p>Each time you call <code>app$expect_values()</code>, it will also
+save a debug screenshot of the web browser, in a file
+<code>001_.png</code>, <code>002_.png</code>, and so on. These screen
+shots are useful for debugging your tests and inspecting what they’re
+doing. You can tell it to not take screen shots, to save space and make
+the tests run slightly faster, in the initialization step, with:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>expect_values_screenshot_args <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>If you want to disable screenshots for a single <code>app$expect_values()</code> call, you can use:</p>
+<p>If you want to disable screenshots for a single
+<code>app$expect_values()</code> call, you can use:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span>screenshot_args <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>If you want more targeted tests, you can snapshot specific items by using the <code>input</code>, <code>output</code>, and <code>export</code> parameters. For example, to capture the value of just the outputs named <code>"a"</code> and <code>"b"</code>, you would call:</p>
+<p>If you want more targeted tests, you can snapshot specific items by
+using the <code>input</code>, <code>output</code>, and
+<code>export</code> parameters. For example, to capture the value of
+just the outputs named <code>"a"</code> and <code>"b"</code>, you would
+call:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span>output <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>You could also capture specific inputs or exports:</p>
@@ -168,35 +215,42 @@
 <span>  output <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span>,</span>
 <span>  export <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"e1"</span>, <span class="st">"e2"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Finally, if you want to snapshot all <code>output</code>s but no inputs or exports, you can simply set <code>output</code> to <code>TRUE</code> as only values that are requested are recorded:</p>
+<p>Finally, if you want to snapshot all <code>output</code>s but no
+inputs or exports, you can simply set <code>output</code> to
+<code>TRUE</code> as only values that are requested are recorded:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span>output <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>The same can be used to snapshot all <code>input</code> and/or all <code>export</code> values. To capture all <code>output</code> and <code>export</code> values, but no <code>input</code> values:</p>
+<p>The same can be used to snapshot all <code>input</code> and/or all
+<code>export</code> values. To capture all <code>output</code> and
+<code>export</code> values, but no <code>input</code> values:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span>output <span class="op">=</span> <span class="cn">TRUE</span>, export <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="exported-values">Exported values<a class="anchor" aria-label="anchor" href="#exported-values"></a>
 </h3>
-<p>In some cases, it’s useful to snapshot some bits of internal state of an application – state that’s not reflected directly in the inputs or outputs. This can be done by <em>export</em>ing values.</p>
-<p>Consider this toy example where an application has an internal reactive expression that would be convenient to capture.</p>
+<p>In some cases, it’s useful to snapshot some bits of internal state of
+an application – state that’s not reflected directly in the inputs or
+outputs. This can be done by <em>export</em>ing values.</p>
+<p>Consider this toy example where an application has an internal
+reactive expression that would be convenient to capture.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/numericInput.html" class="external-link">numericInput</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"x"</span>, <span class="fl">4</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/numericInput.html" class="external-link">numericInput</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="st">"y"</span>, <span class="fl">10</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/numericInput.html" class="external-link">numericInput</a></span><span class="op">(</span><span class="st">"z"</span>, <span class="st">"z"</span>, <span class="fl">100</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/textOutput.html" class="external-link">verbatimTextOutput</a></span><span class="op">(</span><span class="st">"result"</span>, placeholder <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/numericInput.html" class="external-link">numericInput</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"x"</span>, <span class="fl">4</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/numericInput.html" class="external-link">numericInput</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="st">"y"</span>, <span class="fl">10</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/numericInput.html" class="external-link">numericInput</a></span><span class="op">(</span><span class="st">"z"</span>, <span class="st">"z"</span>, <span class="fl">100</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html" class="external-link">verbatimTextOutput</a></span><span class="op">(</span><span class="st">"result"</span>, placeholder <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">xy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">x</span> <span class="op">*</span> <span class="va">input</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span>
-<span>    <span class="va">yz</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">y</span> <span class="op">+</span> <span class="va">input</span><span class="op">$</span><span class="va">z</span><span class="op">)</span></span>
+<span>    <span class="va">xy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">x</span> <span class="op">*</span> <span class="va">input</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span>
+<span>    <span class="va">yz</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">y</span> <span class="op">+</span> <span class="va">input</span><span class="op">$</span><span class="va">z</span><span class="op">)</span></span>
 <span></span>
-<span>    <span class="va">output</span><span class="op">$</span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/renderPrint.html" class="external-link">renderText</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>    <span class="va">output</span><span class="op">$</span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderText</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>      <span class="fu">xy</span><span class="op">(</span><span class="op">)</span> <span class="op">/</span> <span class="fu">yz</span><span class="op">(</span><span class="op">)</span></span>
 <span>    <span class="op">}</span><span class="op">)</span></span>
 <span></span>
-<span>    <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
 <span>      xy <span class="op">=</span> <span class="op">{</span></span>
 <span>        <span class="fu">xy</span><span class="op">(</span><span class="op">)</span></span>
 <span>      <span class="op">}</span>,</span>
@@ -209,7 +263,7 @@
 <p><img src="images/screenshot-exports-app.png" width="100%" style="display: block; margin: auto;"></p>
 <p>Notice these lines:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>    <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
 <span>      xy <span class="op">=</span> <span class="op">{</span></span>
 <span>        <span class="fu">xy</span><span class="op">(</span><span class="op">)</span></span>
 <span>      <span class="op">}</span>,</span>
@@ -217,41 +271,71 @@
 <span>        <span class="fu">yz</span><span class="op">(</span><span class="op">)</span></span>
 <span>      <span class="op">}</span></span>
 <span>    <span class="op">)</span></span></code></pre></div>
-<p>This creates exported values called <code>xy</code> and <code>yz</code>. When a test snapshot is taken, it evaluates the reactive expression and inserts their values in the snapshot:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">{</span></span>
-<span id="cb15-2"><a href="#cb15-2"></a>  <span class="dt">"input"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb15-3"><a href="#cb15-3"></a>    <span class="dt">"x"</span><span class="fu">:</span> <span class="dv">4</span><span class="fu">,</span></span>
-<span id="cb15-4"><a href="#cb15-4"></a>    <span class="dt">"y"</span><span class="fu">:</span> <span class="dv">10</span><span class="fu">,</span></span>
-<span id="cb15-5"><a href="#cb15-5"></a>    <span class="dt">"z"</span><span class="fu">:</span> <span class="dv">100</span></span>
-<span id="cb15-6"><a href="#cb15-6"></a>  <span class="fu">},</span></span>
-<span id="cb15-7"><a href="#cb15-7"></a>  <span class="dt">"output"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb15-8"><a href="#cb15-8"></a>    <span class="dt">"result"</span><span class="fu">:</span> <span class="st">"0.3636364"</span></span>
-<span id="cb15-9"><a href="#cb15-9"></a>  <span class="fu">},</span></span>
-<span id="cb15-10"><a href="#cb15-10"></a>  <span class="dt">"export"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb15-11"><a href="#cb15-11"></a>    <span class="dt">"xy"</span><span class="fu">:</span> <span class="dv">40</span><span class="fu">,</span></span>
-<span id="cb15-12"><a href="#cb15-12"></a>    <span class="dt">"yz"</span><span class="fu">:</span> <span class="dv">110</span></span>
-<span id="cb15-13"><a href="#cb15-13"></a>  <span class="fu">}</span></span>
-<span id="cb15-14"><a href="#cb15-14"></a><span class="fu">}</span></span></code></pre></div>
-<p>Note that the expression (i.e. <code>xy()</code> and <code>yz()</code>) is saved when <code><a href="https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html" class="external-link">exportTestValues()</a></code> is called, not the specific values. Generally, you should keep these expressions as simple as possible so that test failures yield informative outputs. Note that any value here has to be serializable to JSON, so it’s not suitable for testing complex objects.</p>
+<p>This creates exported values called <code>xy</code> and
+<code>yz</code>. When a test snapshot is taken, it evaluates the
+reactive expression and inserts their values in the snapshot:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="dt">"input"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>    <span class="dt">"x"</span><span class="fu">:</span> <span class="dv">4</span><span class="fu">,</span></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>    <span class="dt">"y"</span><span class="fu">:</span> <span class="dv">10</span><span class="fu">,</span></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>    <span class="dt">"z"</span><span class="fu">:</span> <span class="dv">100</span></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>  <span class="dt">"output"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>    <span class="dt">"result"</span><span class="fu">:</span> <span class="st">"0.3636364"</span></span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a>  <span class="dt">"export"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a>    <span class="dt">"xy"</span><span class="fu">:</span> <span class="dv">40</span><span class="fu">,</span></span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a>    <span class="dt">"yz"</span><span class="fu">:</span> <span class="dv">110</span></span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Note that the expression (i.e. <code>xy()</code> and
+<code>yz()</code>) is saved when <code><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues()</a></code> is
+called, not the specific values. Generally, you should keep these
+expressions as simple as possible so that test failures yield
+informative outputs. Note that any value here has to be serializable to
+JSON, so it’s not suitable for testing complex objects.</p>
 </div>
 <div class="section level3">
 <h3 id="adding-delays">Adding delays<a class="anchor" aria-label="anchor" href="#adding-delays"></a>
 </h3>
-<p>In some cases, you may need to wait for some amount of time between steps (e.g. waiting for CSS animations). You can do this by adding <code><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep()</a></code> in your script. For example:</p>
+<p>In some cases, you may need to wait for some amount of time between
+steps (e.g. waiting for CSS animations). You can do this by adding
+<code><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep()</a></code> in your script. For example:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
-<p>However, if you are waiting for some Shiny reactives to be calculated, please read more in the <a href="#wait-for-value">Waiting for an <code>output</code> (or <code>input</code>) value</a> section.</p>
+<p>However, if you are waiting for some Shiny reactives to be
+calculated, please read more in the <a href="#wait-for-value">Waiting
+for an <code>output</code> (or <code>input</code>) value</a>
+section.</p>
 </div>
 <div class="section level3">
 <h3 id="controlling-random-values">Controlling random values<a class="anchor" aria-label="anchor" href="#controlling-random-values"></a>
 </h3>
-<p>If your application uses randomly-generated values (by calling functions like <code>rnorm</code>, <code>runif</code>, <code>sample</code> directly or indirectly), then, in normal operation, it will produce different results on each run. Because <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> works by comparing the current state of an application to a previous state, these random changes will cause test failures.</p>
-<p>To make such applications exactly repeatable, you can set the random seed. This can be done by specifying a random seed in the recorder. The seed can be any integer value.</p>
+<p>If your application uses randomly-generated values (by calling
+functions like <code>rnorm</code>, <code>runif</code>,
+<code>sample</code> directly or indirectly), then, in normal operation,
+it will produce different results on each run. Because
+<a href="https://rstudio.github.io/shinytest2/">shinytest2</a> works by comparing the current state of an
+application to a previous state, these random changes will cause test
+failures.</p>
+<p>To make such applications exactly repeatable, you can set the random
+seed. This can be done by specifying a random seed in the recorder. The
+seed can be any integer value.</p>
 <p><img src="images/screenshot-recorder-random-seed.png" width="100%" style="display: block; margin: auto;"></p>
-<p>If your test script has already been created, you can set the random seed by editing the test script so that the <code>AppDriver$new()</code> call has a value for <code>seed</code>. Moreover, if you need these tests to pass on multiple versions of R with different <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">RNGkind()</a></code> defaults (e.g., 3.5 and 3.6), you may want to set a fixed <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">RNGkind()</a></code> across your tests (perhaps via <code>RNGversion("3.5.0")</code>). However, using a <code>AppDriver$new(variant=)</code> value that contains the R version can also remedy this situation.</p>
+<p>If your test script has already been created, you can set the random
+seed by editing the test script so that the <code>AppDriver$new()</code>
+call has a value for <code>seed</code>. Moreover, if you need these
+tests to pass on multiple versions of R with different
+<code><a href="https://rdrr.io/r/base/Random.html" class="external-link">RNGkind()</a></code> defaults (e.g., 3.5 and 3.6), you may want to set
+a fixed <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">RNGkind()</a></code> across your tests (perhaps via
+<code>RNGversion("3.5.0")</code>). However, using a
+<code>AppDriver$new(variant=)</code> value that contains the R version
+can also remedy this situation.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>seed <span class="op">=</span> <span class="fl">4323</span><span class="op">)</span></span></code></pre></div>
-<p>In many cases, instead of setting the random seed, it is more elegant to use an <a href="zzz-faq.html#can-i-modify-the-input-and-output-values-that-are-recorded-in-snapshots">output preprocessor</a>.</p>
+<p>In many cases, instead of setting the random seed, it is more elegant
+to use an <a href="zzz-faq.html#can-i-modify-the-input-and-output-values-that-are-recorded-in-snapshots">output
+preprocessor</a>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -260,36 +344,57 @@
 <div class="section level3">
 <h3 id="tabs">Tabs<a class="anchor" aria-label="anchor" href="#tabs"></a>
 </h3>
-<p>With tabbed views, such as <code><a href="https://shiny.rstudio.com/reference/shiny/latest/tabsetPanel.html" class="external-link">tabsetPanel()</a></code> and <code><a href="https://shiny.rstudio.com/reference/shiny/latest/navbarPage.html" class="external-link">navbarPage()</a></code>, in order for <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> to keep track of which tab is currently selected, they must have an <code>id</code>. For example:</p>
+<p>With tabbed views, such as <code><a href="https://rdrr.io/pkg/shiny/man/tabsetPanel.html" class="external-link">tabsetPanel()</a></code> and
+<code><a href="https://rdrr.io/pkg/shiny/man/navbarPage.html" class="external-link">navbarPage()</a></code>, in order for <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> to
+keep track of which tab is currently selected, they must have an
+<code>id</code>. For example:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/tabsetPanel.html" class="external-link">tabsetPanel</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"tabs"</span>, <span class="va">....</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tabsetPanel.html" class="external-link">tabsetPanel</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"tabs"</span>, <span class="va">....</span><span class="op">)</span></span></code></pre></div>
 <p>or</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/navbarPage.html" class="external-link">navbarPage</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"tabs"</span>, <span class="va">....</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/navbarPage.html" class="external-link">navbarPage</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"tabs"</span>, <span class="va">....</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="uploading-files">Uploading files<a class="anchor" aria-label="anchor" href="#uploading-files"></a>
 </h3>
-<p>If you record a file upload event to a <code>fileInput</code>, the test script will have a line like this:</p>
+<p>If you record a file upload event to a <code>fileInput</code>, the
+test script will have a line like this:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span><span class="op">$</span><span class="fu">uploadFile</span><span class="op">(</span>file1 <span class="op">=</span> <span class="st">"mtcars.csv"</span><span class="op">)</span></span></code></pre></div>
-<p>Notice that the filename <code>"mtcars.csv"</code> appears in the script without a full file path. This is because the test recorder does not know where the file came from; it only knows the name of the file.</p>
-<p>Before you run the test script, you must copy the file to the <code>tests/testthat/</code> directory. See the <code>tests/testthat/</code> subdirectory of <a href="https://github.com/rstudio/shinytest2/tree/61d51d9e96640bfae3eeefa12c4b685099b584c8/tests/testthat/apps/upload" class="external-link">this app</a> for an example.</p>
-<p>After copying the file to that directory, run <code><a href="../reference/test_app.html">test_app()</a></code> as usual.</p>
+<p>Notice that the filename <code>"mtcars.csv"</code> appears in the
+script without a full file path. This is because the test recorder does
+not know where the file came from; it only knows the name of the
+file.</p>
+<p>Before you run the test script, you must copy the file to the
+<code>tests/testthat/</code> directory. See the
+<code>tests/testthat/</code> subdirectory of <a href="https://github.com/rstudio/shinytest2/tree/61d51d9e96640bfae3eeefa12c4b685099b584c8/tests/testthat/apps/upload" class="external-link">this
+app</a> for an example.</p>
+<p>After copying the file to that directory, run <code><a href="../reference/test_app.html">test_app()</a></code>
+as usual.</p>
 </div>
 <div class="section level3">
 <h3 id="view-the-headless-browser">View the headless browser<a class="anchor" aria-label="anchor" href="#view-the-headless-browser"></a>
 </h3>
-<p>As you step through the script, you can inspect the state of the application in a few different ways.</p>
-<p>The recommended way is to call <code>app$view()</code>. This will open a browser window in your default Chrome browser.</p>
-<p>Another way is to take a screenshot of your application. You can call <code>app$get_screenshot()</code> to take a screenshot of the application. This will display the screenshot as if it were a plot. (In RStudio, it will show in the Plots tab.)</p>
-<p>Using both methods, you can inspect the screenshot to see the state of the application.</p>
+<p>As you step through the script, you can inspect the state of the
+application in a few different ways.</p>
+<p>The recommended way is to call <code>app$view()</code>. This will
+open a browser window in your default Chrome browser.</p>
+<p>Another way is to take a screenshot of your application. You can call
+<code>app$get_screenshot()</code> to take a screenshot of the
+application. This will display the screenshot as if it were a plot. (In
+RStudio, it will show in the Plots tab.)</p>
+<p>Using both methods, you can inspect the screenshot to see the state
+of the application.</p>
 </div>
 <div class="section level3">
 <h3 id="getting-input-output-and-export-values">Getting input, output, and export values<a class="anchor" aria-label="anchor" href="#getting-input-output-and-export-values"></a>
 </h3>
-<p>It can also be useful to get the current input, output, and export values.</p>
-<p>To fetch all values without incrementing the expectation counter, you can call <code>app$get_values()</code>. This returns a list, which you can inspect with the <code><a href="https://rdrr.io/r/utils/str.html" class="external-link">str()</a></code> function. It may look something like this:</p>
+<p>It can also be useful to get the current input, output, and export
+values.</p>
+<p>To fetch all values without incrementing the expectation counter, you
+can call <code>app$get_values()</code>. This returns a list, which you
+can inspect with the <code><a href="https://rdrr.io/r/utils/str.html" class="external-link">str()</a></code> function. It may look something
+like this:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vals</span> <span class="op">&lt;-</span> <span class="va">app</span><span class="op">$</span><span class="fu">get_values</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -306,7 +411,9 @@
 <span><span class="co">#&gt;   ..$ check_group_out: chr "[1] \"1\""</span></span>
 <span><span class="co">#&gt;   ..$ text_out      : chr "[1] \"Enter text...\""</span></span>
 <span><span class="co">#&gt;  $ export: Named list()</span></span></code></pre></div>
-<p>The values retrieved this way can be used for expectation-based testing. For example, we could retrieve the <code>checkbox_out</code> value and compare it to a known string:</p>
+<p>The values retrieved this way can be used for expectation-based
+testing. For example, we could retrieve the <code>checkbox_out</code>
+value and compare it to a known string:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vals</span> <span class="op">&lt;-</span> <span class="va">app</span><span class="op">$</span><span class="fu">get_values</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu">expect_identical</span><span class="op">(</span><span class="va">vals</span><span class="op">$</span><span class="va">output</span><span class="op">$</span><span class="va">checkbox_out</span>, <span class="st">"[1] TRUE"</span><span class="op">)</span></span>
@@ -315,40 +422,58 @@
 <span><span class="fu">expect_identical</span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="fu">get_value</span><span class="op">(</span>output <span class="op">=</span> <span class="st">"checkbox_out"</span><span class="op">)</span>, <span class="st">"[1] TRUE"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="wait-for-value">Waiting for an <code>input</code> (or <code>output</code>) value<a class="anchor" aria-label="anchor" href="#wait-for-value"></a>
+<h3 id="wait-for-value">Waiting for an <code>input</code> (or <code>output</code>)
+value<a class="anchor" aria-label="anchor" href="#wait-for-value"></a>
 </h3>
-<p>In most situations, when an <code>input</code> value is set, <code>app$set_inputs()</code> will wait up to 3 seconds (default) for the next output value to be sent from the server. If, however, you have an application that does not immediately send the value you are interested in, you will need to insert at <code>app$wait_for_value()</code> function call. This is readily useful for htmlwidgets or anything that involves javascript code to set <code>input</code> values. This method can also be used to determine when <code>input</code> (or <code>output</code>) values have been set after the initial output values have been set or for when reactivity is done in two or more stages.</p>
-<p>For example, when checking a checkbox that adds dynamic UI, such as the old faithful Shiny example, three round trips from the browser to the Shiny server will need to occur.</p>
+<p>In most situations, when an <code>input</code> value is set,
+<code>app$set_inputs()</code> will wait up to 3 seconds (default) for
+the next output value to be sent from the server. If, however, you have
+an application that does not immediately send the value you are
+interested in, you will need to insert at
+<code>app$wait_for_value()</code> function call. This is readily useful
+for htmlwidgets or anything that involves javascript code to set
+<code>input</code> values. This method can also be used to determine
+when <code>input</code> (or <code>output</code>) values have been set
+after the initial output values have been set or for when reactivity is
+done in two or more stages.</p>
+<p>For example, when checking a checkbox that adds dynamic UI, such as
+the old faithful Shiny example, three round trips from the browser to
+the Shiny server will need to occur.</p>
 <ol style="list-style-type: decimal">
 <li>Checking the checkbox</li>
 <li>Putting the slider and plot placeholder into the app’s UI</li>
-<li>Once the slider is recognized by the browser, it will send information back to Shiny causing the plot to be rendered and placed in the browser</li>
+<li>Once the slider is recognized by the browser, it will send
+information back to Shiny causing the plot to be rendered and placed in
+the browser</li>
 </ol>
-<p>If we were to only use <code>app$set_inputs("chkbx", TRUE)</code> and immediately take a snapshot, we would most likely miss the correct plot value.</p>
-<p>To dig into this further, we can look at this situation’s example code:</p>
+<p>If we were to only use <code>app$set_inputs("chkbx", TRUE)</code> and
+immediately take a snapshot, we would most likely miss the correct plot
+value.</p>
+<p>To dig into this further, we can look at this situation’s example
+code:</p>
 <p><strong><code>app.R</code>:</strong></p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/checkboxInput.html" class="external-link">checkboxInput</a></span><span class="op">(</span><span class="st">"chkbx"</span>, <span class="st">"Display Graph?"</span>, <span class="cn">FALSE</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/htmlOutput.html" class="external-link">uiOutput</a></span><span class="op">(</span><span class="st">"dynamic_output"</span><span class="op">)</span></span>
+<span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/checkboxInput.html" class="external-link">checkboxInput</a></span><span class="op">(</span><span class="st">"chkbx"</span>, <span class="st">"Display Graph?"</span>, <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/htmlOutput.html" class="external-link">uiOutput</a></span><span class="op">(</span><span class="st">"dynamic_output"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">output</span><span class="op">$</span><span class="va">dynamic_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/renderUI.html" class="external-link">renderUI</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">output</span><span class="op">$</span><span class="va">dynamic_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderUI.html" class="external-link">renderUI</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="va">input</span><span class="op">$</span><span class="va">chkbx</span><span class="op">)</span> <span class="op">{</span></span>
 <span>      <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/sliderInput.html" class="external-link">sliderInput</a></span><span class="op">(</span>inputId <span class="op">=</span> <span class="st">"bins"</span>, label <span class="op">=</span> <span class="st">"Number of bins:"</span>, min <span class="op">=</span> <span class="fl">1</span>, max <span class="op">=</span> <span class="fl">50</span>, value <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/plotOutput.html" class="external-link">plotOutput</a></span><span class="op">(</span>outputId <span class="op">=</span> <span class="st">"dist_plot"</span><span class="op">)</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sliderInput.html" class="external-link">sliderInput</a></span><span class="op">(</span>inputId <span class="op">=</span> <span class="st">"bins"</span>, label <span class="op">=</span> <span class="st">"Number of bins:"</span>, min <span class="op">=</span> <span class="fl">1</span>, max <span class="op">=</span> <span class="fl">50</span>, value <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/plotOutput.html" class="external-link">plotOutput</a></span><span class="op">(</span>outputId <span class="op">=</span> <span class="st">"dist_plot"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="co"># Will not execute until `input$bins` is available</span></span>
 <span>  <span class="co"># `input$bins` is not available until `chkbx` is checked</span></span>
-<span>  <span class="va">output</span><span class="op">$</span><span class="va">dist_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/renderPlot.html" class="external-link">renderPlot</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">output</span><span class="op">$</span><span class="va">dist_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html" class="external-link">renderPlot</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="co"># artificially slow the plot</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
 <span></span>
@@ -359,8 +484,10 @@
 <span>         main <span class="op">=</span> <span class="st">"Histogram of waiting times"</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span><span class="op">)</span></span></code></pre></div>
-<p>Naively, we could add <code><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep()</a></code> function calls to slow down <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> testing to hope that the Shiny application is in a stable state.</p>
+<span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span><span class="op">)</span></span></code></pre></div>
+<p>Naively, we could add <code><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep()</a></code> function calls to slow
+down <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> testing to hope that the Shiny
+application is in a stable state.</p>
 <p><strong><code>./tests/testthat/test-use-sleep-bad.R</code>:</strong></p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">test_that</span><span class="op">(</span><span class="st">"Sleeping can work to wait for an app to stabilize"</span>, <span class="op">{</span></span>
@@ -379,7 +506,14 @@
 <span></span>
 <span>  <span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<p>The above pattern will probably fail if executed on a slower machine. This pattern of <em>sleeping and hoping</em> should be replaced with <code>app$wait_for_idle()</code> or <code>app$wait_for_value()</code>. <code>app$wait_for_idle()</code> will wait for the whole application to be idle for 500ms (default). This method is more intuitive, generic, and is easier to code. <code>app$wait_for_value()</code> will wait for a specific input value to not be an <code>ignore</code>ed value. This method is very specific and requires more logic to code.</p>
+<p>The above pattern will probably fail if executed on a slower machine.
+This pattern of <em>sleeping and hoping</em> should be replaced with
+<code>app$wait_for_idle()</code> or <code>app$wait_for_value()</code>.
+<code>app$wait_for_idle()</code> will wait for the whole application to
+be idle for 500ms (default). This method is more intuitive, generic, and
+is easier to code. <code>app$wait_for_value()</code> will wait for a
+specific input value to not be an <code>ignore</code>ed value. This
+method is very specific and requires more logic to code.</p>
 <p><strong><code>./tests/testthat/test-wait-good.R</code>:</strong></p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">test_that</span><span class="op">(</span><span class="st">"Use $wait_for_idle() for app to stabilize"</span>, <span class="op">{</span></span>
@@ -428,8 +562,13 @@
 <div class="section level2">
 <h2 id="dealing-with-dynamic-data">Dealing with dynamic data<a class="anchor" aria-label="anchor" href="#dealing-with-dynamic-data"></a>
 </h2>
-<p>If your application uses a data source that changes over time, then a snapshot taken yesterday may not match a snapshot taken today, even if the app itself hasn’t changed. Dynamic data inherently poses a challenge for snapshot-based testing.</p>
-<p>This problem can be avoided by detecting when the application is being tested, and in that case use a static data set instead. To do the detection, you can do something like the following:</p>
+<p>If your application uses a data source that changes over time, then a
+snapshot taken yesterday may not match a snapshot taken today, even if
+the app itself hasn’t changed. Dynamic data inherently poses a challenge
+for snapshot-based testing.</p>
+<p>This problem can be avoided by detecting when the application is
+being tested, and in that case use a static data set instead. To do the
+detection, you can do something like the following:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"shiny.testmode"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># Load static/dummy data here</span></span>
@@ -440,10 +579,23 @@
 <div class="section level2">
 <h2 id="using-variant-to-expect-different-snapshots">Using <code>variant</code> to expect different snapshots<a class="anchor" aria-label="anchor" href="#using-variant-to-expect-different-snapshots"></a>
 </h2>
-<p>You can variants to deal with cases where the snapshot output varies and you want to capture and test the variations. Common use cases include variations for operating system, R version, or version of key dependency. Variants are an advanced feature.</p>
-<p>When you use them, you’ll need to carefully think about your testing strategy to ensure that all important variants are covered by automated tests, and ensure that you have a way to get snapshot changes out of your CI system and back into the repo.</p>
-<p>It is recommended to use <code>AppDriver$new(variant= platform_variant())</code> to capture the operating system and R version where the test is running. Variants are required when calling <code>$expect_screenshot()</code>. A <code>NULL</code> value may be used, but is not recommended for testing reproducibility.</p>
-<p>All <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> expectation methods eventually call <a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link"><code>testthat::expect_snapshot_file()</code></a> to save the snapshot files. Snapshot expectations will only compare to their variant’s version of the snapshot file.</p>
+<p>You can variants to deal with cases where the snapshot output varies
+and you want to capture and test the variations. Common use cases
+include variations for operating system, R version, or version of key
+dependency. Variants are an advanced feature.</p>
+<p>When you use them, you’ll need to carefully think about your testing
+strategy to ensure that all important variants are covered by automated
+tests, and ensure that you have a way to get snapshot changes out of
+your CI system and back into the repo.</p>
+<p>It is recommended to use
+<code>AppDriver$new(variant= platform_variant())</code> to capture the
+operating system and R version where the test is running. Variants are
+required when calling <code>$expect_screenshot()</code>. A
+<code>NULL</code> value may be used, but is not recommended for testing
+reproducibility.</p>
+<p>All <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> expectation methods eventually call <a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link"><code>testthat::expect_snapshot_file()</code></a>
+to save the snapshot files. Snapshot expectations will only compare to
+their variant’s version of the snapshot file.</p>
 </div>
 <div class="section level2">
 <h2 id="limitations">Limitations<a class="anchor" aria-label="anchor" href="#limitations"></a>
@@ -451,14 +603,35 @@
 <div class="section level3">
 <h3 id="inputs-without-input-bindings">Inputs without input bindings<a class="anchor" aria-label="anchor" href="#inputs-without-input-bindings"></a>
 </h3>
-<p>Most input components in Shiny set their values by communicating through something called an <em>input binding</em>. <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> works well with <code>input</code> values that are set via input bindings.</p>
-<p>However, there are some components that set input values without using an input binding. These include some <a href="http://www.htmlwidgets.org/" class="external-link">htmlwidgets</a>, such as <a href="https://rstudio.github.io/DT/" class="external-link">DT</a> and <a href="https://github.com/plotly/plotly.R" class="external-link">plotly</a>, as well as Shiny’s built-in plot interactions with <code><a href="https://shiny.rstudio.com/reference/shiny/latest/renderPlot.html" class="external-link">renderPlot()</a></code>.</p>
-<p>To set these unbound inputs, the resulting test script code will look something like this:</p>
+<p>Most input components in Shiny set their values by communicating
+through something called an <em>input binding</em>.
+<a href="https://rstudio.github.io/shinytest2/">shinytest2</a> works well with <code>input</code> values that
+are set via input bindings.</p>
+<p>However, there are some components that set input values without
+using an input binding. These include some <a href="http://www.htmlwidgets.org/" class="external-link">htmlwidgets</a>, such as <a href="https://rstudio.github.io/DT/" class="external-link">DT</a> and <a href="https://github.com/plotly/plotly.R" class="external-link">plotly</a>, as well as Shiny’s
+built-in plot interactions with <code><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html" class="external-link">renderPlot()</a></code>.</p>
+<p>To set these unbound inputs, the resulting test script code will look
+something like this:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>table_rows_selected <span class="op">=</span> <span class="fl">1</span>, allow_no_input_binding_ <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>table_row_last_clicked <span class="op">=</span> <span class="fl">1</span>, allow_no_input_binding_ <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>When the test script is replayed, the headless browser will set these inputs to the specified values and send them to the server running Shiny in R. However, the browser will not be able to tell the input object to do the exact same behaviors. For example, with DT, when a row is selected, the mouse click event in the browser triggers the DataTable to highlight the row in the browser and also set the input value for Shiny. When <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> plays the script, it can only do the latter part, setting the input value. The result is that when a screenshot is taken, it <strong>will not</strong> have highlighted rows. For components that have internal state that is updated in response to user interaction, that internal state will not be updated when the test script is played. In some cases, this may mean that when the script is played, the behavior when the script is played will not be the same as when a user actually interacts with the application.</p>
-<p>If the input component sets multiple input values (without bindings) in response to a single user event, it may make sense to coalesce them into a single <code>set_inputs</code> call, such as this:</p>
+<p>When the test script is replayed, the headless browser will set these
+inputs to the specified values and send them to the server running Shiny
+in R. However, the browser will not be able to tell the input object to
+do the exact same behaviors. For example, with DT, when a row is
+selected, the mouse click event in the browser triggers the DataTable to
+highlight the row in the browser and also set the input value for Shiny.
+When <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> plays the script, it can only do the
+latter part, setting the input value. The result is that when a
+screenshot is taken, it <strong>will not</strong> have highlighted rows.
+For components that have internal state that is updated in response to
+user interaction, that internal state will not be updated when the test
+script is played. In some cases, this may mean that when the script is
+played, the behavior when the script is played will not be the same as
+when a user actually interacts with the application.</p>
+<p>If the input component sets multiple input values (without bindings)
+in response to a single user event, it may make sense to coalesce them
+into a single <code>set_inputs</code> call, such as this:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span></span>
 <span>  table_rows_selected <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -466,11 +639,35 @@
 <span>  allow_no_input_binding_ <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
+<div class="section level3">
+<h3 id="input-components-provided-as-variables">Input component(s) provided as variable(s)<a class="anchor" aria-label="anchor" href="#input-components-provided-as-variables"></a>
+</h3>
+<p>In some cases there might be a need to provide the input components
+using the variables (not hard-coded). It’s possible as
+<code>$set_inputs()</code> uses <code>rlang::list2(...)</code> to
+process the input values. This function supports <code>!!!</code>, <a href="https://rlang.r-lib.org/reference/splice.html" class="external-link">the splicing
+operator</a>, so one can construct a list outside of set_inputs() and
+use it to set the input values.</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># helper function that wraps `set_inputs`, with  the default value for the 'dataset' component</span></span>
+<span><span class="va">update_dataset</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">app</span>, <span class="va">value</span>, <span class="va">component_id</span> <span class="op">=</span> <span class="st">"dataset"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkChoice.html" class="external-link">assert_choice</a></span><span class="op">(</span><span class="va">value</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rock"</span>, <span class="st">"pressure"</span>, <span class="st">"cars"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">ml</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/list2.html" class="external-link">list2</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">ml</span><span class="op">[[</span><span class="va">component_id</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span>  <span class="va">app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">ml</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">appDir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/02_text"</span>, package <span class="op">=</span> <span class="st">"shiny"</span><span class="op">)</span></span>
+<span><span class="va">app</span> <span class="op">&lt;-</span> <span class="fu">shinytest2</span><span class="fu">::</span><span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">appDir</span><span class="op">)</span></span>
+<span><span class="fu">update_dataset</span><span class="op">(</span><span class="va">app</span>, <span class="st">"rock"</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="next">Next<a class="anchor" aria-label="anchor" href="#next"></a>
 </h2>
-<p>Learn about using shinytest2 with <a href="use-ci.html">continuous integration</a>.</p>
+<p>Learn about using shinytest2 with <a href="use-ci.html">continuous
+integration</a>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

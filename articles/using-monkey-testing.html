@@ -15,8 +15,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.6/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.6/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.7/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.7/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Monkey testing">
@@ -87,10 +87,12 @@
 
 
 
-<script src="using-monkey-testing_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+
+<div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Monkey testing</h1>
-                        <h4 data-toc-skip class="author">David Granjon</h4>
+                        <h4 data-toc-skip class="author">David
+Granjon</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rstudio/shinytest2/blob/HEAD/vignettes/using-monkey-testing.Rmd" class="external-link"><code>vignettes/using-monkey-testing.Rmd</code></a></small>
@@ -102,30 +104,45 @@
 <div class="section level2">
 <h2 id="monkey-headless-testing-with-shinytest2">Monkey (headless) testing with <code>{shinytest2}</code><a class="anchor" aria-label="anchor" href="#monkey-headless-testing-with-shinytest2"></a>
 </h2>
-<p>Most people will use <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> with the plug and play <code><a href="../reference/record_test.html">record_test()</a></code> app, which is very convenient if you are not familiar with JavaScript. Under the hood, <code><a href="../reference/record_test.html">record_test()</a></code> generates an R script composed of a series of directed instructions that manipulates the app to automate testing on CI/CD environments.</p>
-<p><em>Monkey testing</em>, a type of testing where random inputs are used to test the behavior of an app, is widely used by web developers to check application robustness, particularly in apps with a large number of inputs. The goal is ultimately to try to break the app by triggering unexpected combinations. Most available libraries are JS-based such as <a href="https://github.com/marmelab/gremlins.js" class="external-link">gremlins.js</a>, traditionally combined with JS-based global testing libraries like <a href="https://pptr.dev/" class="external-link">Puppeteer</a>, but can work with <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> as well.</p>
-<p>In this vignette we’ll provide a more thorough overview of the <code>AppDriver</code> R6 class (extending on the concepts covered in the <a href="in-depth.html">Testing in depth</a> article), which allows the developer to programmatically control the app. We’ll see how we can seamlessly benefit from gremlins.js with only few lines of code.</p>
+<p>Most people will use <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> with the plug and play
+<code><a href="../reference/record_test.html">record_test()</a></code> app, which is very convenient if you are not
+familiar with JavaScript. Under the hood, <code><a href="../reference/record_test.html">record_test()</a></code>
+generates an R script composed of a series of directed instructions that
+manipulates the app to automate testing on CI/CD environments.</p>
+<p><em>Monkey testing</em>, a type of testing where random inputs are
+used to test the behavior of an app, is widely used by web developers to
+check application robustness, particularly in apps with a large number
+of inputs. The goal is ultimately to try to break the app by triggering
+unexpected combinations. Most available libraries are JS-based such as
+<a href="https://github.com/marmelab/gremlins.js" class="external-link">gremlins.js</a>,
+traditionally combined with JS-based global testing libraries like <a href="https://pptr.dev/" class="external-link">Puppeteer</a>, but can work with
+<a href="https://rstudio.github.io/shinytest2/">shinytest2</a> as well.</p>
+<p>In this vignette we’ll provide a more thorough overview of the
+<code>AppDriver</code> R6 class (extending on the concepts covered in
+the <a href="in-depth.html">Testing in depth</a> article), which allows
+the developer to programmatically control the app. We’ll see how we can
+seamlessly benefit from gremlins.js with only few lines of code.</p>
 <div class="section level3">
 <h3 id="initialize-the-driver">Initialize the driver<a class="anchor" aria-label="anchor" href="#initialize-the-driver"></a>
 </h3>
 <p>We consider a simple app composed of a slider and a plot output:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/sliderInput.html" class="external-link">sliderInput</a></span><span class="op">(</span><span class="st">"obs"</span>, <span class="st">"Number of observations:"</span>,</span>
+<code class="sourceCode R"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sliderInput.html" class="external-link">sliderInput</a></span><span class="op">(</span><span class="st">"obs"</span>, <span class="st">"Number of observations:"</span>,</span>
 <span>    min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">1000</span>, value <span class="op">=</span> <span class="fl">500</span></span>
 <span>  <span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/plotOutput.html" class="external-link">plotOutput</a></span><span class="op">(</span><span class="st">"distPlot"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/plotOutput.html" class="external-link">plotOutput</a></span><span class="op">(</span><span class="st">"distPlot"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Server logic</span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">output</span><span class="op">$</span><span class="va">distPlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/renderPlot.html" class="external-link">renderPlot</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">output</span><span class="op">$</span><span class="va">distPlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html" class="external-link">renderPlot</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">obs</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Complete app with UI and server components</span></span>
-<span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
 <p>The driver may be initialized with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">headless_app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
@@ -133,8 +150,18 @@
 <span>  name <span class="op">=</span> <span class="st">"monkey-test"</span>,</span>
 <span>  shiny_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>port <span class="op">=</span> <span class="fl">3515</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Note the <code>shiny_args</code> slot allowing you to pass custom options to <code><a href="https://shiny.rstudio.com/reference/shiny/latest/runApp.html" class="external-link">shiny::runApp()</a></code> such as the port, which might be useful if your organization restricts port number. <code>load_timeout</code> defaults to 10s and 20s locally and during CI/CD, respectively. Therefore, if your app takes longer to launch, you can change this value. Keep in mind that an app taking more than 20s to launch is generally under-optimized and would require specific care such as profiling and refactoring.</p>
-<p>AppDriver starts a Chrome-based headless browser. If you need specific <a href="https://peter.sh/experiments/chromium-command-line-switches/" class="external-link">flags</a> that are not available by default in <a href="https://rstudio.github.io/shinytest2/">shinytest2</a>, you can pass them before instantiating the driver:</p>
+<p>Note the <code>shiny_args</code> slot allowing you to pass custom
+options to <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">shiny::runApp()</a></code> such as the port, which might be
+useful if your organization restricts port number.
+<code>load_timeout</code> defaults to 10s and 20s locally and during
+CI/CD, respectively. Therefore, if your app takes longer to launch, you
+can change this value. Keep in mind that an app taking more than 20s to
+launch is generally under-optimized and would require specific care such
+as profiling and refactoring.</p>
+<p>AppDriver starts a Chrome-based headless browser. If you need
+specific <a href="https://peter.sh/experiments/chromium-command-line-switches/" class="external-link">flags</a>
+that are not available by default in <a href="https://rstudio.github.io/shinytest2/">shinytest2</a>, you can
+pass them before instantiating the driver:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">chromote</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/chromote/man/default_chrome_args.html" class="external-link">set_chrome_args</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -142,15 +169,23 @@
 <span>    <span class="co"># Custom flags: see https://peter.sh/experiments/chromium-command-line-switches/</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Some flags are considered by default, particularly <code>--no-sandbox</code>, which is applied only on CI/CD, as Chrome won’t start without it.</p>
-<p>If you run this script locally, you may add <code>view = TRUE</code> to open the Chrome Devtools, which will significantly ease the testing calibration. I highly recommend creating the test protocol locally and then moving to CI/CD later when all bugs are fixed.</p>
-<p>In the below figure, the application is shown on the left side panel. The top-right side panel shows the DOM elements (default) and the bottom-right side panel displays the JavaScript console output.</p>
+<p>Some flags are considered by default, particularly
+<code>--no-sandbox</code>, which is applied only on CI/CD, as Chrome
+won’t start without it.</p>
+<p>If you run this script locally, you may add <code>view = TRUE</code>
+to open the Chrome Devtools, which will significantly ease the testing
+calibration. I highly recommend creating the test protocol locally and
+then moving to CI/CD later when all bugs are fixed.</p>
+<p>In the below figure, the application is shown on the left side panel.
+The top-right side panel shows the DOM elements (default) and the
+bottom-right side panel displays the JavaScript console output.</p>
 <p><img src="images/gremlins-start.png" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="injecting-gremlins-js">Injecting gremlins.js<a class="anchor" aria-label="anchor" href="#injecting-gremlins-js"></a>
 </h3>
-<p>The next steps consist of injecting the gremlins.js dependency in the DOM so that we can unleash the horde.</p>
+<p>The next steps consist of injecting the gremlins.js dependency in the
+DOM so that we can unleash the horde.</p>
 <div class="section level4">
 <h4 id="easy-way">Easy way<a class="anchor" aria-label="anchor" href="#easy-way"></a>
 </h4>
@@ -161,21 +196,32 @@
 <span><span class="st">  s.src = 'https://unpkg.com/gremlins.js';</span></span>
 <span><span class="st">  document.body.appendChild(s);</span></span>
 <span><span class="st">"</span><span class="op">)</span></span></code></pre></div>
-<p>This creates a <code>&lt;script&gt;</code> tag pointing to the correct Content Delivery Network (CDN), an optimized server to store libraries, and inserts it at the end of the body.</p>
-<p>To test whether everything worked well, we can dump the DOM and look for the scripts. We can find gremlins.js by calling <code>typeof window.gremlins</code>, which returns an object:</p>
+<p>This creates a <code>&lt;script&gt;</code> tag pointing to the
+correct Content Delivery Network (CDN), an optimized server to store
+libraries, and inserts it at the end of the body.</p>
+<p>To test whether everything worked well, we can dump the DOM and look
+for the scripts. We can find gremlins.js by calling
+<code>typeof window.gremlins</code>, which returns an object:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">headless_app</span><span class="op">$</span><span class="fu">get_html</span><span class="op">(</span><span class="st">"script"</span>, outer_html <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">headless_app</span><span class="op">$</span><span class="fu">get_js</span><span class="op">(</span><span class="st">"typeof window.gremlins"</span><span class="op">)</span></span></code></pre></div>
-<p>You may instead see <code>undefined</code> returned. This is generally because the JS code is blocked by the network. If this is the case, consider injecting gremlins.js locally, as explained in the next section.</p>
+<p>You may instead see <code>undefined</code> returned. This is
+generally because the JS code is blocked by the network. If this is the
+case, consider injecting gremlins.js locally, as explained in the next
+section.</p>
 <p><img src="images/gremlins-inject.png" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="local-way">Local way<a class="anchor" aria-label="anchor" href="#local-way"></a>
 </h4>
-<p>You can store and serve a local copy of the gremlins.js script with <code><a href="https://shiny.rstudio.com/reference/shiny/latest/resourcePaths.html" class="external-link">shiny::addResourcePath()</a></code>, assuming <code>gremlins.js</code> is in <code>inst/js/gremlins.min.js</code>. You can accomplish this by adding the following code to the <code>app.R</code> file:</p>
+<p>You can store and serve a local copy of the gremlins.js script with
+<code><a href="https://rdrr.io/pkg/shiny/man/resourcePaths.html" class="external-link">shiny::addResourcePath()</a></code>, assuming <code>gremlins.js</code>
+is in <code>inst/js/gremlins.min.js</code>. You can accomplish this by
+adding the following code to the <code>app.R</code> file:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/resourcePaths.html" class="external-link">addResourcePath</a></span><span class="op">(</span><span class="st">"gremlins"</span>, <span class="st">"inst/js/gremlins.min.js"</span><span class="op">)</span></span></code></pre></div>
-<p>We can subsequently inject the gremlins in the DOM and check whether everything worked as expected:</p>
+<code class="sourceCode R"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/resourcePaths.html" class="external-link">addResourcePath</a></span><span class="op">(</span><span class="st">"gremlins"</span>, <span class="st">"inst/js/gremlins.min.js"</span><span class="op">)</span></span></code></pre></div>
+<p>We can subsequently inject the gremlins in the DOM and check whether
+everything worked as expected:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">headless_app</span><span class="op">$</span><span class="fu">run_js</span><span class="op">(</span><span class="st">"</span></span>
 <span><span class="st">  let s = document.createElement('script');</span></span>
@@ -197,11 +243,20 @@
 <li>We create the horde with <code>gremlins.createHorde()</code>.</li>
 <li>We run the monkey test with <code>horde.unleash();</code>.</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">const</span> horde <span class="op">=</span> <span class="va">gremlins</span>.<span class="at">createHorde</span>()<span class="op">;</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="va">horde</span>.<span class="at">unleash</span>()<span class="op">;</span></span></code></pre></div>
-<p><code>createHorde()</code> accepts many species of gremlins capable of handling various events such as clicks, touch, form filling, scrolling, typing, and more, as described in the gremlins.js <a href="https://github.com/marmelab/gremlins.js#advanced-usage" class="external-link">documentation</a>.</p>
-<p>We don’t recommend using the <code>scroller,</code> which sometimes <a href="https://github.com/rstudio/shinytest2/issues/117" class="external-link">crashes</a> the Chrome instance.</p>
-<p>If your plots rely on random elements, such as <code>rnorm</code>, it is best practice to set up a seed using <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code>. By default, all species will attack in random order with a delay of 10 ms between each event. You can also control the attack strategy to fine tune the global behavior. If you want more control over what your gremlins species should be doing, you can define a custom species.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="kw">const</span> horde <span class="op">=</span> gremlins<span class="op">.</span><span class="fu">createHorde</span>()<span class="op">;</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>horde<span class="op">.</span><span class="fu">unleash</span>()<span class="op">;</span></span></code></pre></div>
+<p><code>createHorde()</code> accepts many species of gremlins capable
+of handling various events such as clicks, touch, form filling,
+scrolling, typing, and more, as described in the gremlins.js <a href="https://github.com/marmelab/gremlins.js#advanced-usage" class="external-link">documentation</a>.</p>
+<p>We don’t recommend using the <code>scroller,</code> which sometimes
+<a href="https://github.com/rstudio/shinytest2/issues/117" class="external-link">crashes</a>
+the Chrome instance.</p>
+<p>If your plots rely on random elements, such as <code>rnorm</code>, it
+is best practice to set up a seed using <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code>. By
+default, all species will attack in random order with a delay of 10 ms
+between each event. You can also control the attack strategy to fine
+tune the global behavior. If you want more control over what your
+gremlins species should be doing, you can define a custom species.</p>
 </div>
 <div class="section level4">
 <h4 id="practice">Practice<a class="anchor" aria-label="anchor" href="#practice"></a>
@@ -209,7 +264,8 @@
 <div class="section level5">
 <h5 id="blind-run">Blind run<a class="anchor" aria-label="anchor" href="#blind-run"></a>
 </h5>
-<p>In the following, we run the most basic monkey test configuration:</p>
+<p>In the following, we run the most basic monkey test
+configuration:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">headless_app</span><span class="op">$</span><span class="fu">run_js</span><span class="op">(</span><span class="st">"gremlins.createHorde().unleash();"</span><span class="op">)</span></span></code></pre></div>
 <p>The result is shown in the GIF below:</p>
@@ -218,32 +274,53 @@
 <div class="section level5">
 <h5 id="optimized-testing">Optimized testing<a class="anchor" aria-label="anchor" href="#optimized-testing"></a>
 </h5>
-<p>Does it really makes sense to invoke all species given we only have a slider? Absolutely not! We can use the following code to test only the slider input.</p>
+<p>Does it really makes sense to invoke all species given we only have a
+slider? Absolutely not! We can use the following code to test only the
+slider input.</p>
 <p><img src="images/gremlins-slider-handle.png" width="100%" style="display: block; margin: auto;"></p>
-<p>The best species to perform this task is the <code>toucher</code>, which is able to randomly move the slider input. The documentation specifies many events such as tap, doubletap, gesture and multi-touch. It seems more relevant to apply only gesture, consisting of dragging the slider on the x-axis (note: gesture also considers the y-axis, which does not make sense for the slider. While this is a gremlins.js limitation, it won’t prevent our test from running).</p>
-<p>We target the slider handle by its class, <code>irs-handle single,</code> to ensure we don’t touch any other element. We also increase the number of maximum touches from 2 to 200. Note the HTML inspector, which allows us to seamlessly inspect and extract any class or id. The <strong>log</strong> parameter enables logging in the JavaScript console:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">const</span> customToucher <span class="op">=</span> <span class="va">gremlins</span>.<span class="va">species</span>.<span class="at">toucher</span>(<span class="op">{</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a>  <span class="co">// which touch event types will be triggered</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a>  <span class="dt">touchTypes</span><span class="op">:</span> [<span class="st">'gesture'</span>]<span class="op">,</span></span>
-<span id="cb10-4"><a href="#cb10-4"></a>  <span class="co">// Touch only if element has class irs-handle single</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a>  <span class="dt">canTouch</span><span class="op">:</span> (element) <span class="kw">=&gt;</span> <span class="va">element</span>.<span class="at">className</span> <span class="op">===</span> <span class="st">'irs-handle single'</span><span class="op">,</span></span>
-<span id="cb10-6"><a href="#cb10-6"></a>  <span class="dt">log</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
-<span id="cb10-7"><a href="#cb10-7"></a>  <span class="dt">maxTouches</span><span class="op">:</span> <span class="dv">200</span></span>
-<span id="cb10-8"><a href="#cb10-8"></a><span class="op">}</span>)<span class="op">;</span></span></code></pre></div>
-<p>We can create our custom horde and disable the FPS and Alert mogwais gremlins since they are not relevant to our case study:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">const</span> horde <span class="op">=</span> <span class="va">gremlins</span>.<span class="at">createHorde</span>(<span class="op">{</span></span>
-<span id="cb11-2"><a href="#cb11-2"></a>  <span class="dt">species</span><span class="op">:</span> [customToucher]<span class="op">,</span></span>
-<span id="cb11-3"><a href="#cb11-3"></a>  <span class="dt">mogwais</span><span class="op">:</span> [<span class="va">gremlins</span>.<span class="va">mogwais</span>.<span class="at">gizmo</span>()]</span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="op">}</span>)<span class="op">;</span></span></code></pre></div>
-<p>As <code>unleash</code> is a <strong>promise</strong>, we can execute a function right after it, in order to check whether the script ran as expected.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1"></a>horde</span>
-<span id="cb12-2"><a href="#cb12-2"></a>  .<span class="at">unleash</span>()</span>
-<span id="cb12-3"><a href="#cb12-3"></a>  .<span class="at">then</span>(() <span class="kw">=&gt;</span> <span class="op">{</span></span>
-<span id="cb12-4"><a href="#cb12-4"></a>    <span class="va">console</span>.<span class="at">log</span>(<span class="st">'Gremlins test success'</span>)</span>
-<span id="cb12-5"><a href="#cb12-5"></a><span class="op">}</span>)<span class="op">;</span></span></code></pre></div>
-<p>If you are running on CI/CD and can’t see the Chrome Devtools, you can still display the logs. The <code>console.log</code> output will be captured by the <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> logs with <code>headless_app$get_logs()</code> allowing you to debug and refine the monkey testing script.</p>
+<p>The best species to perform this task is the <code>toucher</code>,
+which is able to randomly move the slider input. The documentation
+specifies many events such as tap, doubletap, gesture and multi-touch.
+It seems more relevant to apply only gesture, consisting of dragging the
+slider on the x-axis (note: gesture also considers the y-axis, which
+does not make sense for the slider. While this is a gremlins.js
+limitation, it won’t prevent our test from running).</p>
+<p>We target the slider handle by its class,
+<code>irs-handle single,</code> to ensure we don’t touch any other
+element. We also increase the number of maximum touches from 2 to 200.
+Note the HTML inspector, which allows us to seamlessly inspect and
+extract any class or id. The <strong>log</strong> parameter enables
+logging in the JavaScript console:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="kw">const</span> customToucher <span class="op">=</span> gremlins<span class="op">.</span><span class="at">species</span><span class="op">.</span><span class="fu">toucher</span>({</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="co">// which touch event types will be triggered</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="dt">touchTypes</span><span class="op">:</span> [<span class="st">'gesture'</span>]<span class="op">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  <span class="co">// Touch only if element has class irs-handle single</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  <span class="dt">canTouch</span><span class="op">:</span> (element) <span class="kw">=&gt;</span> element<span class="op">.</span><span class="at">className</span> <span class="op">===</span> <span class="st">'irs-handle single'</span><span class="op">,</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="dt">log</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>  <span class="dt">maxTouches</span><span class="op">:</span> <span class="dv">200</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<p>We can create our custom horde and disable the FPS and Alert mogwais
+gremlins since they are not relevant to our case study:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="kw">const</span> horde <span class="op">=</span> gremlins<span class="op">.</span><span class="fu">createHorde</span>({</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="dt">species</span><span class="op">:</span> [customToucher]<span class="op">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="dt">mogwais</span><span class="op">:</span> [gremlins<span class="op">.</span><span class="at">mogwais</span><span class="op">.</span><span class="fu">gizmo</span>()]</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<p>As <code>unleash</code> is a <strong>promise</strong>, we can execute
+a function right after it, in order to check whether the script ran as
+expected.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>horde</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="op">.</span><span class="fu">unleash</span>()</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="op">.</span><span class="fu">then</span>(() <span class="kw">=&gt;</span> {</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">'Gremlins test success'</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<p>If you are running on CI/CD and can’t see the Chrome Devtools, you
+can still display the logs. The <code>console.log</code> output will be
+captured by the <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> logs with
+<code>headless_app$get_logs()</code> allowing you to debug and refine
+the monkey testing script.</p>
 <p><img src="images/gremlins-logs.png" width="100%" style="display: block; margin: auto;"></p>
-<p>As monkey testing lasts about 10s, you often want to take a screenshot of the ongoing attack:</p>
+<p>As monkey testing lasts about 10s, you often want to take a
+screenshot of the ongoing attack:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">headless_app</span><span class="op">$</span><span class="fu">run_js</span><span class="op">(</span><span class="st">"</span></span>
 <span><span class="st">  const customToucher = gremlins.species.toucher({</span></span>
@@ -267,10 +344,14 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">headless_app</span><span class="op">$</span><span class="fu">get_screenshot</span><span class="op">(</span><span class="st">"gremlins.png"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="images/gremlins-attack-refined.gif" width="100%" style="display: block; margin: auto;"></p>
-<p>Should you run multiple attacks, it is always good practice to reset Shiny inputs between attacks, or even close the current headless app and restart a new session:</p>
+<p>Should you run multiple attacks, it is always good practice to reset
+Shiny inputs between attacks, or even close the current headless app and
+restart a new session:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">headless_app</span><span class="op">$</span><span class="fu">set_inputs</span><span class="op">(</span>obs <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span></code></pre></div>
-<p>If you run on CI/CD, don’t forget to clean the session after tests are completed, particularly if you set the <code>shiny.port</code> option, as you can’t have 2 apps running on the same port:</p>
+<p>If you run on CI/CD, don’t forget to clean the session after tests
+are completed, particularly if you set the <code>shiny.port</code>
+option, as you can’t have 2 apps running on the same port:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">headless_app</span><span class="op">$</span><span class="kw">stop</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
