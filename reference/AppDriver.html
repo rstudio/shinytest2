@@ -332,7 +332,7 @@ Shiny app is idle for 200ms.</p></dd>
 
 <dt><code>screenshot_args</code></dt>
 <dd><p>Default set of arguments to pass in to
-<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method when taking
+<code><a href="http://rstudio.github.io/chromote/reference/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method when taking
 screenshots within <code>$expect_screenshot()</code>. To disable screenshots by
 default, set to <code>FALSE</code>.</p></dd>
 
@@ -622,7 +622,7 @@ missing, the default value will be
 <p>The final value can either be:</p><ul><li><p><code>TRUE</code>: A screenshot of the browser's scrollable area will be taken with no delay</p></li>
 <li><p><code>FALSE</code>: No screenshot will be taken</p></li>
 <li><p>A named list of arguments. These arguments are passed directly to
-<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. The <code>selector</code>
+<code><a href="http://rstudio.github.io/chromote/reference/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. The <code>selector</code>
 and <code>delay</code> will default to <code>"html"</code> and <code>0</code> respectively.</p></li>
 </ul></dd>
 
@@ -1431,11 +1431,11 @@ differences. This integer-like value should be relatively small.</p></dd>
 
 <dt><code>screenshot_args</code></dt>
 <dd><p>This named list of arguments is passed along to
-<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. If missing, the
+<code><a href="http://rstudio.github.io/chromote/reference/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. If missing, the
 value will default to <code>$new(screenshot_args=)</code>.</p>
 <p>If <code>screenshot_args</code> is:</p><ul><li><p><code>TRUE</code>: A screenshot of the browser's scrollable area will be taken with no delay</p></li>
 <li><p>A named list of arguments: Arguments passed directly to
-<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. The <code>delay</code>
+<code><a href="http://rstudio.github.io/chromote/reference/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. The <code>delay</code>
 argument will default to <code>0</code> seconds. The <code>selector</code> argument can take two
 special values in addition to being a CSS DOM selector.</p><ul><li><p><code>"scrollable_area"</code> (default): The entire scrollable area will be
 captured. Typically this is your browser's viewport size, but it
@@ -1599,11 +1599,11 @@ that file.</p></dd>
 
 <dt><code>screenshot_args</code></dt>
 <dd><p>This named list of arguments is passed along to
-<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. If missing, the
+<code><a href="http://rstudio.github.io/chromote/reference/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. If missing, the
 value will default to <code>$new(screenshot_args=)</code>.</p>
 <p>If <code>screenshot_args</code> is:</p><ul><li><p><code>TRUE</code>: A screenshot of the browser's scrollable area will be taken with no delay</p></li>
 <li><p>A named list of arguments: Arguments passed directly to
-<code><a href="https://rdrr.io/pkg/chromote/man/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. The <code>delay</code>
+<code><a href="http://rstudio.github.io/chromote/reference/ChromoteSession.html" class="external-link">chromote::ChromoteSession</a></code>'s <code>$get_screenshot()</code> method. The <code>delay</code>
 argument will default to <code>0</code> seconds. The <code>selector</code> argument can take two
 special values in addition to being a CSS DOM selector.</p><ul><li><p><code>"scrollable_area"</code> (default): The entire scrollable area will be
 captured. Typically this is your browser's viewport size, but it can be
