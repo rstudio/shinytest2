@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,20 +61,20 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="shinytest2-development-version">shinytest2 (development version)<a class="anchor" aria-label="anchor" href="#shinytest2-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.3.0" id="shinytest2-030">shinytest2 0.3.0<a class="anchor" aria-label="anchor" href="#shinytest2-030"></a></h2>
 <div class="section level3">
-<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<h3 id="breaking-changes-0-3-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-3-0"></a></h3>
 <ul><li>
 <code>AppDriver$get_screenshot(selector=)</code>, <code>AppDriver$expect_screenshot(selector=)</code>’s default <code>selector</code> value changed from the HTML DOM selector <code>"html"</code> to <code>"scrollable_area"</code>. <code>"scrollable_area"</code> is a custom <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> selector that will take a screenshot of the entire scrollable area. While a breaking change, this new default value is more intuitive and robust to non-standard CSS height and width values that fail with <code>"html"</code>. (<a href="https://github.com/rstudio/shinytest2/issues/325" class="external-link">#325</a>)</li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-0-3-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-0"></a></h3>
 <ul><li><p><code>AppDriver$get_screenshot(selector=)</code>, <code>AppDriver$expect_screenshot(selector=)</code>, and their corresponding <code>selector</code> values inside <code>screenshot_args=</code>, gained two custom <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> values: <code>"scrollable_area"</code> and <code>"viewport"</code>. <code>"scrollable_area"</code> is the new default value and it takes a screenshot of the entire scrollable area. This is more intuitive than the previous value of the HTML DOM selector <code>"html"</code> which may result in a surprising height and width. <code>"viewport"</code> will take a screenshot of the current browser viewport. This means it will take a screenshot of whatever <code>$view()</code> is currently looking at. (<a href="https://github.com/rstudio/shinytest2/issues/325" class="external-link">#325</a>)</p></li>
 <li><p>GitHub Action <code>rstudio/shinytest2/actions/test-app</code> added support for multiple directories in <code>app-dir</code>. These can be supplied using multiline string yaml syntax. See <a href="https://rstudio.github.io/shinytest2/articles/use-ci.html#check-app-yaml-1%3E">use-ci vignette</a> for more details. (<a href="https://github.com/rstudio/shinytest2/issues/332" class="external-link">#332</a>)</p></li>
 <li><p>GitHub Action <code>rstudio/shinytest2/actions/test-app</code> changed the default value of <code>upload-snapshots</code> from <code>false</code> to <code>true</code>. This is in preparation for automated snapshot handling. (<a href="https://github.com/rstudio/shinytest2/issues/332" class="external-link">#332</a>)</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug--improvements-development-version">Bug / Improvements<a class="anchor" aria-label="anchor" href="#bug--improvements-development-version"></a></h3>
+<h3 id="bug--improvements-0-3-0">Bug / Improvements<a class="anchor" aria-label="anchor" href="#bug--improvements-0-3-0"></a></h3>
 <ul><li>Set the directory to the Shiny App directory before starting the background R process. This allows for local <code>.Rprofile</code> and <code>.Renviron</code> files to be found naturally. (<a href="https://github.com/rstudio/shinytest2/issues/275" class="external-link">#275</a>)</li>
 </ul></div>
 </div>
