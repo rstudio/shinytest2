@@ -3,11 +3,11 @@ Title: Testing for Shiny Applications
 Version: 0.3.0
 Authors@R:
     c(
-        person("Barret", "Schloerke", role = c("cre", "aut"), email = "barret@rstudio.com", comment = c(ORCID = "0000-0001-9986-114X")),
-        person(family = "RStudio", role = c("cph", "fnd")),
-        person("Winston", "Chang", role ="ctb", email = "winston@rstudio.com", comment = "Original author to rstudio/shinytest"),
-        person("Gábor", "Csárdi", role = "ctb", email = "gabor@rstudio.com", comment = "Original author to rstudio/shinytest"),
-        person("Hadley", "Wickham", role = "ctb", email = "hadley@rstudio.com", comment = "Original author to rstudio/shinytest"),
+        person("Barret", "Schloerke", role = c("cre", "aut"), email = "barret@posit.co", comment = c(ORCID = "0000-0001-9986-114X")),
+        person(family = "Posit Software, PBC", role = c("cph", "fnd")),
+        person("Winston", "Chang", role ="ctb", email = "winston@posit.co", comment = "Original author to rstudio/shinytest"),
+        person("Gábor", "Csárdi", role = "ctb", email = "gabor@posit.co", comment = "Original author to rstudio/shinytest"),
+        person("Hadley", "Wickham", role = "ctb", email = "hadley@posit.co", comment = "Original author to rstudio/shinytest"),
         person(family = "Mango Solutions", role = c("cph", "ccp"), comment = "Original author to rstudio/shinytest")
     )
 Description: Automated unit testing of Shiny applications through a headless 'Chromium' browser.
