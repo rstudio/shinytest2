@@ -1,5 +1,9 @@
 # shinytest2 (development version)
 
+## Breaking changes
+
+* `AppDriver$get_screenshot()`/`AppDriver$expect_screenshot()` now default an underlying `deviceScaleFactor` option to 0 instead of 1. This ensures that image sizes are more consistent across devices. To revert to prior behavior, provide `screenshot_args = list(scale = 1)` to `get_screenshot()`/`expect_screenshot()`  (#350).
+
 # shinytest2 0.3.0
 
 ## Breaking changes
