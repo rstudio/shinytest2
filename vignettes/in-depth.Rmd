@@ -496,8 +496,8 @@ update_dataset <- function(app, value, component_id = "dataset") {
   app$set_inputs(!!!ml)
 }
 
-appDir <- system.file("examples/02_text", package = "shiny")
-app <- shinytest2::AppDriver$new(appDir)
+app_dir <- system.file("examples/02_text", package = "shiny")
+app <- shinytest2::AppDriver$new(app_dir)
 update_dataset(app, "rock")
 ```
 
