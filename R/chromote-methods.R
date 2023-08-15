@@ -200,7 +200,7 @@ chromote_wait_for_condition <- function(
 
 
 
-chromote_set_device_metrics <- function(chromote_session, ..., width = NULL, height = NULL, device_scale_factor = 1, mobile = FALSE) {
+chromote_set_device_metrics <- function(chromote_session, ..., width = NULL, height = NULL, device_scale_factor = 0, mobile = FALSE) {
   assert_chromote_session(chromote_session)
   ellipsis::check_dots_empty()
 
