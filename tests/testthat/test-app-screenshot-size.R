@@ -2,6 +2,8 @@ library(shiny)
 
 
 test_that("images are captured via expect_values", {
+  skip_on_cran()
+
   img_height <- 501
   img_width <- 502
 
