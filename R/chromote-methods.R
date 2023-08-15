@@ -200,15 +200,15 @@ chromote_wait_for_condition <- function(
 
 
 
-chromote_set_device_metrics <- function(chromote_session, ..., width = NULL, height = NULL, device_scale_factor = 0, mobile = FALSE) {
+chromote_set_device_metrics <- function(chromote_session, ..., width = NULL, height = NULL) {
   assert_chromote_session(chromote_session)
   ellipsis::check_dots_empty()
 
   chromote_session$Emulation$setDeviceMetricsOverride(
     width = width,
     height = height,
-    deviceScaleFactor = device_scale_factor,
-    mobile = mobile
+    deviceScaleFactor = 0,
+    mobile = FALSE
   )
 }
 
