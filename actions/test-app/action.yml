@@ -41,6 +41,17 @@ runs:
               if (i > 1) cat("\n\n")
               # Wrap in try for the rare chance `cli` isn't installed
               try(cli::cat_rule(paste0("{shinytest2}: ", app_dir), line = "bar3"))
+              # Load the renv project if `renv.lock` is used in the current wd
+              if (app_dir != "." && file.exists("renv.lock")) {
+                if (!requireNamespace("renv", quietly = TRUE)) {
+                  warning(
+                    "`renv.lock` was found but {renv} is not installed. ",
+                    "The app in '", app_dir, "' will be tested without activating the {renv} project."
+                  )
+                } else {
+                  renv::load()
+                }
+              }
               # Test app
               try(shinytest2::test_app(app_dir), silent = FALSE)
             },
