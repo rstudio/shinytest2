@@ -124,7 +124,6 @@ jobs:
       - uses: rstudio/shinytest2/actions/test-app@actions/v1
         with:
           app-dir: "."
-          upload-snapshots: true
 ```
 
 You should change the `os` and `r` version to whatever operating system and R version is being used on the platform that your application will be deployed to.
