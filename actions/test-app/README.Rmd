@@ -103,7 +103,17 @@ Workflow contents:
 print_yaml("example-test-app-package.yaml")
 ```
 
+# Development
 
+The `test-app` action uses a sliding git tag that follows the pattern `actions/vX`, e.g. `actions/v1`. For historical reasons, we also support the `v1` tag, but future versions will only be available under the `actions/vX` tag.
+
+The `test-app` action release cycle is not dependent on the shinytest2 package cycle. When changes are made to the `test-app` action, you should force-update the current sliding tag version:
+
+```bash
+git tag -f v1            # update historical v1 tag
+git tag -f actions/v1    # update sliding tag
+git push --tags --force  # push tag to github
+```
 
 # License
 
