@@ -113,7 +113,7 @@ jobs:
 
       - uses: r-lib/actions/setup-renv@v2
 
-      - uses: rstudio/shinytest2/actions/test-app@v1
+      - uses: rstudio/shinytest2/actions/test-app@actions/v1
         with:
           app-dir: "."
           upload-snapshots: true
@@ -204,7 +204,7 @@ For a repository with this structure, the configuration is largely the same as a
 The `check-app.yaml` have all App dir locations supplied to `app-dir` using the multiline yaml string syntax.
 
 ```yaml
-      - uses: rstudio/shinytest2/actions/test-app@v1
+      - uses: rstudio/shinytest2/actions/test-app@actions/v1
         with:
           app-dir: |
             01_hello

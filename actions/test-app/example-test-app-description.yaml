@@ -40,6 +40,6 @@ jobs:
           extra-packages:
             shinytest2
 
-      - uses: rstudio/shinytest2/actions/test-app@v1
+      - uses: rstudio/shinytest2/actions/test-app@actions/v1
         with:
           app-dir: "."
