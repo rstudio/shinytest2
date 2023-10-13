@@ -29,7 +29,7 @@ Inputs available:
 Typical (single app testing) GHA step usage:
 
 ``` yaml
-- uses: rstudio/shinytest2/actions/test-app@v1
+- uses: rstudio/shinytest2/actions/test-app@actions/v1
   with:
     app-dir: |
       dir/to/app
@@ -38,7 +38,7 @@ Typical (single app testing) GHA step usage:
 Multiple Apps can be tested by supplying multiple directories to `app-dir` separated by a newline:
 
 ```yaml
-- uses: rstudio/shinytest2/actions/test-app@v1
+- uses: rstudio/shinytest2/actions/test-app@actions/v1
   with:
     app-dir: |
       dir/to/app1
@@ -103,7 +103,17 @@ Workflow contents:
 print_yaml("example-test-app-package.yaml")
 ```
 
+# Development
 
+The `test-app` action uses a sliding git tag that follows the pattern `actions/vX`, e.g. `actions/v1`. For historical reasons, we also support the `v1` tag, but future versions will only be available under the `actions/vX` tag.
+
+The `test-app` action release cycle is not dependent on the shinytest2 package cycle. When changes are made to the `test-app` action, you should force-update the current sliding tag version:
+
+```bash
+git tag -f v1            # update historical v1 tag
+git tag -f actions/v1    # update sliding tag
+git push --tags --force  # push tag to github
+```
 
 # License
 

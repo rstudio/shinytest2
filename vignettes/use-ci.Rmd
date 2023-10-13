@@ -72,7 +72,15 @@ The files that you will need to add are described below.
 
 ### `check-app.yaml`
 
-This file contains information for GitHub Actions to build and test your application. It should look similar to this:
+This file contains information for GitHub Actions to build and test your application.
+You can easily set up this action in your repo with help from the [usethis package][usethis]:
+```r
+usethis::use_github_action(
+  url = "https://github.com/rstudio/shinytest2/raw/main/actions/test-app/example-test-app-renv.yaml",
+  save_as = "check-app.yaml"
+)
+```
+It should look similar to this:
 
 ```yml
 # Workflow derived from https://github.com/rstudio/shinytest2/tree/main/actions/test-app/example-test-app-description.yaml
@@ -113,10 +121,9 @@ jobs:
 
       - uses: r-lib/actions/setup-renv@v2
 
-      - uses: rstudio/shinytest2/actions/test-app@v1
+      - uses: rstudio/shinytest2/actions/test-app@actions/v1
         with:
           app-dir: "."
-          upload-snapshots: true
 ```
 
 You should change the `os` and `r` version to whatever operating system and R version is being used on the platform that your application will be deployed to.
@@ -204,7 +211,7 @@ For a repository with this structure, the configuration is largely the same as a
 The `check-app.yaml` have all App dir locations supplied to `app-dir` using the multiline yaml string syntax.
 
 ```yaml
-      - uses: rstudio/shinytest2/actions/test-app@v1
+      - uses: rstudio/shinytest2/actions/test-app@actions/v1
         with:
           app-dir: |
             01_hello
@@ -273,3 +280,6 @@ This tells GitHub to install the `{shiny}` package from the `main` branch of htt
 # Example workflows
 
 To view example workflows and more description about the `test-app` GitHub Actions step, please see https://github.com/rstudio/shinytest2/tree/main/actions/test-app for more information examples.
+
+
+[usethis]: https://usethis.r-lib.org

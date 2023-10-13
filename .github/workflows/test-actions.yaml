@@ -40,13 +40,13 @@ jobs:
 
       # ## Suggested usage
       # - name: Test app
-      #   uses: rstudio/shinytest2/actions/test-app@v1
+      #   uses: rstudio/shinytest2/actions/test-app@actions/v1
       #   with:
       #     app-dir: |
       #       tests/testthat/apps/hello
 
       - name: Test app (main)
-        uses: rstudio/shinytest2/actions/test-app@v1
+        uses: rstudio/shinytest2/actions/test-app@actions/v1
         with:
           app-dir: "tests/testthat/apps/window"
 
