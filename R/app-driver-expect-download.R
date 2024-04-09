@@ -87,7 +87,7 @@ app_expect_download <- function(
   cran = FALSE
 ) {
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   snapshot_info <- app_download(
     self, private,
@@ -127,7 +127,7 @@ app_get_download <- function(
   filename = NULL
 ) {
   ckm8_assert_app_driver(self, private)
-  # ellipsis::check_dots_empty()
+  # rlang::check_dots_empty()
 
   if (is.null(filename)) {
     # Save to a temporary file with possibly suggested name

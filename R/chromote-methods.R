@@ -91,7 +91,7 @@ chromote_wait_for_condition <- function(
   timeout = 15 * 1000,
   interval = 100
 ) {
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
   condition_js <- as.character(condition_js) # {glue} support
   checkmate::assert_character(condition_js, any.missing = FALSE, len = 1)
   checkmate::assert_number(timeout, lower = 0)
@@ -202,7 +202,7 @@ chromote_wait_for_condition <- function(
 
 chromote_set_device_metrics <- function(chromote_session, ..., width = NULL, height = NULL) {
   assert_chromote_session(chromote_session)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   chromote_session$Emulation$setDeviceMetricsOverride(
     width = width,

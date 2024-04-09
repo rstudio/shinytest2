@@ -18,7 +18,7 @@ app_get_js <- function(
   timeout = missing_arg()
 ) {
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
   timeout <- app_get_timeout(self, private, timeout = timeout)
 
   "!DEBUG app_get_js()"
@@ -38,7 +38,7 @@ app_run_js <- function(
   timeout = missing_arg()
 ) {
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
   timeout <- app_get_timeout(self, private, timeout = timeout)
 
   "!DEBUG app_run_js()"
@@ -65,7 +65,7 @@ app_expect_js <- function(
   cran = FALSE
 ) {
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
   timeout <- app_get_timeout(self, private, timeout = timeout)
 
   result <- self$get_js(
@@ -99,7 +99,7 @@ app_get_text <- function(
   selector
 ) {
   ckm8_assert_app_driver(self, private)
-  # ellipsis::check_dots_empty()
+  # rlang::check_dots_empty()
 
   ret <- self$get_js(
     script = get_text_js(selector)
@@ -113,7 +113,7 @@ app_expect_text <- function(
   cran = FALSE
 ) {
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   self$expect_js(
     script = get_text_js(selector),
@@ -138,7 +138,7 @@ app_get_html <- function(
   outer_html = TRUE
 ) {
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   ret <- self$get_js(
     script = get_html_js(selector, isTRUE(outer_html))
@@ -153,7 +153,7 @@ app_expect_html <- function(
   cran = FALSE
 ) {
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   self$expect_js(
     script = get_html_js(selector, isTRUE(outer_html)),

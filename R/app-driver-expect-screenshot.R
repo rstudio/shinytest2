@@ -15,7 +15,7 @@ app_get_screenshot <- function(
 ) {
   "!DEBUG app_get_screenshot()"
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   screenshot_args <- default_screenshot_args(
     maybe_missing_value(screenshot_args, private$default_screenshot_args)
@@ -76,7 +76,7 @@ app_expect_screenshot <- function(
 ) {
   "!DEBUG app_expect_screenshot()"
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   compare <- rlang::maybe_missing(
     compare,
