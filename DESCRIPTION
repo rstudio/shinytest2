@@ -1,6 +1,6 @@
 Package: shinytest2
 Title: Testing for Shiny Applications
-Version: 0.3.1
+Version: 0.3.1.9000
 Authors@R:
     c(
         person("Barret", "Schloerke", role = c("cre", "aut"), email = "barret@posit.co", comment = c(ORCID = "0000-0001-9986-114X")),
@@ -27,13 +27,12 @@ Imports:
     checkmate (>= 2.0.0),
     chromote (>= 0.1.2),
     crayon,
-    ellipsis,
     fs,
     globals (>= 0.14.0),
     httr,
     jsonlite,
     pingr,
-    rlang (>= 0.3.0),
+    rlang (>= 1.0.0),
     rmarkdown,
     shiny,
     withr

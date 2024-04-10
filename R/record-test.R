@@ -56,7 +56,7 @@ record_test <- function(
   record_screen_size = TRUE,
   run_test = TRUE
 ) {
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
   rlang::check_installed("shinyvalidate", "0.1.2")
 
   if (inherits(app, "ShinyDriver")) {

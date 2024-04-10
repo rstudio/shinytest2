@@ -13,7 +13,7 @@ app_get_single_ioe <- function(
   export = missing_arg()
 ) {
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   # input <- rlang::maybe_missing(input, FALSE)
   # output <- rlang::maybe_missing(output, FALSE)
@@ -79,7 +79,7 @@ app_get_values <- function(
   hash_images = FALSE
 ) {
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
   hash_images <- isTRUE(hash_images)
 
   self$log_message("Getting all values")
@@ -154,7 +154,7 @@ app_expect_values <- function(
   cran = FALSE
 ) {
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   self$log_message("Expecting values")
   "!DEBUG app_expect_values()"

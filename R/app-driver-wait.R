@@ -104,7 +104,7 @@ app_wait_for_value <- function(
 ) {
   "!DEBUG app_wait_for_value()"
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
   timeout <- app_get_timeout(self, private, timeout = timeout)
 
   checkmate::assert_number(interval, lower = 0, finite = FALSE, na.ok = FALSE)

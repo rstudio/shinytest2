@@ -21,7 +21,7 @@ is_windows <- cache_fn_val(function() { .Platform$OS.type == "windows" })
 #' @seealso [`testthat::test_dir()`]
 #' @export
 platform_variant <- function(..., os_name = TRUE, r_version = TRUE) {
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   os_name <- isTRUE(os_name)
   r_version <- isTRUE(r_version)

@@ -35,7 +35,7 @@ use_shinytest2 <- function(
   quiet = FALSE,
   overwrite = FALSE
 ) {
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   if (all(
     rlang::is_missing(runner),
