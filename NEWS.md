@@ -8,6 +8,10 @@
 
 * `AppDriver$get_screenshot()`/`AppDriver$expect_screenshot()` now default an underlying `deviceScaleFactor` option to 0 instead of 1. This ensures that image sizes are more consistent across devices. To revert to prior behavior, provide `screenshot_args = list(scale = 1)` to `get_screenshot()`/`expect_screenshot()`  (#350).
 
+## Bug / Improvements
+
+* shinytest2 no longer checks if the computer running the tests is connected to the internet when determining if shinytest2 can connect to the server hosting the Shiny app being tested. (@Riraro #364)
+
 # shinytest2 0.3.0
 
 ## Breaking changes

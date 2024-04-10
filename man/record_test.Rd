@@ -46,8 +46,8 @@ bindings are recorded.
 \item If \code{TRUE}, events without input bindings are recorded.
 \item If \code{FALSE}, events without input bindings are not recorded.
 \item If \code{NULL} (default), if an updated input does not have a corresponding
-\item input, a modal dialog will be shown asking if unbound input events should
-\item be recorded.
+input, a modal dialog will be shown asking if unbound input events should
+be recorded.
 }
 
 See \code{\link{AppDriver}}\verb{$set_inputs()} for more information.}
