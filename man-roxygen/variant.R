@@ -1,6 +1,6 @@
 #' @param variant
 #'   If not-`NULL`, results will be saved in
-#'   _snaps/{variant}/{test.md}`, so `variant` must be a single
+#'   `_snaps/{variant}/{test.md}`, so `variant` must be a single
 #'   string of alphanumeric characters suitable for use as a
 #'   directory name.
 #'
