@@ -1,4 +1,4 @@
-# shinytest2 (development version)
+# shinytest2 0.3.2
 
 * `{shinytest2}` now uses `{rlang}` and longer depends on `{ellipsis}` (@olivroy, #382).
 
