@@ -1084,7 +1084,7 @@ from within the same testing file. Otherwise, two different \code{AppDriver}
 objects will be referencing the same files.}
 
 \item{\code{variant}}{If not-\code{NULL}, results will be saved in
-_snaps/{variant}/{test.md}\verb{, so }variant` must be a single
+\verb{_snaps/\{variant\}/\{test.md\}}, so \code{variant} must be a single
 string of alphanumeric characters suitable for use as a
 directory name.
 
