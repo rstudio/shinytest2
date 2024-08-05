@@ -52,7 +52,8 @@ Suggests:
     vdiffr (>= 1.0.0),
     spelling
 Config/Needs/check:
-    rstudio/shiny
+    rstudio/shiny,
+    bslib
 Config/Needs/website:
     pkgdown,
     tidyverse/tidytemplate
