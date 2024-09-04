@@ -1,84 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/404.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/articles/in-depth.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/articles/robust.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/articles/shinytest2.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/articles/use-application-audit.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/articles/use-ci.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/articles/use-package.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/articles/using-monkey-testing.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/articles/z-migration.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/articles/zzz-faq.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/index.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/reference/AppDriver.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/reference/compare_screenshot_threshold.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/reference/load_app_env.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/reference/migrate_from_shinytest.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/reference/platform_variant.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/reference/record_test.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/reference/register_input_processor.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/reference/test_app.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/reference/use_shinytest2.html</loc>
-  </url>
-  <url>
-    <loc>https://rstudio.github.io/shinytest2/todo.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://rstudio.github.io/shinytest2/404.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/LICENSE-text.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/LICENSE.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/articles/in-depth.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/articles/index.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/articles/robust.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/articles/shinytest2.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/articles/use-application-audit.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/articles/use-ci.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/articles/use-package.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/articles/using-monkey-testing.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/articles/z-migration.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/articles/zzz-faq.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/authors.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/index.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/news/index.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/reference/AppDriver.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/reference/compare_screenshot_threshold.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/reference/index.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/reference/load_app_env.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/reference/migrate_from_shinytest.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/reference/platform_variant.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/reference/record_test.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/reference/register_input_processor.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/reference/test_app.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/reference/use_shinytest2.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/todo.html</loc></url>
 </urlset>
+
