@@ -1,5 +1,9 @@
 # shinytest2 (development version)
 
+## Bug / Improvements
+
+* Add support for `$click()`ing `{bslib}`'s `input_task_button()` (#829).
+
 # shinytest2 0.3.2
 
 ## Bug / Improvements
