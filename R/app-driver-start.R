@@ -100,7 +100,7 @@ app_start_shiny <- function(
       app_abort(self, private, sprintf(
         paste(
           "The Shiny app failed to start up within %s second%s.",
-          "To increase the loading timeout, consult the documentation in `?AppDriver`", 
+          "To increase the loading timeout, consult the documentation in `?AppDriver`",
           "for the `load_timeout` argument of `AppDriver$new()`.",
           "The app printed the following lines to stderr during start up:\n%s"
         ),
