@@ -98,7 +98,8 @@ app_start_shiny <- function(
 
     if (i == max_i) {
       app_abort(self, private, paste0(
-        "Cannot find shiny port number. Error lines found:\n",
+        "Reached `load_timeout` limit and shiny app is still not running \n",
+        "Error lines found while waiting:\n",
         paste(err_lines, collapse = "\n")
       ))
     }
