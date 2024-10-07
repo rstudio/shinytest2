@@ -98,9 +98,12 @@ app_start_shiny <- function(
 
     if (i == max_i) {
       app_abort(self, private, paste0(
-        "Reached `load_timeout` limit and shiny app is still not running \n",
+        "Reached `load_timeout` limit ", load_timeout,
+        " seconds and shiny app is still not running \n",
         "Error lines found while waiting:\n",
-        paste(err_lines, collapse = "\n")
+        paste(err_lines, collapse = "\n"),
+        "You can increase `load_timeout` to more if your shiny",
+        "application is huge or charge a big dataset".
       ))
     }
   }
