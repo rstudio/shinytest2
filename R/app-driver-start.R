@@ -103,7 +103,7 @@ app_start_shiny <- function(
         "Error lines found while waiting:\n",
         paste(err_lines, collapse = "\n"),
         "You can increase `load_timeout` to more if your shiny",
-        "application is huge or charge a big dataset".
+        " application is huge or charge a big dataset".
       ))
     }
   }
