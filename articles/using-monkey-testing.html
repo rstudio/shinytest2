@@ -160,7 +160,7 @@ then moving to CI/CD later when all bugs are fixed.</p>
 <p>In the below figure, the application is shown on the left side panel.
 The top-right side panel shows the DOM elements (default) and the
 bottom-right side panel displays the JavaScript console output.</p>
-<p><img src="images/gremlins-start.png" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images%2Fgremlins-start.png" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="injecting-gremlins-js">Injecting gremlins.js<a class="anchor" aria-label="anchor" href="#injecting-gremlins-js"></a>
@@ -190,7 +190,7 @@ for the scripts. We can find gremlins.js by calling
 generally because the JS code is blocked by the network. If this is the
 case, consider injecting gremlins.js locally, as explained in the next
 section.</p>
-<p><img src="images/gremlins-inject.png" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images%2Fgremlins-inject.png" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="local-way">Local way<a class="anchor" aria-label="anchor" href="#local-way"></a>
@@ -250,7 +250,7 @@ configuration:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">headless_app</span><span class="op">$</span><span class="fu">run_js</span><span class="op">(</span><span class="st">"gremlins.createHorde().unleash();"</span><span class="op">)</span></span></code></pre></div>
 <p>The result is shown in the GIF below:</p>
-<p><img src="images/gremlins-attack.gif" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images%2Fgremlins-attack.gif" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level5">
 <h5 id="optimized-testing">Optimized testing<a class="anchor" aria-label="anchor" href="#optimized-testing"></a>
@@ -258,7 +258,7 @@ configuration:</p>
 <p>Does it really makes sense to invoke all species given we only have a
 slider? Absolutely not! We can use the following code to test only the
 slider input.</p>
-<p><img src="images/gremlins-slider-handle.png" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images%2Fgremlins-slider-handle.png" width="100%" style="display: block; margin: auto;"></p>
 <p>The best species to perform this task is the <code>toucher</code>,
 which is able to randomly move the slider input. The documentation
 specifies many events such as tap, doubletap, gesture and multi-touch.
@@ -299,7 +299,7 @@ can still display the logs. The <code>console.log</code> output will be
 captured by the <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> logs with
 <code>headless_app$get_logs()</code> allowing you to debug and refine
 the monkey testing script.</p>
-<p><img src="images/gremlins-logs.png" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images%2Fgremlins-logs.png" width="100%" style="display: block; margin: auto;"></p>
 <p>As monkey testing lasts about 10s, you often want to take a
 screenshot of the ongoing attack:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
@@ -324,7 +324,7 @@ screenshot of the ongoing attack:</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">headless_app</span><span class="op">$</span><span class="fu">get_screenshot</span><span class="op">(</span><span class="st">"gremlins.png"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="images/gremlins-attack-refined.gif" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images%2Fgremlins-attack-refined.gif" width="100%" style="display: block; margin: auto;"></p>
 <p>Should you run multiple attacks, it is always good practice to reset
 Shiny inputs between attacks, or even close the current headless app and
 restart a new session:</p>
@@ -352,7 +352,7 @@ option, as you can’t have 2 apps running on the same port:</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
   </div></footer>
