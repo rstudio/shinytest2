@@ -97,12 +97,15 @@ app_start_shiny <- function(
     Sys.sleep(0.2)
 
     if (i == max_i) {
-      app_abort(self, private, paste0(
-        "The Shiny app failed to start up within ", 
-        round(load_timeout / 1000), " seconds. ",
-        "Set `load_timeout` to a number greater than ", 
-        load_timeout, " to increase the loading timeout. ",
-        "The app printed the following lines to stdout during start up:\n",
+      app_abort(self, private, sprintf(
+        paste(
+          "The Shiny app failed to start up within %s second%s.",
+          "To increase the loading timeout, consult the documentation in `?AppDriver`", 
+          "for the `load_timeout` argument of `AppDriver$new()`.",
+          "The app printed the following lines to stderr during start up:\n%s"
+        ),
+        load_timeout / 1000,
+        if (load_timeout == 1000) "" else "s",
         paste(err_lines, collapse = "\n")
       ))
     }
