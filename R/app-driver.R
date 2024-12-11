@@ -319,24 +319,8 @@ AppDriver <- R6Class( # nolint
       clean_logs = TRUE,
       shiny_args = list(),
       render_args = NULL,
-      options = list(),
-      test_env = rlang::caller_env(2)
+      options = list()
     ) {
-      # str(list(
-      #   rlang::caller_env(),
-      #   rlang::frame_env()
-      # ))
-      # print(list(
-      #   rlang::caller_call(1),
-      #   as.list(),
-      #   rlang::caller_call(2),
-      #   rlang::caller_call(3),
-      #   rlang::caller_call(4),
-      #   NULL
-      # ))
-      print(rlang::search_envs())
-
-      test_env = force(test_env)
       app_initialize(
         self, private,
         app_dir = app_dir,
@@ -356,8 +340,7 @@ AppDriver <- R6Class( # nolint
         clean_logs = clean_logs,
         shiny_args = shiny_args,
         render_args = render_args,
-        options = options,
-        test_env = test_env
+        options = options
       )
     },
 

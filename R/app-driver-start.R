@@ -7,8 +7,7 @@ app_start_shiny <- function(
   load_timeout = 10000,
   shiny_args = list(),
   render_args = NULL,
-  options = list(),
-  test_env
+  options = list()
 ) {
   ckm8_assert_app_driver(self, private)
 
@@ -23,67 +22,13 @@ app_start_shiny <- function(
     # Load the app's .Rprofile / .Renviron if possible
     withr::local_dir(self$get_dir())
 
+    # Find the package name if we're running in a package
     package_name <- testthat::testing_package()
     if (!nzchar(package_name)) package_name <- NULL
+    # How to load the package is determined by the testthat context
+    # * If we're `test_check()`ing, we should load the installed package
+    # * Otherwise, we should source the R files before loading the app
     load_package <- if (testthat::is_checking()) "installed" else "source"
-
-    message("parent envs:")
-
-    print(rlang::env_parents(rlang::env(test_env)), last = rlang::base_env())
-
-    message("info:")
-    str(rlang::list2(package_name, load_package, testing_package = testthat::testing_package()))
-
-    message("post pryr:")
-    print(pryr::rls(test_env))
-
-    callr_fn_with_env <- function(app_dir, shiny_args, has_rmd, seed, rng_kind, render_args, options, package_name, load_package, test_env) {
-
-      if (!is.null(seed)) {
-        # Prior to R 3.6, RNGkind has 2 args, otherwise it has 3
-        do.call(RNGkind, as.list(rng_kind))
-        set.seed(seed)
-        getNamespace("shiny")$withPrivateSeed(set.seed(seed + 11))
-      }
-
-      options <- as.list(options)
-      options[["shiny.testmode"]] <- TRUE
-      # TODO-future; Adjust shiny to add htmldeps to the list of the rendered page
-      # options[["shiny-testmode-html-dep"]] <- getTracerDep()
-      do.call(base::options, options)
-
-      # test_env = testthat:::test_files_setup_env(
-      #   test_package = package_name,
-      #   test_dir = app_dir,
-      #   load_package = load_package,
-      #   env = NULL
-      # )
-      # withr::local_environment(test_env)
-      print(pryr::rls(test_env))
-
-      withr::local_environment(test_env)
-      print(pryr::rls(test_env))
-
-      # Return value is important for `AppDriver$stop()`
-      # Do not add code after this if else block
-      if (has_rmd) {
-        # Shiny document
-        rmarkdown::run(
-          file = NULL, # Do not open anything in browser
-          dir = app_dir,
-          default_file = NULL, # Let rmarkdown find the default file
-          # DO NOT ENABLE! Makes things like `app$wait_for_idle()` not work as expected.
-          auto_reload = FALSE, # Do not constantly poll for file changes. Drastically reduces `app$get_logs()`
-          shiny_args = shiny_args,
-          render_args = render_args
-        )
-      } else {
-        # Normal shiny app
-        do.call(shiny::runApp, c(app_dir, shiny_args))
-      }
-    }
-    environment(callr_fn_with_env) <- test_env
-
 
     callr::r_bg(
       stdout = sprintf(tempfile_format, "shiny-stdout"),
@@ -98,11 +43,63 @@ app_start_shiny <- function(
         render_args = render_args,
         options = options,
         package_name = package_name,
-        load_package = load_package,
-        test_env = test_env
+        load_package = load_package
       ),
-      package = TRUE,
-      callr_fn_with_env
+      function(
+        app_dir,
+        shiny_args,
+        has_rmd,
+        seed,
+        rng_kind,
+        render_args,
+        options,
+        package_name,
+        load_package
+      ) {
+
+        if (!is.null(seed)) {
+          # Prior to R 3.6, RNGkind has 2 args, otherwise it has 3
+          do.call(RNGkind, as.list(rng_kind))
+          set.seed(seed)
+          getNamespace("shiny")$withPrivateSeed(set.seed(seed + 11))
+        }
+
+        options <- as.list(options)
+        options[["shiny.testmode"]] <- TRUE
+        # TODO-future; Adjust shiny to add htmldeps to the list of the rendered page
+        # options[["shiny-testmode-html-dep"]] <- getTracerDep()
+        do.call(base::options, options)
+
+        # Add testthat to app's environment
+        library(testthat)
+        testthat___test_files_setup_env <- getFromNamespace("test_files_setup_env", "testthat")
+
+        test_env = testthat___test_files_setup_env(
+          test_package = package_name,
+          test_dir = app_dir,
+          load_package = load_package,
+          env = NULL
+        )
+        withr::local_environment(test_env)
+
+        # Return value is important for `AppDriver$stop()`
+        # Do not add code after this if else block
+        if (has_rmd) {
+          # Shiny document
+          rmarkdown::run(
+            file = NULL, # Do not open anything in browser
+            dir = app_dir,
+            default_file = NULL, # Let rmarkdown find the default file
+            # DO NOT ENABLE! Makes things like `app$wait_for_idle()` not work as expected.
+            auto_reload = FALSE, # Do not constantly poll for file changes. Drastically reduces `app$get_logs()`
+            shiny_args = shiny_args,
+            render_args = render_args
+          )
+        } else {
+          # Normal shiny app
+          do.call(shiny::runApp, c(app_dir, shiny_args))
+        }
+      }
     )
   })
 

@@ -17,8 +17,7 @@ app_initialize_ <- function(
   clean_logs = TRUE,
   shiny_args = list(),
   render_args = NULL,
-  options = list(),
-  test_env
+  options = list()
 ) {
   ckm8_assert_app_driver(self, private)
   rlang::check_dots_empty()
@@ -71,8 +70,7 @@ app_initialize_ <- function(
       load_timeout = private$load_timeout,
       shiny_args = shiny_args,
       render_args = render_args,
-      options = options,
-      test_env = test_env
+      options = options
     )
   }
 
