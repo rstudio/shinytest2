@@ -58,7 +58,7 @@ runs:
 
     - name: Upload snapshots
       if: inputs.upload-snapshots != 'false'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ runner.os }}-r${{ steps.test-app.outputs.r-version }}-testthat-snapshots
         # path: ${{ inputs.app-dir }}/tests*/testthat/_snaps
