@@ -170,7 +170,7 @@ compare_screenshot_threshold <- function(
       " > `", threshold, "` (threshold)."),
       "*" = paste0("`old`:", old),
       "*" = paste0("`new`:", new),
-      "i" = crayon::silver("(To remove this message, increase `threshold`, or set `quiet = TRUE`)")
+      "i" = cli::col_silver("(To remove this message, increase `threshold`, or set `quiet = TRUE`)")
     ))
   }
 
