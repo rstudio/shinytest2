@@ -9,8 +9,8 @@ compare_screenshot_threshold(
   old,
   new,
   ...,
-  threshold = NULL,
-  kernel_size = 5,
+  threshold = getOption("shinytest2.compare_screenshot.threshold", NULL),
+  kernel_size = getOption("shinytest2.compare_screenshot.kernel_size", 5),
   quiet = FALSE
 )
 
@@ -23,25 +23,29 @@ screenshot_max_difference(old, new = missing_arg(), ..., kernel_size = 5)
 
 \item{...}{Must be empty. Allows for parameter expansion.}
 
-\item{threshold}{If the value of \code{threshold} is \code{NULL},
-\code{compare_screenshot_threshold()} will act like
-\code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}}. However, if \code{threshold} is a positive
-number, it will be compared against the largest convolution value found if
-the two images fail a \code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}} comparison. The max
-value that can be found is \code{4 * kernel_size ^ 2}.
+\item{threshold}{The threshold for maximum allowed image difference (see
+below for details). The default is \code{NULL} or can be set globally via the
+\code{shinytest2.compare_screenshot.threshold} option.
 
-Threshold values values below 5 help deter
-false-positive screenshot comparisons (such as inconsistent rounded
-corners). Larger values in the 10s and 100s will help find \emph{real}
-changes. However, not all values are one size fits all and you will need
-to play with a threshold that fits your needs.
+If the value of \code{threshold} is \code{NULL}, \code{compare_screenshot_threshold()}
+will act like \code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}}. However, if \code{threshold} is
+a positive number, it will be compared against the largest convolution
+value found if the two images fail a \code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}}
+comparison. The max value that can be found is \code{4 * kernel_size ^ 2}.
+
+Threshold values values below 5 help deter false-positive screenshot
+comparisons (such as inconsistent rounded corners). Larger values in the
+10s and 100s will help find \emph{real} changes. However, not all values are one
+size fits all and you will need to play with a threshold that fits your
+needs.
 
 To find the current difference between two images, use
 \code{screenshot_max_difference()}.}
 
 \item{kernel_size}{The \code{kernel_size} represents the height and width of the
 convolution kernel applied to the matrix of pixel differences. This
-integer-like value should be relatively small, such as 5.}
+integer-like value should be relatively small, such as 5. The default value
+can be set via the \code{shinytest2.compare_screenshot.kernel_size} option.}
 
 \item{quiet}{If \code{FALSE} and the value is larger than \code{threshold}, then a
 message is printed to the console. This is helpful when getting a failing

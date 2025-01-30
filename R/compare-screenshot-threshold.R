@@ -1,5 +1,3 @@
-
-
 #' Compare screenshots given threshold value
 #'
 #' \pkg{chromote} can sometimes produce screenshot images with non-deterministic
@@ -34,28 +32,32 @@
 #' @param old Current screenshot file path
 #' @param new New screenshot file path
 #' @param ... Must be empty. Allows for parameter expansion.
-#' @param threshold If the value of `threshold` is `NULL`,
-#' `compare_screenshot_threshold()` will act like
-#' [`testthat::compare_file_binary`]. However, if `threshold` is a positive
-#' number, it will be compared against the largest convolution value found if
-#' the two images fail a [`testthat::compare_file_binary`] comparison. The max
-#' value that can be found is `4 * kernel_size ^ 2`.
+#' @param threshold The threshold for maximum allowed image difference (see
+#'   below for details). The default is `NULL` or can be set globally via the
+#'   `shinytest2.compare_screenshot.threshold` option.
 #'
-#' Threshold values values below 5 help deter
-#' false-positive screenshot comparisons (such as inconsistent rounded
-#' corners). Larger values in the 10s and 100s will help find _real_
-#' changes. However, not all values are one size fits all and you will need
-#' to play with a threshold that fits your needs.
+#'   If the value of `threshold` is `NULL`, `compare_screenshot_threshold()`
+#'   will act like [`testthat::compare_file_binary`]. However, if `threshold` is
+#'   a positive number, it will be compared against the largest convolution
+#'   value found if the two images fail a [`testthat::compare_file_binary`]
+#'   comparison. The max value that can be found is `4 * kernel_size ^ 2`.
 #'
-#' To find the current difference between two images, use
-#' `screenshot_max_difference()`.
+#'   Threshold values values below 5 help deter false-positive screenshot
+#'   comparisons (such as inconsistent rounded corners). Larger values in the
+#'   10s and 100s will help find _real_ changes. However, not all values are one
+#'   size fits all and you will need to play with a threshold that fits your
+#'   needs.
+#'
+#'   To find the current difference between two images, use
+#'   `screenshot_max_difference()`.
 #' @param kernel_size The `kernel_size` represents the height and width of the
-#' convolution kernel applied to the matrix of pixel differences. This
-#' integer-like value should be relatively small, such as 5.
+#'   convolution kernel applied to the matrix of pixel differences. This
+#'   integer-like value should be relatively small, such as 5. The default value
+#'   can be set via the `shinytest2.compare_screenshot.kernel_size` option.
 #' @param quiet If `FALSE` and the value is larger than `threshold`, then a
-#' message is printed to the console. This is helpful when getting a failing
-#' image and being informed about how different the `new` image is from the
-#' `old` image.
+#'   message is printed to the console. This is helpful when getting a failing
+#'   image and being informed about how different the `new` image is from the
+#'   `old` image.
 #' @export
 #' @describeIn compare_screenshot_threshold
 #' Compares two images and allows for a `threshold` difference of _so many_
@@ -117,9 +119,10 @@
 #' #> TRUE # Images are not as different than 5 units
 compare_screenshot_threshold <- function(
   old,
-  new, ...,
-  threshold = NULL,
-  kernel_size = 5,
+  new,
+  ...,
+  threshold = getOption("shinytest2.compare_screenshot.threshold", NULL),
+  kernel_size = getOption("shinytest2.compare_screenshot.kernel_size", 5),
   quiet = FALSE
 ) {
   rlang::check_dots_empty()
@@ -165,18 +168,27 @@ compare_screenshot_threshold <- function(
   ret <- conv_max_value < threshold
 
   if (!ret && is_false(quiet)) {
-    rlang::inform(c(
-      "!" = paste0("Maximum screenshot convolution value `", conv_max_value, "`",
-      " > `", threshold, "` (threshold)."),
-      "*" = paste0("`old`:", old),
-      "*" = paste0("`new`:", new),
-      "i" = crayon::silver("(To remove this message, increase `threshold`, or set `quiet = TRUE`)")
-    ))
+    rlang::inform(
+      c(
+        "!" = paste0(
+          "Maximum screenshot convolution value `",
+          conv_max_value,
+          "`",
+          " > `",
+          threshold,
+          "` (threshold)."
+        ),
+        "*" = paste0("`old`:", old),
+        "*" = paste0("`new`:", new),
+        "i" = crayon::silver(
+          "(To remove this message, increase `threshold`, or set `quiet = TRUE`)"
+        )
+      )
+    )
   }
 
   ret
 }
-
 
 #' @export
 #' @describeIn compare_screenshot_threshold
