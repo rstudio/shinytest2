@@ -1,3 +1,5 @@
+
+
 #' Compare screenshots given threshold value
 #'
 #' \pkg{chromote} can sometimes produce screenshot images with non-deterministic
@@ -168,27 +170,18 @@ compare_screenshot_threshold <- function(
   ret <- conv_max_value < threshold
 
   if (!ret && is_false(quiet)) {
-    rlang::inform(
-      c(
-        "!" = paste0(
-          "Maximum screenshot convolution value `",
-          conv_max_value,
-          "`",
-          " > `",
-          threshold,
-          "` (threshold)."
-        ),
-        "*" = paste0("`old`:", old),
-        "*" = paste0("`new`:", new),
-        "i" = crayon::silver(
-          "(To remove this message, increase `threshold`, or set `quiet = TRUE`)"
-        )
-      )
-    )
+    rlang::inform(c(
+      "!" = paste0("Maximum screenshot convolution value `", conv_max_value, "`",
+      " > `", threshold, "` (threshold)."),
+      "*" = paste0("`old`:", old),
+      "*" = paste0("`new`:", new),
+      "i" = crayon::silver("(To remove this message, increase `threshold`, or set `quiet = TRUE`)")
+    ))
   }
 
   ret
 }
+
 
 #' @export
 #' @describeIn compare_screenshot_threshold
