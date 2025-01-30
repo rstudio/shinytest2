@@ -2,7 +2,7 @@
 
 ## Bug / Improvements
 
-* Add support for `$click()`ing `{bslib}`'s `input_task_button()` (#829).
+* Add support for `$click()`ing `{bslib}`'s `input_task_button()` (#389).
 
 * Improved the error message when an app takes too long to start up (@LouisLeNezet, #394).
 
