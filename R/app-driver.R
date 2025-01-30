@@ -1030,12 +1030,14 @@ AppDriver <- R6Class( # nolint
     #'   [`chromote::ChromoteSession`]'s `$get_screenshot()` method. If missing, the
     #'   value will default to `$new(screenshot_args=)`.
     #'
-    #' If `screenshot_args` is:
-    #'   * `TRUE`: A screenshot of the browser's scrollable area will be taken with no delay
+    #'   If `screenshot_args` is:
+    #'
+    #'   * `TRUE`: A screenshot of the browser's scrollable area will be taken
+    #'     with no delay
     #'   * A named list of arguments: Arguments passed directly to
-    #' [`chromote::ChromoteSession`]'s `$get_screenshot()` method. The `delay`
-    #' argument will default to `0` seconds. The `selector` argument can take two
-    #' special values in addition to being a CSS DOM selector.
+    #'     [`chromote::ChromoteSession`]'s `$get_screenshot()` method. The
+    #'     `delay` argument will default to `0` seconds. The `selector` argument
+    #'     can take two special values in addition to being a CSS DOM selector.
     #'
     #'     * `"scrollable_area"` (default): The entire scrollable area will be
     #'       captured. Typically this is your browser's viewport size, but it
@@ -1047,41 +1049,48 @@ AppDriver <- R6Class( # nolint
     #'       current viewing location, height, and width. It will only capture
     #'       what is currently being seen with `$view()`.
     #'
-    #'     In `v0.3.0`, the default `selector` value was changed from the HTML DOM
-    #'   selector (`"html"`) to entire scrollable area (`"scrollable_area"`).
+    #'     In `v0.3.0`, the default `selector` value was changed from the HTML
+    #'     DOM selector (`"html"`) to entire scrollable area
+    #'     (`"scrollable_area"`).
     #' @param name The file name to be used for the snapshot. The file extension
     #'   will overwritten to `.png`. By default, the `name` supplied to
     #'   `app` on initialization with a counter will be used (e.g. `"NAME-001.png"`).
     #' @param compare A function used to compare the screenshot snapshot files.
-    #' The function should take two inputs, the paths to the `old` and `new`
-    #' snapshot, and return either `TRUE` or `FALSE`.
+    #'   The function should take two inputs, the paths to the `old` and `new`
+    #'   snapshot, and return either `TRUE` or `FALSE`.
     #'
-    #' `compare` defaults to a function that wraps around
-    #' `compare_screenshot_threshold(old, new, threshold = threshold,
-    #' kernel_size = kernel_size, quiet = quiet)`. Note: if `threshold` is
-    #' `NULL` (default), `compare` will behave as if
+    #'   `compare` defaults to a function that wraps around
+    #'   `compare_screenshot_threshold(old, new, threshold = threshold,
+    #'   kernel_size = kernel_size, quiet = quiet)`. Note: if `threshold` is
+    #'   `NULL` (default), `compare` will behave as if
     #' [`testthat::compare_file_binary()`] was provided, comparing the two
     #' images byte-by-byte.
     #' @param threshold Parameter supplied to [`compare_screenshot_threshold()`]
-    #' when using the default `compare` method. If the value of `threshold` is
-    #' `NULL`, [`compare_screenshot_threshold()`] will act like
-    #' [`testthat::compare_file_binary`]. However, if `threshold` is a positive number,
-    #' it will be compared against the largest convolution value found if the
-    #' two images fail a [`testthat::compare_file_binary`] comparison.
+    #'   when using the default `compare` method. The default value can be set
+    #'   globally with the `shinytest2.compare_screenshot.threshold` option.
     #'
-    #' Which value should I use? Threshold values values below 5 help deter
-    #' false-positive screenshot comparisons (such as inconsistent rounded
-    #' corners). Larger values in the 10s and 100s will help find _real_
-    #' changes. However, not all values are one size fits all and you will need
-    #' to play with a threshold that fits your needs.
-    #' @param kernel_size Parameter supplied to [`compare_screenshot_threshold()`]
-    #' when using the default `compare` method. The `kernel_size` represents the
-    #' height and width of the convolution kernel applied to the pixel
-    #' differences. This integer-like value should be relatively small.
+    #'   If the value of `threshold` is `NULL`,
+    #'   [`compare_screenshot_threshold()`] will act like
+    #'   [`testthat::compare_file_binary`]. However, if `threshold` is a
+    #'   positive number, it will be compared against the largest convolution
+    #'   value found if the two images fail a [`testthat::compare_file_binary`]
+    #'   comparison.
+    #'
+    #'   Which value should I use? Threshold values values below 5 help deter
+    #'   false-positive screenshot comparisons (such as inconsistent rounded
+    #'   corners). Larger values in the 10s and 100s will help find _real_
+    #'   changes. However, not all values are one size fits all and you will
+    #'   need to play with a threshold that fits your needs.
+    #' @param kernel_size Parameter supplied to
+    #'   [`compare_screenshot_threshold()`] when using the default `compare`
+    #'   method. The `kernel_size` represents the height and width of the
+    #'   convolution kernel applied to the pixel differences. This integer-like
+    #'   value should be relatively small. The default value can be set globally
+    #'   with the `shinytest2.compare_screenshot.kernel_size` option.
     #' @param quiet Parameter supplied to [`compare_screenshot_threshold()`]
-    #' when using the default `compare` method. If `FALSE`, diagnostic
-    #' information will be presented when the computed value is larger than a
-    #' non-`NULL` `threshold` value.
+    #'   when using the default `compare` method. If `FALSE`, diagnostic
+    #'   information will be presented when the computed value is larger than a
+    #'   non-`NULL` `threshold` value.
     #' @examples
     #' \dontrun{
     #' # These example lines should be performed in a `./tests/testthat`
