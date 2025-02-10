@@ -35,6 +35,7 @@ Imports:
     rlang (>= 1.0.0),
     rmarkdown,
     shiny,
+    pkgload,
     withr
 Suggests:
     deSolve,
