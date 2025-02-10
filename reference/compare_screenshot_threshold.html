@@ -60,12 +60,17 @@ corners of <code>div</code>s or <code>textarea</code>s.</p>
 <span>  <span class="va">old</span>,</span>
 <span>  <span class="va">new</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  threshold <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  kernel_size <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  threshold <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"shinytest2.compare_screenshot.threshold"</span>, <span class="cn">NULL</span><span class="op">)</span>,</span>
+<span>  kernel_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"shinytest2.compare_screenshot.kernel_size"</span>, <span class="fl">5</span><span class="op">)</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">screenshot_max_difference</span><span class="op">(</span><span class="va">old</span>, new <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span>, kernel_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">screenshot_max_difference</span><span class="op">(</span></span>
+<span>  <span class="va">old</span>,</span>
+<span>  new <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  kernel_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"shinytest2.compare_screenshot.kernel_size"</span>, <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -85,17 +90,19 @@ corners of <code>div</code>s or <code>textarea</code>s.</p>
 
 
 <dt id="arg-threshold">threshold<a class="anchor" aria-label="anchor" href="#arg-threshold"></a></dt>
-<dd><p>If the value of <code>threshold</code> is <code>NULL</code>,
-<code>compare_screenshot_threshold()</code> will act like
-<code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">testthat::compare_file_binary</a></code>. However, if <code>threshold</code> is a positive
-number, it will be compared against the largest convolution value found if
-the two images fail a <code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">testthat::compare_file_binary</a></code> comparison. The max
-value that can be found is <code>4 * kernel_size ^ 2</code>.</p>
-<p>Threshold values values below 5 help deter
-false-positive screenshot comparisons (such as inconsistent rounded
-corners). Larger values in the 10s and 100s will help find <em>real</em>
-changes. However, not all values are one size fits all and you will need
-to play with a threshold that fits your needs.</p>
+<dd><p>The threshold for maximum allowed image difference (see
+below for details). The default is <code>NULL</code> or can be set globally via the
+<code>shinytest2.compare_screenshot.threshold</code> option.</p>
+<p>If the value of <code>threshold</code> is <code>NULL</code>, <code>compare_screenshot_threshold()</code>
+will act like <code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">testthat::compare_file_binary</a></code>. However, if <code>threshold</code> is
+a positive number, it will be compared against the largest convolution
+value found if the two images fail a <code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">testthat::compare_file_binary</a></code>
+comparison. The max value that can be found is <code>4 * kernel_size ^ 2</code>.</p>
+<p>Threshold values values below 5 help deter false-positive screenshot
+comparisons (such as inconsistent rounded corners). Larger values in the
+10s and 100s will help find <em>real</em> changes. However, not all values are one
+size fits all and you will need to play with a threshold that fits your
+needs.</p>
 <p>To find the current difference between two images, use
 <code>screenshot_max_difference()</code>.</p></dd>
 
@@ -103,7 +110,8 @@ to play with a threshold that fits your needs.</p>
 <dt id="arg-kernel-size">kernel_size<a class="anchor" aria-label="anchor" href="#arg-kernel-size"></a></dt>
 <dd><p>The <code>kernel_size</code> represents the height and width of the
 convolution kernel applied to the matrix of pixel differences. This
-integer-like value should be relatively small, such as 5.</p></dd>
+integer-like value should be relatively small, such as 5. The default value
+can be set via the <code>shinytest2.compare_screenshot.kernel_size</code> option.</p></dd>
 
 
 <dt id="arg-quiet">quiet<a class="anchor" aria-label="anchor" href="#arg-quiet"></a></dt>
