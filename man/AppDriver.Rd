@@ -2181,8 +2181,8 @@ recommended to use other expectation methods.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_screenshot(
   ...,
-  threshold = NULL,
-  kernel_size = 5,
+  threshold = getOption("shinytest2.compare_screenshot.threshold", NULL),
+  kernel_size = getOption("shinytest2.compare_screenshot.kernel_size", 5),
   screenshot_args = missing_arg(),
   delay = missing_arg(),
   selector = missing_arg(),

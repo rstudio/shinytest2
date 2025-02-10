@@ -14,7 +14,12 @@ compare_screenshot_threshold(
   quiet = FALSE
 )
 
-screenshot_max_difference(old, new = missing_arg(), ..., kernel_size = 5)
+screenshot_max_difference(
+  old,
+  new = missing_arg(),
+  ...,
+  kernel_size = getOption("shinytest2.compare_screenshot.kernel_size", 5)
+)
 }
 \arguments{
 \item{old}{Current screenshot file path}
