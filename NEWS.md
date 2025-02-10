@@ -8,6 +8,8 @@
 
 * The `threshold` and `kernel_size` default values of the `AppDriver$expect_screenshot()` method are now configurable via two new global options: `shinytest2.compare_screenshot.threshold` and `shinytest2.compare_screenshot.kernel_size` (#401)
 
+* `{shinytest2}` now imports `{cli}` and no longer imports `{crayon}` (@olivroy, #399). 
+
 # shinytest2 0.3.2
 
 ## Bug / Improvements

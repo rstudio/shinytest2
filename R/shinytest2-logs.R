@@ -5,14 +5,14 @@ print.shinytest2_log <- function(x, ...) {
 }
 
 #' @export
-#' @importFrom crayon blue magenta cyan green red silver make_style
+#' @importFrom cli col_blue col_magenta col_cyan col_green col_red col_silver make_ansi_style
 format.shinytest2_log <- function(x, ...) {
 
   get_color <- function(location, level) {
     switch(as.character(location),
-      shiny = switch(level, stderr = magenta, force),
-      chromote = switch(level, throw = red, error = red, cyan),
-      shinytest2 = switch(level, green)
+      shiny = switch(level, stderr = col_magenta, force),
+      chromote = switch(level, throw = col_red, error = col_red, col_cyan),
+      shinytest2 = switch(level, col_green)
     )
   }
 
