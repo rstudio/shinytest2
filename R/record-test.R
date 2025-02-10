@@ -33,8 +33,8 @@ warning("TODO-barret; Record test should save the recording into the package if 
 #'   * If `TRUE`, events without input bindings are recorded.
 #'   * If `FALSE`, events without input bindings are not recorded.
 #'   * If `NULL` (default), if an updated input does not have a corresponding
-#'   * input, a modal dialog will be shown asking if unbound input events should
-#'   * be recorded.
+#'     input, a modal dialog will be shown asking if unbound input events should
+#'     be recorded.
 #'
 #'   See [`AppDriver`]`$set_inputs()` for more information.
 #' @param record_screen_size If `TRUE`, the screen size will be recorded when initialized and changed.
@@ -58,7 +58,7 @@ record_test <- function(
   record_screen_size = TRUE,
   run_test = TRUE
 ) {
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
   rlang::check_installed("shinyvalidate", "0.1.2")
 
   if (inherits(app, "ShinyDriver")) {

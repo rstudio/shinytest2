@@ -41,7 +41,7 @@ app_find_node_id <- function(
   selector = missing_arg()
 ) {
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   "!DEBUG finding a nodeID"
 
@@ -89,7 +89,7 @@ app_click <- function(
     self$set_inputs(!!input := "click", ...)
 
   } else {
-    ellipsis::check_dots_empty()
+    rlang::check_dots_empty()
     self$log_message(paste0(
       "Clicking HTML element with selector: ",
       node_id_css_selector(

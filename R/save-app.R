@@ -42,7 +42,30 @@ app_server_globals <- function(server) {
   # https://github.com/HenrikBengtsson/globals/issues/61#issuecomment-731777640
   rlang::check_installed("globals", version = "0.14.0")
 
-  globals <- globals::globalsOf(server, envir = environment(server), recursive = TRUE)
+  # First pass, globals don't need to exist. This pass catches errors that
+  # would otherwise be masked by the `mustExist = TRUE` pass.
+  globals <- globals::globalsOf(server, envir = environment(server), recursive = TRUE, mustExist = FALSE)
+
+  # Second pass, globals must exist.
+  tryCatch({
+    globals::globalsOf(server, envir = environment(server), recursive = TRUE, mustExist = TRUE)
+  }, error = function(cnd) {
+    if (grepl("failed to locate", tolower(conditionMessage(cnd)))) {
+      rlang::warn(
+        c(
+          "Failed to locate globals in server function.",
+          "i" = paste(
+            "This may be due to non-standard evaluation or other dynamic code.",
+            "The app may not work as expected."
+          )
+        ),
+        parent = cnd
+      )
+    } else {
+      rlang::cnd_signal(cnd) # rethrow the error
+    }
+  })
+
   globals <- globals::cleanup(globals)
 
   # remove globals found in packages

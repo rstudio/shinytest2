@@ -15,15 +15,15 @@ if enabled (default).
 
 Inputs available:
 
-  - `app-dir` - default `"."`. Directory of Shiny application (or
-    Shiny-based document) to test
-  - `upload-snapshots` - default `true`. Whether to upload all testthat
-    snapshots as an artifact.
+- `app-dir` - default `"."`. Directory of Shiny application (or
+  Shiny-based document) to test
+- `upload-snapshots` - default `true`. Whether to upload all testthat
+  snapshots as an artifact.
 
 Typical (single app testing) GHA step usage:
 
 ``` yaml
-- uses: rstudio/shinytest2/actions/test-app@v1
+- uses: rstudio/shinytest2/actions/test-app@actions/v1
   with:
     app-dir: |
       dir/to/app
@@ -33,7 +33,7 @@ Multiple Apps can be tested by supplying multiple directories to
 `app-dir` separated by a newline:
 
 ``` yaml
-- uses: rstudio/shinytest2/actions/test-app@v1
+- uses: rstudio/shinytest2/actions/test-app@actions/v1
   with:
     app-dir: |
       dir/to/app1
@@ -46,16 +46,16 @@ These workflows are a good building block / starting point for testing
 your Shiny applications. You may need to alter what is actually executed
 to fit your needs.
 
-  - [`test-app-description`](#dependencies-in-description-file) - An
-    example CI workflow to test your Shiny application given you are
-    using a `DESCRIPTION` file to state your dependencies.
-  - [`test-app-renv`](#dependencies-managed-by-renv) - An example CI
-    workflow to test your Shiny application given you are using `{renv}`
-    to manage your dependencies.
-  - [`test-app-package`](#app-within-package-structure) - An example CI
-    workflow to test a Shiny application within your local R package. It
-    is recommended to use `app-dir` input to set the location of your
-    Shiny application.
+- [`test-app-description`](#dependencies-in-description-file) - An
+  example CI workflow to test your Shiny application given you are using
+  a `DESCRIPTION` file to state your dependencies.
+- [`test-app-renv`](#dependencies-managed-by-renv) - An example CI
+  workflow to test your Shiny application given you are using `{renv}`
+  to manage your dependencies.
+- [`test-app-package`](#app-within-package-structure) - An example CI
+  workflow to test a Shiny application within your local R package. It
+  is recommended to use `app-dir` input to set the location of your
+  Shiny application.
 
 ## Dependencies in DESCRIPTION file
 
@@ -113,7 +113,7 @@ jobs:
           extra-packages:
             shinytest2
 
-      - uses: rstudio/shinytest2/actions/test-app@v1
+      - uses: rstudio/shinytest2/actions/test-app@actions/v1
         with:
           app-dir: "."
 ```
@@ -132,7 +132,7 @@ usethis::use_github_action(
 Workflow contents:
 
 ``` yaml
-# Workflow derived from https://github.com/rstudio/shinytest2/tree/main/actions/test-app/example-test-app-description.yaml
+# Workflow derived from https://github.com/rstudio/shinytest2/tree/main/actions/test-app/example-test-app-renv.yaml
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
   push:
@@ -171,7 +171,7 @@ jobs:
 
       - uses: r-lib/actions/setup-renv@v2
 
-      - uses: rstudio/shinytest2/actions/test-app@v1
+      - uses: rstudio/shinytest2/actions/test-app@actions/v1
         with:
           app-dir: "."
 ```
@@ -238,9 +238,26 @@ jobs:
             local::.
             shinytest2
 
-      - uses: rstudio/shinytest2/actions/test-app@v1
+      - uses: rstudio/shinytest2/actions/test-app@actions/v1
         with:
           app-dir: "."
+```
+
+# Development
+
+The `test-app` action uses a sliding git tag that follows the pattern
+`actions/vX`, e.g. `actions/v1`. For historical reasons, we also support
+the `v1` tag, but future versions will only be available under the
+`actions/vX` tag.
+
+The `test-app` action release cycle is not dependent on the shinytest2
+package cycle. When changes are made to the `test-app` action, you
+should force-update the current sliding tag version:
+
+``` bash
+git tag -f v1            # update historical v1 tag
+git tag -f actions/v1    # update sliding tag
+git push --tags --force  # push tag to github
 ```
 
 # License
@@ -250,4 +267,4 @@ The scripts and documentation in this project are released under the
 
 # Contributions
 
-Contributions are welcome\!
+Contributions are welcome!

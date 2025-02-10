@@ -97,9 +97,17 @@ window.shinytest2 = (function() {
                 // Instead of setting a value, we'll just trigger a click.
                 $(el).trigger("click");
             },
+            "bslib.task-button": function(el, value) {
+                if (value !== "click") {
+                    throw "The only valid value for an task button is \"click\".";
+                }
+
+                // Instead of setting a value, we'll just trigger a click.
+                $(el).trigger("click");
+            },
 
             "shiny.fileInputBinding": function(el, value) {
-                throw "Setting value of fileInput is not supported. Use app$uploadFile() instead";
+                throw "Setting value of fileInput is not supported. Use app$upload_file() instead";
             },
 
             "shiny.sliderInput": function(el, value) {

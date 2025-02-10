@@ -17,7 +17,7 @@ expect_migration <- function(
   ...,
   fixed = TRUE,
   enexpr_new_expr = TRUE,
-  info_env = make_info_env(verbose = !is.na(message))
+  info_env = make_info_env(verbose = !is.na(message)) # nolint
 ) {
   expect_msg_helper(
     migrated_expr <-
@@ -48,7 +48,7 @@ expect_migration_error <- function(
   message = NA,
   ...,
   fixed = TRUE,
-  info_env = make_info_env()
+  info_env = make_info_env() # nolint
 ) {
   expect_msg_helper(
     # migrated_expr <-

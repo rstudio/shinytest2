@@ -20,7 +20,7 @@ app_initialize_ <- function(
   options = list()
 ) {
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   # This will kill any existing Shiny processes launched by shinytest,
   # in case they're using some of the same resources.

@@ -8,7 +8,7 @@ app_httr_get <- function(self, private, url, fn_404 = NULL) {
     pieces$port <- switch(pieces$scheme, "http" = 80, "https" = 443)
   }
 
-  if (!pingr::is_up(pieces$hostname, pieces$port)) {
+  if (!pingr::is_up(pieces$hostname, pieces$port, check_online = FALSE)) {
     app_abort(self, private, "Could not find Shiny server. Shiny app is no longer running")
   }
 

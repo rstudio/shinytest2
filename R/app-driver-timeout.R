@@ -1,6 +1,6 @@
 app_get_timeout <- function(self, private, ..., timeout = missing_arg(), timeout_name = checkmate::vname(timeout)) {
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   timeout <- rlang::maybe_missing(timeout, private$timeout)
   ckm8_assert_single_number(timeout, lower = 0, finite = TRUE, .var.name = timeout_name)
@@ -115,7 +115,7 @@ app_init_timeouts <- function(
   timeout = missing_arg()
 ) {
   ckm8_assert_app_driver(self, private)
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   private$load_timeout <- resolve_load_timeout(load_timeout)
 

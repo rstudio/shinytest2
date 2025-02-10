@@ -18,7 +18,7 @@ migrate_from_shinytest <- function(
   include_expect_screenshot = missing_arg(),
   quiet = FALSE
 ) {
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
   rlang::check_installed("shinytest", version = "1.5.1")
 
   # Use an environment to avoid having to return many function levels to merge info and then send back many function levels

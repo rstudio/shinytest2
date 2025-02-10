@@ -1,5 +1,31 @@
 # shinytest2 (development version)
 
+## Bug / Improvements
+
+* Add support for `$click()`ing `{bslib}`'s `input_task_button()` (#829).
+
+* Improved the error message when an app takes too long to start up (@LouisLeNezet, #394).
+
+# shinytest2 0.3.2
+
+## Bug / Improvements
+
+* `{shinytest2}` now uses `{rlang}` and longer depends on `{ellipsis}` (@olivroy, #382).
+
+* `{shinytest2}` now warns rather than erroring when a potentially non-existent global variable is found in the server function, such as when column names are passed to `dplyr::select()` (thanks @matt-sd-watson @MichalLauer, #385).
+
+# shinytest2 0.3.1
+
+## Breaking changes
+
+* `AppDriver$get_screenshot()`/`AppDriver$expect_screenshot()` now default an underlying `deviceScaleFactor` option to 0 instead of 1. This ensures that image sizes are more consistent across devices. To revert to prior behavior, provide `screenshot_args = list(scale = 1)` to `get_screenshot()`/`expect_screenshot()`  (#350).
+
+## Bug / Improvements
+
+* shinytest2 no longer checks if the computer running the tests is connected to the internet when determining if shinytest2 can connect to the server hosting the Shiny app being tested. (@Riraro #364)
+
+# shinytest2 0.3.0
+
 ## Breaking changes
 
 * `AppDriver$get_screenshot(selector=)`, `AppDriver$expect_screenshot(selector=)`'s default `selector` value changed from the HTML DOM selector `"html"` to `"scrollable_area"`. `"scrollable_area"` is a custom `{shinytest2}` selector that will take a screenshot of the entire scrollable area. While a breaking change, this new default value is more intuitive and robust to non-standard CSS height and width values that fail with `"html"`. (#325)

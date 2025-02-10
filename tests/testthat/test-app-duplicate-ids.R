@@ -50,7 +50,7 @@ test_that("Duplicate input/output ids are found", {
 
 
 
-test_that("Duplicate output ids are found", {
+test_that("Duplicate custom output ids are found", {
 
   shiny_app <- shinyApp(
     ui = fluidPage(
@@ -74,7 +74,7 @@ test_that("Duplicate output ids are found", {
 })
 
 
-test_that("Duplicate input ids are found", {
+test_that("Duplicate shiny output ids are found", {
   shiny_app <- shinyApp(
     ui = fluidPage(
       # Duplicate output IDs causes failure to load application
@@ -87,8 +87,13 @@ test_that("Duplicate input ids are found", {
     }
   )
 
-  expect_error(
-    AppDriver$new(shiny_app, load_timeout = 2000),
-    "Shiny app did not become stable"
+  expect_warning(
+    app <- AppDriver$new(shiny_app, check_names = TRUE),
+    "html"
+  )
+
+  expect_failure(
+    app$expect_unique_names(),
+    "html"
   )
 })

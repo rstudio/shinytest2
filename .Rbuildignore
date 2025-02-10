@@ -21,3 +21,4 @@ _\.new\.png$
 ^tests/testthat/migrate-apps$
 ^tests/testthat/apps$
 ^CRAN-SUBMISSION$
+^_dev$

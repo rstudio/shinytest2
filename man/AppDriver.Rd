@@ -1084,7 +1084,7 @@ from within the same testing file. Otherwise, two different \code{AppDriver}
 objects will be referencing the same files.}
 
 \item{\code{variant}}{If not-\code{NULL}, results will be saved in
-_snaps/{variant}/{test.md}\verb{, so }variant` must be a single
+\verb{_snaps/\{variant\}/\{test.md\}}, so \code{variant} must be a single
 string of alphanumeric characters suitable for use as a
 directory name.
 
@@ -2200,7 +2200,10 @@ recommended to use other expectation methods.
 
 \item{\code{threshold}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
 when using the default \code{compare} method. If the value of \code{threshold} is
-NULL\verb{, [}compare_screenshot_threshold()\verb{] will act like [}testthat::compare_file_binary\verb{]. However, if }threshold\verb{ is a positive number, it will be compared against the largest convolution value found if the two images fail a [}testthat::compare_file_binary`] comparison.
+\code{NULL}, \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}} will act like
+\code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}}. However, if \code{threshold} is a positive number,
+it will be compared against the largest convolution value found if the
+two images fail a \code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}} comparison.
 
 Which value should I use? Threshold values values below 5 help deter
 false-positive screenshot comparisons (such as inconsistent rounded

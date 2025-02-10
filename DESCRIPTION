@@ -1,13 +1,13 @@
 Package: shinytest2
 Title: Testing for Shiny Applications
-Version: 0.2.1.9001
+Version: 0.3.2.9001
 Authors@R:
     c(
-        person("Barret", "Schloerke", role = c("cre", "aut"), email = "barret@rstudio.com", comment = c(ORCID = "0000-0001-9986-114X")),
-        person(family = "RStudio", role = c("cph", "fnd")),
-        person("Winston", "Chang", role ="ctb", email = "winston@rstudio.com", comment = "Original author to rstudio/shinytest"),
-        person("Gábor", "Csárdi", role = "ctb", email = "gabor@rstudio.com", comment = "Original author to rstudio/shinytest"),
-        person("Hadley", "Wickham", role = "ctb", email = "hadley@rstudio.com", comment = "Original author to rstudio/shinytest"),
+        person("Barret", "Schloerke", role = c("cre", "aut"), email = "barret@posit.co", comment = c(ORCID = "0000-0001-9986-114X")),
+        person(family = "Posit Software, PBC", role = c("cph", "fnd")),
+        person("Winston", "Chang", role ="ctb", email = "winston@posit.co", comment = "Original author to rstudio/shinytest"),
+        person("Gábor", "Csárdi", role = "ctb", email = "gabor@posit.co", comment = "Original author to rstudio/shinytest"),
+        person("Hadley", "Wickham", role = "ctb", email = "hadley@posit.co", comment = "Original author to rstudio/shinytest"),
         person(family = "Mango Solutions", role = c("cph", "ccp"), comment = "Original author to rstudio/shinytest")
     )
 Description: Automated unit testing of Shiny applications through a headless 'Chromium' browser.
@@ -15,7 +15,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 URL: https://rstudio.github.io/shinytest2/, https://github.com/rstudio/shinytest2
 BugReports: https://github.com/rstudio/shinytest2/issues
 VignetteBuilder: knitr
@@ -25,16 +25,15 @@ Imports:
     R6 (>= 2.4.0),
     callr,
     checkmate (>= 2.0.0),
-    chromote (>= 0.1.0),
+    chromote (>= 0.1.2),
     crayon,
-    ellipsis,
     fs,
     globals (>= 0.14.0),
     httr,
     jsonlite,
     lifecycle (>= 1.0.3),
     pingr,
-    rlang (>= 0.3.0),
+    rlang (>= 1.0.0),
     rmarkdown,
     shiny,
     withr
@@ -54,7 +53,8 @@ Suggests:
     vdiffr (>= 1.0.0),
     spelling
 Config/Needs/check:
-    rstudio/shiny
+    rstudio/shiny,
+    bslib
 Config/Needs/website:
     pkgdown,
     tidyverse/tidytemplate

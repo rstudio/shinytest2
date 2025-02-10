@@ -122,7 +122,7 @@ compare_screenshot_threshold <- function(
   kernel_size = 5,
   quiet = FALSE
 ) {
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
 
   is_same_file <- testthat::compare_file_binary(old, new)
   # Quit early if they are the same file

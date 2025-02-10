@@ -40,5 +40,8 @@ test_that("AppDriver can receive a shinyAppDir object", {
 
   app$set_inputs(bins = 20)
 
+  il <- rlang::list2(bins = 15)
+  app$set_inputs(!!!il)
+
   expect_true(fs::path_has_parent(app$get_dir(), tempdir()))
 })
