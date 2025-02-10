@@ -235,7 +235,7 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
         c(
           conditionMessage(e),
           "\n",
-          i = crayon::silver("You can inspect the failed AppDriver object via `rlang::last_error()$app`"),
+          i = cli::col_silver("You can inspect the failed AppDriver object via `rlang::last_error()$app`"),
           i = paste0("AppDriver logs:\n", logs),
           "\n"
         ),
