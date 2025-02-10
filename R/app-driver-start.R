@@ -39,6 +39,9 @@ app_start_shiny <- function(
   )
 
   print(list(package_name, package_path))
+  # `testthat::is_checking()` is TRUE inside `testthat::test_check()`, typically called in `R CMD check`.
+  # If we're doing R CMD check, we only want to use installed packages.
+  load_package <- if (testthat::is_checking()) "installed" else "source"
 
   p <- local({
     # https://github.com/r-lib/testthat/issues/603
@@ -51,11 +54,6 @@ app_start_shiny <- function(
     # Find the package name if we're running in a package
     # package_name <- testthat::testing_package()
     # if (!nzchar(package_name)) package_name <- NULL
-
-    # How to load the package is determined by the testthat context
-    # * If we're `test_check()`ing, we should load the installed package
-    # * Otherwise, we should source the R files before loading the app
-    load_package <- if (testthat::is_checking()) "installed" else "source"
 
     callr::r_bg(
       stdout = sprintf(tempfile_format, "shiny-stdout"),
