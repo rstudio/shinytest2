@@ -26,7 +26,7 @@ Imports:
     callr,
     checkmate (>= 2.0.0),
     chromote (>= 0.1.2),
-    crayon,
+    cli,
     fs,
     globals (>= 0.14.0),
     httr,
