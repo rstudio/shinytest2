@@ -134,6 +134,8 @@ app_start_shiny <- function(
           )
         }
 
+        ## Do not utilize the package's namespace environment.
+        ## The shiny app should still require that the user calls `library()` or uses `::`
         # .test_env <- testthat::test_env(.package_name)
 
         # end: altered testthat:::test_files_setup
@@ -151,8 +153,6 @@ app_start_shiny <- function(
         #   load_package = .load_package,
         #   env = NULL
         # )
-
-        # withr::local_environment(.test_env)
 
         # Return value is important for `AppDriver$stop()`
         # Do not add code after this if else block
