@@ -198,7 +198,7 @@ screenshot_max_difference <- function(
   old,
   new = missing_arg(),
   ...,
-  kernel_size = 5
+  kernel_size = getOption("shinytest2.compare_screenshot.kernel_size", 5)
 ) {
   # Use the `FILE.new.EXT`
   new <- rlang::maybe_missing(new, {
