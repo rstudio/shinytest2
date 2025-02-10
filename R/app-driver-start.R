@@ -19,26 +19,15 @@ app_start_shiny <- function(
   # the RNG kind should inherit from the parent process
   rng_kind <- RNGkind()
 
-  # pkgload::pkg_path()
-
-  package_path <- tryCatch(
-    {
-      pkgload::pkg_path()
-    },
-    error = function(e) {
+  try_null <- function(expr) {
+    tryCatch(expr, error = function(e) {
       NULL
-    }
-  )
-  package_name <- tryCatch(
-    {
-      pkgload::pkg_name()
-    },
-    error = function(e) {
-      NULL
-    }
-  )
+    })
+  }
 
-  print(list(package_name, package_path))
+  package_path <- try_null(pkgload::pkg_path())
+  package_name <- try_null(pkgload::pkg_name())
+
   # `testthat::is_checking()` is TRUE inside `testthat::test_check()`, typically called in `R CMD check`.
   # If we're doing R CMD check, we only want to use installed packages.
   load_package <- if (testthat::is_checking()) "installed" else "source"
@@ -48,12 +37,6 @@ app_start_shiny <- function(
     withr::local_envvar(c("R_TESTS" = NA))
     # Load the app's .Rprofile / .Renviron if possible
     withr::local_dir(self$get_dir())
-
-    print("get")
-
-    # Find the package name if we're running in a package
-    # package_name <- testthat::testing_package()
-    # if (!nzchar(package_name)) package_name <- NULL
 
     callr::r_bg(
       stdout = sprintf(tempfile_format, "shiny-stdout"),
@@ -96,47 +79,36 @@ app_start_shiny <- function(
         # options[["shiny-testmode-html-dep"]] <- getTracerDep()
         do.call(base::options, .options)
 
-        # Do not use testthat:::test_files_setup as it will load the library when `load_package == "installed"`
-        # start: Alteration of testthat:::test_files_setup where {testthat} and the package are not loaded
-        # Alteration comments done in `##` comments
+        # Taken inspiration from `testthat:::test_files_setup` but trying to
+        # never library the package or {testthat}. Instead attach the local
+        # package (when possible).
+        # Motivation:
+        # * Shiny will only have access to the installed package namepace after
+        #   a library call, so during testing we should try to mimic this
+        #   behavior to avoid surprises
+        # * Whereas testthat wants to have already `library()`ed {testthat} and
+        #   the package by the time the test file is sourced
 
-        ## Suppress testthat from loading
-        # library(testthat)
+        if (!is.null(.package_path)) {
+          # If .load_package == "installed", carry on like normal!
 
-        ## No need to arg match static values
-        # load_package <- rlang::arg_match(load_package, c("none", "installed", "source"))
-        if (.load_package == "installed") {
-          ## Suppress package from loading.
-          ## Require the user to ask for it in their app!
-          # library(test_package, character.only = TRUE)
-        } else if (.load_package == "source") {
-          ## Use `asNamespace("testthat")` to access non-exported methods
-          # Allow configuring what we export to the search path (#1636)
-          # desc$get_field("Config/testthat/load-all", default = NULL)
-          # args <- asNamespace("testthat")$find_load_all_args(test_dir)
+          if (.load_package == "source") {
+            # Shim the local package. Only expose like a regular package.
+            # Reasoning is that Shiny will only have access to the installed
+            # package when not using the local package.
 
-          pkgload::load_all(
-            ## This feels wrong. Feels like it should be the pkg's dir
-            .package_path,
-            #.test_dir,
-            ## Do not attach package. Make the user call `library(pkg)` themselves
-            # attach = FALSE,
-
-            # ## Be sure to attach the local package to the search path
-            attach = TRUE,
-
-            # ## Do not export any values
-            export_all = FALSE,
-            # helpers = args[["helpers"]],
-            quiet = TRUE
-          )
+            pkgload::load_all(
+              .package_path,
+              # Be sure to attach the local package to the search path
+              attach = TRUE,
+              # Expose only exported values! No imports or helpers
+              export_all = FALSE,
+              export_imports = FALSE,
+              helpers = FALSE,
+              quiet = TRUE
+            )
+          }
         }
-
-        ## Do not utilize the package's namespace environment.
-        ## The shiny app should still require that the user calls `library()` or uses `::`
-        # .test_env <- testthat::test_env(.package_name)
-
-        # end: altered testthat:::test_files_setup
 
         ret <-
           if (.has_rmd) {
