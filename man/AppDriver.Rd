@@ -2181,8 +2181,8 @@ recommended to use other expectation methods.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_screenshot(
   ...,
-  threshold = NULL,
-  kernel_size = 5,
+  threshold = getOption("shinytest2.compare_screenshot.threshold", NULL),
+  kernel_size = getOption("shinytest2.compare_screenshot.kernel_size", 5),
   screenshot_args = missing_arg(),
   delay = missing_arg(),
   selector = missing_arg(),
@@ -2199,22 +2199,28 @@ recommended to use other expectation methods.
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
 \item{\code{threshold}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
-when using the default \code{compare} method. If the value of \code{threshold} is
-\code{NULL}, \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}} will act like
-\code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}}. However, if \code{threshold} is a positive number,
-it will be compared against the largest convolution value found if the
-two images fail a \code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}} comparison.
+when using the default \code{compare} method. The default value can be set
+globally with the \code{shinytest2.compare_screenshot.threshold} option.
+
+If the value of \code{threshold} is \code{NULL},
+\code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}} will act like
+\code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}}. However, if \code{threshold} is a
+positive number, it will be compared against the largest convolution
+value found if the two images fail a \code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}}
+comparison.
 
 Which value should I use? Threshold values values below 5 help deter
 false-positive screenshot comparisons (such as inconsistent rounded
 corners). Larger values in the 10s and 100s will help find \emph{real}
-changes. However, not all values are one size fits all and you will need
-to play with a threshold that fits your needs.}
+changes. However, not all values are one size fits all and you will
+need to play with a threshold that fits your needs.}
 
-\item{\code{kernel_size}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
-when using the default \code{compare} method. The \code{kernel_size} represents the
-height and width of the convolution kernel applied to the pixel
-differences. This integer-like value should be relatively small.}
+\item{\code{kernel_size}}{Parameter supplied to
+\code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}} when using the default \code{compare}
+method. The \code{kernel_size} represents the height and width of the
+convolution kernel applied to the pixel differences. This integer-like
+value should be relatively small. The default value can be set globally
+with the \code{shinytest2.compare_screenshot.kernel_size} option.}
 
 \item{\code{screenshot_args}}{This named list of arguments is passed along to
 \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. If missing, the
@@ -2222,11 +2228,12 @@ value will default to \verb{$new(screenshot_args=)}.
 
 If \code{screenshot_args} is:
 \itemize{
-\item \code{TRUE}: A screenshot of the browser's scrollable area will be taken with no delay
+\item \code{TRUE}: A screenshot of the browser's scrollable area will be taken
+with no delay
 \item A named list of arguments: Arguments passed directly to
-\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. The \code{delay}
-argument will default to \code{0} seconds. The \code{selector} argument can take two
-special values in addition to being a CSS DOM selector.
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. The
+\code{delay} argument will default to \code{0} seconds. The \code{selector} argument
+can take two special values in addition to being a CSS DOM selector.
 \itemize{
 \item \code{"scrollable_area"} (default): The entire scrollable area will be
 captured. Typically this is your browser's viewport size, but it
@@ -2238,8 +2245,9 @@ current viewing location, height, and width. It will only capture
 what is currently being seen with \verb{$view()}.
 }
 
-In \code{v0.3.0}, the default \code{selector} value was changed from the HTML DOM
-selector (\code{"html"}) to entire scrollable area (\code{"scrollable_area"}).
+In \code{v0.3.0}, the default \code{selector} value was changed from the HTML
+DOM selector (\code{"html"}) to entire scrollable area
+(\code{"scrollable_area"}).
 }}
 
 \item{\code{delay}}{The number of \strong{seconds} to wait before taking the screenshot.
