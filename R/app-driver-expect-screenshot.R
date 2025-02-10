@@ -64,8 +64,8 @@ app_get_screenshot <- function(
 app_expect_screenshot <- function(
   self, private,
   ...,
-  threshold = NULL,
-  kernel_size = 5,
+  threshold = getOption("shinytest2.compare_screenshot.threshold", NULL),
+  kernel_size = getOption("shinytest2.compare_screenshot.kernel_size", 5),
   quiet = FALSE,
   name = NULL,
   screenshot_args = missing_arg(),

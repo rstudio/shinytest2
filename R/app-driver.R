@@ -1154,8 +1154,8 @@ AppDriver <- R6Class( # nolint
     #' }
     expect_screenshot = function(
       ...,
-      threshold = NULL,
-      kernel_size = 5,
+      threshold = getOption("shinytest2.compare_screenshot.threshold", NULL),
+      kernel_size = getOption("shinytest2.compare_screenshot.kernel_size", 5),
       screenshot_args = missing_arg(),
       delay = missing_arg(),
       selector = missing_arg(),
