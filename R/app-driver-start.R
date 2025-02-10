@@ -140,19 +140,6 @@ app_start_shiny <- function(
 
         # end: altered testthat:::test_files_setup
 
-        # # Add testthat to app's environment
-        # library(testthat)
-        # .testthat___test_files_setup_env <- getFromNamespace(
-        #   "test_files_setup_env",
-        #   "testthat"
-        # )
-
-        # .test_env = .testthat___test_files_setup_env(
-        #   test_package = .package_name,
-        #   test_dir = .app_dir,
-        #   load_package = .load_package,
-        #   env = NULL
-        # )
 
         # Return value is important for `AppDriver$stop()`
         # Do not add code after this if else block
