@@ -19,18 +19,17 @@ app_start_shiny <- function(
   # the RNG kind should inherit from the parent process
   rng_kind <- RNGkind()
 
-  try_null <- function(expr) {
-    tryCatch(expr, error = function(e) {
-      NULL
-    })
-  }
+  package_path <- tryCatch(pkgload::pkg_path(), error = function(e) NULL)
+  package_name <- tryCatch(pkgload::pkg_name(), error = function(e) NULL)
 
-  package_path <- try_null(pkgload::pkg_path())
-  package_name <- try_null(pkgload::pkg_name())
-
-  # `testthat::is_checking()` is TRUE inside `testthat::test_check()`, typically called in `R CMD check`.
+  # `testthat::is_checking()` is TRUE inside `testthat::test_check()`, typically
+  # called in `R CMD check`.
   # If we're doing R CMD check, we only want to use installed packages.
-  load_package <- if (testthat::is_checking()) "installed" else "source"
+  # Therefore, disable the local package sourcing
+  if (testthat::is_checking()) {
+    package_path <- NULL
+    package_name <- NULL
+  }
 
   p <- local({
     # https://github.com/r-lib/testthat/issues/603
@@ -51,8 +50,7 @@ app_start_shiny <- function(
         .render_args = render_args,
         .options = options,
         .package_name = package_name,
-        .package_path = package_path,
-        .load_package = load_package
+        .package_path = package_path
       ),
       function(
         .app_dir,
@@ -63,8 +61,7 @@ app_start_shiny <- function(
         .render_args,
         .options,
         .package_name,
-        .package_path,
-        .load_package
+        .package_path
       ) {
         if (!is.null(.seed)) {
           # Prior to R 3.6, RNGkind has 2 args, otherwise it has 3
@@ -79,35 +76,22 @@ app_start_shiny <- function(
         # options[["shiny-testmode-html-dep"]] <- getTracerDep()
         do.call(base::options, .options)
 
-        # Taken inspiration from `testthat:::test_files_setup` but trying to
-        # never library the package or {testthat}. Instead attach the local
-        # package (when possible).
+        # Taken inspiration from `testthat:::test_files_setup`.
         # Motivation:
         # * Shiny will only have access to the installed package namepace after
         #   a library call, so during testing we should try to mimic this
         #   behavior to avoid surprises
         # * Whereas testthat wants to have already `library()`ed {testthat} and
         #   the package by the time the test file is sourced
-
         if (!is.null(.package_path)) {
-          # If .load_package == "installed", carry on like normal!
-
-          if (.load_package == "source") {
-            # Shim the local package. Only expose like a regular package.
-            # Reasoning is that Shiny will only have access to the installed
-            # package when not using the local package.
-
-            pkgload::load_all(
-              .package_path,
-              # Be sure to attach the local package to the search path
-              attach = TRUE,
-              # Expose only exported values! No imports or helpers
-              export_all = FALSE,
-              export_imports = FALSE,
-              helpers = FALSE,
-              quiet = TRUE
-            )
-          }
+          pkgload::load_all(
+            .package_path,
+            # Be sure to add the local package to the search path,
+            # but do not "library()" the local package.
+            # (Typically) Shiny will not have access to the local package
+            # until the package is loaded. We should mimic this behavior!
+            attach = FALSE,
+          )
         }
 
         ret <-
