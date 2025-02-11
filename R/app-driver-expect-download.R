@@ -84,6 +84,7 @@ app_expect_download <- function(
   ...,
   compare = NULL,
   name = NULL,
+  transform = NULL,
   cran = FALSE
 ) {
   ckm8_assert_app_driver(self, private)
@@ -103,6 +104,7 @@ app_expect_download <- function(
   app__expect_snapshot_file(
     self, private,
     snapshot_info$download_path,
+    transform = transform,
     cran = cran,
     compare = compare
   )

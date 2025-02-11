@@ -151,6 +151,7 @@ app_expect_values <- function(
   export = missing_arg(),
   name = NULL,
   screenshot_args = missing_arg(),
+  transform = NULL,
   cran = FALSE
 ) {
   ckm8_assert_app_driver(self, private)
@@ -232,6 +233,7 @@ app_expect_values <- function(
   app__expect_snapshot_file(
     self, private,
     json_path,
+    transform = transform,
     cran = cran,
     compare = testthat::compare_file_text
   )
