@@ -72,7 +72,6 @@ app_expect_screenshot <- function(
   delay = missing_arg(),
   selector = missing_arg(),
   compare = missing_arg(),
-  transform = NULL,
   cran = FALSE
 ) {
   "!DEBUG app_expect_screenshot()"
@@ -105,7 +104,6 @@ app_expect_screenshot <- function(
   app__expect_snapshot_file(
     self, private,
     filename,
-    transform = transform,
     cran = cran,
     compare = compare
   )

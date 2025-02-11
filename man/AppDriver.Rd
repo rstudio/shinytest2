@@ -2199,7 +2199,6 @@ recommended to use other expectation methods.
   compare = missing_arg(),
   quiet = FALSE,
   name = NULL,
-  transform = NULL,
   cran = FALSE
 )}\if{html}{\out{</div>}}
 }
@@ -2303,10 +2302,6 @@ non-\code{NULL} \code{threshold} value.}
 \item{\code{name}}{The file name to be used for the snapshot. The file extension
 will overwritten to \code{.png}. By default, the \code{name} supplied to
 \code{app} on initialization with a counter will be used (e.g. \code{"NAME-001.png"}).}
-
-\item{\code{transform}}{Optionally, a function to scrub sensitive or stochastic text
-from the output. Should take a character vector of lines as input and
-return a modified character vector as output.}
 
 \item{\code{cran}}{Should these expectations be verified on CRAN? By default,
 they are not because snapshot tests tend to be fragile

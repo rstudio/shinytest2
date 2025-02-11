@@ -1167,7 +1167,6 @@ AppDriver <- R6Class( # nolint
       compare = missing_arg(),
       quiet = FALSE,
       name = NULL,
-      transform = NULL,
       cran = FALSE
     ) {
       app_expect_screenshot_and_variant(
@@ -1181,7 +1180,6 @@ AppDriver <- R6Class( # nolint
         delay = delay,
         selector = selector,
         name = name,
-        transform = transform,
         cran = cran
       )
     },

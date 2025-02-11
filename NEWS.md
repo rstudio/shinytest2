@@ -10,7 +10,7 @@
 
 * `{shinytest2}` now imports `{cli}` and no longer imports `{crayon}` (@olivroy, #399). 
 
-* Added `{testthat}`'s snapshot file `transform=` parameter to `AppDriver$expect_screenshot()`, `AppDriver$expect_download()`, and `AppDriver$expect_values()`. (#403)
+* Added [`{testthat}`'s snapshot file `transform=` parameter support](https://github.com/r-lib/testthat/pull/1530) to `AppDriver$expect_download()` and `AppDriver$expect_values()`. This allows for text transformations of the snapshot files before they are compared. (#403)
 
 
 # shinytest2 0.3.2
