@@ -20,6 +20,7 @@ app__expect_snapshot_file <- function(
   variant,
   name = fs::path_file(file),
   cran = FALSE,
+  transform = NULL,
   compare = testthat::compare_file_binary
 ) {
   ckm8_assert_app_driver(self, private)
@@ -41,6 +42,7 @@ app__expect_snapshot_file <- function(
       name = name_safe,
       cran = cran,
       compare = compare,
+      transform = transform,
       variant = self$get_variant()
     ),
     expectation_failure = function(cnd) {

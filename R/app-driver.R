@@ -130,6 +130,9 @@ NULL
 #'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
 #' @param timeout_ Amount of time to wait before giving up (milliseconds).
 #'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
+#' @param transform Optionally, a function to scrub sensitive or stochastic text
+#'        from the output. Should take a character vector of lines as input and
+#'        return a modified character vector as output.
 #' @param cran Should these expectations be verified on CRAN? By default,
 #'        they are not because snapshot tests tend to be fragile
 #'        because they often rely on minor details of dependencies.
@@ -531,6 +534,7 @@ AppDriver <- R6Class( # nolint
       input = missing_arg(), output = missing_arg(), export = missing_arg(),
       screenshot_args = missing_arg(),
       name = NULL,
+      transform = transform,
       cran = FALSE
       ) {
       app_expect_values(
@@ -539,6 +543,7 @@ AppDriver <- R6Class( # nolint
         input = input, output = output, export = export,
         screenshot_args = screenshot_args,
         name = name,
+        transform = transform,
         cran = cran
       )
     },
@@ -691,8 +696,8 @@ AppDriver <- R6Class( # nolint
     #' # Save snapshot value of `rock.csv` to capture default file name
     #' app$expect_download("downloadData", compare = testthat::compare_file_text)
     #' }
-    expect_download = function(output, ..., compare = NULL, name = NULL, cran = FALSE) {
-      app_expect_download(self, private, output = output, ..., compare = compare, name = name, cran = cran)
+    expect_download = function(output, ..., compare = NULL, name = NULL, transform = NULL, cran = FALSE) {
+      app_expect_download(self, private, output = output, ..., compare = compare, name = name, transform = transform, cran = cran)
     },
     #' @description
     #' Get downloadable file
@@ -1162,6 +1167,7 @@ AppDriver <- R6Class( # nolint
       compare = missing_arg(),
       quiet = FALSE,
       name = NULL,
+      transform = NULL,
       cran = FALSE
     ) {
       app_expect_screenshot_and_variant(
@@ -1175,6 +1181,7 @@ AppDriver <- R6Class( # nolint
         delay = delay,
         selector = selector,
         name = name,
+        transform = transform,
         cran = cran
       )
     },
