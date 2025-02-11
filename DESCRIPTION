@@ -35,6 +35,7 @@ Imports:
     rlang (>= 1.0.0),
     rmarkdown,
     shiny,
+    pkgload,
     withr
 Suggests:
     deSolve,
@@ -51,6 +52,8 @@ Suggests:
     usethis,
     vdiffr (>= 1.0.0),
     spelling
+Config/Needs/shinytest2-testing:
+    decor
 Config/Needs/check:
     rstudio/shiny,
     bslib
