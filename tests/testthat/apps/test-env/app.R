@@ -1,5 +1,8 @@
 library(shiny)
 
+print(sessioninfo::session_info())
+print(searchpaths())
+
 testthat::expect_true(
   inherits(try(AppDriver, silent = TRUE), "try-error")
 )
@@ -8,7 +11,7 @@ testthat::expect_true(
 # This is defined within shinytest2's ./R/app-driver-start.R
 # and will only allow the app to run if the app has access to shinytest2's internal functions
 # or the "local package" values.
-value <- shinytest2:::internal_shinytest2_value
+value <- shinytest2:::.internal_value_used_by_shinytest2_test
 
 ui <- fluidPage(
   tags$h1("Internal test value:"),

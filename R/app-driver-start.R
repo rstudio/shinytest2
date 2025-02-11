@@ -1,6 +1,6 @@
 # Do not delete
-# Paired with tests/testthat/apps/test-env/ 's tests on `internal_shinytest2_value`
-internal_shinytest2_value <- TRUE
+# Paired with tests/testthat/apps/test-env/ 's tests on `.internal_value_used_by_shinytest2_test`
+.internal_value_used_by_shinytest2_test <- TRUE
 
 app_start_shiny <- function(
   self,
