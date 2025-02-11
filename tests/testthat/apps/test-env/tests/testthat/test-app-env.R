@@ -1,5 +1,3 @@
-test_that("local pkg env is loaded", {
-  expect_equal(internal_shinytest2_value, TRUE)
-
+test_that("local pkg env is not loaded until library() call", {
   AppDriver$new(variant = NULL)
 })

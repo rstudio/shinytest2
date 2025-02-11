@@ -1,8 +1,5 @@
 library(shiny)
 
-print(sessioninfo::session_info())
-print(searchpaths())
-
 testthat::expect_true(
   inherits(try(AppDriver, silent = TRUE), "try-error")
 )
