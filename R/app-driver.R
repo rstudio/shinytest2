@@ -147,7 +147,8 @@ check_cran_deprecated <- function(
 #'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
 #' @param timeout_ Amount of time to wait before giving up (milliseconds).
 #'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
-#' @template cran
+#' @param cran Deprecated. With `AppDriver` never testing on CRAN,
+#'             this parameter no longer has any effect.
 #' @param wait_ Wait until all reactive updates have completed?
 #' @param hash_images If `TRUE`, images will be hashed before being returned.
 #'   Otherwise, all images will return their full data64 encoded value.
@@ -256,7 +257,17 @@ AppDriver <- R6Class(
     #'   `NAME-001.json`. Name **must** be unique when saving multiple snapshots
     #'   from within the same testing file. Otherwise, two different `AppDriver`
     #'   objects will be referencing the same files.
-    #' @template variant
+    #' @param variant
+    #'   If not-`NULL`, results will be saved in
+    #'   `_snaps/{variant}/{test.md}`, so `variant` must be a single
+    #'   string of alphanumeric characters suitable for use as a
+    #'   directory name.
+    #'
+    #'   You can variants to deal with cases where the snapshot output
+    #'   varies and you want to capture and test the variations.
+    #'   Common use cases include variations for operating system, R
+    #'   version, or version of key dependency. For example usage,
+    #'   see [`platform_variant()`].
     #' @param seed An optional random seed to use before starting the application.
     #'   For apps that use R's random number generator, this can make their
     #'   behavior repeatable.
