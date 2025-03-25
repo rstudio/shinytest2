@@ -18,6 +18,19 @@ For R packages that have Shiny applications, there are generally two ways that t
 
 <!-- See https://github.com/rstudio/shinytestPackageExample for an example package. This document closely mirrors the content of that package: it explains how to set up tests for both types of applications, and then has a section that describes some setup tasks that are common to both types. -->
 
+> 🚧 Using `{chromote}` in CRAN tests
+>
+> `{chromote}` utilizes the Google Chrome application installed on testing
+> machines, which can change over time. CRAN has requested that no package utilize
+> `{chromote}`'s functionality when testing on CRAN. This is because the package
+> may not work as expected if the version of Google Chrome changes.
+>
+> To address this, `{shinytest2}` will call `testthat::skip_on_cran()` when creating an `AppDriver` during CRAN testing.
+>
+> To learn more about CRAN's reasoning and how to test your package using CI,
+> please visit `{chromote}`'s [Using `{chromote}` in CRAN tests](https://rstudio.github.io/chromote/articles/example-cran-tests.html).
+
+
 
 ## Applications in `inst/`
 
@@ -100,7 +113,11 @@ hello_world_app <- function() {
     ),
     server = function(input, output) {
       output$plot <- renderPlot({
-        plot(head(cars, input$n), xlim = range(cars[[1]]), ylim = range(cars[[2]]))
+        plot(
+          head(cars, input$n),
+          xlim = range(cars[[1]]),
+          ylim = range(cars[[2]])
+        )
       })
     }
   )
