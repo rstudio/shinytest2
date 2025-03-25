@@ -1,0 +1,45 @@
+Package: purrr
+Title: Functional Programming Tools
+Version: 1.0.4
+Authors@R: c(
+    person("Hadley", "Wickham", , "hadley@posit.co", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-4757-117X")),
+    person("Lionel", "Henry", , "lionel@posit.co", role = "aut"),
+    person("Posit Software, PBC", role = c("cph", "fnd"),
+           comment = c(ROR = "03wc8by49"))
+  )
+Description: A complete and consistent functional programming toolkit for
+    R.
+License: MIT + file LICENSE
+URL: https://purrr.tidyverse.org/, https://github.com/tidyverse/purrr
+BugReports: https://github.com/tidyverse/purrr/issues
+Depends: R (>= 4.0)
+Imports: cli (>= 3.6.1), lifecycle (>= 1.0.3), magrittr (>= 1.5.0),
+        rlang (>= 1.1.1), vctrs (>= 0.6.3)
+Suggests: covr, dplyr (>= 0.7.8), httr, knitr, lubridate, rmarkdown,
+        testthat (>= 3.0.0), tibble, tidyselect
+LinkingTo: cli
+VignetteBuilder: knitr
+Biarch: true
+Config/build/compilation-database: true
+Config/Needs/website: tidyverse/tidytemplate, tidyr
+Config/testthat/edition: 3
+Config/testthat/parallel: TRUE
+Encoding: UTF-8
+RoxygenNote: 7.3.2
+NeedsCompilation: yes
+Packaged: 2025-01-29 21:33:56 UTC; hadleywickham
+Author: Hadley Wickham [aut, cre] (<https://orcid.org/0000-0003-4757-117X>),
+  Lionel Henry [aut],
+  Posit Software, PBC [cph, fnd] (03wc8by49)
+Maintainer: Hadley Wickham <hadley@posit.co>
+Repository: CRAN
+Date/Publication: 2025-02-05 18:00:01 UTC
+Built: R 4.4.1; aarch64-apple-darwin20; 2025-02-05 18:50:51 UTC; unix
+Archs: purrr.so.dSYM
+RemoteType: standard
+RemotePkgRef: purrr
+RemoteRef: purrr
+RemoteRepos: https://cloud.r-project.org/
+RemotePkgPlatform: aarch64-apple-darwin20
+RemoteSha: 1.0.4

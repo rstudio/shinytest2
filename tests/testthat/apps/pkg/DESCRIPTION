@@ -1,0 +1,10 @@
+Package: expkg
+Title: Testing package
+Version: 0.0.0.9000
+Authors@R: 
+    person("Barret", "Schloerke", , "barret@posit.it", role = c("aut", "cre"))
+Description: Tests whether or not the local, non-cran package is loaded for app testing.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
