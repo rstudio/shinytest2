@@ -1,5 +1,6 @@
 app_initialize_ <- function(
-  self, private,
+  self,
+  private,
   app_dir = testthat::test_path("../../"),
   ...,
   load_timeout = missing_arg(),
@@ -28,14 +29,25 @@ app_initialize_ <- function(
   gc()
 
   # Convert `rlang::missing_arg()` to `missing_value()` to allow for R6 printing
-  private$default_expect_values_screenshot_args <- maybe_missing_value(expect_values_screenshot_args, missing_value()) # nolint
-  private$default_screenshot_args <- maybe_missing_value(screenshot_args, missing_value())
+  private$default_expect_values_screenshot_args <- maybe_missing_value(
+    expect_values_screenshot_args,
+    missing_value()
+  ) # nolint
+  private$default_screenshot_args <- maybe_missing_value(
+    screenshot_args,
+    missing_value()
+  )
   app_set_variant(self, private, variant)
 
   private$counter <- Count$new()
   private$shiny_url <- Url$new()
 
-  app_init_timeouts(self, private, load_timeout = load_timeout, timeout = timeout)
+  app_init_timeouts(
+    self,
+    private,
+    load_timeout = load_timeout,
+    timeout = timeout
+  )
 
   private$save_dir <- st2_temp_file()
   # Clear out any prior files
@@ -56,7 +68,11 @@ app_initialize_ <- function(
     app_dir <- app_save(app_dir)
   }
 
-  if (length(app_dir) == 1 && is.character(app_dir) && grepl("^http(s?)://", app_dir)) {
+  if (
+    length(app_dir) == 1 &&
+      is.character(app_dir) &&
+      grepl("^http(s?)://", app_dir)
+  ) {
     private$shiny_url$set(app_dir)
     app_set_dir(self, private, ".")
   } else {
@@ -65,7 +81,8 @@ app_initialize_ <- function(
     app_set_dir(self, private, app_dir)
 
     app_start_shiny(
-      self, private,
+      self,
+      private,
       seed = seed,
       load_timeout = private$load_timeout,
       shiny_args = shiny_args,
@@ -75,9 +92,13 @@ app_initialize_ <- function(
   }
 
   # Read js content before init'ing chromote to reduce time between
-  js_file <- system.file("internal", "js", "shiny-tracer.js", package = "shinytest2")
+  js_file <- system.file(
+    "internal",
+    "js",
+    "shiny-tracer.js",
+    package = "shinytest2"
+  )
   js_content <- read_utf8(js_file)
-
 
   "!DEBUG create new phantomjs session"
   self$log_message("Creating new ChromoteSession")
@@ -115,8 +136,10 @@ app_initialize_ <- function(
   "!DEBUG waiting for Shiny to become stable"
   self$log_message("Waiting for Shiny to become ready")
 
-  withCallingHandlers( # abort() on error
-    { # nolint
+  withCallingHandlers(
+    # abort() on error
+    {
+      # nolint
       self$wait_for_js(
         "window.shinytest2 && window.shinytest2.ready === true",
         timeout = private$load_timeout
@@ -127,10 +150,15 @@ app_initialize_ <- function(
       }
     },
     error = function(e) {
-      app_abort(self, private,
+      app_abort(
+        self,
+        private,
         paste0(
-          "Shiny app did not become stable in ", private$load_timeout, "ms.\n",
-          "Message: ", conditionMessage(e)
+          "Shiny app did not become stable in ",
+          private$load_timeout,
+          "ms.\n",
+          "Message: ",
+          conditionMessage(e)
         ),
         parent = e
       )
@@ -164,6 +192,18 @@ app_initialize_ <- function(
 app_initialize <- function(self, private, ..., view = missing_arg()) {
   ckm8_assert_app_driver(self, private)
 
+  # Always skip on CRAN
+  # https://rstudio.github.io/chromote/articles/example-cran-tests.html
+  #
+  # > Note that the manual says that external commands (here 'chrome') must
+  # > be used conditionally, so changes should not have resulted in a check
+  # > failure.
+  # - Ripley
+  #
+  # However, we can not use it conditionally.
+  # So the only course of action is to skip the test.
+  testthat::skip_on_cran()
+
   if (testthat::is_testing()) {
     # Make sure chromote can be started. If not, skip test
     try_chromote <- function(silent = FALSE) {
@@ -186,17 +226,27 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
     chromote_can_be_started <- try_chromote(silent = FALSE)
     if (inherits(chromote_can_be_started, "try-error")) {
       # Skip test
-      testthat::skip("`shinytest2::AppDriver` can not be initialized as {chromote} can not be started")
+      testthat::skip(
+        "`shinytest2::AppDriver` can not be initialized as {chromote} can not be started"
+      )
     }
   }
 
-  withCallingHandlers( # abort() on error
+  withCallingHandlers(
+    # abort() on error
     app_initialize_(self, private, ..., view = view),
     error = function(e) {
       tryCatch(
-        self$log_message(paste0("Error while initializing AppDriver:\n", conditionMessage(e))),
+        self$log_message(paste0(
+          "Error while initializing AppDriver:\n",
+          conditionMessage(e)
+        )),
         error = function(ee) {
-          app_inform(self, private, paste0("Could not log error message. Error: ", conditionMessage(ee)))
+          app_inform(
+            self,
+            private,
+            paste0("Could not log error message. Error: ", conditionMessage(ee))
+          )
         }
       )
 
@@ -207,22 +257,33 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
           view_val <- rlang::maybe_missing(view, NULL)
           if (
             rlang::is_interactive() &&
-            # If no chromote session object exists, then we can't view it
-            inherits(self$get_chromote_session(), "ChromoteSession") &&
-            # If view_val == TRUE, ChromoteSession was opened earlier when possible. Do not open again.
-            !isTRUE(view_val) &&
-            # If view_val == FALSE, user asked to not open chromote session. Do not open
-            !is_false(view_val)
+              # If no chromote session object exists, then we can't view it
+              inherits(self$get_chromote_session(), "ChromoteSession") &&
+              # If view_val == TRUE, ChromoteSession was opened earlier when possible. Do not open again.
+              !isTRUE(view_val) &&
+              # If view_val == FALSE, user asked to not open chromote session. Do not open
+              !is_false(view_val)
           ) {
-            app_inform(self, private, "`$view()`ing chromote session for debugging purposes")
+            app_inform(
+              self,
+              private,
+              "`$view()`ing chromote session for debugging purposes"
+            )
             self$log_message("Viewing chromote session for debugging purposes")
             self$view()
           }
         },
         error = function(ee) {
-          app_inform(self, private, c(
-            "!" = paste0("Could not open chromote session. Error: ", conditionMessage(ee))
-          ))
+          app_inform(
+            self,
+            private,
+            c(
+              "!" = paste0(
+                "Could not open chromote session. Error: ",
+                conditionMessage(ee)
+              )
+            )
+          )
         }
       )
 
@@ -231,11 +292,15 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
         error = function(e) "(Error retrieving logs)"
       )
 
-      app_abort(self, private,
+      app_abort(
+        self,
+        private,
         c(
           conditionMessage(e),
           "\n",
-          i = cli::col_silver("You can inspect the failed AppDriver object via `rlang::last_error()$app`"),
+          i = cli::col_silver(
+            "You can inspect the failed AppDriver object via `rlang::last_error()$app`"
+          ),
           i = paste0("AppDriver logs:\n", logs),
           "\n"
         ),

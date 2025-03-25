@@ -1,6 +1,23 @@
 #' @importFrom rlang missing_arg
+#' @importFrom lifecycle deprecated
 #' @importFrom callr process
 NULL
+
+check_cran_deprecated <- function(
+  cran = deprecated(),
+  env = rlang::caller_env(),
+  user_env = rlang::caller_env(2)
+) {
+  if (lifecycle::is_present(cran)) {
+    lifecycle::deprecate_warn(
+      "0.3.3",
+      I("cran ="),
+      details = "`cran =` is no longer supported as `shinytest2::AppDriver` objects can not be created when CRAN is testing. Please remove this parameter.",
+      env = env,
+      user_env = user_env
+    )
+  }
+}
 
 #' Drive a Shiny application
 #'
@@ -99,14 +116,15 @@ NULL
 #'
 #' Their underlying logic is similar to:
 #' ```r
+#' skip_on_cran() # AppDriver
+#'
 #' ## Expect values
 #' tmpfile <- tempfile(fileext = ".json")
 #' jsonlite::write_json(app$get_values(), tmpfile)
 #' expect_snapshot_file(
 #'   tmpfile,
 #'   variant = app$get_variant(),
-#'   compare = testthat::compare_file_text,
-#'   cran = cran
+#'   compare = testthat::compare_file_text
 #' )
 #'
 #'
@@ -116,8 +134,7 @@ NULL
 #' expect_snapshot_file(
 #'   tmpfile,
 #'   variant = app$get_variant(),
-#'   compare = testthat::compare_file_binary,
-#'   cran = cran
+#'   compare = testthat::compare_file_binary
 #' )
 #' ```
 #'
@@ -130,9 +147,7 @@ NULL
 #'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
 #' @param timeout_ Amount of time to wait before giving up (milliseconds).
 #'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
-#' @param cran Should these expectations be verified on CRAN? By default,
-#'        they are not because snapshot tests tend to be fragile
-#'        because they often rely on minor details of dependencies.
+#' @template cran
 #' @param wait_ Wait until all reactive updates have completed?
 #' @param hash_images If `TRUE`, images will be hashed before being returned.
 #'   Otherwise, all images will return their full data64 encoded value.
@@ -186,7 +201,8 @@ NULL
 #' @importFrom R6 R6Class
 #' @seealso [`platform_variant()`], [`use_shinytest2_test()`]
 #' @export
-AppDriver <- R6Class( # nolint
+AppDriver <- R6Class(
+  # nolint
   "AppDriver",
   cloneable = FALSE,
   private = list(
@@ -218,10 +234,8 @@ AppDriver <- R6Class( # nolint
     finalize = function() {
       app_finalize(self, private)
     }
-
   ),
   public = list(
-
     #' @description
     #' Initialize an `AppDriver` object
     #'
@@ -322,7 +336,8 @@ AppDriver <- R6Class( # nolint
       options = list()
     ) {
       app_initialize(
-        self, private,
+        self,
+        private,
         app_dir = app_dir,
         ...,
         load_timeout = load_timeout,
@@ -344,7 +359,6 @@ AppDriver <- R6Class( # nolint
       )
     },
 
-
     #' @description
     #' View the Shiny application
     #'
@@ -360,7 +374,6 @@ AppDriver <- R6Class( # nolint
     view = function() {
       app_view(self, private)
     },
-
 
     #' @description Click an element
     #'
@@ -390,10 +403,19 @@ AppDriver <- R6Class( # nolint
     #' cat(app$get_text("#view"))
     #' }
     click = function(
-      input = missing_arg(), output = missing_arg(), selector = missing_arg(),
+      input = missing_arg(),
+      output = missing_arg(),
+      selector = missing_arg(),
       ...
     ) {
-      app_click(self, private, input = input, output = output, selector = selector, ...)
+      app_click(
+        self,
+        private,
+        input = input,
+        output = output,
+        selector = selector,
+        ...
+      )
     },
 
     #' @description Set input values
@@ -428,11 +450,15 @@ AppDriver <- R6Class( # nolint
       priority_ = c("input", "event")
     ) {
       app_set_inputs(
-        self, private, ..., wait_ = wait_, timeout_ = timeout_,
-        allow_no_input_binding_ = allow_no_input_binding_, priority_ = priority_
+        self,
+        private,
+        ...,
+        wait_ = wait_,
+        timeout_ = timeout_,
+        allow_no_input_binding_ = allow_no_input_binding_,
+        priority_ = priority_
       )
     },
-
 
     #' @description Upload a file
     #'
@@ -528,18 +554,24 @@ AppDriver <- R6Class( # nolint
     #' }
     expect_values = function(
       ...,
-      input = missing_arg(), output = missing_arg(), export = missing_arg(),
+      input = missing_arg(),
+      output = missing_arg(),
+      export = missing_arg(),
       screenshot_args = missing_arg(),
       name = NULL,
-      cran = FALSE
-      ) {
+      cran = deprecated()
+    ) {
+      check_cran_deprecated(cran)
+
       app_expect_values(
-        self, private,
+        self,
+        private,
         ...,
-        input = input, output = output, export = export,
+        input = input,
+        output = output,
+        export = export,
         screenshot_args = screenshot_args,
         name = name,
-        cran = cran
       )
     },
     #' @description
@@ -570,13 +602,18 @@ AppDriver <- R6Class( # nolint
     #' }
     get_value = function(
       ...,
-      input = missing_arg(), output = missing_arg(), export = missing_arg(),
+      input = missing_arg(),
+      output = missing_arg(),
+      export = missing_arg(),
       hash_images = FALSE
     ) {
       app_get_value(
-        self, private,
+        self,
+        private,
         ...,
-        input = input, output = output, export = export,
+        input = input,
+        output = output,
+        export = export,
         hash_images = hash_images
       )
     },
@@ -657,12 +694,17 @@ AppDriver <- R6Class( # nolint
     #' }
     get_values = function(
       ...,
-      input = missing_arg(), output = missing_arg(), export = missing_arg(),
+      input = missing_arg(),
+      output = missing_arg(),
+      export = missing_arg(),
       hash_images = FALSE
     ) {
       app_get_values(
-        self, private,
-        input = input, output = output, export = export,
+        self,
+        private,
+        input = input,
+        output = output,
+        export = export,
         ...,
         hash_images = hash_images
       )
@@ -691,8 +733,23 @@ AppDriver <- R6Class( # nolint
     #' # Save snapshot value of `rock.csv` to capture default file name
     #' app$expect_download("downloadData", compare = testthat::compare_file_text)
     #' }
-    expect_download = function(output, ..., compare = NULL, name = NULL, cran = FALSE) {
-      app_expect_download(self, private, output = output, ..., compare = compare, name = name, cran = cran)
+    expect_download = function(
+      output,
+      ...,
+      compare = NULL,
+      name = NULL,
+      cran = deprecated()
+    ) {
+      check_cran_deprecated(cran)
+
+      app_expect_download(
+        self,
+        private,
+        output = output,
+        ...,
+        compare = compare,
+        name = name
+      )
     },
     #' @description
     #' Get downloadable file
@@ -755,8 +812,10 @@ AppDriver <- R6Class( # nolint
     #' # Make a snapshot of `"Hello Shiny!"`
     #' app$expect_text("h2")
     #' }
-    expect_text = function(selector, ..., cran = FALSE) {
-      app_expect_text(self, private, selector, ..., cran = cran)
+    expect_text = function(selector, ..., cran = deprecated()) {
+      check_cran_deprecated(cran)
+
+      app_expect_text(self, private, selector, ...)
     },
     #' @description
     #' Get UI text
@@ -779,7 +838,6 @@ AppDriver <- R6Class( # nolint
     get_text = function(selector) {
       app_get_text(self, private, selector = selector)
     },
-
 
     #' @description Expect snapshot of UI HTML
     #'
@@ -809,8 +867,21 @@ AppDriver <- R6Class( # nolint
     #' # Save a snapshot of the `caption` output
     #' app$expect_html("#caption")
     #' }
-    expect_html = function(selector, ..., outer_html = TRUE, cran = FALSE) {
-      app_expect_html(self, private, selector, ..., outer_html = outer_html, cran = cran)
+    expect_html = function(
+      selector,
+      ...,
+      outer_html = TRUE,
+      cran = deprecated()
+    ) {
+      check_cran_deprecated(cran)
+
+      app_expect_html(
+        self,
+        private,
+        selector,
+        ...,
+        outer_html = outer_html
+      )
     },
     #' @description Get UI HTML
     #'
@@ -879,13 +950,18 @@ AppDriver <- R6Class( # nolint
       file = missing_arg(),
       timeout = missing_arg(),
       pre_snapshot = NULL,
-      cran = FALSE
+      cran = deprecated()
     ) {
+      check_cran_deprecated(cran)
+
       app_expect_js(
-        self, private,
+        self,
+        private,
         script = script,
         ...,
-        file = file, timeout = timeout, pre_snapshot = pre_snapshot, cran = cran
+        file = file,
+        timeout = timeout,
+        pre_snapshot = pre_snapshot
       )
     },
 
@@ -956,7 +1032,8 @@ AppDriver <- R6Class( # nolint
       timeout = missing_arg()
     ) {
       app_get_js(
-        self, private,
+        self,
+        private,
         script = script,
         ...,
         file = file,
@@ -1000,14 +1077,14 @@ AppDriver <- R6Class( # nolint
       timeout = missing_arg()
     ) {
       app_run_js(
-        self, private,
+        self,
+        private,
         script = script,
         ...,
         file = file,
         timeout = timeout
       )
     },
-
 
     #' @description
     #' Expect a screenshot of the Shiny application
@@ -1162,10 +1239,13 @@ AppDriver <- R6Class( # nolint
       compare = missing_arg(),
       quiet = FALSE,
       name = NULL,
-      cran = FALSE
+      cran = deprecated()
     ) {
+      check_cran_deprecated(cran)
+
       app_expect_screenshot_and_variant(
-        self, private,
+        self,
+        private,
         ...,
         threshold = threshold,
         kernel_size = kernel_size,
@@ -1174,8 +1254,7 @@ AppDriver <- R6Class( # nolint
         screenshot_args = screenshot_args,
         delay = delay,
         selector = selector,
-        name = name,
-        cran = cran
+        name = name
       )
     },
     #' @description
@@ -1211,7 +1290,8 @@ AppDriver <- R6Class( # nolint
       selector = missing_arg()
     ) {
       app_get_screenshot(
-        self, private,
+        self,
+        private,
         file = file,
         ...,
         screenshot_args = screenshot_args,
@@ -1219,7 +1299,6 @@ AppDriver <- R6Class( # nolint
         selector = selector
       )
     },
-
 
     #' @description Wait for Shiny to not be busy (idle) for a set amount of time
     #'
@@ -1343,11 +1422,15 @@ AppDriver <- R6Class( # nolint
       interval = 400
     ) {
       app_wait_for_value(
-        self, private,
-        input = input, output = output, export = export,
+        self,
+        private,
+        input = input,
+        output = output,
+        export = export,
         ...,
         ignore = ignore,
-        timeout = timeout, interval = interval
+        timeout = timeout,
+        interval = interval
       )
     },
     #' @description Wait for a JavaScript expression to be true
@@ -1386,14 +1469,13 @@ AppDriver <- R6Class( # nolint
       interval = 100
     ) {
       app_wait_for_js(
-        self, private,
+        self,
+        private,
         script = script,
         timeout = timeout,
         interval = interval
       )
     },
-
-
 
     #' @description
     #' Expect unique input and output names.
@@ -1438,7 +1520,6 @@ AppDriver <- R6Class( # nolint
     expect_unique_names = function() {
       app_expect_unique_names(self, private)
     },
-
 
     #' @description
     #' Retrieve the Shiny app path
@@ -1521,7 +1602,13 @@ AppDriver <- R6Class( # nolint
     #' #> [1] 1080
     #' }
     set_window_size = function(width, height, wait = TRUE) {
-      app_set_window_size(self, private, width = width, height = height, wait = wait)
+      app_set_window_size(
+        self,
+        private,
+        width = width,
+        height = height,
+        wait = wait
+      )
     },
 
     #' @description
@@ -1722,7 +1809,6 @@ AppDriver <- R6Class( # nolint
     log_message = function(message) {
       app_log_message(self, private, message = message)
     },
-
 
     #' @description Stop the Shiny application driver
     #'
