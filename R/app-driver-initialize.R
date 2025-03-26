@@ -202,7 +202,16 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
   #
   # However, we can not use it conditionally.
   # So the only course of action is to skip the test.
-  testthat::skip_on_cran()
+
+  # If sys envvar `SHINYTEST2_APP_DRIVER_TEST_ON_CRAN` is "true" or "1",
+  # then do not skip testing on CRAN
+  env_test_on_cran <- Sys.getenv("SHINYTEST2_APP_DRIVER_TEST_ON_CRAN", "false")
+  should_test_on_cran <- tolower(env_test_on_cran) %in% c("true", "1")
+  should_skip_on_cran <- !should_test_on_cran
+  if (should_skip_on_cran) {
+    # 99% Common case: Skip test on CRAN where chromote is used
+    testthat::skip_on_cran()
+  }
 
   if (testthat::is_testing()) {
     # Make sure chromote can be started. If not, skip test
