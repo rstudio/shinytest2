@@ -2,7 +2,7 @@
 
 ## Breaking changes
 
-* From a request from CRAN, creating an `AppDriver` (which uses `{chromote}`) during testing will cause the test to skip during CRAN testing. `{shinytest2}` performs this by internally calling `testthat::skip_on_cran()`.
+* `{shinytest2}` will skip and test on CRAN where an `AppDriver` is initialized. From a request from CRAN, using [`{chromote}` during CRAN package testing](https://rstudio.github.io/chromote/articles/example-cran-tests.html) should be avoided as it can create failing tests over time due to application changes within the testing machine, not changes in package code. Since `AppDriver` directly depends on `{chromote}` to test Shiny applications, creating an `AppDriver` should always skip the current test during CRAN package testing. This decision was made to achieve consistent testing behavior over time (rather than silently skipping tests that are expected to run due to a Chrome update). To escape this behavior, you can set the system environment variable `SHINYTEST2_APP_DRIVER_TEST_ON_CRAN=1`. Following `{chromote}`'s recommendation, you should test your R package [in a CI environment, ideally on a weekly or monthly schedule](https://rstudio.github.io/chromote/articles/example-cran-tests.html) to test your Shiny app with the latest R package versions. (#407)
 
 ## Bug / Improvements
 
