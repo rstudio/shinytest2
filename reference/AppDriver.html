@@ -155,14 +155,15 @@ document.</p>
 <p>The two main expectation methods: <code>$expect_values()</code> and <code>$expect_screenshot()</code>
 eventually wrap <code><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">testthat::expect_snapshot_file()</a></code>.</p>
 <p>Their underlying logic is similar to:</p>
-<p></p><div class="sourceCode r"><pre><code><span><span class="co">## Expect values</span></span>
+<p></p><div class="sourceCode r"><pre><code><span><span class="fu">skip_on_cran</span><span class="op">(</span><span class="op">)</span> <span class="co"># AppDriver</span></span>
+<span></span>
+<span><span class="co">## Expect values</span></span>
 <span><span class="va">tmpfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".json"</span><span class="op">)</span></span>
 <span><span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/read_json.html" class="external-link">write_json</a></span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="fu">get_values</span><span class="op">(</span><span class="op">)</span>, <span class="va">tmpfile</span><span class="op">)</span></span>
 <span><span class="fu">expect_snapshot_file</span><span class="op">(</span></span>
 <span>  <span class="va">tmpfile</span>,</span>
 <span>  variant <span class="op">=</span> <span class="va">app</span><span class="op">$</span><span class="fu">get_variant</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  compare <span class="op">=</span> <span class="fu">testthat</span><span class="fu">::</span><span class="va"><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">compare_file_text</a></span>,</span>
-<span>  cran <span class="op">=</span> <span class="va">cran</span></span>
+<span>  compare <span class="op">=</span> <span class="fu">testthat</span><span class="fu">::</span><span class="va"><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">compare_file_text</a></span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span></span>
@@ -172,8 +173,7 @@ eventually wrap <code><a href="https://testthat.r-lib.org/reference/expect_snaps
 <span><span class="fu">expect_snapshot_file</span><span class="op">(</span></span>
 <span>  <span class="va">tmpfile</span>,</span>
 <span>  variant <span class="op">=</span> <span class="va">app</span><span class="op">$</span><span class="fu">get_variant</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  compare <span class="op">=</span> <span class="fu">testthat</span><span class="fu">::</span><span class="va"><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">compare_file_binary</a></span>,</span>
-<span>  cran <span class="op">=</span> <span class="va">cran</span></span>
+<span>  compare <span class="op">=</span> <span class="fu">testthat</span><span class="fu">::</span><span class="va"><a href="https://testthat.r-lib.org/reference/expect_snapshot_file.html" class="external-link">compare_file_binary</a></span></span>
 <span><span class="op">)</span></span></code></pre><p></p></div>
 <p>To update the snapshot values, you will need to run a variation of
 <code><a href="https://testthat.r-lib.org/reference/snapshot_accept.html" class="external-link">testthat::snapshot_review()</a></code>.</p>
@@ -577,7 +577,7 @@ manually inspected and have their components tested individually.</p>
 <span>  export <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  screenshot_args <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  cran <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  cran <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -617,9 +617,8 @@ will be overwritten to <code>.json</code>. By default, the <code>name</code> sup
 
 
 <dt><code>cran</code></dt>
-<dd><p>Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.</p></dd>
+<dd><p>Deprecated. With <code>AppDriver</code> never testing on CRAN,
+this parameter no longer has any effect.</p></dd>
 
 
 </dl><p></p></div>
@@ -843,7 +842,7 @@ file will be downloaded and saved as a snapshot file.</p><div class="section">
 <span>  <span class="va">...</span>,</span>
 <span>  compare <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  cran <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  cran <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -871,9 +870,8 @@ generates an ascending sequence of names: <code>001.download</code>,
 
 
 <dt><code>cran</code></dt>
-<dd><p>Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.</p></dd>
+<dd><p>Deprecated. With <code>AppDriver</code> never testing on CRAN,
+this parameter no longer has any effect.</p></dd>
 
 
 </dl><p></p></div>
@@ -956,7 +954,7 @@ package authors room to alter their HTML structures. The resulting array
 of <code>TAG.textContent</code> values found will be stored in a snapshot file.</p>
 <p>Please see <a href="https://rstudio.github.io/shinytest2/articles/robust.html">Robust testing</a> for more details.</p><div class="section">
 <h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">expect_text</span><span class="op">(</span><span class="va">selector</span>, <span class="va">...</span>, cran <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">expect_text</span><span class="op">(</span><span class="va">selector</span>, <span class="va">...</span>, cran <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -970,9 +968,8 @@ of <code>TAG.textContent</code> values found will be stored in a snapshot file.<
 
 
 <dt><code>cran</code></dt>
-<dd><p>Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.</p></dd>
+<dd><p>Deprecated. With <code>AppDriver</code> never testing on CRAN,
+this parameter no longer has any effect.</p></dd>
 
 
 </dl><p></p></div>
@@ -1041,7 +1038,7 @@ package authors room to alter their HTML structures. The resulting array
 of <code>TAG.textContent</code> values found will be stored in a snapshot file.</p>
 <p>Please see <a href="https://rstudio.github.io/shinytest2/articles/robust.html">Robust testing</a> for more details.</p><div class="section">
 <h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">expect_html</span><span class="op">(</span><span class="va">selector</span>, <span class="va">...</span>, outer_html <span class="op">=</span> <span class="cn">TRUE</span>, cran <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">expect_html</span><span class="op">(</span><span class="va">selector</span>, <span class="va">...</span>, outer_html <span class="op">=</span> <span class="cn">TRUE</span>, cran <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -1060,9 +1057,8 @@ If <code>FALSE</code>, the full DOM structure of the child elements will be retu
 
 
 <dt><code>cran</code></dt>
-<dd><p>Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.</p></dd>
+<dd><p>Deprecated. With <code>AppDriver</code> never testing on CRAN,
+this parameter no longer has any effect.</p></dd>
 
 
 </dl><p></p></div>
@@ -1143,7 +1139,7 @@ For example, <code>$expect_text()</code> and <code>$expect_html()</code> are thi
 <span>  file <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  timeout <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  pre_snapshot <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  cran <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  cran <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -1172,9 +1168,8 @@ Defaults to the resolved <code>timeout</code> value during the <code>AppDriver</
 
 
 <dt><code>cran</code></dt>
-<dd><p>Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.</p></dd>
+<dd><p>Deprecated. With <code>AppDriver</code> never testing on CRAN,
+this parameter no longer has any effect.</p></dd>
 
 
 </dl><p></p></div>
@@ -1381,7 +1376,7 @@ recommended to use other expectation methods.</p><div class="section">
 <span>  compare <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  cran <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  cran <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -1488,9 +1483,8 @@ will overwritten to <code>.png</code>. By default, the <code>name</code> supplie
 
 
 <dt><code>cran</code></dt>
-<dd><p>Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.</p></dd>
+<dd><p>Deprecated. With <code>AppDriver</code> never testing on CRAN,
+this parameter no longer has any effect.</p></dd>
 
 
 </dl><p></p></div>

@@ -86,6 +86,20 @@ to have an <code>app.R</code> in a subdirectory of <code>inst/</code>.
 The second way is to have a function which returns a Shiny app
 object.</p>
 <!-- See https://github.com/rstudio/shinytestPackageExample for an example package. This document closely mirrors the content of that package: it explains how to set up tests for both types of applications, and then has a section that describes some setup tasks that are common to both types. -->
+<blockquote>
+<p>🚧 Using <a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a> in CRAN tests</p>
+<p><a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a> utilizes the Google Chrome application
+installed on testing machines, which can change over time. CRAN has
+requested that no package utilize <a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a>’s
+functionality when testing on CRAN. This is because the package may not
+work as expected if the version of Google Chrome changes.</p>
+<p>To address this, <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> will call
+<code><a href="https://testthat.r-lib.org/reference/skip.html" class="external-link">testthat::skip_on_cran()</a></code> when creating an
+<code>AppDriver</code> during CRAN testing.</p>
+<p>To learn more about CRAN’s reasoning and how to test your package
+using CI, please visit <a href="https://rstudio.github.io/chromote/" class="external-link">chromote</a>’s <a href="https://rstudio.github.io/chromote/articles/example-cran-tests.html" class="external-link">Using
+<code>{chromote}</code> in CRAN tests</a>.</p>
+</blockquote>
 <div class="section level2">
 <h2 id="applications-in-inst">Applications in <code>inst/</code><a class="anchor" aria-label="anchor" href="#applications-in-inst"></a>
 </h2>
@@ -169,7 +183,11 @@ there’s a function <code>hello_world_app()</code>, which lives in
 <span>    <span class="op">)</span>,</span>
 <span>    server <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span><span class="op">)</span> <span class="op">{</span></span>
 <span>      <span class="va">output</span><span class="op">$</span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html" class="external-link">renderPlot</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cars</span>, <span class="va">input</span><span class="op">$</span><span class="va">n</span><span class="op">)</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">cars</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">cars</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>          <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cars</span>, <span class="va">input</span><span class="op">$</span><span class="va">n</span><span class="op">)</span>,</span>
+<span>          xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">cars</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>          ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">cars</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span>        <span class="op">)</span></span>
 <span>      <span class="op">}</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span>  <span class="op">)</span></span>
