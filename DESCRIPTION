@@ -35,7 +35,8 @@ Imports:
     rlang (>= 1.0.0),
     rmarkdown,
     shiny,
-    withr
+    withr,
+    lifecycle
 Suggests:
     deSolve,
     diffobj,
