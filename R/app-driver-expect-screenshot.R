@@ -132,26 +132,26 @@ app_expect_screenshot <- function(
   )
 }
 
-app_expect_screenshot_and_variant <- function(
-  # nolint
-  self,
-  private,
-  ...
-) {
-  if (app_is_missing_variant(self, private)) {
-    app_abort(
-      self,
-      private,
-      c(
-        "This `AppDriver` object can not call `$expect_screenshot()` without a `variant` initialized. Please supply a `variant` value when creating your `AppDriver` object, like `AppDriver(variant = <value>)`",
-        i = "`variant = platform_variant()` is the suggested value",
-        i = "`variant = NULL` can work, but screenshots are known to cause conflicts when changing R version or platform."
+app_expect_screenshot_and_variant <- # nolint
+  function(
+    self,
+    private,
+    ...
+  ) {
+    if (app_is_missing_variant(self, private)) {
+      app_abort(
+        self,
+        private,
+        c(
+          "This `AppDriver` object can not call `$expect_screenshot()` without a `variant` initialized. Please supply a `variant` value when creating your `AppDriver` object, like `AppDriver(variant = <value>)`",
+          i = "`variant = platform_variant()` is the suggested value",
+          i = "`variant = NULL` can work, but screenshots are known to cause conflicts when changing R version or platform."
+        )
       )
-    )
+    }
+    # Expect screenshot
+    app_expect_screenshot(self, private, ...)
   }
-  # Expect screenshot
-  app_expect_screenshot(self, private, ...)
-}
 
 
 handle_custom_selector <- function(self, private, screenshot_args) {

@@ -202,8 +202,9 @@ check_cran_deprecated <- function(
 #' @importFrom R6 R6Class
 #' @seealso [`platform_variant()`], [`use_shinytest2_test()`]
 #' @export
+# nolint start
 AppDriver <- R6Class(
-  # nolint
+  # nolint end
   "AppDriver",
   cloneable = FALSE,
   private = list(
