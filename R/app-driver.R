@@ -298,10 +298,10 @@ AppDriver <- R6Class(
     #' @param check_names Check if widget names are unique once the application
     #'   initially loads? If duplicate names are found on initialization, a
     #'   warning will be displayed.
-    #' @param view Opens the [`ChromoteSession`] in an interactive browser tab
+    #' @param view Opens the [`chromote::ChromoteSession`] in an interactive browser tab
     #'   before attempting to navigate to the Shiny app.
     #' @param height,width Window size to use when opening the
-    #'   [`ChromoteSession`]. Both `height` and `width` values must be non-null
+    #'   [`chromote::ChromoteSession`]. Both `height` and `width` values must be non-null
     #'   values to be used.
     #' @param clean_logs Whether to remove the `stdout` and `stderr` Shiny app
     #'   logs when the `AppDriver` object is garbage collected.
@@ -373,7 +373,7 @@ AppDriver <- R6Class(
     #' @description
     #' View the Shiny application
     #'
-    #' Calls `$view()` on the [`ChromoteSession`] object to _view_ your Shiny
+    #' Calls `$view()` on the [`chromote::ChromoteSession`] object to _view_ your Shiny
     #' application in a Chrome browser.
     #'
     #' This method is very helpful for debugging while writing your tests.
@@ -1625,8 +1625,8 @@ AppDriver <- R6Class(
     #' @description
     #' Get Chromote Session
     #'
-    #' Get the [`ChromoteSession`] object from the \pkg{chromote} package.
-    #' @return [`ChromoteSession`] R6 object
+    #' Get the [`chromote::ChromoteSession`] object from the \pkg{chromote} package.
+    #' @return [`chromote::ChromoteSession`] R6 object
     #' @examples
     #' \dontrun{
     #' app_path <- system.file("examples/01_hello", package = "shiny")

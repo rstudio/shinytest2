@@ -1135,11 +1135,11 @@ screenshots by default, set to \code{FALSE}.}
 initially loads? If duplicate names are found on initialization, a
 warning will be displayed.}
 
-\item{\code{view}}{Opens the \code{\link{ChromoteSession}} in an interactive browser tab
+\item{\code{view}}{Opens the \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}} in an interactive browser tab
 before attempting to navigate to the Shiny app.}
 
 \item{\code{height, width}}{Window size to use when opening the
-\code{\link{ChromoteSession}}. Both \code{height} and \code{width} values must be non-null
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}. Both \code{height} and \code{width} values must be non-null
 values to be used.}
 
 \item{\code{clean_logs}}{Whether to remove the \code{stdout} and \code{stderr} Shiny app
@@ -1186,7 +1186,7 @@ app$expect_values()
 \subsection{Method \code{view()}}{
 View the Shiny application
 
-Calls \verb{$view()} on the \code{\link{ChromoteSession}} object to \emph{view} your Shiny
+Calls \verb{$view()} on the \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}} object to \emph{view} your Shiny
 application in a Chrome browser.
 
 This method is very helpful for debugging while writing your tests.
@@ -2889,13 +2889,13 @@ app$get_window_size()
 \subsection{Method \code{get_chromote_session()}}{
 Get Chromote Session
 
-Get the \code{\link{ChromoteSession}} object from the \pkg{chromote} package.
+Get the \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}} object from the \pkg{chromote} package.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_chromote_session()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{\link{ChromoteSession}} R6 object
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}} R6 object
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
