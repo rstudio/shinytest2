@@ -1,3 +1,5 @@
+warning("TODO-barret; Record test should save the recording into the package if within a package.")
+
 #' Launch test event recorder for a Shiny app
 #'
 #' Once a recording is completed, it will create or append a new
