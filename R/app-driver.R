@@ -755,7 +755,7 @@ AppDriver <- R6Class(
       ...,
       compare = NULL,
       name = NULL,
-      transform = NULL
+      transform = NULL,
       cran = deprecated()
     ) {
       check_cran_deprecated(cran)
