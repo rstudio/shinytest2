@@ -131,8 +131,8 @@ NULL
 #' @param timeout_ Amount of time to wait before giving up (milliseconds).
 #'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
 #' @param transform Optionally, a function to scrub sensitive or stochastic text
-#'        from the output. Should take a character vector of lines as input and
-#'        return a modified character vector as output.
+#'   from the output. Should take a character vector of lines as input and
+#'   return a modified character vector as output.
 #' @param cran Should these expectations be verified on CRAN? By default,
 #'        they are not because snapshot tests tend to be fragile
 #'        because they often rely on minor details of dependencies.
