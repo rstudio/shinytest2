@@ -1,7 +1,8 @@
-app__expect_snapshot_value <- function( # nolint
-  self, private,
+app__expect_snapshot_value <- function(
+  # nolint
+  self,
+  private,
   x,
-  cran = FALSE,
   ...
 ) {
   ckm8_assert_app_driver(self, private)
@@ -9,17 +10,17 @@ app__expect_snapshot_value <- function( # nolint
 
   testthat::expect_snapshot_value(
     x,
-    cran = cran,
+    cran = FALSE,
     variant = self$get_variant(),
     ...
   )
 }
 app__expect_snapshot_file <- function(
-  self, private,
+  self,
+  private,
   file,
   variant,
   name = fs::path_file(file),
-  cran = FALSE,
   transform = NULL,
   compare = testthat::compare_file_binary
 ) {
@@ -36,11 +37,12 @@ app__expect_snapshot_file <- function(
   # Make it path safe so others are not created or accessed
   name_safe <- fs::path_sanitize(name, "_")
 
-  withCallingHandlers( # Display text diff when possible
+  withCallingHandlers(
+    # Display text diff when possible
     testthat::expect_snapshot_file(
       file,
       name = name_safe,
-      cran = cran,
+      cran = FALSE,
       compare = compare,
       transform = transform,
       variant = self$get_variant()
@@ -49,10 +51,10 @@ app__expect_snapshot_file <- function(
       if (
         # Only display text if allowed to be verbose
         is_false(getOption("shinytest2.expectation_failure.quiet", FALSE)) &&
-        # Require `diffobj` to be installed
-        rlang::is_installed("diffobj") &&
-        # Only display text if compare fn is for text diffs
-        identical(compare, testthat::compare_file_text)
+          # Require `diffobj` to be installed
+          rlang::is_installed("diffobj") &&
+          # Only display text if compare fn is for text diffs
+          identical(compare, testthat::compare_file_text)
       ) {
         # In vdiffr, check for snapshot version
 
@@ -61,11 +63,17 @@ app__expect_snapshot_file <- function(
         snapshotter <- get_snapshotter()
         if (!is.null(snapshotter)) {
           path_old <- snapshot_path(snapshotter, name)
-          path_new <- fs::path_ext_set(path_old, paste0(".new.", fs::path_ext(path_old)))
+          path_new <- fs::path_ext_set(
+            path_old,
+            paste0(".new.", fs::path_ext(path_old))
+          )
           if (all(file.exists(path_old, path_new))) {
             diff <- diff_lines(path_old, path_new)
             msg <- paste0(
-              "Diff in snapshot file `", snapshotter$file, name, "`\n",
+              "Diff in snapshot file `",
+              snapshotter$file,
+              name,
+              "`\n",
               paste0(diff, collapse = "\n")
             )
             # Defer the expectation to be thrown after re-throwing the original condition

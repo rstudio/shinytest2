@@ -25,7 +25,7 @@ Imports:
     R6 (>= 2.4.0),
     callr,
     checkmate (>= 2.0.0),
-    chromote (>= 0.1.2),
+    chromote (>= 0.5.0),
     cli,
     fs,
     globals (>= 0.14.0),
@@ -35,7 +35,8 @@ Imports:
     rlang (>= 1.0.0),
     rmarkdown,
     shiny,
-    withr
+    withr,
+    lifecycle
 Suggests:
     deSolve,
     diffobj,
