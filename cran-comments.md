@@ -1,8 +1,16 @@
-This is a maintenance release to address issues found in CRAN checks.
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
 
 ## revdepcheck results
 
-We checked 29 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+We checked 58 reverse dependencies (46 from CRAN + 12 from Bioconductor), comparing R CMD check results across CRAN and dev versions of this package.
 
  * We saw 0 new problems
- * We failed to check 0 packages
+ * We failed to check 1 packages
+
+Issues with CRAN packages are summarised below.
+
+### Failed to check
+
+* shiny.destroy (NA)
