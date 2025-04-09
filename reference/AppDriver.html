@@ -577,6 +577,7 @@ manually inspected and have their components tested individually.</p>
 <span>  export <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  screenshot_args <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  transform <span class="op">=</span> <span class="va">transform</span>,</span>
 <span>  cran <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -614,6 +615,12 @@ and <code>delay</code> will default to <code>"html"</code> and <code>0</code> re
 <dd><p>The file name to be used for the snapshot. The file extension
 will be overwritten to <code>.json</code>. By default, the <code>name</code> supplied to
 <code>app</code> on initialization with a counter will be used (e.g. <code>"NAME-001.json"</code>).</p></dd>
+
+
+<dt><code>transform</code></dt>
+<dd><p>Optionally, a function to scrub sensitive or stochastic text
+from the output. Should take a character vector of lines as input and
+return a modified character vector as output.</p></dd>
 
 
 <dt><code>cran</code></dt>
@@ -842,6 +849,7 @@ file will be downloaded and saved as a snapshot file.</p><div class="section">
 <span>  <span class="va">...</span>,</span>
 <span>  compare <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  transform <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cran <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -867,6 +875,12 @@ has extension <code>.r</code>, <code>.R</code>, <code>.Rmd</code>, <code>.md</co
 <dd><p>File name to save file to (including file name extension). The default, <code>NULL</code>,
 generates an ascending sequence of names: <code>001.download</code>,
 <code>002.download</code>, etc.</p></dd>
+
+
+<dt><code>transform</code></dt>
+<dd><p>Optionally, a function to scrub sensitive or stochastic text
+from the output. Should take a character vector of lines as input and
+return a modified character vector as output.</p></dd>
 
 
 <dt><code>cran</code></dt>

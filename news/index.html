@@ -56,6 +56,7 @@
 <li><p>Improved the error message when an app takes too long to start up (<a href="https://github.com/LouisLeNezet" class="external-link">@LouisLeNezet</a>, <a href="https://github.com/rstudio/shinytest2/issues/394" class="external-link">#394</a>).</p></li>
 <li><p>The <code>threshold</code> and <code>kernel_size</code> default values of the <code>AppDriver$expect_screenshot()</code> method are now configurable via two new global options: <code>shinytest2.compare_screenshot.threshold</code> and <code>shinytest2.compare_screenshot.kernel_size</code> (<a href="https://github.com/rstudio/shinytest2/issues/401" class="external-link">#401</a>)</p></li>
 <li><p><a href="https://rstudio.github.io/shinytest2/">shinytest2</a> now imports <a href="https://cli.r-lib.org" class="external-link">cli</a> and no longer imports <a href="https://r-lib.github.io/crayon/" class="external-link">crayon</a> (<a href="https://github.com/olivroy" class="external-link">@olivroy</a>, <a href="https://github.com/rstudio/shinytest2/issues/399" class="external-link">#399</a>).</p></li>
+<li><p>Added <a href="https://github.com/r-lib/testthat/pull/1530" class="external-link"><code>{testthat}</code>’s snapshot file <code>transform=</code> parameter support</a> to <code>AppDriver$expect_download()</code> and <code>AppDriver$expect_values()</code>. This allows for text transformations of the snapshot files before they are compared. (<a href="https://github.com/rstudio/shinytest2/issues/403" class="external-link">#403</a>)</p></li>
 </ul></div>
 </div>
     <div class="section level2">
