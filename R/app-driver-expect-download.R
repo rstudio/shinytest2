@@ -90,7 +90,8 @@ app_expect_download <- function(
   output,
   ...,
   compare = NULL,
-  name = NULL
+  name = NULL,
+  transform = NULL
 ) {
   ckm8_assert_app_driver(self, private)
   rlang::check_dots_empty()
@@ -111,6 +112,7 @@ app_expect_download <- function(
     self,
     private,
     snapshot_info$download_path,
+    transform = transform,
     compare = compare
   )
 

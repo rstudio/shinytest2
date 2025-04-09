@@ -147,8 +147,11 @@ check_cran_deprecated <- function(
 #'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
 #' @param timeout_ Amount of time to wait before giving up (milliseconds).
 #'   Defaults to the resolved `timeout` value during the `AppDriver` initialization.
+#' @param transform Optionally, a function to scrub sensitive or stochastic text
+#'   from the output. Should take a character vector of lines as input and
+#'   return a modified character vector as output.
 #' @param cran Deprecated. With `AppDriver` never testing on CRAN,
-#'             this parameter no longer has any effect.
+#'   this parameter no longer has any effect.
 #' @param wait_ Wait until all reactive updates have completed?
 #' @param hash_images If `TRUE`, images will be hashed before being returned.
 #'   Otherwise, all images will return their full data64 encoded value.
@@ -571,6 +574,7 @@ AppDriver <- R6Class(
       export = missing_arg(),
       screenshot_args = missing_arg(),
       name = NULL,
+      transform = transform,
       cran = deprecated()
     ) {
       check_cran_deprecated(cran)
@@ -584,6 +588,7 @@ AppDriver <- R6Class(
         export = export,
         screenshot_args = screenshot_args,
         name = name,
+        transform = transform
       )
     },
     #' @description
@@ -750,6 +755,7 @@ AppDriver <- R6Class(
       ...,
       compare = NULL,
       name = NULL,
+      transform = NULL,
       cran = deprecated()
     ) {
       check_cran_deprecated(cran)
@@ -760,6 +766,7 @@ AppDriver <- R6Class(
         output = output,
         ...,
         compare = compare,
+        transform = transform,
         name = name
       )
     },

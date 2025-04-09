@@ -176,7 +176,8 @@ app_expect_values <- function(
   output = missing_arg(),
   export = missing_arg(),
   name = NULL,
-  screenshot_args = missing_arg()
+  screenshot_args = missing_arg(),
+  transform = NULL
 ) {
   ckm8_assert_app_driver(self, private)
   rlang::check_dots_empty()
@@ -271,6 +272,7 @@ app_expect_values <- function(
     self,
     private,
     json_path,
+    transform = transform,
     compare = testthat::compare_file_text
   )
 
