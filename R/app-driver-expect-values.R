@@ -272,7 +272,7 @@ app_expect_values <- function(
     self,
     private,
     json_path,
-    transform = transform
+    transform = transform,
     compare = testthat::compare_file_text
   )
 
