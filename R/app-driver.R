@@ -59,7 +59,7 @@ check_cran_deprecated <- function(
 #'
 #' Reactive values from within your Shiny application can be exported using the
 #' method:
-#' [`shiny::exportTestValues()`](https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html).
+#' [`shiny::exportTestValues()`](https://shiny.posit.co/r/reference/shiny/latest/exporttestvalues.html).
 #' This underutilized method exposes internal values of your app
 #' without needing to create a corresponding input value or output value.
 #'
