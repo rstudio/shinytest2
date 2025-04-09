@@ -2,7 +2,7 @@ library(shinytest2)
 
 test_that("images are captured via expect_values", {
   app <- AppDriver$new(
-    variant = platform_variant()
+    variant = platform_variant(r_version = FALSE)
     # name = "values-image"
   )
 
@@ -10,9 +10,11 @@ test_that("images are captured via expect_values", {
   app$expect_values()
 
   # Add something that will always produce a new image
-  app$run_js('
+  app$run_js(
+    '
     $("body").append("<div>" + new Date() + "</div>")
-  ')
+  '
+  )
 
   # Since it is zoomed in on the image, the text will be NOT be displayed
   app$expect_values(output = "img")
@@ -20,7 +22,6 @@ test_that("images are captured via expect_values", {
   # # Uncomment to test always new screenshot via `$expect_values()`
   # app$expect_values()
 })
-
 
 # TODO-future; Perform these tests via mock to assert proper screenshot args are captured.
 test_that("Values screenshot args are used", {
@@ -45,8 +46,6 @@ test_that("User screenshot args are used instead of auto defined screenshot args
   app$expect_values(screenshot_args = list(selector = "#green"))
 })
 
-
-
 # TODO-future; Perform these tests via mock to assert proper screenshot args are captured.
 test_that("No screenshot is taken", {
   app <- AppDriver$new(
@@ -66,7 +65,6 @@ test_that("No screenshot is taken", {
   # No picture
   app$expect_values(screenshot_args = FALSE)
 })
-
 
 test_that("screenshot can be expected", {
   app <- AppDriver$new(

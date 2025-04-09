@@ -1,4 +1,3 @@
-
 img_folder <- system.file("example/imgs", package = "shinytest2")
 bookmark_new <- fs::path(img_folder, "bookmark-new.png")
 bookmark_old <- fs::path(img_folder, "bookmark-old.png")
@@ -46,7 +45,6 @@ test_that("screenshot options are used", {
         )
     }
   )
-  print(list(small_max_diff, big_max_diff))
   expect_lt(small_max_diff, big_max_diff)
 })
 
@@ -82,7 +80,6 @@ test_that("convolution can be performed", {
     )
   )
 
-
   # Slightly different images
   expect_false(
     compare_screenshot_threshold(
@@ -101,9 +98,11 @@ test_that("convolution can be performed", {
         threshold = 28.2
       )
   })
-  expect_true(ans, label = "compare_screenshot_threshold(slider_old, slider_new, threshold = 28.2)")
+  expect_true(
+    ans,
+    label = "compare_screenshot_threshold(slider_old, slider_new, threshold = 28.2)"
+  )
 })
-
 
 test_that("kernel size makes a difference", {
   skip_if_not_installed("png")
@@ -127,7 +126,6 @@ test_that("kernel size makes a difference", {
   expect_lt(big_max_diff, 50)
 })
 
-
 test_that("Errors in screenshot_max_difference do not cause errors in compare_screenshot_threshold", {
   expect_silent({
     comp_val <-
@@ -138,5 +136,4 @@ test_that("Errors in screenshot_max_difference do not cause errors in compare_sc
       )
   })
   expect_false(comp_val)
-
 })

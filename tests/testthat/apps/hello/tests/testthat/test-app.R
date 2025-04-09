@@ -8,10 +8,9 @@
 #   app$snapshot(list(output = "greeting"))
 # })
 
-
 # shinytest2 code using `app$**()`:
 test_that("basic website example works using shinytest", {
-  app <- AppDriver$new(variant = platform_variant())
+  app <- AppDriver$new(variant = platform_variant(r_version = FALSE))
 
   app$set_inputs(name = "Hadley")
   app$set_inputs(greet = "click")
@@ -30,7 +29,10 @@ test_that("basic website example works using shinytest", {
 
 # shinytest2 code using `app$**()`:
 test_that("basic website example works using testthat", {
-  app <- AppDriver$new(variant = platform_variant(), name = "manual")
+  app <- AppDriver$new(
+    variant = platform_variant(r_version = FALSE),
+    name = "manual"
+  )
 
   app$set_inputs(name = "Hadley")
   app$set_inputs(greet = "click")
@@ -38,7 +40,11 @@ test_that("basic website example works using testthat", {
   # Take picture and record inputs / outputs
   tmpfile <- tempfile()
   app$get_screenshot(tmpfile)
-  expect_snapshot_file(tmpfile, name = "manual-screenshot.png", variant = app$get_variant())
+  expect_snapshot_file(
+    tmpfile,
+    name = "manual-screenshot.png",
+    variant = app$get_variant()
+  )
 
   values <- app$get_values()
   expect_equal(values$output$greeting, "Hello Hadley!")
