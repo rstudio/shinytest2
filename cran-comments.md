@@ -40,7 +40,12 @@ The release also includes routine features and bug fixes.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 1 note
+
+─  checking CRAN incoming feasibility ... [4s/20s] NOTE (20.2s)
+   Maintainer: ‘Barret Schloerke <barret@posit.co>’
+
+   Size of tarball: 5069497 bytes
 
 ## revdepcheck results
 
