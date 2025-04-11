@@ -574,7 +574,7 @@ AppDriver <- R6Class(
       export = missing_arg(),
       screenshot_args = missing_arg(),
       name = NULL,
-      transform = transform,
+      transform = NULL,
       cran = deprecated()
     ) {
       check_cran_deprecated(cran)
