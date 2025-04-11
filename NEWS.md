@@ -1,5 +1,10 @@
 # shinytest2 (development version)
 
+## Bug
+
+* Fixed a bug where `AppDriver$expect_values(transform=)` default value caused error to be thrown. (#413)
+
+
 # shinytest2 0.4.0
 
 ## Breaking changes
