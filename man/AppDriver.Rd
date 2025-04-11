@@ -1379,7 +1379,7 @@ Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robu
   export = missing_arg(),
   screenshot_args = missing_arg(),
   name = NULL,
-  transform = transform,
+  transform = NULL,
   cran = deprecated()
 )}\if{html}{\out{</div>}}
 }
