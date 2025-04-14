@@ -34,6 +34,8 @@
     "prettyCheckbox": false,
     "radio": "2",
     "search": "",
+    "search_reset": 0,
+    "search_search": 0,
     "search_text": "",
     "select": "2",
     "slider1": 65,
