@@ -258,8 +258,8 @@ app_expect_values <- function(
       # Muffle any expectation (good or bad) thrown by testthat
       expectation = function(ex) {
         # Continue, skipping the signaling of the condition
-        # https://github.com/r-lib/testthat/blob/38c087d3bb5ec3c098c181f1e58a55c687268fba/R/expectation.R#L32-L34
-        invokeRestart("continue_test")
+        # https://github.com/r-lib/testthat/pull/2271/files#diff-eeb22563925ae9725656cfbfc44bd5001428734041747d5d90d364464e8e651cR107
+        invokeRestart("muffle_expectation")
       }
     )
   }
