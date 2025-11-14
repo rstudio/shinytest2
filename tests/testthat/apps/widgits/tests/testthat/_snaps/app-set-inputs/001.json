@@ -18,6 +18,8 @@
     "prettyCheckbox": false,
     "radio": "1",
     "search": "",
+    "search_reset": 0,
+    "search_search": 0,
     "search_text": "",
     "select": "1",
     "slider1": 50,
