@@ -90,10 +90,16 @@ app_expect_download <- function(
   output,
   ...,
   compare = NULL,
-  name = NULL
+  name = NULL,
+  transform = NULL
 ) {
   ckm8_assert_app_driver(self, private)
   rlang::check_dots_empty()
+
+  ## Announce snapshot file
+  # Cannot announce before download because we need the filename
+  # from the Content-Disposition header... which is after we download the file
+  # Therefore, we cannot announce the testthat file
 
   snapshot_info <- app_download(
     self,
@@ -111,6 +117,7 @@ app_expect_download <- function(
     self,
     private,
     snapshot_info$download_path,
+    transform = transform,
     compare = compare
   )
 

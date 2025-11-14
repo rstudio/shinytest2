@@ -47,7 +47,7 @@ retrieved after any initialization error has been thrown.
 
 Reactive values from within your Shiny application can be exported using the
 method:
-\href{https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html}{\code{shiny::exportTestValues()}}.
+\href{https://shiny.posit.co/r/reference/shiny/latest/exporttestvalues.html}{\code{shiny::exportTestValues()}}.
 This underutilized method exposes internal values of your app
 without needing to create a corresponding input value or output value.
 
@@ -1379,6 +1379,7 @@ Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robu
   export = missing_arg(),
   screenshot_args = missing_arg(),
   name = NULL,
+  transform = NULL,
   cran = deprecated()
 )}\if{html}{\out{</div>}}
 }
@@ -1414,6 +1415,10 @@ and \code{delay} will default to \code{"html"} and \code{0} respectively.
 \item{\code{name}}{The file name to be used for the snapshot. The file extension
 will be overwritten to \code{.json}. By default, the \code{name} supplied to
 \code{app} on initialization with a counter will be used (e.g. \code{"NAME-001.json"}).}
+
+\item{\code{transform}}{Optionally, a function to scrub sensitive or stochastic text
+from the output. Should take a character vector of lines as input and
+return a modified character vector as output.}
 
 \item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
 this parameter no longer has any effect.}
@@ -1644,6 +1649,7 @@ file will be downloaded and saved as a snapshot file.
   ...,
   compare = NULL,
   name = NULL,
+  transform = NULL,
   cran = deprecated()
 )}\if{html}{\out{</div>}}
 }
@@ -1663,6 +1669,10 @@ has extension \code{.r}, \code{.R}, \code{.Rmd}, \code{.md}, or \code{.txt}, and
 \item{\code{name}}{File name to save file to (including file name extension). The default, \code{NULL},
 generates an ascending sequence of names: \verb{001.download},
 \verb{002.download}, etc.}
+
+\item{\code{transform}}{Optionally, a function to scrub sensitive or stochastic text
+from the output. Should take a character vector of lines as input and
+return a modified character vector as output.}
 
 \item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
 this parameter no longer has any effect.}

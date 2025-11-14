@@ -234,7 +234,7 @@ If you use a dynamic UI and want to reassert the names are still unique, it is p
 
 -   `input` corresponds to the `input` values provided by the Shiny application.
 -   `output` corresponds to the `output` values provided by the Shiny application.
--   `export` corresponds to value that have been \_export_ed by the Shiny application. These values are exported by [`shiny::exportTestValues()`](https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html) from within your `server` function.
+-   `export` corresponds to value that have been \_export_ed by the Shiny application. These values are exported by [`shiny::exportTestValues()`](https://shiny.posit.co/r/reference/shiny/latest/exporttestvalues.html) from within your `server` function.
 
 When `AppDriver$expect_values()` is called, each `input`, `output`, and `export` value will be serialized to JSON and saved to a snapshot file (e.g. `001.json`) for followup expectations.
 
@@ -279,7 +279,7 @@ When expecting a screenshot, a `AppDriver$new(variant=)` must be supplied. The v
 
 ## Exported values
 
-It cannot be recommended enough to use [`shiny::exportTestValues()`](https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html) to test your Shiny app's reactive values.
+It cannot be recommended enough to use [`shiny::exportTestValues()`](https://shiny.posit.co/r/reference/shiny/latest/exporttestvalues.html) to test your Shiny app's reactive values.
 
 If we make the assumption that package authors create consistent render methods, then we can test the values provided to render methods using `shiny::exportTestValues()`. Let's look at an example of a Shiny app that displays a plot of the first `n` rows of data.
 

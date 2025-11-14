@@ -1,5 +1,16 @@
 # shinytest2 (development version)
 
+* Fixed internal bug where `{testthat}` v3.3.0 changed expectation behavior for screenshot snapshots within `App$expect_values()` (#418).
+
+# shinytest2 0.4.1
+
+## Bug
+
+* Fixed a bug where `AppDriver$expect_values(transform=)` default value caused error to be thrown. (#413)
+
+
+# shinytest2 0.4.0
+
 ## Breaking changes
 
 * `{shinytest2}` will skip and test on CRAN where an `AppDriver` is initialized. From a request from CRAN, using [`{chromote}` during CRAN package testing](https://rstudio.github.io/chromote/articles/example-cran-tests.html) should be avoided as it can create failing tests over time due to application changes within the testing machine, not changes in package code. Since `AppDriver` directly depends on `{chromote}` to test Shiny applications, creating an `AppDriver` should always skip the current test during CRAN package testing. This decision was made to achieve consistent testing behavior over time (rather than silently skipping tests that are expected to run due to a Chrome update). To escape this behavior, you can set the system environment variable `SHINYTEST2_APP_DRIVER_TEST_ON_CRAN=1`. Following `{chromote}`'s recommendation, you should test your R package [in a CI environment, ideally on a weekly or monthly schedule](https://rstudio.github.io/chromote/articles/example-cran-tests.html) to test your Shiny app with the latest R package versions. (#407)
@@ -13,6 +24,9 @@
 * The `threshold` and `kernel_size` default values of the `AppDriver$expect_screenshot()` method are now configurable via two new global options: `shinytest2.compare_screenshot.threshold` and `shinytest2.compare_screenshot.kernel_size` (#401)
 
 * `{shinytest2}` now imports `{cli}` and no longer imports `{crayon}` (@olivroy, #399).
+
+* Added [`{testthat}`'s snapshot file `transform=` parameter support](https://github.com/r-lib/testthat/pull/1530) to `AppDriver$expect_download()` and `AppDriver$expect_values()`. This allows for text transformations of the snapshot files before they are compared. (#403)
+
 
 # shinytest2 0.3.2
 

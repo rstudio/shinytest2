@@ -176,7 +176,8 @@ app_expect_values <- function(
   output = missing_arg(),
   export = missing_arg(),
   name = NULL,
-  screenshot_args = missing_arg()
+  screenshot_args = missing_arg(),
+  transform = NULL
 ) {
   ckm8_assert_app_driver(self, private)
   rlang::check_dots_empty()
@@ -192,6 +193,16 @@ app_expect_values <- function(
   )
 
   json_path <- app_next_temp_snapshot_path(self, private, name, "json")
+  # `NAME.json` -> `NAME_.png`; `NAME_.new.png`
+  png_path <-
+    fs::path_ext_set(
+      paste0(fs::path_ext_remove(json_path), "_"),
+      "png"
+    )
+
+  # Announce snapshot file before touching before any other expressions can fail
+  testthat::announce_snapshot_file(json_path)
+  testthat::announce_snapshot_file(png_path)
 
   url <- app_get_shiny_test_url(
     self,
@@ -237,13 +248,6 @@ app_expect_values <- function(
     withCallingHandlers(
       # swallow expectation
       {
-        # nolint
-        # `NAME.json` -> `NAME_.png`; `NAME_.new.png`
-        png_path <-
-          fs::path_ext_set(
-            paste0(fs::path_ext_remove(json_path), "_"),
-            "png"
-          )
         # Take screenshot using snapshot expectation.
         # Skip the variant check in `$expect_snapshot()`
         # Leverage testthat snapshot logic, but muffle any expectation output
@@ -257,8 +261,8 @@ app_expect_values <- function(
       # Muffle any expectation (good or bad) thrown by testthat
       expectation = function(ex) {
         # Continue, skipping the signaling of the condition
-        # https://github.com/r-lib/testthat/blob/38c087d3bb5ec3c098c181f1e58a55c687268fba/R/expectation.R#L32-L34
-        invokeRestart("continue_test")
+        # https://github.com/r-lib/testthat/pull/2271/files#diff-eeb22563925ae9725656cfbfc44bd5001428734041747d5d90d364464e8e651cR107
+        invokeRestart("muffle_expectation")
       }
     )
   }
@@ -271,6 +275,7 @@ app_expect_values <- function(
     self,
     private,
     json_path,
+    transform = transform,
     compare = testthat::compare_file_text
   )
 
