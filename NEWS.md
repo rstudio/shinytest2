@@ -1,3 +1,7 @@
+# shinytest2 (development version)
+
+* Fixed internal bug where `{testthat}` v3.3.0 changed expectation behavior for screenshot snapshots within `App$expect_values()` (#418).
+
 # shinytest2 0.4.1
 
 ## Bug
