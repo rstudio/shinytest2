@@ -15,7 +15,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 URL: https://rstudio.github.io/shinytest2/, https://github.com/rstudio/shinytest2
 BugReports: https://github.com/rstudio/shinytest2/issues
 VignetteBuilder: knitr
