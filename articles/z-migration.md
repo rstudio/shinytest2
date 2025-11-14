@@ -1,0 +1,668 @@
+# Migrating from shinytest
+
+[shinytest2](https://rstudio.github.io/shinytest2/) is the successor to
+[shinytest](https://github.com/rstudio/shinytest).
+[shinytest](https://github.com/rstudio/shinytest) was implemented using
+[`{webdriver}`](https://rstudio.github.io/webdriver/) which uses
+[PhantomJS](https://phantomjs.org/api/). PhantomJS has been unsupported
+since 2017 and does not support displaying
+[bslib](https://rstudio.github.io/bslib/)’s Bootstrap v5.
+[shinytest2](https://rstudio.github.io/shinytest2/) uses
+[chromote](https://rstudio.github.io/chromote/) to connect to your
+locally installed Chrome or Chromium application, allowing
+[shinytest2](https://rstudio.github.io/shinytest2/) to display
+[bslib](https://rstudio.github.io/bslib/)’s Bootstrap v5.
+
+To auto-migrate your existing
+[shinytest](https://github.com/rstudio/shinytest) tests to
+[shinytest2](https://rstudio.github.io/shinytest2/), call
+`shinytest2::migrate_from_shinytest(PATH_TO_APP)`.
+
+## Code structure
+
+In the sub sections below, `ShinyDriver` is a reference to the
+[`shinytest::ShinyDriver`](https://rdrr.io/pkg/shinytest/man/ShinyDriver.html)
+R6 object. In each code block, the `ShinyDriver` object will be referred
+to as `old`. Similarly, `AppDriver` is a reference to
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.md)
+R6 object.
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.md)
+has replaced [shinytest](https://github.com/rstudio/shinytest)’s
+`ShinyDriver` object and will be referred to as `new` in each code
+block.
+
+### Methods
+
+#### `ShinyDriver$click()`
+
+Signature:
+`ShinyDriver$click(name, iotype = c("auto", "input", "output"))`
+
+The parameters have been separated to be clearer in their intended use
+to `AppDriver$click(input, output, ..., selector)`.
+
+``` r
+## {shinytest}
+old$click("mybutton")
+old$click("clickcount", iotype = "output")
+old$click("my_id", iotype = "auto")
+
+## {shinytest2}
+new$click("mybutton"); new$click(input = "mybutton")
+new$click(output = "clickcount")
+new$click(selector = "#my_id")
+```
+
+#### `ShinyDriver$executeScript()`
+
+Signature: `ShinyDriver$executeScript(script, ...)`
+
+The `...` must now be inserted into the script. You can do this with
+commands like
+[`glue::glue()`](https://glue.tidyverse.org/reference/glue.html) or
+[`paste()`](https://rdrr.io/r/base/paste.html). Extra parameters include
+`file`, which can contain your `script` content, and `timeout`, which
+will throw an error if the `timeout` (in milliseconds) is reached before
+the script returns. If a promise is the last value in the `script` then
+the `resolve`d value will be sent back to the R session.
+
+``` r
+## {shinytest}
+life <- 42
+old$executeScript("1 + 1;")
+old$executeScript("var life = arguments[0]; life;", life)
+
+## {shinytest2}
+life <- 42
+new$get_js("1 + 1;")
+new$get_js(paste0("let life = ", jsonlite::toJSON(life, auto_unbox = TRUE), "; life;"))
+# If a promise is returned, the resolved value will be sent back to the R session
+new$get_js(
+  paset0("
+  let life = ", jsonlite::toJSON(life, auto_unbox = TRUE), ";
+  new Promise((resolve, reject) => resolve(life));
+  ")
+)
+```
+
+#### `ShinyDriver$executeScriptAsync()`
+
+Signature: `ShinyDriver$executeScriptAsync(script, ...)`
+
+`ShinyDriver$executeScriptAsync()` magically made a `callback` argument
+available in the JavaScript code and would block the R session until
+`callback` was called within `script`. In `shinytest2` your script will
+need to be updated to use a JavaScript `Promise.` The `Promise`’s
+`resolve` method should be the callback that you used previously. You
+should also provide a maximum `timeout` (in milliseconds) that you are
+willing to wait before an error is thrown. For example:
+
+``` r
+## {shinytest}
+# Wait until a button is clicked
+old$executeScriptAsync(
+  '
+  var selector = arguments[0];
+  var callback = arguments[1];
+  $( selector ).one( "click", function() {
+    callback();
+  });
+  ',
+  "#mybutton"
+)
+
+## {shinytest2}
+# Wait until a button is clicked
+new$get_js(
+  paste0("
+  let selector = ", jsonlite::toJSON("#mybutton", auto_unbox = TRUE), ";
+  new Promise((resolve, reject) => {
+    $( selector ).one( \"click\", function() {
+      resolve();
+    });
+  });
+  "),
+  timeout = 15 * 1000
+)
+```
+
+#### `ShinyDriver$getAllValues()`
+
+Signature:
+`ShinyDriver$getAllValues(input = TRUE, output = TRUE, export = TRUE)`
+
+This method has been renamed to
+`AppDriver$get_values(..., input, output, export, hash_images = TRUE)`.
+The new method has a slightly different behavior if only some of the
+`input`, `output` or `export` arguments are provided. If `input`,
+`output` or `export` are provided, then the method will return the
+values for the provided `input`, `output` or `export` names only. If no
+`input`, `output` or `export` are provided, then the method will return
+all values, similar to setting
+`ShinyDriver$getAllValues(input = TRUE, output = TRUE, export = TRUE)`.
+
+``` r
+## {shinytest}
+old$getAllValues()
+# All input values
+old$getAllValues(input = TRUE, output = FALSE, export = FALSE)
+# Only `clickcount` output value
+old$getAllValues(input = FALSE, output = "clickcount", export = FALSE)
+
+## {shinytest2}
+new$get_values()
+# All input values
+new$get_values(input = TRUE)
+# Only `clickcount` output value
+new$get_values(output = "clickcount")
+```
+
+#### `ShinyDriver$getValue()`
+
+Signature:
+`ShinyDriver$getValue(name, iotype = c("auto", "input", "output"))`
+
+This method has been renamed to
+`AppDriver$get_value(..., input, output, export)` and its parameters
+have been spread out into `input` and `output`, while adding support for
+`export`.
+
+``` r
+## {shinytest}
+old$getValue("myinput")
+
+## {shinytest2}
+new$get_value(input = "myinput")
+# Equivalent to
+new$get_values(input = "myinput")$input$myinput
+```
+
+#### `ShinyDriver$getUrl()`
+
+Signature: `ShinyDriver$getUrl()`
+
+This method has been renamed to `AppDriver$get_url()`.
+
+``` r
+## {shinytest}
+old$getUrl()
+
+## {shinytest2}
+new$get_url()
+```
+
+#### `ShinyDriver$setInputs()`
+
+Signature:
+`ShinyDriver$setInputs(..., wait_ = TRUE, values_ = TRUE, timeout_ = 3 * 1000, allowInputNoBinding_ = FALSE, priority_ = c("input", "event"))`
+
+The method name has been renamed to `AppDriver$get_values()` and the
+parameters have been converted to `snake_case`. `value_` support has
+been removed, but the same functionality can be achieved via a call to
+`AppDriver$get_values()` *after* a call to `AppDriver$set_inputs()`.
+
+``` r
+## {shinytest}
+getValuesResult <- old$setInputs(life = 42)
+
+## {shinytest2}
+new$set_inputs(life = 42)
+get_values_result <- new$get_values()
+```
+
+#### `ShinyDriver$getWindowSize()`, `ShinyDriver$setWindowSize()`
+
+Signatures: \* `ShinyDriver$getWindowSize()` \*
+`ShinyDriver$setWindowSize(width, height)`
+
+These methods have been renamed to `AppDriver$get_window_size()` and
+`AppDriver$set_window_size(width, height)` respectively.
+
+``` r
+## {shinytest}
+old$getWindowSize()
+old$setWindowSize(width = 1024, height = 768)
+
+## {shinytest2}
+new$get_window_size()
+new$set_window_size(width = 1024, height = 768)
+```
+
+#### `ShinyDriver$checkUniqueWidgetNames()`
+
+Signature: `ShinyDriver$checkUniqueWidgetNames()`
+
+This method checks to make sure all input and output names are unique.
+It is still run at initialization via
+`AppDriver$new(check_names = TRUE)`, and if any issues are found during
+startup, only warnings will be displayed. The exported method has been
+upgraded to an expectation version and renamed to
+`AppDriver$expect_unique_names()`.
+
+``` r
+## {shinytest}
+old$checkUniqueWidgetNames()
+
+## {shinytest2}
+new$expect_unique_names()
+```
+
+### Snapshots
+
+Snapshots are now handled by [testthat](https://testthat.r-lib.org). To
+leverage this capability, use the `AppDriver$expect_*()` methods to
+assert that the value is consistent over many testing executions.
+
+#### `ShinyDriver$snapshotInit()`
+
+Signature: `ShinyDriver$snapshotInit(path, screenshot = TRUE)`
+
+This method has been moved to the parameters:
+`AppDriver$new(name = path)`. Screenshots via
+[testthat](https://testthat.r-lib.org) snapshots are not allowed until
+an `AppDriver$new(variant=)` value is provided. `variant` is similar to
+the `suffix` value in `shinytest::testApp(suffix=)`.
+
+``` r
+## {shinytest}
+old$snapshotInit("mytest")
+
+## {shinytest2}
+new <- AppDriver$new(name = "mytest", variant = NULL)
+# Suggested
+new <- AppDriver$new(name = "mytest", variant = platform_variant())
+```
+
+#### `ShinyDriver$snapshot()`
+
+Signature:
+`ShinyDriver$snapshot(items = NULL, filename = NULL, screenshot = NULL)`
+
+In [shinytest](https://github.com/rstudio/shinytest) this method would
+expect a screenshot and expect all values to be consistent. This method
+no longer exists in [shinytest2](https://rstudio.github.io/shinytest2/),
+and has been broken up into two methods that must be called
+independently: `AppDriver$expect_screenshot()` and
+`AppDriver$expect_values()`. `AppDriver$expect_values()` will (by
+default) take a *debug* screenshot that will never fail in an
+expectation. This allows for a historical record (version control) of
+what the app looked like while not having to constantly battle with
+false-positive screenshot failures. If a single `output` value is
+supplied to `AppDriver$expect_values()`, then the *debug* screenshot is
+zoomed in on the output value.
+
+``` r
+## {shinytest}
+old$snapshot()
+old$snapshot(items = list(output = "clickcount"))
+
+## {shinytest2}
+# Must supply `variant=` to be able to call `AppDriver$expect_screenshot()`, even if it is `NULL`
+new <- AppDriver$new(path_to_app, variant = NULL)
+new$expect_screenshot(); new$expect_values()
+new$expect_screenshot(); new$expect_values(output = "clickcount")
+
+# Suggested;
+new <- AppDriver$new(path_to_app)
+new$expect_values()
+```
+
+#### `ShinyDriver$takeScreenshot()`
+
+Signature:
+`ShinyDriver$takeScreenshot(file = NULL, id = NULL, parent = FALSE)`
+
+This method has been renamed to `AppDriver$get_screenshot(file)`, and
+the `id` and `parent` parameters have been removed. To use a selector,
+set `AppDriver$get_screenshot(myfile, selector = ".custom-selector")` or
+`screenshot_args` directly.
+
+``` r
+## {shinytest}
+old$takeScreenshot("myfile1.png")
+old$takeScreenshot("myfile2.png", id = "myid")
+
+## {shinytest2}
+new$get_screenshot("myfile1.png")
+new$get_screenshot("myfile2.png", selector = "#myid")
+new$get_screenshot("myfile2.png", screenshot_args = list(selector = "#myid"))
+```
+
+#### `ShinyDriver$snapshotDownload()`
+
+Signature: `ShinyDriver$snapshotDownload(id, filename)`
+
+This method has been renamed to
+`AppDriver$expect_download(id, filename)`.
+
+``` r
+## {shinytest}
+old$snapshotDownload("mylinkid")
+
+## {shinytest2}
+new$expect_download("mylinkid")
+```
+
+#### `ShinyDriver$stop()`
+
+Signature: `ShinyDriver$stop()`
+
+This method stayed the same! 🥳 In
+[shinytest2](https://rstudio.github.io/shinytest2/), this will also stop
+your \[`ChromeSession`\] instance and clean up any temporary Shiny log
+files.
+
+#### `ShinyDriver$uploadFile()`
+
+Signature:
+`ShinyDriver$uploadFile(..., wait_ = TRUE, values_ = TRUE, timeout_ = 3 * 1000)`
+
+This method has been renamed to `AppDriver$upload_file(...)`, and
+similar to `AppDriver$set_inputs()`, support for
+`ShinyDriver$uploadFile(values_ =)` has been removed.
+
+``` r
+## {shinytest}
+old$uploadFile(myFileInput = "myfile.txt")
+
+## {shinytest2}
+new$upload_file(myFileInput = "myfile.txt")
+```
+
+#### `ShinyDriver$waitFor()`
+
+Signature:
+`ShinyDriver$waitFor(expr, checkInterval = 100, timeout = 3000)`
+
+This method has been renamed and had its parameters reordered to
+`AppDriver$wait_for_js(script, timeout, interval)`. Like other
+JavaScript methods in
+[shinytest2](https://rstudio.github.io/shinytest2/), `script` needs to
+explicitly return a value.
+
+``` r
+## {shinytest}
+old$waitFor("$('#myid').length > 0")
+
+## {shinytest2}
+new$wait_for_js("$('#myid').length > 0");
+```
+
+#### `ShinyDriver$waitForShiny()`
+
+Signature: `ShinyDriver$waitForShiny()`
+
+This method has been upgraded to
+`AppDriver$wait_for_idle(duration = 500, timeout = 30 * 1000)`. The
+`ShinyDriver$waitForShiny()` method only waited until a single instance
+in time stated that Shiny was no longer busy. The new method will wait
+until Shiny has been “idle” for a continuous stretch of time. It is
+useful to wait until Shiny has been idle for a set duration in order to
+avoid situations where dynamic UI needs to calculate new outputs given
+new input information.
+
+``` r
+## {shinytest}
+old$waitForShiny()
+
+## {shinytest2}
+# Equivalent
+new$wait_for_idle(duration = 0, timeout = 3 * 1000)
+# Suggested (Shiny must become continuously idle for at least 500ms within 30s
+new$wait_for_idle()
+```
+
+#### `ShinyDriver$waitForValue()`
+
+Signature:
+`ShinyDriver$waitForValue(name, ignore = list(NULL, ""), iotype = c("input", "output", "export"), timeout = 10000, checkInterval = 400)`:
+This (underutilized) method has had the `name`/`iotype` spread out into
+separate `input`, `output`, `export` parameters. Only one
+`input`/`output`/`export` value may be supplied in an `AppDriver`
+object. The `timeout` has been increased to 15 seconds. Both methods
+still poll the Shiny application at a set `interval` for the
+corresponding value to be something *not* in the `ignore`d set of
+values.
+
+``` r
+## {shinytest}
+old$waitForValue("myslider")
+old$waitForValue("mydynamicplot", iotype = "output")
+
+## {shinytest2}
+new$wait_for_value("myslider"); new$wait_for_value(input = "myslider")
+new$wait_for_value(output = "mydynamicplot")
+```
+
+### Elements / Widgets
+
+Direct element or Widget support for
+[shinytest2](https://rstudio.github.io/shinytest2/) has been drastically
+reduced. With the ability to execute any JavaScript function via
+`$get_js(script)` and `$run_js(script)`, it is now possible to reproduce
+many of the methods that were provided in
+[shinytest](https://github.com/rstudio/shinytest).
+
+#### `ShinyDriver$findElement()`, `ShinyDriver$findElements()`, `ShinyDriver$findWidget()`
+
+Signatures: \*
+`ShinyDriver$findElement(css = NULL, linkText = NULL, partialLinkText = NULL, xpath = NULL)`
+\*
+`ShinyDriver$findElements(css = NULL, linkText = NULL, partialLinkText = NULL, xpath = NULL)`
+\* `ShinyDriver$findWidget(name, iotype = c("auto", "input", "output"))`
+
+These methods have been removed. It is suggested to use JavaScript code
+directly or use newer helper methods.
+
+``` r
+## {shinytest}
+old$findElement("#mybutton")$click()
+old$findElement("#mybutton")$getText()
+old$findElement("#mybutton")$getCssValue("color")
+
+## {shinytest2}
+new$get_text(selector = "#mybutton")
+new$click(selector = "#mybutton")
+# No direct equivalent method. Using JavaScript instead
+new$get_js('$("#mybutton").css("color")')
+```
+
+#### `ShinyDriver$getSource()`, `ShinyDriver$getTitle()`
+
+Signatures: \* `ShinyDriver$getSource()` \* `ShinyDriver$getTitle()`
+
+These methods have been removed. It is suggested to use JavaScript code
+directly, or to use newer helper methods.
+
+``` r
+## {shinytest}
+old$getSource()
+old$getTitle()
+
+## {shinytest2}
+new$get_html("html", outer_html = TRUE)
+new$get_js("window.document.title;")
+```
+
+### Testing setup
+
+[shinytest2](https://rstudio.github.io/shinytest2/) is heavily
+integrated with the [testthat](https://testthat.r-lib.org) testing
+framework. Similar to [shinytest](https://github.com/rstudio/shinytest),
+snapshots are recorded, but they are recorded via
+[testthat](https://testthat.r-lib.org) snapshots. For more information
+on the robustness of different testing approaches, please see the
+[Robust
+testing](https://rstudio.github.io/shinytest2/articles/robust.md)
+vignette.
+
+- `ShinyDriver$new(suffix=)`: Please use `AppDriver$new(variant=)`.
+
+``` r
+## {shinytest}
+old <- ShinyDriver$new(path_to_app, suffix = "macos-4.1")
+
+## {shinytest2}
+new <- AppDriver$new(path_to_app, variant = "macos-4.1")
+```
+
+#### `ShinyDriver$getRelativePathToApp()`, `ShinyDriver$getTestsDir()`
+
+Signatures: \* `ShinyDriver$getRelativePathToApp()` \*
+`ShinyDriver$getTestsDir()`
+
+These methods have been removed as they are no longer needed given
+execution [shinytest2](https://rstudio.github.io/shinytest2/) testing is
+always done within the [testthat](https://testthat.r-lib.org) testing
+framework.
+
+#### `ShinyDriver$getSnapshotDir()`
+
+Signature: `ShinyDriver$getSnapshotDir()`
+
+This method has been removed as [testthat](https://testthat.r-lib.org)
+uses the `./_snaps` directory to store snapshot outputs.
+
+#### `ShinyDriver$expectUpdate()`
+
+Signature:
+`ShinyDriver$expectUpdate(output, ..., timeout = 3000, iotype = c("auto", "input", "output"))`
+
+This method is no longer supported. While knowing that an output value
+has been updated, it is very uncertain as to what the new value is.
+While possibly useful, it is not robust and therefore not recommended.
+Other testing methods should be explored.
+
+Equivalent code has been provided below for legacy support.
+
+``` r
+## {shinytest}
+old$expectUpdate("myoutput", myinput = 42)
+
+## {shinytest2} (equivalent code)
+myoutput_prior <- new$get_values(output = "myoutput")
+new$set_inputs(myinput = 42)
+testthat::expect_failure(
+  testthat::expect_equal(
+    new$get_values(output = "myoutput"),
+    myoutput_prior
+  )
+)
+```
+
+### Debugging
+
+Debugging in [shinytest2](https://rstudio.github.io/shinytest2/) has
+been unified and is enabled at all times. The
+[shinytest](https://github.com/rstudio/shinytest) debugging methods have
+been removed in favor of `AppDriver$get_logs()`, which returns a
+similarly shaped `tibble` as `ShinyDriver$getDebugLog()`’s `data.frame`.
+The columns have been altered to be more generic, where `type` has been
+broken into two columns: `location` and `level`.
+
+- `ShinyDriver$getDebugLog()`, `ShinyDriver$getEventLog()`: Now use
+  `AppDriver$get_logs()`.
+- `ShinyDriver$logEvent(event, ...)`: Messages can still be recorded
+  using `AppDriver$log_message(text)`, but `...` values are no longer
+  supported.
+- `ShinyDriver$enableDebugLogMessages(enable = TRUE)`: No longer used.
+  *All* messages are always recorded.
+
+``` r
+## {shinytest}
+old$getDebugLog(); old$getEventLog()
+old$logEvent("Creating report")
+
+## {shinytest2}
+new$get_logs()
+old$log_message("Creating report")
+```
+
+If `options = list(shiny.trace = TRUE)` is set when initializing an
+`AppDriver` object, then all WebSocket traffic will be recorded.
+
+``` r
+## {shinytest2}
+# Record all websocket traffic. Caution!! This is very verbose!!
+new <- AppDriver$new(path_to_app, options = list(shiny.trace = TRUE))
+new$get_logs()
+```
+
+### Other removed methods
+
+- `ShinyDriver$setValue(name, value, iotype)`: To set an output value,
+  it must be performed by setting an input value and having your render
+  methods set the output value. To set an input value, use
+  `AppDriver$set_inputs()`.
+
+``` r
+## {shinytest}
+old$setValue("myinput", 42)
+
+## {shinytest2}
+new$set_inputs(myinput = 42)
+```
+
+- `ShinyDriver$listWidgets()`: This method has been removed and can be
+  achieved by getting the names of the existing values:
+  `AppDriver$get_values()`.
+
+``` r
+## {shinytest}
+old$listWidgets()
+
+## {shinytest2}
+lapply(new$get_values(), names)
+```
+
+- `ShinyDriver$clone()`: `AppDriver` does not support cloning. (The
+  underlying `ChromoteSession` does not support cloning, so `AppDriver`
+  cannot support cloning.)
+
+- `ShinyDriver$goBack()`, `ShinyDriver$refresh()`: These methods have
+  been removed, but can be achieved with `AppDriver$run_js(script)`.
+
+``` r
+## {shinytest}
+old$goBack()
+old$refresh()
+
+## {shinytest2}
+# Go back
+new$run_js("window.history.back();")
+# Refresh page
+new$run_js("window.location.reload();")
+```
+
+- `ShinyDriver$getAppDir()`, `ShinyDriver$getAppFilename()`,
+  `ShinyDriver$isRmd()`: `AppDriver$get_dir()` is the only method still
+  supported given `AppDriver$new(app_dir=)` is a single directory path.
+  The other methods have been removed as their functionality does not
+  make sense within [shinytest2](https://rstudio.github.io/shinytest2/).
+
+``` r
+## {shinytest}
+old$isRmd()
+old$getAppDir()
+old$getAppFilename()
+
+## {shinytest2}
+app_dir <- new$get_dir()
+rmd_files <- fs::dir_ls(new$get_dir(), regexp = "\\.[Rr]md$")
+is_rmd <- length(rmd_files) >= 1
+app_filename <- if (has_rmd) fs::path_file(rmd_files[1]) else NULL
+```
+
+- `ShinyDriver$sendKeys(name, keys)`: This method has been removed and
+  there is currently no easy alternative. If you are familiar with the
+  [key code
+  values](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode#value_of_keycode),
+  you can trigger them with `jQuery` and `AppDriver$run_js(script)`.
+
+``` r
+## {shinytest}
+old$sendKeys("myinput", webdriver::keys$enter)
+
+## {shinytest2}
+new$run_js("$('#myinput').trigger({type: 'keypress', which: 13, keyCode: 13});")
+```

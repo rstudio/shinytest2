@@ -1,0 +1,111 @@
+# shinytest2
+
+Manually testing Shiny applications is often laborious, inconsistent,
+and doesn’t scale well. Whether you are developing new features, fixing
+bug(s), or simply upgrading dependencies on a serious app where mistakes
+have real consequences, it is critical to know when regressions are
+introduced. [shinytest2](https://rstudio.github.io/shinytest2/) provides
+a streamlined toolkit for unit testing Shiny applications and seamlessly
+integrates with the popular [testthat](https://testthat.r-lib.org)
+framework for unit testing R code.
+
+[shinytest2](https://rstudio.github.io/shinytest2/) uses
+[chromote](https://rstudio.github.io/chromote/) to render applications
+in a headless Chrome browser.
+[chromote](https://rstudio.github.io/chromote/) allows for a live
+preview, better debugging tools, and/or simply using modern
+JavaScript/CSS.
+
+By simply recording your actions as code and extending them to test the
+more particular aspects of your application, it will result in fewer
+bugs and more confidence in future Shiny application development.
+
+## Installation
+
+``` r
+# Install the released version from CRAN
+install.packages("shinytest2")
+
+# Or the development version from GitHub:
+# install.packages("devtools")
+devtools::install_github("rstudio/shinytest2")
+```
+
+## Usage
+
+The easiest way to get started is by calling
+[`shinytest2::record_test()`](https://rstudio.github.io/shinytest2/reference/record_test.md)
+in your app directory. This will open a Shiny application to record your
+actions as code. To programmatically create a test, call
+[`shinytest2::use_shinytest2_test()`](https://rstudio.github.io/shinytest2/reference/use_shinytest2.md).
+
+Call
+[`shinytest2::use_shinytest2()`](https://rstudio.github.io/shinytest2/reference/use_shinytest2.md)
+to create a initial value test file and set up any other infrastructure
+you may need.
+
+Please check out our [Getting
+Started](https://rstudio.github.io/shinytest2/articles/shinytest2.html)
+article for example usage.
+
+# Package index
+
+## Making tests
+
+- [`AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.md)
+  : Drive a Shiny application
+- [`record_test()`](https://rstudio.github.io/shinytest2/reference/record_test.md)
+  : Launch test event recorder for a Shiny app
+- [`platform_variant()`](https://rstudio.github.io/shinytest2/reference/platform_variant.md)
+  : Platform specific variant
+- [`compare_screenshot_threshold()`](https://rstudio.github.io/shinytest2/reference/compare_screenshot_threshold.md)
+  [`screenshot_max_difference()`](https://rstudio.github.io/shinytest2/reference/compare_screenshot_threshold.md)
+  : Compare screenshots given threshold value
+
+## Running tests
+
+- [`test_app()`](https://rstudio.github.io/shinytest2/reference/test_app.md)
+  :
+
+  Test Shiny applications with testthat
+
+- [`load_app_env()`](https://rstudio.github.io/shinytest2/reference/load_app_env.md)
+  : Load the Shiny application's support environment
+
+## Setting up tests
+
+- [`use_shinytest2()`](https://rstudio.github.io/shinytest2/reference/use_shinytest2.md)
+  [`use_shinytest2_test()`](https://rstudio.github.io/shinytest2/reference/use_shinytest2.md)
+  :
+
+  Use shinytest2 with your Shiny application
+
+## Migrating tests
+
+- [`migrate_from_shinytest()`](https://rstudio.github.io/shinytest2/reference/migrate_from_shinytest.md)
+  :
+
+  Migrate shinytest tests
+
+# Articles
+
+### All vignettes
+
+- [Testing in
+  depth](https://rstudio.github.io/shinytest2/articles/in-depth.md):
+- [Robust
+  testing](https://rstudio.github.io/shinytest2/articles/robust.md):
+- [Getting started with
+  shinytest2](https://rstudio.github.io/shinytest2/articles/shinytest2.md):
+- [Auditing Shiny
+  apps](https://rstudio.github.io/shinytest2/articles/use-application-audit.md):
+- [Using shinytest2 with continuous
+  integration](https://rstudio.github.io/shinytest2/articles/use-ci.md):
+- [Using shinytest2 with R
+  packages](https://rstudio.github.io/shinytest2/articles/use-package.md):
+- [Monkey
+  testing](https://rstudio.github.io/shinytest2/articles/using-monkey-testing.md):
+- [Migrating from
+  shinytest](https://rstudio.github.io/shinytest2/articles/z-migration.md):
+- [Frequently Asked
+  Questions](https://rstudio.github.io/shinytest2/articles/zzz-faq.md):

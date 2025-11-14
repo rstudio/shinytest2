@@ -1,0 +1,195 @@
+# Frequently Asked Questions
+
+## What does it mean when I run `test_app()` and it says, “Server did not update any output values within 3 seconds”?
+
+The full message is this:
+
+    Server did not update any output values within 3 seconds. If this is expected, use `wait_ = FALSE` or increase the value of `timeout_`.
+
+This happens when setting an `input` value does *not* result in an
+output changing.
+
+[shinytest2](https://rstudio.github.io/shinytest2/) normally assumes
+that when you call `app$set_inputs()`, the setting of an input will also
+result in a changed output, so the test driver process will wait for an
+output to change before moving on to the next step in a test script. If
+no outputs change within the timeout period (which defaults to 3
+seconds), it prints that message.
+
+If, in your application, you expect that setting a particular input does
+not immediately result in any output changes, then you should call
+`app$set_inputs()` with `wait_=FALSE`.
+
+On the other hand, if you expect that setting the input should result in
+an output change, but the time exceeds the timeout, then you can call
+`app$set_inputs()` with, for example, `timeout_ = 10 * 1000`.
+
+## Some input values are not set right after calling `app$set_inputs()`. How do I wait for them?
+
+In most situations, when an `input` value is set,
+[shinytest2](https://rstudio.github.io/shinytest2/) will wait for the
+next value to be sent to the server. (See question above and [this
+section in Testing in
+depth](https://rstudio.github.io/shinytest2/articles/in-depth.html#wait-for-value).
+However, when dealing with dynamic UI inputs, htmlwidgets, or even
+selectize inputs, `input` values are not set on the first `output`
+change. Use
+`app$wait_for_value(input = NAME, ignore = list(VALUE_1, ...., VALUE_N))`
+to wait until a particular `input` (or `output`) value is available (or
+has a non-invalid value).
+
+## How can my app detect if it’s running in `{shinytest2}`?
+
+Sometimes it can be useful to alter the behavior of your application
+when it’s being tested. To detect when it’s being tested, you can use
+`isTRUE(getOption("shiny.testmode"))`, as in:
+
+``` r
+if (isTRUE(getOption("shiny.testmode"))) {
+   # Do something special here
+}
+```
+
+## How can I get the objects from files in my the R folder into the testing environment?
+
+Loading the support environment for a Shiny application requires a call
+to
+[`shinytest2::load_app_env()`](https://rstudio.github.io/shinytest2/reference/load_app_env.md)
+in `./tests/testthat/setup-shinytest2.R`. This method will load the
+`global.R` and all R files into the testing environment, similar to
+testing package R code.
+
+This is not automatically performed as it may be costly to load the
+support environment.
+
+## Can I modify the `input` and `output` values that are recorded in snapshots?
+
+For some kinds of outputs, it is problematic to record the raw value
+directly in a JSON snapshot. The output might be very large (e.g., image
+data or a large table), or it may contain randomly-generated values for
+which the specific value is unimportant for testing (such as
+randomly-generated DOM element IDs).
+
+In these situations, you can use an *output preprocessor* function. This
+is most commonly done by the author of component used in an application,
+although it can also be done by an application author. An output
+preprocessor function is passed an object representing the output value,
+and it should return a value. If the problem is that the value is large,
+the preprocessor function can modify the value by hashing it and
+returning the hash. If the problem is that the value contains some
+random values, the preprocessor function can replace the random values
+with fixed ones.
+
+To add an output preprocessor, use
+[`shiny::snapshotPreprocessOutput()`](https://rdrr.io/pkg/shiny/man/snapshotPreprocessOutput.html)
+to modify an output renderer. For example, see [this
+section](https://github.com/rstudio/shiny/blob/81cc7c5/R/shinywrappers.R#L656-L663)
+of the
+[`renderDataTable()`](https://rdrr.io/pkg/shiny/man/renderDataTable.html)
+function. It takes the object that *would be* returned by
+[`renderDataTable()`](https://rdrr.io/pkg/shiny/man/renderDataTable.html),
+and modifies it by adding an output preprocessor which removes strings
+that contain random values.
+
+For some outputs (notably htmlwidgets), the output value is text string
+containing JSON, and if you want to modify the JSON, you will have to
+either (1) do text processing on the JSON, or (2) convert the JSON to an
+R object, modify the R object, and convert the R object back to JSON.
+The plotly R package uses this method in
+[`renderPlotly()`](https://github.com/plotly/plotly.R/blob/2eef4ab/R/shiny.R#L46-L53).
+
+The examples above modify the output renderer from inside the output
+renderer function, and this would have to be done by the author of the
+component. It is also possible for an application author to modify a
+renderer with something like the following:
+
+``` r
+shinyApp(
+  ui = fluidPage(
+    verbatimTextOutput("random")
+  ),
+  server = function(input, output, session) {
+    output$random <- snapshotPreprocessOutput(
+      renderText({
+        paste("This is a random number:", rnorm(1))
+      }),
+      function(value) {
+        sub("[0-9.]+$", "<a random number>", value)
+      }
+    )
+  }
+)
+```
+
+The output in the JSON snapshot will be:
+
+``` json
+  "output": {
+    "random": "This is a random number: <a random number>"
+  }
+```
+
+(This example is just for illustration purposes. Note that for this
+example, the screenshots will still change each time the test is run, so
+there are better solutions, like [setting the random
+seed](https://rstudio.github.io/shinytest2/articles/in-depth.html#controlling-randomness).)
+
+Input values can face the same issues, and they can also be modified
+with
+[`shiny::snapshotPreprocessInput()`](https://rdrr.io/pkg/shiny/man/snapshotPreprocessInput.html).
+
+## Should I manually shut down my `AppDriver`?
+
+For code completeness, you should call `app$stop()` at the end of your
+tests to shut down the background Shiny process and current Chromote
+Session.
+
+If your R session is starting to feel more sluggish, you may want to
+call `app$stop()` manually. Or if you are programmatically creating many
+instances of `AppDriver`, you may want to call `app$stop()` when the
+specific test is complete via `withr::defer(app$stop())` right after
+initialization.
+
+## How can I open the test to see if bookmarks are working?
+
+Testing Shiny bookmarks requires the browser to be loaded with specific
+query parameters. Luckily, you can use
+[shinytest2](https://rstudio.github.io/shinytest2/) to help you achieve
+this by running a local `AppDriver` and another `AppDriver` that uses a
+url with your specific query parameters! ([Original
+code](https://github.com/rstudio/shinytest2/issues/219#issuecomment-1149162328),
+[Working
+example](https://github.com/rstudio/shinytest2/tree/v0.2.0/tests/testthat/apps/download))
+
+File: `tests/testthat//test-bookmark.R`
+
+``` r
+test_that("Bookmark works", {
+  # Start local app in the background in test mode
+  bg_app <- shinytest2::AppDriver$new("path/to/shiny/app")
+  # Capture the background app's URL and add appropriate query parameters
+  bookmark_url <- paste0(bg_app$get_url(), "?_inputs_&n=10")
+  # Open the bookmark URL in a new AppDriver object
+  app <- shinytest2::AppDriver$new(bookmark_url)
+
+  # Run your tests on the bookmarked `app`
+  app$expect_values()
+})
+```
+
+File: `tests/testthat/_snaps/bookmark/001.json`
+
+``` json
+{
+  "input": {
+    "._bookmark_": 0,
+    "caps": true,
+    "txt": "abcd"
+  },
+  "output": {
+    "out": "ABCD"
+  },
+  "export": {
+  }
+}
+```

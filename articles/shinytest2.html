@@ -6,16 +6,15 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Getting started with shinytest2 • shinytest2</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.9/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.9/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Getting started with shinytest2">
@@ -28,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -174,7 +173,7 @@ also launches a special Shiny application in the current R process which
 displays the target app in an iframe and has some controls outside the
 iframe. We’ll refer to this as the <strong>recorder app</strong>. You
 will see something like this:</p>
-<p><img src="images%2Frecord-simple-app.png" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images/record-simple-app.png" class="r-plt" width="100%" style="display: block; margin: auto;"></p>
 <p>On the left is the target app (in this case, the “What is your name”
 app), and on the right is the recorder app sidebar. Note that you may
 need to make the browser window wider because the recorder sidebar
@@ -196,7 +195,7 @@ this, click the <code>Expect Shiny values</code> button on the recorder
 app.</p>
 <p>After modifying some <code>input</code>s and making an expectation,
 it will look something like this:</p>
-<p><img src="images%2Frecord-simple-app-2.png" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images/record-simple-app-2.png" class="r-plt" width="100%" style="display: block; margin: auto;"></p>
 <p>It is also possible to take a <em>targeted</em> value expectation.
 This is a snapshot of one or more specified <code>output</code> (instead
 of the default, which is to snapshot the entire application). To do
@@ -346,7 +345,7 @@ application directory. (You may need to run
 <code>install.packages("diffviewer")</code> for
 <code><a href="https://testthat.r-lib.org/reference/snapshot_accept.html" class="external-link">testthat::snapshot_review()</a></code> to successfully execute.)</p>
 <p>It will look something like this:</p>
-<p><img src="images%2Fdiffviewer-1.png" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images/diffviewer-1.png" class="r-plt" width="100%" style="display: block; margin: auto;"></p>
 <p>After inspecting the changes, you can choose to update the expected
 results (that is, replace the old expected results with the new current
 results), or to just quit without updating.</p>
@@ -361,7 +360,7 @@ skip/quit without updating if the changes are unexpected.</p>
 <p>If you want to have more than one set of tests for an application,
 you can record new tests, each with a unique name. You can enter the
 name when recording your tests:</p>
-<p><img src="images%2Frecord-name.png" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images/record-name.png" class="r-plt" width="100%" style="display: block; margin: auto;"></p>
 <p>The saved test can be moved to a different testing file,
 e.g. <code>tests/testthat/test-simple-app.R</code>. When you run
 <code>test_app("path/to/app")</code>, it will run all the tests scripts
@@ -438,7 +437,7 @@ in depth</a> article.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
   </div></footer>

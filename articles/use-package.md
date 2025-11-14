@@ -1,0 +1,213 @@
+# Using shinytest2 with R packages
+
+For R packages that have Shiny applications, there are generally two
+ways that the applications will be present in the package. The first is
+to have an `app.R` in a subdirectory of `inst/`. The second way is to
+have a function which returns a Shiny app object.
+
+> 🚧 Using [chromote](https://rstudio.github.io/chromote/) in CRAN tests
+>
+> [chromote](https://rstudio.github.io/chromote/) utilizes the Google
+> Chrome application installed on testing machines, which can change
+> over time. CRAN has requested that no package utilize
+> [chromote](https://rstudio.github.io/chromote/)’s functionality when
+> testing on CRAN. This is because the package may not work as expected
+> if the version of Google Chrome changes.
+>
+> To address this, [shinytest2](https://rstudio.github.io/shinytest2/)
+> will call
+> [`testthat::skip_on_cran()`](https://testthat.r-lib.org/reference/skip.html)
+> when creating an `AppDriver` during CRAN testing.
+>
+> To learn more about CRAN’s reasoning and how to test your package
+> using CI, please visit
+> [chromote](https://rstudio.github.io/chromote/)’s [Using `{chromote}`
+> in CRAN
+> tests](https://rstudio.github.io/chromote/articles/example-cran-tests.html).
+
+## Applications in `inst/`
+
+An application could live in a subdirectory of `inst/`, as shown below:
+
+    /
+    ├── DESCRIPTION
+    ├── NAMESPACE
+    ├── R
+    ├── inst
+    │   └── sample_app
+    │       ├── app.R
+    │       └── tests
+    │           ├── testthat
+    │           │   ├── _snaps
+    │           │   │   └── shinytest2
+    │           │   │       └── 001.json
+    │           │   └── test-shinytest2.R
+    │           └── testthat.R
+    └── tests
+        ├── testthat
+        │   └── test-inst-apps.R
+        └── testthat.R
+
+In this case, you can run
+[`record_test()`](https://rstudio.github.io/shinytest2/reference/record_test.md)
+and
+[`test_app()`](https://rstudio.github.io/shinytest2/reference/test_app.md)
+as normal. After you create and run the tests, there will be a `tests/`
+subdirectory in the application directory that stores the test scripts
+and results.
+
+Since we are using [testthat](https://testthat.r-lib.org) for automated
+tests, you would create a test driver script in `tests/testthat/`. In
+this example, it’s named `test-inst-apps.R` and contains the following:
+
+``` r
+# File: tests/testthat/test-inst-apps.R
+library(shinytest2)
+
+test_that("sample_app works", {
+  # Don't run these tests on the CRAN build servers
+  skip_on_cran()
+
+  appdir <- system.file(package = "exPackage", "sample_app")
+  test_app(appdir)
+})
+```
+
+If the application directory is not meant to be public, it can also be
+located in `./tests/testthat/apps`.
+[shinytest2](https://rstudio.github.io/shinytest2/) does this with many
+application and has `appdir` above point to the relative path to the
+application.
+
+## Application objects created by functions
+
+The second way have an application in an R package is by having a
+function that returns a Shiny application object. In this example,
+there’s a function `hello_world_app()`, which lives in
+`R/hello-world.R`:
+
+    /
+    ├── .Rbuildignore
+    ├── DESCRIPTION
+    ├── NAMESPACE
+    ├── R
+    │   └── hello-world.R
+    └── tests
+        ├── testthat
+        │   ├── _snaps
+        │   │   └── app-function
+        │   │       └── 001.json
+        │   └── test-app-function.R
+        └── testthat.R
+
+The function simply returns an object from
+[`shinyApp()`](https://rdrr.io/pkg/shiny/man/shinyApp.html):
+
+``` r
+# File: R/hello-world.R
+
+hello_world_app <- function() {
+  utils::data(cars)
+  shinyApp(
+    ui = fluidPage(
+      sliderInput("n", "n", 1, nrow(cars), 10),
+      plotOutput("plot")
+    ),
+    server = function(input, output) {
+      output$plot <- renderPlot({
+        plot(
+          head(cars, input$n),
+          xlim = range(cars[[1]]),
+          ylim = range(cars[[2]])
+        )
+      })
+    }
+  )
+}
+```
+
+Once we have the object, it can be supplied directly to
+`AppDriver$new()`.
+
+``` r
+# File: tests/testthat/test-app-function.R
+
+test_that("hello-world app initial values are consistent", {
+  # Don't run these tests on the CRAN build servers
+  skip_on_cran()
+
+  shiny_app <- hello_world_app()
+  app <- AppDriver$new(shiny_app, name = "hello")
+
+  app$expect_values()
+})
+```
+
+To help create tests, you can call
+[`record_test()`](https://rstudio.github.io/shinytest2/reference/record_test.md)
+on your shiny application object directly. Unfortunately, the test file
+will not be able to be saved. Instead, the test commands can be copied
+into a test script manually.
+
+## Other setup steps
+
+There are a few steps that are needed for both types of tests.
+
+It is recommended to call
+[`shinytest2::use_shinytest2()`](https://rstudio.github.io/shinytest2/reference/use_shinytest2.md)
+to enable different test config set-ups.
+
+You will need to add [shinytest2](https://rstudio.github.io/shinytest2/)
+to the `Suggests` section in your `DESCRIPTION` file.
+
+    Suggests:
+        shinytest2
+
+When all of these items are in place, you can test your package using
+`devtools::install(); testthat::test_local()` or by running
+`R CMD check` on your package. If you are using the RStudio IDE, you can
+also run Build -\> Test Package or Build -\> Check Package.
+
+[shinytest2](https://rstudio.github.io/shinytest2/) requires that your
+package to be *installed* when testing.
+[`testthat::test_local()`](https://testthat.r-lib.org/reference/test_package.html)
+(and related wrappers) eventually call
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+to temporarily source the local R package. You can use
+[`test_local()`](https://testthat.r-lib.org/reference/test_package.html)
+to test non-[shinytest2](https://rstudio.github.io/shinytest2/) tests,
+but you will need to install your R package to safely execute your
+[shinytest2](https://rstudio.github.io/shinytest2/) tests. If not
+installed, it will create a confusing situation where your
+[shinytest2](https://rstudio.github.io/shinytest2/) tests are running on
+a *different* version of your R package (whichever was last installed),
+than the rest of your tests (the current source).
+
+## How should I test multiple applications?
+
+You can call
+[`shinytest2::test_app()`](https://rstudio.github.io/shinytest2/reference/test_app.md)
+multiple times within a test script. It does not need to be wrapped
+within a
+[`testthat::test_that()`](https://testthat.r-lib.org/reference/test_that.html)
+call.
+
+[shinytest2](https://rstudio.github.io/shinytest2/) tests many internal
+apps using the code similar to the code below:
+
+``` r
+# ./tests/testthat/test-apps.R
+
+app_dirs <- fs::dir_ls(testthat::test_path("apps"))
+lapply(app_dirs, function(app_dir) {
+  shinytest2::test_app(app_dir)
+})
+```
+
+## Continuous integration
+
+If you would like your package to be tested with every commit, you can
+set it up with GitHub Actions. Please see [Using shinytest2 with
+continuous
+integration](https://rstudio.github.io/shinytest2/articles/use-ci.md)
+for inspiration.
