@@ -1,3 +1,5 @@
+# shinytest2 (development version)
+
 # shinytest2 0.4.1
 
 ## Bug
