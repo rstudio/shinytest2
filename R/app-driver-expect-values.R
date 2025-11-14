@@ -193,6 +193,16 @@ app_expect_values <- function(
   )
 
   json_path <- app_next_temp_snapshot_path(self, private, name, "json")
+  # `NAME.json` -> `NAME_.png`; `NAME_.new.png`
+  png_path <-
+    fs::path_ext_set(
+      paste0(fs::path_ext_remove(json_path), "_"),
+      "png"
+    )
+
+  # Announce snapshot file before touching before any other expressions can fail
+  testthat::announce_snapshot_file(json_path)
+  testthat::announce_snapshot_file(png_path)
 
   url <- app_get_shiny_test_url(
     self,
@@ -238,13 +248,6 @@ app_expect_values <- function(
     withCallingHandlers(
       # swallow expectation
       {
-        # nolint
-        # `NAME.json` -> `NAME_.png`; `NAME_.new.png`
-        png_path <-
-          fs::path_ext_set(
-            paste0(fs::path_ext_remove(json_path), "_"),
-            "png"
-          )
         # Take screenshot using snapshot expectation.
         # Skip the variant check in `$expect_snapshot()`
         # Leverage testthat snapshot logic, but muffle any expectation output
