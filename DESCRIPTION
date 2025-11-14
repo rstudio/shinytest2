@@ -1,7 +1,7 @@
 Package: shinytest2
 Title: Testing for Shiny Applications
 Version: 0.4.1.9000
-Authors@R:c(
+Authors@R: c(
     person("Barret", "Schloerke", , "barret@posit.co", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0001-9986-114X")),
     person(, "Posit Software, PBC", role = c("cph", "fnd")),
@@ -57,8 +57,8 @@ LinkingTo:
     cpp11
 VignetteBuilder: 
     knitr
-Config/Needs/check:rstudio/shiny, bslib
-Config/Needs/website:pkgdown, tidyverse/tidytemplate
+Config/Needs/check: rstudio/shiny, bslib
+Config/Needs/website: pkgdown, tidyverse/tidytemplate
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
