@@ -54,8 +54,10 @@ Suggests:
     spelling,
     usethis,
     vdiffr (>= 1.0.0)
-LinkingTo: cpp11
-VignetteBuilder: knitr
+LinkingTo: 
+    cpp11
+VignetteBuilder: 
+    knitr
 Config/Needs/check: rstudio/shiny, bslib
 Config/Needs/shinytest2-testing: decor
 Config/Needs/website: pkgdown, tidyverse/tidytemplate
