@@ -1,1 +1,4 @@
-shinytest2::test_app()
+library(testthat)
+library(expkg)
+
+test_check("expkg")

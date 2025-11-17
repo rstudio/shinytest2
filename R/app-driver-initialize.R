@@ -78,7 +78,11 @@ app_initialize_ <- function(
   } else {
     "!DEBUG starting shiny app from path"
     self$log_message("Starting Shiny app")
-    app_set_dir(self, private, app_dir)
+    if (is.function(app_dir)) {
+      app_set_dir(self, private, ".")
+    } else {
+      app_set_dir(self, private, app_dir)
+    }
 
     app_start_shiny(
       self,
@@ -173,8 +177,9 @@ app_initialize_ <- function(
     self$get_chromote_session(),
     "Shiny.shinyapp.config.workerId"
   )$result$value
-  if (identical(private$shiny_worker_id, ""))
+  if (identical(private$shiny_worker_id, "")) {
     private$shiny_worker_id <- NA_character_
+  }
 
   private$shiny_test_url <- chromote_eval(
     self$get_chromote_session(),
