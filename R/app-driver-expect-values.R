@@ -201,6 +201,7 @@ app_expect_values <- function(
     )
 
   # Announce snapshot file before touching before any other expressions can fail
+  testthat::local_edition(3)
   testthat::announce_snapshot_file(json_path)
   testthat::announce_snapshot_file(png_path)
 
