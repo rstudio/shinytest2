@@ -146,6 +146,33 @@ To help create tests, you can call `record_test()` on your shiny application obj
 <!-- For more information about this script, see the [Test driver script notes](#Test-driver-script-notes) section below. -->
 
 
+## Running Applications with a function
+
+Some packages, such as `{golem}`, provide a function that runs or returns a shiny application.  In this case, you can create a wrapper function to perform two actions: load the package and return an app. For example, if your package is named `mypkg` and the function that runs the app is `run_test_app()`, you can create a wrapper function like this:
+
+```{r}
+run_mypkg_app <- function() {
+  library(mypkg)
+  run_test_app()
+}
+
+app <- AppDriver$new(run_mypkg_app, name = "mypkg-app")
+```
+
+For shorthand, you can also use the package function directly:
+
+```{r}
+app <- AppDriver$new(run_test_app, name = "mypkg-app")
+```
+
+When using a function to initalize the `AppDriver`, `{shinytest2}` will automatically call `pkgload::load_all()` when you execute `library(<pkg>)` or `require(<pkg>)` to load your dev package, `<pkg>`, in the background R process. Similar to `{mirai}`, there is no carryover to the execution within the background R process. All packages may need to be `library()`'ed again.
+
+`{golem}` provides a template `run_app()` function. `{golem}` app authors can use the shorthand:
+```{r}
+app <- AppDriver$new(run_app)
+```
+
+
 ## Other setup steps
 
 There are a few steps that are needed for both types of tests.
@@ -159,9 +186,9 @@ Suggests:
     shinytest2
 ```
 
-When all of these items are in place, you can test your package using `devtools::install(); testthat::test_local()` or by running ``R CMD check`` on your package. If you are using the RStudio IDE, you can also run Build -> Test Package or Build -> Check Package.
+When all of these items are in place, you can test your package using `testthat::test_local()` or by running ``R CMD check`` on your package. If you are using the RStudio IDE, you can also run Build -> Test Package or Build -> Check Package.
 
-`{shinytest2}` requires that your package to be *installed* when testing. [`testthat::test_local()`](https://testthat.r-lib.org/reference/test_package.html) (and related wrappers) eventually call `pkgload::load_all()` to temporarily source the local R package. You can use `test_local()` to test non-`{shinytest2}` tests, but you will need to install your R package to safely execute your `{shinytest2}` tests. If not installed, it will create a confusing situation where your `{shinytest2}` tests are running on a *different* version of your R package (whichever was last installed), than the rest of your tests (the current source).
+`{shinytest2}` **no longer** requires that your package to be *installed* when testing. It will load from your local path. [`testthat::test_local()`](https://testthat.r-lib.org/reference/test_package.html) (and related wrappers) eventually call `pkgload::load_all()` to temporarily source the local R package in the foreground for unit testing. `{shinytest2}` has made the stance that App authors **must** call `library(<pkg>)` or `require(<pkg>)` on their package within their App. This ensures that the package is loaded in the background R process that runs the Shiny application. When `library*()` is called, `{shinytest2}` will automatically execute `pkgload::load_all()` to load the package's source code.
 
 ## How should I test multiple applications?
 
