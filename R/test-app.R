@@ -34,9 +34,18 @@ NULL
 #' ## File: ./tests/testthat/test-shinytest2.R
 #' # Test a shiny application within your own {testthat} code
 #' test_that("Testing a Shiny app in a package", {
-#'   shinytest2::test_app(path_to_app)
+#'   app <- shinytest2::AppDriver$new(path_to_app)
+#'   # Perform tests with `app`...
 #' })
 #' ```
+#'
+#' When testing within a package, it is recommended to not call `test_app()`,
+#' but instead test your applications within your own \pkg{testthat} tests. This
+#' allows for more flexibility and control over how your applications are
+#' tested while your current package's testthat infrastructure. See the [Use
+#' Package
+#' vignette](https://rstudio.github.io/shinytest2/articles/use-package.html) for
+#' more details.
 #'
 #' @section Uploading files:
 #'
@@ -135,12 +144,17 @@ test_app <- function(
   }
 
   if (testthat::is_testing()) {
-    # rlang::warn(c(
-    #   "x" = "Calling `shinytest2::test_app()` within a {testthat} test has been deprecated in {shinytest2} v0.3.0",
-    #   "!" = "Calling `shinytest2::test_app()` within a {testthat} test will be hard deprecated in {shinytest2} v0.4.0",
-    #   "i" = "If you are testing within a package, please see URL on how to migrate your App tests to be located in your package tests.",
-    #   "i" = "If you are using CI, don't forget to collect your new snapshots after your initial run."
-    # ))
+    rlang::warn(
+      c(
+        "x" = "Calling {.code shinytest2::test_app() } within a {.pkg testthat } test has been superseded in {.pkg shinytest2 } v0.5.0",
+        "i" = "If you are testing within a package, please see URL on how to migrate your App tests to be located in your package tests.",
+        "i" = "If you are using CI, don't forget to collect your new snapshots after your initial run!",
+        "i" = "See {.url https://rstudio.github.io/shinytest2/articles/use-package.html } for more details."
+      ),
+      use_cli_format = TRUE,
+      .frequency = "once",
+      .frequency_id = "shinytest2_test_app_migration_warning"
+    )
     # warning("TODO-barret; missing url for migration warning")
 
     # Normalize the reporter given any input

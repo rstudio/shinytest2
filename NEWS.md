@@ -1,8 +1,21 @@
 # shinytest2 (development version)
 
+
+## AppDriver
+
 * Added support for local package development for the background Shiny App process in `AppDriver$new(app_dir=)`. In the background test R process, any `library(<pkg>)` or `require(<pkg>)` call will automatically execute `pkgload::load_all()` to load the local R package's source code. Installing the package before testing is no longer required! (#402).
 
 * Added support for function execution for `AppDriver$new(app_dir=)`. You must run the App or document yourself. Similar to `{mirai}`, all packages must be `library()`'d or `require()`'d again as the function is being ran in the background R process (#402).
+
+## Package testing
+
+* For package authors, it is now recommended to test your Shiny applications within your own `{testthat}` tests instead of using `test_app()`. This leverages your package's existing `{testthat}` infrastructure to test your Shiny applications, collecting snapshots in a single location. See the [use-package vignette](https://rstudio.github.io/shinytest2/articles/use-package.html) for more details on how this should look (#328).
+
+## Bug / Improvements
+
+* `test_app(check_setup=)` is now deprecated. Checking is no longer required as default behavior. This is because `load_app_env()` is now superseded by two new functions: `with_app_support()` and `local_app_support()`. Each function provides a more robust and flexible way to scope app support files such as `global.R`, `app.R`, `server.R`, and `ui.R`. See `?with_app_support` and `?local_app_support` for more details. (#328).
+
+* Given `test_app(check_setup=FALSE)` is now deprecated, `use_shinytest2(setup=)` is also deprecated. Be sure to call `with_app_support()` / `local_app_support()` when necessary. (#328).
 
 * Fixed internal bug where `{testthat}` v3.3.0 changed expectation behavior for screenshot snapshots within `App$expect_values()` (#418).
 

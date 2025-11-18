@@ -56,9 +56,16 @@ shinytest2::test_app()
 ## File: ./tests/testthat/test-shinytest2.R
 # Test a shiny application within your own \{testthat\} code
 test_that("Testing a Shiny app in a package", \{
-  shinytest2::test_app(path_to_app)
+  app <- shinytest2::AppDriver$new(path_to_app)
+  # Perform tests with `app`...
 \})
 }\if{html}{\out{</div>}}
+
+When testing within a package, it is recommended to not call \code{test_app()},
+but instead test your applications within your own \pkg{testthat} tests. This
+allows for more flexibility and control over how your applications are
+tested while your current package's testthat infrastructure. See the \href{https://rstudio.github.io/shinytest2/articles/use-package.html}{Use Package vignette} for
+more details.
 }
 \section{Uploading files}{
 
