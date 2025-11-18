@@ -218,7 +218,7 @@ package versions for all of your Shiny app dependencies.
 <a href="https://rstudio.github.io/renv/" class="external-link">renv</a> uses the same mechanism that is used by shinyapps.io
 and RStudio Connect.</p>
 <p><a href="https://rstudio.github.io/renv/" class="external-link">renv</a> auto-generates these three files using
-is<code>renv::init()</code> and <code>renv::snapshot()</code>.</p>
+is<code><a href="https://rstudio.github.io/renv/reference/init.html" class="external-link">renv::init()</a></code> and <code><a href="https://rstudio.github.io/renv/reference/snapshot.html" class="external-link">renv::snapshot()</a></code>.</p>
 <table class="table">
 <colgroup>
 <col width="18%">
@@ -247,10 +247,10 @@ library at some point in time.</td>
 </tbody>
 </table>
 <p>To create <code>.Rprofile</code> and <code>renv/activate.R</code>,
-call <code>renv::init()</code> within your App project. To create /
-update <code>renv.lock</code>, call <code>renv::snapshot()</code>.</p>
+call <code><a href="https://rstudio.github.io/renv/reference/init.html" class="external-link">renv::init()</a></code> within your App project. To create /
+update <code>renv.lock</code>, call <code><a href="https://rstudio.github.io/renv/reference/snapshot.html" class="external-link">renv::snapshot()</a></code>.</p>
 <p><strong>Whenever you update packages on your development machine, you
-should run <code>renv::snapshot()</code> command again to make sure the
+should run <code><a href="https://rstudio.github.io/renv/reference/snapshot.html" class="external-link">renv::snapshot()</a></code> command again to make sure the
 packages used on GitHub stay in sync.</strong></p>
 <p>To learn more about <a href="https://rstudio.github.io/renv/" class="external-link">renv</a>, please see their <a href="https://rstudio.github.io/renv/articles/renv.html" class="external-link">Introduction to
 renv</a> and <a href="https://rstudio.github.io/renv/articles/collaborating.html" class="external-link">Collaborating

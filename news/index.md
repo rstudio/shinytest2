@@ -2,6 +2,23 @@
 
 ## shinytest2 (development version)
 
+- Added support for local package development for the background Shiny
+  App process in `AppDriver$new(app_dir=)`. In the background test R
+  process, any `library(<pkg>)` or `require(<pkg>)` call will
+  automatically execute
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  to load the local R package’s source code. Installing the package
+  before testing is no longer required!
+  ([\#402](https://github.com/rstudio/shinytest2/issues/402)).
+
+- Added support for function execution for `AppDriver$new(app_dir=)`.
+  You must run the App or document yourself. Similar to
+  [mirai](https://mirai.r-lib.org), all packages must be
+  [`library()`](https://rdrr.io/r/base/library.html)’d or
+  [`require()`](https://rdrr.io/r/base/library.html)’d again as the
+  function is being ran in the background R process
+  ([\#402](https://github.com/rstudio/shinytest2/issues/402)).
+
 - Fixed internal bug where [testthat](https://testthat.r-lib.org) v3.3.0
   changed expectation behavior for screenshot snapshots within
   `App$expect_values()`

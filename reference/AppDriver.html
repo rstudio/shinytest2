@@ -254,6 +254,12 @@ Markdown document.</p></li>
 <li><p>A URL pointing to your shiny application. (Don't forget to set
 <code>testmode = TRUE</code> when running your application!)</p></li>
 <li><p>A Shiny application object which inherits from <code>"shiny.appobj"</code>.</p></li>
+<li><p>A function that runs your Shiny application or Shiny R Markdown or
+returns a Shiny app object. If being used within a package, be sure
+to call <code>library(&lt;pkg&gt;)</code> first within the provided function as the
+function will be executed within the background R process. When
+<code>library*()</code> is called, <code><a href="https://pkgload.r-lib.org/reference/load_all.html" class="external-link">pkgload::load_all()</a></code> will be automatically
+executed to load the package's source code.</p></li>
 </ul><p>By default, <code>app_dir</code> is set to <code>test_path("../../")</code> to work in both
 interactive and testing usage.</p>
 <p>If a file path is not provided to <code>app_dir</code>, snapshots will be saved as

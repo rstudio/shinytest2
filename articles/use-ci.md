@@ -142,7 +142,10 @@ dependencies. [renv](https://rstudio.github.io/renv/) uses the same
 mechanism that is used by shinyapps.io and RStudio Connect.
 
 [renv](https://rstudio.github.io/renv/) auto-generates these three files
-using is`renv::init()` and `renv::snapshot()`.
+using
+is[`renv::init()`](https://rstudio.github.io/renv/reference/init.html)
+and
+[`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html).
 
 | File              | Usage                                                                                                |
 |:------------------|:-----------------------------------------------------------------------------------------------------|
@@ -150,13 +153,15 @@ using is`renv::init()` and `renv::snapshot()`.
 | `renv.lock`       | The lockfile, describing the state of your project’s library at some point in time.                  |
 | `renv/activate.R` | The activation script run by the project `.Rprofile`.                                                |
 
-To create `.Rprofile` and `renv/activate.R`, call `renv::init()` within
-your App project. To create / update `renv.lock`, call
-`renv::snapshot()`.
+To create `.Rprofile` and `renv/activate.R`, call
+[`renv::init()`](https://rstudio.github.io/renv/reference/init.html)
+within your App project. To create / update `renv.lock`, call
+[`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html).
 
 **Whenever you update packages on your development machine, you should
-run `renv::snapshot()` command again to make sure the packages used on
-GitHub stay in sync.**
+run
+[`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
+command again to make sure the packages used on GitHub stay in sync.**
 
 To learn more about [renv](https://rstudio.github.io/renv/), please see
 their [Introduction to

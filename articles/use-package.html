@@ -212,6 +212,38 @@ test script manually.</p>
 <!-- For more information about this script, see the [Test driver script notes](#Test-driver-script-notes) section below. -->
 </div>
 <div class="section level2">
+<h2 id="running-applications-with-a-function">Running Applications with a function<a class="anchor" aria-label="anchor" href="#running-applications-with-a-function"></a>
+</h2>
+<p>Some packages, such as <a href="https://thinkr-open.github.io/golem/" class="external-link">golem</a>, provide a function that
+runs or returns a shiny application. In this case, you can create a
+wrapper function to perform two actions: load the package and return an
+app. For example, if your package is named <code>mypkg</code> and the
+function that runs the app is <code>run_test_app()</code>, you can
+create a wrapper function like this:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">run_mypkg_app</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mypkg</span><span class="op">)</span></span>
+<span>  <span class="fu">run_test_app</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">run_mypkg_app</span>, name <span class="op">=</span> <span class="st">"mypkg-app"</span><span class="op">)</span></span></code></pre></div>
+<p>For shorthand, you can also use the package function directly:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">run_test_app</span>, name <span class="op">=</span> <span class="st">"mypkg-app"</span><span class="op">)</span></span></code></pre></div>
+<p>When using a function to initialize the <code>AppDriver</code>,
+<a href="https://rstudio.github.io/shinytest2/">shinytest2</a> will automatically call
+<code><a href="https://pkgload.r-lib.org/reference/load_all.html" class="external-link">pkgload::load_all()</a></code> when you execute
+<code>library(&lt;pkg&gt;)</code> or <code>require(&lt;pkg&gt;)</code>
+to load your dev package, <code>&lt;pkg&gt;</code>, in the background R
+process. Similar to <a href="https://mirai.r-lib.org" class="external-link">mirai</a>, there is no carryover to the
+execution within the background R process. All packages may need to be
+<code><a href="https://rdrr.io/r/base/library.html" class="external-link">library()</a></code>’ed again.</p>
+<p><a href="https://thinkr-open.github.io/golem/" class="external-link">golem</a> provides a template <code>run_app()</code>
+function. <a href="https://thinkr-open.github.io/golem/" class="external-link">golem</a> app authors can use the shorthand:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">run_app</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
 <h2 id="other-setup-steps">Other setup steps<a class="anchor" aria-label="anchor" href="#other-setup-steps"></a>
 </h2>
 <p>There are a few steps that are needed for both types of tests.</p>
@@ -222,20 +254,22 @@ to enable different test config set-ups.</p>
 <pre><code><span><span class="va">Suggests</span><span class="op">:</span></span>
 <span>    <span class="va">shinytest2</span></span></code></pre>
 <p>When all of these items are in place, you can test your package using
-<code>devtools::install(); testthat::test_local()</code> or by running
+<code><a href="https://testthat.r-lib.org/reference/test_package.html" class="external-link">testthat::test_local()</a></code> or by running
 <code>R CMD check</code> on your package. If you are using the RStudio
 IDE, you can also run Build -&gt; Test Package or Build -&gt; Check
 Package.</p>
-<p><a href="https://rstudio.github.io/shinytest2/">shinytest2</a> requires that your package to be
-<em>installed</em> when testing. <a href="https://testthat.r-lib.org/reference/test_package.html" class="external-link"><code>testthat::test_local()</code></a>
+<p><a href="https://rstudio.github.io/shinytest2/">shinytest2</a> <strong>no longer</strong> requires that
+your package to be <em>installed</em> when testing. It will load from
+your local path. <a href="https://testthat.r-lib.org/reference/test_package.html" class="external-link"><code>testthat::test_local()</code></a>
 (and related wrappers) eventually call <code><a href="https://pkgload.r-lib.org/reference/load_all.html" class="external-link">pkgload::load_all()</a></code>
-to temporarily source the local R package. You can use
-<code><a href="https://testthat.r-lib.org/reference/test_package.html" class="external-link">test_local()</a></code> to test non-<a href="https://rstudio.github.io/shinytest2/">shinytest2</a> tests,
-but you will need to install your R package to safely execute your
-<a href="https://rstudio.github.io/shinytest2/">shinytest2</a> tests. If not installed, it will create a
-confusing situation where your <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> tests are
-running on a <em>different</em> version of your R package (whichever was
-last installed), than the rest of your tests (the current source).</p>
+to temporarily source the local R package in the foreground for unit
+testing. <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> has made the stance that App authors
+<strong>must</strong> call <code>library(&lt;pkg&gt;)</code> or
+<code>require(&lt;pkg&gt;)</code> on their package within their App.
+This ensures that the package is loaded in the background R process that
+runs the Shiny application. When <code>library*()</code> is called,
+<a href="https://rstudio.github.io/shinytest2/">shinytest2</a> will automatically execute
+<code><a href="https://pkgload.r-lib.org/reference/load_all.html" class="external-link">pkgload::load_all()</a></code> to load the package’s source code.</p>
 </div>
 <div class="section level2">
 <h2 id="how-should-i-test-multiple-applications">How should I test multiple applications?<a class="anchor" aria-label="anchor" href="#how-should-i-test-multiple-applications"></a>
@@ -245,7 +279,7 @@ within a test script. It does not need to be wrapped within a
 <code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">testthat::test_that()</a></code> call.</p>
 <p><a href="https://rstudio.github.io/shinytest2/">shinytest2</a> tests many internal apps using the code
 similar to the code below:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ./tests/testthat/test-apps.R</span></span>
 <span></span>
 <span><span class="va">app_dirs</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">dir_ls</a></span><span class="op">(</span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_path.html" class="external-link">test_path</a></span><span class="op">(</span><span class="st">"apps"</span><span class="op">)</span><span class="op">)</span></span>

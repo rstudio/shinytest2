@@ -236,6 +236,14 @@ Initialize an `AppDriver` object
 
   - A Shiny application object which inherits from `"shiny.appobj"`.
 
+  - A function that runs your Shiny application or Shiny R Markdown or
+    returns a Shiny app object. If being used within a package, be sure
+    to call `library(<pkg>)` first within the provided function as the
+    function will be executed within the background R process. When
+    `library*()` is called,
+    [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+    will be automatically executed to load the package's source code.
+
   By default, `app_dir` is set to `test_path("../../")` to work in both
   interactive and testing usage.
 
