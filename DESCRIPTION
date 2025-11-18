@@ -53,10 +53,12 @@ Suggests:
     showimage,
     spelling,
     usethis,
+    rhino,
+    golem,
     vdiffr (>= 1.0.0)
-LinkingTo: 
+LinkingTo:
     cpp11
-VignetteBuilder: 
+VignetteBuilder:
     knitr
 Config/Needs/check: rstudio/shiny, bslib
 Config/Needs/shinytest2-testing: decor

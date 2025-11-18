@@ -8,5 +8,6 @@ exclusions: list(
     "inst/gha/audit-app.R" = list(
       "object_usage_linter" = 81
     ),
-    "R/cpp11.R"
+    "R/cpp11.R",
+    "tests/testthat/pkgs/golem/R/run_app.R"
   )
