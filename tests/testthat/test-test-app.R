@@ -67,3 +67,15 @@ test_that("app support loading with_app_support works", {
 
   expect_false(exists("n"))
 })
+
+
+# Test check_setup deprecation
+test_that("check_setup = TRUE shows deprecation warning", {
+  lifecycle::expect_deprecated(
+    test_app(
+      app_dir = test_path("apps/task-button"),
+      check_setup = TRUE
+    ),
+    regexp = "is no longer used"
+  )
+})

@@ -1,8 +1,3 @@
-warning("TODO-barret; test check_setup values")
-warning(
-  "TODO-barret; requires R file loading; Look into using `testthat::test_dir(load_package=)` and `testthat:::test_files_setup_env()`"
-)
-
 # Import something from testthat to avoid a check error that nothing is imported from a `Depends` package
 #' @importFrom testthat default_reporter
 NULL
