@@ -171,8 +171,14 @@ app_start_shiny <- function(
         ret <-
           if (is.function(.app_dir)) {
             stopifnot(length(.shiny_args) == 0)
-            # Function, run it!
-            .app_dir()
+            # Function, run the app!
+            obj <- .app_dir()
+            if (inherits(obj, "shiny.appobj")) {
+              # If a shiny app object, is returned, run it
+              do.call(shiny::runApp, c(list(appDir = obj), .shiny_args))
+            } else {
+              obj
+            }
           } else if (.has_rmd) {
             # Shiny document
             rmarkdown::run(
@@ -186,7 +192,7 @@ app_start_shiny <- function(
             )
           } else {
             # Normal shiny app
-            do.call(shiny::runApp, c(.app_dir, .shiny_args))
+            do.call(shiny::runApp, c(list(appDir = .app_dir), .shiny_args))
           }
 
         # Return value is important for `AppDriver$stop()`
@@ -217,10 +223,16 @@ app_start_shiny <- function(
     err_lines <- readLines(p$get_error_file())
 
     if (!p$is_alive()) {
+      msg <- if (is.function(self$get_dir())) {
+        paste0(
+          "The Shiny app function has already terminated. Did you return a Shiny application object or run an App?\n"
+        )
+      }
       app_abort(
         self,
         private,
         paste0(
+          msg,
           "Error starting shiny application:\n",
           paste(err_lines, collapse = "\n")
         )
