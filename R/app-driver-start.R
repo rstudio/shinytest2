@@ -127,12 +127,13 @@ app_start_shiny <- function(
             "\n"
           )
           # Need to store in global env so that shiny app can see it
-          assign(envir = globalenv(), "library", function(...) {
+          global_env <- globalenv()
+          global_env[["library"]] <- function(...) {
             pkg_load_helper(base::library, ...)
-          })
-          assign(envir = globalenv(), "require", function(...) {
+          }
+          global_env[["require"]] <- function(...) {
             pkg_load_helper(base::require, ...)
-          })
+          }
 
           # # If `::` / `:::` is called on the local package, ensure it has already been `library()`'d / `require()`'d
           # pkg_namespace_helper <- function(.fn, pkg, ...) {

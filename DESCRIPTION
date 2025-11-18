@@ -40,6 +40,7 @@ Imports:
     shiny,
     withr
 Suggests:
+    box,
     deSolve,
     diffobj,
     ggplot2,

@@ -165,7 +165,7 @@ For shorthand, you can also use the package function directly:
 app <- AppDriver$new(run_test_app, name = "mypkg-app")
 ```
 
-When using a function to initalize the `AppDriver`, `{shinytest2}` will automatically call `pkgload::load_all()` when you execute `library(<pkg>)` or `require(<pkg>)` to load your dev package, `<pkg>`, in the background R process. Similar to `{mirai}`, there is no carryover to the execution within the background R process. All packages may need to be `library()`'ed again.
+When using a function to initialize the `AppDriver`, `{shinytest2}` will automatically call `pkgload::load_all()` when you execute `library(<pkg>)` or `require(<pkg>)` to load your dev package, `<pkg>`, in the background R process. Similar to `{mirai}`, there is no carryover to the execution within the background R process. All packages may need to be `library()`'ed again.
 
 `{golem}` provides a template `run_app()` function. `{golem}` app authors can use the shorthand:
 ```{r}
