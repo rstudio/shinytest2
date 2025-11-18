@@ -30,21 +30,32 @@ app_get_single_ioe <- function(
     )
   }
 
-  if (input_is_provided) ckm8_assert_single_string(input) else if (
-    output_is_provided
-  )
-    ckm8_assert_single_string(output) else if (export_is_provided)
-    ckm8_assert_single_string(export) else
+  if (input_is_provided) {
+    ckm8_assert_single_string(input)
+  } else if (output_is_provided) {
+    ckm8_assert_single_string(output)
+  } else if (export_is_provided) {
+    ckm8_assert_single_string(export)
+  } else {
     app_abort(self, private, "Missing ioe type", .internal = TRUE)
+  }
 
   type <-
-    if (input_is_provided) "input" else if (output_is_provided)
-      "output" else if (export_is_provided) "export"
+    if (input_is_provided) {
+      "input"
+    } else if (output_is_provided) {
+      "output"
+    } else if (export_is_provided) {
+      "export"
+    }
   name <-
-    if (input_is_provided) input else if (output_is_provided) output else if (
-      export_is_provided
-    )
+    if (input_is_provided) {
+      input
+    } else if (output_is_provided) {
+      output
+    } else if (export_is_provided) {
       export
+    }
 
   list(
     input = input,
@@ -307,8 +318,13 @@ app_get_shiny_test_url <- function(
   }
 
   q_string <- function(group, value) {
-    if (isTRUE(value)) paste0(group, "=1") else if (is.character(value))
-      paste0(group, "=", paste(value, collapse = ",")) else ""
+    if (isTRUE(value)) {
+      paste0(group, "=1")
+    } else if (is.character(value)) {
+      paste0(group, "=", paste(value, collapse = ","))
+    } else {
+      ""
+    }
   }
   paste(
     private$shiny_test_url,

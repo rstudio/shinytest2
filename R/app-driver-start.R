@@ -30,12 +30,20 @@ app_start_shiny <- function(
     package_path <- NULL
     package_name <- NULL
   }
+  if (identical(package_name, "shinytest2")) {
+    # Prevent trying to load shinytest2 within the shiny app itself
+    package_name <- NULL
+    package_path <- NULL
+  }
 
   p <- local({
     # https://github.com/r-lib/testthat/issues/603
     withr::local_envvar(c("R_TESTS" = NA))
-    # Load the app's .Rprofile / .Renviron if possible
-    withr::local_dir(self$get_dir())
+
+    if (!is.function(self$get_dir())) {
+      # Load the app's .Rprofile / .Renviron if possible
+      withr::local_dir(self$get_dir())
+    }
 
     callr::r_bg(
       stdout = sprintf(tempfile_format, "shiny-stdout"),
@@ -76,48 +84,38 @@ app_start_shiny <- function(
         # options[["shiny-testmode-html-dep"]] <- getTracerDep()
         do.call(base::options, .options)
 
-        # Taken inspiration from `testthat:::test_files_setup`.
-        # Motivation:
-        # * Shiny will only have access to the installed package namepace after
-        #   a library call, so during testing we should try to mimic this
-        #   behavior to avoid surprises
-        # * Whereas testthat wants to have already `library()`ed {testthat} and
-        #   the package by the time the test file is sourced
-        message(paste0(
-          collapse = "\n",
-          capture.output(str(list(
-            .package_name = .package_name,
-            .package_path = .package_path
-          )))
-        ))
-        message("pre-loaded pkgs")
-        message(paste0(
-          collapse = "\n",
-          capture.output(pkgload:::dev_packages())
-        ))
+        has_loaded <- new.env(parent = emptyenv())
+        has_loaded$value <- FALSE
+
+        # If a package name / path is supplied, we override `library()` / `require()`
+        # within the Shiny app to load the local package only when requested.
+        # This mimics the behavior of running a regular Shiny app that uses an installed package:
+        # * Do not expose internal objects
+        # * Do not expose exported objects until `library()` / `require()` is called
         if (!is.null(.package_path)) {
           # Because we can not `pkgload::load_all()` it won't _require_ a `library()` call.
           # Therefore, we shim `library()` to only load the local package when requested.
           # This works for both `library(expkg)` and `require(expkg)` calls.
-          .shinytest2_library <- function(...) {
+          pkg_load_helper <- function(.fn, ...) {
             lib_call <- rlang::call_match(
-              rlang::current_call(),
-              base::library
+              rlang::caller_call(),
+              .fn
             )
-            if (isTRUE(lib_call$character.only)) {
-              pkg_name <- lib_call$package
-            } else {
-              pkg_name <- as.character(lib_call$package)
-            }
-            print(list(
-              pkg_name = pkg_name,
-              .package_name = .package_name,
-              lib_call = lib_call
-            ))
+            # Must use a variable for substitute to work properly
 
-            # Already loaded?
-            if (!(.package_name %in% pkgload:::dev_packages())) {
-              # Load dev pkg
+            lib_call_package <- lib_call$package
+            if (isTRUE(lib_call$character.only)) {
+              pkg_name <- as.character(lib_call_package)
+            } else {
+              pkg_name <- as.character(substitute(lib_call_package))
+            }
+
+            # Load dev pkg
+            if (
+              !(has_loaded$value) &&
+                length(pkg_name) == 1 &&
+                pkg_name == .package_name
+            ) {
               pkgload::load_all(
                 .package_path,
                 attach = TRUE,
@@ -125,32 +123,62 @@ app_start_shiny <- function(
                 export_imports = TRUE,
                 attach_testthat = FALSE
               )
+              has_loaded$value <- TRUE
             }
 
-            # By returning `library()`, both `library(expkg)` and `require(expkg)` work
-            base::library(...)
+            # Call original function
+            .fn(...)
           }
 
-          message(
-            "Overriding `library()` within Shiny app to load local package"
+          cat(
+            "Overriding `library()` / `require()` to load local package: ",
+            .package_name,
+            "\n"
           )
-          # library <- .shinytest2_library
-          assign("library", .shinytest2_library, envir = globalenv())
+          # Need to store in global env so that shiny app can see it
+          assign(envir = globalenv(), "library", function(...) {
+            pkg_load_helper(base::library, ...)
+          })
+          assign(envir = globalenv(), "require", function(...) {
+            pkg_load_helper(base::require, ...)
+          })
+
+          # # If `::` / `:::` is called on the local package, ensure it has already been `library()`'d / `require()`'d
+          # pkg_namespace_helper <- function(.fn, pkg, ...) {
+          #   if (pkg == .package_name) {
+          #     # Ensure local package is loaded
+          #     if (!(has_loaded$value)) {
+          #       rlang::abort(
+          #         paste0(
+          #           "Attempted to access local package '",
+          #           .package_name,
+          #           "' via `::` or `:::` before it was loaded with `library()` or `require()`"
+          #         )
+          #       )
+          #     }
+          #   }
+          #   # Call original function
+          #   .fn(pkg, ...)
+          # }
+          ## For some reason, we can not override `::` / `:::`
+          # assign(envir = globalenv(), "`::`", function(pkg, ...) {
+          #   pkg_namespace_helper(base::`::`, pkg, ...)
+          # })
+          # assign(envir = globalenv(), "`:::`", function(pkg, ...) {
+          #   pkg_namespace_helper(base::`:::`, pkg, ...)
+          # })
 
           # If within a package... do not read the R files in the R/ folder
-          message("Disabling Shiny autoloading of R/ files")
+          cat(
+            "Disabling Shiny autoloading of R/ files: `options(shiny.autoload.r = FALSE)`\n"
+          )
           withr::local_options(shiny.autoload.r = FALSE, warn = 2)
         }
 
-        message("post-loaded pkgs\n")
-        message(paste0(
-          collapse = "\n",
-          capture.output(pkgload:::dev_packages())
-        ))
-
         ret <-
           if (is.function(.app_dir)) {
-            # app_dir is a function
+            stopifnot(length(.shiny_args) == 0)
+            # Function, run it!
             .app_dir()
           } else if (.has_rmd) {
             # Shiny document

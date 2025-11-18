@@ -79,7 +79,7 @@ app_initialize_ <- function(
     "!DEBUG starting shiny app from path"
     self$log_message("Starting Shiny app")
     if (is.function(app_dir)) {
-      app_set_dir(self, private, ".")
+      app_set_dir(self, private, app_dir, shiny_args = shiny_args)
     } else {
       app_set_dir(self, private, app_dir)
     }
