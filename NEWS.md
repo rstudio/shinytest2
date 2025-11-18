@@ -6,6 +6,8 @@
 
 * Fixed internal bug where `{testthat}` v3.3.0 changed expectation behavior for screenshot snapshots within `App$expect_values()` (#418).
 
+* Migrated from `{httr}` to `{httr2}` for all HTTP requests made by `{shinytest2}` (#420).
+
 # shinytest2 0.4.1
 
 ## Bug
