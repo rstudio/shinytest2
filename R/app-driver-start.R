@@ -1,7 +1,3 @@
-# Do not delete
-# Paired with tests/testthat/apps/test-env/ 's tests on `.internal_value_used_by_shinytest2_test`
-.internal_value_used_by_shinytest2_test <- TRUE # nolint
-
 app_start_shiny <- function(
   self,
   private,
@@ -29,11 +25,6 @@ app_start_shiny <- function(
   if (testthat::is_checking()) {
     package_path <- NULL
     package_name <- NULL
-  }
-  if (identical(package_name, "shinytest2")) {
-    # Prevent trying to load shinytest2 within the shiny app itself
-    package_name <- NULL
-    package_path <- NULL
   }
 
   p <- local({
@@ -168,11 +159,13 @@ app_start_shiny <- function(
           #   pkg_namespace_helper(base::`:::`, pkg, ...)
           # })
 
-          # If within a package... do not read the R files in the R/ folder
-          cat(
-            "Disabling Shiny autoloading of R/ files: `options(shiny.autoload.r = FALSE)`\n"
-          )
-          withr::local_options(shiny.autoload.r = FALSE, warn = 2)
+          # If within a package root... do not read the R files in the R/ folder
+          if (.package_path == getwd()) {
+            cat(
+              "Disabling Shiny autoloading of R/ files `options(shiny.autoload.r = FALSE)` as dev package directory is the same as the app directory\n"
+            )
+            withr::local_options(shiny.autoload.r = FALSE, warn = 2)
+          }
         }
 
         ret <-
