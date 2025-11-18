@@ -1,21 +1,11 @@
 app_set_dir <- function(
   self,
   private,
-  app_dir,
-  ...,
-  shiny_args = list()
+  app_dir
 ) {
   ckm8_assert_app_driver(self, private)
 
   if (is.function(app_dir)) {
-    if (length(shiny_args) != 0) {
-      app_abort(
-        self,
-        private,
-        "When `app_dir=` is a function, `shiny_args=` must be empty"
-      )
-    }
-
     # package_path <- tryCatch(pkgload::pkg_path(), error = function(e) NULL)
     package_name <- tryCatch(pkgload::pkg_name(), error = function(e) NULL)
 
