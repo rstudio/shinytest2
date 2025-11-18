@@ -8,7 +8,6 @@ input_task_button <- yoink("bslib", "input_task_button")
 bind_task_button <- yoink("bslib", "bind_task_button")
 
 
-
 ui <- fluidPage(
   actionButton("run_normal", "Run normal"),
   textOutput("normal_result"),
@@ -26,13 +25,16 @@ server <- function(input, output, session) {
   task <- ExtendedTask$new(function() {
     promise(function(resolve, reject) {
       # Use later to simulate future promise calls
-      later(function() {
-        resolve(slow_function())
-        # Add extra time for extra checks
-      }, delay = 0.01)
+      later(
+        function() {
+          resolve(slow_function())
+          # Add extra time for extra checks
+        },
+        delay = 0.01
+      )
     })
-  }) |> bind_task_button("run_async")
-
+  }) |>
+    bind_task_button("run_async")
 
   # Normal
   observeEvent(input$run_normal, {
