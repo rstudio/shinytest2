@@ -122,7 +122,7 @@ app_start_shiny <- function(
           }
 
           cat(
-            "Overriding `library()` / `require()` to load local package: ",
+            "Overriding `library()` / `require()` to load local package:",
             .package_name,
             "\n"
           )

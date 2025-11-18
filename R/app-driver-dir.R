@@ -8,13 +8,6 @@ app_set_dir <- function(
   ckm8_assert_app_driver(self, private)
 
   if (is.function(app_dir)) {
-    if (length(formals(app_dir)) != 0) {
-      app_abort(
-        self,
-        private,
-        "`app_dir=` function must have no arguments"
-      )
-    }
     if (length(shiny_args) != 0) {
       app_abort(
         self,
@@ -33,13 +26,23 @@ app_set_dir <- function(
     ) {
       # If the function is from the local package, ensure the package is loaded
       # Make a new function that first loads the package, then runs the original function
+      message(
+        "Upgrading `app_dir` function to load dev package: ",
+        package_name
+      )
+
       app_fn <- app_dir
       app_dir <- function() {}
       rlang::fn_body(app_dir) <- rlang::expr({
         # Run app with dev package loaded
         # `library()` shimmed in app driver start
         library(!!package_name, character.only = TRUE)
-        (!!app_fn)()
+
+        .pkg_ns <- rlang::ns_env(!!package_name)
+        .dev_pkg_run_app <- !!app_fn
+        environment(.dev_pkg_run_app) <- .pkg_ns
+
+        .dev_pkg_run_app()
       })
       rlang::fn_env(app_dir) <- globalenv()
     }
