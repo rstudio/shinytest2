@@ -35,8 +35,10 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages:
-            "local::."
+          needs: |
+            shinytest2-testing
+          extra-packages: |
+            local::.
 
       # ## Suggested usage
       # - name: Test app

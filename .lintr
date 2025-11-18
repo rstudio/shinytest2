@@ -2,11 +2,14 @@ linters: linters_with_defaults(
     line_length_linter = NULL,
     indentation_linter = NULL,
     commented_code_linter = NULL,
-    cyclocomp_linter = NULL
+    return_linter = NULL
   )
 exclusions: list(
     "inst/gha/audit-app.R" = list(
       "object_usage_linter" = 81
     ),
-    "R/cpp11.R"
+    "R/cpp11.R",
+    "tests/testthat/pkgs/golem/R/run_app.R",
+    "vignettes/use-package.Rmd",
+    "tests/testthat/pkgs/"
   )

@@ -47,7 +47,7 @@ retrieved after any initialization error has been thrown.
 
 Reactive values from within your Shiny application can be exported using the
 method:
-\href{https://shiny.rstudio.com/reference/shiny/latest/exportTestValues.html}{\code{shiny::exportTestValues()}}.
+\href{https://shiny.posit.co/r/reference/shiny/latest/exporttestvalues.html}{\code{shiny::exportTestValues()}}.
 This underutilized method exposes internal values of your app
 without needing to create a corresponding input value or output value.
 
@@ -105,14 +105,15 @@ eventually wrap \code{\link[testthat:expect_snapshot_file]{testthat::expect_snap
 
 Their underlying logic is similar to:
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{## Expect values
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{skip_on_cran() # AppDriver
+
+## Expect values
 tmpfile <- tempfile(fileext = ".json")
 jsonlite::write_json(app$get_values(), tmpfile)
 expect_snapshot_file(
   tmpfile,
   variant = app$get_variant(),
-  compare = testthat::compare_file_text,
-  cran = cran
+  compare = testthat::compare_file_text
 )
 
 
@@ -122,8 +123,7 @@ app$get_screenshot(tmpfile)
 expect_snapshot_file(
   tmpfile,
   variant = app$get_variant(),
-  compare = testthat::compare_file_binary,
-  cran = cran
+  compare = testthat::compare_file_binary
 )
 }\if{html}{\out{</div>}}
 
@@ -1068,6 +1068,12 @@ Markdown document.
 \item A URL pointing to your shiny application. (Don't forget to set
 \code{testmode = TRUE} when running your application!)
 \item A Shiny application object which inherits from \code{"shiny.appobj"}.
+\item A function that runs your Shiny application or Shiny R Markdown or
+returns a Shiny app object. If being used within a package, be sure
+to call \verb{library(<pkg>)} first within the provided function as the
+function will be executed within the background R process. When
+\verb{library*()} is called, \code{pkgload::load_all()} will be automatically
+executed to load the package's source code.
 }
 
 By default, \code{app_dir} is set to \code{test_path("../../")} to work in both
@@ -1135,11 +1141,11 @@ screenshots by default, set to \code{FALSE}.}
 initially loads? If duplicate names are found on initialization, a
 warning will be displayed.}
 
-\item{\code{view}}{Opens the \code{\link{ChromoteSession}} in an interactive browser tab
+\item{\code{view}}{Opens the \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}} in an interactive browser tab
 before attempting to navigate to the Shiny app.}
 
 \item{\code{height, width}}{Window size to use when opening the
-\code{\link{ChromoteSession}}. Both \code{height} and \code{width} values must be non-null
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}. Both \code{height} and \code{width} values must be non-null
 values to be used.}
 
 \item{\code{clean_logs}}{Whether to remove the \code{stdout} and \code{stderr} Shiny app
@@ -1186,7 +1192,7 @@ app$expect_values()
 \subsection{Method \code{view()}}{
 View the Shiny application
 
-Calls \verb{$view()} on the \code{\link{ChromoteSession}} object to \emph{view} your Shiny
+Calls \verb{$view()} on the \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}} object to \emph{view} your Shiny
 application in a Chrome browser.
 
 This method is very helpful for debugging while writing your tests.
@@ -1379,7 +1385,8 @@ Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robu
   export = missing_arg(),
   screenshot_args = missing_arg(),
   name = NULL,
-  cran = FALSE
+  transform = NULL,
+  cran = deprecated()
 )}\if{html}{\out{</div>}}
 }
 
@@ -1415,9 +1422,12 @@ and \code{delay} will default to \code{"html"} and \code{0} respectively.
 will be overwritten to \code{.json}. By default, the \code{name} supplied to
 \code{app} on initialization with a counter will be used (e.g. \code{"NAME-001.json"}).}
 
-\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.}
+\item{\code{transform}}{Optionally, a function to scrub sensitive or stochastic text
+from the output. Should take a character vector of lines as input and
+return a modified character vector as output.}
+
+\item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
+this parameter no longer has any effect.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1645,7 +1655,8 @@ file will be downloaded and saved as a snapshot file.
   ...,
   compare = NULL,
   name = NULL,
-  cran = FALSE
+  transform = NULL,
+  cran = deprecated()
 )}\if{html}{\out{</div>}}
 }
 
@@ -1665,9 +1676,12 @@ has extension \code{.r}, \code{.R}, \code{.Rmd}, \code{.md}, or \code{.txt}, and
 generates an ascending sequence of names: \verb{001.download},
 \verb{002.download}, etc.}
 
-\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.}
+\item{\code{transform}}{Optionally, a function to scrub sensitive or stochastic text
+from the output. Should take a character vector of lines as input and
+return a modified character vector as output.}
+
+\item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
+this parameter no longer has any effect.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1761,7 +1775,7 @@ of \code{TAG.textContent} values found will be stored in a snapshot file.
 
 Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robust testing} for more details.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_text(selector, ..., cran = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_text(selector, ..., cran = deprecated())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1771,9 +1785,8 @@ Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robu
 
 \item{\code{...}}{Must be empty. Allows for parameter expansion.}
 
-\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.}
+\item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
+this parameter no longer has any effect.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1852,7 +1865,7 @@ of \code{TAG.textContent} values found will be stored in a snapshot file.
 
 Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robust testing} for more details.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_html(selector, ..., outer_html = TRUE, cran = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_html(selector, ..., outer_html = TRUE, cran = deprecated())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1865,9 +1878,8 @@ Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robu
 \item{\code{outer_html}}{If \code{TRUE} (default), the full DOM structure will be returned (\code{TAG.outerHTML}).
 If \code{FALSE}, the full DOM structure of the child elements will be returned (\code{TAG.innerHTML}).}
 
-\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.}
+\item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
+this parameter no longer has any effect.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1955,7 +1967,7 @@ Once the \code{script} has executed, the JSON result will be saved to a snapshot
   file = missing_arg(),
   timeout = missing_arg(),
   pre_snapshot = NULL,
-  cran = FALSE
+  cran = deprecated()
 )}\if{html}{\out{</div>}}
 }
 
@@ -1974,9 +1986,8 @@ Defaults to the resolved \code{timeout} value during the \code{AppDriver} initia
 \item{\code{pre_snapshot}}{A function to be called on the result of the script before taking the snapshot.
 \verb{$expect_html()} and \verb{$expect_text()} both use \code{\link[=unlist]{unlist()}}.}
 
-\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.}
+\item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
+this parameter no longer has any effect.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2189,7 +2200,7 @@ recommended to use other expectation methods.
   compare = missing_arg(),
   quiet = FALSE,
   name = NULL,
-  cran = FALSE
+  cran = deprecated()
 )}\if{html}{\out{</div>}}
 }
 
@@ -2293,9 +2304,8 @@ non-\code{NULL} \code{threshold} value.}
 will overwritten to \code{.png}. By default, the \code{name} supplied to
 \code{app} on initialization with a counter will be used (e.g. \code{"NAME-001.png"}).}
 
-\item{\code{cran}}{Should these expectations be verified on CRAN? By default,
-they are not because snapshot tests tend to be fragile
-because they often rely on minor details of dependencies.}
+\item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
+this parameter no longer has any effect.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2895,13 +2905,13 @@ app$get_window_size()
 \subsection{Method \code{get_chromote_session()}}{
 Get Chromote Session
 
-Get the \code{\link{ChromoteSession}} object from the \pkg{chromote} package.
+Get the \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}} object from the \pkg{chromote} package.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_chromote_session()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{\link{ChromoteSession}} R6 object
+\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}} R6 object
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

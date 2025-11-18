@@ -113,6 +113,7 @@ images are different.
 }
 
 \examples{
+\dontshow{if (requireNamespace("showimage", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 img_folder <- system.file("example/imgs/", package = "shinytest2")
 slider_old <- fs::path(img_folder, "slider-old.png")
 slider_new <- fs::path(img_folder, "slider-new.png")
@@ -162,4 +163,5 @@ compare_screenshot_threshold(bookmark_old, bookmark_new, threshold = NULL)
 #> FALSE # Images are not identical
 compare_screenshot_threshold(bookmark_old, bookmark_new, threshold = 5)
 #> TRUE # Images are not as different than 5 units
+\dontshow{\}) # examplesIf}
 }

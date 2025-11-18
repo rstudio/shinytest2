@@ -1,5 +1,9 @@
-test_that("$get_value errors are caught", {
+test_that("n is defined", {
+  expect_true(exists("n"))
+  expect_equal(n, 750)
+})
 
+test_that("$get_value errors are caught", {
   app <- AppDriver$new(test_path("apps/wait"))
 
   expect_error(
@@ -27,7 +31,6 @@ test_that("$get_value errors are caught", {
     "length 0"
   )
 
-
   expect_error(
     app$wait_for_value(input = "something", output = "txt"),
     "specify only one"
@@ -52,7 +55,6 @@ test_that("$get_value errors are caught", {
 
 
 test_that("wait for value works on output", {
-
   app <- AppDriver$new(test_path("apps/wait"))
 
   expect_equal(
@@ -62,7 +64,6 @@ test_that("wait for value works on output", {
 })
 
 test_that("wait for value works on input", {
-
   app <- AppDriver$new(test_path("apps/wait"))
 
   expect_equal(

@@ -1,9 +1,46 @@
-
 app_set_dir <- function(
-  self, private,
+  self,
+  private,
   app_dir
 ) {
   ckm8_assert_app_driver(self, private)
+
+  if (is.function(app_dir)) {
+    # package_path <- tryCatch(pkgload::pkg_path(), error = function(e) NULL)
+    package_name <- tryCatch(pkgload::pkg_name(), error = function(e) NULL)
+
+    if (
+      !is.null(package_name) &&
+        rlang::env_label(environment(app_dir)) ==
+          rlang::env_label(pkgload::pkg_ns())
+    ) {
+      # If the function is from the local package, ensure the package is loaded
+      # Make a new function that first loads the package, then runs the original function
+      message(
+        "Upgrading `app_dir` function to load dev package: ",
+        package_name
+      )
+
+      app_fn <- app_dir
+      app_dir <- function() {}
+      rlang::fn_body(app_dir) <- rlang::expr({
+        # Run app with dev package loaded
+        # `library()` shimmed in app driver start
+        library(!!package_name, character.only = TRUE)
+
+        .pkg_ns <- rlang::ns_env(!!package_name)
+        .dev_pkg_run_app <- !!app_fn
+        environment(.dev_pkg_run_app) <- .pkg_ns
+
+        .dev_pkg_run_app()
+      })
+      rlang::fn_env(app_dir) <- globalenv()
+    }
+
+    # Set app function
+    private$dir <- app_dir
+    return()
+  }
 
   app_dir <- app_dir_value(app_dir)
 
@@ -16,7 +53,8 @@ app_set_dir <- function(
         paste0("\"", cur_dir, "\"")
       }
     app_abort(
-      self, private,
+      self,
+      private,
       c(
         "`app_dir` must be an existing directory",
         "i" = paste0("Received: ", cur_dir)
@@ -25,25 +63,33 @@ app_set_dir <- function(
   }
 
   shiny_app_and_rmd_abort <- function() {
-    app_abort(self, private, c(
-      "`app_dir` must be a directory containing:",
-      "",
-      "*" = "an `./app.R` Shiny application",
-      "",
-      " " = "or",
-      "",
-      "*" = "a Shiny R Markdown file",
-      "*" = "a `./server.R` Shiny server",
-      "",
-      "i" = "If a Shiny R Markdown document is found, it will be the prefered document.",
-      "i" = "`./app.R` is not compatible with Shiny R Markdown files."
-    ))
+    app_abort(
+      self,
+      private,
+      c(
+        "`app_dir` must be a directory containing:",
+        "",
+        "*" = "an `./app.R` Shiny application",
+        "",
+        " " = "or",
+        "",
+        "*" = "a Shiny R Markdown file",
+        "*" = "a `./server.R` Shiny server",
+        "",
+        "i" = "If a Shiny R Markdown document is found, it will be the prefered document.",
+        "i" = "`./app.R` is not compatible with Shiny R Markdown files."
+      )
+    )
   }
   shiny_app_and_server_abort <- function() {
-    app_abort(self, private, c(
-      "`app_dir` contains both `app.R` and `server.R`. Unintented behavior may occur.",
-      "!" = "Please either use `app.R` or `server.R`, but not both."
-    ))
+    app_abort(
+      self,
+      private,
+      c(
+        "`app_dir` contains both `app.R` and `server.R`. Unintented behavior may occur.",
+        "!" = "Please either use `app.R` or `server.R`, but not both."
+      )
+    )
   }
 
   if (!fs::dir_exists(app_dir)) {
@@ -74,6 +120,10 @@ app_set_dir <- function(
 
 app_get_dir <- function(self, private) {
   ckm8_assert_app_driver(self, private)
+  if (is.function(private$dir)) {
+    return(private$dir)
+  }
+
   as.character(private$dir)
 }
 
@@ -81,6 +131,9 @@ app_dir_has_rmd <- function(self, private, app_dir = missing_arg()) {
   if (rlang::is_missing(app_dir)) {
     ckm8_assert_app_driver(self, private)
     app_dir <- self$get_dir()
+  }
+  if (is.function(app_dir)) {
+    return(FALSE)
   }
   length(app_dir_rmd(app_dir = app_dir)) >= 1
 }
@@ -90,7 +143,11 @@ app_dir_rmd <- function(self, private, app_dir = rlang::missing_arg()) {
     app_dir <- self$get_dir()
   }
   # Similar to https://github.com/rstudio/rmarkdown/issues/2236
-  docs <- fs::dir_ls(app_dir, regexp = "^[^_].*\\.[Rrq][Mm][Dd]$", type = "file")
+  docs <- fs::dir_ls(
+    app_dir,
+    regexp = "^[^_].*\\.[Rrq][Mm][Dd]$",
+    type = "file"
+  )
 
   if (length(docs) >= 1) {
     docs <- Filter(docs, f = function(doc_path) {

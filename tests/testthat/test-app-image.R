@@ -10,28 +10,35 @@ ui <- fluidPage(
 
   tags$br(),
   h3("A red box"),
-  div(id = "red", style = "background-color: red; width: 100px; height: 100px;"),
+  div(
+    id = "red",
+    style = "background-color: red; width: 100px; height: 100px;"
+  ),
   h3("A green box"),
-  div(id = "green", style = "background-color: darkgreen; width: 100px; height: 100px;"),
+  div(
+    id = "green",
+    style = "background-color: darkgreen; width: 100px; height: 100px;"
+  ),
 )
 
 server <- function(input, output, session) {
-  output$img <- renderImage({
-    shiny::req(input$rawr)
+  output$img <- renderImage(
+    {
+      shiny::req(input$rawr)
 
-    list(src = test_path("app-files/bear.png"))
-  }, deleteFile = FALSE)
-
+      list(src = test_path("app-files/bear.png"))
+    },
+    deleteFile = FALSE
+  )
 }
 
 shiny_app <- shinyApp(ui, server)
 
 
-
 test_that("images are captured via expect_values", {
   app <- AppDriver$new(
     shiny_app,
-    variant = platform_variant()
+    variant = platform_variant(r_version = FALSE)
     # name = "values-image"
   )
 
@@ -39,9 +46,11 @@ test_that("images are captured via expect_values", {
   app$expect_values()
 
   # Add something that will always produce a new image
-  app$run_js('
+  app$run_js(
+    '
     $("body").append("<div>" + new Date() + "</div>")
-  ')
+  '
+  )
 
   # Since it is zoomed in on the image, the text will be NOT be displayed
   app$expect_values(output = "img")
@@ -49,7 +58,6 @@ test_that("images are captured via expect_values", {
   # # Uncomment to test always new screenshot via `$expect_values()`
   # app$expect_values()
 })
-
 
 # TODO-future; Perform these tests via mock to assert proper screenshot args are captured.
 test_that("Values screenshot args are used", {
@@ -76,8 +84,6 @@ test_that("User screenshot args are used instead of auto defined screenshot args
   app$expect_values(screenshot_args = list(selector = "#green"))
 })
 
-
-
 # TODO-future; Perform these tests via mock to assert proper screenshot args are captured.
 test_that("No screenshot is taken", {
   app <- AppDriver$new(
@@ -99,7 +105,6 @@ test_that("No screenshot is taken", {
   # No picture
   app2$expect_values(screenshot_args = FALSE)
 })
-
 
 test_that("screenshot can be expected", {
   app <- AppDriver$new(

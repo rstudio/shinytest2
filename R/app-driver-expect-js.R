@@ -1,9 +1,16 @@
-app_js_script_helper <- function(self, private, script = missing_arg(), file = missing_arg()) {
+app_js_script_helper <- function(
+  self,
+  private,
+  script = missing_arg(),
+  file = missing_arg()
+) {
   ckm8_assert_app_driver(self, private)
   if (rlang::is_missing(file)) return(script)
 
   if (!rlang::is_missing(script)) {
-    app_warn(self, private,
+    app_warn(
+      self,
+      private,
       "Both `file` and `script` are specified. `script` will be ignored."
     )
   }
@@ -11,7 +18,8 @@ app_js_script_helper <- function(self, private, script = missing_arg(), file = m
 }
 
 app_get_js <- function(
-  self, private,
+  self,
+  private,
   script,
   ...,
   file = missing_arg(),
@@ -31,7 +39,8 @@ app_get_js <- function(
   )$result$value
 }
 app_run_js <- function(
-  self, private,
+  self,
+  private,
   script,
   ...,
   file = missing_arg(),
@@ -56,13 +65,13 @@ app_run_js <- function(
 
 
 app_expect_js <- function(
-  self, private,
+  self,
+  private,
   script,
   ...,
   file = missing_arg(),
   timeout = missing_arg(),
-  pre_snapshot = NULL,
-  cran = FALSE
+  pre_snapshot = NULL
 ) {
   ckm8_assert_app_driver(self, private)
   rlang::check_dots_empty()
@@ -82,20 +91,23 @@ app_expect_js <- function(
   # Must use _value_ output as _print_ output is unstable
   # over different R versions and locales
   app__expect_snapshot_value(
-    self, private,
-    result,
-    cran = cran
+    self,
+    private,
+    result
   )
 }
 
 
 get_text_js <- function(selector) {
   paste0(
-    "Array.from(document.querySelectorAll(", toJSON_atomic(selector), ")).map((item, i) => item.textContent);"
+    "Array.from(document.querySelectorAll(",
+    toJSON_atomic(selector),
+    ")).map((item, i) => item.textContent);"
   )
 }
 app_get_text <- function(
-  self, private,
+  self,
+  private,
   selector
 ) {
   ckm8_assert_app_driver(self, private)
@@ -107,18 +119,17 @@ app_get_text <- function(
   unlist(ret)
 }
 app_expect_text <- function(
-  self, private,
+  self,
+  private,
   selector,
-  ...,
-  cran = FALSE
+  ...
 ) {
   ckm8_assert_app_driver(self, private)
   rlang::check_dots_empty()
 
   self$expect_js(
     script = get_text_js(selector),
-    pre_snapshot = unlist,
-    cran = cran
+    pre_snapshot = unlist
   )
 
   invisible(self)
@@ -127,12 +138,17 @@ app_expect_text <- function(
 
 get_html_js <- function(selector, outer_html) {
   paste0(
-    "let map_fn = ", toJSON_atomic(outer_html), " ? (item, i) => item.outerHTML : (item, i) => item.innerHTML;\n",
-    "Array.from(document.querySelectorAll(", toJSON_atomic(selector), ")).map(map_fn);"
+    "let map_fn = ",
+    toJSON_atomic(outer_html),
+    " ? (item, i) => item.outerHTML : (item, i) => item.innerHTML;\n",
+    "Array.from(document.querySelectorAll(",
+    toJSON_atomic(selector),
+    ")).map(map_fn);"
   )
 }
 app_get_html <- function(
-  self, private,
+  self,
+  private,
   selector,
   ...,
   outer_html = TRUE
@@ -146,19 +162,18 @@ app_get_html <- function(
   unlist(ret)
 }
 app_expect_html <- function(
-  self, private,
+  self,
+  private,
   selector,
   ...,
-  outer_html = TRUE,
-  cran = FALSE
+  outer_html = TRUE
 ) {
   ckm8_assert_app_driver(self, private)
   rlang::check_dots_empty()
 
   self$expect_js(
     script = get_html_js(selector, isTRUE(outer_html)),
-    pre_snapshot = unlist,
-    cran = cran
+    pre_snapshot = unlist
   )
 
   invisible(self)

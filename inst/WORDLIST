@@ -1,6 +1,7 @@
 AppDriver
 CDN
 CMD
+CRAN's
 Chromote
 DOI
 DOM
@@ -25,6 +26,7 @@ WebSocket
 ci
 config
 der
+dev
 dir
 doubletap
 erroring

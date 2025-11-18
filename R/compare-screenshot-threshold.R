@@ -69,7 +69,7 @@
 #' [`AppDriver`]`$expect_screenshot(threshold=, kernel_size=)` to make
 #' expectations on screenshots given particular `threshold` and `kernel_size`
 #' values.
-#' @examples
+#' @examplesIf requireNamespace("showimage", quietly = TRUE)
 #' img_folder <- system.file("example/imgs/", package = "shinytest2")
 #' slider_old <- fs::path(img_folder, "slider-old.png")
 #' slider_new <- fs::path(img_folder, "slider-new.png")
