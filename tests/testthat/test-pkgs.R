@@ -17,6 +17,15 @@ test_that("functions shouldn't return a non-shiny app", {
   )
 })
 
+test_that("app-support loading works", {
+  app <- AppDriver$new(
+    app_dir = test_path("pkgs/expkg/apps/app-support/"),
+    load_app_support = TRUE
+  )
+
+  app$expect_values()
+})
+
 
 # Use test_app to relay the tests to the top level testthat runner
 # It is not testing an _app_ per se, but this allows us to

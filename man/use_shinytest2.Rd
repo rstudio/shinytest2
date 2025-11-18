@@ -8,12 +8,12 @@
 use_shinytest2(
   app_dir = ".",
   runner = missing_arg(),
-  setup = missing_arg(),
   ignore = missing_arg(),
   package = missing_arg(),
   ...,
   quiet = FALSE,
-  overwrite = FALSE
+  overwrite = FALSE,
+  setup = deprecated()
 )
 
 use_shinytest2_test(
@@ -28,9 +28,6 @@ use_shinytest2_test(
 
 \item{runner}{If \code{TRUE}, creates a \pkg{shinytest2} test runner at \code{./tests/testthat.R}}
 
-\item{setup}{If \code{TRUE}, creates a setup file called
-\code{./tests/testthat/setup-shinytest2.R} containing a call to \code{\link[=load_app_env]{load_app_env()}}}
-
 \item{ignore}{If \code{TRUE}, adds entries to \code{.Rbuildignore} and \code{.gitignore} to
 ignore new debug screenshots. (\verb{*_.new.png})}
 
@@ -41,6 +38,10 @@ ignore new debug screenshots. (\verb{*_.new.png})}
 \item{quiet}{If \code{TRUE}, console output will be suppressed.}
 
 \item{overwrite}{If \code{TRUE}, the test file or test runner will be overwritten.}
+
+\item{setup}{Deprecated. If you need Shiny app support loaded into your
+environment, please look at \code{\link[=local_app_support]{local_app_support()}} and
+\code{\link[=with_app_support]{with_app_support()}}.}
 
 \item{open}{If \code{TRUE}, the test file will be opened in an editor via
 \code{\link[=file.edit]{file.edit()}} after saving.}

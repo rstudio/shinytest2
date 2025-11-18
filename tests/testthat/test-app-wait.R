@@ -1,7 +1,6 @@
 # Testing that the app helper files can be loaded
 test_that("wait for idle works", {
-
-  load_app_env(test_path("apps/wait"))
+  local_app_support(test_path("apps/wait"))
   app <- AppDriver$new(test_path("apps/wait"))
 
   app$wait_for_idle(duration = 2 * n)
@@ -10,8 +9,7 @@ test_that("wait for idle works", {
 })
 
 test_that("waiting a lesser value will not be enough", {
-
-  load_app_env(test_path("apps/wait"))
+  local_app_support(test_path("apps/wait"))
   app <- AppDriver$new(test_path("apps/wait"))
 
   app$wait_for_idle(duration = n / 2)

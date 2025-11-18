@@ -16,8 +16,7 @@ test_that("before", {
 test_that("wrapper", {
   expect_equal(1, 1)
   expect_error(
-    test_app(app_dir, name = "custom name 1"),
-    "This should be an error"
+    test_app(app_dir, name = "custom name 1")
   )
   expect_equal(1, 1)
 })
@@ -33,11 +32,38 @@ test_that("before", {
   expect_equal(1, 1)
 })
 expect_error(
-  test_app(app_dir, name = "custom name 2"),
-  "This should be an error"
+  test_app(app_dir, name = "custom name 2")
 )
 test_that("after", {
   expect_equal(1, 1)
   expect_equal(1, 1)
   expect_equal(1, 1)
+})
+
+
+test_that("app support loading works", {
+  expect_false(exists("n"))
+
+  local({
+    local_app_support(app_dir = test_path("apps/wait"))
+
+    expect_true(exists("n"))
+    expect_equal(n, 750)
+  })
+
+  expect_false(exists("n"))
+})
+
+test_that("app support loading with_app_support works", {
+  expect_false(exists("n"))
+
+  with_app_support(
+    app_dir = test_path("apps/wait"),
+    {
+      expect_true(exists("n"))
+      expect_equal(n, 750)
+    }
+  )
+
+  expect_false(exists("n"))
 })

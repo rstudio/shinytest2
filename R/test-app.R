@@ -135,13 +135,13 @@ test_app <- function(
   }
 
   if (testthat::is_testing()) {
-    warning("TODO-barret; missing url for migration warning")
-    rlang::warn(c(
-      "x" = "Calling `shinytest2::test_app()` within a {testthat} test has been deprecated in {shinytest2} v0.3.0",
-      "!" = "Calling `shinytest2::test_app()` within a {testthat} test will be hard deprecated in {shinytest2} v0.4.0",
-      "i" = "If you are testing within a package, please see URL on how to migrate your App tests to be located in your package tests.",
-      "i" = "If you are using CI, don't forget to collect your new snapshots after your initial run."
-    ))
+    # rlang::warn(c(
+    #   "x" = "Calling `shinytest2::test_app()` within a {testthat} test has been deprecated in {shinytest2} v0.3.0",
+    #   "!" = "Calling `shinytest2::test_app()` within a {testthat} test will be hard deprecated in {shinytest2} v0.4.0",
+    #   "i" = "If you are testing within a package, please see URL on how to migrate your App tests to be located in your package tests.",
+    #   "i" = "If you are using CI, don't forget to collect your new snapshots after your initial run."
+    # ))
+    # warning("TODO-barret; missing url for migration warning")
 
     # Normalize the reporter given any input
     outer_reporter <- testthat::with_reporter(
@@ -202,6 +202,7 @@ test_app <- function(
           ## We want to act like a continuously integrated reporter
           # start_reporter = outer_reporter$start_reporter,
           # end_reporter = outer_reporter$end_reporter,
+
           start_context = function(...) outer_reporter$start_context(...),
           end_context = function(...) outer_reporter$end_context(...),
           add_result = function(...) outer_reporter$add_result(...),
@@ -273,18 +274,24 @@ test_app <- function(
 
 #' Load the Shiny application's support environment
 #'
-#' Executes all `./R` files and `global.R` into the current environment.
-#' This is useful when wanting access to functions or values created in the `./R` folder for testing purposes.
+#' `r lifecycle::badge("superseded")` by `local_app_support()` and
+#' `with_app_support()` as they offer more flexibility where and when the
+#' support environment is loaded.
 #'
-#' Loading these files is not automatically performed by `test_app()` and must
-#' be called in `./tests/testthat/setup-shinytest2.R` if access to support file objects is
-#' desired.
+#' Executes all `./R` files and `global.R` into the current environment. This is
+#' useful when wanting access to functions or values created in the `./R` folder
+#' for testing purposes.
+#'
+#' Loading these files is not automatically performed by `test_app()` and should
+#' be called in `./tests/testthat/setup-shinytest2.R` if access to support file
+#' objects is desired.
 #'
 #' @seealso [`use_shinytest2()`] for creating a testing setup file that
 #'   loads your Shiny app support environment into the testing environment.
 #'
 #' @param app_dir The base directory for the Shiny application.
-#' @param renv The environment in which the files in the `R/`` directory should be evaluated.
+#' @param renv The environment in which the files in the `R/`` directory should
+#' be evaluated.
 #' @inheritParams shiny::loadSupport
 #' @export
 load_app_env <- function(
@@ -295,40 +302,57 @@ load_app_env <- function(
   shiny::loadSupport(app_dir, renv = renv, globalrenv = globalrenv)
 }
 
-warning(
-  "Document how to use load_app_env() in both an app testing context and a package testing context."
-)
+#' Attach the Shiny application's support environment
+#'
+#' Executes all `./R` files and `global.R` into a temp environment that is
+#' attached appropriately. This is useful when wanting access to functions or
+#' values created in the `./R` folder for testing purposes.
+#'
+#' Loading these files is not automatically performed by `test_app()` and must
+#' be called within your unit tests to access support file objects.
+#'
+#' @param app_dir The base directory for the Shiny application.
+#' @param expr An expression to evaluate within the support environment.
+#' @param envir The environment in which the files in the `R/` directory should
+#' be evaluated.
+#' @describeIn app_support Temporarily attach the Shiny application's support
+#' environment into the current environment.
+#' @export
+#' @examples
+#' \dontrun{
+#' # ./R/utils.R
+#' n <- 42
+#'
+#' #' # ./tests/testthat/test-utils.R
+#' test_that("Can access support environment", {
+#'   shinytest2::local_app_support()
+#'   expect_equal(n, 42)
+#' })
+#' }
+local_app_support <- function(
+  app_dir = "../../",
+  envir = rlang::caller_env()
+) {
+  globalrenv <- rlang::new_environment(parent = envir)
+  renv <- rlang::new_environment(parent = globalrenv)
 
-# warning("load_app_env() is deprecated. Use `load_app_support()` / `with_app_support()` instead.")
-# # #' @export
-# # local_app_env <- function(
-# local_app_support <- function(
-#   app_dir,
-#   envir = rlang::caller_env()
-# ) {
-#   shiny::loadSupport(app_dir, renv = envir, globalrenv = envir)
-# }
+  shiny::loadSupport(app_dir, renv = renv, globalrenv = globalrenv)
 
-# with_app_support <- function(
-#   app_dir,
-#   expr,
-#   envir = rlang::caller_env()
-# ) {
+  withr::local_environment(renv, .local_envir = envir)
+}
 
-#   # Make new environment
-#   tmp_envir <- rlang::new_environment(parent = envir)
-#   # Load support files into new environment
-#   local_app_support(app_dir, envir = tmp_envir)
-#   # Evaluate expression in new environment
-#   withr::with_environment(tmp_envir, expr, name = "app_support")
-# }
+#' @describeIn app_support For the provided `expr`, attach the Shiny
+#' application's support environment into the current environment.
+#' @export
+with_app_support <- function(
+  expr,
+  app_dir = "../../",
+  envir = rlang::caller_env()
+) {
+  globalrenv <- rlang::new_environment(parent = envir)
+  renv <- rlang::new_environment(parent = globalrenv)
 
-has_load_app_env <- function(file) {
-  if (!fs::file_exists(file)) {
-    return(FALSE)
-  }
+  shiny::loadSupport(app_dir, renv = renv, globalrenv = globalrenv)
 
-  lines <- read_utf8(file)
-  has_call <- grepl("load_app_env", lines, fixed = TRUE)
-  return(has_call)
+  withr::with_environment(renv, expr)
 }

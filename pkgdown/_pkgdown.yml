@@ -27,6 +27,7 @@ reference:
   desc: ~
   contents:
   - test_app
+  - local_app_support
   - load_app_env
 
 - title: Setting up tests

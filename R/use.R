@@ -13,14 +13,15 @@
 #'
 #' @param app_dir The base directory for the Shiny application
 #' @param runner If `TRUE`, creates a \pkg{shinytest2} test runner at `./tests/testthat.R`
-#' @param setup If `TRUE`, creates a setup file called
-#' `./tests/testthat/setup-shinytest2.R` containing a call to [`load_app_env()`]
 #' @param ignore If `TRUE`, adds entries to `.Rbuildignore` and `.gitignore` to
 #' ignore new debug screenshots. (`*_.new.png`)
 #' @param package If `TRUE`, adds \pkg{shinytest2} to `Suggests` in the `DESCRIPTION` file.
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @param quiet If `TRUE`, console output will be suppressed.
 #' @param overwrite If `TRUE`, the test file or test runner will be overwritten.
+#' @param setup Deprecated. If you need Shiny app support loaded into your
+#' environment, please look at [`local_app_support()`] and
+#' [`with_app_support()`].
 #' @export
 #' @examples
 #' # Set up shinytest2 testing configs
@@ -28,41 +29,55 @@
 use_shinytest2 <- function(
   app_dir = ".",
   runner = missing_arg(),
-  setup = missing_arg(),
   ignore = missing_arg(),
   package = missing_arg(),
   ...,
   quiet = FALSE,
-  overwrite = FALSE
+  overwrite = FALSE,
+  setup = deprecated()
 ) {
   rlang::check_dots_empty()
 
-  if (all(
-    rlang::is_missing(runner),
-    rlang::is_missing(setup),
-    rlang::is_missing(ignore),
-    rlang::is_missing(package)
-  )) {
+  if (lifecycle::is_present(setup)) {
+    lifecycle::deprecate_warn(
+      "1.5.0",
+      "use_shinytest2(setup)",
+      details = "If you need Shiny app support loaded into your environment, please look at `local_app_support()` and `with_app_support()`. "
+    )
+  }
+
+  if (
+    all(
+      rlang::is_missing(runner),
+      rlang::is_missing(ignore),
+      rlang::is_missing(package)
+    )
+  ) {
     runner <- TRUE
-    setup <- TRUE
     ignore <- TRUE
     package <- TRUE
   } else {
     # If something is provided, disable everything else
     runner <- isTRUE(rlang::maybe_missing(runner, FALSE))
-    setup <- isTRUE(rlang::maybe_missing(setup, FALSE))
     ignore <- isTRUE(rlang::maybe_missing(ignore, FALSE))
     package <- isTRUE(rlang::maybe_missing(package, FALSE))
   }
 
-  if (all(!runner, !setup, !ignore, !package)) {
-    stop("At least one of `runner`, `setup`, `ignore`, or `package` must be `TRUE`")
+  if (all(!runner, !ignore, !package)) {
+    stop(
+      "At least one of `runner`, `ignore`, or `package` must be `TRUE`"
+    )
   }
 
-  if (runner)  use_shinytest2_runner(app_dir, quiet = quiet, overwrite = overwrite)
-  if (setup)   use_shinytest2_setup(app_dir, quiet = quiet)
-  if (ignore)  use_shinytest2_ignore(app_dir, quiet = quiet)
-  if (package) use_shinytest2_package(app_dir, quiet = quiet)
+  if (runner) {
+    use_shinytest2_runner(app_dir, quiet = quiet, overwrite = overwrite)
+  }
+  if (ignore) {
+    use_shinytest2_ignore(app_dir, quiet = quiet)
+  }
+  if (package) {
+    use_shinytest2_package(app_dir, quiet = quiet)
+  }
 
   invisible()
 }
@@ -92,7 +107,10 @@ use_shinytest2_test <- function(
   }
 
   copy_test_file_helper(
-    from_file = system.file("internal/template/test-shinytest2.R", package = "shinytest2"),
+    from_file = system.file(
+      "internal/template/test-shinytest2.R",
+      package = "shinytest2"
+    ),
     to_file = "tests/testthat/test-shinytest2.R",
     pre_msg = "Saving test: ",
     existing_pre_msg = "Test already found: ",
@@ -103,35 +121,20 @@ use_shinytest2_test <- function(
   )
 }
 
-use_shinytest2_setup <- function(app_dir = ".", quiet = FALSE) {
-  withr::with_dir(app_dir, {
-    # Legacy support for old setup.R files.
-    # Should be using `setup-shinytest2.R`
-    if (has_load_app_env("tests/testthat/setup.R")) {
-      return(FALSE)
-    }
-
-    fs::dir_create("tests/testthat")
-    write_union(
-      "tests/testthat/setup-shinytest2.R",
-      comments = "# Load application support files into testing environment",
-      lines = "shinytest2::load_app_env()",
-      quiet = quiet
-    )
-  })
-}
-
-
 use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
   app_dir <- app_dir_value(app_dir)
   withr::with_dir(app_dir, {
     if (!fs::file_exists("DESCRIPTION")) {
       if (!quiet) {
         rlang::inform(
-          c("!" = paste0(
-            "No `", fs::path(app_dir, "DESCRIPTION"), "` file found.",
-            " Skipping adding `{shinytest2}` to `Suggests`"
-          ))
+          c(
+            "!" = paste0(
+              "No `",
+              fs::path(app_dir, "DESCRIPTION"),
+              "` file found.",
+              " Skipping adding `{shinytest2}` to `Suggests`"
+            )
+          )
         )
       }
       return(FALSE)
@@ -158,7 +161,6 @@ use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
 }
 
 use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
-
   # Check app_dir location?
 
   # Do not use `usethis::use_git_ignore()` or `usethis::use_build_ignore()` directly!
@@ -168,7 +170,9 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
   withr::with_dir(app_dir, {
     wrote_lines <- write_union(
       ".gitignore",
-      comments = c("# {shinytest2}: Ignore new debug snapshots for `$expect_values()`"),
+      comments = c(
+        "# {shinytest2}: Ignore new debug snapshots for `$expect_values()`"
+      ),
       lines = "*_.new.png",
       quiet = quiet
     )
@@ -179,7 +183,11 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
       } else {
         rlang::inform(
           c(
-            "!" = paste0("`", fs::path(app_dir, ".gitignore"), "` already contains `*_.new.png`")
+            "!" = paste0(
+              "`",
+              fs::path(app_dir, ".gitignore"),
+              "` already contains `*_.new.png`"
+            )
           )
         )
       }
@@ -189,7 +197,11 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
       build_ignores <- c(
         "_\\.new\\.png$"
       )
-      wrote_lines <- write_union(".Rbuildignore", lines = build_ignores, quiet = quiet)
+      wrote_lines <- write_union(
+        ".Rbuildignore",
+        lines = build_ignores,
+        quiet = quiet
+      )
       if (!quiet) {
         if (wrote_lines) {
           ## `write_union()` is verbose, do not be double verbose
@@ -197,22 +209,35 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
         } else {
           rlang::inform(
             c(
-              "!" = paste0("`", fs::path(app_dir, ".Rbuildignore"), "` already contains `_*.new.png`")
+              "!" = paste0(
+                "`",
+                fs::path(app_dir, ".Rbuildignore"),
+                "` already contains `_*.new.png`"
+              )
             )
           )
         }
       }
     } else {
       if (!quiet) {
-        rlang::inform(c("!" = "No `.Rbuildignore` file found. Skipping adding `_*.new.png` to `.Rbuildignore`"))
+        rlang::inform(c(
+          "!" = "No `.Rbuildignore` file found. Skipping adding `_*.new.png` to `.Rbuildignore`"
+        ))
       }
     }
   })
 }
 
-use_shinytest2_runner <- function(app_dir = ".", quiet = FALSE, overwrite = FALSE) {
+use_shinytest2_runner <- function(
+  app_dir = ".",
+  quiet = FALSE,
+  overwrite = FALSE
+) {
   copy_test_file_helper(
-    from_file = system.file("internal/template/testthat.R", package = "shinytest2"),
+    from_file = system.file(
+      "internal/template/testthat.R",
+      package = "shinytest2"
+    ),
     to_file = "tests/testthat.R",
     pre_msg = "Saving test runner: ",
     existing_pre_msg = "Runner already found: ",
@@ -234,15 +259,15 @@ copy_test_file_helper <- function(
   overwrite = FALSE,
   open = FALSE
 ) {
-
   app_dir <- app_dir_value(app_dir)
   withr::with_dir(app_dir, {
-
     if (!overwrite && fs::file_exists(to_file)) {
       if (!quiet) {
         if (identical(readLines(from_file), readLines(to_file))) {
           # Notify that the file is identical
-          rlang::inform(c("*" = paste0("Identical file found. Skipping: ", to_file)))
+          rlang::inform(c(
+            "*" = paste0("Identical file found. Skipping: ", to_file)
+          ))
         } else {
           # Notify that a file already exists
           rlang::inform(c("!" = paste0(existing_pre_msg, to_file)))
@@ -280,5 +305,11 @@ edit_file <- function(file, open = TRUE) {
 # Use `force = TRUE` to set up infrastructure without forcing to look for a DESCRIPTION file
 with_this_project <- function(code, ..., path = ".", force = TRUE) {
   rlang::check_installed("usethis")
-  usethis::with_project(path = path, code = code, force = force, ..., quiet = FALSE)
+  usethis::with_project(
+    path = path,
+    code = code,
+    force = force,
+    ...,
+    quiet = FALSE
+  )
 }
