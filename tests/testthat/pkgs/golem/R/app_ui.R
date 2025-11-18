@@ -11,7 +11,8 @@ app_ui <- function(request) {
     # Your application UI logic
     fluidPage(
       # golem::golem_welcome_page() # Remove this line to start building your UI
-      shiny::div(id="test_id", "Golem App loaded")
+      shiny::div(id = "test_id", "Golem App loaded"),
+      verbatimTextOutput("text_output")
     )
   )
 }

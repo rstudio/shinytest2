@@ -10,19 +10,12 @@ test_that("Local pkg loads", {
 
 
 test_that("App requires library calls to load pkg", {
-  app <- AppDriver$new("app.R")
-  # app <- AppDriver$new()
-  app$wait_for_idle()
+  app <- AppDriver$new("apps/library/")
+  expkg_expect_shiny_app(app)
+})
 
-  expect_equal(
-    app$get_value(output = "btn_click_count"),
-    "0"
-  )
-
-  app$click("btn")
-
-  expect_equal(
-    app$get_value(output = "btn_click_count"),
-    "1"
-  )
+test_that("App requires require calls to load pkg", {
+  # skip("because")
+  app <- AppDriver$new("apps/require/")
+  expkg_expect_shiny_app(app)
 })
