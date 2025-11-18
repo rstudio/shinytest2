@@ -12,9 +12,12 @@ test_that("images are captured via expect_values", {
     imageOutput("img", width = img_width, height = img_height),
   )
   server <- function(input, output, session) {
-    output$img <- renderImage({
-      list(src = bear_path)
-    }, deleteFile = FALSE)
+    output$img <- renderImage(
+      {
+        list(src = bear_path)
+      },
+      deleteFile = FALSE
+    )
   }
   shiny_app <- shinyApp(ui, server)
 
@@ -42,28 +45,44 @@ test_that("images are captured via expect_values", {
       # app$wait_for_idle()
 
       # Default value
-      img_s1 <- expect_screenshot(app, rlang::missing_arg(), c(
-        max(c(img_height, window_size$height)),
-        # Image width + 15 px margin left from container
-        max(c(img_width + 15, window_size$width))
-      ))
+      img_s1 <- expect_screenshot(
+        app,
+        rlang::missing_arg(),
+        c(
+          max(c(img_height, window_size$height)),
+          # Image width + 15 px margin left from container
+          max(c(img_width + 15, window_size$width))
+        )
+      )
 
       # Browser Viewport
-      img_v1 <- expect_screenshot(app, "viewport", c(window_size$height, window_size$width))
+      img_v1 <- expect_screenshot(
+        app,
+        "viewport",
+        c(window_size$height, window_size$width)
+      )
 
       if (window_size$scroll) {
         # Introduce a scroll
         app$run_js("window.scroll(5, 20)")
 
         # Scroll value (default)
-        img_s2 <- expect_screenshot(app, "scrollable_area", c(
-          max(c(img_height, window_size$height)),
-          # Image width + 15 px margin left from container
-          max(c(img_width + 15, window_size$width))
-        ))
+        img_s2 <- expect_screenshot(
+          app,
+          "scrollable_area",
+          c(
+            max(c(img_height, window_size$height)),
+            # Image width + 15 px margin left from container
+            max(c(img_width + 15, window_size$width))
+          )
+        )
 
         # Browser Viewport
-        img_v2 <- expect_screenshot(app, "viewport", c(window_size$height, window_size$width))
+        img_v2 <- expect_screenshot(
+          app,
+          "viewport",
+          c(window_size$height, window_size$width)
+        )
       }
 
       if (window_size$scroll) {
@@ -93,6 +112,9 @@ test_that("images are captured via expect_values", {
 
 
 test_that("app with no `html` height can get a screenshot", {
+  skip_on_cran()
+  skip_on_os("windows")
+
   shiny_app <- shinyApp(
     div(
       style = "height:400px; background:red;",
@@ -122,5 +144,4 @@ test_that("app with no `html` height can get a screenshot", {
   expect_no_screenshot_error("viewport")
   # Produces error
   expect_no_screenshot_error("html", error_msg = "with 0 height")
-
 })

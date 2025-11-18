@@ -33,18 +33,22 @@ Imports:
     jsonlite,
     lifecycle,
     pingr,
+    pkgload,
     R6 (>= 2.4.0),
     rlang (>= 1.0.0),
     rmarkdown,
     shiny,
     withr
 Suggests:
+    box,
     deSolve,
     diffobj,
     ggplot2,
+    golem,
     knitr,
     plotly,
     png,
+    rhino,
     rstudioapi,
     shinytest (>= 1.5.1),
     shinyvalidate (>= 0.1.2),
@@ -55,9 +59,10 @@ Suggests:
     vdiffr (>= 1.0.0)
 LinkingTo:
     cpp11
-VignetteBuilder: 
+VignetteBuilder:
     knitr
 Config/Needs/check: rstudio/shiny, bslib
+Config/Needs/shinytest2-testing: decor
 Config/Needs/website: pkgdown, tidyverse/tidytemplate
 Config/testthat/edition: 3
 Encoding: UTF-8

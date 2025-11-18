@@ -1068,6 +1068,12 @@ Markdown document.
 \item A URL pointing to your shiny application. (Don't forget to set
 \code{testmode = TRUE} when running your application!)
 \item A Shiny application object which inherits from \code{"shiny.appobj"}.
+\item A function that runs your Shiny application or Shiny R Markdown or
+returns a Shiny app object. If being used within a package, be sure
+to call \verb{library(<pkg>)} first within the provided function as the
+function will be executed within the background R process. When
+\verb{library*()} is called, \code{pkgload::load_all()} will be automatically
+executed to load the package's source code.
 }
 
 By default, \code{app_dir} is set to \code{test_path("../../")} to work in both

@@ -1,6 +1,8 @@
-
 test_that("plotly webgl works", {
   skip_if_not_installed("plotly")
+  skip(
+    "webgl doesn't work with chromote; make a different snapshot pre-process test"
+  )
   # TODO-future; Good candidate for fuzzy picture matching
 
   app <- AppDriver$new()

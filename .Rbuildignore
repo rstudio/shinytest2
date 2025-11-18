@@ -20,5 +20,6 @@ _\.new\.png$
 
 ^tests/testthat/migrate-apps$
 ^tests/testthat/apps$
+^tests/testthat/pkgs$
 ^CRAN-SUBMISSION$
 ^_dev$
