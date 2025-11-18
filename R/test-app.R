@@ -101,12 +101,12 @@ test_app <- function(
     sibling_folders <- fs::path_file(fs::dir_ls(cur_path))
     if (
       length(cur_folder) == 1 &&
-      cur_folder == "tests" &&
-      "testthat" %in% sibling_folders
+        cur_folder == "tests" &&
+        "testthat" %in% sibling_folders
     ) {
       "../"
-    # } else if ("tests" %in% sibling_folders) {
-    #   "."
+      # } else if ("tests" %in% sibling_folders) {
+      #   "."
     } else {
       "."
     }
@@ -116,13 +116,22 @@ test_app <- function(
 
   if (isTRUE(check_setup)) {
     # Legacy support for `setup.R`; Same content, just different name
-    setup_paths <- fs::path(app_dir, "tests", "testthat", c("setup-shinytest2.R", "setup.R"))
+    setup_paths <- fs::path(
+      app_dir,
+      "tests",
+      "testthat",
+      c("setup-shinytest2.R", "setup.R")
+    )
     setup_paths_exist <- fs::file_exists(setup_paths)
     if (!any(setup_paths_exist)) {
       rlang::abort(
         c(
           "No `setup-shinytest2.R` file found in `./tests/testthat`",
-          "i" = paste0("To create a `setup-shinytest2.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
+          "i" = paste0(
+            "To create a `setup-shinytest2.R` file, please run `shinytest2::use_shinytest2(\"",
+            app_dir,
+            "\", setup = TRUE)`"
+          ),
           "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
         )
       )
@@ -138,18 +147,24 @@ test_app <- function(
       rlang::abort(
         c(
           "No call to `shinytest2::load_app_env()` found in `./tests/testthat/setup-shinytest2.R`",
-          "i" = paste0("To create a `setup-shinytest2.R` file, please run `shinytest2::use_shinytest2(\"", app_dir, "\", setup = TRUE)`"),
+          "i" = paste0(
+            "To create a `setup-shinytest2.R` file, please run `shinytest2::use_shinytest2(\"",
+            app_dir,
+            "\", setup = TRUE)`"
+          ),
           "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
         )
       )
     }
   }
 
-
-
   if (testthat::is_testing()) {
     # Normalize the reporter given any input
-    outer_reporter <- testthat::with_reporter(reporter, testthat::get_reporter(), start_end_reporter = FALSE)
+    outer_reporter <- testthat::with_reporter(
+      reporter,
+      testthat::get_reporter(),
+      start_end_reporter = FALSE
+    )
 
     outer_context <- NULL
 
@@ -160,7 +175,9 @@ test_app <- function(
       snapshot_reporter <- outer_reporter
     } else if (inherits(outer_reporter, "MultiReporter")) {
       # Find the SnapshotReporter, as the `test` value is available
-      snapshot_reporters <- Filter(outer_reporter$reporters, f = function(x) inherits(x, "SnapshotReporter"))
+      snapshot_reporters <- Filter(outer_reporter$reporters, f = function(x) {
+        inherits(x, "SnapshotReporter")
+      })
       if (length(snapshot_reporters) > 0) {
         snapshot_reporter <- snapshot_reporters[[1]]
       }
@@ -168,75 +185,87 @@ test_app <- function(
     if (!is.null(snapshot_reporter)) {
       test_name <- snapshot_reporter$test
       outer_context <- snapshot_reporter$file
-      # Stop the current test
-      outer_reporter$end_test(outer_context, test_name)
-    }
-
-    ## Unwravel and re-wrap file/context like
-    ## https://github.com/r-lib/testthat/blob/aab0464b555c27dcb2381af5f71c395a084a8643/R/test-files.R#L269-L277
-    # Stop the current context / file
-    outer_reporter$end_context_if_started()
-    outer_reporter$end_file()
-    withr::defer({
-      # Restore the context when done
-      outer_reporter$start_file(outer_context)
-
-      if (!rlang::is_missing(test_name)) {
-        # Restore the current test
-        outer_reporter$start_test(outer_context, test_name)
+      if (!is.null(test_name)) {
+        # End the current test
+        snapshot_reporter$end_test(outer_context, test_name)
       }
 
-    })
+      ## Unwravel and re-wrap file/context like
+      ## https://github.com/r-lib/testthat/blob/aab0464b555c27dcb2381af5f71c395a084a8643/R/test-files.R#L269-L277
+      # Stop the current context / file
+      outer_reporter$end_context_if_started()
+      outer_reporter$end_file()
+      withr::defer({
+        # Restore the context when done
+        outer_reporter$start_file(outer_context)
 
-    name <- rlang::maybe_missing(name, fs::path_file(app_dir))
+        if (!rlang::is_missing(test_name)) {
+          # Restore the current test
+          outer_reporter$start_test(outer_context, test_name)
+        }
+      })
 
-    ReplayReporter <- R6Class( # nolint
-      "ReplayReporter",
-      inherit = testthat::Reporter,
-      public = list(
-        is_full = function(...) outer_reporter$is_full(...),
-        ## Do not perform these two methods.
-        ## We want to act like a continuously integrated reporter
-        # start_reporter = outer_reporter$start_reporter,
-        # end_reporter = outer_reporter$end_reporter,
-        start_context = function(...) outer_reporter$start_context(...),
-        end_context = function(...) outer_reporter$end_context(...),
-        add_result = function(...) outer_reporter$add_result(...),
-        start_file = function(test_file, ...) {
-          ## This could be done above when ending the outer context
-          ## However, by ending / starting the outer file
-          ## a hint is displayed as to what file is currently testing
-          # Close current file
-          outer_reporter$end_file()
+      name <- rlang::maybe_missing(name, fs::path_file(app_dir))
 
-          # Upgrade the name
-          if (!is.null(name) && length(name) == 1 && is.character(name) && nchar(name) > 0) {
-            # ⠏ |         0 | CURRENT_TEST_CONTEXT - APP_NAME - APP_TEST_FILE
-            test_file <- sub(
-              "^test-",
-              paste0(
-                "test-",
-                if (is.null(outer_context)) "" else paste0(outer_context, " - "),
-                name,
-                " - "
-              ),
-              test_file
-            )
-          }
-          outer_reporter$start_file(test_file, ...)
-        },
-        end_file = function(...) {
-          outer_reporter$end_file(...)
-          # Restart current file that was ended in ReplayReporter$start_file
-          outer_reporter$start_file(outer_context)
-        },
-        start_test = function(...) outer_reporter$start_test(...),
-        end_test = function(...) outer_reporter$end_test(...)
+      # nolint start
+      ReplayReporter <- R6Class(
+        # nolint end
+        "ReplayReporter",
+        inherit = testthat::Reporter,
+        public = list(
+          is_full = function(...) outer_reporter$is_full(...),
+          ## Do not perform these two methods.
+          ## We want to act like a continuously integrated reporter
+          # start_reporter = outer_reporter$start_reporter,
+          # end_reporter = outer_reporter$end_reporter,
+          start_context = function(...) outer_reporter$start_context(...),
+          end_context = function(...) outer_reporter$end_context(...),
+          add_result = function(...) outer_reporter$add_result(...),
+          start_file = function(test_file, ...) {
+            ## This could be done above when ending the outer context
+            ## However, by ending / starting the outer file
+            ## a hint is displayed as to what file is currently testing
+            # Close current file
+            # outer_reporter$end_file()
+
+            # Upgrade the name
+            if (
+              !is.null(name) &&
+                length(name) == 1 &&
+                is.character(name) &&
+                nchar(name) > 0
+            ) {
+              # ⠏ |         0 | CURRENT_TEST_CONTEXT - APP_NAME - APP_TEST_FILE
+              test_file <- sub(
+                "^test-",
+                paste0(
+                  "test-",
+                  if (is.null(outer_context)) {
+                    ""
+                  } else {
+                    paste0(outer_context, " - ")
+                  },
+                  name,
+                  " - "
+                ),
+                test_file
+              )
+            }
+            outer_reporter$start_file(test_file, ...)
+          },
+          end_file = function(...) {
+            outer_reporter$end_file(...)
+            # Restart current file that was ended in ReplayReporter$start_file
+            outer_reporter$start_file(outer_context)
+          },
+          start_test = function(...) outer_reporter$start_test(...),
+          end_test = function(...) outer_reporter$end_test(...)
+        )
       )
-    )
-    reporter <- ReplayReporter$new()
-    # Currently testing, the inner reporter should not stop on failure
-    stop_on_failure <- rlang::maybe_missing(stop_on_failure, FALSE)
+      reporter <- ReplayReporter$new()
+      # Currently testing, the inner reporter should not stop on failure
+      stop_on_failure <- rlang::maybe_missing(stop_on_failure, FALSE)
+    }
   } else {
     # Not currently testing
     # Use the default stop_on_failure value
@@ -256,7 +285,6 @@ test_app <- function(
 
   invisible(results)
 }
-
 
 
 #' Load the Shiny application's support environment
