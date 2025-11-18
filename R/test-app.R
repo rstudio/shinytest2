@@ -2,7 +2,6 @@ warning("TODO-barret; test check_setup values")
 warning(
   "TODO-barret; requires R file loading; Look into using `testthat::test_dir(load_package=)` and `testthat:::test_files_setup_env()`"
 )
-warning("TODO-barret; use-package.Rmd vignette")
 
 # Import something from testthat to avoid a check error that nothing is imported from a `Depends` package
 #' @importFrom testthat default_reporter
@@ -102,7 +101,6 @@ test_app <- function(
   ...,
   name = missing_arg(),
   reporter = testthat::get_reporter(),
-  # TODO-v0.4.0; Remove this argument and let `...` handle it
   stop_on_failure = missing_arg(),
   check_setup = deprecated()
 ) {
@@ -133,7 +131,7 @@ test_app <- function(
   if (lifecycle::is_present(check_setup)) {
     if (isTRUE(check_setup)) {
       lifecycle::deprecate_warn(
-        "0.1.0",
+        "0.5.0",
         "shinytest2::test_app(check_setup = 'is no longer used')",
         details = c(
           "To manually load an app's support files, call `shinytest2::local_app_support(app_dir=)` within your {testthat} test",
