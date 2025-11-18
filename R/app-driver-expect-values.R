@@ -124,7 +124,7 @@ app_get_values <- function(
 
   # Ask Shiny for info
   cur_env <- rlang::current_env()
-  req <- app_httr_get(self, private, url, fn_404 = function(req) {
+  req <- app_httr2_get(self, private, url, fn_404 = function(req) {
     app_abort(
       self,
       private,
@@ -168,7 +168,7 @@ app_get_values <- function(
 
   tmpfile <- tempfile()
   on.exit(unlink(tmpfile), add = TRUE)
-  writeBin(req$content, tmpfile)
+  writeBin(httr2::resp_body_raw(req), tmpfile)
   values <- readRDS(tmpfile)
 
   if (hash_images) {
@@ -226,7 +226,7 @@ app_expect_values <- function(
   )
   # Ask Shiny for info
   cur_env <- rlang::current_env()
-  req <- app_httr_get(self, private, url, fn_404 = function(req) {
+  req <- app_httr2_get(self, private, url, fn_404 = function(req) {
     app_abort(
       self,
       private,
@@ -239,7 +239,7 @@ app_expect_values <- function(
   })
 
   # Convert to text, then replace base64-encoded images with hashes.
-  content <- raw_to_utf8(req$content)
+  content <- raw_to_utf8(httr2::resp_body_raw(req))
   # original_content <- content
   content <- hash_snapshot_image_data(content, is_json_file = TRUE)
   # Adjust the text to _pretty_ print

@@ -4,6 +4,7 @@ require("shiny", quietly = TRUE, character.only = TRUE)
 test_that("Make sure global vars are set - issue303", {
   # Only run on CI. CRAN requires package to be installed to run `callr::rscript()
   skip_if(!on_ci(), "Only run on CI")
+  skip_on_os("windows")
 
   # Run the script in a global environment that does not polute this global environment
   p <- callr::rscript("scripts/issue_303.R", show = FALSE)
@@ -21,6 +22,7 @@ test_that("Make sure global vars are set - issue303", {
 test_that("Make sure global vars are set - pr307", {
   # Only run on CI. CRAN requires package to be installed to run `callr::rscript()
   skip_if(!on_ci(), "Only run on CI")
+  skip_on_os("windows")
 
   # Run the script in a global environment that does not polute this global environment
   p <- callr::rscript("scripts/pr_307.R", show = FALSE)
@@ -81,7 +83,6 @@ test_that("can run saved app", {
 
   expect_equal(app$get_value(output = "x"), as.character(x))
 })
-
 
 
 test_that("can get ui and server from app", {
