@@ -113,7 +113,7 @@ test_that("images are captured via expect_values", {
 
 test_that("app with no `html` height can get a screenshot", {
   skip_on_cran()
-  skip_on_windows()
+  skip_on_os("windows")
 
   shiny_app <- shinyApp(
     div(
