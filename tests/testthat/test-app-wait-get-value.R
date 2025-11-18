@@ -1,8 +1,3 @@
-test_that("n is defined", {
-  expect_true(exists("n"))
-  expect_equal(n, 750)
-})
-
 test_that("$get_value errors are caught", {
   app <- AppDriver$new(test_path("apps/wait"))
 

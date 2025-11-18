@@ -10,7 +10,8 @@ server <- function(input, output) {
     head(cars, input$n)
   })
   plot_obj <- reactive({
-    ggplot2::ggplot(dt(), ggplot2::aes_string("speed", "dist")) + ggplot2::geom_point()
+    ggplot2::ggplot(dt(), ggplot2::aes_string("speed", "dist")) +
+      ggplot2::geom_point()
   })
 
   output$plot <- renderPlot({
@@ -26,9 +27,7 @@ server <- function(input, output) {
 shiny_app <- shinyApp(ui = ui, server = server)
 
 
-
 test_that("`export`ed `plot_obj` is updated by `n`", {
-
   skip_if_not_installed("vdiffr")
 
   app <- AppDriver$new(shiny_app)
@@ -39,7 +38,11 @@ test_that("`export`ed `plot_obj` is updated by `n`", {
     testthat::expect_equal(n_val, n, expected.label = n)
     # Verify `dt()` data is first `n` lines of `cars`
     dt <- app$get_value(export = "dt")
-    testthat::expect_equal(dt, head(cars, n), expected.label = paste0("head(cars, ", n, ")"))
+    testthat::expect_equal(
+      dt,
+      head(cars, n),
+      expected.label = paste0("head(cars, ", n, ")")
+    )
 
     # Verify `plot_obj()` data is `dt()`
     plot_obj <- app$get_value(export = "plot_obj")
@@ -71,7 +74,7 @@ test_that("`export`ed `plot_obj` is updated by `n`", {
   plot_obj_10 <- app$get_value(export = "plot_obj")
   expect_equal(plot_obj_10$data, dt10)
   # Verify `plot_obj()` is consistent
-  vdiffr::expect_doppelganger("cars-points-10", plot_obj_10)
+  vdiffr::expect_doppelganger("cars-points-10-export", plot_obj_10)
 
   ## Update `n` to 20
   app$set_inputs(n = 20)
@@ -86,7 +89,7 @@ test_that("`export`ed `plot_obj` is updated by `n`", {
   # Verify `plot_obj()` data is `dt()`
   plot_obj_20 <- app$get_value(export = "plot_obj")
   expect_equal(plot_obj_20$data, dt20)
-  vdiffr::expect_doppelganger("cars-points-20", plot_obj_20)
+  vdiffr::expect_doppelganger("cars-points-20-export", plot_obj_20)
 })
 
 
