@@ -16,7 +16,9 @@ expkg_shiny_app <- function() {
       tags$p("If this app loads, it is a success!"),
       actionButton("btn", "Click Me"),
       verbatimTextOutput("btn_click_count"),
-      verbatimTextOutput("exported_value")
+      verbatimTextOutput("exported_value"),
+      verbatimTextOutput("internal_value"),
+      tags$code(expkg_internal_value)
     ),
     server = function(input, output) {
       output$btn_click_count <- renderText({
@@ -24,6 +26,9 @@ expkg_shiny_app <- function() {
       })
       output$exported_value <- renderText({
         expkg_exported_value
+      })
+      output$internal_value <- renderText({
+        expkg_internal_value
       })
     }
   )

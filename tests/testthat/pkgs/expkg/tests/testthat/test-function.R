@@ -9,7 +9,14 @@ test_that("Local pkg loads", {
 })
 
 
-test_that("Pass in fn directly", {
+test_that("Pass in run fn directly", {
   app <- AppDriver$new(expkg_run_shiny_app)
+  expkg_expect_shiny_app(app)
+})
+
+
+# https://github.com/rstudio/shinytest2/issues/296
+test_that("Pass in app obj fn directly", {
+  app <- AppDriver$new(expkg_shiny_app)
   expkg_expect_shiny_app(app)
 })
