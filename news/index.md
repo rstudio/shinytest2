@@ -24,6 +24,11 @@
   `App$expect_values()`
   ([\#418](https://github.com/rstudio/shinytest2/issues/418)).
 
+- Migrated from [httr](https://httr.r-lib.org/) to
+  [httr2](https://httr2.r-lib.org) for all HTTP requests made by
+  [shinytest2](https://rstudio.github.io/shinytest2/)
+  ([\#420](https://github.com/rstudio/shinytest2/issues/420)).
+
 ## shinytest2 0.4.1
 
 CRAN release: 2025-04-11
