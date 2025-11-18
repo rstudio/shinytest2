@@ -1,5 +1,6 @@
-
-Count <- R6Class( # nolint
+# nolint start
+Count <- R6Class(
+  # nolint end
   "Count",
   private = list(
     count = 0
@@ -16,7 +17,8 @@ Count <- R6Class( # nolint
 )
 
 app_next_temp_snapshot_path <- function(
-  self, private,
+  self,
+  private,
   name, # full path or filename
   ext = "json"
 ) {
@@ -36,7 +38,9 @@ app_next_temp_snapshot_path <- function(
 }
 
 
-Url <- R6Class( # nolint
+# nolint start
+Url <- R6Class(
+  # nolint end
   "Url",
   private = list(
     url = NULL
@@ -46,9 +50,27 @@ Url <- R6Class( # nolint
       private$url
     },
     set = function(url) {
-      res <- httr::parse_url(url)
+      res <- tryCatch(
+        httr2::url_parse(url),
+        error = function(e) {
+          # httr2::url_parse() uses curl underneath which is stricter
+          # Convert parsing errors to validation errors
+          if (grepl("Port number", e$message)) {
+            warning(e$message)
+            stop("Assertion on 'url port' failed")
+          }
+          if (grepl("parse URL", e$message)) {
+            stop("Assertion on 'url hostname' failed: Must be a single string")
+          }
+          stop(e)
+        }
+      )
 
-      checkmate::assert_subset(res$scheme, c("http", "https"), .var.name = "url scheme")
+      checkmate::assert_subset(
+        res$scheme,
+        c("http", "https"),
+        .var.name = "url scheme"
+      )
 
       if (!is.null(res$port)) {
         res$port <- as.integer(res$port)
@@ -57,7 +79,7 @@ Url <- R6Class( # nolint
 
       ckm8_assert_single_string(res$hostname, .var.name = "url hostname")
 
-      private$url <- httr::build_url(res)
+      private$url <- httr2::url_build(res)
 
       invisible(self)
     }

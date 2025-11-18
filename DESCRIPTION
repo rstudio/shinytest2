@@ -29,7 +29,7 @@ Imports:
     cli,
     fs,
     globals (>= 0.14.0),
-    httr,
+    httr2,
     jsonlite,
     lifecycle,
     pingr,
@@ -97,7 +97,7 @@ Collate:
     'cpp11.R'
     'expect-snapshot.R'
     'expr-recurse.R'
-    'httr.R'
+    'httr2.R'
     'migrate.R'
     'missing-value.R'
     'utils.R'
