@@ -43,9 +43,11 @@ Suggests:
     deSolve,
     diffobj,
     ggplot2,
+    golem,
     knitr,
     plotly,
     png,
+    rhino,
     rstudioapi,
     shinytest (>= 1.5.1),
     shinyvalidate (>= 0.1.2),
@@ -53,8 +55,6 @@ Suggests:
     showimage,
     spelling,
     usethis,
-    rhino,
-    golem,
     vdiffr (>= 1.0.0)
 LinkingTo:
     cpp11
