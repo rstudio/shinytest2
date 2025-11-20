@@ -12,7 +12,6 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
-
   output$download_button_txt <- downloadHandler(
     filename = function() {
       "download-button.txt"
@@ -68,7 +67,6 @@ server <- function(input, output) {
 shiny_app <- shinyApp(ui, server)
 
 
-
 test_that("download files work from link and button", {
   app <- AppDriver$new(shiny_app, variant = NULL)
 
@@ -94,11 +92,14 @@ test_that("download files work from link and button", {
 
 
 test_that("download files can be retrieved", {
-  on.exit({
-    if (fs::file_exists("barret.test")) {
-      fs::file_delete("barret.test")
-    }
-  }, add = TRUE)
+  on.exit(
+    {
+      if (fs::file_exists("barret.test")) {
+        fs::file_delete("barret.test")
+      }
+    },
+    add = TRUE
+  )
 
   app <- AppDriver$new(shiny_app, variant = NULL)
 

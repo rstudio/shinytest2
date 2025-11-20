@@ -1,4 +1,6 @@
 test_that("Quarto documents can be tested", {
+  skip_if_no_apps()
+
   app <- AppDriver$new(test_path("apps/qmd"), seed = 68850)
 
   app$set_inputs(name = "barret")

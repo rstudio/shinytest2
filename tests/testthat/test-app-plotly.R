@@ -7,13 +7,22 @@ ui <- fluidPage(
 )
 server <- function(input, output, session, ...) {
   output$p <- plotly::renderPlotly({
-      plotly::plot_ly(x = cars[, 1], y = cars[, 2], type = "scattergl", mode = "markers")
-    }) |>
-      shiny::snapshotPreprocessOutput(function(p) {
-        info <- jsonlite::parse_json(p, simplifyVector = TRUE, simplifyDataFrame = FALSE,
-          simplifyMatrix = FALSE)
-        info$x$data[[1]][c("x", "y")]
-      })
+    plotly::plot_ly(
+      x = cars[, 1],
+      y = cars[, 2],
+      type = "scattergl",
+      mode = "markers"
+    )
+  }) |>
+    shiny::snapshotPreprocessOutput(function(p) {
+      info <- jsonlite::parse_json(
+        p,
+        simplifyVector = TRUE,
+        simplifyDataFrame = FALSE,
+        simplifyMatrix = FALSE
+      )
+      info$x$data[[1]][c("x", "y")]
+    })
 }
 shiny_app <- shinyApp(ui, server)
 

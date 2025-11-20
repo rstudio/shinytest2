@@ -1,4 +1,6 @@
 test_that("$get_value errors are caught", {
+  skip_if_no_apps()
+
   app <- AppDriver$new(test_path("apps/wait"))
 
   expect_error(
@@ -50,6 +52,8 @@ test_that("$get_value errors are caught", {
 
 
 test_that("wait for value works on output", {
+  skip_if_no_apps()
+
   app <- AppDriver$new(test_path("apps/wait"))
 
   expect_equal(
@@ -59,6 +63,8 @@ test_that("wait for value works on output", {
 })
 
 test_that("wait for value works on input", {
+  skip_if_no_apps()
+
   app <- AppDriver$new(test_path("apps/wait"))
 
   expect_equal(

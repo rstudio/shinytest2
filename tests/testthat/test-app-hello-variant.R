@@ -1,5 +1,7 @@
 # shinytest2 code using `app$**()`:
 test_that("screenshots need a variant", {
+  skip_if_no_apps()
+
   app <- AppDriver$new(test_path("apps/hello"))
 
   app$set_inputs(name = "Hadley")
@@ -10,7 +12,8 @@ test_that("screenshots need a variant", {
 
   expect_error(
     app$expect_screenshot(),
-    "can not call `$expect_screenshot()`", fixed = TRUE
+    "can not call `$expect_screenshot()`",
+    fixed = TRUE
   )
 })
 

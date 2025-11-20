@@ -1,4 +1,5 @@
 test_that("basic website example works", {
+  skip_if_no_apps()
   app <- AppDriver$new(test_path("apps/hello"), variant = NULL)
 
   app$set_inputs(name = "Hadley")
@@ -8,22 +9,25 @@ test_that("basic website example works", {
   app$click("greet")
   app$expect_values(output = "greeting") # Barret
 
-
   # Track clicks on `#greeting` and `#custom_div`
-  app$run_js("
+  app$run_js(
+    "
     window.greeting_count = 0;
 
     $('#greeting').click(function () {
       window.greeting_count += 1;
     });
-  ")
-  app$run_js("
+  "
+  )
+  app$run_js(
+    "
     window.custom_count = 0;
 
     $('#custom_div').click(function () {
       window.custom_count += 1;
     });
-  ")
+  "
+  )
 
   expect_equal(app$get_js("window.greeting_count"), 0)
   expect_equal(app$get_js("window.custom_count"), 0)

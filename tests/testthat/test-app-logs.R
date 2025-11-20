@@ -44,18 +44,56 @@ expect_log_tests <- function(log) {
       # "{shiny}      R  info  ----------- Cat msg!"
       # to
       # "{shiny}      R  info     ----------- Cat msg!"
-      txt <- sub("(stdout |stderr |info   |error  |throw  |log    |               )", "\\1   ", txt)
+      txt <- sub(
+        "(stdout |stderr |info   |error  |throw  |log    |               )",
+        "\\1   ",
+        txt
+      )
     }
     txt
   }
-  expect_match(log, msg("{shiny}      R  stdout ----------- Cat msg!"), all = FALSE, fixed = TRUE)
-  expect_match(log, msg("{shiny}      R  stderr ----------- Message msg!"), all = FALSE, fixed = TRUE)
+  expect_match(
+    log,
+    msg("{shiny}      R  stdout ----------- Cat msg!"),
+    all = FALSE,
+    fixed = TRUE
+  )
+  expect_match(
+    log,
+    msg("{shiny}      R  stderr ----------- Message msg!"),
+    all = FALSE,
+    fixed = TRUE
+  )
 
-  expect_match(log, msg("\\{shinytest2\\} R  info   \\d\\d:\\d\\d:\\d\\d.\\d\\d Starting Shiny app"), all = FALSE)
-  expect_match(log, msg("\\{chromote\\}   JS info   \\d\\d:\\d\\d:\\d\\d.\\d\\d shinytest2; Loaded"), all = FALSE)
+  expect_match(
+    log,
+    msg(
+      "\\{shinytest2\\} R  info   \\d\\d:\\d\\d:\\d\\d.\\d\\d Starting Shiny app"
+    ),
+    all = FALSE
+  )
+  expect_match(
+    log,
+    msg(
+      "\\{chromote\\}   JS info   \\d\\d:\\d\\d:\\d\\d.\\d\\d shinytest2; Loaded"
+    ),
+    all = FALSE
+  )
 
-  expect_match(log, msg("\\{chromote\\}   JS throw  \\d\\d:\\d\\d:\\d\\d.\\d\\d Uncaught Exception msg"), all = FALSE)
-  expect_match(log, msg("\\{chromote\\}   JS throw  \\d\\d:\\d\\d:\\d\\d.\\d\\d Uncaught TypeError: window.test_method is not a function"), all = FALSE)
+  expect_match(
+    log,
+    msg(
+      "\\{chromote\\}   JS throw  \\d\\d:\\d\\d:\\d\\d.\\d\\d Uncaught Exception msg"
+    ),
+    all = FALSE
+  )
+  expect_match(
+    log,
+    msg(
+      "\\{chromote\\}   JS throw  \\d\\d:\\d\\d:\\d\\d.\\d\\d Uncaught TypeError: window.test_method is not a function"
+    ),
+    all = FALSE
+  )
 
   for (extra_msg in c(
     "Nullish null undefined",
@@ -72,7 +110,10 @@ expect_log_tests <- function(log) {
   )) {
     expect_match(
       log,
-      msg(paste0("\\{chromote\\}   JS log    \\d\\d:\\d\\d:\\d\\d.\\d\\d ", extra_msg)),
+      msg(paste0(
+        "\\{chromote\\}   JS log    \\d\\d:\\d\\d:\\d\\d.\\d\\d ",
+        extra_msg
+      )),
       all = FALSE
     )
   }
@@ -80,7 +121,8 @@ expect_log_tests <- function(log) {
   expect_match(
     log[which(grepl("Character abc", log)) + 1],
     msg("                                   (anonymous) @ "),
-    all = FALSE, fixed = TRUE
+    all = FALSE,
+    fixed = TRUE
   )
   expect_match(
     log[which(grepl("Uncaught Exception msg", log)) + 1],
@@ -125,7 +167,6 @@ test_that("App captures known debug messages", {
   # [24] "{shiny}      R  error ----------- Running application in test mode."
   # [25] "{shiny}      R  error ----------- "
   # [26] "{shiny}      R  error ----------- Listening on http://127.0.0.1:9372"
-
 
   expect_log_tests(log)
 
@@ -239,9 +280,17 @@ test_that("App captures known debug messages", {
   # check that websocket traffic exists
   expect_match(log, "websocket", all = FALSE, fixed = TRUE)
 
-  expect_match(log, "----------- SEND {\"busy\":\"busy\"}", all = FALSE, fixed = TRUE)
-  expect_match(log, "\\{chromote\\}   JS websocket \\d\\d:\\d\\d:\\d\\d.\\d\\d recv \\{\"busy\":\"busy\"\\}", all = FALSE)
-
+  expect_match(
+    log,
+    "----------- SEND {\"busy\":\"busy\"}",
+    all = FALSE,
+    fixed = TRUE
+  )
+  expect_match(
+    log,
+    "\\{chromote\\}   JS websocket \\d\\d:\\d\\d:\\d\\d.\\d\\d recv \\{\"busy\":\"busy\"\\}",
+    all = FALSE
+  )
 })
 
 # nolint end

@@ -10,6 +10,8 @@
 
 # shinytest2 code using `app$**()`:
 test_that("basic website example works using shinytest", {
+  skip_if_no_apps()
+
   app <- AppDriver$new(
     test_path("apps/hello"),
     variant = platform_variant(r_version = FALSE)
@@ -32,6 +34,8 @@ test_that("basic website example works using shinytest", {
 
 # shinytest2 code using `app$**()`:
 test_that("basic website example works using testthat", {
+  skip_if_no_apps()
+
   app <- AppDriver$new(
     test_path("apps/hello"),
     variant = platform_variant(r_version = FALSE),

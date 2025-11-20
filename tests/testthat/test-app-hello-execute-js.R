@@ -1,4 +1,6 @@
 test_that("JS can take a file or script", {
+  skip_if_no_apps()
+
   app <- AppDriver$new(test_path("apps/hello"))
 
   app$set_inputs(name = "Hadley")
@@ -22,7 +24,8 @@ test_that("JS can take a file or script", {
 
   expect_warning(
     app$get_js("1 + 1", file = test_path("apps/hello/js/one-plus-one.js")),
-    "Both `file` and `script` are specified", fixed = TRUE
+    "Both `file` and `script` are specified",
+    fixed = TRUE
   )
 
   expect_error(

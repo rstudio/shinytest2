@@ -1,6 +1,7 @@
 # Current shinytest2 code using `app$**()`:
 test_that("set kitchen sink of inputs", {
   skip_if_not_installed("shinyWidgets")
+  skip_if_no_apps()
 
   app <- AppDriver$new(
     test_path("apps/widgets"),

@@ -1,6 +1,6 @@
-library(shinytest2)
-
 test_that("{shinytest2} recording: dir-profile", {
+  skip_if_no_apps()
+
   app <- AppDriver$new(
     test_path("apps/dir-rprofile"),
     name = "dir-profile",

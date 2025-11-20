@@ -1,7 +1,6 @@
 require("shiny", quietly = TRUE, character.only = TRUE)
 
 test_that("Duplicate input ids are found", {
-
   shiny_app <- shinyApp(
     ui = fluidPage(
       # Duplicate input IDs; Warning!
@@ -25,7 +24,6 @@ test_that("Duplicate input ids are found", {
 })
 
 test_that("Duplicate input/output ids are found", {
-
   shiny_app <- shinyApp(
     ui = fluidPage(
       # Duplicate input/output ID; Warning!
@@ -49,9 +47,7 @@ test_that("Duplicate input/output ids are found", {
 })
 
 
-
 test_that("Duplicate custom output ids are found", {
-
   shiny_app <- shinyApp(
     ui = fluidPage(
       div(id = "custom", class = "shiny-bound-output", "Div 1 content"),
