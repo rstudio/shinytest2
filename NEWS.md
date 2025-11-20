@@ -9,17 +9,27 @@
 
 ## Package testing
 
-* For package authors, it is now recommended to test your Shiny applications within your own `{testthat}` tests instead of using `test_app()`. This leverages your package's existing `{testthat}` infrastructure to test your Shiny applications, collecting snapshots in a single location. See the [use-package vignette](https://rstudio.github.io/shinytest2/articles/use-package.html) for more details on how this should look (#328).
+* For package authors, it is now recommended to test your Shiny applications within your own `{testthat}` tests instead of using `test_app()`. By using your package's existing `{testthat}` infrastructure to test your Shiny applications, collecting snapshots in a single location. Be sure to use `with_app_support()` or `local_app_support()` to load your app's support files as needed. See the [use-package vignette](https://rstudio.github.io/shinytest2/articles/use-package.html) for more details (#328).
+
+* To implement the new test file location app, `record_test()` will now save the test file to the package's `tests/testthat/` directory if the current working directory is within a package given `record_in_package=TRUE` (default). If `record_in_package=FALSE`, the test file will be saved relative to the app's `tests/testthat/` directory. This change helps facilitate using the package's existing testing infrastructure by having unit tests in a single place (#328).
 
 ## Bug / Improvements
 
-* `test_app(check_setup=)` is now deprecated. Checking is no longer required as default behavior. This is because `load_app_env()` is now superseded by two new functions: `with_app_support()` and `local_app_support()`. Each function provides a more robust and flexible way to scope app support files such as `global.R`, `app.R`, `server.R`, and `ui.R`. See `?with_app_support` and `?local_app_support` for more details. (#328).
+* Added two new methods: `with_app_support()` and `local_app_support()`. These methods provide package authors a flexible way to scope app support files such as `global.R`, `app.R`, `server.R`, and `ui.R` within your tests. Non-package authors should still use `load_app_support()` within their `setup-shinytest2.R` file. See `?local_app_support` for more details (#328).
 
-* Given `test_app(check_setup=FALSE)` is now deprecated, `use_shinytest2(setup=)` is also deprecated. Be sure to call `with_app_support()` / `local_app_support()` when necessary. (#328).
+* `load_app_env()` has been superseded by `load_app_support()`. This new method aligns its name with `local_app_support()` and `with_app_support()`, and similarly, it requires an `app_dir=` parameter (#328).
+
+* `test_app(check_setup=)` is now deprecated. Checking is no longer required as default behavior. This is because `load_app_env()` is now superseded by two new functions: `with_app_support()` and `local_app_support()`. Each function provides a more robust and flexible way to scope app support files such as `global.R`, `app.R`, `server.R`, and `ui.R`. See `?with_app_support` and `?local_app_support` for more details (#328).
+
+* Given `test_app(check_setup=FALSE)` is now deprecated. This change was done for package authors do not require apps to load support (#328).
+
+* `record_test()` will now only save setup file for local app testing and not within package app testing. When recording a test for an app inside a pacakge, `local_app_support()` will be added to the top of the testing code (#328).
 
 * Fixed internal bug where `{testthat}` v3.3.0 changed expectation behavior for screenshot snapshots within `App$expect_values()` (#418).
 
 * Migrated from `{httr}` to `{httr2}` for all HTTP requests made by `{shinytest2}` (#420).
+
+* `record_test()` gained a new parameter `record_in_package=`. If `TRUE` and if the current working directory is within a package, the test file will be saved to the package's `tests/testthat/` directory. If `FALSE`, the test file will be saved to the app's `tests/testthat/` directory (#328).
 
 # shinytest2 0.4.1
 
