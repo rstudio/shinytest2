@@ -21,7 +21,7 @@ test_that("functions shouldn't return a non-shiny app", {
 # Use test_app to relay the tests to the top level testthat runner
 # It is not testing an _app_ per se, but this allows us to
 # test the package loading behavior within the shinytest2 test suite easily
-test_app(test_path("pkgs/expkg"), load_package = "source")
+test_app(test_path("pkgs/expkg"), load_package = "source", quiet = TRUE)
 
 if (!requireNamespace("golem", quietly = TRUE)) {
   testthat::test_that(paste0("pkgs - golem"), {
@@ -30,7 +30,8 @@ if (!requireNamespace("golem", quietly = TRUE)) {
 } else {
   test_app(
     test_path("pkgs/golem"),
-    load_package = "source"
+    load_package = "source",
+    quiet = TRUE
   )
 }
 
@@ -44,6 +45,7 @@ if (
 } else {
   test_app(
     test_path("pkgs/rhino"),
-    load_package = "none"
+    load_package = "none",
+    quiet = TRUE
   )
 }

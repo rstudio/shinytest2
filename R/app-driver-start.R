@@ -161,7 +161,8 @@ app_start_shiny <- function(
           # })
 
           # If within a package root... do not read the R files in the R/ folder
-          if (in_dev_pkg(.package_path)) {
+          # Taken from `in_dev_pkg()`
+          if (getwd() == .package_path) {
             cat(
               "Disabling Shiny autoloading of R/ files `options(shiny.autoload.r = FALSE)` as dev package directory is the same as the app directory\n"
             )

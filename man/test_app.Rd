@@ -10,7 +10,8 @@ test_app(
   name = missing_arg(),
   reporter = testthat::get_reporter(),
   stop_on_failure = missing_arg(),
-  check_setup = deprecated()
+  check_setup = deprecated(),
+  quiet = FALSE
 )
 }
 \arguments{
@@ -34,6 +35,9 @@ However, if missing and currently testing, \code{FALSE} will be used to
 seamlessly integrate the app reporter to \code{reporter}.}
 
 \item{check_setup}{\link{Deprecated}. Parameter ignored.}
+
+\item{quiet}{If \code{TRUE}, suppresses deprecation warnings when called within
+\pkg{testthat} tests.}
 }
 \description{
 This is a helper method that wraps around \code{\link[testthat:test_dir]{testthat::test_dir()}} to test

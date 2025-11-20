@@ -86,6 +86,8 @@ NULL
 #'   However, if missing and currently testing, `FALSE` will be used to
 #'   seamlessly integrate the app reporter to `reporter`.
 #' @param check_setup [Deprecated]. Parameter ignored.
+#' @param quiet If `TRUE`, suppresses deprecation warnings when called within
+#'   \pkg{testthat} tests.
 #' @seealso
 #'   * [`record_test()`] to create tests to record against your Shiny
 #'     application.
@@ -108,7 +110,8 @@ test_app <- function(
   name = missing_arg(),
   reporter = testthat::get_reporter(),
   stop_on_failure = missing_arg(),
-  check_setup = deprecated()
+  check_setup = deprecated(),
+  quiet = FALSE
 ) {
   # Inspiration from https://github.com/rstudio/shiny/blob/a8c14dab9623c984a66fcd4824d8d448afb151e7/inst/app_template/tests/testthat.R
 
@@ -140,35 +143,27 @@ test_app <- function(
         "0.5.0",
         "shinytest2::test_app(check_setup = 'is no longer used')",
         details = c(
-          "To manually load an app's support files, call `shinytest2::local_app_support(app_dir=)` within your {testthat} test",
-          i = "Please see `?shinytest2::local_app_support` for more information"
+          "To manually load an app's support files, call `shinytest2::local_app_support(app_dir=)` within your {testthat} test.",
+          i = "Please see `?shinytest2::local_app_support` for more information.",
+          i = "To remove this warning, please remove the `check_setup` argument from your `test_app()` calls."
         )
       )
     }
   }
 
-  warning("TODO: also disable for CRAN")
-  warning("TODO: message formatting")
-  warning("TODO: disable warning")
   if (testthat::is_testing()) {
-    rlang::warn(
-      c(
-        "x" = cli::cli_format(
-          "Calling {.code shinytest2::test_app() } within a {.pkg testthat } test has been superseded in {.pkg shinytest2 } v0.5.0"
-        ),
-        "i" = cli::cli_format(
-          "If you are testing within a package, please see URL on how to migrate your App tests to be located in your package tests."
-        ),
-        "i" = cli::cli_format(
-          "If you are using CI, don't forget to collect your new snapshots after your initial run!"
-        ),
-        "i" = cli::cli_format(
-          "See {.url https://rstudio.github.io/shinytest2/articles/use-package.html } for more details."
+    if (!quiet && !on_cran()) {
+      rlang::warn(
+        c(
+          "x" = "Calling `shinytest2::test_app()` within a {testthat} test has been deprecated in {shinytest2} v0.5.0.",
+          "x" = "This will become an error in a future version of {shinytest2}.",
+          "i" = "If you are testing within a package, it is strongly recommended relocate your app tests to be within your package tests. Please note, you will need to use `local_app_support()` or `with_app_support()` to load your app's support files as needed.",
+          "i" = "If you are using CI, don't forget to collect your new snapshots after your initial run!",
+          "i" = "See {.url https://rstudio.github.io/shinytest2/articles/use-package.html } for more details.",
+          "i" = "To suppress this warning, remove `shinytest2::test_app()` calls from your {testthat} tests or add the parameter `test_app(quiet = TRUE)`."
         )
-      ),
-      .frequency = "once",
-      .frequency_id = "shinytest2_test_app_migration_warning"
-    )
+      )
+    }
     # warning("TODO-barret; missing url for migration warning")
 
     # Normalize the reporter given any input
