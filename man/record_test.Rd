@@ -11,11 +11,12 @@ record_test(
   seed = NULL,
   load_timeout = NULL,
   shiny_args = list(),
-  test_file = "test-shinytest2.R",
+  test_file = NULL,
   open_test_file = rlang::is_interactive(),
   allow_no_input_binding = NULL,
   record_screen_size = TRUE,
-  run_test = TRUE
+  run_test = TRUE,
+  record_in_package = TRUE
 )
 }
 \arguments{
@@ -35,7 +36,13 @@ milliseconds. If a value is provided, it will be saved in the test script.}
 \item{shiny_args}{A list of options to pass to \code{runApp()}. If a value
 is provided, it will be saved in the test script.}
 
-\item{test_file}{Base file name of the \pkg{testthat} test file.}
+\item{test_file}{Base file name of the \pkg{testthat} test file. If \code{NULL}, a
+default name will be used. If recording within a package, the test file
+will be saved to the package's \verb{tests/testthat/} directory. If not within a
+package, the test file will be saved to the app's \verb{tests/testthat/} directory.
+If within a package, the default name is \verb{test-app-<appdir>.R}, where \verb{<appdir>} is the
+name of the app directory. If not within a package, the default name is
+\code{test-shinytest2.R}.}
 
 \item{open_test_file}{If \code{TRUE}, the test file will be opened in an editor
 via \code{\link[=file.edit]{file.edit()}} before executing.}
@@ -55,6 +62,11 @@ See \code{\link{AppDriver}}\verb{$set_inputs()} for more information.}
 \item{record_screen_size}{If \code{TRUE}, the screen size will be recorded when initialized and changed.}
 
 \item{run_test}{If \code{TRUE}, \code{test_file} will be executed after saving the recording.}
+
+\item{record_in_package}{If \code{TRUE} and if the current working directory is
+within a package, the test file will be saved to the package's
+\verb{tests/testthat/} directory. If \code{FALSE}, the test file will be saved to the
+app's \verb{tests/testthat/} directory.}
 }
 \description{
 Once a recording is completed, it will create or append a new

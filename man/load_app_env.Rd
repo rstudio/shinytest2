@@ -20,11 +20,10 @@ be evaluated.}
 \code{NULL}, \code{global.R} will not be evaluated at all.}
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} by \code{local_app_support()} and
-\code{with_app_support()} as they offer more flexibility where and when the
-support environment is loaded.
-}
-\details{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} by \code{\link[=load_app_support]{load_app_support()}}. For package
+development, \code{local_app_support()} and \code{with_app_support()} offer more
+flexibility as to when the support environment is loaded.
+
 Executes all \code{./R} files and \code{global.R} into the current environment. This is
 useful when wanting access to functions or values created in the \code{./R} folder
 for testing purposes.
@@ -37,3 +36,4 @@ objects is desired.
 \code{\link[=use_shinytest2]{use_shinytest2()}} for creating a testing setup file that
 loads your Shiny app support environment into the testing environment.
 }
+\keyword{internal}

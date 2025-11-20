@@ -3,17 +3,20 @@
 \name{local_app_support}
 \alias{local_app_support}
 \alias{with_app_support}
+\alias{load_app_support}
 \title{Attach the Shiny application's support environment}
 \usage{
-local_app_support(app_dir = "../../", envir = rlang::caller_env())
+local_app_support(app_dir, envir = rlang::caller_env())
 
-with_app_support(expr, app_dir = "../../", envir = rlang::caller_env())
+with_app_support(app_dir, expr, envir = rlang::caller_env())
+
+load_app_support(app_dir, envir = rlang::caller_env())
 }
 \arguments{
 \item{app_dir}{The base directory for the Shiny application.}
 
-\item{envir}{The environment in which the files in the \verb{R/} directory should
-be evaluated.}
+\item{envir}{The environment in which the App support should
+be made available.}
 
 \item{expr}{An expression to evaluate within the support environment.}
 }
@@ -23,8 +26,13 @@ attached appropriately. This is useful when wanting access to functions or
 values created in the \code{./R} folder for testing purposes.
 }
 \details{
-Loading these files is not automatically performed by \code{test_app()} and must
-be called within your unit tests to access support file objects.
+For Shiny application testing within R packages, \code{local_app_support()} and
+\code{with_app_support()} where loading an App's support files should not happen
+automatically.
+
+For non-package based Shiny applications, it is recommended to use
+\code{\link[=load_app_support]{load_app_support()}} for the support to be available throughout all test
+files.
 }
 \section{Functions}{
 \itemize{
@@ -34,16 +42,29 @@ environment into the current environment.
 \item \code{with_app_support()}: For the provided \code{expr}, attach the Shiny
 application's support environment into the current environment.
 
+\item \code{load_app_support()}: Loads all support files into the current environment.
+No cleanup actions are ever performed.
+
 }}
 \examples{
 \dontrun{
-# ./R/utils.R
+# ./tests/testthat/apps/myapp/R/utils.R
 n <- 42
 
 #' # ./tests/testthat/test-utils.R
 test_that("Can access support environment", {
-  shinytest2::local_app_support()
+  expect_false(exists("n"))
+  shinytest2::local_app_support(test_path("apps/myapp"))
   expect_equal(n, 42)
+})
+
+# Or using with_app_support()
+test_that("Can access support environment", {
+  expect_false(exists("n"))
+  shinytest2::with_app_support(test_path("apps/myapp"), {
+    expect_equal(n, 42)
+  })
+  expect_false(exists("n"))
 })
 }
 }

@@ -8,12 +8,12 @@
 use_shinytest2(
   app_dir = ".",
   runner = missing_arg(),
+  setup = missing_arg(),
   ignore = missing_arg(),
   package = missing_arg(),
   ...,
   quiet = FALSE,
-  overwrite = FALSE,
-  setup = deprecated()
+  overwrite = FALSE
 )
 
 use_shinytest2_test(
@@ -28,6 +28,11 @@ use_shinytest2_test(
 
 \item{runner}{If \code{TRUE}, creates a \pkg{shinytest2} test runner at \code{./tests/testthat.R}}
 
+\item{setup}{If \code{TRUE}, creates a setup file called
+\code{./tests/testthat/setup-shinytest2.R} containing a call to
+\code{\link[=load_app_support]{load_app_support()}}. If'd like fine grain control over when the environment is
+loaded, please look at \code{\link[=local_app_support]{local_app_support()}} and \code{\link[=with_app_support]{with_app_support()}}.}
+
 \item{ignore}{If \code{TRUE}, adds entries to \code{.Rbuildignore} and \code{.gitignore} to
 ignore new debug screenshots. (\verb{*_.new.png})}
 
@@ -39,10 +44,6 @@ ignore new debug screenshots. (\verb{*_.new.png})}
 
 \item{overwrite}{If \code{TRUE}, the test file or test runner will be overwritten.}
 
-\item{setup}{Deprecated. If you need Shiny app support loaded into your
-environment, please look at \code{\link[=local_app_support]{local_app_support()}} and
-\code{\link[=with_app_support]{with_app_support()}}.}
-
 \item{open}{If \code{TRUE}, the test file will be opened in an editor via
 \code{\link[=file.edit]{file.edit()}} after saving.}
 }
@@ -51,17 +52,27 @@ Use \pkg{shinytest2} with your Shiny application
 }
 \section{Functions}{
 \itemize{
-\item \code{use_shinytest2()}: This \pkg{usethis}-style method initializes many different useful features when using
-\pkg{shinytest2}:
+\item \code{use_shinytest2()}: This \pkg{usethis}-style method initializes many different useful features
+when using \pkg{shinytest2}:
 \itemize{
-\item \code{runner}: Creates a \pkg{shinytest2} test runner at \code{./tests/testthat.R}. This file
-will contain a call to \code{\link[=test_app]{test_app()}}.
-\item \code{setup}: Creates \code{./tests/testthat/setup-shinytest2.R} to add your Shiny \code{./R} objects and functions into the testing environment. This file will run before testing begins.
-\item \code{ignore}: Add an entry to \code{./Rbuildignore} (if it exists) and \code{.gitignore} to ignore new debug screenshots. (\verb{*_.new.png})
-\item \code{package}: Adds \code{shinytest} to the \code{Suggests} packages in the \code{DESCRIPTION} file (if it exists).
+\item \code{runner}: Creates a \pkg{shinytest2} test runner at \code{./tests/testthat.R}.
+This file will contain a call to \code{\link[=test_app]{test_app()}}.
+\item \code{setup}: Creates \code{./tests/testthat/setup-shinytest2.R} to add your Shiny
+\code{./R} objects and functions into the testing environment. This file will
+run before testing begins.
+\item \code{ignore}: Add an entry to \code{./Rbuildignore} (if it exists) and \code{.gitignore}
+to ignore new debug screenshots. (\verb{*_.new.png})
+\item \code{package}: Adds \code{shinytest} to the \code{Suggests} packages in the \code{DESCRIPTION}
+file (if it exists).
 }
 
-If any of these values are \emph{not} missing, the remaining missing values will be set to \code{FALSE}. This allows \code{use_shinytest2()} to add more flags in future versions without opting into all changes inadvertently.
+When all values are missing and currently in a package working directory, the
+defaults are all TRUE. When the current working directory is a package root
+directory, \code{runner}/\code{setup} are \code{FALSE} and \code{ignore}/\code{package} are \code{TRUE}.
+
+If any of these values are \emph{not} missing, the remaining missing values will
+be set to \code{FALSE}. This allows \code{use_shinytest2()} to add more flags in future
+versions without opting into all changes inadvertently.
 
 \item \code{use_shinytest2_test()}: Creates a test file called \code{./tests/testthat/test-shinytest2.R}. By
 default, this file's template test will initialize your Shiny application and

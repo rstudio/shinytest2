@@ -325,7 +325,7 @@ test_app <- function(
 #' @inheritParams shiny::loadSupport
 #' @keywords internal
 #' @export
-load_app_support <- load_app_env <- function(
+load_app_env <- function(
   app_dir = "../../",
   renv = rlang::caller_env(),
   globalrenv = rlang::caller_env()
