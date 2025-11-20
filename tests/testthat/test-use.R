@@ -1,9 +1,10 @@
-expect_configs <- function(runner, ignore, package) {
-  if (all(!runner, !ignore, !package)) {
+expect_configs <- function(runner, setup, ignore, package) {
+  if (all(!runner, !setup, !ignore, !package)) {
     testthat::expect_error(
       use_shinytest2(
         app_dir = ".",
         runner = FALSE,
+        setup = FALSE,
         ignore = FALSE,
         package = FALSE
       ),
@@ -36,6 +37,9 @@ expect_configs <- function(runner, ignore, package) {
     "runner = ",
     runner,
     "\n",
+    "setup = ",
+    setup,
+    "\n",
     "ignore = ",
     ignore,
     "\n",
@@ -48,6 +52,7 @@ expect_configs <- function(runner, ignore, package) {
       use_shinytest2(
         app_dir = app_dir,
         runner = runner,
+        setup = setup,
         ignore = ignore,
         package = package
       )
@@ -58,6 +63,12 @@ expect_configs <- function(runner, ignore, package) {
   testthat::expect_equal(
     file.exists(file.path(app_dir, "tests/testthat.R")),
     runner,
+    info = info
+  )
+
+  testthat::expect_equal(
+    file.exists(file.path(app_dir, "tests/testthat/setup-shinytest2.R")),
+    setup,
     info = info
   )
 
@@ -97,32 +108,15 @@ test_that("use_shinytest2() sets up configs for all configurations", {
 
   dt <- expand.grid(
     runner = c(TRUE, FALSE),
+    setup = c(TRUE, FALSE),
     ignore = c(TRUE, FALSE),
     package = c(TRUE, FALSE)
   )
   Map(
     dt$runner,
+    dt$setup,
     dt$ignore,
     dt$package,
     f = expect_configs
-  )
-})
-
-test_that("use_shinytest2(setup=) is deprecated", {
-  app_dir <- tempfile("st2-test")
-  fs::dir_create(app_dir)
-  withr::defer(fs::dir_delete(app_dir))
-
-  lifecycle::expect_deprecated(
-    capture.output(
-      {
-        use_shinytest2(
-          app_dir = app_dir,
-          runner = TRUE,
-          setup = TRUE
-        )
-      },
-      type = "message"
-    )
   )
 })
