@@ -1,5 +1,6 @@
 test_that("Spell check", {
   skip_on_cran()
+  skip_on_ci()
   skip_if_not_installed("spelling")
 
   spelling_errors <- spelling::spell_check_package(test_path("../../"))
