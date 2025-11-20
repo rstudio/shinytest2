@@ -19,7 +19,6 @@ app__expect_snapshot_file <- function(
   self,
   private,
   file,
-  variant,
   name = fs::path_file(file),
   transform = NULL,
   compare = testthat::compare_file_binary
