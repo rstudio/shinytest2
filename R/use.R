@@ -26,8 +26,9 @@
 #' @param runner If `TRUE`, creates a \pkg{shinytest2} test runner at `./tests/testthat.R`
 #' @param setup If `TRUE`, creates a setup file called
 #' `./tests/testthat/setup-shinytest2.R` containing a call to
-#' [`load_app_support()`]. If'd like fine grain control over when the environment is
-#' loaded, please look at [`local_app_support()`] and [`with_app_support()`].
+#' [`load_app_support()`]. If you would like fine grain control over when the
+#' environment is loaded, please look at [`local_app_support()`] and
+#' [`with_app_support()`].
 #' @param ignore If `TRUE`, adds entries to `.Rbuildignore` and `.gitignore` to
 #' ignore new debug screenshots. (`*_.new.png`)
 #' @param package If `TRUE`, adds \pkg{shinytest2} to `Suggests` in the `DESCRIPTION` file.

@@ -23,7 +23,7 @@
 
 * Given `test_app(check_setup=FALSE)` is now deprecated. This change was done for package authors do not require apps to load support (#328).
 
-* `record_test()` will now only save setup file for local app testing and not within package app testing. When recording a test for an app inside a pacakge, `local_app_support()` will be added to the top of the testing code (#328).
+* `record_test()` will now only save setup file for local app testing and not within package app testing. When recording a test for an app inside a package, `local_app_support()` will be added to the top of the testing code (#328).
 
 * Fixed internal bug where `{testthat}` v3.3.0 changed expectation behavior for screenshot snapshots within `App$expect_values()` (#418).
 

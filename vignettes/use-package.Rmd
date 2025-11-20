@@ -140,7 +140,7 @@ When using a function to initialize the `AppDriver`, `{shinytest2}` will automat
 
 ## Application objects
 
-The third way have an application in an R package is by having a function that returns a Shiny application object. App objects being supplied directly to `AppDriver$new()` are to be considered for quick testing / confirmation of targeted behavior. For more complex applications, it is recommended to use one of the other two approaches described above as not all globals and contexts are preserved when serializing the app object.
+The third way have an application in an R package is by having a function that returns a Shiny application object. App objects being supplied directly to `AppDriver$new()` are to be considered for quick testing / confirmation of targeted behavior. For more complex applications, it is recommended to use one of the other two approaches described above as not all global variables and contexts are preserved when serializing the app object.
 
 In this example, there's a function `hello_world_app()`, which lives in `R/app-object.R`:
 
@@ -235,7 +235,7 @@ Good:
 Bad:
 * Call `test_app("path/to/app")` within your package's `testthat::test_that()` tests.
 
-This keeps your snapps all in one place and not scattered across multiple application directories.
+This keeps your snaps all in one place and not scattered across multiple application directories.
 
 
 ## Migrating from shinytest v0.4.0 to v0.5.0

@@ -30,8 +30,9 @@ use_shinytest2_test(
 
 \item{setup}{If \code{TRUE}, creates a setup file called
 \code{./tests/testthat/setup-shinytest2.R} containing a call to
-\code{\link[=load_app_support]{load_app_support()}}. If'd like fine grain control over when the environment is
-loaded, please look at \code{\link[=local_app_support]{local_app_support()}} and \code{\link[=with_app_support]{with_app_support()}}.}
+\code{\link[=load_app_support]{load_app_support()}}. If you would like fine grain control over when the
+environment is loaded, please look at \code{\link[=local_app_support]{local_app_support()}} and
+\code{\link[=with_app_support]{with_app_support()}}.}
 
 \item{ignore}{If \code{TRUE}, adds entries to \code{.Rbuildignore} and \code{.gitignore} to
 ignore new debug screenshots. (\verb{*_.new.png})}
