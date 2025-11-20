@@ -724,9 +724,22 @@ shinyApp(
         )
       )
     )
+    iv_app_function <- shinyvalidate::InputValidator$new()
+    iv_app_function$condition(~ is.function(app$get_dir()))
+    iv_app_function$add_rule(
+      "seed",
+      ~ shiny::tagList(
+        shiny::tags$p("Can not save tests for an application function."),
+        shiny::tags$p(
+          "Please supply an application directory to",
+          shiny::tags$code("record_test(app =)")
+        )
+      )
+    )
 
     iv$add_validator(iv_screenshot)
     iv$add_validator(iv_app_path)
+    iv$add_validator(iv_app_function)
     iv$enable()
 
     # Use reactiveVal dedupe feature
