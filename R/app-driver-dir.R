@@ -16,10 +16,10 @@ app_set_dir <- function(
     ) {
       # If the function is from the local package, ensure the package is loaded
       # Make a new function that first loads the package, then runs the original function
-      message(
-        "Upgrading `app_dir` function to load dev package: ",
-        package_name
-      )
+      # rlang::inform(
+      #   "Upgrading `app_dir` function to load dev package: ",
+      #   package_name
+      # )
 
       app_fn <- app_dir
       app_dir <- function() {}
