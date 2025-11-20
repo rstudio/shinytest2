@@ -100,6 +100,7 @@ Collate:
     'httr2.R'
     'migrate.R'
     'missing-value.R'
+    'pkg.R'
     'utils.R'
     'platform.R'
     'record-test-unique-name.R'

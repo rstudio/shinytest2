@@ -6,24 +6,21 @@ app_set_dir <- function(
   ckm8_assert_app_driver(self, private)
 
   if (is.function(app_dir)) {
-    # package_path <- tryCatch(pkgload::pkg_path(), error = function(e) NULL)
-    package_name <- tryCatch(pkgload::pkg_name(), error = function(e) NULL)
+    # package_path <- dev_pkg_path()
+    package_name <- dev_pkg_name()
+
+    app_fn <- app_dir
 
     if (
       !is.null(package_name) &&
-        rlang::env_label(environment(app_dir)) ==
-          rlang::env_label(pkgload::pkg_ns())
+        rlang::env_label(environment(app_fn)) == rlang::env_label(dev_pkg_ns())
     ) {
       # If the function is from the local package, ensure the package is loaded
-      # Make a new function that first loads the package, then runs the original function
-      # rlang::inform(
-      #   "Upgrading `app_dir` function to load dev package: ",
-      #   package_name
-      # )
+      # Make a new function that first loads the package (to trigger pkgload in
+      # background), then runs the original function
 
-      app_fn <- app_dir
-      app_dir <- function() {}
-      rlang::fn_body(app_dir) <- rlang::expr({
+      wrapped_app_fn <- function() {}
+      rlang::fn_body(wrapped_app_fn) <- rlang::expr({
         # Run app with dev package loaded
         # `library()` shimmed in app driver start
         library(!!package_name, character.only = TRUE)
@@ -34,11 +31,14 @@ app_set_dir <- function(
 
         .dev_pkg_run_app()
       })
-      rlang::fn_env(app_dir) <- globalenv()
-    }
+      rlang::fn_env(wrapped_app_fn) <- globalenv()
 
-    # Set app function
-    private$dir <- app_dir
+      # Set app function
+      private$dir <- wrapped_app_fn
+    } else {
+      # Set app function
+      private$dir <- app_fn
+    }
     return()
   }
 

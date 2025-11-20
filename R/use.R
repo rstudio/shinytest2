@@ -1,15 +1,33 @@
+warning(
+  "Docs: When migrating from lapply(dir('apps'), test_app) to package testing, remove the setup support file for shinytest2 and use `with/local_app_support()` in your tests instead."
+)
+warnings(
+  "Docs: App test cases. Where the package is what is important and we shouldn't polute the testing environment when not needed."
+)
+
 #' Use \pkg{shinytest2} with your Shiny application
 #'
 #' @describeIn use_shinytest2
-#' This \pkg{usethis}-style method initializes many different useful features when using
-#' \pkg{shinytest2}:
-#' * `runner`: Creates a \pkg{shinytest2} test runner at `./tests/testthat.R`. This file
-#' will contain a call to [`test_app()`].
-#' * `setup`: Creates `./tests/testthat/setup-shinytest2.R` to add your Shiny `./R` objects and functions into the testing environment. This file will run before testing begins.
-#' * `ignore`: Add an entry to `./Rbuildignore` (if it exists) and `.gitignore` to ignore new debug screenshots. (`*_.new.png`)
-#' * `package`: Adds `shinytest` to the `Suggests` packages in the `DESCRIPTION` file (if it exists).
+#' This \pkg{usethis}-style method initializes many different useful features
+#' when using \pkg{shinytest2}:
 #'
-#' If any of these values are _not_ missing, the remaining missing values will be set to `FALSE`. This allows `use_shinytest2()` to add more flags in future versions without opting into all changes inadvertently.
+#' * `runner`: Creates a \pkg{shinytest2} test runner at `./tests/testthat.R`.
+#'   This file will contain a call to [`test_app()`].
+#' * `setup`: Creates `./tests/testthat/setup-shinytest2.R` to add your Shiny
+#'   `./R` objects and functions into the testing environment. This file will
+#'   run before testing begins.
+#' * `ignore`: Add an entry to `./Rbuildignore` (if it exists) and `.gitignore`
+#'   to ignore new debug screenshots. (`*_.new.png`)
+#' * `package`: Adds `shinytest` to the `Suggests` packages in the `DESCRIPTION`
+#'   file (if it exists).
+#'
+#' When all values are missing and currently in a package working directory, the
+#' defaults are all TRUE. When the current working directory is a package root
+#' directory, `runner`/`setup` are `FALSE` and `ignore`/`package` are `TRUE`.
+#'
+#' If any of these values are _not_ missing, the remaining missing values will
+#' be set to `FALSE`. This allows `use_shinytest2()` to add more flags in future
+#' versions without opting into all changes inadvertently.
 #'
 #' @param app_dir The base directory for the Shiny application
 #' @param runner If `TRUE`, creates a \pkg{shinytest2} test runner at `./tests/testthat.R`
@@ -47,10 +65,32 @@ use_shinytest2 <- function(
       rlang::is_missing(package)
     )
   ) {
-    runner <- TRUE
-    setup <- TRUE
-    ignore <- TRUE
-    package <- TRUE
+    if (in_dev_pkg()) {
+      # If in package, only ignore and package
+      runner <- FALSE
+      setup <- FALSE
+      ignore <- TRUE
+      package <- TRUE
+
+      if (!quiet) {
+        rlang::inform(
+          c(
+            "*" = "Detected package working directory. Defaulting to `ignore = TRUE` and `package = TRUE`"
+          )
+        )
+        rlang::inform(
+          c(
+            "i" = "To load app support files, use `shinytest2::with_app_support()` or `shinytest2::local_app_support()` within your tests."
+          )
+        )
+      }
+    } else {
+      # If not in package, enable everything
+      runner <- TRUE
+      setup <- TRUE
+      ignore <- TRUE
+      package <- TRUE
+    }
   } else {
     # If something is provided, disable everything else
     runner <- isTRUE(rlang::maybe_missing(runner, FALSE))
