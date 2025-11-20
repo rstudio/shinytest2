@@ -1,10 +1,3 @@
-warning(
-  "Docs: When migrating from lapply(dir('apps'), test_app) to package testing, remove the setup support file for shinytest2 and use `with/local_app_support()` in your tests instead."
-)
-warning(
-  "Docs: App test cases. Where the package is what is important and we shouldn't polute the testing environment when not needed."
-)
-
 #' Use \pkg{shinytest2} with your Shiny application
 #'
 #' @describeIn use_shinytest2
