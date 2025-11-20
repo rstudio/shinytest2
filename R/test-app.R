@@ -403,6 +403,7 @@ with_app_support <- function(
 
 #' @describeIn app_support Loads all support files into the current environment.
 #' No cleanup actions are ever performed.
+#' @export
 load_app_support <- function(app_dir, envir = rlang::caller_env()) {
   renv <- shiny::loadSupport(
     appDir = app_dir,
