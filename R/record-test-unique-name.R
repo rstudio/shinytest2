@@ -1,16 +1,16 @@
 # Also used in recorder
 known_app_driver_name_values <- function(test_file) {
-
   exprs <- parse(file = test_file)
 
   is_appdriver_new <- function(expr_list) {
     length(expr_list) >= 1 &&
       is.language(expr_list[[1]]) &&
-      st2_expr_text(expr_list[[1]]) %in% c(
-        "AppDriver$new",
-        "shinytest2::AppDriver$new",
-        "shinytest2:::AppDriver$new"
-      )
+      st2_expr_text(expr_list[[1]]) %in%
+        c(
+          "AppDriver$new",
+          "shinytest2::AppDriver$new",
+          "shinytest2:::AppDriver$new"
+        )
   }
 
   known_names <- list()
@@ -26,7 +26,7 @@ known_app_driver_name_values <- function(test_file) {
       new_name <- args$name
       if (
         is.null(new_name) || # allow `NULL`
-        rlang::is_scalar_character(new_name) # allow single character value
+          rlang::is_scalar_character(new_name) # allow single character value
         # Do not allow symbols or language expressions
       ) {
         # Allows the collecting of NULL name values

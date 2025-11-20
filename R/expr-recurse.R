@@ -8,14 +8,18 @@ expr_recurse <- function(expr, post_fn) {
     if (
       # Return early if it is a single item
       length(expr_list) == 1 &&
-      # Make sure not something like `app$getAllValues()`
-      is.language(expr_list[[1]]) &&
-      length(expr_list[[1]]) == 1
+        # Make sure not something like `app$getAllValues()`
+        is.language(expr_list[[1]]) &&
+        length(expr_list[[1]]) == 1
     ) {
       return(expr)
     }
     for (i in seq_len(length(expr_list))) {
       val <- expr_recurse_(expr_list[[i]], post_fn, is_top_level = FALSE)
+      # Handle rlang::missing() arguments
+      if (rlang::is_missing(val)) {
+        next
+      }
       # Support the setting of `NULL` values
       expr_list[i] <- list(val)
     }
@@ -29,8 +33,12 @@ expr_recurse <- function(expr, post_fn) {
 
 
 st2_expr_text <- function(expr) {
-  if (is.null(expr) || is.character(expr)) return(expr)
-  if (is.list(expr)) return(lapply(expr, st2_expr_text))
+  if (is.null(expr) || is.character(expr)) {
+    return(expr)
+  }
+  if (is.list(expr)) {
+    return(lapply(expr, st2_expr_text))
+  }
   gsub(
     "\\s*\n    ",
     "\n  ",
