@@ -77,7 +77,7 @@ If the application directory is not meant to be public, it can also be located i
 
 ## Applications using a function
 
-Some packages, such as `{golem}`, provide a function that runs or returns a shiny application.  In this case, you can create a wrapper function to perform two actions: load the package and return an app. For example, if your package is named `mypkg`, your package structure may look like:
+Some packages, such as `{golem}`, provide a function that runs or returns a shiny application.  In this case, you can create a wrapper function to perform two actions: load the package via `library()` or `require()` and returns/runs an app. For example, if your package is named `mypkg`, your package structure may look like:
 
 ```
 /
@@ -112,7 +112,7 @@ test_that("mypkg app initial values are consistent", {
 })
 ```
 
-This works as `{shinytest2}` recognizes that the `run_app` function is part of the local package. When running a local package methods, `{shinytest2}` will call the method within the scope of your local R package in the the background process. All other functions will run as normal.
+This works as `{shinytest2}` recognizes that the `run_app` function is part of the local package. When running a local package methods, `{shinytest2}` will call the method within the scope of your local R package in the the background process.
 
 The specially handled function is functionally equivalent to defining a wrapper function that loads the package and calls `run_app()`:
 
@@ -134,13 +134,15 @@ test_that("mypkg app initial values are consistent", {
 })
 ```
 
-When using a function to initialize the `AppDriver`, `{shinytest2}` will automatically call `pkgload::load_all()` when you execute `library(<pkg>)` or `require(<pkg>)` to load your dev package, `<pkg>`, in the background R process. Currently, only the local dev package can be loaded.  Similar to `{mirai}`, there is also no carryover from the testing environment to the supplied function execution within the background R process. All packages may need to be `library()`'ed again.
+When using a function to initialize the `AppDriver`, `{shinytest2}` will automatically call `pkgload::load_all()` when you execute `library(<pkg>)` or `require(<pkg>)` to load your dev package, `<pkg>`, in the background R process. Currently, only the local dev package can be loaded.  Similar to `{mirai}`, there is also no carryover from the testing environment to the supplied function execution within the background R process. All packages may need to be `library()`'ed again!
 
 
 
 ## Application objects
 
-The third way have an application in an R package is by having a function that returns a Shiny application object. In this example, there's a function `hello_world_app()`, which lives in `R/app-object.R`:
+The third way have an application in an R package is by having a function that returns a Shiny application object. App objects being supplied directly to `AppDriver$new()` are to be considered for quick testing / confirmation of targeted behavior. For more complex applications, it is recommended to use one of the other two approaches described above as not all globals and contexts are preserved when serializing the app object.
+
+In this example, there's a function `hello_world_app()`, which lives in `R/app-object.R`:
 
 ```
 /
@@ -201,9 +203,6 @@ test_that("hello-world app initial values are consistent", {
 ```
 
 To help create tests, you can call `record_test()` on your shiny application object directly. Unfortunately, the test file will not be able to be saved. Instead, the test commands can be copied into a test script manually.
-
-App objects are to be considered for quick testing / confirmation of targeted behavior. For more complex applications, it is recommended to use one of the other two approaches described above as not all globals and contexts are preserved when serializing the app object.
-
 
 
 
