@@ -13,15 +13,16 @@
 #'
 #' @param app_dir The base directory for the Shiny application
 #' @param runner If `TRUE`, creates a \pkg{shinytest2} test runner at `./tests/testthat.R`
+#' @param setup If `TRUE`, creates a setup file called
+#' `./tests/testthat/setup-shinytest2.R` containing a call to
+#' [`load_app_support()`]. If'd like fine grain control over when the environment is
+#' loaded, please look at [`local_app_support()`] and [`with_app_support()`].
 #' @param ignore If `TRUE`, adds entries to `.Rbuildignore` and `.gitignore` to
 #' ignore new debug screenshots. (`*_.new.png`)
 #' @param package If `TRUE`, adds \pkg{shinytest2} to `Suggests` in the `DESCRIPTION` file.
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @param quiet If `TRUE`, console output will be suppressed.
 #' @param overwrite If `TRUE`, the test file or test runner will be overwritten.
-#' @param setup Deprecated. If you need Shiny app support loaded into your
-#' environment, please look at [`local_app_support()`] and
-#' [`with_app_support()`].
 #' @export
 #' @examples
 #' # Set up shinytest2 testing configs
@@ -29,48 +30,46 @@
 use_shinytest2 <- function(
   app_dir = ".",
   runner = missing_arg(),
+  setup = missing_arg(),
   ignore = missing_arg(),
   package = missing_arg(),
   ...,
   quiet = FALSE,
-  overwrite = FALSE,
-  setup = deprecated()
+  overwrite = FALSE
 ) {
   rlang::check_dots_empty()
-
-  if (lifecycle::is_present(setup)) {
-    lifecycle::deprecate_warn(
-      "1.5.0",
-      "use_shinytest2(setup)",
-      details = "If you need Shiny app support loaded into your environment, please look at `local_app_support()` and `with_app_support()`. "
-    )
-  }
 
   if (
     all(
       rlang::is_missing(runner),
+      rlang::is_missing(setup),
       rlang::is_missing(ignore),
       rlang::is_missing(package)
     )
   ) {
     runner <- TRUE
+    setup <- TRUE
     ignore <- TRUE
     package <- TRUE
   } else {
     # If something is provided, disable everything else
     runner <- isTRUE(rlang::maybe_missing(runner, FALSE))
+    setup <- isTRUE(rlang::maybe_missing(setup, FALSE))
     ignore <- isTRUE(rlang::maybe_missing(ignore, FALSE))
     package <- isTRUE(rlang::maybe_missing(package, FALSE))
   }
 
-  if (all(!runner, !ignore, !package)) {
+  if (all(!runner, !setup, !ignore, !package)) {
     stop(
-      "At least one of `runner`, `ignore`, or `package` must be `TRUE`"
+      "At least one of `runner`, `setup`, `ignore`, or `package` must be `TRUE`"
     )
   }
 
   if (runner) {
     use_shinytest2_runner(app_dir, quiet = quiet, overwrite = overwrite)
+  }
+  if (setup) {
+    use_shinytest2_setup(app_dir, quiet = quiet)
   }
   if (ignore) {
     use_shinytest2_ignore(app_dir, quiet = quiet)
@@ -119,6 +118,43 @@ use_shinytest2_test <- function(
     overwrite = overwrite,
     open = open
   )
+}
+
+
+has_setup_file <- function(file, fixed_pattern) {
+  if (!fs::file_exists(file)) {
+    return(FALSE)
+  }
+
+  lines <- read_utf8(file)
+  has_call <- grepl(fixed_pattern, lines, fixed = TRUE)
+  return(has_call)
+}
+
+use_shinytest2_setup <- function(app_dir = ".", quiet = FALSE) {
+  withr::with_dir(app_dir, {
+    # Legacy support for old setup.R files.
+    # Should be using `setup-shinytest2.R`
+    if (has_setup_file("tests/testthat/setup.R", "load_app_env")) {
+      return(FALSE)
+    }
+    if (has_setup_file("tests/testthat/setup-shinytest2.R", "load_app_env")) {
+      return(FALSE)
+    }
+    if (
+      has_setup_file("tests/testthat/setup-shinytest2.R", "load_app_support")
+    ) {
+      return(FALSE)
+    }
+
+    fs::dir_create("tests/testthat")
+    write_union(
+      "tests/testthat/setup-shinytest2.R",
+      comments = "# Load application support files into testing environment",
+      lines = "shinytest2::load_app_support(test_path(\"../..\"))",
+      quiet = quiet
+    )
+  })
 }
 
 use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {

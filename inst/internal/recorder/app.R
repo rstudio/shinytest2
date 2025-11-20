@@ -7,8 +7,11 @@ load_timeout <- getOption("shinytest2.load.timeout")
 start_seed <- getOption("shinytest2.seed")
 shiny_args <- getOption("shinytest2.shiny.args")
 save_file <- getOption("shinytest2.test_file")
+package_path <- getOption("shinytest2.package_path")
 record_screen_size <- getOption("shinytest2.record_screen_size")
 allow_no_input_binding <- getOption("shinytest2.allow_no_input_binding")
+
+in_dev_package <- !is.null(package_path)
 
 if (is.null(target_url) || is.null(app)) {
   rlang::abort(paste0(
@@ -17,7 +20,36 @@ if (is.null(target_url) || is.null(app)) {
   ))
 }
 
-test_save_file <- file.path(app$get_dir(), "tests", "testthat", save_file)
+
+app_file_location_txt <- NULL
+if (is.function(app$get_dir())) {
+  # App is a function
+  # fs::file_exists("") #> FALSE
+  test_save_file <- ""
+  here_dir <- getwd()
+} else {
+  if (in_dev_package) {
+    # App within R package
+    here_dir <- package_path
+  } else {
+    # Relative to app testing
+    here_dir <- app$get_dir()
+  }
+  test_save_file <- file.path(here_dir, "tests", "testthat", save_file)
+
+  relative_save_path <- fs::path_rel(
+    app$get_dir(),
+    file.path(here_dir, "tests", "testthat")
+  )
+
+  app_file_location_txt <- paste0(
+    "test_path(\"",
+    relative_save_path,
+    "\")"
+  )
+}
+
+test_runner_file <- file.path(here_dir, "tests", "testthat.R")
 
 # Can't register more than once, so remove existing one just in case.
 removeInputHandler("shinytest2.testevents")
@@ -278,11 +310,21 @@ generate_test_code <- function(events, name, seed) {
 
   # From the tests dir, it is up two folders and then the app file
   inner_code <- paste(
+    # Load app support if in package
+    # Anti-paired with `use_shinytest2_setup()` in recorder app.R
+    if (in_dev_package && !is.null(app_file_location_txt)) {
+      paste0(
+        "local_app_support(",
+        app_file_location_txt,
+        ")\n\n"
+      )
+    },
     paste0(
       "app <- AppDriver$new(\n",
       "  ",
       paste(
         c(
+          app_file_location_txt,
           # TODO-future; Should this value be a parameter?
           # Going with "no" for now as it is difficult to capture the expression
           # when nothing else is an expression
@@ -597,7 +639,7 @@ shinyApp(
                 # Get unescaped filenames in a char vector, with full path
                 filepaths <- vapply(event$value, `[[`, "name", FUN.VALUE = "")
                 filepaths <- fs::path(
-                  app$get_dir(),
+                  here_dir,
                   "tests",
                   "testthat",
                   filepaths
@@ -688,12 +730,7 @@ shinyApp(
         test_save_file
       )
       # Convert names to chars
-      cur_test_names <- unique(as.character(lapply(cur_test_names, function(x) {
-        if (is.null(x)) {
-          return("`NULL`")
-        }
-        x
-      })))
+      cur_test_names <- unique(unlist(cur_test_names))
       if (name %in% cur_test_names) {
         shiny::tags$div(
           "Please use a unique name. Known names:",
@@ -713,7 +750,7 @@ shinyApp(
       ~"At least one expectation must be made"
     )
     iv_app_path <- shinyvalidate::InputValidator$new()
-    iv_app_path$condition(~ fs::path_has_parent(app$get_dir(), tempdir()))
+    iv_app_path$condition(~ fs::path_has_parent(here_dir, tempdir()))
     iv_app_path$add_rule(
       "seed",
       ~ shiny::tagList(
@@ -928,10 +965,6 @@ shinyApp(
           code <- paste0("library(shinytest2)", code)
         }
 
-        test_runner_file <- fs::path(
-          fs::path_dir(fs::path_dir(test_save_file)),
-          "testthat.R"
-        )
         overwrite_test_runner <-
           if (fs::file_exists(test_runner_file)) {
             if (
@@ -943,7 +976,7 @@ shinyApp(
             ) {
               rlang::warn(paste0(
                 "Overwriting test runner ",
-                fs::path_rel(test_runner_file, app$get_dir()),
+                fs::path_rel(test_runner_file, here_dir),
                 " with `shinytest2::test_app()` call to ensure proper a testing environment."
               ))
               # Runner exists. Overwrite existing contents
@@ -958,17 +991,30 @@ shinyApp(
           }
         if (overwrite_test_runner) {
           shinytest2:::use_shinytest2_runner(
-            app$get_dir(),
+            here_dir,
             quiet = FALSE,
             overwrite = TRUE
           )
         }
 
+        if (in_dev_package) {
+          # Ensure that shinytest2 is listed in Suggests in DESCRIPTION
+          shinytest2:::use_shinytest2_package(here_dir, quiet = FALSE)
+        } else {
+          # Ensure that shinytest2 is available in the app's testthat folder
+          # Anti-paired with `generate_test_code()` above
+          shinytest2:::use_shinytest2_setup(here_dir, quiet = FALSE)
+        }
+
         rlang::inform(
           c(
             "*" = paste0(
-              "Saving test file: ",
-              fs::path_rel(test_save_file, app$get_dir())
+              if (in_dev_package) {
+                "Saving package test file: "
+              } else {
+                "Saving test file: "
+              },
+              fs::path_rel(test_save_file, here_dir)
             )
           )
         )

@@ -1,4 +1,5 @@
-# Import something from testthat to avoid a check error that nothing is imported from a `Depends` package
+# Import something from testthat to avoid a check error that nothing is imported
+# from a `Depends` package
 #' @importFrom testthat default_reporter
 NULL
 
@@ -76,18 +77,28 @@ NULL
 #'   * Otherwise, the default path of `"."` is used.
 #' @param ... Parameters passed to [`testthat::test_dir()`]
 #' @param reporter The reporter to use for the tests
-#' @param name Name to display in the middle of the test name. This value is only used
-#' when calling `test_app()` inside of \pkg{testhat} test. The final testing context will
-#' have the format of `"{test_context} - {name} - {app_test_context}"`.
+#' @param name Name to display in the middle of the test name. This value is
+#'   only used when calling `test_app()` inside of \pkg{testhat} test. The final
+#'   testing context will have the format of `"{test_context} - {name} -
+#'   {app_test_context}"`.
 #' @param reporter Reporter to pass through to [`testthat::test_dir()`].
-#' @param stop_on_failure If missing, the default value of `TRUE` will be used. However, if missing and currently testing, `FALSE` will be used to seamlessly integrate the app reporter to `reporter`.
+#' @param stop_on_failure If missing, the default value of `TRUE` will be used.
+#'   However, if missing and currently testing, `FALSE` will be used to
+#'   seamlessly integrate the app reporter to `reporter`.
 #' @param check_setup [Deprecated]. Parameter ignored.
 #' @seealso
-#' * [`record_test()`] to create tests to record against your Shiny application.
-#' * [testthat::snapshot_review()] and [testthat::snapshot_accept()] if
-#'   you want to compare or update snapshots after testing.
-#' * [`load_app_env()`] to load the Shiny application's helper files.
-#'   This is only necessary if you want access to the values while testing.
+#'   * [`record_test()`] to create tests to record against your Shiny
+#'     application.
+#'   * [testthat::snapshot_review()] and [testthat::snapshot_accept()] if you
+#'     want to compare or update snapshots after testing.
+#'   * [`local_app_support()`] / [`with_app_support()`] to load the Shiny
+#'     application's helper files into respective environments. These methods
+#'     are useful for within package testing as they have fine tune control over
+#'     when the support environment is loaded.
+#'   * [`load_app_support()`] to load the Shiny application's helper files into
+#'     the calling environment. This method is useful for non-package based
+#'     Shiny applications where the support environment should be available in
+#'     every test file.
 #'
 #' @export
 #' @importFrom lifecycle deprecated
@@ -136,15 +147,25 @@ test_app <- function(
     }
   }
 
+  warning("TODO: also disable for CRAN")
+  warning("TODO: message formatting")
+  warning("TODO: disable warning")
   if (testthat::is_testing()) {
     rlang::warn(
       c(
-        "x" = "Calling {.code shinytest2::test_app() } within a {.pkg testthat } test has been superseded in {.pkg shinytest2 } v0.5.0",
-        "i" = "If you are testing within a package, please see URL on how to migrate your App tests to be located in your package tests.",
-        "i" = "If you are using CI, don't forget to collect your new snapshots after your initial run!",
-        "i" = "See {.url https://rstudio.github.io/shinytest2/articles/use-package.html } for more details."
+        "x" = cli::cli_format(
+          "Calling {.code shinytest2::test_app() } within a {.pkg testthat } test has been superseded in {.pkg shinytest2 } v0.5.0"
+        ),
+        "i" = cli::cli_format(
+          "If you are testing within a package, please see URL on how to migrate your App tests to be located in your package tests."
+        ),
+        "i" = cli::cli_format(
+          "If you are using CI, don't forget to collect your new snapshots after your initial run!"
+        ),
+        "i" = cli::cli_format(
+          "See {.url https://rstudio.github.io/shinytest2/articles/use-package.html } for more details."
+        )
       ),
-      use_cli_format = TRUE,
       .frequency = "once",
       .frequency_id = "shinytest2_test_app_migration_warning"
     )
@@ -281,9 +302,11 @@ test_app <- function(
 
 #' Load the Shiny application's support environment
 #'
-#' `r lifecycle::badge("superseded")` by `local_app_support()` and
-#' `with_app_support()` as they offer more flexibility where and when the
-#' support environment is loaded.
+#'
+#' @description
+#' `r lifecycle::badge("superseded")` by [`load_app_support()`]. For package
+#' development, `local_app_support()` and `with_app_support()` offer more
+#' flexibility as to when the support environment is loaded.
 #'
 #' Executes all `./R` files and `global.R` into the current environment. This is
 #' useful when wanting access to functions or values created in the `./R` folder
@@ -300,8 +323,9 @@ test_app <- function(
 #' @param renv The environment in which the files in the `R/`` directory should
 #' be evaluated.
 #' @inheritParams shiny::loadSupport
+#' @keywords internal
 #' @export
-load_app_env <- function(
+load_app_support <- load_app_env <- function(
   app_dir = "../../",
   renv = rlang::caller_env(),
   globalrenv = rlang::caller_env()
@@ -315,51 +339,81 @@ load_app_env <- function(
 #' attached appropriately. This is useful when wanting access to functions or
 #' values created in the `./R` folder for testing purposes.
 #'
-#' Loading these files is not automatically performed by `test_app()` and must
-#' be called within your unit tests to access support file objects.
+#' For Shiny application testing within R packages, `local_app_support()` and
+#' `with_app_support()` where loading an App's support files should not happen
+#' automatically.
+#'
+#' For non-package based Shiny applications, it is recommended to use
+#' [`load_app_support()`] for the support to be available throughout all test
+#' files.
 #'
 #' @param app_dir The base directory for the Shiny application.
 #' @param expr An expression to evaluate within the support environment.
-#' @param envir The environment in which the files in the `R/` directory should
-#' be evaluated.
+#' @param envir The environment in which the App support should
+#' be made available.
 #' @describeIn app_support Temporarily attach the Shiny application's support
 #' environment into the current environment.
 #' @export
 #' @examples
 #' \dontrun{
-#' # ./R/utils.R
+#' # ./tests/testthat/apps/myapp/R/utils.R
 #' n <- 42
 #'
 #' #' # ./tests/testthat/test-utils.R
 #' test_that("Can access support environment", {
-#'   shinytest2::local_app_support()
+#'   expect_false(exists("n"))
+#'   shinytest2::local_app_support(test_path("apps/myapp"))
 #'   expect_equal(n, 42)
+#' })
+#'
+#' # Or using with_app_support()
+#' test_that("Can access support environment", {
+#'   expect_false(exists("n"))
+#'   shinytest2::with_app_support(test_path("apps/myapp"), {
+#'     expect_equal(n, 42)
+#'   })
+#'   expect_false(exists("n"))
 #' })
 #' }
 local_app_support <- function(
-  app_dir = "../../",
+  app_dir,
   envir = rlang::caller_env()
 ) {
-  globalrenv <- rlang::new_environment(parent = envir)
-  renv <- rlang::new_environment(parent = globalrenv)
-
-  shiny::loadSupport(app_dir, renv = renv, globalrenv = globalrenv)
+  renv <- load_app_support(
+    app_dir,
+    # Use a new environment so that support files do not pollute the global env
+    envir = rlang::new_environment(parent = globalenv())
+  )
 
   withr::local_environment(renv, .local_envir = envir)
 }
+
 
 #' @describeIn app_support For the provided `expr`, attach the Shiny
 #' application's support environment into the current environment.
 #' @export
 with_app_support <- function(
+  app_dir,
   expr,
-  app_dir = "../../",
   envir = rlang::caller_env()
 ) {
-  globalrenv <- rlang::new_environment(parent = envir)
-  renv <- rlang::new_environment(parent = globalrenv)
-
-  shiny::loadSupport(app_dir, renv = renv, globalrenv = globalrenv)
+  renv <- load_app_support(
+    app_dir,
+    # Use a new environment so that support files do not pollute the global env
+    envir = rlang::new_environment(parent = globalenv())
+  )
 
   withr::with_environment(renv, expr)
+}
+
+#' @describeIn app_support Loads all support files into the current environment.
+#' No cleanup actions are ever performed.
+load_app_support <- function(app_dir, envir = rlang::caller_env()) {
+  renv <- shiny::loadSupport(
+    appDir = app_dir,
+    renv = rlang::new_environment(parent = envir),
+    globalrenv = envir
+  )
+
+  invisible(renv)
 }
