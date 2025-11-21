@@ -24,3 +24,4 @@ _\.new\.png$
 ^tests/testthat/pkgs$
 ^CRAN-SUBMISSION$
 ^_dev$
+^.claude$
