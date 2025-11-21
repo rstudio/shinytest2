@@ -61,6 +61,8 @@ LinkingTo:
     cpp11
 VignetteBuilder:
     knitr
+Remotes:
+    schloerke/testthat@patch-2
 Config/Needs/check: rstudio/shiny, bslib
 Config/Needs/shinytest2-testing: decor
 Config/Needs/website: pkgdown, tidyverse/tidytemplate
