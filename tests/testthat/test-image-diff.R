@@ -11,7 +11,7 @@ test_that("screenshot options are used", {
   expect_false(
     compare_screenshot_threshold(
       bookmark_old,
-      bookmark_new,
+      bookmark_new
     )
   )
 
@@ -22,7 +22,7 @@ test_that("screenshot options are used", {
       expect_true(
         compare_screenshot_threshold(
           bookmark_old,
-          bookmark_new,
+          bookmark_new
         )
       )
     }
