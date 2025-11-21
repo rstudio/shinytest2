@@ -125,23 +125,16 @@ compare_screenshot_threshold <- function(
   kernel_size = getOption("shinytest2.compare_screenshot.kernel_size", 5),
   quiet = FALSE
 ) {
-  message("\n\n\n\n\ncompare_screenshot_threshold() called with:")
-  print(sys.call())
-
-  message("\n\nsys.calls(): ")
-  print(sys.calls())
+  rlang::check_dots_empty()
 
   str(list(
     old = old,
     new = new,
     threshold = threshold,
-    dots = list(...),
     is_null_threshold = is.null(threshold),
     kernel_size = kernel_size,
     quiet = quiet
   ))
-
-  rlang::check_dots_empty()
 
   is_same_file <- testthat::compare_file_binary(old, new)
   message("is_same_file: ", is_same_file)
