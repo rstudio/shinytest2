@@ -1,5 +1,3 @@
-
-
 #' Compare screenshots given threshold value
 #'
 #' \pkg{chromote} can sometimes produce screenshot images with non-deterministic
@@ -129,9 +127,21 @@ compare_screenshot_threshold <- function(
 ) {
   rlang::check_dots_empty()
 
+  str(list(
+    old = old,
+    new = new,
+    threshold = threshold,
+    is_null_threshold = is.null(threshold),
+    kernel_size = kernel_size,
+    quiet = quiet
+  ))
+
   is_same_file <- testthat::compare_file_binary(old, new)
+  message("is_same_file: ", is_same_file)
   # Quit early if they are the same file
-  if (is_same_file) return(TRUE)
+  if (is_same_file) {
+    return(TRUE)
+  }
 
   # If no threshold value is provided, return the previous answer of
   # `is_same_file`
@@ -163,6 +173,8 @@ compare_screenshot_threshold <- function(
     )
   )
   if (inherits(conv_max_value, "try-error")) {
+    message("screenshot_max_difference() produced an error: ")
+    str(conv_max_value)
     # If the screenshot_max_difference calculation, the images are not the same
     return(FALSE)
   }
@@ -171,13 +183,23 @@ compare_screenshot_threshold <- function(
 
   if (!ret && is_false(quiet)) {
     rlang::inform(c(
-      "!" = paste0("Maximum screenshot convolution value `", conv_max_value, "`",
-      " > `", threshold, "` (threshold)."),
+      "!" = paste0(
+        "Maximum screenshot convolution value `",
+        conv_max_value,
+        "`",
+        " > `",
+        threshold,
+        "` (threshold)."
+      ),
       "*" = paste0("`old`:", old),
       "*" = paste0("`new`:", new),
-      "i" = cli::col_silver("(To remove this message, increase `threshold`, or set `quiet = TRUE`)")
+      "i" = cli::col_silver(
+        "(To remove this message, increase `threshold`, or set `quiet = TRUE`)"
+      )
     ))
   }
+
+  message("ret: ", ret)
 
   ret
 }
