@@ -68,6 +68,8 @@ shiny_app <- shinyApp(ui, server)
 
 
 test_that("download files work from link and button", {
+  skip_on_os("windows") # file formats differ on Windows
+
   app <- AppDriver$new(shiny_app, variant = NULL)
 
   app$wait_for_js("$('#download_link_csv').attr('href') != ''")
