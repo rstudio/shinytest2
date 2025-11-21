@@ -1,6 +1,6 @@
 Package: shinytest2
 Title: Testing for Shiny Applications
-Version: 0.4.1.9000
+Version: 0.4.1.9001
 Authors@R: c(
     person("Barret", "Schloerke", , "barret@posit.co", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0001-9986-114X")),
@@ -31,7 +31,7 @@ Imports:
     globals (>= 0.14.0),
     httr2,
     jsonlite,
-    lifecycle,
+    lifecycle (>= 1.0.3),
     pingr,
     pkgload,
     R6 (>= 2.4.0),
@@ -61,6 +61,8 @@ LinkingTo:
     cpp11
 VignetteBuilder:
     knitr
+Remotes:
+    schloerke/testthat@patch-2
 Config/Needs/check: rstudio/shiny, bslib
 Config/Needs/shinytest2-testing: decor
 Config/Needs/website: pkgdown, tidyverse/tidytemplate
@@ -100,6 +102,7 @@ Collate:
     'httr2.R'
     'migrate.R'
     'missing-value.R'
+    'pkg.R'
     'utils.R'
     'platform.R'
     'record-test-unique-name.R'

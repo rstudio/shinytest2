@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-latest, r: release}
+          - { os: ubuntu-latest, r: release }
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -50,13 +50,13 @@ jobs:
       - name: Test app (main)
         uses: rstudio/shinytest2/actions/test-app@actions/v1
         with:
-          app-dir: "tests/testthat/apps/window"
+          app-dir: "tests/testthat/local-apps/window"
 
       - name: Test app (PR)
         if: github.event_name == 'pull_request'
         uses: ./actions/test-app
         with:
           app-dir: |
-            tests/testthat/apps/text_html,tests/testthat/apps/window,
-            tests/testthat/apps/text_html
-            tests/testthat/apps/text_html
+            tests/testthat/local-apps/html-text,tests/testthat/local-apps/window,
+            tests/testthat/local-apps/html-text
+            tests/testthat/local-apps/html-text

@@ -1,29 +1,66 @@
 library(shiny)
 
-target_url    <- getOption("shinytest2.recorder.url")
-app           <- getOption("shinytest2.app")
-app_name      <- getOption("shinytest2.name")
-load_timeout  <- getOption("shinytest2.load.timeout")
-start_seed    <- getOption("shinytest2.seed")
-shiny_args    <- getOption("shinytest2.shiny.args")
-save_file     <- getOption("shinytest2.test_file")
+target_url <- getOption("shinytest2.recorder.url")
+app <- getOption("shinytest2.app")
+app_name <- getOption("shinytest2.name")
+load_timeout <- getOption("shinytest2.load.timeout")
+start_seed <- getOption("shinytest2.seed")
+shiny_args <- getOption("shinytest2.shiny.args")
+save_file <- getOption("shinytest2.test_file")
+package_path <- getOption("shinytest2.package_path")
 record_screen_size <- getOption("shinytest2.record_screen_size")
 allow_no_input_binding <- getOption("shinytest2.allow_no_input_binding")
 
+in_dev_package <- !is.null(package_path)
+
 if (is.null(target_url) || is.null(app)) {
-  rlang::abort(paste0("Test recorder requires the 'shinytest2.recorder.url' and ",
-    "'shinytest2.app' options to be set."))
+  rlang::abort(paste0(
+    "Test recorder requires the 'shinytest2.recorder.url' and ",
+    "'shinytest2.app' options to be set."
+  ))
 }
 
-test_save_file <- file.path(app$get_dir(), "tests", "testthat", save_file)
+
+app_file_location_txt <- NULL
+if (is.function(app$get_dir())) {
+  # App is a function
+  # fs::file_exists("") #> FALSE
+  test_save_file <- ""
+  here_dir <- getwd()
+} else {
+  if (in_dev_package) {
+    # App within R package
+    here_dir <- package_path
+  } else {
+    # Relative to app testing
+    here_dir <- app$get_dir()
+  }
+  test_save_file <- file.path(here_dir, "tests", "testthat", save_file)
+
+  relative_save_path <- fs::path_rel(
+    app$get_dir(),
+    file.path(here_dir, "tests", "testthat")
+  )
+
+  app_file_location_txt <- paste0(
+    "test_path(\"",
+    relative_save_path,
+    "\")"
+  )
+}
+
+test_runner_file <- file.path(here_dir, "tests", "testthat.R")
 
 # Can't register more than once, so remove existing one just in case.
 removeInputHandler("shinytest2.testevents")
 
 # Need to avoid Shiny's default recursive unlisting
-registerInputHandler("shinytest2.testevents", function(val, shinysession, name) {
-  val
-})
+registerInputHandler(
+  "shinytest2.testevents",
+  function(val, shinysession, name) {
+    val
+  }
+)
 
 escape_string <- function(s) {
   # escape \ as well as "
@@ -42,7 +79,11 @@ deparse2 <- function(x) {
   expr <- sub("^structure\\((list.*), \\.Names = c\\([^(]+\\)\\)$", "\\1", expr)
   # Same as above, but for single item in .Names, like:
   #  "structure(list(a = 1), .Names = \"a\")"
-  expr <- sub('^structure\\((list.*), \\.Names = \\"[^\\"]*\\"\\)$', "\\1", expr)
+  expr <- sub(
+    '^structure\\((list.*), \\.Names = \\"[^\\"]*\\"\\)$',
+    "\\1",
+    expr
+  )
 
   expr
 }
@@ -70,18 +111,24 @@ tooltip <- function(text, placement = "top") {
 }
 
 enable_tooltip_script <- function() {
-  shiny::tags$script("$('span[data-toggle=\"tooltip\"]').tooltip({ delay: 250 });")
+  shiny::tags$script(
+    "$('span[data-toggle=\"tooltip\"]').tooltip({ delay: 250 });"
+  )
 }
 
 # Given a vector/list, return TRUE if any elements are unnamed, FALSE otherwise.
 any_unnamed <- function(x) {
   # Zero-length vector
-  if (length(x) == 0) return(FALSE)
+  if (length(x) == 0) {
+    return(FALSE)
+  }
 
   nms <- names(x)
 
   # List with no name attribute
-  if (is.null(nms)) return(TRUE)
+  if (is.null(nms)) {
+    return(TRUE)
+  }
 
   # List with name attribute; check for any ""
   any(!nzchar(nms))
@@ -114,11 +161,15 @@ is_st2_comment <- function(x) {
   inherits(x, "st2_comment")
 }
 get_st2_comment <- function(x) {
-  if (!is_st2_comment(x)) stop("Not a st2_comment")
+  if (!is_st2_comment(x)) {
+    stop("Not a st2_comment")
+  }
   x$comment
 }
 get_st2_comment_save_code <- function(x) {
-  if (!is_st2_comment(x)) stop("Not a st2_comment")
+  if (!is_st2_comment(x)) {
+    stop("Not a st2_comment")
+  }
   x$save_code
 }
 
@@ -126,8 +177,9 @@ input_processors <- list(
   default = function(value) {
     # This function is designed to operate on atomic vectors (not lists), so if
     # this is a list, we need to unlist it.
-    if (is.list(value))
+    if (is.list(value)) {
       value <- unlist(value, recursive = FALSE)
+    }
 
     if (length(value) > 1) {
       # If it's an array, recurse
@@ -172,7 +224,10 @@ input_processors <- list(
 )
 
 # Add in input processors registered by other packages.
-input_processors <- merge_vectors(input_processors, shinytest2::get_input_processors())
+input_processors <- merge_vectors(
+  input_processors,
+  shinytest2::get_input_processors()
+)
 
 # Given an input value taken from the client, return the value that would need
 # to be passed to app$set_input() to set the input to that value.
@@ -188,7 +243,10 @@ process_input_value <- function(value, input_type) {
     if (try_load_package(pkg)) {
       # The set of `input_processors` may have changed by loading the package, so
       # re-merge the registered input processors.
-      input_processors <<- merge_vectors(input_processors, shinytest2::get_input_processors())
+      input_processors <<- merge_vectors(
+        input_processors,
+        shinytest2::get_input_processors()
+      )
     }
   }
 
@@ -223,7 +281,6 @@ quote_name <- function(name) {
 }
 
 generate_test_code <- function(events, name, seed) {
-
   # Remove st2_comment code events
   height <- NULL
   width <- NULL
@@ -231,7 +288,8 @@ generate_test_code <- function(events, name, seed) {
     if (is_st2_comment(event$app_code)) {
       return(get_st2_comment_save_code(event$app_code))
     }
-    switch(event$type,
+    switch(
+      event$type,
       "setWindowSize" = {
         if (isTRUE(event$first_set_window_size)) {
           height <<- event$height
@@ -246,27 +304,44 @@ generate_test_code <- function(events, name, seed) {
   })) # Unlist to remove `NULL`s
   event_code <- paste0(event_code, collapse = "\n")
 
-  has_expect_screenshot <- any(unlist(lapply(events, `[[`, "type")) == "expectScreenshot")
+  has_expect_screenshot <- any(
+    unlist(lapply(events, `[[`, "type")) == "expectScreenshot"
+  )
 
   # From the tests dir, it is up two folders and then the app file
   inner_code <- paste(
+    # Load app support if in package
+    # Anti-paired with `use_shinytest2_setup()` in recorder app.R
+    if (in_dev_package && !is.null(app_file_location_txt)) {
+      paste0(
+        "local_app_support(",
+        app_file_location_txt,
+        ")\n\n"
+      )
+    },
     paste0(
       "app <- AppDriver$new(\n",
-      "  ", paste(c(
-        # TODO-future; Should this value be a parameter?
-        # Going with "no" for now as it is difficult to capture the expression
-        # when nothing else is an expression
-        if (has_expect_screenshot) "variant = platform_variant()",
-        if (isTRUE(nzchar(name))) paste0("name = ", deparse2(name)),
-        if (!is.null(seed)) paste0("seed = ", seed),
-        if (!is.null(height)) paste0("height = ", height),
-        if (!is.null(width)) paste0("width = ", width),
-        if (!is.null(load_timeout)) paste0("load_timeout = ", load_timeout),
-        if (length(shiny_args) > 0) paste0("shiny_args = ", deparse2(shiny_args)),
-        NULL # used for trailing comma
+      "  ",
+      paste(
+        c(
+          app_file_location_txt,
+          # TODO-future; Should this value be a parameter?
+          # Going with "no" for now as it is difficult to capture the expression
+          # when nothing else is an expression
+          if (has_expect_screenshot) "variant = platform_variant()",
+          if (isTRUE(nzchar(name))) paste0("name = ", deparse2(name)),
+          if (!is.null(seed)) paste0("seed = ", seed),
+          if (!is.null(height)) paste0("height = ", height),
+          if (!is.null(width)) paste0("width = ", width),
+          if (!is.null(load_timeout)) paste0("load_timeout = ", load_timeout),
+          if (length(shiny_args) > 0) {
+            paste0("shiny_args = ", deparse2(shiny_args))
+          },
+          NULL # used for trailing comma
         ),
         collapse = ",\n  "
-      ), "\n",
+      ),
+      "\n",
       ")"
     ),
     event_code,
@@ -281,8 +356,11 @@ generate_test_code <- function(events, name, seed) {
   inner_code <- gsub("\n", "\n  ", paste0("  ", inner_code))
 
   ret <- paste0(
-    "test_that(\"{shinytest2} recording: ", name, "\", {\n",
-    inner_code, "\n",
+    "test_that(\"{shinytest2} recording: ",
+    name,
+    "\", {\n",
+    inner_code,
+    "\n",
     "})\n"
   )
 
@@ -290,9 +368,13 @@ generate_test_code <- function(events, name, seed) {
 }
 
 has_inputs_without_binding <- function(events) {
-  any(vapply(events, function(event) {
-    return(event$type == "inputEvent" && !event$hasBinding)
-  }, TRUE))
+  any(vapply(
+    events,
+    function(event) {
+      return(event$type == "inputEvent" && !event$hasBinding)
+    },
+    TRUE
+  ))
 }
 
 
@@ -308,23 +390,38 @@ shinyApp(
       tags$script(src = "inject-recorder.js")
     ),
 
-    div(id = "app-iframe-container",
+    div(
+      id = "app-iframe-container",
       tags$iframe(id = "app-iframe", src = target_url)
     ),
-    div(id = "shiny-recorder",
-      div(class = "shiny-recorder-header", tags$code("{shinytest2}"), "expections"),
-      div(class = "shiny-recorder-controls form-group",
-        actionButton("values",
+    div(
+      id = "shiny-recorder",
+      div(
+        class = "shiny-recorder-header",
+        tags$code("{shinytest2}"),
+        "expections"
+      ),
+      div(
+        class = "shiny-recorder-controls form-group",
+        actionButton(
+          "values",
           span(
-            img(src = "shiny.png", class = "shiny-recorder-icon", style = "height: 23px;vertical-align: middle;"),
+            img(
+              src = "shiny.png",
+              class = "shiny-recorder-icon",
+              style = "height: 23px;vertical-align: middle;"
+            ),
             "Expect Shiny values"
           )
         ),
         tooltip(
-          HTML("To capture all Shiny values via the keyboard, press Ctrl-shift-V or or &#8984;-shift-V.<br/>You can also Ctrl-click or &#8984;-click on an input/output to capture just that one input/output."),
+          HTML(
+            "To capture all Shiny values via the keyboard, press Ctrl-shift-V or or &#8984;-shift-V.<br/>You can also Ctrl-click or &#8984;-click on an input/output to capture just that one input/output."
+          ),
           placement = "bottom"
         ),
-        actionButton("screenshot",
+        actionButton(
+          "screenshot",
           span(
             img(src = "snapshot.png", class = "shiny-recorder-icon"),
             "Expect screenshot",
@@ -332,24 +429,30 @@ shinyApp(
           )
         ),
         tooltip(
-          HTML("To trigger a screenshot via the keyboard, press Ctrl-shift-S or &#8984;-shift-S"),
+          HTML(
+            "To trigger a screenshot via the keyboard, press Ctrl-shift-S or &#8984;-shift-S"
+          ),
           placement = "bottom"
         ),
       ),
       div(class = "shiny-recorder-header", "Code"),
       uiOutput("recorded_events"),
       div(class = "shiny-recorder-header", "Save"),
-      div(id = "save-and-quit",
+      div(
+        id = "save-and-quit",
         tagAppendChild(
           tagAppendAttributes(
             textInput("testname", label = "Test name:", value = app_name),
             class = "inline-input-container",
           ),
-          tooltip("The name of the test should be short, unique, and path-friendly way to describe what the set of expectations are trying to confirm.")
+          tooltip(
+            "The name of the test should be short, unique, and path-friendly way to describe what the set of expectations are trying to confirm."
+          )
         ),
         tagAppendChild(
           tagAppendAttributes(
-            numeric_input("seed",
+            numeric_input(
+              "seed",
               label = "Random seed:",
               value = start_seed,
               min = 0,
@@ -357,15 +460,19 @@ shinyApp(
             ),
             class = "inline-input-container"
           ),
-          tooltip("A seed is recommended if your application uses any randomness. This includes all Shiny Rmd documents.")
+          tooltip(
+            "A seed is recommended if your application uses any randomness. This includes all Shiny Rmd documents."
+          )
         ),
-        actionButton("exit_nosave",
+        actionButton(
+          "exit_nosave",
           span(
             img(src = "exit-nosave.png", class = "shiny-recorder-icon"),
             "Exit"
           )
         ),
-        actionButton("exit_save",
+        actionButton(
+          "exit_save",
           span(
             img(src = "exit-save.png", class = "shiny-recorder-icon"),
             "Save test and exit"
@@ -388,7 +495,6 @@ shinyApp(
       )
     })
 
-
     # echo console output from the driver object (in real-time)
     observe({
       invalidateLater(500)
@@ -404,8 +510,14 @@ shinyApp(
         n_sub
       }
 
-      n_console_err_lines <<- print_logs(level == "stderr", n = n_console_err_lines)
-      n_console_std_lines <<- print_logs(level != "stderr", n = n_console_std_lines)
+      n_console_err_lines <<- print_logs(
+        level == "stderr",
+        n = n_console_err_lines
+      )
+      n_console_std_lines <<- print_logs(
+        level != "stderr",
+        n = n_console_std_lines
+      )
     })
 
     allow_no_input_binding_react <- reactiveVal(allow_no_input_binding)
@@ -420,11 +532,14 @@ shinyApp(
         to_remove <- c()
 
         for (i in seq_along(events)) {
-          if (i == 1) next
+          if (i == 1) {
+            next
+          }
           prev_event <- events[[i - 1]]
           curr_event <- events[[i]]
           if (prev_event$type == curr_event$type) {
-            switch(curr_event$type,
+            switch(
+              curr_event$type,
               "outputEvent" = , # nolint
               "waitForIdle" = , # nolint
               "setWindowSize" = {
@@ -441,14 +556,16 @@ shinyApp(
             )
           } else if (
             i >= 3 &&
-            curr_event$type == "setWindowSize" &&
-            prev_event$type == "outputEvent" &&
-            events[[i - 2]]$type == "setWindowSize"
+              curr_event$type == "setWindowSize" &&
+              prev_event$type == "outputEvent" &&
+              events[[i - 2]]$type == "setWindowSize"
           ) {
             # If two setWindowSize events sandwich an outputEvent,
             # remove the first setWindowSize
             to_remove[length(to_remove) + 1] <- i - 2
-          } else if (!record_screen_size && curr_event$type == "setWindowSize") {
+          } else if (
+            !record_screen_size && curr_event$type == "setWindowSize"
+          ) {
             # If we're not recording screen size, remove all setWindowSize events
             to_remove[length(to_remove) + 1] <- i
           }
@@ -464,24 +581,41 @@ shinyApp(
 
       events <- lapply(events, function(event) {
         event$app_code <-
-          switch(event$type,
+          switch(
+            event$type,
             "initialize" = NULL,
             "waitForIdle" = "app$wait_for_idle()",
             "setWindowSize" = {
-              code <- paste0("app$set_window_size(width = ", event$width, ", height = ", event$height, ")")
+              code <- paste0(
+                "app$set_window_size(width = ",
+                event$width,
+                ", height = ",
+                event$height,
+                ")"
+              )
               if (shinytest2:::is_false(found_first_set_window_size)) {
                 found_first_set_window_size <<- TRUE
                 event$first_set_window_size <- TRUE
               }
               code
             },
-            "expectDownload" = paste0("app$expect_download(\"", event$name, "\")"),
+            "expectDownload" = paste0(
+              "app$expect_download(\"",
+              event$name,
+              "\")"
+            ),
             "expectScreenshot" = "app$expect_screenshot()",
             "expectValues" = {
               key <- event$key
               value <- event$value
               if (!is.null(key)) {
-                paste0("app$expect_values(", quote_name(key), " = ", process_input_value(value, "default"), ")")
+                paste0(
+                  "app$expect_values(",
+                  quote_name(key),
+                  " = ",
+                  process_input_value(value, "default"),
+                  ")"
+                )
               } else {
                 paste0("app$expect_values()")
               }
@@ -495,24 +629,34 @@ shinyApp(
               } else if (event$inputType == "shiny.fileupload") {
                 # File uploads are a special case of inputs
                 code <- paste0(
-                  "app$upload_file(", key, " = ", value, ")"
+                  "app$upload_file(",
+                  key,
+                  " = ",
+                  value,
+                  ")"
                 )
 
                 # Get unescaped filenames in a char vector, with full path
                 filepaths <- vapply(event$value, `[[`, "name", FUN.VALUE = "")
-                filepaths <- fs::path(app$get_dir(), "tests", "testthat", filepaths)
+                filepaths <- fs::path(
+                  here_dir,
+                  "tests",
+                  "testthat",
+                  filepaths
+                )
 
                 # Check that all files exist. If not, add a message and don't run test
                 # automatically on exit.
                 if (!all(fs::file_exists(filepaths))) {
-
                   code <- list(
                     st2_comment(
                       "Uploaded file outside of: ./tests/testthat",
                       paste0(
                         "\n",
                         "rlang::warn(paste0(\n",
-                        "  \"`", key, "` should be the path to the file, relative to the app's tests/testthat directory.\\n\",\n",
+                        "  \"`",
+                        key,
+                        "` should be the path to the file, relative to the app's tests/testthat directory.\\n\",\n",
                         "  \"Remove this warning when the file is in the correct location.\"\n",
                         "))\n"
                       )
@@ -523,11 +667,15 @@ shinyApp(
 
                 code
               } else {
-                if (!event$hasBinding && !isTRUE(allow_no_input_binding_react())) {
+                if (
+                  !event$hasBinding && !isTRUE(allow_no_input_binding_react())
+                ) {
                   st2_comment("Update unbound `input` value")
                 } else {
                   args <- ""
-                  if (!event$hasBinding && isTRUE(allow_no_input_binding_react())) {
+                  if (
+                    !event$hasBinding && isTRUE(allow_no_input_binding_react())
+                  ) {
                     args <- paste0(args, ", allow_no_input_binding_ = TRUE")
                     if (identical(event$priority, "event")) {
                       args <- paste0(args, ', priority_ = "event"')
@@ -536,7 +684,8 @@ shinyApp(
 
                   paste0(
                     "app$set_inputs(",
-                    quote_name(event$name), " = ",
+                    quote_name(event$name),
+                    " = ",
                     value,
                     args,
                     ")"
@@ -557,7 +706,8 @@ shinyApp(
 
     has_expectation_event <- reactive({
       for (event in trim_testevents()) {
-        switch(event$type,
+        switch(
+          event$type,
           "expectValues" = , # nolint
           "expectScreenshot" = , # nolint
           "expectDownload" = {
@@ -569,15 +719,18 @@ shinyApp(
     })
 
     testname_validator <- function(name) {
-      if (is.null(name)) return()
-      if (!fs::file_exists(test_save_file)) return()
+      if (is.null(name)) {
+        return()
+      }
+      if (!fs::file_exists(test_save_file)) {
+        return()
+      }
 
-      cur_test_names <- shinytest2:::known_app_driver_name_values(test_save_file)
+      cur_test_names <- shinytest2:::known_app_driver_name_values(
+        test_save_file
+      )
       # Convert names to chars
-      cur_test_names <- unique(as.character(lapply(cur_test_names, function(x) {
-        if (is.null(x)) return("`NULL`")
-        x
-      })))
+      cur_test_names <- unique(unlist(cur_test_names))
       if (name %in% cur_test_names) {
         shiny::tags$div(
           "Please use a unique name. Known names:",
@@ -592,19 +745,38 @@ shinyApp(
     iv$add_rule("seed", shinyvalidate::sv_integer(allow_na = TRUE))
     iv_screenshot <- shinyvalidate::InputValidator$new()
     iv_screenshot$condition(~ !has_expectation_event())
-    iv_screenshot$add_rule("screenshot", ~ "At least one expectation must be made")
+    iv_screenshot$add_rule(
+      "screenshot",
+      ~"At least one expectation must be made"
+    )
     iv_app_path <- shinyvalidate::InputValidator$new()
-    iv_app_path$condition(~ fs::path_has_parent(app$get_dir(), tempdir()))
+    iv_app_path$condition(~ fs::path_has_parent(here_dir, tempdir()))
     iv_app_path$add_rule(
       "seed",
-        ~ shiny::tagList(
-          shiny::tags$p("Can not save tests for a Shiny object."),
-          shiny::tags$p("Please supply an application directory to", shiny::tags$code("record_test(app =)"))
+      ~ shiny::tagList(
+        shiny::tags$p("Can not save tests for a Shiny object."),
+        shiny::tags$p(
+          "Please supply an application directory to",
+          shiny::tags$code("record_test(app =)")
+        )
+      )
+    )
+    iv_app_function <- shinyvalidate::InputValidator$new()
+    iv_app_function$condition(~ is.function(app$get_dir()))
+    iv_app_function$add_rule(
+      "seed",
+      ~ shiny::tagList(
+        shiny::tags$p("Can not save tests for an application function."),
+        shiny::tags$p(
+          "Please supply an application directory to",
+          shiny::tags$code("record_test(app =)")
+        )
       )
     )
 
     iv$add_validator(iv_screenshot)
     iv$add_validator(iv_app_path)
+    iv$add_validator(iv_app_function)
     iv$enable()
 
     # Use reactiveVal dedupe feature
@@ -652,23 +824,56 @@ shinyApp(
       showModal(
         modalDialog(
           tagList(
-            "An update input event does not have a corresponding input binding.", tags$br(),
+            "An update input event does not have a corresponding input binding.",
+            tags$br(),
             tags$ul(
-              tags$li("Click", tags$code("Record"), " to record updates to", tags$code("input"), "without a binding."),
-              tags$li("Click", tags$code("Ignore"), " to discard these events."),
+              tags$li(
+                "Click",
+                tags$code("Record"),
+                " to record updates to",
+                tags$code("input"),
+                "without a binding."
+              ),
+              tags$li(
+                "Click",
+                tags$code("Ignore"),
+                " to discard these events."
+              ),
             ),
             # tags$br(),
           ),
           footer = tagList(
-            actionButton("inputs_no_binding_ignore", "Ignore", `data-dismiss` = "modal"),
-            actionButton("inputs_no_binding_save",   "Record", `data-dismiss` = "modal"),
-            tooltip(tagList(
-              "To prevent this modal from being displayed, set the parameter", tags$br(),
-              tags$ul(
-                tags$li(tags$code("record_test(allow_no_input_binding = TRUE)"), "to", tags$strong("record"), "these events."),
-                tags$li(tags$code("record_test(allow_no_input_binding = FALSE)"), "to", tags$strong("ignore"), "these events.")
-              )
-            ), placement = "left"),
+            actionButton(
+              "inputs_no_binding_ignore",
+              "Ignore",
+              `data-dismiss` = "modal"
+            ),
+            actionButton(
+              "inputs_no_binding_save",
+              "Record",
+              `data-dismiss` = "modal"
+            ),
+            tooltip(
+              tagList(
+                "To prevent this modal from being displayed, set the parameter",
+                tags$br(),
+                tags$ul(
+                  tags$li(
+                    tags$code("record_test(allow_no_input_binding = TRUE)"),
+                    "to",
+                    tags$strong("record"),
+                    "these events."
+                  ),
+                  tags$li(
+                    tags$code("record_test(allow_no_input_binding = FALSE)"),
+                    "to",
+                    tags$strong("ignore"),
+                    "these events."
+                  )
+                )
+              ),
+              placement = "left"
+            ),
             enable_tooltip_script(),
           )
         )
@@ -696,9 +901,15 @@ shinyApp(
         tags$pre(div(
           .noWS = "outside",
           lapply(event_codes, function(event_code) {
-            if (is.null(event_code)) return()
+            if (is.null(event_code)) {
+              return()
+            }
             is_st2_comment_val <- is_st2_comment(event_code)
-            code <- if (is_st2_comment_val) get_st2_comment(event_code) else event_code
+            code <- if (is_st2_comment_val) {
+              get_st2_comment(event_code)
+            } else {
+              event_code
+            }
             can_select <- !is_st2_comment_val
             # https://stackoverflow.com/a/64917958/591574
             tagList(
@@ -745,17 +956,29 @@ shinyApp(
         add_library_call <- TRUE
         if (fs::file_exists(test_save_file)) {
           # Don't double library()
-          add_library_call <- !any(grepl("^\\s*library\\s*\\(\\s*shinytest2\\s*\\)\\s*$", readLines(test_save_file)))
+          add_library_call <- !any(grepl(
+            "^\\s*library\\s*\\(\\s*shinytest2\\s*\\)\\s*$",
+            readLines(test_save_file)
+          ))
         }
         if (add_library_call) {
           code <- paste0("library(shinytest2)", code)
         }
 
-        test_runner_file <- fs::path(fs::path_dir(fs::path_dir(test_save_file)), "testthat.R")
         overwrite_test_runner <-
           if (fs::file_exists(test_runner_file)) {
-            if (!any(grepl("test_app(", readLines(test_runner_file), fixed = TRUE))) {
-              rlang::warn(paste0("Overwriting test runner ", fs::path_rel(test_runner_file, app$get_dir()), " with `shinytest2::test_app()` call to ensure proper a testing environment."))
+            if (
+              !any(grepl(
+                "test_app(",
+                readLines(test_runner_file),
+                fixed = TRUE
+              ))
+            ) {
+              rlang::warn(paste0(
+                "Overwriting test runner ",
+                fs::path_rel(test_runner_file, here_dir),
+                " with `shinytest2::test_app()` call to ensure proper a testing environment."
+              ))
               # Runner exists. Overwrite existing contents
               TRUE
             } else {
@@ -768,17 +991,33 @@ shinyApp(
           }
         if (overwrite_test_runner) {
           shinytest2:::use_shinytest2_runner(
-            app$get_dir(),
+            here_dir,
             quiet = FALSE,
             overwrite = TRUE
           )
         }
 
-        rlang::inform(
-          c("*" = paste0("Saving test file: ", fs::path_rel(test_save_file, app$get_dir())))
-        )
+        if (in_dev_package) {
+          # Ensure that shinytest2 is listed in Suggests in DESCRIPTION
+          shinytest2:::use_shinytest2_package(here_dir, quiet = FALSE)
+        } else {
+          # Ensure that shinytest2 is available in the app's testthat folder
+          # Anti-paired with `generate_test_code()` above
+          shinytest2:::use_shinytest2_setup(here_dir, quiet = FALSE)
+        }
 
-        shinytest2:::use_shinytest2_setup(app$get_dir(), quiet = FALSE)
+        rlang::inform(
+          c(
+            "*" = paste0(
+              if (in_dev_package) {
+                "Saving package test file: "
+              } else {
+                "Saving test file: "
+              },
+              fs::path_rel(test_save_file, here_dir)
+            )
+          )
+        )
 
         cat(code, file = test_save_file, append = TRUE)
 

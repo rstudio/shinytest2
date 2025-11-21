@@ -32,9 +32,9 @@ For R packages that have Shiny applications, there are generally two ways that t
 
 
 
-## Applications in `inst/`
+## Applications defined in another file
 
-An application could live in a subdirectory of `inst/`, as shown below:
+Placing your Shiny application in a subdirectory of `inst/` is a common and clean way to include Shiny applications in R packages.
 
 ```
 /
@@ -44,25 +44,21 @@ An application could live in a subdirectory of `inst/`, as shown below:
 ├── inst
 │   └── sample_app
 │       ├── app.R
-│       └── tests
-│           ├── testthat
-│           │   ├── _snaps
-│           │   │   └── shinytest2
-│           │   │       └── 001.json
-│           │   └── test-shinytest2.R
-│           └── testthat.R
 └── tests
     ├── testthat
-    │   └── test-inst-apps.R
+    │   ├── _snaps
+    │   │   └── sample_app
+    │   │       └── 001.json
+    │   └── test-sample_app.R
     └── testthat.R
 ```
 
-In this case, you can run `record_test()` and `test_app()` as normal. After you create and run the tests, there will be a `tests/` subdirectory in the application directory that stores the test scripts and results.
+When recording tests for this application, `record_test()` will save the test files in the package's `tests/testthat/` directory. This doesn't clutter the application directory with test files and leverages existing package testing infrastructure for a unified testing experience.
 
-Since we are using `{testthat}` for automated tests, you would create a test driver script in `tests/testthat/`. In this example, it's named `test-inst-apps.R` and contains the following:
+Within each test file, supply the application directory to `AppDriver$new()`. For example, in `tests/testthat/test-sample_app.R`, you would have:
 
 ```{r}
-# File: tests/testthat/test-inst-apps.R
+# File: tests/testthat/test-sample_app.R
 library(shinytest2)
 
 test_that("sample_app works", {
@@ -70,18 +66,18 @@ test_that("sample_app works", {
   skip_on_cran()
 
   appdir <- system.file(package = "exPackage", "sample_app")
-  test_app(appdir)
+  app <- AppDriver$new(appdir, name = "sample_app")
+
+  app$expect_values()
 })
 ```
 
-If the application directory is not meant to be public, it can also be located in `./tests/testthat/apps`. `{shinytest2}` does this with many application and has `appdir` above point to the relative path to the application.
-
-<!-- For more information about this script, see the [Test driver script notes](#Test-driver-script-notes) section below. -->
+If the application directory is not meant to be public, it can also be located in `./tests/testthat/apps`. `{shinytest2}` does this with many application and has `appdir` above point to the relative path to the application. `app_dir <- testthat::test_path("apps/sample_app")`.
 
 
-## Application objects created by functions
+## Applications using a function
 
-The second way have an application in an R package is by having a function that returns a Shiny application object. In this example, there's a function `hello_world_app()`, which lives in `R/hello-world.R`:
+Some packages, such as `{golem}`, provide a function that runs or returns a shiny application.  In this case, you can create a wrapper function to perform two actions: load the package via `library()` or `require()` and returns/runs an app. For example, if your package is named `mypkg`, your package structure may look like:
 
 ```
 /
@@ -89,7 +85,7 @@ The second way have an application in an R package is by having a function that 
 ├── DESCRIPTION
 ├── NAMESPACE
 ├── R
-│   └── hello-world.R
+│   └── run-app.R
 └── tests
     ├── testthat
     │   ├── _snaps
@@ -99,24 +95,90 @@ The second way have an application in an R package is by having a function that 
     └── testthat.R
 ```
 
+
+and the function that runs the app is `run_app()`, you can pass in functions defined within your R package directly to `AppDriver$new()`:
+
+```{r}
+# File: tests/testthat/test-app-function.R
+library(shinytest2)
+
+test_that("mypkg app initial values are consistent", {
+  # Don't run these tests on the CRAN build servers
+  skip_on_cran()
+
+  app <- AppDriver$new(run_app, name = "mypkg-app")
+
+  app$expect_values()
+})
+```
+
+This works as `{shinytest2}` recognizes that the `run_app` function is part of the local package. When running a local package methods, `{shinytest2}` will call the method within the scope of your local R package in the the background process.
+
+The specially handled function is functionally equivalent to defining a wrapper function that loads the package and calls `run_app()`:
+
+```{r}
+# File: tests/testthat/test-app-function.R
+library(shinytest2)
+run_mypkg_app <-
+
+test_that("mypkg app initial values are consistent", {
+  # Don't run these tests on the CRAN build servers
+  skip_on_cran()
+
+  app <- AppDriver$new(name = "mypkg-app", function() {
+    library(mypkg)
+    run_app()
+  })
+
+  app$expect_values()
+})
+```
+
+When using a function to initialize the `AppDriver`, `{shinytest2}` will automatically call `pkgload::load_all()` when you execute `library(<pkg>)` or `require(<pkg>)` to load your dev package, `<pkg>`, in the background R process. Currently, only the local dev package can be loaded.  Similar to `{mirai}`, there is also no carryover from the testing environment to the supplied function execution within the background R process. All packages may need to be `library()`'ed again!
+
+
+
+## Application objects
+
+The third way have an application in an R package is by having a function that returns a Shiny application object. App objects being supplied directly to `AppDriver$new()` are to be considered for quick testing / confirmation of targeted behavior. For more complex applications, it is recommended to use one of the other two approaches described above as not all global variables and contexts are preserved when serializing the app object.
+
+In this example, there's a function `hello_world_app()`, which lives in `R/app-object.R`:
+
+```
+/
+├── .Rbuildignore
+├── DESCRIPTION
+├── NAMESPACE
+├── R
+│   └── app-object.R
+└── tests
+    ├── testthat
+    │   ├── _snaps
+    │   │   └── app-object
+    │   │       └── 001.json
+    │   └── test-app-object.R
+    └── testthat.R
+```
+
 The function simply returns an object from `shinyApp()`:
 
 ```{r}
-# File: R/hello-world.R
+# File: R/app-object.R
+
+dt <- datasets::cars
 
 hello_world_app <- function() {
-  utils::data(cars)
   shinyApp(
     ui = fluidPage(
-      sliderInput("n", "n", 1, nrow(cars), 10),
+      sliderInput("n", "n", 1, nrow(dt), 10),
       plotOutput("plot")
     ),
     server = function(input, output) {
       output$plot <- renderPlot({
         plot(
-          head(cars, input$n),
-          xlim = range(cars[[1]]),
-          ylim = range(cars[[2]])
+          head(dt, input$n),
+          xlim = range(dt[[1]]),
+          ylim = range(dt[[2]])
         )
       })
     }
@@ -143,35 +205,6 @@ test_that("hello-world app initial values are consistent", {
 To help create tests, you can call `record_test()` on your shiny application object directly. Unfortunately, the test file will not be able to be saved. Instead, the test commands can be copied into a test script manually.
 
 
-<!-- For more information about this script, see the [Test driver script notes](#Test-driver-script-notes) section below. -->
-
-
-## Running Applications with a function
-
-Some packages, such as `{golem}`, provide a function that runs or returns a shiny application.  In this case, you can create a wrapper function to perform two actions: load the package and return an app. For example, if your package is named `mypkg` and the function that runs the app is `run_test_app()`, you can create a wrapper function like this:
-
-```{r}
-run_mypkg_app <- function() {
-  library(mypkg)
-  run_test_app()
-}
-
-app <- AppDriver$new(run_mypkg_app, name = "mypkg-app")
-```
-
-For shorthand, you can also use the package function directly:
-
-```{r}
-app <- AppDriver$new(run_test_app, name = "mypkg-app")
-```
-
-When using a function to initialize the `AppDriver`, `{shinytest2}` will automatically call `pkgload::load_all()` when you execute `library(<pkg>)` or `require(<pkg>)` to load your dev package, `<pkg>`, in the background R process. Similar to `{mirai}`, there is no carryover to the execution within the background R process. All packages may need to be `library()`'ed again.
-
-`{golem}` provides a template `run_app()` function. `{golem}` app authors can use the shorthand:
-```{r}
-app <- AppDriver$new(run_app)
-```
-
 
 ## Other setup steps
 
@@ -192,18 +225,95 @@ When all of these items are in place, you can test your package using `testthat:
 
 ## How should I test multiple applications?
 
-You can call `shinytest2::test_app()` multiple times within a test script. It does not need to be wrapped within a `testthat::test_that()` call.
+Given you have multiple applications / app functions in your package, you can create multiple test files in `tests/testthat/`, one for each application. Each test file can create its own `AppDriver` instance for the specific application being tested.
 
-`{shinytest2}` tests many internal apps using the code similar to the code below:
+It is not recommended to utilize `test_app("path/to/app")` within package testing as we want the tests to be controlled by the package's `testthat` infrastructure. This allows for more flexibility and control over how your applications are tested while your current package's testthat infrastructure.
 
-``` r
-# ./tests/testthat/test-apps.R
+Good:
+* Supply a function from within your package to `AppDriver$new()` and test within your package's `testthat::test_that()` tests.
+* Supply an application directory within your package to `AppDriver$new()` and test within your package's `testthat::test_that()` tests.
+Bad:
+* Call `test_app("path/to/app")` within your package's `testthat::test_that()` tests.
 
-app_dirs <- fs::dir_ls(testthat::test_path("apps"))
-lapply(app_dirs, function(app_dir) {
-  shinytest2::test_app(app_dir)
+This keeps your snaps all in one place and not scattered across multiple application directories.
+
+
+## Migrating from shinytest v0.4.0 to v0.5.0
+
+Previously, it was encouraged to store tests within the application directory itself. This made sense when applications were primarily standalone. However, for R packages, it is more idiomatic to store tests in the `tests/testthat/` directory and utilize an app that is defined elsewhere (either in `inst/` or another directory).
+
+Previous file structure:
+```
+/
+├── DESCRIPTION
+├── NAMESPACE
+├── R
+├── inst
+│   └── sample_app
+│       ├── app.R
+│       ├── R
+│       │   └── helpers.R
+│       └── tests
+│           ├── testthat.R
+│           └── testthat
+│              ├── setup-shinytest2.R
+│              └── test-sample_app.R
+└── tests
+    ├── testthat.R
+    └── testthat
+        └── test-other-things.R
+```
+
+Previous `test-sample_app.R`:
+```{r}
+library(shinytest2)
+
+test_that("sample_app works", {
+  app <- AppDriver$new(name = "sample_app")
+
+  app$expect_values()
+  expect_equal(app$get_value("input$n"), helper_value)
 })
 ```
+
+It is now recommended to store all tests in `tests/testthat/` and have the application defined elsewhere. This keeps the application directory clean and leverages existing package testing infrastructure for a unified testing experience.
+
+
+New file structure:
+```
+/
+├── DESCRIPTION
+├── NAMESPACE
+├── R
+├── inst
+│   └── sample_app
+│       ├── app.R
+│       ├── R
+│           └── helpers.R
+└── tests
+    ├── testthat.R
+    └── testthat
+        ├── test-other-things.R
+        └── test-sample_app.R
+```
+
+New `test-sample_app.R`:
+```{r}
+library(shinytest2)
+test_that("sample_app works", {
+  appdir <- system.file(package = "exPackage", "sample_app")
+  local_app_support(appdir)
+
+  app <- AppDriver$new(appdir, name = "sample_app")
+
+  app$expect_values()
+  expect_equal(app$get_value("input$n"), helper_value)
+})
+```
+
+Since we have moved the tests out of the application directory, we need to ensure that any supporting files (like snapshots) are still accessible. When testing **only** an application, the premise is similar to a package where all supporting files should be available in the testing environment. However, within a package, the application is a means to test the package and should not automatically load supporting files into the entire testing environment, possibly causing conflicts with other Shiny applications or tests.
+
+To address this, we use `local_app_support(appdir)` to temporarily link the necessary support files from the application directory to the test environment. This ensures that the tests can access the required snapshots and other supporting files without cluttering the application directory itself.
 
 
 ## Continuous integration

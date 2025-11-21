@@ -23,7 +23,13 @@
 #'   milliseconds. If a value is provided, it will be saved in the test script.
 #' @param shiny_args A list of options to pass to `runApp()`. If a value
 #'   is provided, it will be saved in the test script.
-#' @param test_file Base file name of the \pkg{testthat} test file.
+#' @param test_file Base file name of the \pkg{testthat} test file. If `NULL`, a
+#'   default name will be used. If recording within a package, the test file
+#'   will be saved to the package's `tests/testthat/` directory. If not within a
+#'   package, the test file will be saved to the app's `tests/testthat/` directory.
+#'   If within a package, the default name is `test-app-<appdir>.R`, where `<appdir>` is the
+#'   name of the app directory. If not within a package, the default name is
+#'   `test-shinytest2.R`.
 #' @param open_test_file If `TRUE`, the test file will be opened in an editor
 #'   via [`file.edit()`] before executing.
 #' @param allow_no_input_binding This value controls if events without input
@@ -37,6 +43,10 @@
 #'   See [`AppDriver`]`$set_inputs()` for more information.
 #' @param record_screen_size If `TRUE`, the screen size will be recorded when initialized and changed.
 #' @param run_test If `TRUE`, `test_file` will be executed after saving the recording.
+#' @param record_in_package If `TRUE` and if the current working directory is
+#'   within a package, the test file will be saved to the package's
+#'   `tests/testthat/` directory. If `FALSE`, the test file will be saved to the
+#'   app's `tests/testthat/` directory.
 #' @seealso [`test_app()`]
 #' @export
 #' @examples
@@ -50,24 +60,55 @@ record_test <- function(
   seed = NULL,
   load_timeout = NULL,
   shiny_args = list(),
-  test_file = "test-shinytest2.R",
+  test_file = NULL,
   open_test_file = rlang::is_interactive(),
   allow_no_input_binding = NULL,
   record_screen_size = TRUE,
-  run_test = TRUE
+  run_test = TRUE,
+  record_in_package = TRUE
 ) {
   rlang::check_dots_empty()
   rlang::check_installed("shinyvalidate", "0.1.2")
 
   if (inherits(app, "ShinyDriver")) {
-    rlang::abort(paste0("Recording tests for `ShinyDriver` objects is not supported."))
+    rlang::abort(
+      "Recording tests for `ShinyDriver` objects is not supported."
+    )
   }
+
+  package_path <- NULL
+  if (record_in_package) {
+    pkg_path <- tryCatch(pkgload::pkg_path(), error = function(e) NULL)
+    if (is.null(pkg_path)) {
+      # No package detected, so do not record in package testing style
+      record_in_package <- FALSE
+    } else {
+      message("Remove inform")
+      rlang::inform(
+        "Detected package root directory. ",
+        "Saving test file to package's tests/testthat/ directory."
+      )
+      package_path <- pkg_path
+    }
+  }
+
+  if (is.null(test_file)) {
+    if (record_in_package) {
+      test_file <- paste0("test-app-", fs::path_file(app), ".R")
+    } else {
+      test_file <- "test-shinytest2.R"
+    }
+  }
+
+  # Note: App objects with functions are handled similarly to appobjects: the
+  # save button can not be clicked. So when the user exits the recorder, no
+  # tests are run
+
   if (shiny::is.shiny.appobj(app)) {
     app <- AppDriver$new(app)
   }
 
   if (is.character(app)) {
-    app_path_val <- app
     if (grepl("^http(s?)://", app)) {
       rlang::abort("Recording tests for remote apps is not supported.")
     }
@@ -77,20 +118,25 @@ record_test <- function(
       seed <- floor(stats::runif(1, min = 0, max = 1e5))
     }
 
-    app <- AppDriver$new(app, seed = seed, load_timeout = load_timeout, shiny_args = shiny_args)
+    app <- AppDriver$new(
+      app,
+      seed = seed,
+      load_timeout = load_timeout,
+      shiny_args = shiny_args
+    )
     on.exit({
       rm(app)
       gc()
     })
-  } else {
-    app_path_val <- app$get_dir()
   }
 
   if (!inherits(app, "AppDriver")) {
-    rlang::abort("Unknown object type to record tests for. Must supply a `AppDriver` object or file path")
+    rlang::abort(
+      "Unknown object type to record tests for. Must supply a `AppDriver` object or file path"
+    )
   }
 
-  if (is.null(name)) {
+  if (is.null(name) && !is.function(app$get_dir())) {
     name <- fs::path_file(app$get_dir())
   }
 
@@ -116,18 +162,23 @@ record_test <- function(
   withr::with_options(
     list(
       shinytest2.recorder.url = url,
-      shinytest2.app          = app,
-      shinytest2.name         = name,
+      shinytest2.app = app,
+      shinytest2.name = name,
       shinytest2.load.timeout = if (!is.null(load_timeout)) load_timeout,
-      shinytest2.seed         = seed,
-      shinytest2.shiny.args   = shiny_args,
-      shinytest2.test_file    = test_file,
+      shinytest2.seed = seed,
+      shinytest2.shiny.args = shiny_args,
+      shinytest2.test_file = test_file,
+      shinytest2.package_path = package_path,
       shinytest2.record_screen_size = isTRUE(record_screen_size),
       shinytest2.allow_no_input_binding = allow_no_input_binding
     ),
     # Make sure the recorder opens in an external browser
     with_external_shiny_browser({
-      res <- shiny::runApp(system.file("internal", "recorder", package = "shinytest2"))
+      res <- shiny::runApp(system.file(
+        "internal",
+        "recorder",
+        package = "shinytest2"
+      ))
     })
   )
 
@@ -135,21 +186,33 @@ record_test <- function(
   if (
     # Quit if the test file was not saved
     is.null(saved_test_file) ||
-    # Quit if told not to run the test
-    !isTRUE(run_test)
+      # Quit if told not to run the test
+      !isTRUE(run_test)
   ) {
     return(invisible(NULL))
   }
 
   edit_file(saved_test_file, open = open_test_file)
 
-  test_filter <- sub("^test-", "", fs::path_ext_remove(fs::path_file(saved_test_file)))
+  test_filter <- sub(
+    "^test-",
+    "",
+    fs::path_ext_remove(fs::path_file(saved_test_file))
+  )
   # Run the test script
-  rlang::inform(c("*" = paste0(
-    "Running recorded test: ",
-    fs::path_rel(saved_test_file, app$get_dir())
-  )))
-  test_app(app_path_val, filter = test_filter)
+  rlang::inform(c(
+    "*" = paste0(
+      "Running recorded test: ",
+      fs::path_rel(saved_test_file, app$get_dir())
+    )
+  ))
+  if (!is.null(package_path)) {
+    # Test within the package
+    testthat::test_local(package_path, filter = test_filter)
+  } else {
+    # Test locally in the app directory
+    test_app(app$get_dir(), filter = test_filter)
+  }
 
   invisible(res$test_file)
 }
@@ -171,8 +234,12 @@ record_test <- function(
 #' @export
 #' @keywords internal
 register_input_processor <- function(input_type, processor) {
-  if (!is.function(processor) || !identical(names(formals(processor)), "value")) {
-    rlang::abort("`processor` must be a function that takes one parameter, `value`")
+  if (
+    !is.function(processor) || !identical(names(formals(processor)), "value")
+  ) {
+    rlang::abort(
+      "`processor` must be a function that takes one parameter, `value`"
+    )
   }
   recorder_input_processors[[input_type]] <- processor
 }

@@ -15,8 +15,8 @@ app_start_shiny <- function(
   # the RNG kind should inherit from the parent process
   rng_kind <- RNGkind()
 
-  package_path <- tryCatch(pkgload::pkg_path(), error = function(e) NULL)
-  package_name <- tryCatch(pkgload::pkg_name(), error = function(e) NULL)
+  package_path <- dev_pkg_path()
+  package_name <- dev_pkg_name()
 
   # `testthat::is_checking()` is TRUE inside `testthat::test_check()`, typically
   # called in `R CMD check`.
@@ -161,7 +161,8 @@ app_start_shiny <- function(
           # })
 
           # If within a package root... do not read the R files in the R/ folder
-          if (.package_path == getwd()) {
+          # Taken from `in_dev_pkg()`
+          if (getwd() == .package_path) {
             cat(
               "Disabling Shiny autoloading of R/ files `options(shiny.autoload.r = FALSE)` as dev package directory is the same as the app directory\n"
             )

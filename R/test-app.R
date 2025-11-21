@@ -1,4 +1,5 @@
-# Import something from testthat to avoid a check error that nothing is imported from a `Depends` package
+# Import something from testthat to avoid a check error that nothing is imported
+# from a `Depends` package
 #' @importFrom testthat default_reporter
 NULL
 
@@ -28,9 +29,18 @@ NULL
 #' ## File: ./tests/testthat/test-shinytest2.R
 #' # Test a shiny application within your own {testthat} code
 #' test_that("Testing a Shiny app in a package", {
-#'   shinytest2::test_app(path_to_app)
+#'   app <- shinytest2::AppDriver$new(path_to_app)
+#'   # Perform tests with `app`...
 #' })
 #' ```
+#'
+#' When testing within a package, it is recommended to not call `test_app()`,
+#' but instead test your applications within your own \pkg{testthat} tests. This
+#' allows for more flexibility and control over how your applications are
+#' tested while your current package's testthat infrastructure. See the [Use
+#' Package
+#' vignette](https://rstudio.github.io/shinytest2/articles/use-package.html) for
+#' more details.
 #'
 #' @section Uploading files:
 #'
@@ -67,29 +77,41 @@ NULL
 #'   * Otherwise, the default path of `"."` is used.
 #' @param ... Parameters passed to [`testthat::test_dir()`]
 #' @param reporter The reporter to use for the tests
-#' @param name Name to display in the middle of the test name. This value is only used
-#' when calling `test_app()` inside of \pkg{testhat} test. The final testing context will
-#' have the format of `"{test_context} - {name} - {app_test_context}"`.
-#' @param check_setup If `TRUE`, the app will be checked for the presence of
-#' `./tests/testthat/setup-shinytest2.R`. This file must contain a call to
-#' [`shinytest2::load_app_env()`].
+#' @param name Name to display in the middle of the test name. This value is
+#'   only used when calling `test_app()` inside of \pkg{testhat} test. The final
+#'   testing context will have the format of `"{test_context} - {name} -
+#'   {app_test_context}"`.
 #' @param reporter Reporter to pass through to [`testthat::test_dir()`].
-#' @param stop_on_failure If missing, the default value of `TRUE` will be used. However, if missing and currently testing, `FALSE` will be used to seamlessly integrate the app reporter to `reporter`.
+#' @param stop_on_failure If missing, the default value of `TRUE` will be used.
+#'   However, if missing and currently testing, `FALSE` will be used to
+#'   seamlessly integrate the app reporter to `reporter`.
+#' @param check_setup [Deprecated]. Parameter ignored.
+#' @param quiet If `TRUE`, suppresses deprecation warnings when called within
+#'   \pkg{testthat} tests.
 #' @seealso
-#' * [`record_test()`] to create tests to record against your Shiny application.
-#' * [testthat::snapshot_review()] and [testthat::snapshot_accept()] if
-#'   you want to compare or update snapshots after testing.
-#' * [`load_app_env()`] to load the Shiny application's helper files.
-#'   This is only necessary if you want access to the values while testing.
+#'   * [`record_test()`] to create tests to record against your Shiny
+#'     application.
+#'   * [testthat::snapshot_review()] and [testthat::snapshot_accept()] if you
+#'     want to compare or update snapshots after testing.
+#'   * [`local_app_support()`] / [`with_app_support()`] to load the Shiny
+#'     application's helper files into respective environments. These methods
+#'     are useful for within package testing as they have fine tune control over
+#'     when the support environment is loaded.
+#'   * [`load_app_support()`] to load the Shiny application's helper files into
+#'     the calling environment. This method is useful for non-package based
+#'     Shiny applications where the support environment should be available in
+#'     every test file.
 #'
 #' @export
+#' @importFrom lifecycle deprecated
 test_app <- function(
   app_dir = missing_arg(),
   ...,
   name = missing_arg(),
-  check_setup = TRUE,
   reporter = testthat::get_reporter(),
-  stop_on_failure = missing_arg()
+  stop_on_failure = missing_arg(),
+  check_setup = deprecated(),
+  quiet = FALSE
 ) {
   # Inspiration from https://github.com/rstudio/shiny/blob/a8c14dab9623c984a66fcd4824d8d448afb151e7/inst/app_template/tests/testthat.R
 
@@ -114,51 +136,36 @@ test_app <- function(
 
   app_dir <- app_dir_value(app_dir)
 
-  if (isTRUE(check_setup)) {
-    # Legacy support for `setup.R`; Same content, just different name
-    setup_paths <- fs::path(
-      app_dir,
-      "tests",
-      "testthat",
-      c("setup-shinytest2.R", "setup.R")
-    )
-    setup_paths_exist <- fs::file_exists(setup_paths)
-    if (!any(setup_paths_exist)) {
-      rlang::abort(
-        c(
-          "No `setup-shinytest2.R` file found in `./tests/testthat`",
-          "i" = paste0(
-            "To create a `setup-shinytest2.R` file, please run `shinytest2::use_shinytest2(\"",
-            app_dir,
-            "\", setup = TRUE)`"
-          ),
-          "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
-        )
-      )
-    }
-    found <- FALSE
-    for (setup_path in setup_paths) {
-      if (has_load_app_env(setup_path)) {
-        found <- TRUE
-        break
-      }
-    }
-    if (!found) {
-      rlang::abort(
-        c(
-          "No call to `shinytest2::load_app_env()` found in `./tests/testthat/setup-shinytest2.R`",
-          "i" = paste0(
-            "To create a `setup-shinytest2.R` file, please run `shinytest2::use_shinytest2(\"",
-            app_dir,
-            "\", setup = TRUE)`"
-          ),
-          "i" = "To disable this message, please set `test_app(check_setup = FALSE)`"
+  # If value is provided and `TRUE`...
+  if (lifecycle::is_present(check_setup)) {
+    if (isTRUE(check_setup)) {
+      lifecycle::deprecate_warn(
+        "0.5.0",
+        "shinytest2::test_app(check_setup = 'is no longer used')",
+        details = c(
+          "To manually load an app's support files, call `shinytest2::local_app_support(app_dir=)` within your {testthat} test.",
+          i = "Please see `?shinytest2::local_app_support` for more information.",
+          i = "To remove this warning, please remove the `check_setup` argument from your `test_app()` calls."
         )
       )
     }
   }
 
   if (testthat::is_testing()) {
+    if (!quiet && !on_cran()) {
+      rlang::warn(
+        c(
+          "x" = "Calling `shinytest2::test_app()` within a {testthat} test has been deprecated in {shinytest2} v0.5.0.",
+          "x" = "This will become an error in a future version of {shinytest2}.",
+          "i" = "If you are testing within a package, it is strongly recommended relocate your app tests to be within your package tests. Please note, you will need to use `local_app_support()` or `with_app_support()` to load your app's support files as needed.",
+          "i" = "If you are using CI, don't forget to collect your new snapshots after your initial run!",
+          "i" = "See {.url https://rstudio.github.io/shinytest2/articles/use-package.html } for more details.",
+          "i" = "To suppress this warning, remove `shinytest2::test_app()` calls from your {testthat} tests or add the parameter `test_app(quiet = TRUE)`."
+        )
+      )
+    }
+    # warning("TODO-barret; missing url for migration warning")
+
     # Normalize the reporter given any input
     outer_reporter <- testthat::with_reporter(
       reporter,
@@ -218,6 +225,7 @@ test_app <- function(
           ## We want to act like a continuously integrated reporter
           # start_reporter = outer_reporter$start_reporter,
           # end_reporter = outer_reporter$end_reporter,
+
           start_context = function(...) outer_reporter$start_context(...),
           end_context = function(...) outer_reporter$end_context(...),
           add_result = function(...) outer_reporter$add_result(...),
@@ -289,19 +297,28 @@ test_app <- function(
 
 #' Load the Shiny application's support environment
 #'
-#' Executes all `./R` files and `global.R` into the current environment.
-#' This is useful when wanting access to functions or values created in the `./R` folder for testing purposes.
 #'
-#' Loading these files is not automatically performed by `test_app()` and must
-#' be called in `./tests/testthat/setup-shinytest2.R` if access to support file objects is
-#' desired.
+#' @description
+#' `r lifecycle::badge("superseded")` by [`load_app_support()`]. For package
+#' development, `local_app_support()` and `with_app_support()` offer more
+#' flexibility as to when the support environment is loaded.
+#'
+#' Executes all `./R` files and `global.R` into the current environment. This is
+#' useful when wanting access to functions or values created in the `./R` folder
+#' for testing purposes.
+#'
+#' Loading these files is not automatically performed by `test_app()` and should
+#' be called in `./tests/testthat/setup-shinytest2.R` if access to support file
+#' objects is desired.
 #'
 #' @seealso [`use_shinytest2()`] for creating a testing setup file that
 #'   loads your Shiny app support environment into the testing environment.
 #'
 #' @param app_dir The base directory for the Shiny application.
-#' @param renv The environment in which the files in the `R/`` directory should be evaluated.
+#' @param renv The environment in which the files in the `R/`` directory should
+#' be evaluated.
 #' @inheritParams shiny::loadSupport
+#' @keywords internal
 #' @export
 load_app_env <- function(
   app_dir = "../../",
@@ -311,13 +328,88 @@ load_app_env <- function(
   shiny::loadSupport(app_dir, renv = renv, globalrenv = globalrenv)
 }
 
+#' Attach the Shiny application's support environment
+#'
+#' Executes all `./R` files and `global.R` into a temp environment that is
+#' attached appropriately. This is useful when wanting access to functions or
+#' values created in the `./R` folder for testing purposes.
+#'
+#' For Shiny application testing within R packages, `local_app_support()` and
+#' `with_app_support()` where loading an App's support files should not happen
+#' automatically.
+#'
+#' For non-package based Shiny applications, it is recommended to use
+#' [`load_app_support()`] for the support to be available throughout all test
+#' files.
+#'
+#' @param app_dir The base directory for the Shiny application.
+#' @param expr An expression to evaluate within the support environment.
+#' @param envir The environment in which the App support should
+#' be made available.
+#' @describeIn app_support Temporarily attach the Shiny application's support
+#' environment into the current environment.
+#' @export
+#' @examples
+#' \dontrun{
+#' # ./tests/testthat/apps/myapp/R/utils.R
+#' n <- 42
+#'
+#' #' # ./tests/testthat/test-utils.R
+#' test_that("Can access support environment", {
+#'   expect_false(exists("n"))
+#'   shinytest2::local_app_support(test_path("apps/myapp"))
+#'   expect_equal(n, 42)
+#' })
+#'
+#' # Or using with_app_support()
+#' test_that("Can access support environment", {
+#'   expect_false(exists("n"))
+#'   shinytest2::with_app_support(test_path("apps/myapp"), {
+#'     expect_equal(n, 42)
+#'   })
+#'   expect_false(exists("n"))
+#' })
+#' }
+local_app_support <- function(
+  app_dir,
+  envir = rlang::caller_env()
+) {
+  renv <- load_app_support(
+    app_dir,
+    # Use a new environment so that support files do not pollute the global env
+    envir = rlang::new_environment(parent = globalenv())
+  )
 
-has_load_app_env <- function(file) {
-  if (!fs::file_exists(file)) {
-    return(FALSE)
-  }
+  withr::local_environment(renv, .local_envir = envir)
+}
 
-  lines <- read_utf8(file)
-  has_call <- grepl("load_app_env", lines, fixed = TRUE)
-  return(has_call)
+
+#' @describeIn app_support For the provided `expr`, attach the Shiny
+#' application's support environment into the current environment.
+#' @export
+with_app_support <- function(
+  app_dir,
+  expr,
+  envir = rlang::caller_env()
+) {
+  renv <- load_app_support(
+    app_dir,
+    # Use a new environment so that support files do not pollute the global env
+    envir = rlang::new_environment(parent = globalenv())
+  )
+
+  withr::with_environment(renv, expr)
+}
+
+#' @describeIn app_support Loads all support files into the current environment.
+#' No cleanup actions are ever performed.
+#' @export
+load_app_support <- function(app_dir, envir = rlang::caller_env()) {
+  renv <- shiny::loadSupport(
+    appDir = app_dir,
+    renv = rlang::new_environment(parent = envir),
+    globalrenv = envir
+  )
+
+  invisible(renv)
 }

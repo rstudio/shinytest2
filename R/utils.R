@@ -1,15 +1,42 @@
+# testthat on_cran
+on_cran <- function() {
+  !identical(Sys.getenv("NOT_CRAN"), "true")
+}
 
 # nolint start
 ckm8_assert_single_string <- function(x, .var.name = checkmate::vname(x)) {
-  checkmate::assert_character(x, len = 1, any.missing = FALSE, .var.name = .var.name, null.ok = FALSE)
+  checkmate::assert_character(
+    x,
+    len = 1,
+    any.missing = FALSE,
+    .var.name = .var.name,
+    null.ok = FALSE
+  )
 }
-ckm8_assert_single_integer <- function(x, ..., len = 1, any.missing = FALSE, .var.name = checkmate::vname(x)) {
-  checkmate::assert_integer(x, len = len, any.missing = any.missing, .var.name = .var.name, ...)
+ckm8_assert_single_integer <- function(
+  x,
+  ...,
+  len = 1,
+  any.missing = FALSE,
+  .var.name = checkmate::vname(x)
+) {
+  checkmate::assert_integer(
+    x,
+    len = len,
+    any.missing = any.missing,
+    .var.name = .var.name,
+    ...
+  )
 }
 ckm8_assert_single_number <- function(x, ..., .var.name = checkmate::vname(x)) {
   checkmate::assert_number(x, .var.name = .var.name, ...)
 }
-ckm8_assert_app_driver <- function(self, private, self.var.name = checkmate::vname(self), private.var.name = checkmate::vname(private)) {
+ckm8_assert_app_driver <- function(
+  self,
+  private,
+  self.var.name = checkmate::vname(self),
+  private.var.name = checkmate::vname(private)
+) {
   checkmate::assert_r6(self, "AppDriver", .var.name = self.var.name)
   checkmate::assert_environment(private, .var.name = private.var.name)
 }
@@ -19,7 +46,9 @@ ckm8_assert_app_driver <- function(self, private, self.var.name = checkmate::vna
 cache_fn_val <- function(fn) {
   val <- NULL
   function() {
-    if (!is.null(val)) return(val)
+    if (!is.null(val)) {
+      return(val)
+    }
 
     val <<- fn()
     val
@@ -27,7 +56,7 @@ cache_fn_val <- function(fn) {
 }
 
 on_ci <- function() {
- isTRUE(as.logical(Sys.getenv("CI")))
+  isTRUE(as.logical(Sys.getenv("CI")))
 }
 
 raw_to_utf8 <- function(data) {
@@ -51,31 +80,50 @@ write_utf8 <- function(text, ...) {
 }
 
 
-
 # nolint start
 # https://github.com/rstudio/shiny/blob/2360bde13efac1fe501efee447a8f3dde0136722/R/shiny.R#L35-L49
-toJSON <- function(x, ...,  dataframe = "columns", null = "null", na = "null",
-  auto_unbox = TRUE, digits = getOption("shiny.json.digits", 16),
-  use_signif = TRUE, force = TRUE, POSIXt = "ISO8601", UTC = TRUE,
-  rownames = FALSE, keep_vec_names = TRUE, strict_atomic = TRUE) {
-
+toJSON <- function(
+  x,
+  ...,
+  dataframe = "columns",
+  null = "null",
+  na = "null",
+  auto_unbox = TRUE,
+  digits = getOption("shiny.json.digits", 16),
+  use_signif = TRUE,
+  force = TRUE,
+  POSIXt = "ISO8601",
+  UTC = TRUE,
+  rownames = FALSE,
+  keep_vec_names = TRUE,
+  strict_atomic = TRUE
+) {
   if (strict_atomic) {
     x <- I(x)
   }
 
   # I(x) is so that length-1 atomic vectors get put in [].
-  jsonlite::toJSON(x, dataframe = dataframe, null = null, na = na,
-   auto_unbox = auto_unbox, digits = digits, use_signif = use_signif,
-   force = force, POSIXt = POSIXt, UTC = UTC, rownames = rownames,
-   keep_vec_names = keep_vec_names, json_verbatim = TRUE, ...)
+  jsonlite::toJSON(
+    x,
+    dataframe = dataframe,
+    null = null,
+    na = na,
+    auto_unbox = auto_unbox,
+    digits = digits,
+    use_signif = use_signif,
+    force = force,
+    POSIXt = POSIXt,
+    UTC = UTC,
+    rownames = rownames,
+    keep_vec_names = keep_vec_names,
+    json_verbatim = TRUE,
+    ...
+  )
 }
 toJSON_atomic <- function(x, ...) {
   toJSON(x, ..., strict_atomic = FALSE)
 }
 # nolint end
-
-
-
 
 # For PhantomJS on Windows, the pHYs (Physical pixel dimensions) header enbeds
 # the computer screen's actual resolution, even though the screenshots are
@@ -109,11 +157,23 @@ normalize_png_res_header <- function(self, private, file) {
 }
 
 png_res_header_data <- as.raw(c(
-  0x70, 0x48, 0x59, 0x73,  # "pHYs"
-  0x00, 0x00, 0x0b, 0x13,  # Pixels per unit, X: 2835
-  0x00, 0x00, 0x0b, 0x13,  # Pixels per unit, Y: 2835
-  0x01,                    # Unit specifier: meters
-  0x00, 0x9a, 0x9c, 0x18   # Checksum
+  0x70,
+  0x48,
+  0x59,
+  0x73, # "pHYs"
+  0x00,
+  0x00,
+  0x0b,
+  0x13, # Pixels per unit, X: 2835
+  0x00,
+  0x00,
+  0x0b,
+  0x13, # Pixels per unit, Y: 2835
+  0x01, # Unit specifier: meters
+  0x00,
+  0x9a,
+  0x9c,
+  0x18 # Checksum
 ))
 
 app_inform_where <- function(self, private, message) {
@@ -157,16 +217,23 @@ write_union <- function(path, lines, comments = NULL, quiet = FALSE) {
   }
   new <- setdiff(lines, existing_lines)
   if (length(new) == 0) {
-      return(invisible(FALSE))
+    return(invisible(FALSE))
   }
   if (!quiet) {
     # Try to not depend on usethis if possible
     if (rlang::is_installed("usethis")) {
-      usethis::ui_done("Adding {usethis::ui_value(new)} to {usethis::ui_path(path)}")
+      usethis::ui_done(
+        "Adding {usethis::ui_value(new)} to {usethis::ui_path(path)}"
+      )
     } else {
-      rlang::inform(c("*" = paste0(
-        "Adding ", new, " to ", path
-      )))
+      rlang::inform(c(
+        "*" = paste0(
+          "Adding ",
+          new,
+          " to ",
+          path
+        )
+      ))
     }
   }
   all_txt <- paste0(c(existing_lines, comments, new), collapse = "\n")

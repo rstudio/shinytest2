@@ -8,9 +8,10 @@ test_app(
   app_dir = missing_arg(),
   ...,
   name = missing_arg(),
-  check_setup = TRUE,
   reporter = testthat::get_reporter(),
-  stop_on_failure = missing_arg()
+  stop_on_failure = missing_arg(),
+  check_setup = deprecated(),
+  quiet = FALSE
 )
 }
 \arguments{
@@ -23,17 +24,20 @@ test_app(
 
 \item{...}{Parameters passed to \code{\link[testthat:test_dir]{testthat::test_dir()}}}
 
-\item{name}{Name to display in the middle of the test name. This value is only used
-when calling \code{test_app()} inside of \pkg{testhat} test. The final testing context will
-have the format of \code{"{test_context} - {name} - {app_test_context}"}.}
-
-\item{check_setup}{If \code{TRUE}, the app will be checked for the presence of
-\code{./tests/testthat/setup-shinytest2.R}. This file must contain a call to
-\code{\link[=load_app_env]{load_app_env()}}.}
+\item{name}{Name to display in the middle of the test name. This value is
+only used when calling \code{test_app()} inside of \pkg{testhat} test. The final
+testing context will have the format of \code{"{test_context} - {name} - {app_test_context}"}.}
 
 \item{reporter}{Reporter to pass through to \code{\link[testthat:test_dir]{testthat::test_dir()}}.}
 
-\item{stop_on_failure}{If missing, the default value of \code{TRUE} will be used. However, if missing and currently testing, \code{FALSE} will be used to seamlessly integrate the app reporter to \code{reporter}.}
+\item{stop_on_failure}{If missing, the default value of \code{TRUE} will be used.
+However, if missing and currently testing, \code{FALSE} will be used to
+seamlessly integrate the app reporter to \code{reporter}.}
+
+\item{check_setup}{\link{Deprecated}. Parameter ignored.}
+
+\item{quiet}{If \code{TRUE}, suppresses deprecation warnings when called within
+\pkg{testthat} tests.}
 }
 \description{
 This is a helper method that wraps around \code{\link[testthat:test_dir]{testthat::test_dir()}} to test
@@ -58,9 +62,16 @@ shinytest2::test_app()
 ## File: ./tests/testthat/test-shinytest2.R
 # Test a shiny application within your own \{testthat\} code
 test_that("Testing a Shiny app in a package", \{
-  shinytest2::test_app(path_to_app)
+  app <- shinytest2::AppDriver$new(path_to_app)
+  # Perform tests with `app`...
 \})
 }\if{html}{\out{</div>}}
+
+When testing within a package, it is recommended to not call \code{test_app()},
+but instead test your applications within your own \pkg{testthat} tests. This
+allows for more flexibility and control over how your applications are
+tested while your current package's testthat infrastructure. See the \href{https://rstudio.github.io/shinytest2/articles/use-package.html}{Use Package vignette} for
+more details.
 }
 \section{Uploading files}{
 
@@ -96,10 +107,17 @@ shiny::runTests()
 
 \seealso{
 \itemize{
-\item \code{\link[=record_test]{record_test()}} to create tests to record against your Shiny application.
-\item \code{\link[testthat:snapshot_accept]{testthat::snapshot_review()}} and \code{\link[testthat:snapshot_accept]{testthat::snapshot_accept()}} if
-you want to compare or update snapshots after testing.
-\item \code{\link[=load_app_env]{load_app_env()}} to load the Shiny application's helper files.
-This is only necessary if you want access to the values while testing.
+\item \code{\link[=record_test]{record_test()}} to create tests to record against your Shiny
+application.
+\item \code{\link[testthat:snapshot_accept]{testthat::snapshot_review()}} and \code{\link[testthat:snapshot_accept]{testthat::snapshot_accept()}} if you
+want to compare or update snapshots after testing.
+\item \code{\link[=local_app_support]{local_app_support()}} / \code{\link[=with_app_support]{with_app_support()}} to load the Shiny
+application's helper files into respective environments. These methods
+are useful for within package testing as they have fine tune control over
+when the support environment is loaded.
+\item \code{\link[=load_app_support]{load_app_support()}} to load the Shiny application's helper files into
+the calling environment. This method is useful for non-package based
+Shiny applications where the support environment should be available in
+every test file.
 }
 }

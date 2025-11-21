@@ -13,21 +13,27 @@ load_app_env(
 \arguments{
 \item{app_dir}{The base directory for the Shiny application.}
 
-\item{renv}{The environment in which the files in the `R/`` directory should be evaluated.}
+\item{renv}{The environment in which the files in the `R/`` directory should
+be evaluated.}
 
 \item{globalrenv}{The environment in which \code{global.R} should be evaluated. If
 \code{NULL}, \code{global.R} will not be evaluated at all.}
 }
 \description{
-Executes all \code{./R} files and \code{global.R} into the current environment.
-This is useful when wanting access to functions or values created in the \code{./R} folder for testing purposes.
-}
-\details{
-Loading these files is not automatically performed by \code{test_app()} and must
-be called in \code{./tests/testthat/setup-shinytest2.R} if access to support file objects is
-desired.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} by \code{\link[=load_app_support]{load_app_support()}}. For package
+development, \code{local_app_support()} and \code{with_app_support()} offer more
+flexibility as to when the support environment is loaded.
+
+Executes all \code{./R} files and \code{global.R} into the current environment. This is
+useful when wanting access to functions or values created in the \code{./R} folder
+for testing purposes.
+
+Loading these files is not automatically performed by \code{test_app()} and should
+be called in \code{./tests/testthat/setup-shinytest2.R} if access to support file
+objects is desired.
 }
 \seealso{
 \code{\link[=use_shinytest2]{use_shinytest2()}} for creating a testing setup file that
 loads your Shiny app support environment into the testing environment.
 }
+\keyword{internal}

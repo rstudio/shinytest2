@@ -1,20 +1,34 @@
 #' Use \pkg{shinytest2} with your Shiny application
 #'
 #' @describeIn use_shinytest2
-#' This \pkg{usethis}-style method initializes many different useful features when using
-#' \pkg{shinytest2}:
-#' * `runner`: Creates a \pkg{shinytest2} test runner at `./tests/testthat.R`. This file
-#' will contain a call to [`test_app()`].
-#' * `setup`: Creates `./tests/testthat/setup-shinytest2.R` to add your Shiny `./R` objects and functions into the testing environment. This file will run before testing begins.
-#' * `ignore`: Add an entry to `./Rbuildignore` (if it exists) and `.gitignore` to ignore new debug screenshots. (`*_.new.png`)
-#' * `package`: Adds `shinytest` to the `Suggests` packages in the `DESCRIPTION` file (if it exists).
+#' This \pkg{usethis}-style method initializes many different useful features
+#' when using \pkg{shinytest2}:
 #'
-#' If any of these values are _not_ missing, the remaining missing values will be set to `FALSE`. This allows `use_shinytest2()` to add more flags in future versions without opting into all changes inadvertently.
+#' * `runner`: Creates a \pkg{shinytest2} test runner at `./tests/testthat.R`.
+#'   This file will contain a call to [`test_app()`].
+#' * `setup`: Creates `./tests/testthat/setup-shinytest2.R` to add your Shiny
+#'   `./R` objects and functions into the testing environment. This file will
+#'   run before testing begins.
+#' * `ignore`: Add an entry to `./Rbuildignore` (if it exists) and `.gitignore`
+#'   to ignore new debug screenshots. (`*_.new.png`)
+#' * `package`: Adds `shinytest` to the `Suggests` packages in the `DESCRIPTION`
+#'   file (if it exists).
+#'
+#' When all values are missing and currently in a package working directory, the
+#' defaults are all TRUE. When the current working directory is a package root
+#' directory, `runner`/`setup` are `FALSE` and `ignore`/`package` are `TRUE`.
+#'
+#' If any of these values are _not_ missing, the remaining missing values will
+#' be set to `FALSE`. This allows `use_shinytest2()` to add more flags in future
+#' versions without opting into all changes inadvertently.
 #'
 #' @param app_dir The base directory for the Shiny application
 #' @param runner If `TRUE`, creates a \pkg{shinytest2} test runner at `./tests/testthat.R`
 #' @param setup If `TRUE`, creates a setup file called
-#' `./tests/testthat/setup-shinytest2.R` containing a call to [`load_app_env()`]
+#' `./tests/testthat/setup-shinytest2.R` containing a call to
+#' [`load_app_support()`]. If you would like fine grain control over when the
+#' environment is loaded, please look at [`local_app_support()`] and
+#' [`with_app_support()`].
 #' @param ignore If `TRUE`, adds entries to `.Rbuildignore` and `.gitignore` to
 #' ignore new debug screenshots. (`*_.new.png`)
 #' @param package If `TRUE`, adds \pkg{shinytest2} to `Suggests` in the `DESCRIPTION` file.
@@ -37,16 +51,40 @@ use_shinytest2 <- function(
 ) {
   rlang::check_dots_empty()
 
-  if (all(
-    rlang::is_missing(runner),
-    rlang::is_missing(setup),
-    rlang::is_missing(ignore),
-    rlang::is_missing(package)
-  )) {
-    runner <- TRUE
-    setup <- TRUE
-    ignore <- TRUE
-    package <- TRUE
+  if (
+    all(
+      rlang::is_missing(runner),
+      rlang::is_missing(setup),
+      rlang::is_missing(ignore),
+      rlang::is_missing(package)
+    )
+  ) {
+    if (in_dev_pkg()) {
+      # If in package, only ignore and package
+      runner <- FALSE
+      setup <- FALSE
+      ignore <- TRUE
+      package <- TRUE
+
+      if (!quiet) {
+        rlang::inform(
+          c(
+            "*" = "Detected package working directory. Defaulting to `ignore = TRUE` and `package = TRUE`"
+          )
+        )
+        rlang::inform(
+          c(
+            "i" = "To load app support files, use `shinytest2::with_app_support()` or `shinytest2::local_app_support()` within your tests."
+          )
+        )
+      }
+    } else {
+      # If not in package, enable everything
+      runner <- TRUE
+      setup <- TRUE
+      ignore <- TRUE
+      package <- TRUE
+    }
   } else {
     # If something is provided, disable everything else
     runner <- isTRUE(rlang::maybe_missing(runner, FALSE))
@@ -56,13 +94,23 @@ use_shinytest2 <- function(
   }
 
   if (all(!runner, !setup, !ignore, !package)) {
-    stop("At least one of `runner`, `setup`, `ignore`, or `package` must be `TRUE`")
+    stop(
+      "At least one of `runner`, `setup`, `ignore`, or `package` must be `TRUE`"
+    )
   }
 
-  if (runner)  use_shinytest2_runner(app_dir, quiet = quiet, overwrite = overwrite)
-  if (setup)   use_shinytest2_setup(app_dir, quiet = quiet)
-  if (ignore)  use_shinytest2_ignore(app_dir, quiet = quiet)
-  if (package) use_shinytest2_package(app_dir, quiet = quiet)
+  if (runner) {
+    use_shinytest2_runner(app_dir, quiet = quiet, overwrite = overwrite)
+  }
+  if (setup) {
+    use_shinytest2_setup(app_dir, quiet = quiet)
+  }
+  if (ignore) {
+    use_shinytest2_ignore(app_dir, quiet = quiet)
+  }
+  if (package) {
+    use_shinytest2_package(app_dir, quiet = quiet)
+  }
 
   invisible()
 }
@@ -92,7 +140,10 @@ use_shinytest2_test <- function(
   }
 
   copy_test_file_helper(
-    from_file = system.file("internal/template/test-shinytest2.R", package = "shinytest2"),
+    from_file = system.file(
+      "internal/template/test-shinytest2.R",
+      package = "shinytest2"
+    ),
     to_file = "tests/testthat/test-shinytest2.R",
     pre_msg = "Saving test: ",
     existing_pre_msg = "Test already found: ",
@@ -103,11 +154,30 @@ use_shinytest2_test <- function(
   )
 }
 
+
+has_setup_file <- function(file, fixed_pattern) {
+  if (!fs::file_exists(file)) {
+    return(FALSE)
+  }
+
+  lines <- read_utf8(file)
+  has_call <- grepl(fixed_pattern, lines, fixed = TRUE)
+  return(has_call)
+}
+
 use_shinytest2_setup <- function(app_dir = ".", quiet = FALSE) {
   withr::with_dir(app_dir, {
     # Legacy support for old setup.R files.
     # Should be using `setup-shinytest2.R`
-    if (has_load_app_env("tests/testthat/setup.R")) {
+    if (has_setup_file("tests/testthat/setup.R", "load_app_env")) {
+      return(FALSE)
+    }
+    if (has_setup_file("tests/testthat/setup-shinytest2.R", "load_app_env")) {
+      return(FALSE)
+    }
+    if (
+      has_setup_file("tests/testthat/setup-shinytest2.R", "load_app_support")
+    ) {
       return(FALSE)
     }
 
@@ -115,12 +185,11 @@ use_shinytest2_setup <- function(app_dir = ".", quiet = FALSE) {
     write_union(
       "tests/testthat/setup-shinytest2.R",
       comments = "# Load application support files into testing environment",
-      lines = "shinytest2::load_app_env()",
+      lines = "shinytest2::load_app_support(test_path(\"../..\"))",
       quiet = quiet
     )
   })
 }
-
 
 use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
   app_dir <- app_dir_value(app_dir)
@@ -128,10 +197,14 @@ use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
     if (!fs::file_exists("DESCRIPTION")) {
       if (!quiet) {
         rlang::inform(
-          c("!" = paste0(
-            "No `", fs::path(app_dir, "DESCRIPTION"), "` file found.",
-            " Skipping adding `{shinytest2}` to `Suggests`"
-          ))
+          c(
+            "!" = paste0(
+              "No `",
+              fs::path(app_dir, "DESCRIPTION"),
+              "` file found.",
+              " Skipping adding `{shinytest2}` to `Suggests`"
+            )
+          )
         )
       }
       return(FALSE)
@@ -158,7 +231,6 @@ use_shinytest2_package <- function(app_dir = ".", quiet = FALSE) {
 }
 
 use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
-
   # Check app_dir location?
 
   # Do not use `usethis::use_git_ignore()` or `usethis::use_build_ignore()` directly!
@@ -168,7 +240,9 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
   withr::with_dir(app_dir, {
     wrote_lines <- write_union(
       ".gitignore",
-      comments = c("# {shinytest2}: Ignore new debug snapshots for `$expect_values()`"),
+      comments = c(
+        "# {shinytest2}: Ignore new debug snapshots for `$expect_values()`"
+      ),
       lines = "*_.new.png",
       quiet = quiet
     )
@@ -179,7 +253,11 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
       } else {
         rlang::inform(
           c(
-            "!" = paste0("`", fs::path(app_dir, ".gitignore"), "` already contains `*_.new.png`")
+            "!" = paste0(
+              "`",
+              fs::path(app_dir, ".gitignore"),
+              "` already contains `*_.new.png`"
+            )
           )
         )
       }
@@ -189,7 +267,11 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
       build_ignores <- c(
         "_\\.new\\.png$"
       )
-      wrote_lines <- write_union(".Rbuildignore", lines = build_ignores, quiet = quiet)
+      wrote_lines <- write_union(
+        ".Rbuildignore",
+        lines = build_ignores,
+        quiet = quiet
+      )
       if (!quiet) {
         if (wrote_lines) {
           ## `write_union()` is verbose, do not be double verbose
@@ -197,22 +279,35 @@ use_shinytest2_ignore <- function(app_dir = ".", quiet = FALSE) {
         } else {
           rlang::inform(
             c(
-              "!" = paste0("`", fs::path(app_dir, ".Rbuildignore"), "` already contains `_*.new.png`")
+              "!" = paste0(
+                "`",
+                fs::path(app_dir, ".Rbuildignore"),
+                "` already contains `_*.new.png`"
+              )
             )
           )
         }
       }
     } else {
       if (!quiet) {
-        rlang::inform(c("!" = "No `.Rbuildignore` file found. Skipping adding `_*.new.png` to `.Rbuildignore`"))
+        rlang::inform(c(
+          "!" = "No `.Rbuildignore` file found. Skipping adding `_*.new.png` to `.Rbuildignore`"
+        ))
       }
     }
   })
 }
 
-use_shinytest2_runner <- function(app_dir = ".", quiet = FALSE, overwrite = FALSE) {
+use_shinytest2_runner <- function(
+  app_dir = ".",
+  quiet = FALSE,
+  overwrite = FALSE
+) {
   copy_test_file_helper(
-    from_file = system.file("internal/template/testthat.R", package = "shinytest2"),
+    from_file = system.file(
+      "internal/template/testthat.R",
+      package = "shinytest2"
+    ),
     to_file = "tests/testthat.R",
     pre_msg = "Saving test runner: ",
     existing_pre_msg = "Runner already found: ",
@@ -234,15 +329,15 @@ copy_test_file_helper <- function(
   overwrite = FALSE,
   open = FALSE
 ) {
-
   app_dir <- app_dir_value(app_dir)
   withr::with_dir(app_dir, {
-
     if (!overwrite && fs::file_exists(to_file)) {
       if (!quiet) {
         if (identical(readLines(from_file), readLines(to_file))) {
           # Notify that the file is identical
-          rlang::inform(c("*" = paste0("Identical file found. Skipping: ", to_file)))
+          rlang::inform(c(
+            "*" = paste0("Identical file found. Skipping: ", to_file)
+          ))
         } else {
           # Notify that a file already exists
           rlang::inform(c("!" = paste0(existing_pre_msg, to_file)))
@@ -280,5 +375,11 @@ edit_file <- function(file, open = TRUE) {
 # Use `force = TRUE` to set up infrastructure without forcing to look for a DESCRIPTION file
 with_this_project <- function(code, ..., path = ".", force = TRUE) {
   rlang::check_installed("usethis")
-  usethis::with_project(path = path, code = code, force = force, ..., quiet = FALSE)
+  usethis::with_project(
+    path = path,
+    code = code,
+    force = force,
+    ...,
+    quiet = FALSE
+  )
 }

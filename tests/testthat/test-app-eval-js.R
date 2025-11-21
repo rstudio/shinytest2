@@ -3,10 +3,12 @@ require("shiny", quietly = TRUE, character.only = TRUE)
 shiny_app <- shinyApp(
   ui = fluidPage(
     "Eval JS",
-    tags$script("
+    tags$script(
+      "
       var test_value = 42;
       var test_string = 'Hello world!';
-    "),
+    "
+    ),
     verbatimTextOutput("txt")
   ),
   server = function(input, output) {
@@ -16,7 +18,6 @@ shiny_app <- shinyApp(
     })
   }
 )
-
 
 
 test_that("Duplicate input ids are found", {
