@@ -1,4 +1,4 @@
-# shinytest2 (development version)
+# shinytest2 0.5.0
 
 ## Lifecycle changes
 
