@@ -13,11 +13,12 @@ record_test(
   seed = NULL,
   load_timeout = NULL,
   shiny_args = list(),
-  test_file = "test-shinytest2.R",
+  test_file = NULL,
   open_test_file = rlang::is_interactive(),
   allow_no_input_binding = NULL,
   record_screen_size = TRUE,
-  run_test = TRUE
+  run_test = TRUE,
+  record_in_package = TRUE
 )
 ```
 
@@ -59,7 +60,14 @@ record_test(
 
 - test_file:
 
-  Base file name of the testthat test file.
+  Base file name of the testthat test file. If `NULL`, a default name
+  will be used. If recording within a package, the test file will be
+  saved to the package's `tests/testthat/` directory. If not within a
+  package, the test file will be saved to the app's `tests/testthat/`
+  directory. If within a package, the default name is
+  `test-app-<appdir>.R`, where `<appdir>` is the name of the app
+  directory. If not within a package, the default name is
+  `test-shinytest2.R`.
 
 - open_test_file:
 
@@ -91,6 +99,13 @@ record_test(
 - run_test:
 
   If `TRUE`, `test_file` will be executed after saving the recording.
+
+- record_in_package:
+
+  If `TRUE` and if the current working directory is within a package,
+  the test file will be saved to the package's `tests/testthat/`
+  directory. If `FALSE`, the test file will be saved to the app's
+  `tests/testthat/` directory.
 
 ## Uploading files
 

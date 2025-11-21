@@ -1,8 +1,21 @@
 # Load the Shiny application's support environment
 
+**\[superseded\]** by
+[`load_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md).
+For package development,
+[`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
+and
+[`with_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
+offer more flexibility as to when the support environment is loaded.
+
 Executes all `./R` files and `global.R` into the current environment.
 This is useful when wanting access to functions or values created in the
 `./R` folder for testing purposes.
+
+Loading these files is not automatically performed by
+[`test_app()`](https://rstudio.github.io/shinytest2/reference/test_app.md)
+and should be called in `./tests/testthat/setup-shinytest2.R` if access
+to support file objects is desired.
 
 ## Usage
 
@@ -29,13 +42,6 @@ load_app_env(
 
   The environment in which `global.R` should be evaluated. If `NULL`,
   `global.R` will not be evaluated at all.
-
-## Details
-
-Loading these files is not automatically performed by
-[`test_app()`](https://rstudio.github.io/shinytest2/reference/test_app.md)
-and must be called in `./tests/testthat/setup-shinytest2.R` if access to
-support file objects is desired.
 
 ## See also
 

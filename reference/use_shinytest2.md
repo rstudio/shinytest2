@@ -38,7 +38,12 @@ use_shinytest2_test(
 
   If `TRUE`, creates a setup file called
   `./tests/testthat/setup-shinytest2.R` containing a call to
-  [`load_app_env()`](https://rstudio.github.io/shinytest2/reference/load_app_env.md)
+  [`load_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md).
+  If you would like fine grain control over when the environment is
+  loaded, please look at
+  [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
+  and
+  [`with_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md).
 
 - ignore:
 
@@ -84,6 +89,11 @@ use_shinytest2_test(
 
   - `package`: Adds `shinytest` to the `Suggests` packages in the
     `DESCRIPTION` file (if it exists).
+
+  When all values are missing and currently in a package working
+  directory, the defaults are all TRUE. When the current working
+  directory is a package root directory, `runner`/`setup` are `FALSE`
+  and `ignore`/`package` are `TRUE`.
 
   If any of these values are *not* missing, the remaining missing values
   will be set to `FALSE`. This allows `use_shinytest2()` to add more

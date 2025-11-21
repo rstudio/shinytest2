@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,10 +100,11 @@ using CI, please visit <a href="https://rstudio.github.io/chromote/" class="exte
 <code>{chromote}</code> in CRAN tests</a>.</p>
 </blockquote>
 <div class="section level2">
-<h2 id="applications-in-inst">Applications in <code>inst/</code><a class="anchor" aria-label="anchor" href="#applications-in-inst"></a>
+<h2 id="applications-defined-in-another-file">Applications defined in another file<a class="anchor" aria-label="anchor" href="#applications-defined-in-another-file"></a>
 </h2>
-<p>An application could live in a subdirectory of <code>inst/</code>, as
-shown below:</p>
+<p>Placing your Shiny application in a subdirectory of
+<code>inst/</code> is a common and clean way to include Shiny
+applications in R packages.</p>
 <pre><code>/
 ├── DESCRIPTION
 ├── NAMESPACE
@@ -111,27 +112,23 @@ shown below:</p>
 ├── inst
 │   └── sample_app
 │       ├── app.R
-│       └── tests
-│           ├── testthat
-│           │   ├── _snaps
-│           │   │   └── shinytest2
-│           │   │       └── 001.json
-│           │   └── test-shinytest2.R
-│           └── testthat.R
 └── tests
     ├── testthat
-    │   └── test-inst-apps.R
+    │   ├── _snaps
+    │   │   └── sample_app
+    │   │       └── 001.json
+    │   └── test-sample_app.R
     └── testthat.R</code></pre>
-<p>In this case, you can run <code><a href="../reference/record_test.html">record_test()</a></code> and
-<code><a href="../reference/test_app.html">test_app()</a></code> as normal. After you create and run the tests,
-there will be a <code>tests/</code> subdirectory in the application
-directory that stores the test scripts and results.</p>
-<p>Since we are using <a href="https://testthat.r-lib.org" class="external-link">testthat</a> for automated tests, you
-would create a test driver script in <code>tests/testthat/</code>. In
-this example, it’s named <code>test-inst-apps.R</code> and contains the
-following:</p>
+<p>When recording tests for this application, <code><a href="../reference/record_test.html">record_test()</a></code>
+will save the test files in the package’s <code>tests/testthat/</code>
+directory. This doesn’t clutter the application directory with test
+files and leverages existing package testing infrastructure for a
+unified testing experience.</p>
+<p>Within each test file, supply the application directory to
+<code>AppDriver$new()</code>. For example, in
+<code>tests/testthat/test-sample_app.R</code>, you would have:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># File: tests/testthat/test-inst-apps.R</span></span>
+<code class="sourceCode R"><span><span class="co"># File: tests/testthat/test-sample_app.R</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/shinytest2/">shinytest2</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"sample_app works"</span>, <span class="op">{</span></span>
@@ -139,28 +136,31 @@ following:</p>
 <span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/skip.html" class="external-link">skip_on_cran</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">appdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"exPackage"</span>, <span class="st">"sample_app"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="../reference/test_app.html">test_app</a></span><span class="op">(</span><span class="va">appdir</span><span class="op">)</span></span>
+<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">appdir</span>, name <span class="op">=</span> <span class="st">"sample_app"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <p>If the application directory is not meant to be public, it can also
 be located in <code>./tests/testthat/apps</code>.
 <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> does this with many application and has
-<code>appdir</code> above point to the relative path to the
-application.</p>
-<!-- For more information about this script, see the [Test driver script notes](#Test-driver-script-notes) section below. -->
+<code>appdir</code> above point to the relative path to the application.
+<code>app_dir &lt;- testthat::test_path("apps/sample_app")</code>.</p>
 </div>
 <div class="section level2">
-<h2 id="application-objects-created-by-functions">Application objects created by functions<a class="anchor" aria-label="anchor" href="#application-objects-created-by-functions"></a>
+<h2 id="applications-using-a-function">Applications using a function<a class="anchor" aria-label="anchor" href="#applications-using-a-function"></a>
 </h2>
-<p>The second way have an application in an R package is by having a
-function that returns a Shiny application object. In this example,
-there’s a function <code>hello_world_app()</code>, which lives in
-<code>R/hello-world.R</code>:</p>
+<p>Some packages, such as <a href="https://thinkr-open.github.io/golem/" class="external-link">golem</a>, provide a function that
+runs or returns a shiny application. In this case, you can create a
+wrapper function to perform two actions: load the package via
+<code><a href="https://rdrr.io/r/base/library.html" class="external-link">library()</a></code> or <code><a href="https://rdrr.io/r/base/library.html" class="external-link">require()</a></code> and returns/runs an
+app. For example, if your package is named <code>mypkg</code>, your
+package structure may look like:</p>
 <pre><code>/
 ├── .Rbuildignore
 ├── DESCRIPTION
 ├── NAMESPACE
 ├── R
-│   └── hello-world.R
+│   └── run-app.R
 └── tests
     ├── testthat
     │   ├── _snaps
@@ -168,24 +168,100 @@ there’s a function <code>hello_world_app()</code>, which lives in
     │   │       └── 001.json
     │   └── test-app-function.R
     └── testthat.R</code></pre>
+<p>and the function that runs the app is <code>run_app()</code>, you can
+pass in functions defined within your R package directly to
+<code>AppDriver$new()</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># File: tests/testthat/test-app-function.R</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/shinytest2/">shinytest2</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"mypkg app initial values are consistent"</span>, <span class="op">{</span></span>
+<span>  <span class="co"># Don't run these tests on the CRAN build servers</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/skip.html" class="external-link">skip_on_cran</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">run_app</span>, name <span class="op">=</span> <span class="st">"mypkg-app"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<p>This works as <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> recognizes that the
+<code>run_app</code> function is part of the local package. When running
+a local package methods, <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> will call the method
+within the scope of your local R package in the the background
+process.</p>
+<p>The specially handled function is functionally equivalent to defining
+a wrapper function that loads the package and calls
+<code>run_app()</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># File: tests/testthat/test-app-function.R</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/shinytest2/">shinytest2</a></span><span class="op">)</span></span>
+<span><span class="va">run_mypkg_app</span> <span class="op">&lt;-</span></span>
+<span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"mypkg app initial values are consistent"</span>, <span class="op">{</span></span>
+<span>  <span class="co"># Don't run these tests on the CRAN build servers</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/skip.html" class="external-link">skip_on_cran</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"mypkg-app"</span>, <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mypkg</span><span class="op">)</span></span>
+<span>    <span class="fu">run_app</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<p>When using a function to initialize the <code>AppDriver</code>,
+<a href="https://rstudio.github.io/shinytest2/">shinytest2</a> will automatically call
+<code><a href="https://pkgload.r-lib.org/reference/load_all.html" class="external-link">pkgload::load_all()</a></code> when you execute
+<code>library(&lt;pkg&gt;)</code> or <code>require(&lt;pkg&gt;)</code>
+to load your dev package, <code>&lt;pkg&gt;</code>, in the background R
+process. Currently, only the local dev package can be loaded. Similar to
+<a href="https://mirai.r-lib.org" class="external-link">mirai</a>, there is also no carryover from the testing
+environment to the supplied function execution within the background R
+process. All packages may need to be <code><a href="https://rdrr.io/r/base/library.html" class="external-link">library()</a></code>’ed
+again!</p>
+</div>
+<div class="section level2">
+<h2 id="application-objects">Application objects<a class="anchor" aria-label="anchor" href="#application-objects"></a>
+</h2>
+<p>The third way have an application in an R package is by having a
+function that returns a Shiny application object. App objects being
+supplied directly to <code>AppDriver$new()</code> are to be considered
+for quick testing / confirmation of targeted behavior. For more complex
+applications, it is recommended to use one of the other two approaches
+described above as not all global variables and contexts are preserved
+when serializing the app object.</p>
+<p>In this example, there’s a function <code>hello_world_app()</code>,
+which lives in <code>R/app-object.R</code>:</p>
+<pre><code>/
+├── .Rbuildignore
+├── DESCRIPTION
+├── NAMESPACE
+├── R
+│   └── app-object.R
+└── tests
+    ├── testthat
+    │   ├── _snaps
+    │   │   └── app-object
+    │   │       └── 001.json
+    │   └── test-app-object.R
+    └── testthat.R</code></pre>
 <p>The function simply returns an object from
 <code><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp()</a></code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># File: R/hello-world.R</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># File: R/app-object.R</span></span>
+<span></span>
+<span><span class="va">dt</span> <span class="op">&lt;-</span> <span class="fu">datasets</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/datasets/cars.html" class="external-link">cars</a></span></span>
 <span></span>
 <span><span class="va">hello_world_app</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">cars</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span></span>
 <span>    ui <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sliderInput.html" class="external-link">sliderInput</a></span><span class="op">(</span><span class="st">"n"</span>, <span class="st">"n"</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">cars</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sliderInput.html" class="external-link">sliderInput</a></span><span class="op">(</span><span class="st">"n"</span>, <span class="st">"n"</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dt</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span>,</span>
 <span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/plotOutput.html" class="external-link">plotOutput</a></span><span class="op">(</span><span class="st">"plot"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    server <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span><span class="op">)</span> <span class="op">{</span></span>
 <span>      <span class="va">output</span><span class="op">$</span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html" class="external-link">renderPlot</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
-<span>          <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cars</span>, <span class="va">input</span><span class="op">$</span><span class="va">n</span><span class="op">)</span>,</span>
-<span>          xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">cars</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>          ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">cars</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span>          <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dt</span>, <span class="va">input</span><span class="op">$</span><span class="va">n</span><span class="op">)</span>,</span>
+<span>          xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">dt</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>          ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">dt</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span>        <span class="op">)</span></span>
 <span>      <span class="op">}</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
@@ -193,7 +269,7 @@ there’s a function <code>hello_world_app()</code>, which lives in
 <span><span class="op">}</span></span></code></pre></div>
 <p>Once we have the object, it can be supplied directly to
 <code>AppDriver$new()</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># File: tests/testthat/test-app-function.R</span></span>
 <span></span>
 <span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"hello-world app initial values are consistent"</span>, <span class="op">{</span></span>
@@ -209,39 +285,6 @@ there’s a function <code>hello_world_app()</code>, which lives in
 shiny application object directly. Unfortunately, the test file will not
 be able to be saved. Instead, the test commands can be copied into a
 test script manually.</p>
-<!-- For more information about this script, see the [Test driver script notes](#Test-driver-script-notes) section below. -->
-</div>
-<div class="section level2">
-<h2 id="running-applications-with-a-function">Running Applications with a function<a class="anchor" aria-label="anchor" href="#running-applications-with-a-function"></a>
-</h2>
-<p>Some packages, such as <a href="https://thinkr-open.github.io/golem/" class="external-link">golem</a>, provide a function that
-runs or returns a shiny application. In this case, you can create a
-wrapper function to perform two actions: load the package and return an
-app. For example, if your package is named <code>mypkg</code> and the
-function that runs the app is <code>run_test_app()</code>, you can
-create a wrapper function like this:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">run_mypkg_app</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mypkg</span><span class="op">)</span></span>
-<span>  <span class="fu">run_test_app</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">run_mypkg_app</span>, name <span class="op">=</span> <span class="st">"mypkg-app"</span><span class="op">)</span></span></code></pre></div>
-<p>For shorthand, you can also use the package function directly:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">run_test_app</span>, name <span class="op">=</span> <span class="st">"mypkg-app"</span><span class="op">)</span></span></code></pre></div>
-<p>When using a function to initialize the <code>AppDriver</code>,
-<a href="https://rstudio.github.io/shinytest2/">shinytest2</a> will automatically call
-<code><a href="https://pkgload.r-lib.org/reference/load_all.html" class="external-link">pkgload::load_all()</a></code> when you execute
-<code>library(&lt;pkg&gt;)</code> or <code>require(&lt;pkg&gt;)</code>
-to load your dev package, <code>&lt;pkg&gt;</code>, in the background R
-process. Similar to <a href="https://mirai.r-lib.org" class="external-link">mirai</a>, there is no carryover to the
-execution within the background R process. All packages may need to be
-<code><a href="https://rdrr.io/r/base/library.html" class="external-link">library()</a></code>’ed again.</p>
-<p><a href="https://thinkr-open.github.io/golem/" class="external-link">golem</a> provides a template <code>run_app()</code>
-function. <a href="https://thinkr-open.github.io/golem/" class="external-link">golem</a> app authors can use the shorthand:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">run_app</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="other-setup-steps">Other setup steps<a class="anchor" aria-label="anchor" href="#other-setup-steps"></a>
@@ -274,18 +317,108 @@ runs the Shiny application. When <code>library*()</code> is called,
 <div class="section level2">
 <h2 id="how-should-i-test-multiple-applications">How should I test multiple applications?<a class="anchor" aria-label="anchor" href="#how-should-i-test-multiple-applications"></a>
 </h2>
-<p>You can call <code><a href="../reference/test_app.html">shinytest2::test_app()</a></code> multiple times
-within a test script. It does not need to be wrapped within a
-<code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">testthat::test_that()</a></code> call.</p>
-<p><a href="https://rstudio.github.io/shinytest2/">shinytest2</a> tests many internal apps using the code
-similar to the code below:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># ./tests/testthat/test-apps.R</span></span>
+<p>Given you have multiple applications / app functions in your package,
+you can create multiple test files in <code>tests/testthat/</code>, one
+for each application. Each test file can create its own
+<code>AppDriver</code> instance for the specific application being
+tested.</p>
+<p>It is not recommended to utilize <code>test_app("path/to/app")</code>
+within package testing as we want the tests to be controlled by the
+package’s <code>testthat</code> infrastructure. This allows for more
+flexibility and control over how your applications are tested while your
+current package’s testthat infrastructure.</p>
+<p>Good: * Supply a function from within your package to
+<code>AppDriver$new()</code> and test within your package’s
+<code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">testthat::test_that()</a></code> tests. * Supply an application
+directory within your package to <code>AppDriver$new()</code> and test
+within your package’s <code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">testthat::test_that()</a></code> tests. Bad: *
+Call <code>test_app("path/to/app")</code> within your package’s
+<code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">testthat::test_that()</a></code> tests.</p>
+<p>This keeps your snaps all in one place and not scattered across
+multiple application directories.</p>
+</div>
+<div class="section level2">
+<h2 id="migrating-from-shinytest-v0-4-0-to-v0-5-0">Migrating from shinytest v0.4.0 to v0.5.0<a class="anchor" aria-label="anchor" href="#migrating-from-shinytest-v0-4-0-to-v0-5-0"></a>
+</h2>
+<p>Previously, it was encouraged to store tests within the application
+directory itself. This made sense when applications were primarily
+standalone. However, for R packages, it is more idiomatic to store tests
+in the <code>tests/testthat/</code> directory and utilize an app that is
+defined elsewhere (either in <code>inst/</code> or another
+directory).</p>
+<p>Previous file structure:</p>
+<pre><code>/
+├── DESCRIPTION
+├── NAMESPACE
+├── R
+├── inst
+│   └── sample_app
+│       ├── app.R
+│       ├── R
+│       │   └── helpers.R
+│       └── tests
+│           ├── testthat.R
+│           └── testthat
+│              ├── setup-shinytest2.R
+│              └── test-sample_app.R
+└── tests
+    ├── testthat.R
+    └── testthat
+        └── test-other-things.R</code></pre>
+<p>Previous <code>test-sample_app.R</code>:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/shinytest2/">shinytest2</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">app_dirs</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">dir_ls</a></span><span class="op">(</span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_path.html" class="external-link">test_path</a></span><span class="op">(</span><span class="st">"apps"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">app_dirs</span>, <span class="kw">function</span><span class="op">(</span><span class="va">app_dir</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">shinytest2</span><span class="fu">::</span><span class="fu"><a href="../reference/test_app.html">test_app</a></span><span class="op">(</span><span class="va">app_dir</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"sample_app works"</span>, <span class="op">{</span></span>
+<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"sample_app"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="fu">get_value</span><span class="op">(</span><span class="st">"input$n"</span><span class="op">)</span>, <span class="va">helper_value</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<p>It is now recommended to store all tests in
+<code>tests/testthat/</code> and have the application defined elsewhere.
+This keeps the application directory clean and leverages existing
+package testing infrastructure for a unified testing experience.</p>
+<p>New file structure:</p>
+<pre><code>/
+├── DESCRIPTION
+├── NAMESPACE
+├── R
+├── inst
+│   └── sample_app
+│       ├── app.R
+│       ├── R
+│           └── helpers.R
+└── tests
+    ├── testthat.R
+    └── testthat
+        ├── test-other-things.R
+        └── test-sample_app.R</code></pre>
+<p>New <code>test-sample_app.R</code>:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/shinytest2/">shinytest2</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"sample_app works"</span>, <span class="op">{</span></span>
+<span>  <span class="va">appdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"exPackage"</span>, <span class="st">"sample_app"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/app_support.html">local_app_support</a></span><span class="op">(</span><span class="va">appdir</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">appdir</span>, name <span class="op">=</span> <span class="st">"sample_app"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="fu">get_value</span><span class="op">(</span><span class="st">"input$n"</span><span class="op">)</span>, <span class="va">helper_value</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<p>Since we have moved the tests out of the application directory, we
+need to ensure that any supporting files (like snapshots) are still
+accessible. When testing <strong>only</strong> an application, the
+premise is similar to a package where all supporting files should be
+available in the testing environment. However, within a package, the
+application is a means to test the package and should not automatically
+load supporting files into the entire testing environment, possibly
+causing conflicts with other Shiny applications or tests.</p>
+<p>To address this, we use <code>local_app_support(appdir)</code> to
+temporarily link the necessary support files from the application
+directory to the test environment. This ensures that the tests can
+access the required snapshots and other supporting files without
+cluttering the application directory itself.</p>
 </div>
 <div class="section level2">
 <h2 id="continuous-integration">Continuous integration<a class="anchor" aria-label="anchor" href="#continuous-integration"></a>

@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -132,10 +132,11 @@ when it’s being tested. To detect when it’s being tested, you can use
 testing environment?<a class="anchor" aria-label="anchor" href="#how-can-i-get-the-objects-from-files-in-my-the-r-folder-into-the-testing-environment"></a>
 </h2>
 <p>Loading the support environment for a Shiny application requires a
-call to <code><a href="../reference/load_app_env.html">shinytest2::load_app_env()</a></code> in
-<code>./tests/testthat/setup-shinytest2.R</code>. This method will load
-the <code>global.R</code> and all R files into the testing environment,
-similar to testing package R code.</p>
+call to <code><a href="../reference/app_support.html">shinytest2::local_app_support()</a></code> or
+<code><a href="../reference/app_support.html">shinytest2::with_app_support()</a></code>. Add these calls to your
+unit tests to load the support into the appropriate environments. These
+methods will load the <code>global.R</code> and all R files into the
+testing environment, similar to testing package R code.</p>
 <p>This is not automatically performed as it may be costly to load the
 support environment.</p>
 </div>

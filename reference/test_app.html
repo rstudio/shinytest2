@@ -11,7 +11,7 @@ testthat::test_check() tests your R package but for your app."><meta property="o
 
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,9 +60,10 @@ your Shiny application or Shiny runtime document.  This is similar to how
 <span>  app_dir <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  name <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  check_setup <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  reporter <span class="op">=</span> <span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/reporter-accessors.html" class="external-link">get_reporter</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  stop_on_failure <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span></span>
+<span>  stop_on_failure <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  check_setup <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  quiet <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -82,15 +83,9 @@ your Shiny application or Shiny runtime document.  This is similar to how
 
 
 <dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
-<dd><p>Name to display in the middle of the test name. This value is only used
-when calling <code>test_app()</code> inside of <span class="pkg">testhat</span> test. The final testing context will
-have the format of <code>"{test_context} - {name} - {app_test_context}"</code>.</p></dd>
-
-
-<dt id="arg-check-setup">check_setup<a class="anchor" aria-label="anchor" href="#arg-check-setup"></a></dt>
-<dd><p>If <code>TRUE</code>, the app will be checked for the presence of
-<code>./tests/testthat/setup-shinytest2.R</code>. This file must contain a call to
-<code><a href="load_app_env.html">load_app_env()</a></code>.</p></dd>
+<dd><p>Name to display in the middle of the test name. This value is
+only used when calling <code>test_app()</code> inside of <span class="pkg">testhat</span> test. The final
+testing context will have the format of <code>"{test_context} - {name} - {app_test_context}"</code>.</p></dd>
 
 
 <dt id="arg-reporter">reporter<a class="anchor" aria-label="anchor" href="#arg-reporter"></a></dt>
@@ -98,7 +93,18 @@ have the format of <code>"{test_context} - {name} - {app_test_context}"</code>.<
 
 
 <dt id="arg-stop-on-failure">stop_on_failure<a class="anchor" aria-label="anchor" href="#arg-stop-on-failure"></a></dt>
-<dd><p>If missing, the default value of <code>TRUE</code> will be used. However, if missing and currently testing, <code>FALSE</code> will be used to seamlessly integrate the app reporter to <code>reporter</code>.</p></dd>
+<dd><p>If missing, the default value of <code>TRUE</code> will be used.
+However, if missing and currently testing, <code>FALSE</code> will be used to
+seamlessly integrate the app reporter to <code>reporter</code>.</p></dd>
+
+
+<dt id="arg-check-setup">check_setup<a class="anchor" aria-label="anchor" href="#arg-check-setup"></a></dt>
+<dd><p><a href="https://rdrr.io/r/base/Deprecated.html" class="external-link">Deprecated</a>. Parameter ignored.</p></dd>
+
+
+<dt id="arg-quiet">quiet<a class="anchor" aria-label="anchor" href="#arg-quiet"></a></dt>
+<dd><p>If <code>TRUE</code>, suppresses deprecation warnings when called within
+<span class="pkg">testthat</span> tests.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -119,8 +125,14 @@ have the format of <code>"{test_context} - {name} - {app_test_context}"</code>.<
 <span><span class="co">## File: ./tests/testthat/test-shinytest2.R</span></span>
 <span><span class="co"># Test a shiny application within your own {testthat} code</span></span>
 <span><span class="fu">test_that</span><span class="op">(</span><span class="st">"Testing a Shiny app in a package"</span>, <span class="op">{</span></span>
-<span>  <span class="fu">shinytest2</span><span class="fu">::</span><span class="fu"><a href="../reference/test_app.html">test_app</a></span><span class="op">(</span><span class="va">path_to_app</span><span class="op">)</span></span>
+<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="fu">shinytest2</span><span class="fu">::</span><span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">path_to_app</span><span class="op">)</span></span>
+<span>  <span class="co"># Perform tests with `app`...</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre><p></p></div>
+<p>When testing within a package, it is recommended to not call <code>test_app()</code>,
+but instead test your applications within your own <span class="pkg">testthat</span> tests. This
+allows for more flexibility and control over how your applications are
+tested while your current package's testthat infrastructure. See the <a href="https://rstudio.github.io/shinytest2/articles/use-package.html">Use Package vignette</a> for
+more details.</p>
     </div>
     <div class="section level2">
     <h2 id="uploading-files">Uploading files<a class="anchor" aria-label="anchor" href="#uploading-files"></a></h2>
@@ -156,11 +168,18 @@ their associated tests.</p>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index">
-<ul><li><p><code><a href="record_test.html">record_test()</a></code> to create tests to record against your Shiny application.</p></li>
-<li><p><code><a href="https://testthat.r-lib.org/reference/snapshot_accept.html" class="external-link">testthat::snapshot_review()</a></code> and <code><a href="https://testthat.r-lib.org/reference/snapshot_accept.html" class="external-link">testthat::snapshot_accept()</a></code> if
-you want to compare or update snapshots after testing.</p></li>
-<li><p><code><a href="load_app_env.html">load_app_env()</a></code> to load the Shiny application's helper files.
-This is only necessary if you want access to the values while testing.</p></li>
+<ul><li><p><code><a href="record_test.html">record_test()</a></code> to create tests to record against your Shiny
+application.</p></li>
+<li><p><code><a href="https://testthat.r-lib.org/reference/snapshot_accept.html" class="external-link">testthat::snapshot_review()</a></code> and <code><a href="https://testthat.r-lib.org/reference/snapshot_accept.html" class="external-link">testthat::snapshot_accept()</a></code> if you
+want to compare or update snapshots after testing.</p></li>
+<li><p><code><a href="app_support.html">local_app_support()</a></code> / <code><a href="app_support.html">with_app_support()</a></code> to load the Shiny
+application's helper files into respective environments. These methods
+are useful for within package testing as they have fine tune control over
+when the support environment is loaded.</p></li>
+<li><p><code><a href="app_support.html">load_app_support()</a></code> to load the Shiny application's helper files into
+the calling environment. This method is useful for non-package based
+Shiny applications where the support environment should be available in
+every test file.</p></li>
 </ul></div>
     </div>
 

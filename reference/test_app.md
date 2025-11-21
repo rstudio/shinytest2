@@ -14,9 +14,10 @@ test_app(
   app_dir = missing_arg(),
   ...,
   name = missing_arg(),
-  check_setup = TRUE,
   reporter = testthat::get_reporter(),
-  stop_on_failure = missing_arg()
+  stop_on_failure = missing_arg(),
+  check_setup = deprecated(),
+  quiet = FALSE
 )
 ```
 
@@ -43,13 +44,6 @@ test_app(
   testing context will have the format of
   `"{test_context} - {name} - {app_test_context}"`.
 
-- check_setup:
-
-  If `TRUE`, the app will be checked for the presence of
-  `./tests/testthat/setup-shinytest2.R`. This file must contain a call
-  to
-  [`load_app_env()`](https://rstudio.github.io/shinytest2/reference/load_app_env.md).
-
 - reporter:
 
   Reporter to pass through to
@@ -60,6 +54,16 @@ test_app(
   If missing, the default value of `TRUE` will be used. However, if
   missing and currently testing, `FALSE` will be used to seamlessly
   integrate the app reporter to `reporter`.
+
+- check_setup:
+
+  [Deprecated](https://rdrr.io/r/base/Deprecated.html). Parameter
+  ignored.
+
+- quiet:
+
+  If `TRUE`, suppresses deprecation warnings when called within testthat
+  tests.
 
 ## Details
 
@@ -80,8 +84,17 @@ Example usage:
     ## File: ./tests/testthat/test-shinytest2.R
     # Test a shiny application within your own {testthat} code
     test_that("Testing a Shiny app in a package", {
-      shinytest2::test_app(path_to_app)
+      app <- shinytest2::AppDriver$new(path_to_app)
+      # Perform tests with `app`...
     })
+
+When testing within a package, it is recommended to not call
+`test_app()`, but instead test your applications within your own
+testthat tests. This allows for more flexibility and control over how
+your applications are tested while your current package's testthat
+infrastructure. See the [Use Package
+vignette](https://rstudio.github.io/shinytest2/articles/use-package.html)
+for more details.
 
 ## Uploading files
 
@@ -122,6 +135,16 @@ method will generically run all test runners and their associated tests.
   [`testthat::snapshot_accept()`](https://testthat.r-lib.org/reference/snapshot_accept.html)
   if you want to compare or update snapshots after testing.
 
-- [`load_app_env()`](https://rstudio.github.io/shinytest2/reference/load_app_env.md)
-  to load the Shiny application's helper files. This is only necessary
-  if you want access to the values while testing.
+- [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
+  /
+  [`with_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
+  to load the Shiny application's helper files into respective
+  environments. These methods are useful for within package testing as
+  they have fine tune control over when the support environment is
+  loaded.
+
+- [`load_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
+  to load the Shiny application's helper files into the calling
+  environment. This method is useful for non-package based Shiny
+  applications where the support environment should be available in
+  every test file.

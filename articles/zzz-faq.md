@@ -54,10 +54,12 @@ if (isTRUE(getOption("shiny.testmode"))) {
 
 Loading the support environment for a Shiny application requires a call
 to
-[`shinytest2::load_app_env()`](https://rstudio.github.io/shinytest2/reference/load_app_env.md)
-in `./tests/testthat/setup-shinytest2.R`. This method will load the
-`global.R` and all R files into the testing environment, similar to
-testing package R code.
+[`shinytest2::local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
+or
+[`shinytest2::with_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md).
+Add these calls to your unit tests to load the support into the
+appropriate environments. These methods will load the `global.R` and all
+R files into the testing environment, similar to testing package R code.
 
 This is not automatically performed as it may be costly to load the
 support environment.

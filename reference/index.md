@@ -19,8 +19,10 @@
 
   Test Shiny applications with testthat
 
-- [`load_app_env()`](https://rstudio.github.io/shinytest2/reference/load_app_env.md)
-  : Load the Shiny application's support environment
+- [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
+  [`with_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
+  [`load_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
+  : Attach the Shiny application's support environment
 
 ## Setting up tests
 
