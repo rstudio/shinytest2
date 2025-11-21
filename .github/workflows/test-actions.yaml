@@ -50,7 +50,7 @@ jobs:
       - name: Test app (main)
         uses: rstudio/shinytest2/actions/test-app@actions/v1
         with:
-          app-dir: "tests/testthat/apps/window"
+          app-dir: "tests/testthat/local-apps/window"
 
       - name: Test app (PR)
         if: github.event_name == 'pull_request'
