@@ -38,8 +38,8 @@ shiny_app <- shinyApp(ui, server)
 test_that("images are captured via expect_values", {
   app <- AppDriver$new(
     shiny_app,
-    variant = platform_variant(r_version = FALSE)
-    # name = "values-image"
+    variant = NULL,
+    name = "values-image"
   )
 
   app$click("rawr")
