@@ -2,21 +2,17 @@
 
 #### 2025-04-11
 
-Critical bug to user interface fixed.
+Critical bug reported from testthat v3.3.0 update.
 
-I am sorry for the fast turn around.
+Larger features / bug fixes for the package.
 
 - Barret
 
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
-* checking CRAN incoming feasibility ... [11s] NOTE
-   Maintainer: 'Barret Schloerke <barret@posit.co>'
-
-   Days since last update: 1
 
 ## revdepcheck results
 
