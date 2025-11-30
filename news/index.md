@@ -1,122 +1,108 @@
 # Changelog
 
-## shinytest2 (development version)
+## shinytest2 0.5.0
 
-### AppDriver
+### Lifecycle changes
 
-- Added support for local package development for the background Shiny
-  App process in `AppDriver$new(app_dir=)`. In the background test R
-  process, any `library(<pkg>)` or `require(<pkg>)` call will
-  automatically execute
-  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
-  to load the local R package’s source code. Installing the package
-  before testing is no longer required!
-  ([\#402](https://github.com/rstudio/shinytest2/issues/402)).
-
-- Added support for function execution for `AppDriver$new(app_dir=)`.
-  You must run the App or document yourself. Similar to
-  [mirai](https://mirai.r-lib.org), all packages must be
-  [`library()`](https://rdrr.io/r/base/library.html)’d or
-  [`require()`](https://rdrr.io/r/base/library.html)’d again as the
-  function is being ran in the background R process
-  ([\#402](https://github.com/rstudio/shinytest2/issues/402)).
-
-### Package testing
-
-- For package authors, it is now recommended to test your Shiny
-  applications within your own [testthat](https://testthat.r-lib.org)
-  tests instead of using
-  [`test_app()`](https://rstudio.github.io/shinytest2/reference/test_app.md).
-  By using your package’s existing
-  [testthat](https://testthat.r-lib.org) infrastructure to test your
-  Shiny applications, collecting snapshots in a single location. Be sure
-  to use
-  [`with_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
-  or
+- [`load_app_env()`](https://rstudio.github.io/shinytest2/reference/load_app_env.md)
+  has been superseded by
+  [`load_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md).
+  This new function aligns its name with
   [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
-  to load your app’s support files as needed. See the [use-package
-  vignette](https://rstudio.github.io/shinytest2/articles/use-package.html)
-  for more details
+  and
+  [`with_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md),
+  and similarly, it requires an `app_dir` parameter
   ([\#328](https://github.com/rstudio/shinytest2/issues/328)).
 
-- To implement the new test file location app,
-  [`record_test()`](https://rstudio.github.io/shinytest2/reference/record_test.md)
-  will now save the test file to the package’s `tests/testthat/`
-  directory if the current working directory is within a package given
-  `record_in_package=TRUE` (default). If `record_in_package=FALSE`, the
-  test file will be saved relative to the app’s `tests/testthat/`
-  directory. This change helps facilitate using the package’s existing
-  testing infrastructure by having unit tests in a single place
-  ([\#328](https://github.com/rstudio/shinytest2/issues/328)).
-
-### Bug / Improvements
-
-- Added two new methods:
+- `test_app(check_setup=)` is now deprecated. Checking is no longer
+  required as default behavior, as
+  [`load_app_env()`](https://rstudio.github.io/shinytest2/reference/load_app_env.md)
+  has been superseded by
   [`with_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
   and
-  [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md).
-  These methods provide package authors a flexible way to scope app
-  support files such as `global.R`, `app.R`, `server.R`, and `ui.R`
-  within your tests. Non-package authors should still use
+  [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md),
+  which provide a more robust and flexible way to scope app support
+  files such as `global.R`, `app.R`, `server.R`, and `ui.R`
+  ([\#328](https://github.com/rstudio/shinytest2/issues/328)).
+
+### New features
+
+- `AppDriver$new(app_dir=)` now supports local package development for
+  the background Shiny app process. In the background test R process,
+  any `library(<pkg>)` or `require(<pkg>)` call automatically executes
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  to load the local R package’s source code. Installing the package
+  before testing is no longer required
+  ([\#402](https://github.com/rstudio/shinytest2/issues/402)).
+
+- `AppDriver$new(app_dir=)` now supports function execution. You must
+  run the app (or document) yourself or return a Shiny app object.
+  Similar to [mirai](https://mirai.r-lib.org), all packages must be
+  loaded with [`library()`](https://rdrr.io/r/base/library.html) or
+  [`require()`](https://rdrr.io/r/base/library.html) again as the
+  function runs in the background R process
+  ([\#402](https://github.com/rstudio/shinytest2/issues/402)).
+
+- Added
+  [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md),
+  [`with_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md),
+  and
+  [`load_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md).
+  [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
+  and
+  [`with_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
+  provide package authors a flexible way to scope app support files such
+  as `global.R`, `app.R`, `server.R`, and `ui.R` within tests.
+  Non-package authors should still use
   [`load_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
   within their `setup-shinytest2.R` file. See
   [`?local_app_support`](https://rstudio.github.io/shinytest2/reference/app_support.md)
   for more details
   ([\#328](https://github.com/rstudio/shinytest2/issues/328)).
 
-- [`load_app_env()`](https://rstudio.github.io/shinytest2/reference/load_app_env.md)
-  has been superseded by
-  [`load_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md).
-  This new method aligns its name with
-  [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
-  and
-  [`with_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md),
-  and similarly, it requires an `app_dir=` parameter
+- [`record_test()`](https://rstudio.github.io/shinytest2/reference/record_test.md)
+  gained a `record_in_package` parameter. If `TRUE` (default) and the
+  current working directory is within a package, the test file is saved
+  to the package’s `tests/testthat/` directory. If `FALSE`, the test
+  file is saved to the app’s `tests/testthat/` directory
   ([\#328](https://github.com/rstudio/shinytest2/issues/328)).
 
-- `test_app(check_setup=)` is now deprecated. Checking is no longer
-  required as default behavior. This is because
-  [`load_app_env()`](https://rstudio.github.io/shinytest2/reference/load_app_env.md)
-  is now superseded by two new functions:
+- Package authors should now test Shiny applications within their own
+  [testthat](https://testthat.r-lib.org) tests instead of using
+  [`test_app()`](https://rstudio.github.io/shinytest2/reference/test_app.md).
+  This collects snapshots in a single location using the package’s
+  existing [testthat](https://testthat.r-lib.org) infrastructure. Use
   [`with_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
-  and
-  [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md).
-  Each function provides a more robust and flexible way to scope app
-  support files such as `global.R`, `app.R`, `server.R`, and `ui.R`. See
-  [`?with_app_support`](https://rstudio.github.io/shinytest2/reference/app_support.md)
-  and
-  [`?local_app_support`](https://rstudio.github.io/shinytest2/reference/app_support.md)
+  or
+  [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
+  to load app support files as needed. See the [use-package
+  vignette](https://rstudio.github.io/shinytest2/articles/use-package.html)
   for more details
   ([\#328](https://github.com/rstudio/shinytest2/issues/328)).
 
-- Given `test_app(check_setup=FALSE)` is now deprecated. This change was
-  done for package authors do not require apps to load support
-  ([\#328](https://github.com/rstudio/shinytest2/issues/328)).
+### Bug fixes and minor improvements
+
+- `AppDriver$expect_values()` now works correctly with
+  [testthat](https://testthat.r-lib.org) v3.3.0, which changed
+  expectation behavior for screenshot snapshots
+  ([\#418](https://github.com/rstudio/shinytest2/issues/418)).
 
 - [`record_test()`](https://rstudio.github.io/shinytest2/reference/record_test.md)
-  will now only save setup file for local app testing and not within
+  now only saves the setup file for local app testing and not within
   package app testing. When recording a test for an app inside a
   package,
   [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
-  will be added to the top of the testing code
+  is added to the top of the testing code. If the current working
+  directory is within a package and `record_in_package = TRUE`
+  (default), the test file is saved to the package’s `tests/testthat/`
+  directory. If `record_in_package = FALSE`, the test file is saved
+  relative to the app’s `tests/testthat/` directory
   ([\#328](https://github.com/rstudio/shinytest2/issues/328)).
 
-- Fixed internal bug where [testthat](https://testthat.r-lib.org) v3.3.0
-  changed expectation behavior for screenshot snapshots within
-  `App$expect_values()`
-  ([\#418](https://github.com/rstudio/shinytest2/issues/418)).
-
-- Migrated from [httr](https://httr.r-lib.org/) to
-  [httr2](https://httr2.r-lib.org) for all HTTP requests made by
-  [shinytest2](https://rstudio.github.io/shinytest2/)
+- [shinytest2](https://rstudio.github.io/shinytest2/) now uses
+  [httr2](https://httr2.r-lib.org) instead of
+  [httr](https://httr.r-lib.org/) for all HTTP requests
   ([\#420](https://github.com/rstudio/shinytest2/issues/420)).
-
-- [`record_test()`](https://rstudio.github.io/shinytest2/reference/record_test.md)
-  gained a new parameter `record_in_package=`. If `TRUE` and if the
-  current working directory is within a package, the test file will be
-  saved to the package’s `tests/testthat/` directory. If `FALSE`, the
-  test file will be saved to the app’s `tests/testthat/` directory
-  ([\#328](https://github.com/rstudio/shinytest2/issues/328)).
 
 ## shinytest2 0.4.1
 
