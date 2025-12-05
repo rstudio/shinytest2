@@ -72,6 +72,14 @@ Url <- R6Class(
         .var.name = "url scheme"
       )
 
+      # Legacy curl behavior: missing path is "/";
+      # Tested:
+      # * Broken in {curl} v5.2.1; path is `NULL`
+      # * Work with {curl} v7; path is `/`
+      if (is.null(res$path)) {
+        res$path <- "/"
+      }
+
       if (!is.null(res$port)) {
         res$port <- as.integer(res$port)
         ckm8_assert_single_integer(res$port, .var.name = "url port")
