@@ -27,7 +27,7 @@
 
 * Fixed internal bug where `{testthat}` v3.3.0 changed expectation behavior for screenshot snapshots within `App$expect_values()` (#418).
 
-* Migrated from `{httr}` to `{httr2}` for all HTTP requests made by `{shinytest2}` (#420).
+* Migrated from `{httr}` to `{httr2}` for all HTTP requests made by `{shinytest2}` (#420, #428).
 
 * `record_test()` gained a new parameter `record_in_package=`. If `TRUE` and if the current working directory is within a package, the test file will be saved to the package's `tests/testthat/` directory. If `FALSE`, the test file will be saved to the app's `tests/testthat/` directory (#328).
 
