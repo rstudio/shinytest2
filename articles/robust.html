@@ -156,29 +156,29 @@ same test block:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># File: tests/testthat/test-add_abs-bad.R</span></span>
 <span></span>
-<span><span class="fu">test_that</span><span class="op">(</span><span class="st">"add_abs() works"</span>, <span class="op">{</span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"add_abs() works"</span>, <span class="op">{</span></span>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">info</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span>  <span class="fl">50</span>, y <span class="op">=</span>  <span class="fl">42</span>, expected <span class="op">=</span>  <span class="fl">92</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">-</span><span class="fl">50</span>, y <span class="op">=</span>  <span class="fl">42</span>, expected <span class="op">=</span>  <span class="fl">8</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span>  <span class="fl">50</span>, y <span class="op">=</span> <span class="op">-</span><span class="fl">42</span>, expected <span class="op">=</span>  <span class="fl">8</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">-</span><span class="fl">50</span>, y <span class="op">=</span> <span class="op">-</span><span class="fl">42</span>, expected <span class="op">=</span>  <span class="fl">92</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu">expect_equal</span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span></span>
 <span>      <span class="fu">add_abs</span><span class="op">(</span><span class="va">info</span><span class="op">$</span><span class="va">x</span>, <span class="va">info</span><span class="op">$</span><span class="va">y</span><span class="op">)</span>,</span>
 <span>      <span class="va">info</span><span class="op">$</span><span class="va">expected</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span></span>
-<span>  <span class="fu">expect_equal</span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span>, <span class="cn">NA</span><span class="op">)</span></span>
-<span>  <span class="fu">expect_equal</span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="cn">NULL</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu">expect_error</span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"string"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span>, <span class="cn">NA</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="cn">NULL</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/expect_error.html" class="external-link">expect_error</a></span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"string"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <p>However, it’s better to break them out into two separate tests, each
 with their own descriptive title.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># File: tests/testthat/test-add_abs-better.R</span></span>
 <span></span>
-<span><span class="fu">test_that</span><span class="op">(</span><span class="st">"add_abs() adds two numbers"</span>, <span class="op">{</span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"add_abs() adds two numbers"</span>, <span class="op">{</span></span>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">info</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span>  <span class="fl">50</span>, y <span class="op">=</span>  <span class="fl">42</span>, expected <span class="op">=</span>  <span class="fl">92</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">-</span><span class="fl">50</span>, y <span class="op">=</span>  <span class="fl">42</span>, expected <span class="op">=</span>  <span class="fl">8</span><span class="op">)</span>,</span>
@@ -186,17 +186,17 @@ with their own descriptive title.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span>  <span class="fl">50</span>, y <span class="op">=</span> <span class="op">-</span><span class="fl">42</span>, expected <span class="op">=</span>  <span class="op">-</span><span class="fl">8</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">-</span><span class="fl">50</span>, y <span class="op">=</span> <span class="op">-</span><span class="fl">42</span>, expected <span class="op">=</span>  <span class="fl">92</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu">expect_equal</span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span></span>
 <span>      <span class="fu">add_abs</span><span class="op">(</span><span class="va">info</span><span class="op">$</span><span class="va">x</span>, <span class="va">info</span><span class="op">$</span><span class="va">y</span><span class="op">)</span>,</span>
 <span>      <span class="va">info</span><span class="op">$</span><span class="va">expected</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">test_that</span><span class="op">(</span><span class="st">"add_abs() handles non-numeric input"</span>, <span class="op">{</span></span>
-<span>  <span class="fu">expect_equal</span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span>, <span class="cn">NA</span><span class="op">)</span></span>
-<span>  <span class="fu">expect_equal</span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="cn">NULL</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu">expect_error</span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"string"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"add_abs() handles non-numeric input"</span>, <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span>, <span class="cn">NA</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="cn">NULL</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/expect_error.html" class="external-link">expect_error</a></span><span class="op">(</span><span class="fu">add_abs</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"string"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <p><a href="https://testthat.r-lib.org" class="external-link">testthat</a> does a great job of displaying output to the
 user when thing go wrong. When the first test goes wrong, an error will
@@ -213,7 +213,7 @@ more context about which test failed.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># File: tests/testthat/test-add_abs-label.R</span></span>
 <span></span>
-<span><span class="fu">test_that</span><span class="op">(</span><span class="st">"add_abs() adds two numbers"</span>, <span class="op">{</span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"add_abs() adds two numbers"</span>, <span class="op">{</span></span>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">info</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span>  <span class="fl">50</span>, y <span class="op">=</span>  <span class="fl">42</span>, expected <span class="op">=</span>  <span class="fl">92</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">-</span><span class="fl">50</span>, y <span class="op">=</span>  <span class="fl">42</span>, expected <span class="op">=</span>  <span class="fl">8</span><span class="op">)</span>,</span>
@@ -221,7 +221,7 @@ more context about which test failed.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span>  <span class="fl">50</span>, y <span class="op">=</span> <span class="op">-</span><span class="fl">42</span>, expected <span class="op">=</span>  <span class="op">-</span><span class="fl">8</span><span class="op">)</span>, <span class="co"># &lt;- Failing line</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">-</span><span class="fl">50</span>, y <span class="op">=</span> <span class="op">-</span><span class="fl">42</span>, expected <span class="op">=</span>  <span class="fl">92</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu">expect_equal</span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span></span>
 <span>      <span class="fu">add_abs</span><span class="op">(</span><span class="va">info</span><span class="op">$</span><span class="va">x</span>, <span class="va">info</span><span class="op">$</span><span class="va">y</span><span class="op">)</span>,</span>
 <span>      <span class="va">info</span><span class="op">$</span><span class="va">expected</span>,</span>
 <span>      label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"x:"</span>, <span class="va">info</span><span class="op">$</span><span class="va">x</span>, <span class="st">"; y:"</span>, <span class="va">info</span><span class="op">$</span><span class="va">y</span><span class="op">)</span>,</span>
@@ -247,8 +247,8 @@ give the test a custom name:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span>  <span class="fl">50</span>, y <span class="op">=</span> <span class="op">-</span><span class="fl">42</span>, expected <span class="op">=</span>  <span class="op">-</span><span class="fl">8</span><span class="op">)</span>, <span class="co"># &lt;- Failing line</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">-</span><span class="fl">50</span>, y <span class="op">=</span> <span class="op">-</span><span class="fl">42</span>, expected <span class="op">=</span>  <span class="fl">92</span><span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">test_that</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"add_abs() adds two numbers: ["</span>, <span class="va">info</span><span class="op">$</span><span class="va">x</span>, <span class="st">", "</span>, <span class="va">info</span><span class="op">$</span><span class="va">y</span>, <span class="st">"]"</span><span class="op">)</span>, <span class="op">{</span></span>
-<span>    <span class="fu">expect_equal</span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"add_abs() adds two numbers: ["</span>, <span class="va">info</span><span class="op">$</span><span class="va">x</span>, <span class="st">", "</span>, <span class="va">info</span><span class="op">$</span><span class="va">y</span>, <span class="st">"]"</span><span class="op">)</span>, <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span></span>
 <span>      <span class="fu">add_abs</span><span class="op">(</span><span class="va">info</span><span class="op">$</span><span class="va">x</span>, <span class="va">info</span><span class="op">$</span><span class="va">y</span><span class="op">)</span>,</span>
 <span>      <span class="va">info</span><span class="op">$</span><span class="va">expected</span></span>
 <span>    <span class="op">)</span></span>
@@ -551,7 +551,7 @@ static values. For example, instead of testing the initial value of
 <span><span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span>export <span class="op">=</span> <span class="st">"dt"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Manual expectation code</span></span>
-<span><span class="fu">expect_equal</span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span></span>
 <span>  <span class="va">app</span><span class="op">$</span><span class="fu">get_value</span><span class="op">(</span>export <span class="op">=</span> <span class="st">"dt"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cars</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>

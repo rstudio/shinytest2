@@ -1,5 +1,6 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://rstudio.github.io/shinytest2/404.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/CLAUDE.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/LICENSE-text.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/LICENSE.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/articles/in-depth.html</loc></url>
@@ -13,6 +14,7 @@
 <url><loc>https://rstudio.github.io/shinytest2/articles/z-migration.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/articles/zzz-faq.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/authors.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/copilot-instructions.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/index.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/news/index.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/reference/AppDriver.html</loc></url>

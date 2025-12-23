@@ -87,7 +87,7 @@ is not the only way. You can create and edit test scripts manually.</p>
 <p>The final product would look something like:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># File: ./tests/testthat/test-shinytest2.R</span></span>
-<span><span class="fu">test_that</span><span class="op">(</span><span class="st">"App initialization is consistent"</span>, <span class="op">{</span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"App initialization is consistent"</span>, <span class="op">{</span></span>
 <span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span></span>
@@ -396,10 +396,10 @@ testing. For example, we could retrieve the <code>checkbox_out</code>
 value and compare it to a known string:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vals</span> <span class="op">&lt;-</span> <span class="va">app</span><span class="op">$</span><span class="fu">get_values</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu">expect_identical</span><span class="op">(</span><span class="va">vals</span><span class="op">$</span><span class="va">output</span><span class="op">$</span><span class="va">checkbox_out</span>, <span class="st">"[1] TRUE"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_identical</a></span><span class="op">(</span><span class="va">vals</span><span class="op">$</span><span class="va">output</span><span class="op">$</span><span class="va">checkbox_out</span>, <span class="st">"[1] TRUE"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Or in a single line:</span></span>
-<span><span class="fu">expect_identical</span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="fu">get_value</span><span class="op">(</span>output <span class="op">=</span> <span class="st">"checkbox_out"</span><span class="op">)</span>, <span class="st">"[1] TRUE"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_identical</a></span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="fu">get_value</span><span class="op">(</span>output <span class="op">=</span> <span class="st">"checkbox_out"</span><span class="op">)</span>, <span class="st">"[1] TRUE"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="wait-for-value">Waiting for an <code>input</code> (or <code>output</code>)
@@ -470,7 +470,7 @@ down <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> testing to h
 application is in a stable state.</p>
 <p><strong><code>./tests/testthat/test-use-sleep-bad.R</code>:</strong></p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">test_that</span><span class="op">(</span><span class="st">"Sleeping can work to wait for an app to stabilize"</span>, <span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"Sleeping can work to wait for an app to stabilize"</span>, <span class="op">{</span></span>
 <span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="co"># Check the box to display the slider and plot</span></span>
@@ -496,7 +496,7 @@ specific input value to not be an <code>ignore</code>ed value. This
 method is very specific and requires more logic to code.</p>
 <p><strong><code>./tests/testthat/test-wait-good.R</code>:</strong></p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">test_that</span><span class="op">(</span><span class="st">"Use $wait_for_idle() for app to stabilize"</span>, <span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"Use $wait_for_idle() for app to stabilize"</span>, <span class="op">{</span></span>
 <span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="co"># Check the box to display the slider and plot</span></span>
@@ -517,7 +517,7 @@ method is very specific and requires more logic to code.</p>
 <span>  <span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">test_that</span><span class="op">(</span><span class="st">"Use $wait_for_value() for app to stabilize"</span>, <span class="op">{</span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"Use $wait_for_value() for app to stabilize"</span>, <span class="op">{</span></span>
 <span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="co"># Check the box to display the slider and plot</span></span>
