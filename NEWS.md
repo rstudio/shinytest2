@@ -59,8 +59,9 @@
   directory. If `record_in_package = FALSE`, the test file is saved relative to
   the app's `tests/testthat/` directory (#328).
 
-* `{shinytest2}` now uses `{httr2}` instead of `{httr}` for all HTTP requests
-  (#420).
+* Migrated from `{httr}` to `{httr2}` for all HTTP requests made by
+  `{shinytest2}` (#420, #428).
+
 
 # shinytest2 0.4.1
 

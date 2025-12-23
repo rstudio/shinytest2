@@ -14,7 +14,7 @@ expr_recurse <- function(expr, post_fn) {
     ) {
       return(expr)
     }
-    for (i in seq_len(length(expr_list))) {
+    for (i in seq_along(expr_list)) {
       val <- expr_recurse_(expr_list[[i]], post_fn, is_top_level = FALSE)
       # Handle rlang::missing() arguments
       if (rlang::is_missing(val)) {
