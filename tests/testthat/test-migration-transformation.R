@@ -1,3 +1,5 @@
+skip_if_not_installed("shinytest")
+
 expect_msg_helper <- function(expr, message, fixed, expect_fn, ...) {
   if (is.na(message)) {
     if (interactive()) {
@@ -52,10 +54,10 @@ expect_migration_error <- function(
 ) {
   expect_msg_helper(
     # migrated_expr <-
-      m__shinytest_lang(
-        rlang::enexpr(original_expr),
-        info_env
-      ),
+    m__shinytest_lang(
+      rlang::enexpr(original_expr),
+      info_env
+    ),
     message = message,
     fixed = fixed,
     expect_fn = testthat::expect_error
@@ -63,7 +65,6 @@ expect_migration_error <- function(
 
   invisible(info_env)
 }
-
 
 
 test_that("setInputs is converted", {
@@ -137,7 +138,6 @@ test_that("click is converted", {
 })
 
 
-
 test_that("executeScript is converted", {
   expect_migration(
     app$executeScript("1 + 1"),
@@ -145,7 +145,10 @@ test_that("executeScript is converted", {
   )
   expect_migration(
     app$executeScript("1 + 1", x = 1, y = 2),
-    app$get_js(script = "let arguments_ = {\"x\":1,\"y\":2};\n1 + 1", timeout = 10000)
+    app$get_js(
+      script = "let arguments_ = {\"x\":1,\"y\":2};\n1 + 1",
+      timeout = 10000
+    )
   )
 })
 
@@ -470,7 +473,12 @@ test_that("takeScreenshot is converted", {
   )
 
   expect_migration(
-    app$uploadFile(timeout_ = 2, myid = "file.png", wait_ = FALSE, values_ = FALSE),
+    app$uploadFile(
+      timeout_ = 2,
+      myid = "file.png",
+      wait_ = FALSE,
+      values_ = FALSE
+    ),
     app$upload_file(myid = "file.png", wait_ = FALSE, timeout_ = 2)
   )
 })
@@ -495,7 +503,12 @@ test_that("waitForShiny is converted", {
 test_that("waitForValue is converted", {
   expect_migration(
     app$waitForValue(myname, ignore = foo(), timeout = 2, checkInterval = 3),
-    app$wait_for_value(input = myname, ignore = foo(), timeout = 2, interval = 3)
+    app$wait_for_value(
+      input = myname,
+      ignore = foo(),
+      timeout = 2,
+      interval = 3
+    )
   )
   expect_migration(
     app$waitForValue(myname, iotype = "output"),
@@ -544,7 +557,8 @@ test_that("snapshot is converted", {
     rlang::exprs(
       app$expect_values(),
       app$expect_screenshot()
-    ), enexpr_new_expr = FALSE
+    ),
+    enexpr_new_expr = FALSE
   )
   # Use a char
   expect_snapshot_migration(
@@ -552,7 +566,8 @@ test_that("snapshot is converted", {
     rlang::exprs(
       app$expect_values(output = "myoutput"),
       app$expect_screenshot()
-    ), enexpr_new_expr = FALSE
+    ),
+    enexpr_new_expr = FALSE
   )
   # Respect language
   expect_snapshot_migration(
@@ -560,7 +575,8 @@ test_that("snapshot is converted", {
     rlang::exprs(
       app$expect_values(output = myoutputvar),
       app$expect_screenshot()
-    ), enexpr_new_expr = FALSE
+    ),
+    enexpr_new_expr = FALSE
   )
   # Turn off expect_screenshot if compare_images is false
   expect_snapshot_migration(
