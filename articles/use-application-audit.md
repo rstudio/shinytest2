@@ -31,7 +31,7 @@ server <- function(input, output) {
   output$brussels <- renderPlot({
     y0 <- c(X = input$X, Y = input$Y)
     times <- seq(0, 1000, .01)
-    out <- ode(y0, times, van_der_pol, input$mu)
+    out <- deSolve::ode(y0, times, van_der_pol, input$mu)
     par(mfrow = c(1, 1))
     plot(out[, 2:3], type = "l", xlab = "X", ylab = "Y", main = "state diagram")
   })
