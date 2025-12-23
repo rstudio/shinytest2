@@ -21,7 +21,7 @@ URL: https://rstudio.github.io/shinytest2/,
     https://github.com/rstudio/shinytest2
 BugReports: https://github.com/rstudio/shinytest2/issues
 Depends:
-    testthat (>= 3.3.0)
+    testthat (>= 3.3.1)
 Imports:
     callr,
     checkmate (>= 2.0.0),

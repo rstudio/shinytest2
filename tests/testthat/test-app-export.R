@@ -1,3 +1,5 @@
+skip_if_not_installed("ggplot2")
+
 library(shiny)
 library(ggplot2)
 

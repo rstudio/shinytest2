@@ -10,4 +10,4 @@ inst/doc
 /doc/
 /Meta/
 CRAN-SUBMISSION
-.claude/*.local.json
+.claude/
