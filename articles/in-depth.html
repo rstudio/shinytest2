@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,7 @@
       <img src="../logo.svg" class="logo" alt=""><h1>Testing in depth</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/rstudio/shinytest2/blob/main/vignettes/in-depth.Rmd" class="external-link"><code>vignettes/in-depth.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/rstudio/shinytest2/blob/rc-v0.5.0/vignettes/in-depth.Rmd" class="external-link"><code>vignettes/in-depth.Rmd</code></a></small>
       <div class="d-none name"><code>in-depth.Rmd</code></div>
     </div>
 
@@ -240,7 +240,7 @@ reactive expression that would be convenient to capture.</p>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="images/screenshot-exports-app.png" class="r-plt" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images/screenshot-exports-app.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
 <p>Notice these lines:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
@@ -301,7 +301,7 @@ failures.</p>
 <p>To make such applications exactly repeatable, you can set the random
 seed. This can be done by specifying a random seed in the recorder. The
 seed can be any integer value.</p>
-<p><img src="images/screenshot-recorder-random-seed.png" class="r-plt" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images/screenshot-recorder-random-seed.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
 <p>If your test script has already been created, you can set the random
 seed by editing the test script so that the <code>AppDriver$new()</code>
 call has a value for <code>seed</code>. Moreover, if you need these

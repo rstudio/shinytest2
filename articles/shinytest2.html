@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">shinytest2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,7 @@
       <img src="../logo.svg" class="logo" alt=""><h1>Getting started with shinytest2</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/rstudio/shinytest2/blob/main/vignettes/shinytest2.Rmd" class="external-link"><code>vignettes/shinytest2.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/rstudio/shinytest2/blob/rc-v0.5.0/vignettes/shinytest2.Rmd" class="external-link"><code>vignettes/shinytest2.Rmd</code></a></small>
       <div class="d-none name"><code>shinytest2.Rmd</code></div>
     </div>
 
@@ -173,7 +173,7 @@ also launches a special Shiny application in the current R process which
 displays the target app in an iframe and has some controls outside the
 iframe. We’ll refer to this as the <strong>recorder app</strong>. You
 will see something like this:</p>
-<p><img src="images/record-simple-app.png" class="r-plt" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images/record-simple-app.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
 <p>On the left is the target app (in this case, the “What is your name”
 app), and on the right is the recorder app sidebar. Note that you may
 need to make the browser window wider because the recorder sidebar
@@ -195,7 +195,7 @@ this, click the <code>Expect Shiny values</code> button on the recorder
 app.</p>
 <p>After modifying some <code>input</code>s and making an expectation,
 it will look something like this:</p>
-<p><img src="images/record-simple-app-2.png" class="r-plt" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images/record-simple-app-2.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
 <p>It is also possible to take a <em>targeted</em> value expectation.
 This is a snapshot of one or more specified <code>output</code> (instead
 of the default, which is to snapshot the entire application). To do
@@ -345,7 +345,7 @@ application directory. (You may need to run
 <code>install.packages("diffviewer")</code> for
 <code><a href="https://testthat.r-lib.org/reference/snapshot_accept.html" class="external-link">testthat::snapshot_review()</a></code> to successfully execute.)</p>
 <p>It will look something like this:</p>
-<p><img src="images/diffviewer-1.png" class="r-plt" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images/diffviewer-1.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
 <p>After inspecting the changes, you can choose to update the expected
 results (that is, replace the old expected results with the new current
 results), or to just quit without updating.</p>
@@ -360,7 +360,7 @@ skip/quit without updating if the changes are unexpected.</p>
 <p>If you want to have more than one set of tests for an application,
 you can record new tests, each with a unique name. You can enter the
 name when recording your tests:</p>
-<p><img src="images/record-name.png" class="r-plt" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images/record-name.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
 <p>The saved test can be moved to a different testing file,
 e.g. <code>tests/testthat/test-simple-app.R</code>. When you run
 <code>test_app("path/to/app")</code>, it will run all the tests scripts
