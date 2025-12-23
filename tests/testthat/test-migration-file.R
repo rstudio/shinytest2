@@ -1,7 +1,13 @@
+skip_if_not_installed("shinytest")
+
 expect_text_migration <- function(original_txt, new_txt, ...) {
   info_env <- make_info_env(..., app_var = NULL) # nolint
   suppressMessages({
-    converted_text <- m__parse_test_text(original_txt, "test-migration-file", info_env)
+    converted_text <- m__parse_test_text(
+      original_txt,
+      "test-migration-file",
+      info_env
+    )
   })
   testthat::expect_equal(converted_text, new_txt)
   info_env
@@ -9,7 +15,7 @@ expect_text_migration <- function(original_txt, new_txt, ...) {
 
 test_that("file contents are converted", {
   info_env <- expect_text_migration(
-"
+    "
     # Comment
     1+ 1; 1 +1; 1+1;
 
@@ -36,7 +42,7 @@ test_that("file contents are converted", {
     app$setInputs(bins = app$getAllValues()$input$bins, values_ = FALSE)
     app$snapshot()
 ",
-"
+    "
     # Comment
     1+ 1; 1 +1; 1+1;
 
@@ -63,7 +69,6 @@ app$expect_values()",
 
 
 test_that("`$expect_screenshot()` only shows up when `compareImages == TRUE` and `screenshot == TRUE`", {
-
   # No suffix, compare_images = TRUE
   expect_text_migration(
     "app <- ShinyDriver$new(\"../..\"); app$snapshotInit(\"mytest\"); app$snapshot()",
@@ -86,13 +91,15 @@ test_that("`$expect_screenshot()` only shows up when `compareImages == TRUE` and
   expect_text_migration(
     "app <- ShinyDriver$new(\"custom/path\"); app$snapshot()",
     "app <- AppDriver$new(\"custom/path\")\napp$expect_values()",
-    suffix = NULL, compare_images = FALSE
+    suffix = NULL,
+    compare_images = FALSE
   )
 
   # compare_images = FALSE w/ screenshot = TRUE; compare_images wins
   expect_text_migration(
     "app <- ShinyDriver$new(\"../..\"); app$snapshotInit(\"mytest\", screenshot = TRUE); app$snapshot()",
     "app <- AppDriver$new()\napp$expect_values()",
-    suffix = NULL, compare_images = FALSE
+    suffix = NULL,
+    compare_images = FALSE
   )
 })

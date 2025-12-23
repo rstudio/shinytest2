@@ -13,9 +13,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-library(shinytest2)
-library(shiny)
-library(deSolve)
+# library(shinytest2)
+# library(shiny)
 ```
 
 # Audit Shiny apps with {shinytest2}
@@ -45,7 +44,7 @@ server <- function(input, output) {
   output$brussels <- renderPlot({
     y0 <- c(X = input$X, Y = input$Y)
     times <- seq(0, 1000, .01)
-    out <- ode(y0, times, van_der_pol, input$mu)
+    out <- deSolve::ode(y0, times, van_der_pol, input$mu)
     par(mfrow = c(1, 1))
     plot(out[, 2:3], type = "l", xlab = "X", ylab = "Y", main = "state diagram")
   })
@@ -144,7 +143,7 @@ recorder_bg <- function(port) {
 
 We can pass this to the `start_r_bg()` function:
 
-```r
+``` r
 start_r_bg <- function(fun, path = NULL, port = 3515) {
 
   # remove NULL elements

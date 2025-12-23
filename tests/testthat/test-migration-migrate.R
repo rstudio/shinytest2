@@ -1,6 +1,7 @@
 # Too many possibilities for tests to randomly fail (e.g. file paths on windows, etc.)
 # The other test files cover this fairly well. CI is good enough
 skip_on_cran()
+skip_if_not_installed("shinytest")
 
 
 expect_migration <- function(test_app_folder, ...) {
