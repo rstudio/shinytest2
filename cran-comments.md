@@ -1,26 +1,29 @@
 ## CRAN comments
 
-#### 2025-04-11
+#### 2026-01-11
 
-Critical bug to user interface fixed.
+Critical bug reported from testthat v3.3.0 update.
 
-I am sorry for the fast turn around.
+Larger features / bug fixes for the package.
 
 - Barret
 
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
-* checking CRAN incoming feasibility ... [11s] NOTE
-   Maintainer: 'Barret Schloerke <barret@posit.co>'
-
-   Days since last update: 1
 
 ## revdepcheck results
 
-We checked 54 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+We checked 76 reverse dependencies (69 from CRAN + 7 from Bioconductor), comparing R CMD check results across CRAN and dev versions of this package.
 
  * We saw 0 new problems
- * We failed to check 0 packages
+ * We failed to check 2 packages
+
+Issues with CRAN packages are summarised below.
+
+### Failed to check
+
+* blockr.dag    (NA)
+* shiny.destroy (NA)
