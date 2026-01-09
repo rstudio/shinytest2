@@ -1,6 +1,6 @@
 ## CRAN comments
 
-#### 2025-04-11
+#### 2026-01-11
 
 Critical bug reported from testthat v3.3.0 update.
 
