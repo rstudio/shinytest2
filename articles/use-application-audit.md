@@ -21,6 +21,7 @@ systems need a much smaller time step than classic systems, thereby
 requiring more time to solve:
 
 ``` r
+
 van_der_pol <- function(t, y, mu) {
   d_x <- y[2]
   d_y <- mu * (1 - y[1]^2) * y[2] - y[1]
@@ -122,6 +123,7 @@ located at `path` on a specific port and run the load test recorder on
 the same port:
 
 ``` r
+
 # Main shiny app
 shiny_bg <- function(path, port) {
   options(shiny.port = port)
@@ -143,6 +145,7 @@ recorder_bg <- function(port) {
 We can pass this to the `start_r_bg()` function:
 
 ``` r
+
 start_r_bg <- function(fun, path = NULL, port = 3515) {
 
   # remove NULL elements
@@ -175,6 +178,7 @@ Besides, we provide some log elements and safety guard in case the app
 can’t start. To launch the app and recorder we can call:
 
 ``` r
+
 target <- start_r_bg(shiny_bg, path = system.file("vig-apps/non-optimized-app/", package = "shinytest2"))
 # Listening on 127.0.0.1:3515
 recorder <- start_r_bg(recorder_bg)
@@ -195,6 +199,7 @@ help us avoid producing this annoying
     Shiny app did not become stable in 10000ms.
 
 ``` r
+
 # Start AppDriver with recorder url
 chrome <- shinytest2::AppDriver$new("http://127.0.0.1:8600", load_timeout = 15 * 1000)
 ```
@@ -214,6 +219,7 @@ message in the R console. We then change the `mu` parameter input
 without forgetting the timeout:
 
 ``` r
+
 app$set_inputs(mu = 4, timeout_ = 15 * 1000)
 ```
 
@@ -254,6 +260,7 @@ Once satisfied, we may close the headless connection to stop the
 recorder:
 
 ``` r
+
 # clean
 app$stop()
 # needed to avoid
@@ -268,6 +275,7 @@ If you remember, the final step consists of replaying the main session
 in parallel. We start `shinycannon` with 5 workers and wait:
 
 ``` r
+
 target_url <- "http://127.0.0.1:3515"
 workers <- 5
 system(
@@ -295,6 +303,7 @@ restart R, cleanup everything and start again.
 The report generation is quite straightforward:
 
 ``` r
+
 # Close the running app
 target$kill()
 
@@ -318,6 +327,7 @@ Now, it is time to integrate the current pipeline in a CI/CD workflow.
 For convenience, we wrap all the previous steps in a single function:
 
 ``` r
+
 ## File: R/audit-app.R
 record_loadtest <- function(path, timeout = 15, workers = 5) {
   message("\n---- BEGIN LOAD-TEST ---- \n")
@@ -440,6 +450,7 @@ If you want to test it on your end, below are lines of code to setup a
 RStudio project and link it to GitHub:
 
 ``` r
+
 # Inside the project
 # Use audit GitHub Actions workflow
 usethis::use_github_action(url = "https://raw.githubusercontent.com/rstudio/shinytest2/main/inst/gha/app-audit.yaml")
@@ -468,6 +479,7 @@ which will avoid unnecessary warnings during any future
 `devtools::check()`:
 
 ``` r
+
 usethis::use_build_ignore(c("public", "recording.log"))
 ```
 

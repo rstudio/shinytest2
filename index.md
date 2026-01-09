@@ -23,6 +23,7 @@ bugs and more confidence in future Shiny application development.
 ## Installation
 
 ``` r
+
 # Install the released version from CRAN
 install.packages("shinytest2")
 

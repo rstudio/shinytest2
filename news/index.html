@@ -154,37 +154,37 @@
 <div class="section level4">
 <h4 id="timeout-values-0-2-0">Timeout values<a class="anchor" aria-label="anchor" href="#timeout-values-0-2-0"></a></h4>
 <p>The <strong>default</strong> timeout values for many <code>AppDriver</code> methods have been altered and are shown in the table below. (<a href="https://github.com/rstudio/shinytest2/issues/263" class="external-link">#263</a>)</p>
-<table class="table"><thead><tr class="header"><th>Method</th>
+<table class="table"><thead><tr><th>Method</th>
 <th align="right">Previous value (ms)</th>
 <th align="right">New value (ms)</th>
-</tr></thead><tbody><tr class="odd"><td><code>AppDriver$new(load_timeout=)</code></td>
+</tr></thead><tbody><tr><td><code>AppDriver$new(load_timeout=)</code></td>
 <td align="right"><code>10 * 1000</code></td>
 <td align="right"><code>15 * 1000</code></td>
-</tr><tr class="even"><td><code>AppDriver$set_inputs(timeout_=)</code></td>
+</tr><tr><td><code>AppDriver$set_inputs(timeout_=)</code></td>
 <td align="right"><code>3 * 1000</code></td>
 <td align="right"><code>4 * 1000</code></td>
-</tr><tr class="odd"><td><code>AppDriver$upload_file(timeout_=)</code></td>
+</tr><tr><td><code>AppDriver$upload_file(timeout_=)</code></td>
 <td align="right"><code>3 * 1000</code></td>
 <td align="right"><code>4 * 1000</code></td>
-</tr><tr class="even"><td><code>AppDriver$expect_js(timeout=)</code></td>
+</tr><tr><td><code>AppDriver$expect_js(timeout=)</code></td>
 <td align="right"><code>15 * 1000</code></td>
 <td align="right"><code>4 * 1000</code></td>
-</tr><tr class="odd"><td><code>AppDriver$get_js(timeout=)</code></td>
+</tr><tr><td><code>AppDriver$get_js(timeout=)</code></td>
 <td align="right"><code>15 * 1000</code></td>
 <td align="right"><code>4 * 1000</code></td>
-</tr><tr class="even"><td><code>AppDriver$run_js(timeout=)</code></td>
+</tr><tr><td><code>AppDriver$run_js(timeout=)</code></td>
 <td align="right"><code>15 * 1000</code></td>
 <td align="right"><code>4 * 1000</code></td>
-</tr><tr class="odd"><td><code>AppDriver$wait_for_idle(timeout=)</code></td>
+</tr><tr><td><code>AppDriver$wait_for_idle(timeout=)</code></td>
 <td align="right"><code>30 * 1000</code></td>
 <td align="right"><code>4 * 1000</code></td>
-</tr><tr class="even"><td><code>AppDriver$wait_for_value(timeout=)</code></td>
+</tr><tr><td><code>AppDriver$wait_for_value(timeout=)</code></td>
 <td align="right"><code>15 * 1000</code></td>
 <td align="right"><code>4 * 1000</code></td>
-</tr><tr class="odd"><td><code>AppDriver$wait_for_js(timeout=)</code></td>
+</tr><tr><td><code>AppDriver$wait_for_js(timeout=)</code></td>
 <td align="right"><code>30 * 1000</code></td>
 <td align="right"><code>4 * 1000</code></td>
-</tr><tr class="even"><td><code>AppDriver$stop(signal_timeout=)</code></td>
+</tr><tr><td><code>AppDriver$stop(signal_timeout=)</code></td>
 <td align="right"><code>250</code></td>
 <td align="right"><code>500</code></td>
 </tr></tbody></table><p><code>AppDriver$new(load_timeout=)</code> is initialized using the first numeric value found: 1. Supplied directly: <code>AppDriver$new(load_timeout=)</code> 2. Locally defined option: <code>options(shinytest2.load_timeout=)</code> 3. System environment variable: <code>SHINYTEST2_LOAD_TIMEOUT</code> 4. <code>15 * 1000</code> (15s)</p>

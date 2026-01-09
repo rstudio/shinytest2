@@ -46,6 +46,7 @@ Begin by installing [shinytest2](https://rstudio.github.io/shinytest2/)
 from CRAN:
 
 ``` r
+
 install.packages("shinytest2")
 ```
 
@@ -75,6 +76,7 @@ To record tests, we first need an app.
 Here is a simple app that I’ve placed in `simple-app/app.R`:
 
 ``` r
+
 library(shiny)
 ui <- fluidPage(
   textInput("name", "What is your name?"),
@@ -95,6 +97,7 @@ To test it, I now load {shinytest2}, and call
 with the path to my app:
 
 ``` r
+
 library(shinytest2)
 record_test("simple-app/")
 ```
@@ -145,6 +148,7 @@ the test script `tests/testthat/test-shinytest2.R` from a subdirectory
 of the application.
 
 ``` r
+
 # File: tests/testthat/test-shinytest2.R
 library(shinytest2)
 
@@ -201,6 +205,7 @@ Behind the scenes, it runs
 You can manually run the tests with this:
 
 ``` r
+
 test_app("simple-app", filter = "shinytest2")
 ```
 
@@ -372,6 +377,7 @@ You can remove these files by adding this to the end of your test script
 (assuming the name of your document is `doc.Rmd`):
 
 ``` r
+
 rmarkdown::shiny_prerendered_clean("../doc.Rmd")
 ```
 

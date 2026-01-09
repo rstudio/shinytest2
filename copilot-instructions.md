@@ -103,6 +103,7 @@ R -e "rmarkdown::render('vignettes/shinytest2.Rmd')"
 1.  **Basic Package Loading**: Verify the package loads without errors
 
     ``` r
+
     library(shinytest2)
     # Should load successfully with all dependencies
     ```
@@ -110,6 +111,7 @@ R -e "rmarkdown::render('vignettes/shinytest2.Rmd')"
 2.  **Chrome Availability**: Check that Chrome/Chromium is accessible
 
     ``` r
+
     chromote::has_chrome()
     # Should return TRUE
     ```
@@ -117,6 +119,7 @@ R -e "rmarkdown::render('vignettes/shinytest2.Rmd')"
 3.  **Basic AppDriver Creation**: Test with a simple Shiny app
 
     ``` r
+
     library(shiny)
     app <- shinyApp(ui = fluidPage(h1("Test")), server = function(input, output) {})
     driver <- AppDriver$new(app)
@@ -126,6 +129,7 @@ R -e "rmarkdown::render('vignettes/shinytest2.Rmd')"
 4.  **Integration Testing**: Verify core dependencies work together
 
     ``` r
+
     library(shinytest2)
     library(chromote)
     library(callr)
@@ -269,6 +273,7 @@ R -e "devtools::build_vignettes()"
 ### Screenshot Testing:
 
 ``` r
+
 # Use platform variant for cross-platform testing
 app <- AppDriver$new(app_path, variant = platform_variant())
 app$expect_screenshot()
@@ -285,6 +290,7 @@ app$expect_screenshot(threshold = 10, kernel_size = 5)
   `sudo apt-get install chromium-browser` or let chromote download it
 
   ``` r
+
   chromote::has_chrome()  # Check if Chrome is available
   ```
 

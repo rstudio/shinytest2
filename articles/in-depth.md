@@ -8,6 +8,7 @@ not the only way. You can create and edit test scripts manually.
 The final product would look something like:
 
 ``` r
+
 # File: ./tests/testthat/test-shinytest2.R
 test_that("App initialization is consistent", {
   app <- AppDriver$new()
@@ -22,6 +23,7 @@ initialization, then the expectations are performed.
 In the initialization, the script creates a new `AppDriver` object.
 
 ``` r
+
 app <- AppDriver$new()
 ```
 
@@ -29,6 +31,7 @@ Next, define some interactions with the application and makes
 expectations via snapshots.
 
 ``` r
+
 app$set_inputs(check_group = c("1", "2"))
 app$set_inputs(check_group = c("1", "2", "3"))
 app$click("action")
@@ -47,6 +50,7 @@ With `app$set_inputs()`, you provide the name of one or more inputs and
 corresponding values to set them to. Consider this set of directives:
 
 ``` r
+
 app$set_inputs(check_group = c("1", "2"))
 app$set_inputs(check_group = c("1", "2", "3"))
 app$click("action")
@@ -62,6 +66,7 @@ It is possible to simplify and speed up the tests by dropping the
 intermediate step, which leaves us with this:
 
 ``` r
+
 app$set_inputs(check_group = c("1", "2", "3"))
 app$click("action")
 ```
@@ -100,6 +105,7 @@ There are few ways to use `app$expect_values()`. The simplest way is to
 call it with no arguments:
 
 ``` r
+
 app$expect_values()
 ```
 
@@ -116,6 +122,7 @@ to save space and make the tests run slightly faster, in the
 initialization step, with:
 
 ``` r
+
 app <- AppDriver$new(expect_values_screenshot_args = FALSE)
 ```
 
@@ -123,6 +130,7 @@ If you want to disable screenshots for a single `app$expect_values()`
 call, you can use:
 
 ``` r
+
 app$expect_values(screenshot_args = FALSE)
 ```
 
@@ -132,12 +140,14 @@ capture the value of just the outputs named `"a"` and `"b"`, you would
 call:
 
 ``` r
+
 app$expect_values(output = c("a", "b"))
 ```
 
 You could also capture specific inputs or exports:
 
 ``` r
+
 app$expect_values(
   input = "n",
   output = c("a", "b"),
@@ -150,6 +160,7 @@ you can simply set `output` to `TRUE` as only values that are requested
 are recorded:
 
 ``` r
+
 app$expect_values(output = TRUE)
 ```
 
@@ -157,6 +168,7 @@ The same can be used to snapshot all `input` and/or all `export` values.
 To capture all `output` and `export` values, but no `input` values:
 
 ``` r
+
 app$expect_values(output = TRUE, export = TRUE)
 ```
 
@@ -170,6 +182,7 @@ Consider this toy example where an application has an internal reactive
 expression that would be convenient to capture.
 
 ``` r
+
 shinyApp(
   fluidPage(
     numericInput("x", "x", 4),
@@ -202,6 +215,7 @@ shinyApp(
 Notice these lines:
 
 ``` r
+
     exportTestValues(
       xy = {
         xy()
@@ -248,6 +262,7 @@ steps (e.g. waiting for CSS animations). You can do this by adding
 For example:
 
 ``` r
+
 Sys.sleep(0.5)
 ```
 
@@ -282,6 +297,7 @@ and 3.6), you may want to set a fixed
 remedy this situation.
 
 ``` r
+
 app <- AppDriver$new(seed = 4323)
 ```
 
@@ -301,12 +317,14 @@ track of which tab is currently selected, they must have an `id`. For
 example:
 
 ``` r
+
 tabsetPanel(id = "tabs", ....)
 ```
 
 or
 
 ``` r
+
 navbarPage(id = "tabs", ....)
 ```
 
@@ -316,6 +334,7 @@ If you record a file upload event to a `fileInput`, the test script will
 have a line like this:
 
 ``` r
+
 app$uploadFile(file1 = "mtcars.csv")
 ```
 
@@ -360,6 +379,7 @@ with the [`str()`](https://rdrr.io/r/utils/str.html) function. It may
 look something like this:
 
 ``` r
+
 vals <- app$get_values()
 
 str(vals)
@@ -382,6 +402,7 @@ For example, we could retrieve the `checkbox_out` value and compare it
 to a known string:
 
 ``` r
+
 vals <- app$get_values()
 expect_identical(vals$output$checkbox_out, "[1] TRUE")
 
@@ -419,6 +440,7 @@ To dig into this further, we can look at this situation’s example code:
 **`app.R`:**
 
 ``` r
+
 library(shiny)
 
 ui <- fluidPage(
@@ -461,6 +483,7 @@ hope that the Shiny application is in a stable state.
 **`./tests/testthat/test-use-sleep-bad.R`:**
 
 ``` r
+
 test_that("Sleeping can work to wait for an app to stabilize", {
   app <- AppDriver$new()
 
@@ -491,6 +514,7 @@ to code.
 **`./tests/testthat/test-wait-good.R`:**
 
 ``` r
+
 test_that("Use $wait_for_idle() for app to stabilize", {
   app <- AppDriver$new()
 
@@ -546,6 +570,7 @@ tested, and in that case use a static data set instead. To do the
 detection, you can do something like the following:
 
 ``` r
+
 if (isTRUE(getOption("shiny.testmode"))) {
   # Load static/dummy data here
 } else {
@@ -597,6 +622,7 @@ To set these unbound inputs, the resulting test script code will look
 something like this:
 
 ``` r
+
 app$set_inputs(table_rows_selected = 1, allow_no_input_binding_ = TRUE)
 app$set_inputs(table_row_last_clicked = 1, allow_no_input_binding_ = TRUE)
 ```
@@ -622,6 +648,7 @@ response to a single user event, it may make sense to coalesce them into
 a single `set_inputs` call, such as this:
 
 ``` r
+
 app$set_inputs(
   table_rows_selected = 1,
   table_row_last_clicked = 1,
@@ -640,6 +667,7 @@ construct a list outside of set_inputs() and use it to set the input
 values.
 
 ``` r
+
 # helper function that wraps `set_inputs`, with  the default value for the 'dataset' component
 update_dataset <- function(app, value, component_id = "dataset") {
   checkmate::assert_choice(value, c("rock", "pressure", "cars"))

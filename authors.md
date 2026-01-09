@@ -24,13 +24,13 @@
 Source:
 [`DESCRIPTION`](https://github.com/rstudio/shinytest2/blob/rc-v0.5.0/DESCRIPTION)
 
-Schloerke B (2025). *shinytest2: Testing for Shiny Applications*. R
+Schloerke B (2026). *shinytest2: Testing for Shiny Applications*. R
 package version 0.5.0, <https://rstudio.github.io/shinytest2/>.
 
     @Manual{,
       title = {shinytest2: Testing for Shiny Applications},
       author = {Barret Schloerke},
-      year = {2025},
+      year = {2026},
       note = {R package version 0.5.0},
       url = {https://rstudio.github.io/shinytest2/},
     }

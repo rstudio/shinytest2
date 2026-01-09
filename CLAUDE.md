@@ -60,6 +60,7 @@ It integrates with testthat for snapshot-based testing of Shiny apps.
 ### Running Tests
 
 ``` r
+
 # Run all package tests
 devtools::test()
 
@@ -73,6 +74,7 @@ devtools::test(filter = "screenshot")
 ### Building the Package
 
 ``` r
+
 # Load package for development
 devtools::load_all()
 
@@ -89,6 +91,7 @@ pkgdown::build_site()
 ### Testing During Development
 
 ``` r
+
 # Create an AppDriver for interactive testing
 library(shinytest2)
 app <- AppDriver$new("path/to/app")
@@ -104,6 +107,7 @@ The package includes C++ code (in src/) compiled via cpp11. After
 modifying C++ code:
 
 ``` r
+
 # Rebuild and reload package
 devtools::load_all()
 ```

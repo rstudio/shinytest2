@@ -77,6 +77,7 @@ application. You can easily set up this action in your repo with help
 from the [usethis package](https://usethis.r-lib.org):
 
 ``` r
+
 usethis::use_github_action(
   url = "https://github.com/rstudio/shinytest2/raw/main/actions/test-app/example-test-app-renv.yaml",
   save_as = "check-app.yaml"
@@ -147,11 +148,11 @@ is[`renv::init()`](https://rstudio.github.io/renv/reference/init.html)
 and
 [`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html).
 
-| File              | Usage                                                                                                |
-|:------------------|:-----------------------------------------------------------------------------------------------------|
-| `.Rprofile`       | Used to activate [renv](https://rstudio.github.io/renv/) for new R sessions launched in the project. |
-| `renv.lock`       | The lockfile, describing the state of your project’s library at some point in time.                  |
-| `renv/activate.R` | The activation script run by the project `.Rprofile`.                                                |
+| File | Usage |
+|:---|:---|
+| `.Rprofile` | Used to activate [renv](https://rstudio.github.io/renv/) for new R sessions launched in the project. |
+| `renv.lock` | The lockfile, describing the state of your project’s library at some point in time. |
+| `renv/activate.R` | The activation script run by the project `.Rprofile`. |
 
 To create `.Rprofile` and `renv/activate.R`, call
 [`renv::init()`](https://rstudio.github.io/renv/reference/init.html)

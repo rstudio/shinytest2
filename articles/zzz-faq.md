@@ -45,6 +45,7 @@ when it’s being tested. To detect when it’s being tested, you can use
 `isTRUE(getOption("shiny.testmode"))`, as in:
 
 ``` r
+
 if (isTRUE(getOption("shiny.testmode"))) {
    # Do something special here
 }
@@ -106,6 +107,7 @@ component. It is also possible for an application author to modify a
 renderer with something like the following:
 
 ``` r
+
 shinyApp(
   ui = fluidPage(
     verbatimTextOutput("random")
@@ -166,6 +168,7 @@ example](https://github.com/rstudio/shinytest2/tree/v0.2.0/tests/testthat/apps/d
 File: `tests/testthat//test-bookmark.R`
 
 ``` r
+
 test_that("Bookmark works", {
   # Start local app in the background in test mode
   bg_app <- shinytest2::AppDriver$new("path/to/shiny/app")

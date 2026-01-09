@@ -19,6 +19,7 @@ to be valid. 🦆
 Let’s look at a quick example of:
 
 ``` r
+
 add_abs <- function(x, y) {
   abs(x + y)
 }
@@ -30,6 +31,7 @@ If we only test positive numbers, then we can guess the answer using
 `+`.
 
 ``` r
+
 x <- 50; y <- 42
 testthat::expect_equal(add_abs(x, y), x + y)
 ```
@@ -38,6 +40,7 @@ However, if a negative number is used, it will have different behavior
 than `+`. So we must test for both situations.
 
 ``` r
+
 x <- 50; y <- -42
 testthat::expect_equal(add_abs(x, y), x + y)
 ```
@@ -45,6 +48,7 @@ testthat::expect_equal(add_abs(x, y), x + y)
 Even better, let’s test all four positive/negative situations:
 
 ``` r
+
 for (info in list(
   list(x =  50, y =  42, expected =  92),
   list(x = -50, y =  42, expected =  8),
@@ -74,6 +78,7 @@ input testing on `+`, but it may make sense to see how
 input values.
 
 ``` r
+
 testthat::expect_equal(add_abs(1, NA), NA)
 testthat::expect_equal(add_abs(1, NULL), numeric(0))
 testthat::expect_error(add_abs(1, "string"))
@@ -90,6 +95,7 @@ For example, the two examples above *could* be included in the same test
 block:
 
 ``` r
+
 # File: tests/testthat/test-add_abs-bad.R
 
 test_that("add_abs() works", {
@@ -115,6 +121,7 @@ However, it’s better to break them out into two separate tests, each
 with their own descriptive title.
 
 ``` r
+
 # File: tests/testthat/test-add_abs-better.R
 
 test_that("add_abs() adds two numbers", {
@@ -155,6 +162,7 @@ determine which assertion failed. Adding labels to the expectation using
 which test failed.
 
 ``` r
+
 # File: tests/testthat/test-add_abs-label.R
 
 test_that("add_abs() adds two numbers", {
@@ -186,6 +194,7 @@ to move the for-loop around the call to
 give the test a custom name:
 
 ``` r
+
 # File: tests/testthat/test-add_abs-label.R
 
 for (info in list(
@@ -369,6 +378,7 @@ It is recommended to make your render methods contain minimal logic so
 that the value being rendered can also be exported.
 
 ``` r
+
 library(shiny)
 library(ggplot2)
 ui <- fluidPage(
@@ -403,6 +413,7 @@ available when executing `AppDriver$get_values()`,
 `AppDriver$get_value()`, and `AppDriver$expect_values()`.
 
 ``` r
+
 app <- AppDriver$new(plot_app)
 
 values <- app$get_values()
@@ -475,6 +486,7 @@ static values. For example, instead of testing the initial value of
 test it against `head(cars, 10)`.
 
 ``` r
+
 # Snapshot code
 app$expect_values(export = "dt")
 
@@ -504,6 +516,7 @@ Since we are not calling `AppDriver$expect_screenshot()` or
 `AppDriver$new(variant=)`.
 
 ``` r
+
 # File: ./tests/testthat/test-export.R
 # App file: ./app.R
 library(shinytest2)
@@ -548,6 +561,7 @@ half of the test. This code can be pulled into a helper function and be
 written as:
 
 ``` r
+
 # File: tests/testthat/test-export.R
 library(shinytest2)
 

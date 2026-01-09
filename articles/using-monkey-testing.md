@@ -33,6 +33,7 @@ few lines of code.
 We consider a simple app composed of a slider and a plot output:
 
 ``` r
+
 ui <- fluidPage(
   sliderInput("obs", "Number of observations:",
     min = 0, max = 1000, value = 500
@@ -54,6 +55,7 @@ shinyApp(ui, server)
 The driver may be initialized with:
 
 ``` r
+
 headless_app <- AppDriver$new(
   app_dir = "<PATH_TO_APP>",
   name = "monkey-test",
@@ -77,6 +79,7 @@ that are not available by default in
 before instantiating the driver:
 
 ``` r
+
 chromote::set_chrome_args(
   c(
     chromote::default_chrome_args(),
@@ -109,6 +112,7 @@ DOM so that we can unleash the horde.
 The easiest way to inject gremlins.js is to call:
 
 ``` r
+
 headless_app$run_js("
   let s = document.createElement('script');
   s.src = 'https://unpkg.com/gremlins.js';
@@ -125,6 +129,7 @@ the scripts. We can find gremlins.js by calling
 `typeof window.gremlins`, which returns an object:
 
 ``` r
+
 headless_app$get_html("script", outer_html = TRUE)
 headless_app$get_js("typeof window.gremlins")
 ```
@@ -143,6 +148,7 @@ assuming `gremlins.js` is in `inst/js/gremlins.min.js`. You can
 accomplish this by adding the following code to the `app.R` file:
 
 ``` r
+
 shiny::addResourcePath("gremlins", "inst/js/gremlins.min.js")
 ```
 
@@ -150,6 +156,7 @@ We can subsequently inject the gremlins in the DOM and check whether
 everything worked as expected:
 
 ``` r
+
 headless_app$run_js("
   let s = document.createElement('script');
   s.src = './gremlins/gremlins.min.js';
@@ -197,6 +204,7 @@ should be doing, you can define a custom species.
 In the following, we run the most basic monkey test configuration:
 
 ``` r
+
 headless_app$run_js("gremlins.createHorde().unleash();")
 ```
 
@@ -270,6 +278,7 @@ As monkey testing lasts about 10s, you often want to take a screenshot
 of the ongoing attack:
 
 ``` r
+
 headless_app$run_js("
   const customToucher = gremlins.species.toucher({
     // which touch event types will be triggered
@@ -300,6 +309,7 @@ Shiny inputs between attacks, or even close the current headless app and
 restart a new session:
 
 ``` r
+
 headless_app$set_inputs(obs = 500)
 ```
 
@@ -308,5 +318,6 @@ completed, particularly if you set the `shiny.port` option, as you can’t
 have 2 apps running on the same port:
 
 ``` r
+
 headless_app$stop()
 ```

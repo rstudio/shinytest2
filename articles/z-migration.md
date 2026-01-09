@@ -42,6 +42,7 @@ The parameters have been separated to be clearer in their intended use
 to `AppDriver$click(input, output, ..., selector)`.
 
 ``` r
+
 ## {shinytest}
 old$click("mybutton")
 old$click("clickcount", iotype = "output")
@@ -67,6 +68,7 @@ the script returns. If a promise is the last value in the `script` then
 the `resolve`d value will be sent back to the R session.
 
 ``` r
+
 ## {shinytest}
 life <- 42
 old$executeScript("1 + 1;")
@@ -98,6 +100,7 @@ should also provide a maximum `timeout` (in milliseconds) that you are
 willing to wait before an error is thrown. For example:
 
 ``` r
+
 ## {shinytest}
 # Wait until a button is clicked
 old$executeScriptAsync(
@@ -142,6 +145,7 @@ all values, similar to setting
 `ShinyDriver$getAllValues(input = TRUE, output = TRUE, export = TRUE)`.
 
 ``` r
+
 ## {shinytest}
 old$getAllValues()
 # All input values
@@ -168,6 +172,7 @@ have been spread out into `input` and `output`, while adding support for
 `export`.
 
 ``` r
+
 ## {shinytest}
 old$getValue("myinput")
 
@@ -184,6 +189,7 @@ Signature: `ShinyDriver$getUrl()`
 This method has been renamed to `AppDriver$get_url()`.
 
 ``` r
+
 ## {shinytest}
 old$getUrl()
 
@@ -202,6 +208,7 @@ been removed, but the same functionality can be achieved via a call to
 `AppDriver$get_values()` *after* a call to `AppDriver$set_inputs()`.
 
 ``` r
+
 ## {shinytest}
 getValuesResult <- old$setInputs(life = 42)
 
@@ -219,6 +226,7 @@ These methods have been renamed to `AppDriver$get_window_size()` and
 `AppDriver$set_window_size(width, height)` respectively.
 
 ``` r
+
 ## {shinytest}
 old$getWindowSize()
 old$setWindowSize(width = 1024, height = 768)
@@ -240,6 +248,7 @@ upgraded to an expectation version and renamed to
 `AppDriver$expect_unique_names()`.
 
 ``` r
+
 ## {shinytest}
 old$checkUniqueWidgetNames()
 
@@ -264,6 +273,7 @@ an `AppDriver$new(variant=)` value is provided. `variant` is similar to
 the `suffix` value in `shinytest::testApp(suffix=)`.
 
 ``` r
+
 ## {shinytest}
 old$snapshotInit("mytest")
 
@@ -292,6 +302,7 @@ supplied to `AppDriver$expect_values()`, then the *debug* screenshot is
 zoomed in on the output value.
 
 ``` r
+
 ## {shinytest}
 old$snapshot()
 old$snapshot(items = list(output = "clickcount"))
@@ -318,6 +329,7 @@ set `AppDriver$get_screenshot(myfile, selector = ".custom-selector")` or
 `screenshot_args` directly.
 
 ``` r
+
 ## {shinytest}
 old$takeScreenshot("myfile1.png")
 old$takeScreenshot("myfile2.png", id = "myid")
@@ -336,6 +348,7 @@ This method has been renamed to
 `AppDriver$expect_download(id, filename)`.
 
 ``` r
+
 ## {shinytest}
 old$snapshotDownload("mylinkid")
 
@@ -362,6 +375,7 @@ similar to `AppDriver$set_inputs()`, support for
 `ShinyDriver$uploadFile(values_ =)` has been removed.
 
 ``` r
+
 ## {shinytest}
 old$uploadFile(myFileInput = "myfile.txt")
 
@@ -381,6 +395,7 @@ JavaScript methods in
 explicitly return a value.
 
 ``` r
+
 ## {shinytest}
 old$waitFor("$('#myid').length > 0")
 
@@ -402,6 +417,7 @@ avoid situations where dynamic UI needs to calculate new outputs given
 new input information.
 
 ``` r
+
 ## {shinytest}
 old$waitForShiny()
 
@@ -425,6 +441,7 @@ corresponding value to be something *not* in the `ignore`d set of
 values.
 
 ``` r
+
 ## {shinytest}
 old$waitForValue("myslider")
 old$waitForValue("mydynamicplot", iotype = "output")
@@ -455,6 +472,7 @@ These methods have been removed. It is suggested to use JavaScript code
 directly or use newer helper methods.
 
 ``` r
+
 ## {shinytest}
 old$findElement("#mybutton")$click()
 old$findElement("#mybutton")$getText()
@@ -475,6 +493,7 @@ These methods have been removed. It is suggested to use JavaScript code
 directly, or to use newer helper methods.
 
 ``` r
+
 ## {shinytest}
 old$getSource()
 old$getTitle()
@@ -499,6 +518,7 @@ vignette.
 - `ShinyDriver$new(suffix=)`: Please use `AppDriver$new(variant=)`.
 
 ``` r
+
 ## {shinytest}
 old <- ShinyDriver$new(path_to_app, suffix = "macos-4.1")
 
@@ -536,6 +556,7 @@ Other testing methods should be explored.
 Equivalent code has been provided below for legacy support.
 
 ``` r
+
 ## {shinytest}
 old$expectUpdate("myoutput", myinput = 42)
 
@@ -569,6 +590,7 @@ broken into two columns: `location` and `level`.
   *All* messages are always recorded.
 
 ``` r
+
 ## {shinytest}
 old$getDebugLog(); old$getEventLog()
 old$logEvent("Creating report")
@@ -582,6 +604,7 @@ If `options = list(shiny.trace = TRUE)` is set when initializing an
 `AppDriver` object, then all WebSocket traffic will be recorded.
 
 ``` r
+
 ## {shinytest2}
 # Record all websocket traffic. Caution!! This is very verbose!!
 new <- AppDriver$new(path_to_app, options = list(shiny.trace = TRUE))
@@ -596,6 +619,7 @@ new$get_logs()
   `AppDriver$set_inputs()`.
 
 ``` r
+
 ## {shinytest}
 old$setValue("myinput", 42)
 
@@ -608,6 +632,7 @@ new$set_inputs(myinput = 42)
   `AppDriver$get_values()`.
 
 ``` r
+
 ## {shinytest}
 old$listWidgets()
 
@@ -623,6 +648,7 @@ lapply(new$get_values(), names)
   been removed, but can be achieved with `AppDriver$run_js(script)`.
 
 ``` r
+
 ## {shinytest}
 old$goBack()
 old$refresh()
@@ -641,6 +667,7 @@ new$run_js("window.location.reload();")
   make sense within [shinytest2](https://rstudio.github.io/shinytest2/).
 
 ``` r
+
 ## {shinytest}
 old$isRmd()
 old$getAppDir()
@@ -660,6 +687,7 @@ app_filename <- if (has_rmd) fs::path_file(rmd_files[1]) else NULL
   you can trigger them with `jQuery` and `AppDriver$run_js(script)`.
 
 ``` r
+
 ## {shinytest}
 old$sendKeys("myinput", webdriver::keys$enter)
 

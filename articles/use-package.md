@@ -57,6 +57,7 @@ Within each test file, supply the application directory to
 you would have:
 
 ``` r
+
 # File: tests/testthat/test-sample_app.R
 library(shinytest2)
 
@@ -105,6 +106,7 @@ and the function that runs the app is `run_app()`, you can pass in
 functions defined within your R package directly to `AppDriver$new()`:
 
 ``` r
+
 # File: tests/testthat/test-app-function.R
 library(shinytest2)
 
@@ -128,6 +130,7 @@ The specially handled function is functionally equivalent to defining a
 wrapper function that loads the package and calls `run_app()`:
 
 ``` r
+
 # File: tests/testthat/test-app-function.R
 library(shinytest2)
 run_mypkg_app <-
@@ -187,6 +190,7 @@ The function simply returns an object from
 [`shinyApp()`](https://rdrr.io/pkg/shiny/man/shinyApp.html):
 
 ``` r
+
 # File: R/app-object.R
 
 dt <- datasets::cars
@@ -214,6 +218,7 @@ Once we have the object, it can be supplied directly to
 `AppDriver$new()`.
 
 ``` r
+
 # File: tests/testthat/test-app-function.R
 
 test_that("hello-world app initial values are consistent", {
@@ -328,6 +333,7 @@ Previous file structure:
 Previous `test-sample_app.R`:
 
 ``` r
+
 library(shinytest2)
 
 test_that("sample_app works", {
@@ -363,6 +369,7 @@ New file structure:
 New `test-sample_app.R`:
 
 ``` r
+
 library(shinytest2)
 test_that("sample_app works", {
   appdir <- system.file(package = "exPackage", "sample_app")
