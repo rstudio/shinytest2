@@ -4,6 +4,8 @@
 
 ## shinytest2 0.5.0
 
+CRAN release: 2026-01-09
+
 ### Lifecycle changes
 
 - [`load_app_env()`](https://rstudio.github.io/shinytest2/reference/load_app_env.md)

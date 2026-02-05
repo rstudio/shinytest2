@@ -6,6 +6,7 @@
   [](https://orcid.org/0000-0001-9986-114X)
 
 - **Posit Software, PBC**. Copyright holder, funder.
+  [![ROR](https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb.svg)](https://ror.org/03wc8by49)
 
 - **[Winston Chang](https://github.com/wch)**. Contributor.  
   Original author to rstudio/shinytest
