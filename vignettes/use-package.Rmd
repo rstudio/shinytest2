@@ -335,7 +335,7 @@ app <- AppDriver$new(app = testApp)
 
 If `mod_test_ui` and `mod_test_server` are from your package, they're already available in your test file through `library(yourpackage)` or `devtools::load_all()`. You can access them directly when creating the app object.
 
-`local_app_support()` is only needed when you have a **separate app directory** with its **own `./R` folder** containing support files that are not part of your main package.
+`local_app_support()` is only needed when you have a **separate app directory** (e.g., `inst/myapps/app1/`) with its **own `R/` subfolder** (e.g., `inst/myapps/app1/R/`) containing support files that are not part of your main package's `R/` directory.
 
 ## Other setup steps
 
