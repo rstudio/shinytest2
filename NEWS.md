@@ -1,7 +1,12 @@
 # shinytest2 (development version)
 
+* Expanded documentation for `local_app_support()`, `with_app_support()`, and
+  `load_app_support()` to clarify when each function is needed. Added detailed
+  examples and a decision tree to the use-package vignette to help users choose
+  the right approach (#438).
+
 * `record_test()` no longer prints a debug message when recording tests in a
-  package directory (#438).
+  package directory (#437).
 
 * Added alt text to all vignette images for improved accessibility (#435).
 
