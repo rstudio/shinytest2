@@ -16,7 +16,7 @@ whose code is defined below. This app simulates a stiff oscillator, also
 known as Van der Pol
 [model](https://en.wikipedia.org/wiki/Van_der_Pol_oscillator). Under the
 hood, this system (composed of 2 differential equations) is integrated
-with the [deSolve](http://desolve.r-forge.r-project.org/) package. Stiff
+with the [deSolve](https://github.com/tpetzoldt/deSolve/) package. Stiff
 systems need a much smaller time step than classic systems, thereby
 requiring more time to solve:
 
