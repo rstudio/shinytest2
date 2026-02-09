@@ -12,3 +12,4 @@ inst/doc
 CRAN-SUBMISSION
 .claude/
 _dev/
+*.tar.gz
