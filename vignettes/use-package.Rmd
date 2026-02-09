@@ -206,6 +206,118 @@ To help create tests, you can call `record_test()` on your shiny application obj
 
 
 
+## Understanding app support files: `local_app_support()` and friends
+
+When testing Shiny applications within R packages, you may need access to helper functions, modules, or other objects defined in your app's `./R` directory. The `local_app_support()`, `with_app_support()`, and `load_app_support()` functions help manage this.
+
+### When do you need these functions?
+
+**You do NOT need them if:**
+
+* Your app is defined inline (as a Shiny app object passed directly to `AppDriver$new()`)
+* All needed functions are already available from your package via `library(yourpackage)` or in the test file itself
+
+**Example - inline app (no `local_app_support()` needed):**
+
+```{r}
+# File: tests/testthat/test-inline-app.R
+library(shinytest2)
+
+test_that("inline app with package modules works", {
+  skip_on_cran()
+  
+  # Your module functions are already available from your package
+  test_app <- shinyApp(
+    ui = fluidPage(mod_test_ui("test")),
+    server = function(input, output, session) {
+      mod_test_server(id = "test")
+    }
+  )
+  
+  app <- AppDriver$new(test_app)
+  app$expect_values()
+})
+```
+
+**You DO need them if:**
+
+* Your app is stored in a directory (e.g., `inst/myapps/app1/`)
+* The app has supporting files in its own `./R` subfolder
+* You need to test those supporting functions or access them in your tests
+
+### Which function should you use?
+
+**`local_app_support(app_dir)`** - Recommended for package testing
+
+* Automatically attaches the app's support environment for the current test
+* Automatically cleans up when the test completes
+* Prevents conflicts between different app tests
+
+**Example:**
+
+```{r}
+# File structure:
+#   ./inst/myapps/app1/app.R
+#   ./inst/myapps/app1/R/modules.R  (contains helper functions)
+#   ./tests/testthat/test-app1.R
+
+test_that("app1 works with its helpers", {
+  skip_on_cran()
+  
+  app_dir <- system.file("myapps/app1", package = "mypkg")
+  
+  # Load app1's support files (modules.R, etc.)
+  local_app_support(app_dir)
+  
+  # Now helper functions from app1/R/ are available
+  expect_true(exists("my_module_ui"))
+  
+  # Test the app
+  app <- AppDriver$new(app_dir)
+  app$expect_values()
+})
+```
+
+**`with_app_support(app_dir, { ... })`** - For explicit scoping
+
+* Support environment is only available within the expression block
+* Cleaned up immediately after the expression completes
+* Useful when you want very clear boundaries
+
+**Example:**
+
+```{r}
+test_that("app support is scoped correctly", {
+  app_dir <- system.file("myapps/app1", package = "mypkg")
+  
+  expect_false(exists("helper_value"))
+  
+  with_app_support(app_dir, {
+    # helper_value is available here
+    expect_true(exists("helper_value"))
+    expect_equal(helper_value, 42)
+  })
+  
+  # helper_value is gone after the block
+  expect_false(exists("helper_value"))
+})
+```
+
+**`load_app_support(app_dir)`** - For standalone apps only
+
+* Permanently loads support files into the testing environment
+* No automatic cleanup
+* Best used in `setup-shinytest2.R` for non-package Shiny applications
+* **Not recommended for package testing** as it can cause conflicts
+
+### Benefits of using these functions
+
+1. **Isolation**: Tests for different apps don't interfere with each other
+2. **Access to internals**: Test helper functions and modules without manual sourcing
+3. **Clean testing**: Automatic cleanup prevents pollution of test environment
+4. **Package compatibility**: Works seamlessly with package development workflow
+
+
 ## Other setup steps
 
 There are a few steps that are needed for both types of tests.

@@ -21,18 +21,10 @@ be made available.}
 \item{expr}{An expression to evaluate within the support environment.}
 }
 \description{
-Executes all \code{./R} files and \code{global.R} into a temp environment that is
-attached appropriately. This is useful when wanting access to functions or
-values created in the \code{./R} folder for testing purposes.
-}
-\details{
-For Shiny application testing within R packages, \code{local_app_support()} and
-\code{with_app_support()} where loading an App's support files should not happen
-automatically.
-
-For non-package based Shiny applications, it is recommended to use
-\code{\link[=load_app_support]{load_app_support()}} for the support to be available throughout all test
-files.
+Executes all \code{./R} files and \code{global.R} from a Shiny application directory
+into an environment that is attached appropriately. This is useful when you
+need access to helper functions, modules, or values created in the \code{./R}
+folder for testing purposes.
 }
 \section{Functions}{
 \itemize{
@@ -46,25 +38,89 @@ application's support environment into the current environment.
 No cleanup actions are ever performed.
 
 }}
+\section{When to use these functions}{
+
+
+\strong{For inline apps (app objects passed directly to AppDriver)}: You do
+\strong{NOT} need these functions. Since your test file already has access to your
+package functions (via \code{library(yourpackage)} or \code{devtools::load_all()}), you
+can reference them directly when creating the app object.
+
+\strong{For apps with separate support files}: Use these functions when your app
+is stored in a directory (e.g., \verb{inst/myapps/app1/}) and has supporting R
+files in an \code{app.R} / \code{server.R}, \verb{global.R, and }./R` subfolder that you
+need to access in your tests.
+}
+
+\section{Choosing which function to use}{
+
+\itemize{
+\item \strong{\code{local_app_support()}}: For R packages or when you want automatic cleanup.
+The support environment is attached for the duration of the current environment,
+then automatically removed. This prevents pollution of the testing
+environment across multiple tests that test multiple apps.
+\item \strong{\code{with_app_support()}}: Similar to \code{local_app_support()}, but uses an
+explicit code block. The support environment is only available within the
+provided expression and is cleaned up immediately after.
+\item \strong{\code{load_app_support()}}: For standalone Shiny apps (non-package). Loads
+support files into the testing environment permanently with no automatic
+cleanup. Best used in \code{setup-shinytest2.R} for non-package apps.
+}
+}
+
+\section{Benefits}{
+
+\itemize{
+\item \strong{Isolation}: \code{local_app_support()} and \code{with_app_support()} prevent
+helper functions from one app test from interfering with another.
+\item \strong{Access to app internals}: Test helper functions, modules, and utilities
+defined in your app's \code{./R} folder without manually sourcing files.
+\item \strong{Package testing}: Enables testing apps within packages where the app's
+support files are separate from the package's exported functions.
+}
+}
+
 \examples{
 \dontrun{
-# ./tests/testthat/apps/myapp/R/utils.R
-n <- 42
+# Example 1: Basic usage with local_app_support()
+# File structure:
+#   ./tests/testthat/apps/myapp/R/utils.R  (contains: n <- 42)
+#   ./tests/testthat/test-utils.R
 
-#' # ./tests/testthat/test-utils.R
 test_that("Can access support environment", {
   expect_false(exists("n"))
   shinytest2::local_app_support(test_path("apps/myapp"))
   expect_equal(n, 42)
 })
+# After test completes, n is automatically removed
 
-# Or using with_app_support()
+# Example 2: Using with_app_support() for explicit scoping
 test_that("Can access support environment", {
   expect_false(exists("n"))
   shinytest2::with_app_support(test_path("apps/myapp"), {
     expect_equal(n, 42)
   })
-  expect_false(exists("n"))
+  expect_false(exists("n"))  # n is no longer available
+})
+
+# Example 3: Testing an app with its support files
+# File structure:
+#   ./inst/myapps/app1/app.R
+#   ./inst/myapps/app1/R/modules.R  (contains: my_module_ui <- function() {...})
+#   ./tests/testthat/test-app1.R
+
+test_that("app1 loads with module support", {
+  expect_false(exists("my_module_ui"))
+
+  app_dir <- system.file("myapps/app1", package = "mypkg")
+  local_app_support(app_dir)
+
+  # Now we can access module functions from app1/R/
+  expect_true(exists("my_module_ui"))
+
+  # And test the app
+  app <- AppDriver$new(app_dir)
+  app$expect_values()
 })
 }
 }
