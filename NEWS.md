@@ -1,5 +1,7 @@
 # shinytest2 (development version)
 
+* Added alt text to all vignette images for improved accessibility (#435).
+
 # shinytest2 0.5.0
 
 ## Lifecycle changes

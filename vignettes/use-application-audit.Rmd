@@ -473,7 +473,7 @@ usethis::use_build_ignore(c("public", "recording.log"))
 
 An example is available [here](https://github.com/DivadNojnarg/shinyAuditTest).
 
-```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center', fig.alt="Screenshot of a shinyloadtest performance report showing session duration metrics with multiple tabs displaying load testing results, indicating that the app struggles to handle 5 simultaneous users due to large computations"}
 knitr::include_graphics("images/shinytest2-loadtest.png")
 ```
 
@@ -493,6 +493,6 @@ would be to set a caching [system](https://shiny.rstudio.com/articles/caching.ht
 with `shiny::bind_cache()`. As shown in the following figure, adding cache is so
 fast that `shinycannon` was able to start more than 1000 sessions in 2 minutes.
 
-```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center', fig.alt="Screenshot of an optimized shinyloadtest performance report showing dramatically improved performance with caching enabled, demonstrating that shinycannon was able to start over 1000 sessions in 2 minutes"}
 knitr::include_graphics("images/shinytest2-shinyloadtest-optimized.png")
 ```
