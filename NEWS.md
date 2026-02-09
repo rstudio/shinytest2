@@ -1,5 +1,10 @@
 # shinytest2 (development version)
 
+## Bug fixes and minor improvements
+
+* `record_test()` no longer prints a debug message when recording tests in a
+  package directory (#438).
+
 # shinytest2 0.5.0
 
 ## Lifecycle changes
