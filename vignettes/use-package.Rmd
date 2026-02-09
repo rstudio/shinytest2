@@ -317,25 +317,6 @@ test_that("app support is scoped correctly", {
 3. **Clean testing**: Automatic cleanup prevents pollution of test environment
 4. **Package compatibility**: Works seamlessly with package development workflow
 
-### Common confusion: Inline apps vs. directory-based apps
-
-The original issue asked about using `local_app_support()` with an inline app. Here's why it's not needed:
-
-```{r}
-# This DOES NOT need local_app_support()
-testApp <- shinyApp(
-  ui = fluidPage(mod_test_ui("test")),
-  server = function(input, output, session) {
-    mod_test_server(id = "test")
-  }
-)
-
-app <- AppDriver$new(app = testApp)
-```
-
-If `mod_test_ui` and `mod_test_server` are from your package, they're already available in your test file through `library(yourpackage)` or `devtools::load_all()`. You can access them directly when creating the app object.
-
-`local_app_support()` is only needed when you have a **separate app directory** (e.g., `inst/myapps/app1/`) with its **own `R/` subfolder** (e.g., `inst/myapps/app1/R/`) containing support files that are not part of your main package's `R/` directory.
 
 ## Other setup steps
 

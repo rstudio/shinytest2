@@ -26,26 +26,39 @@ into an environment that is attached appropriately. This is useful when you
 need access to helper functions, modules, or values created in the \code{./R}
 folder for testing purposes.
 }
+\section{Functions}{
+\itemize{
+\item \code{local_app_support()}: Temporarily attach the Shiny application's support
+environment into the current environment.
+
+\item \code{with_app_support()}: For the provided \code{expr}, attach the Shiny
+application's support environment into the current environment.
+
+\item \code{load_app_support()}: Loads all support files into the current environment.
+No cleanup actions are ever performed.
+
+}}
 \section{When to use these functions}{
 
 
-\strong{For inline apps (app objects passed directly to AppDriver)}: You typically
-do \strong{NOT} need these functions. Since your test file already has access to
-your package functions (via \code{library(yourpackage)} or \code{devtools::load_all()}),
-you can reference them directly when creating the app object.
+\strong{For inline apps (app objects passed directly to AppDriver)}: You do
+\strong{NOT} need these functions. Since your test file already has access to your
+package functions (via \code{library(yourpackage)} or \code{devtools::load_all()}), you
+can reference them directly when creating the app object.
 
 \strong{For apps with separate support files}: Use these functions when your app
-is stored in a directory (e.g., \code{inst/myapps/app1/}) and has supporting R
-files in an \code{./R} subfolder that you need to access in your tests.
+is stored in a directory (e.g., \verb{inst/myapps/app1/}) and has supporting R
+files in an \code{app.R} / \code{server.R}, \verb{global.R, and }./R` subfolder that you
+need to access in your tests.
 }
 
 \section{Choosing which function to use}{
 
 \itemize{
 \item \strong{\code{local_app_support()}}: For R packages or when you want automatic cleanup.
-The support environment is attached for the duration of the current test,
+The support environment is attached for the duration of the current environment,
 then automatically removed. This prevents pollution of the testing
-environment across multiple tests.
+environment across multiple tests that test multiple apps.
 \item \strong{\code{with_app_support()}}: Similar to \code{local_app_support()}, but uses an
 explicit code block. The support environment is only available within the
 provided expression and is cleaned up immediately after.
@@ -67,18 +80,6 @@ support files are separate from the package's exported functions.
 }
 }
 
-\section{Functions}{
-\itemize{
-\item \code{local_app_support()}: Temporarily attach the Shiny application's support
-environment into the current environment.
-
-\item \code{with_app_support()}: For the provided \code{expr}, attach the Shiny
-application's support environment into the current environment.
-
-\item \code{load_app_support()}: Loads all support files into the current environment.
-No cleanup actions are ever performed.
-
-}}
 \examples{
 \dontrun{
 # Example 1: Basic usage with local_app_support()

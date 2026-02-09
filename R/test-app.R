@@ -338,21 +338,22 @@ load_app_env <- function(
 #'
 #' @section When to use these functions:
 #'
-#' **For inline apps (app objects passed directly to AppDriver)**: You typically
-#' do **NOT** need these functions. Since your test file already has access to
-#' your package functions (via `library(yourpackage)` or `devtools::load_all()`),
-#' you can reference them directly when creating the app object.
+#' **For inline apps (app objects passed directly to AppDriver)**: You do
+#' **NOT** need these functions. Since your test file already has access to your
+#' package functions (via `library(yourpackage)` or `devtools::load_all()`), you
+#' can reference them directly when creating the app object.
 #'
 #' **For apps with separate support files**: Use these functions when your app
 #' is stored in a directory (e.g., `inst/myapps/app1/`) and has supporting R
-#' files in an `./R` subfolder that you need to access in your tests.
+#' files in an `app.R` / `server.R`, `global.R, and `./R` subfolder that you
+#' need to access in your tests.
 #'
 #' @section Choosing which function to use:
 #'
 #' * **`local_app_support()`**: For R packages or when you want automatic cleanup.
-#'   The support environment is attached for the duration of the current test,
+#'   The support environment is attached for the duration of the current environment,
 #'   then automatically removed. This prevents pollution of the testing
-#'   environment across multiple tests.
+#'   environment across multiple tests that test multiple apps.
 #'
 #' * **`with_app_support()`**: Similar to `local_app_support()`, but uses an
 #'   explicit code block. The support environment is only available within the
