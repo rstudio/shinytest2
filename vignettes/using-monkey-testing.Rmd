@@ -109,7 +109,7 @@ In the below figure, the application is shown on the left side panel.
 The top-right side panel shows the DOM elements (default) and the
 bottom-right side panel displays the JavaScript console output.
 
-```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center', fig.alt="Screenshot of a browser developer tools window with three panels: the Shiny application on the left showing a slider input, the DOM elements inspector in the top-right panel, and the JavaScript console in the bottom-right panel"}
 knitr::include_graphics("images/gremlins-start.png")
 ```
 
@@ -147,7 +147,7 @@ You may instead see `undefined` returned. This is generally because the
 JS code is blocked by the network. If this is the case, consider
 injecting gremlins.js locally, as explained in the next section.
 
-```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center', fig.alt="Screenshot of the JavaScript console showing successful injection of the gremlins.js library, displaying the gremlins horde object with various methods and properties available for monkey testing"}
 knitr::include_graphics("images/gremlins-inject.png")
 ```
 
@@ -217,7 +217,7 @@ headless_app$run_js("gremlins.createHorde().unleash();")
 
 The result is shown in the GIF below:
 
-```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center', fig.alt="Animated GIF showing gremlins.js monkey testing in action, with random automated interactions being performed on a Shiny app including clicks, scrolls, and other user actions simulated by the gremlins"}
 knitr::include_graphics("images/gremlins-attack.gif")
 ```
 
@@ -227,7 +227,7 @@ Does it really makes sense to invoke all species given we only have a
 slider? Absolutely not! We can use the following code to test only the
 slider input.
 
-```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center', fig.alt="Screenshot of a Shiny app with a slider input being highlighted, demonstrating how to target specific UI elements for focused monkey testing with the toucher species"}
 knitr::include_graphics("images/gremlins-slider-handle.png")
 ```
 
@@ -282,7 +282,7 @@ still display the logs. The `console.log` output will be captured by the
 `{shinytest2}` logs with `headless_app$get_logs()` allowing you to debug
 and refine the monkey testing script.
 
-```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center', fig.alt="Screenshot showing console.log output from gremlins.js monkey testing, displaying detailed logging information that can be captured by shinytest2's get_logs() method for debugging and refining test scripts"}
 knitr::include_graphics("images/gremlins-logs.png")
 ```
 
@@ -313,7 +313,7 @@ Sys.sleep(3)
 headless_app$get_screenshot("gremlins.png")
 ```
 
-```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center', fig.alt="Animated GIF showing refined and optimized gremlins.js monkey testing focused on specific UI elements, demonstrating more targeted automated testing with customized gremlin species configurations"}
 knitr::include_graphics("images/gremlins-attack-refined.gif")
 ```
 
