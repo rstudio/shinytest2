@@ -26,3 +26,4 @@ _\.new\.png$
 ^_dev$
 ^.claude$
 ^CLAUDE.md$
+^_dev$
