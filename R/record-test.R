@@ -83,7 +83,6 @@ record_test <- function(
       # No package detected, so do not record in package testing style
       record_in_package <- FALSE
     } else {
-      message("Remove inform")
       rlang::inform(
         "Detected package root directory. ",
         "Saving test file to package's tests/testthat/ directory."
