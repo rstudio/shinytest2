@@ -100,7 +100,10 @@ In the below figure, the application is shown on the left side panel.
 The top-right side panel shows the DOM elements (default) and the
 bottom-right side panel displays the JavaScript console output.
 
-![](images/gremlins-start.png)
+![Screenshot of a browser developer tools window with three panels: the
+Shiny application on the left showing a slider input, the DOM elements
+inspector in the top-right panel, and the JavaScript console in the
+bottom-right panel](images/gremlins-start.png)
 
 ### Injecting gremlins.js
 
@@ -138,7 +141,10 @@ You may instead see `undefined` returned. This is generally because the
 JS code is blocked by the network. If this is the case, consider
 injecting gremlins.js locally, as explained in the next section.
 
-![](images/gremlins-inject.png)
+![Screenshot of the JavaScript console showing successful injection of
+the gremlins.js library, displaying the gremlins horde object with
+various methods and properties available for monkey
+testing](images/gremlins-inject.png)
 
 #### Local way
 
@@ -210,7 +216,10 @@ headless_app$run_js("gremlins.createHorde().unleash();")
 
 The result is shown in the GIF below:
 
-![](images/gremlins-attack.gif)
+![Animated GIF showing gremlins.js monkey testing in action, with random
+automated interactions being performed on a Shiny app including clicks,
+scrolls, and other user actions simulated by the
+gremlins](images/gremlins-attack.gif)
 
 ##### Optimized testing
 
@@ -218,7 +227,9 @@ Does it really makes sense to invoke all species given we only have a
 slider? Absolutely not! We can use the following code to test only the
 slider input.
 
-![](images/gremlins-slider-handle.png)
+![Screenshot of a Shiny app with a slider input being highlighted,
+demonstrating how to target specific UI elements for focused monkey
+testing with the toucher species](images/gremlins-slider-handle.png)
 
 The best species to perform this task is the `toucher`, which is able to
 randomly move the slider input. The documentation specifies many events
@@ -272,7 +283,10 @@ still display the logs. The `console.log` output will be captured by the
 `headless_app$get_logs()` allowing you to debug and refine the monkey
 testing script.
 
-![](images/gremlins-logs.png)
+![Screenshot showing console.log output from gremlins.js monkey testing,
+displaying detailed logging information that can be captured by
+shinytest2's get_logs() method for debugging and refining test
+scripts](images/gremlins-logs.png)
 
 As monkey testing lasts about 10s, you often want to take a screenshot
 of the ongoing attack:
@@ -302,7 +316,10 @@ Sys.sleep(3)
 headless_app$get_screenshot("gremlins.png")
 ```
 
-![](images/gremlins-attack-refined.gif)
+![Animated GIF showing refined and optimized gremlins.js monkey testing
+focused on specific UI elements, demonstrating more targeted automated
+testing with customized gremlin species
+configurations](images/gremlins-attack-refined.gif)
 
 Should you run multiple attacks, it is always good practice to reset
 Shiny inputs between attacks, or even close the current headless app and

@@ -2,6 +2,13 @@
 
 ## shinytest2 (development version)
 
+- [`record_test()`](https://rstudio.github.io/shinytest2/reference/record_test.md)
+  no longer prints a debug message when recording tests in a package
+  directory ([\#438](https://github.com/rstudio/shinytest2/issues/438)).
+
+- Added alt text to all vignette images for improved accessibility
+  ([\#435](https://github.com/rstudio/shinytest2/issues/435)).
+
 ## shinytest2 0.5.0
 
 CRAN release: 2026-01-09

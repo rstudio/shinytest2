@@ -210,7 +210,10 @@ shinyApp(
 )
 ```
 
-![](images/screenshot-exports-app.png)
+![Screenshot of a Shiny app showing the shinytest2 test recorder with
+exported values visible in the app's code, demonstrating how
+exportTestValues() is used to expose internal reactive values for
+testing](images/screenshot-exports-app.png)
 
 Notice these lines:
 
@@ -283,7 +286,10 @@ To make such applications exactly repeatable, you can set the random
 seed. This can be done by specifying a random seed in the recorder. The
 seed can be any integer value.
 
-![](images/screenshot-recorder-random-seed.png)
+![Screenshot of the test recorder interface showing the random seed
+configuration field where users can set a seed value to ensure
+reproducible test results for applications using random number
+generation](images/screenshot-recorder-random-seed.png)
 
 If your test script has already been created, you can set the random
 seed by editing the test script so that the `AppDriver$new()` call has a

@@ -486,7 +486,10 @@ usethis::use_build_ignore(c("public", "recording.log"))
 An example is available
 [here](https://github.com/DivadNojnarg/shinyAuditTest).
 
-![](images/shinytest2-loadtest.png)
+![Screenshot of a shinyloadtest performance report showing session
+duration metrics with multiple tabs displaying load testing results,
+indicating that the app struggles to handle 5 simultaneous users due to
+large computations](images/shinytest2-loadtest.png)
 
 As shown in the above report, especially in the session duration tab,
 the app is clearly not able to handle 5 simultaneous user due to the
@@ -508,4 +511,7 @@ optimization would be to set a caching
 so fast that `shinycannon` was able to start more than 1000 sessions in
 2 minutes.
 
-![](images/shinytest2-shinyloadtest-optimized.png)
+![Screenshot of an optimized shinyloadtest performance report showing
+dramatically improved performance with caching enabled, demonstrating
+that shinycannon was able to start over 1000 sessions in 2
+minutes](images/shinytest2-shinyloadtest-optimized.png)

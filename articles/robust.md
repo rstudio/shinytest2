@@ -406,7 +406,9 @@ plot_app <- shinyApp(ui = ui, server = server)
 plot_app
 ```
 
-![](images/plot-app.png)
+![Screenshot of a Shiny app displaying a scatter plot with slider
+controls, demonstrating how exported values like plot objects and data
+can be tested using shinytest2](images/plot-app.png)
 
 Both `dt` and `plot_obj` have been `export`ed. This means that they are
 available when executing `AppDriver$get_values()`,

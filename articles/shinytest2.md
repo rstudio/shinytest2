@@ -108,7 +108,10 @@ special Shiny application in the current R process which displays the
 target app in an iframe and has some controls outside the iframe. We’ll
 refer to this as the **recorder app**. You will see something like this:
 
-![](images/record-simple-app.png)
+![Screenshot of the shinytest2 test recorder interface showing the
+target app on the left side with a 'What is your name?' input field and
+the recorder app sidebar on the right side with recording
+controls](images/record-simple-app.png)
 
 On the left is the target app (in this case, the “What is your name”
 app), and on the right is the recorder app sidebar. Note that you may
@@ -134,7 +137,9 @@ recorder app.
 After modifying some `input`s and making an expectation, it will look
 something like this:
 
-![](images/record-simple-app-2.png)
+![Screenshot of the test recorder interface showing the app and recorder
+sidebar with recorded test code including expect_values()
+assertion](images/record-simple-app-2.png)
 
 It is also possible to take a *targeted* value expectation. This is a
 snapshot of one or more specified `output` (instead of the default,
@@ -306,7 +311,9 @@ to successfully execute.)
 
 It will look something like this:
 
-![](images/diffviewer-1.png)
+![Screenshot of the testthat snapshot review interface (diffviewer)
+showing side-by-side comparison of expected and actual test
+results](images/diffviewer-1.png)
 
 After inspecting the changes, you can choose to update the expected
 results (that is, replace the old expected results with the new current
@@ -324,7 +331,9 @@ If you want to have more than one set of tests for an application, you
 can record new tests, each with a unique name. You can enter the name
 when recording your tests:
 
-![](images/record-name.png)
+![Screenshot of the test recorder interface showing a dialog for
+entering a custom name for the test being
+recorded](images/record-name.png)
 
 The saved test can be moved to a different testing file,
 e.g. `tests/testthat/test-simple-app.R`. When you run

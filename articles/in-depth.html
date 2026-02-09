@@ -240,7 +240,7 @@ reactive expression that would be convenient to capture.</p>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="images/screenshot-exports-app.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images/screenshot-exports-app.png" class="r-plt" alt="Screenshot of a Shiny app showing the shinytest2 test recorder with exported values visible in the app's code, demonstrating how exportTestValues() is used to expose internal reactive values for testing" width="100%" style="display: block; margin: auto;"></p>
 <p>Notice these lines:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
@@ -301,7 +301,7 @@ failures.</p>
 <p>To make such applications exactly repeatable, you can set the random
 seed. This can be done by specifying a random seed in the recorder. The
 seed can be any integer value.</p>
-<p><img src="images/screenshot-recorder-random-seed.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images/screenshot-recorder-random-seed.png" class="r-plt" alt="Screenshot of the test recorder interface showing the random seed configuration field where users can set a seed value to ensure reproducible test results for applications using random number generation" width="100%" style="display: block; margin: auto;"></p>
 <p>If your test script has already been created, you can set the random
 seed by editing the test script so that the <code>AppDriver$new()</code>
 call has a value for <code>seed</code>. Moreover, if you need these

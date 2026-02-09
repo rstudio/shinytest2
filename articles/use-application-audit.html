@@ -515,7 +515,7 @@ during any future <code>devtools::check()</code>:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_build_ignore.html" class="external-link">use_build_ignore</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"public"</span>, <span class="st">"recording.log"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>An example is available <a href="https://github.com/DivadNojnarg/shinyAuditTest" class="external-link">here</a>.</p>
-<p><img src="images/shinytest2-loadtest.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images/shinytest2-loadtest.png" class="r-plt" alt="Screenshot of a shinyloadtest performance report showing session duration metrics with multiple tabs displaying load testing results, indicating that the app struggles to handle 5 simultaneous users due to large computations" width="100%" style="display: block; margin: auto;"></p>
 <p>As shown in the above report, especially in the session duration tab,
 the app is clearly not able to handle 5 simultaneous user due to the
 very large computations being performed by the Shiny server:</p>
@@ -534,7 +534,7 @@ optimization would be to set a caching <a href="https://shiny.rstudio.com/articl
 <code>shiny::bind_cache()</code>. As shown in the following figure,
 adding cache is so fast that <code>shinycannon</code> was able to start
 more than 1000 sessions in 2 minutes.</p>
-<p><img src="images/shinytest2-shinyloadtest-optimized.png" class="r-plt" alt="" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="images/shinytest2-shinyloadtest-optimized.png" class="r-plt" alt="Screenshot of an optimized shinyloadtest performance report showing dramatically improved performance with caching enabled, demonstrating that shinycannon was able to start over 1000 sessions in 2 minutes" width="100%" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>
