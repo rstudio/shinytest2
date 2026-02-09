@@ -65,6 +65,16 @@ R files into the testing environment, similar to testing package R code.
 This is not automatically performed as it may be costly to load the
 support environment.
 
+**Important note**: If your app is defined inline (as a Shiny app object
+passed directly to `AppDriver$new()`), you typically do **NOT** need
+these functions. Your package functions are already available when
+[testthat](https://testthat.r-lib.org) loads your local package.
+
+For a detailed explanation of when and how to use these functions, see
+the [Understanding app support
+files](https://rstudio.github.io/shinytest2/articles/use-package.html#understanding-app-support-files-local_app_support-and-friends)
+section in the “Using shinytest2 with R packages” vignette.
+
 ## Can I modify the `input` and `output` values that are recorded in snapshots?
 
 For some kinds of outputs, it is problematic to record the raw value

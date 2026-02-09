@@ -139,6 +139,15 @@ methods will load the <code>global.R</code> and all R files into the
 testing environment, similar to testing package R code.</p>
 <p>This is not automatically performed as it may be costly to load the
 support environment.</p>
+<p><strong>Important note</strong>: If your app is defined inline (as a
+Shiny app object passed directly to <code>AppDriver$new()</code>), you
+typically do <strong>NOT</strong> need these functions. Your package
+functions are already available when <a href="https://testthat.r-lib.org" class="external-link">testthat</a> loads your
+local package.</p>
+<p>For a detailed explanation of when and how to use these functions,
+see the <a href="use-package.html#understanding-app-support-files-local_app_support-and-friends">Understanding
+app support files</a> section in the “Using shinytest2 with R packages”
+vignette.</p>
 </div>
 <div class="section level2">
 <h2 id="can-i-modify-the-input-and-output-values-that-are-recorded-in-snapshots">Can I modify the <code>input</code> and <code>output</code> values

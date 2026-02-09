@@ -2,9 +2,19 @@
 
 ## shinytest2 (development version)
 
+- Expanded documentation for
+  [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md),
+  [`with_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md),
+  and
+  [`load_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
+  to clarify when each function is needed. Added detailed examples and a
+  decision tree to the use-package vignette to help users choose the
+  right approach
+  ([\#438](https://github.com/rstudio/shinytest2/issues/438)).
+
 - [`record_test()`](https://rstudio.github.io/shinytest2/reference/record_test.md)
   no longer prints a debug message when recording tests in a package
-  directory ([\#438](https://github.com/rstudio/shinytest2/issues/438)).
+  directory ([\#437](https://github.com/rstudio/shinytest2/issues/437)).
 
 - Added alt text to all vignette images for improved accessibility
   ([\#435](https://github.com/rstudio/shinytest2/issues/435)).
