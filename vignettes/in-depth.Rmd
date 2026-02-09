@@ -166,7 +166,7 @@ shinyApp(
 )
 ```
 
-```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center', fig.alt="Screenshot of a Shiny app showing the shinytest2 test recorder with exported values visible in the app's code, demonstrating how exportTestValues() is used to expose internal reactive values for testing"}
 knitr::include_graphics("images/screenshot-exports-app.png")
 ```
 
@@ -221,7 +221,7 @@ If your application uses randomly-generated values (by calling functions like `r
 
 To make such applications exactly repeatable, you can set the random seed. This can be done by specifying a random seed in the recorder. The seed can be any integer value.
 
-```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center'}
+```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center', fig.alt="Screenshot of the test recorder interface showing the random seed configuration field where users can set a seed value to ensure reproducible test results for applications using random number generation"}
 knitr::include_graphics("images/screenshot-recorder-random-seed.png")
 ```
 
