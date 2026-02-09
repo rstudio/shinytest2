@@ -26,6 +26,18 @@ into an environment that is attached appropriately. This is useful when you
 need access to helper functions, modules, or values created in the \code{./R}
 folder for testing purposes.
 }
+\section{Functions}{
+\itemize{
+\item \code{local_app_support()}: Temporarily attach the Shiny application's support
+environment into the current environment.
+
+\item \code{with_app_support()}: For the provided \code{expr}, attach the Shiny
+application's support environment into the current environment.
+
+\item \code{load_app_support()}: Loads all support files into the current environment.
+No cleanup actions are ever performed.
+
+}}
 \section{When to use these functions}{
 
 
@@ -35,7 +47,7 @@ your package functions (via \code{library(yourpackage)} or \code{devtools::load_
 you can reference them directly when creating the app object.
 
 \strong{For apps with separate support files}: Use these functions when your app
-is stored in a directory (e.g., \code{inst/myapps/app1/}) and has supporting R
+is stored in a directory (e.g., \verb{inst/myapps/app1/}) and has supporting R
 files in an \code{./R} subfolder that you need to access in your tests.
 }
 
@@ -67,18 +79,6 @@ support files are separate from the package's exported functions.
 }
 }
 
-\section{Functions}{
-\itemize{
-\item \code{local_app_support()}: Temporarily attach the Shiny application's support
-environment into the current environment.
-
-\item \code{with_app_support()}: For the provided \code{expr}, attach the Shiny
-application's support environment into the current environment.
-
-\item \code{load_app_support()}: Loads all support files into the current environment.
-No cleanup actions are ever performed.
-
-}}
 \examples{
 \dontrun{
 # Example 1: Basic usage with local_app_support()
