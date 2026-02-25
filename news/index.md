@@ -1,6 +1,6 @@
 # Changelog
 
-## shinytest2 (development version)
+## shinytest2 0.5.1
 
 - Expanded documentation for
   [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md),
