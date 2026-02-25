@@ -2,6 +2,8 @@
 
 ## shinytest2 0.5.1
 
+CRAN release: 2026-02-25
+
 ### New features
 
 - [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md),
