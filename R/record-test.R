@@ -13,8 +13,8 @@
 #' file to the `tests/testthat` subdirectory or by using `system.file()`. After
 #' fixing the path, remove the line of warning code.
 #'
-#' @param app A [`AppDriver`] object, or path to a Shiny
-#'   application.
+#' @param app A [`AppDriver`] object, path to a Shiny application,
+#'   a Shiny application object, or a function that returns a Shiny application.
 #' @param ... Must be empty. Allows for parameter expansion.
 #' @param name Name provided to [`AppDriver`]. This value should be unique between all tests within a test file. If it is not unique, different expect methods may overwrite each other.
 #' @param seed A random seed to set before running the app. This seed will also
@@ -92,11 +92,7 @@ record_test <- function(
   }
 
   if (is.null(test_file)) {
-    if (record_in_package) {
-      test_file <- paste0("test-app-", fs::path_file(app), ".R")
-    } else {
-      test_file <- "test-shinytest2.R"
-    }
+    test_file <- record_test_file_name(app, record_in_package)
   }
 
   # Note: App objects with functions are handled similarly to appobjects: the
@@ -105,6 +101,15 @@ record_test <- function(
 
   if (shiny::is.shiny.appobj(app)) {
     app <- AppDriver$new(app)
+  }
+
+  if (is.function(app)) {
+    app <- AppDriver$new(
+      app,
+      seed = seed,
+      load_timeout = load_timeout,
+      shiny_args = shiny_args
+    )
   }
 
   if (is.character(app)) {
@@ -123,10 +128,6 @@ record_test <- function(
       load_timeout = load_timeout,
       shiny_args = shiny_args
     )
-    on.exit({
-      rm(app)
-      gc()
-    })
   }
 
   if (!inherits(app, "AppDriver")) {
@@ -199,21 +200,45 @@ record_test <- function(
     fs::path_ext_remove(fs::path_file(saved_test_file))
   )
   # Run the test script
-  rlang::inform(c(
-    "*" = paste0(
-      "Running recorded test: ",
-      fs::path_rel(saved_test_file, app$get_dir())
-    )
-  ))
+  app_dir <- app$get_dir()
+  if (is.function(app_dir)) {
+    # For function apps, show absolute path since we can't compute relative path
+    rlang::inform(c(
+      "*" = paste0("Running recorded test: ", saved_test_file)
+    ))
+  } else {
+    rlang::inform(c(
+      "*" = paste0(
+        "Running recorded test: ",
+        fs::path_rel(saved_test_file, app_dir)
+      )
+    ))
+  }
+
   if (!is.null(package_path)) {
     # Test within the package
     testthat::test_local(package_path, filter = test_filter)
   } else {
     # Test locally in the app directory
-    test_app(app$get_dir(), filter = test_filter)
+    if (is.function(app_dir)) {
+      # For function apps, test from current directory
+      test_app(".", filter = test_filter)
+    } else {
+      test_app(app_dir, filter = test_filter)
+    }
   }
 
   invisible(res$test_file)
+}
+
+# Helper function to determine test file name based on app type
+# @keywords internal
+record_test_file_name <- function(app, record_in_package) {
+  if (record_in_package && is.character(app)) {
+    paste0("test-app-", fs::path_file(app), ".R")
+  } else {
+    "test-shinytest2.R"
+  }
 }
 
 
