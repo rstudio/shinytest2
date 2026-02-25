@@ -20,8 +20,8 @@ record_test(
 )
 }
 \arguments{
-\item{app}{A \code{\link{AppDriver}} object, or path to a Shiny
-application.}
+\item{app}{A \code{\link{AppDriver}} object, path to a Shiny application,
+a Shiny application object, or a function that returns a Shiny application.}
 
 \item{...}{Must be empty. Allows for parameter expansion.}
 
