@@ -1,6 +1,7 @@
 require("shiny", quietly = TRUE, character.only = TRUE)
 
 test_that("Running an app not in testing mode has 404 handled when getting values", {
+  skip_on_cran()
 
   app_bg <- callr::r_bg(
     function() {
