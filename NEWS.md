@@ -1,4 +1,4 @@
-# shinytest2 (development version)
+# shinytest2 0.5.1
 
 * Expanded documentation for `local_app_support()`, `with_app_support()`, and
   `load_app_support()` to clarify when each function is needed. Added detailed
