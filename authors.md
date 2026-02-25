@@ -23,7 +23,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/rstudio/shinytest2/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/rstudio/shinytest2/blob/rc-v0.5.1/DESCRIPTION)
 
 Schloerke B (2026). *shinytest2: Testing for Shiny Applications*. R
 package version 0.5.0.9000, <https://rstudio.github.io/shinytest2/>.
