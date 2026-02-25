@@ -19,6 +19,13 @@
 - Added alt text to all vignette images for improved accessibility
   ([\#435](https://github.com/rstudio/shinytest2/issues/435)).
 
+### Bug fixes
+
+- Fixed `record_test(app=)` to properly handle function apps.
+  Previously, passing a function would error with “object of type
+  ‘closure’ is not subsettable” when determining the test file name
+  ([\#439](https://github.com/rstudio/shinytest2/issues/439)).
+
 ## shinytest2 0.5.0
 
 CRAN release: 2026-01-09

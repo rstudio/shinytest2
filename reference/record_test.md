@@ -28,7 +28,8 @@ record_test(
 
   A
   [`AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.md)
-  object, or path to a Shiny application.
+  object, path to a Shiny application, a Shiny application object, or a
+  function that returns a Shiny application.
 
 - ...:
 
