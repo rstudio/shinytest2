@@ -2,28 +2,29 @@
 
 ## shinytest2 0.5.1
 
-- Expanded documentation for
-  [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md),
+### New features
+
+- [`local_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md),
   [`with_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md),
   and
   [`load_app_support()`](https://rstudio.github.io/shinytest2/reference/app_support.md)
-  to clarify when each function is needed. Added detailed examples and a
-  decision tree to the use-package vignette to help users choose the
-  right approach
+  documentation has been expanded to clarify when each function is
+  needed. The use-package vignette now includes detailed examples and a
+  decision tree to help users choose the right approach
   ([\#438](https://github.com/rstudio/shinytest2/issues/438)).
+
+### Bug fixes and minor improvements
+
+- All vignette images now include alt text for improved accessibility
+  ([\#435](https://github.com/rstudio/shinytest2/issues/435)).
 
 - [`record_test()`](https://rstudio.github.io/shinytest2/reference/record_test.md)
   no longer prints a debug message when recording tests in a package
   directory ([\#437](https://github.com/rstudio/shinytest2/issues/437)).
 
-- Added alt text to all vignette images for improved accessibility
-  ([\#435](https://github.com/rstudio/shinytest2/issues/435)).
-
-### Bug fixes
-
-- Fixed `record_test(app=)` to properly handle function apps.
-  Previously, passing a function would error with “object of type
-  ‘closure’ is not subsettable” when determining the test file name
+- `record_test(app=)` now properly handles function apps. Previously,
+  passing a function would error with “object of type ‘closure’ is not
+  subsettable” when determining the test file name
   ([\#439](https://github.com/rstudio/shinytest2/issues/439)).
 
 ## shinytest2 0.5.0
