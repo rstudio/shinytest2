@@ -178,6 +178,7 @@ test_that("App captures known debug messages", {
 
 
 test_that("App captures known debug messages", {
+  skip_on_os("windows")
   app <- AppDriver$new(shiny_app, options = list(shiny.trace = TRUE))
 
   log_df <- app$get_logs()

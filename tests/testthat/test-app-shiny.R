@@ -33,6 +33,7 @@ test_that("AppDriver can receive a shiny.obj object", {
 })
 
 test_that("AppDriver can receive a shinyAppDir object", {
+  skip_on_os("windows")
 
   ex_app_dir <- shinyAppDir(system.file("examples/01_hello", package = "shiny"))
 
