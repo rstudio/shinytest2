@@ -29,7 +29,8 @@ app_download <- function(
           paste0("Download from '#", output, "' failed."),
           "i" = "Element not found or its `href` attribute was not set within the timeout.",
           "i" = "If the download button is rendered dynamically (e.g., in a modal), make sure the UI is visible before calling `$get_download()` or `$expect_download()`."
-        )
+        ),
+        parent = e
       )
     }
   )
