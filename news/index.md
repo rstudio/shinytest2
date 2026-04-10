@@ -4,6 +4,12 @@
 
 ### Bug fixes and minor improvements
 
+- `$get_download()` and `$expect_download()` now correctly construct the
+  download URL when the app URL contains query parameters. Previously,
+  query parameters were concatenated into the download path, causing an
+  HTML page to be downloaded instead of the expected file
+  ([\#357](https://github.com/rstudio/shinytest2/issues/357)).
+
 - `$get_download()` and `$expect_download()` now wait for the download
   element’s `href` attribute to be populated before fetching.
   Previously, if the element wasn’t in the DOM yet (e.g., inside a
@@ -31,13 +37,18 @@ CRAN release: 2026-02-25
 - All vignette images now include alt text for improved accessibility
   ([\#435](https://github.com/rstudio/shinytest2/issues/435)).
 
+- `$get_download()` and `$expect_download()` now correctly construct the
+  download URL when the app URL contains query parameters. Previously,
+  query parameters were concatenated into the download path, causing an
+  HTML page to be downloaded instead of the expected file
+  ([\#357](https://github.com/rstudio/shinytest2/issues/357)).
+
 - [`record_test()`](https://rstudio.github.io/shinytest2/reference/record_test.md)
   no longer prints a debug message when recording tests in a package
   directory ([\#437](https://github.com/rstudio/shinytest2/issues/437)).
-
-- `record_test(app=)` now properly handles function apps. Previously,
-  passing a function would error with “object of type ‘closure’ is not
-  subsettable” when determining the test file name
+  `record_test(app=)` now handles function apps; previously, passing a
+  function would error with “object of type ‘closure’ is not
+  subsettable”
   ([\#439](https://github.com/rstudio/shinytest2/issues/439)).
 
 ## shinytest2 0.5.0
