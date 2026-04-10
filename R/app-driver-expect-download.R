@@ -9,14 +9,37 @@ app_download <- function(
   ckm8_assert_app_driver(self, private)
   self$log_message(paste0("Downloading file for output id: ", output))
 
-  # Find the URL to download from (the href of the <a> tag)
+  # Wait for the download element to exist and have a non-empty href.
+  # This handles cases where the element is dynamically rendered (e.g., in a
+  # modal) or Shiny's output binding hasn't set the href yet. (#445)
+  href_js <- paste0(
+    "var el = $('#", output, "'); ",
+    "el.length > 0 && el.attr('href') !== undefined && el.attr('href') !== ''"
+  )
+  tryCatch(
+    chromote_wait_for_condition(
+      self$get_chromote_session(),
+      href_js,
+      timeout = private$timeout
+    ),
+    error = function(e) {
+      app_abort(
+        self, private,
+        c(
+          paste0("Download from '#", output, "' failed."),
+          "i" = "Element not found or its `href` attribute was not set within the timeout.",
+          "i" = "If the download button is rendered dynamically (e.g., in a modal), make sure the UI is visible before calling `$get_download()` or `$expect_download()`."
+        ),
+        parent = e
+      )
+    }
+  )
+
+  # Now fetch the href value
   sub_url <- chromote_eval(
     self$get_chromote_session(),
     paste0("$('#", output, "').attr('href')")
   )$result$value
-  if (identical(sub_url, "")) {
-    app_abort(self, private, paste0("Download from '#", output, "' failed"))
-  }
 
   # Add the base location to the URL
   full_url <- paste0(private$shiny_url$get(), sub_url)
