@@ -41,8 +41,8 @@ app_download <- function(
     paste0("$('#", output, "').attr('href')")
   )$result$value
 
-  # Add the base location to the URL
-  full_url <- paste0(private$shiny_url$get(), sub_url)
+  # Add the base location to the URL (#357)
+  full_url <- private$shiny_url$combine(sub_url)
   req <- app_httr2_get(self, private, full_url)
 
   # Find suggested name

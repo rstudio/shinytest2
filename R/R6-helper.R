@@ -49,6 +49,27 @@ Url <- R6Class(
     get = function() {
       private$url
     },
+    # Combine the stored URL with a relative sub-path, properly handling
+    # query parameters on the base URL. (#357)
+    combine = function(sub_url) {
+      base_parsed <- httr2::url_parse(private$url)
+      base_query <- base_parsed$query
+      base_parsed$query <- NULL
+      base_url <- httr2::url_build(base_parsed)
+      # Ensure exactly one "/" between base path and sub_url
+      if (!grepl("/$", base_url) && !grepl("^/", sub_url)) {
+        base_url <- paste0(base_url, "/")
+      } else if (grepl("/$", base_url) && grepl("^/", sub_url)) {
+        sub_url <- sub("^/", "", sub_url)
+      }
+      full_url <- paste0(base_url, sub_url)
+      if (length(base_query) > 0) {
+        full_parsed <- httr2::url_parse(full_url)
+        full_parsed$query <- c(full_parsed$query, base_query)
+        full_url <- httr2::url_build(full_parsed)
+      }
+      full_url
+    },
     set = function(url) {
       res <- tryCatch(
         httr2::url_parse(url),

@@ -24,3 +24,53 @@ test_that("Url Class behaves as expected", {
   )
   expect_url_error("ftp://a.b.com/", "url scheme")
 })
+
+
+# https://github.com/rstudio/shinytest2/issues/357
+test_that("Url$combine constructs correct URL without query params", {
+  url <- Url$new()
+  url$set("http://127.0.0.1:4895/")
+  result <- url$combine("session/abc123/download/downloadData?w=")
+  expect_equal(
+    result,
+    "http://127.0.0.1:4895/session/abc123/download/downloadData?w="
+  )
+})
+
+test_that("Url$combine preserves base query params", {
+  url <- Url$new()
+  url$set("http://127.0.0.1:4895/?foo=bar")
+  result <- url$combine("session/abc123/download/downloadData?w=")
+  parsed <- httr2::url_parse(result)
+  # Path should not contain query string fragments
+  expect_equal(parsed$path, "/session/abc123/download/downloadData")
+  # Both the sub_url query param and the base query param should be present
+  expect_true("w" %in% names(parsed$query))
+  expect_equal(parsed$query$foo, "bar")
+})
+
+test_that("Url$combine handles multiple base query params", {
+  url <- Url$new()
+  url$set("http://127.0.0.1:4895/?foo=bar&baz=qux")
+  result <- url$combine("session/abc123/download/downloadData?w=")
+  parsed <- httr2::url_parse(result)
+  expect_equal(parsed$query$foo, "bar")
+  expect_equal(parsed$query$baz, "qux")
+  expect_true("w" %in% names(parsed$query))
+})
+
+test_that("Url$combine normalizes path boundary without trailing slash", {
+  url <- Url$new()
+  url$set("http://127.0.0.1:4895/app")
+  result <- url$combine("session/abc123/download/downloadData?w=")
+  parsed <- httr2::url_parse(result)
+  expect_equal(parsed$path, "/app/session/abc123/download/downloadData")
+})
+
+test_that("Url$combine normalizes path boundary with double slash", {
+  url <- Url$new()
+  url$set("http://127.0.0.1:4895/app/")
+  result <- url$combine("/session/abc123/download/downloadData?w=")
+  parsed <- httr2::url_parse(result)
+  expect_equal(parsed$path, "/app/session/abc123/download/downloadData")
+})

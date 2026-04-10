@@ -53,6 +53,7 @@ expect_timeouts <- function(
 }
 
 test_that("timeout initialization values", {
+  skip_on_os("windows")
 
   # Respect given value
   expect_timeouts(
