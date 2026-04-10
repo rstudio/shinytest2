@@ -72,13 +72,6 @@ test_that("download files work from link and button", {
 
   app <- AppDriver$new(shiny_app, variant = NULL)
 
-  app$wait_for_js("$('#download_link_csv').attr('href') != ''")
-  app$wait_for_js("$('#download_button_csv').attr('href') != ''")
-  app$wait_for_js("$('#download_link_txt').attr('href') != ''")
-  app$wait_for_js("$('#download_button_txt').attr('href') != ''")
-  app$wait_for_js("$('#download_link_binary').attr('href') != ''")
-  app$wait_for_js("$('#download_button_binary').attr('href') != ''")
-
   app$expect_download("download_link_txt")
   app$expect_download("download_button_txt")
 
@@ -104,9 +97,6 @@ test_that("download files can be retrieved", {
   )
 
   app <- AppDriver$new(shiny_app, variant = NULL)
-
-  app$wait_for_js("$('#download_link_csv').attr('href') != ''")
-  app$wait_for_js("$('#download_button_csv').attr('href') != ''")
 
   link_file <- app$get_download("download_link_csv")
   button_file <- app$get_download("download_button_csv", "barret.test")
