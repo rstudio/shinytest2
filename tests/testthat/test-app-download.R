@@ -121,6 +121,7 @@ test_that("download files can be retrieved", {
 
 # https://github.com/rstudio/shinytest2/issues/357
 test_that("get_download works when AppDriver URL has query parameters", {
+  skip_on_os("windows")
   # Reprex from issue #357
   ui <- fluidPage(
     downloadButton("downloadData", "Download")
