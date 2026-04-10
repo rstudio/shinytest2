@@ -107,3 +107,47 @@ test_that("download files can be retrieved", {
   expect_gt(file.info(link_file)$size, 0)
   expect_gt(file.info(button_file)$size, 0)
 })
+
+
+test_that("get_download works for download button inside a modal (#445)", {
+  modal_app <- shinyApp(
+    ui = basicPage(
+      actionButton("show_modal", "Show Modal")
+    ),
+    server = function(input, output, session) {
+      observeEvent(input$show_modal, {
+        showModal(modalDialog(
+          downloadButton("modal_download", "Download CSV"),
+          easyClose = TRUE,
+          title = "Download"
+        ))
+      })
+
+      output$modal_download <- downloadHandler(
+        filename = function() {
+          "modal-data.csv"
+        },
+        content = function(file) {
+          write.csv(head(iris, 5), file, row.names = FALSE)
+        }
+      )
+    }
+  )
+
+  app <- AppDriver$new(modal_app, variant = NULL)
+
+  # Open the modal
+  app$click("show_modal")
+
+  # get_download should wait for the href to be ready — no manual wait needed
+  file_path <- app$get_download("modal_download")
+
+  # Verify we got actual CSV content, not HTML
+  content <- readLines(file_path, n = 1)
+  expect_false(grepl("<!DOCTYPE|<html", content, ignore.case = TRUE))
+
+  # Verify the CSV is parseable and has expected data
+  df <- read.csv(file_path)
+  expect_equal(nrow(df), 5)
+  expect_equal(names(df), names(iris))
+})
