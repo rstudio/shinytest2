@@ -23,15 +23,15 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/rstudio/shinytest2/blob/rc-v0.5.1/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/rstudio/shinytest2/blob/main/DESCRIPTION)
 
 Schloerke B (2026). *shinytest2: Testing for Shiny Applications*. R
-package version 0.5.1.9000, <https://rstudio.github.io/shinytest2/>.
+package version 0.5.1, <https://rstudio.github.io/shinytest2/>.
 
     @Manual{,
       title = {shinytest2: Testing for Shiny Applications},
       author = {Barret Schloerke},
       year = {2026},
-      note = {R package version 0.5.1.9000},
+      note = {R package version 0.5.1},
       url = {https://rstudio.github.io/shinytest2/},
     }
