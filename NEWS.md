@@ -1,3 +1,18 @@
+# shinytest2 (development version)
+
+## Bug fixes and minor improvements
+
+* `$get_download()` and `$expect_download()` now correctly construct the
+  download URL when the app URL contains query parameters. Previously,
+  query parameters were concatenated into the download path, causing an
+  HTML page to be downloaded instead of the expected file (#357).
+
+* `$get_download()` and `$expect_download()` now wait for the download
+  element's `href` attribute to be populated before fetching. Previously,
+  if the element wasn't in the DOM yet (e.g., inside a modal) or Shiny's
+  output binding hadn't set the `href`, these methods would silently
+  return the app's HTML page instead of the intended file (#445).
+
 # shinytest2 0.5.1
 
 ## New features
