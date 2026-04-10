@@ -117,3 +117,40 @@ test_that("download files can be retrieved", {
   expect_gt(file.info(link_file)$size, 0)
   expect_gt(file.info(button_file)$size, 0)
 })
+
+
+# https://github.com/rstudio/shinytest2/issues/357
+test_that("get_download works when AppDriver URL has query parameters", {
+  # Reprex from issue #357
+  ui <- fluidPage(
+    downloadButton("downloadData", "Download")
+  )
+  server <- function(input, output) {
+    data <- mtcars
+    output$downloadData <- downloadHandler(
+      filename = function() {
+        paste("data-", Sys.Date(), ".csv", sep = "")
+      },
+      content = function(file) {
+        write.csv(data, file)
+      }
+    )
+  }
+  my_app <- shinyApp(ui, server)
+
+  # Test with base URL
+  test_app1 <- AppDriver$new(my_app)
+  current_url <- test_app1$get_url()
+
+  # Test with custom URL containing query parameters
+  test_app2 <- AppDriver$new(paste0(current_url, "?foo=bar"))
+  csv_file <- test_app2$get_download("downloadData")
+
+  # Should be valid CSV, not an HTML page
+  first_line <- readLines(csv_file, n = 1)
+  expect_false(
+    grepl("<!DOCTYPE", first_line, fixed = TRUE),
+    label = "Downloaded file should be CSV, not HTML"
+  )
+  expect_no_error(read.csv(csv_file))
+})
