@@ -141,10 +141,12 @@ test_that("get_download works when AppDriver URL has query parameters", {
 
   # Test with base URL
   test_app1 <- AppDriver$new(my_app)
+  withr::defer(test_app1$stop())
   current_url <- test_app1$get_url()
 
   # Test with custom URL containing query parameters
   test_app2 <- AppDriver$new(paste0(current_url, "?foo=bar"))
+  withr::defer(test_app2$stop())
   csv_file <- test_app2$get_download("downloadData")
 
   # Should be valid CSV, not an HTML page

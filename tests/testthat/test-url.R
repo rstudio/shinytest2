@@ -58,3 +58,19 @@ test_that("Url$combine handles multiple base query params", {
   expect_equal(parsed$query$baz, "qux")
   expect_true("w" %in% names(parsed$query))
 })
+
+test_that("Url$combine normalizes path boundary without trailing slash", {
+  url <- Url$new()
+  url$set("http://127.0.0.1:4895/app")
+  result <- url$combine("session/abc123/download/downloadData?w=")
+  parsed <- httr2::url_parse(result)
+  expect_equal(parsed$path, "/app/session/abc123/download/downloadData")
+})
+
+test_that("Url$combine normalizes path boundary with double slash", {
+  url <- Url$new()
+  url$set("http://127.0.0.1:4895/app/")
+  result <- url$combine("/session/abc123/download/downloadData?w=")
+  parsed <- httr2::url_parse(result)
+  expect_equal(parsed$path, "/app/session/abc123/download/downloadData")
+})
