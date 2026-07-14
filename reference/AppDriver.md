@@ -40,7 +40,7 @@ retrieved after any initialization error has been thrown.
 
 Reactive values from within your Shiny application can be exported using
 the method:
-[[`shiny::exportTestValues()`](https://rdrr.io/pkg/shiny/man/exportTestValues.html)](https://shiny.posit.co/r/reference/shiny/latest/exporttestvalues.html).
+[`shiny::exportTestValues()`](https://shiny.posit.co/r/reference/shiny/latest/exporttestvalues.html).
 This underutilized method exposes internal values of your app without
 needing to create a corresponding input value or output value.
 
