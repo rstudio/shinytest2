@@ -1,5 +1,8 @@
 # shinytest2 (development version)
 
+<!-- temp: trigger CI checks -->
+
+
 ## Bug fixes and minor improvements
 
 * `$get_download()` and `$expect_download()` now correctly construct the
