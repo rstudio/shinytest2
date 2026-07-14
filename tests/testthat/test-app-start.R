@@ -1,5 +1,7 @@
 # https://github.com/rstudio/shinytest2/issues/448
 test_that("app_wait_for_serving() returns FALSE for an unbound port", {
+  skip_if_not_installed("httpuv")
+
   port <- httpuv::randomPort()
   url <- sprintf("http://127.0.0.1:%s/", port)
 
@@ -12,6 +14,8 @@ test_that("app_wait_for_serving() returns FALSE for an unbound port", {
 })
 
 test_that("app_wait_for_serving() returns TRUE once the port accepts connections", {
+  skip_if_not_installed("httpuv")
+
   port <- httpuv::randomPort()
   server <- httpuv::startServer("127.0.0.1", port, list())
   withr::defer(server$stop())

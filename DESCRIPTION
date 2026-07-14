@@ -46,6 +46,7 @@ Suggests:
     diffobj,
     ggplot2,
     golem,
+    httpuv,
     knitr,
     plotly,
     png,
