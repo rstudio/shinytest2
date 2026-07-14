@@ -33,9 +33,9 @@ below for details). The default is \code{NULL} or can be set globally via the
 \code{shinytest2.compare_screenshot.threshold} option.
 
 If the value of \code{threshold} is \code{NULL}, \code{compare_screenshot_threshold()}
-will act like \code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}}. However, if \code{threshold} is
+will act like \code{\link[testthat:compare_file_binary]{testthat::compare_file_binary}}. However, if \code{threshold} is
 a positive number, it will be compared against the largest convolution
-value found if the two images fail a \code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}}
+value found if the two images fail a \code{\link[testthat:compare_file_binary]{testthat::compare_file_binary}}
 comparison. The max value that can be found is \code{4 * kernel_size ^ 2}.
 
 Threshold values values below 5 help deter false-positive screenshot
@@ -96,7 +96,7 @@ default to \code{FILE.new.png}
 
 \enumerate{
 \item First the two images are compared using
-\code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary()}}. If the files are identical, return
+\code{\link[testthat:compare_file_binary]{testthat::compare_file_binary()}}. If the files are identical, return
 \code{TRUE} that the screenshot images are the same.
 \item If \code{threshold} is \code{NULL}, return \code{FALSE} as the convolution will not
 occur.
