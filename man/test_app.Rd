@@ -42,7 +42,7 @@ seamlessly integrate the app reporter to \code{reporter}.}
 \description{
 This is a helper method that wraps around \code{\link[testthat:test_dir]{testthat::test_dir()}} to test
 your Shiny application or Shiny runtime document.  This is similar to how
-\code{\link[testthat:test_package]{testthat::test_check()}} tests your R package but for your app.
+\code{\link[testthat:test_check]{testthat::test_check()}} tests your R package but for your app.
 }
 \details{
 Example usage:
@@ -109,7 +109,7 @@ shiny::runTests()
 \itemize{
 \item \code{\link[=record_test]{record_test()}} to create tests to record against your Shiny
 application.
-\item \code{\link[testthat:snapshot_accept]{testthat::snapshot_review()}} and \code{\link[testthat:snapshot_accept]{testthat::snapshot_accept()}} if you
+\item \code{\link[testthat:snapshot_review]{testthat::snapshot_review()}} and \code{\link[testthat:snapshot_accept]{testthat::snapshot_accept()}} if you
 want to compare or update snapshots after testing.
 \item \code{\link[=local_app_support]{local_app_support()}} / \code{\link[=with_app_support]{with_app_support()}} to load the Shiny
 application's helper files into respective environments. These methods
