@@ -70,7 +70,6 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Collate:
     'R6-helper.R'
     'app-driver-chromote.R'
@@ -114,3 +113,4 @@ Collate:
     'shinytest2-package.R'
     'test-app.R'
     'use.R'
+Config/roxygen2/version: 8.0.0

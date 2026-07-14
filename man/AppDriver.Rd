@@ -128,13 +128,13 @@ expect_snapshot_file(
 }\if{html}{\out{</div>}}
 
 To update the snapshot values, you will need to run a variation of
-\code{\link[testthat:snapshot_accept]{testthat::snapshot_review()}}.
+\code{\link[testthat:snapshot_review]{testthat::snapshot_review()}}.
 }
 
 \examples{
 
 ## ------------------------------------------------
-## Method `AppDriver$new`
+## Method `AppDriver$new()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -150,7 +150,7 @@ app$expect_values()
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$view`
+## Method `AppDriver$view()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -159,7 +159,7 @@ app$view()
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$click`
+## Method `AppDriver$click()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -175,7 +175,7 @@ cat(app$get_text("#view"))
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$set_inputs`
+## Method `AppDriver$set_inputs()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -189,7 +189,7 @@ cat(app$get_text("#view"))
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$upload_file`
+## Method `AppDriver$upload_file()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -205,7 +205,7 @@ app$upload_file(file1 = tmpfile)
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_values`
+## Method `AppDriver$expect_values()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -245,7 +245,7 @@ app$expect_values(input = "A", output = "C")
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_value`
+## Method `AppDriver$get_value()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -261,7 +261,7 @@ app$get_values(output = "caption")$output$caption
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_values`
+## Method `AppDriver$get_values()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -321,7 +321,7 @@ str(app$get_values(input = "A", output = "C"))
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_download`
+## Method `AppDriver$expect_download()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -334,7 +334,7 @@ app$expect_download("downloadData", compare = testthat::compare_file_text)
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_download`
+## Method `AppDriver$get_download()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -351,7 +351,7 @@ app$get_download("downloadData", filename = "./myfile.csv")
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_text`
+## Method `AppDriver$expect_text()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -363,7 +363,7 @@ app$expect_text("h2")
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_text`
+## Method `AppDriver$get_text()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -375,7 +375,7 @@ app$get_text("h2")
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_html`
+## Method `AppDriver$expect_html()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -387,7 +387,7 @@ app$expect_html("#caption")
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_html`
+## Method `AppDriver$get_html()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -404,7 +404,7 @@ cat(app$get_html(".shiny-input-container")[1])
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_js`
+## Method `AppDriver$expect_js()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -424,7 +424,7 @@ app$expect_js("window.test_counter;")
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_js`
+## Method `AppDriver$get_js()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -469,7 +469,7 @@ app$get_js(js_txt)
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$run_js`
+## Method `AppDriver$run_js()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -493,7 +493,7 @@ app$get_js(js_txt)
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_screenshot`
+## Method `AppDriver$expect_screenshot()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -558,7 +558,7 @@ app$expect_screenshot(selector = "viewport")
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_screenshot`
+## Method `AppDriver$get_screenshot()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -579,7 +579,7 @@ showimage::show_image(tmpfile)
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$wait_for_idle`
+## Method `AppDriver$wait_for_idle()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -613,7 +613,7 @@ identical(pre_value, post_value)
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$wait_for_value`
+## Method `AppDriver$wait_for_value()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -659,7 +659,7 @@ app$get_value(output = "total")
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$wait_for_js`
+## Method `AppDriver$wait_for_js()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -679,7 +679,7 @@ app$wait_for_js("complicated_condition();")
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_unique_names`
+## Method `AppDriver$expect_unique_names()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -713,7 +713,7 @@ app$stop()
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_dir`
+## Method `AppDriver$get_dir()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -725,7 +725,7 @@ identical(app$get_dir(), app_path)
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_url`
+## Method `AppDriver$get_url()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -736,7 +736,7 @@ browseURL(app$get_url())
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_window_size`
+## Method `AppDriver$get_window_size()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -752,7 +752,7 @@ app$get_window_size()
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$set_window_size`
+## Method `AppDriver$set_window_size()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -778,7 +778,7 @@ app$get_window_size()
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_chromote_session`
+## Method `AppDriver$get_chromote_session()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -799,7 +799,7 @@ b$Runtime$evaluate("1 + 1")
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_variant`
+## Method `AppDriver$get_variant()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -816,117 +816,7 @@ app$get_variant()
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_logs`
-## ------------------------------------------------
-
-\dontrun{
-app1 <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-
-app1$get_logs()
-#> \{shinytest2\} R  info   10:00:28.86 Start AppDriver initialization
-#> \{shinytest2\} R  info   10:00:28.86 Starting Shiny app
-#> \{shinytest2\} R  info   10:00:29.76 Creating new ChromoteSession
-#> \{shinytest2\} R  info   10:00:30.56 Navigating to Shiny app
-#> \{shinytest2\} R  info   10:00:30.70 Injecting shiny-tracer.js
-#> \{chromote\}   JS info   10:00:30.75 shinytest2; jQuery found
-#> \{chromote\}   JS info   10:00:30.77 shinytest2; Waiting for shiny session to connect
-#> \{chromote\}   JS info   10:00:30.77 shinytest2; Loaded
-#> \{shinytest2\} R  info   10:00:30.77 Waiting for Shiny to become ready
-#> \{chromote\}   JS info   10:00:30.90 shinytest2; Connected
-#> \{chromote\}   JS info   10:00:30.95 shinytest2; shiny:busy
-#> \{shinytest2\} R  info   10:00:30.98 Waiting for Shiny to become idle for 200ms within 15000ms
-#> \{chromote\}   JS info   10:00:30.98 shinytest2; Waiting for Shiny to be stable
-#> \{chromote\}   JS info   10:00:31.37 shinytest2; shiny:idle
-#> \{chromote\}   JS info   10:00:31.38 shinytest2; shiny:value distPlot
-#> \{chromote\}   JS info   10:00:31.57 shinytest2; Shiny has been idle for 200ms
-#> \{shinytest2\} R  info   10:00:31.57 Shiny app started
-#> \{shiny\}      R  stderr ----------- Loading required package: shiny
-#> \{shiny\}      R  stderr ----------- Running application in test mode.
-#> \{shiny\}      R  stderr -----------
-#> \{shiny\}      R  stderr ----------- Listening on http://127.0.0.1:4679
-
-
-# To capture all websocket traffic, set `options = list(shiny.trace = TRUE)`
-app2 <- AppDriver$new(
-  system.file("examples/01_hello", package = "shiny"),
-  options = list(shiny.trace = TRUE)
-)
-
-app2$get_logs()
-## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
-#> \{shinytest2\} R  info      10:01:57.49 Start AppDriver initialization
-#> \{shinytest2\} R  info      10:01:57.50 Starting Shiny app
-#> \{shinytest2\} R  info      10:01:58.20 Creating new ChromoteSession
-#> \{shinytest2\} R  info      10:01:58.35 Navigating to Shiny app
-#> \{shinytest2\} R  info      10:01:58.47 Injecting shiny-tracer.js
-#> \{chromote\}   JS info      10:01:58.49 shinytest2; jQuery not found
-#> \{chromote\}   JS info      10:01:58.49 shinytest2; Loaded
-#> \{shinytest2\} R  info      10:01:58.50 Waiting for Shiny to become ready
-#> \{chromote\}   JS info      10:01:58.55 shinytest2; jQuery found
-#> \{chromote\}   JS info      10:01:58.55 shinytest2; Waiting for shiny session to connect
-#> \{chromote\}   JS websocket 10:01:58.64 send WEBSOCKET_MSG
-#> \{chromote\}   JS websocket 10:01:58.67 recv WEBSOCKET_MSG
-#> \{chromote\}   JS info      10:01:58.67 shinytest2; Connected
-#> \{chromote\}   JS websocket 10:01:58.71 recv WEBSOCKET_MSG
-#> \{chromote\}   JS websocket 10:01:58.72 recv WEBSOCKET_MSG
-#> \{chromote\}   JS info      10:01:58.72 shinytest2; shiny:busy
-#> \{chromote\}   JS websocket 10:01:58.73 recv WEBSOCKET_MSG
-#> \{chromote\}   JS websocket 10:01:58.73 recv WEBSOCKET_MSG
-#> \{shinytest2\} R  info      10:01:58.75 Waiting for Shiny to become idle for 200ms within 15000ms
-#> \{chromote\}   JS info      10:01:58.75 shinytest2; Waiting for Shiny to be stable
-#> \{chromote\}   JS websocket 10:01:58.81 recv WEBSOCKET_MSG
-#> \{chromote\}   JS websocket 10:01:58.81 recv WEBSOCKET_MSG
-#> \{chromote\}   JS info      10:01:58.81 shinytest2; shiny:idle
-#> \{chromote\}   JS websocket 10:01:58.82 recv WEBSOCKET_MSG
-#> \{chromote\}   JS info      10:01:58.82 shinytest2; shiny:value distPlot
-#> \{chromote\}   JS info      10:01:59.01 shinytest2; Shiny has been idle for 200ms
-#> \{shinytest2\} R  info      10:01:59.01 Shiny app started
-#> \{shiny\}      R  stderr    ----------- Loading required package: shiny
-#> \{shiny\}      R  stderr    ----------- Running application in test mode.
-#> \{shiny\}      R  stderr    -----------
-#> \{shiny\}      R  stderr    ----------- Listening on http://127.0.0.1:4560
-#> \{shiny\}      R  stderr    ----------- SEND \{"config":\{"workerId":"","sessionId"|truncated
-#> \{shiny\}      R  stderr    ----------- RECV \{"method":"init","data":\{"bins":30,|truncated
-#> \{shiny\}      R  stderr    ----------- SEND \{"custom":\{"showcase-src":\{"srcref":|truncated
-#> \{shiny\}      R  stderr    ----------- SEND \{"busy":"busy"\}
-#> \{shiny\}      R  stderr    ----------- SEND \{"custom":\{"showcase-src":\{"srcref":|truncated
-#> \{shiny\}      R  stderr    ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
-#> \{shiny\}      R  stderr    ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
-#> \{shiny\}      R  stderr    ----------- SEND \{"busy":"idle"\}
-#> \{shiny\}      R  stderr    ----------- SEND \{"errors":\{\},"values":\{"distPlot":|truncated
-
-# The log that is returned is a `data.frame()`.
-log <- app2$get_logs()
-tibble::glimpse(log)
-#> Rows: 43
-#> Columns: 5
-#> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-#> $ timestamp <dttm> 2022-09-19 10:01:57, 2022-09-19 10:01:57, 2022-09-19 10:01:58, 2022…
-#> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shinytest2"…
-#> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "info", "inf…
-#> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Creating ne…
-#> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-#> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:…
-#> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shi…
-#> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "inf…
-#> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Cre…
-
-# It may be filtered to find desired logs
-subset(log, level == "websocket")
-## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
-#> \{chromote\} JS websocket 10:01:58.64 send WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.67 recv WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.71 recv WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.72 recv WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.73 recv WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.73 recv WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.81 recv WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.81 recv WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.82 recv WEBSOCKET_MSG
-}
-
-## ------------------------------------------------
-## Method `AppDriver$log_message`
+## Method `AppDriver$log_message()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -939,7 +829,7 @@ app$get_logs()
 }
 
 ## ------------------------------------------------
-## Method `AppDriver$stop`
+## Method `AppDriver$stop()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -995,48 +885,49 @@ str(head(rlog, 2))
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-AppDriver-new}{\code{AppDriver$new()}}
-\item \href{#method-AppDriver-view}{\code{AppDriver$view()}}
-\item \href{#method-AppDriver-click}{\code{AppDriver$click()}}
-\item \href{#method-AppDriver-set_inputs}{\code{AppDriver$set_inputs()}}
-\item \href{#method-AppDriver-upload_file}{\code{AppDriver$upload_file()}}
-\item \href{#method-AppDriver-expect_values}{\code{AppDriver$expect_values()}}
-\item \href{#method-AppDriver-get_value}{\code{AppDriver$get_value()}}
-\item \href{#method-AppDriver-get_values}{\code{AppDriver$get_values()}}
-\item \href{#method-AppDriver-expect_download}{\code{AppDriver$expect_download()}}
-\item \href{#method-AppDriver-get_download}{\code{AppDriver$get_download()}}
-\item \href{#method-AppDriver-expect_text}{\code{AppDriver$expect_text()}}
-\item \href{#method-AppDriver-get_text}{\code{AppDriver$get_text()}}
-\item \href{#method-AppDriver-expect_html}{\code{AppDriver$expect_html()}}
-\item \href{#method-AppDriver-get_html}{\code{AppDriver$get_html()}}
-\item \href{#method-AppDriver-expect_js}{\code{AppDriver$expect_js()}}
-\item \href{#method-AppDriver-get_js}{\code{AppDriver$get_js()}}
-\item \href{#method-AppDriver-run_js}{\code{AppDriver$run_js()}}
-\item \href{#method-AppDriver-expect_screenshot}{\code{AppDriver$expect_screenshot()}}
-\item \href{#method-AppDriver-get_screenshot}{\code{AppDriver$get_screenshot()}}
-\item \href{#method-AppDriver-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
-\item \href{#method-AppDriver-wait_for_value}{\code{AppDriver$wait_for_value()}}
-\item \href{#method-AppDriver-wait_for_js}{\code{AppDriver$wait_for_js()}}
-\item \href{#method-AppDriver-expect_unique_names}{\code{AppDriver$expect_unique_names()}}
-\item \href{#method-AppDriver-get_dir}{\code{AppDriver$get_dir()}}
-\item \href{#method-AppDriver-get_url}{\code{AppDriver$get_url()}}
-\item \href{#method-AppDriver-get_window_size}{\code{AppDriver$get_window_size()}}
-\item \href{#method-AppDriver-set_window_size}{\code{AppDriver$set_window_size()}}
-\item \href{#method-AppDriver-get_chromote_session}{\code{AppDriver$get_chromote_session()}}
-\item \href{#method-AppDriver-get_variant}{\code{AppDriver$get_variant()}}
-\item \href{#method-AppDriver-get_logs}{\code{AppDriver$get_logs()}}
-\item \href{#method-AppDriver-log_message}{\code{AppDriver$log_message()}}
-\item \href{#method-AppDriver-stop}{\code{AppDriver$stop()}}
-}
+  \itemize{
+    \item \href{#method-AppDriver-initialize}{\code{AppDriver$new()}}
+    \item \href{#method-AppDriver-view}{\code{AppDriver$view()}}
+    \item \href{#method-AppDriver-click}{\code{AppDriver$click()}}
+    \item \href{#method-AppDriver-set_inputs}{\code{AppDriver$set_inputs()}}
+    \item \href{#method-AppDriver-upload_file}{\code{AppDriver$upload_file()}}
+    \item \href{#method-AppDriver-expect_values}{\code{AppDriver$expect_values()}}
+    \item \href{#method-AppDriver-get_value}{\code{AppDriver$get_value()}}
+    \item \href{#method-AppDriver-get_values}{\code{AppDriver$get_values()}}
+    \item \href{#method-AppDriver-expect_download}{\code{AppDriver$expect_download()}}
+    \item \href{#method-AppDriver-get_download}{\code{AppDriver$get_download()}}
+    \item \href{#method-AppDriver-expect_text}{\code{AppDriver$expect_text()}}
+    \item \href{#method-AppDriver-get_text}{\code{AppDriver$get_text()}}
+    \item \href{#method-AppDriver-expect_html}{\code{AppDriver$expect_html()}}
+    \item \href{#method-AppDriver-get_html}{\code{AppDriver$get_html()}}
+    \item \href{#method-AppDriver-expect_js}{\code{AppDriver$expect_js()}}
+    \item \href{#method-AppDriver-get_js}{\code{AppDriver$get_js()}}
+    \item \href{#method-AppDriver-run_js}{\code{AppDriver$run_js()}}
+    \item \href{#method-AppDriver-expect_screenshot}{\code{AppDriver$expect_screenshot()}}
+    \item \href{#method-AppDriver-get_screenshot}{\code{AppDriver$get_screenshot()}}
+    \item \href{#method-AppDriver-wait_for_idle}{\code{AppDriver$wait_for_idle()}}
+    \item \href{#method-AppDriver-wait_for_value}{\code{AppDriver$wait_for_value()}}
+    \item \href{#method-AppDriver-wait_for_js}{\code{AppDriver$wait_for_js()}}
+    \item \href{#method-AppDriver-expect_unique_names}{\code{AppDriver$expect_unique_names()}}
+    \item \href{#method-AppDriver-get_dir}{\code{AppDriver$get_dir()}}
+    \item \href{#method-AppDriver-get_url}{\code{AppDriver$get_url()}}
+    \item \href{#method-AppDriver-get_window_size}{\code{AppDriver$get_window_size()}}
+    \item \href{#method-AppDriver-set_window_size}{\code{AppDriver$set_window_size()}}
+    \item \href{#method-AppDriver-get_chromote_session}{\code{AppDriver$get_chromote_session()}}
+    \item \href{#method-AppDriver-get_variant}{\code{AppDriver$get_variant()}}
+    \item \href{#method-AppDriver-get_logs}{\code{AppDriver$get_logs()}}
+    \item \href{#method-AppDriver-log_message}{\code{AppDriver$log_message()}}
+    \item \href{#method-AppDriver-stop}{\code{AppDriver$stop()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AppDriver-new"></a>}}
-\if{latex}{\out{\hypertarget{method-AppDriver-new}{}}}
-\subsection{Method \code{new()}}{
-Initialize an \code{AppDriver} object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$new(
+\if{html}{\out{<a id="method-AppDriver-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-initialize}{}}}
+\subsection{\code{AppDriver$new()}}{
+  Initialize an \code{AppDriver} object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$new(
   app_dir = testthat::test_path("../../"),
   ...,
   name = NULL,
@@ -1055,13 +946,13 @@ Initialize an \code{AppDriver} object
   shiny_args = list(),
   render_args = NULL,
   options = list()
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{app_dir}}{This value can be many different things:
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{app_dir}}{This value can be many different things:
 \itemize{
 \item A directory containing your Shiny application or a run-time Shiny R
 Markdown document.
@@ -1081,15 +972,12 @@ interactive and testing usage.
 
 If a file path is not provided to \code{app_dir}, snapshots will be saved as
 if the root of the Shiny application was the current directory.}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{name}}{Prefix value to use when saving testthat snapshot files. Ex:
+      \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+      \item{\code{name}}{Prefix value to use when saving testthat snapshot files. Ex:
 \verb{NAME-001.json}. Name \strong{must} be unique when saving multiple snapshots
 from within the same testing file. Otherwise, two different \code{AppDriver}
 objects will be referencing the same files.}
-
-\item{\code{variant}}{If not-\code{NULL}, results will be saved in
+      \item{\code{variant}}{If not-\code{NULL}, results will be saved in
 \verb{_snaps/\{variant\}/\{test.md\}}, so \code{variant} must be a single
 string of alphanumeric characters suitable for use as a
 directory name.
@@ -1099,12 +987,10 @@ varies and you want to capture and test the variations.
 Common use cases include variations for operating system, R
 version, or version of key dependency. For example usage,
 see \code{\link[=platform_variant]{platform_variant()}}.}
-
-\item{\code{seed}}{An optional random seed to use before starting the application.
+      \item{\code{seed}}{An optional random seed to use before starting the application.
 For apps that use R's random number generator, this can make their
 behavior repeatable.}
-
-\item{\code{load_timeout}}{How long to wait for the app to load, in ms.
+      \item{\code{load_timeout}}{How long to wait for the app to load, in ms.
 This includes the time to start R. Defaults to 15s.
 
 If \code{load_timeout} is missing, the first numeric value found will be used:
@@ -1113,8 +999,7 @@ If \code{load_timeout} is missing, the first numeric value found will be used:
 \item System environment variable \code{SHINYTEST2_LOAD_TIMEOUT}
 \item \code{15 * 1000} (15 seconds)
 }}
-
-\item{\code{timeout}}{Default number of milliseconds for any \code{timeout} or
+      \item{\code{timeout}}{Default number of milliseconds for any \code{timeout} or
 \code{timeout_} parameter in the \code{AppDriver} class. Defaults to 4s.
 
 If \code{timeout} is missing, the first numeric value found will be used:
@@ -1123,54 +1008,43 @@ If \code{timeout} is missing, the first numeric value found will be used:
 \item System environment variable \code{SHINYTEST2_TIMEOUT}
 \item \code{4 * 1000} (4 seconds)
 }}
-
-\item{\code{wait}}{If \code{TRUE}, \verb{$wait_for_idle(duration = 200, timeout = load_timeout)}
+      \item{\code{wait}}{If \code{TRUE}, \verb{$wait_for_idle(duration = 200, timeout = load_timeout)}
 will be called once the app has connected a new session, blocking until the
 Shiny app is idle for 200ms.}
-
-\item{\code{screenshot_args}}{Default set of arguments to pass in to
+      \item{\code{screenshot_args}}{Default set of arguments to pass in to
 \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method when taking
 screenshots within \verb{$expect_screenshot()}. To disable screenshots by
 default, set to \code{FALSE}.}
-
-\item{\code{expect_values_screenshot_args}}{The value for \code{screenshot_args} when
+      \item{\code{expect_values_screenshot_args}}{The value for \code{screenshot_args} when
 producing a debug screenshot for \verb{$expect_values()}. To disable debug
 screenshots by default, set to \code{FALSE}.}
-
-\item{\code{check_names}}{Check if widget names are unique once the application
+      \item{\code{check_names}}{Check if widget names are unique once the application
 initially loads? If duplicate names are found on initialization, a
 warning will be displayed.}
-
-\item{\code{view}}{Opens the \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}} in an interactive browser tab
+      \item{\code{view}}{Opens the \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}} in an interactive browser tab
 before attempting to navigate to the Shiny app.}
-
-\item{\code{height, width}}{Window size to use when opening the
+      \item{\code{height, width}}{Window size to use when opening the
 \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}. Both \code{height} and \code{width} values must be non-null
 values to be used.}
-
-\item{\code{clean_logs}}{Whether to remove the \code{stdout} and \code{stderr} Shiny app
+      \item{\code{clean_logs}}{Whether to remove the \code{stdout} and \code{stderr} Shiny app
 logs when the \code{AppDriver} object is garbage collected.}
-
-\item{\code{shiny_args}}{A list of options to pass to \code{\link[shiny:runApp]{shiny::runApp()}}. Ex:
+      \item{\code{shiny_args}}{A list of options to pass to \code{\link[shiny:runApp]{shiny::runApp()}}. Ex:
 \code{list(port = 8080)}.}
-
-\item{\code{render_args}}{Passed to \code{rmarkdown::run(render_args=)} for
+      \item{\code{render_args}}{Passed to \code{rmarkdown::run(render_args=)} for
 interactive \code{.Rmd}s. Ex: \code{list(quiet = TRUE)}}
-
-\item{\code{options}}{A list of \code{\link[base:options]{base::options()}} to set in the Shiny
+      \item{\code{options}}{A list of \code{\link[base:options]{base::options()}} to set in the Shiny
 application's child R process. See \code{\link[shiny:shinyOptions]{shiny::shinyOptions()}} for
 inspiration. If \code{shiny.trace = TRUE}, then all WebSocket traffic will
 be captured by \code{chromote} and time-stamped for logging purposes.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-An object with class \code{AppDriver} and the many methods described in this documentation.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-# Create an AppDriver from the Shiny app in the current directory
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    An object with class \code{AppDriver} and the many methods described in this documentation.
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{# Create an AppDriver from the Shiny app in the current directory
 app <- AppDriver()
 
 # Create an AppDriver object from a different Shiny app directory
@@ -1180,75 +1054,70 @@ app <- AppDriver(example_app)
 # Expect consistent inital values
 app$expect_values()
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-view"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-view}{}}}
-\subsection{Method \code{view()}}{
-View the Shiny application
+\subsection{\code{AppDriver$view()}}{
+  View the Shiny application
 
 Calls \verb{$view()} on the \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}} object to \emph{view} your Shiny
 application in a Chrome browser.
 
 This method is very helpful for debugging while writing your tests.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$view()}\if{html}{\out{</div>}}
-}
-
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-# Open app in Chrome
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$view()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{# Open app in Chrome
 app$view()
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-click"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-click}{}}}
-\subsection{Method \code{click()}}{
-Click an element
+\subsection{\code{AppDriver$click()}}{
+  Click an element
 
 Find a Shiny input/output value or DOM CSS selector and click it using
 the \href{https://www.w3schools.com/jsref/met_html_click.asp}{DOM method \code{TAG.click()}}.
 
 This method can be used to click input buttons and other elements that
 need to simulate a click action.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$click(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$click(
   input = missing_arg(),
   output = missing_arg(),
   selector = missing_arg(),
   ...
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{input, output, selector}}{A name of an Shiny \code{input}/\code{output} value or
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{input, output, selector}}{A name of an Shiny \code{input}/\code{output} value or
 a DOM CSS selector. Only one of these may be used.}
-
-\item{\code{...}}{If \code{input} is used, all extra arguments are passed to
+      \item{\code{...}}{If \code{input} is used, all extra arguments are passed to
 \verb{$set_inputs(!!input := "click", ...)}. This means that the
 \code{AppDriver} will wait until an output has been updated within the
 specified \code{timeout_}. When clicking any other content, \code{...} must be empty.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/07_widgets", package = "shiny")
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
 
 tmpfile <- write.csv(cars, "cars.csv")
@@ -1258,56 +1127,50 @@ app$set_inputs(dataset = "cars", obs = 6)
 app$click("update")
 cat(app$get_text("#view"))
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-set_inputs"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-set_inputs}{}}}
-\subsection{Method \code{set_inputs()}}{
-Set input values
+\subsection{\code{AppDriver$set_inputs()}}{
+  Set input values
 
 Set Shiny inputs by sending the value to the Chrome browser and
 programmatically updating the values. Given \code{wait_ = TRUE}, the method will
 not return until an output value has been updated.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_inputs(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$set_inputs(
   ...,
   wait_ = TRUE,
   timeout_ = missing_arg(),
   allow_no_input_binding_ = FALSE,
   priority_ = c("input", "event")
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{Name-value pairs, \verb{component_name_1 = value_1, component_name_2 = value_2} etc.
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{Name-value pairs, \verb{component_name_1 = value_1, component_name_2 = value_2} etc.
 Input with name \code{component_name_1} will be assigned value \code{value_1}.}
-
-\item{\code{wait_}}{Wait until all reactive updates have completed?}
-
-\item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).
+      \item{\code{wait_}}{Wait until all reactive updates have completed?}
+      \item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).
 Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
-
-\item{\code{allow_no_input_binding_}}{When setting the value of an input, allow
+      \item{\code{allow_no_input_binding_}}{When setting the value of an input, allow
 it to set the value of an input even if that input does not have an
 input binding. This is useful to replicate behavior like hovering over
 a \pkg{plotly} plot.}
-
-\item{\code{priority_}}{Sets the event priority. For expert use only: see
+      \item{\code{priority_}}{Sets the event priority. For expert use only: see
 \url{https://shiny.rstudio.com/articles/communicating-with-js.html#values-vs-events} for details.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/07_widgets", package = "shiny")
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
 
 cat(app$get_text("#view"))
@@ -1315,40 +1178,36 @@ app$set_inputs(dataset = "cars", obs = 6)
 app$click("update")
 cat(app$get_text("#view"))
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-upload_file"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-upload_file}{}}}
-\subsection{Method \code{upload_file()}}{
-Upload a file
+\subsection{\code{AppDriver$upload_file()}}{
+  Upload a file
 
 Uploads a file to the specified file input.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$upload_file(..., wait_ = TRUE, timeout_ = missing_arg())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{Name-path pair, e.g. \code{component_name = file_path}. The file located at
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$upload_file(..., wait_ = TRUE, timeout_ = missing_arg())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{Name-path pair, e.g. \code{component_name = file_path}. The file located at
 \code{file_path} will be uploaded to file input with name \code{component_name}.}
-
-\item{\code{wait_}}{Wait until all reactive updates have completed?}
-
-\item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).
+      \item{\code{wait_}}{Wait until all reactive updates have completed?}
+      \item{\code{timeout_}}{Amount of time to wait before giving up (milliseconds).
 Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/09_upload", package = "shiny")
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/09_upload", package = "shiny")
 app <- AppDriver$new(app_path)
 
 # Save example file
@@ -1358,17 +1217,15 @@ write.csv(cars, tmpfile, row.names = FALSE)
 # Upload file to input named: file1
 app$upload_file(file1 = tmpfile)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-expect_values"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-expect_values}{}}}
-\subsection{Method \code{expect_values()}}{
-Expect \code{input}, \code{output}, and \code{export} values
+\subsection{\code{AppDriver$expect_values()}}{
+  Expect \code{input}, \code{output}, and \code{export} values
 
 A JSON snapshot is saved of given the results from the underlying call to \verb{$get_values()}.
 
@@ -1377,8 +1234,9 @@ trouble serializing may not work well. Instead, these objects should be
 manually inspected and have their components tested individually.
 
 Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robust testing} for more details.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_values(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$expect_values(
   ...,
   input = missing_arg(),
   output = missing_arg(),
@@ -1387,15 +1245,14 @@ Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robu
   name = NULL,
   transform = NULL,
   cran = deprecated()
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{input, output, export}}{Depending on which parameters are supplied, different return values can occur:
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+      \item{\code{input, output, export}}{Depending on which parameters are supplied, different return values can occur:
 * If \code{input}, \code{output}, and \code{export} are all missing, then all values are included in the snapshot.
 * If at least one \code{input}, \code{output}, or \code{export} is specified, then only the requested values are included in the snapshot.
 
@@ -1403,8 +1260,7 @@ The values supplied to each variable can be:
 * A character vector of specific names to only include in the snapshot.
 * \code{TRUE} to request that all values of that type are included in the snapshot.
 * Anything else (e.g. \code{NULL} or \code{FALSE}) will result in the parameter being ignored.}
-
-\item{\code{screenshot_args}}{This value is passed along to
+      \item{\code{screenshot_args}}{This value is passed along to
 \verb{$expect_screenshot()} where the resulting snapshot expectation is ignored. If
 missing, the default value will be
 \verb{$new(expect_values_screenshot_args=)}.
@@ -1417,27 +1273,23 @@ The final value can either be:
 \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. The \code{selector}
 and \code{delay} will default to \code{"html"} and \code{0} respectively.
 }}
-
-\item{\code{name}}{The file name to be used for the snapshot. The file extension
+      \item{\code{name}}{The file name to be used for the snapshot. The file extension
 will be overwritten to \code{.json}. By default, the \code{name} supplied to
 \code{app} on initialization with a counter will be used (e.g. \code{"NAME-001.json"}).}
-
-\item{\code{transform}}{Optionally, a function to scrub sensitive or stochastic text
+      \item{\code{transform}}{Optionally, a function to scrub sensitive or stochastic text
 from the output. Should take a character vector of lines as input and
 return a modified character vector as output.}
-
-\item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
+      \item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
 this parameter no longer has any effect.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The result of the snapshot expectation
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-library(shiny)
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The result of the snapshot expectation
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{library(shiny)
 shiny_app <- shinyApp(
   fluidPage(
     h1("Pythagorean theorem"),
@@ -1471,17 +1323,15 @@ app$expect_values(export = TRUE)
 # Snapshot values `"A"` from `input` and `"C"` from `output`
 app$expect_values(input = "A", output = "C")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-get_value"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-get_value}{}}}
-\subsection{Method \code{get_value()}}{
-Get a single \code{input}, \code{output}, or \code{export} value
+\subsection{\code{AppDriver$get_value()}}{
+  Get a single \code{input}, \code{output}, or \code{export} value
 
 This is a helper function around \verb{$get_values()} to retrieve a single
 \code{input}, \code{output}, or \code{export} value. Only a single \code{input}, \code{output}, or
@@ -1489,37 +1339,35 @@ This is a helper function around \verb{$get_values()} to retrieve a single
 
 Note, values that contain environments or other values that will have
 trouble serializing to RDS may not work well.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_value(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$get_value(
   ...,
   input = missing_arg(),
   output = missing_arg(),
   export = missing_arg(),
   hash_images = FALSE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{input, output, export}}{One of these variable should contain a single
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+      \item{\code{input, output, export}}{One of these variable should contain a single
 string value. If more than one value is specified or no values are
 specified, an error will be thrown.}
-
-\item{\code{hash_images}}{If \code{TRUE}, images will be hashed before being returned.
+      \item{\code{hash_images}}{If \code{TRUE}, images will be hashed before being returned.
 Otherwise, all images will return their full data64 encoded value.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The requested \code{input}, \code{output}, or \code{export} value.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/04_mpg", package = "shiny")
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The requested \code{input}, \code{output}, or \code{export} value.
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/04_mpg", package = "shiny")
 app <- AppDriver$new(app_path)
 
 # Retrieve a single value
@@ -1529,39 +1377,37 @@ app$get_value(output = "caption")
 app$get_values(output = "caption")$output$caption
 #> [1] "mpg ~ cyl"
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-get_values"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-get_values}{}}}
-\subsection{Method \code{get_values()}}{
-Get \code{input}, \code{output}, and \code{export} values
+\subsection{\code{AppDriver$get_values()}}{
+  Get \code{input}, \code{output}, and \code{export} values
 
 Retrieves a list of all known \code{input}, \code{output}, or \code{export} values. This
 method is a core method when inspecting your Shiny app.
 
 Note, values that contain environments or other values that will have
 trouble serializing may not work well.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_values(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$get_values(
   ...,
   input = missing_arg(),
   output = missing_arg(),
   export = missing_arg(),
   hash_images = FALSE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{input, output, export}}{Depending on which parameters are supplied, different return values can occur:
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+      \item{\code{input, output, export}}{Depending on which parameters are supplied, different return values can occur:
 * If \code{input}, \code{output}, and \code{export} are all missing, then all values are included in the snapshot.
 * If at least one \code{input}, \code{output}, or \code{export} is specified, then only the requested values are included in the snapshot.
 
@@ -1569,19 +1415,17 @@ The values supplied to each variable can be:
 * A character vector of specific names to only include in the snapshot.
 * \code{TRUE} to request that all values of that type are included in the snapshot.
 * Anything else (e.g. \code{NULL} or \code{FALSE}) will result in the parameter being ignored.}
-
-\item{\code{hash_images}}{If \code{TRUE}, images will be hashed before being returned.
+      \item{\code{hash_images}}{If \code{TRUE}, images will be hashed before being returned.
 Otherwise, all images will return their full data64 encoded value.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A named list of all inputs, outputs, and export values.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-library(shiny)
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A named list of all inputs, outputs, and export values.
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{library(shiny)
 shiny_app <- shinyApp(
   fluidPage(
     h1("Pythagorean theorem"),
@@ -1635,95 +1479,86 @@ str(app$get_values(input = "A", output = "C"))
 #> $ output:List of 1
 #> ..$ C: chr "5"
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-expect_download"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-expect_download}{}}}
-\subsection{Method \code{expect_download()}}{
-Expect a downloadable file
+\subsection{\code{AppDriver$expect_download()}}{
+  Expect a downloadable file
 
-Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}} \code{output} ID, the corresponding
+Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadLink]{shiny::downloadLink()}} \code{output} ID, the corresponding
 file will be downloaded and saved as a snapshot file.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_download(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$expect_download(
   output,
   ...,
   compare = NULL,
   name = NULL,
   transform = NULL,
   cran = deprecated()
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{output}}{\code{output} ID of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{compare}}{This value is passed through to \code{\link[testthat:expect_snapshot_file]{testthat::expect_snapshot_file()}}.
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{output}}{\code{output} ID of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadLink]{shiny::downloadLink()}}}
+      \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+      \item{\code{compare}}{This value is passed through to \code{\link[testthat:expect_snapshot_file]{testthat::expect_snapshot_file()}}.
 By default it is set to \code{NULL} which will default to \code{testthat::compare_file_text} if \code{name}
 has extension \code{.r}, \code{.R}, \code{.Rmd}, \code{.md}, or \code{.txt}, and otherwise uses
 \code{testthat::compare_file_binary}.}
-
-\item{\code{name}}{File name to save file to (including file name extension). The default, \code{NULL},
+      \item{\code{name}}{File name to save file to (including file name extension). The default, \code{NULL},
 generates an ascending sequence of names: \verb{001.download},
 \verb{002.download}, etc.}
-
-\item{\code{transform}}{Optionally, a function to scrub sensitive or stochastic text
+      \item{\code{transform}}{Optionally, a function to scrub sensitive or stochastic text
 from the output. Should take a character vector of lines as input and
 return a modified character vector as output.}
-
-\item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
+      \item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
 this parameter no longer has any effect.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/10_download", package = "shiny")
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/10_download", package = "shiny")
 app <- AppDriver$new(app_path)
 
 # Save snapshot of rock.csv as 001.download
 # Save snapshot value of `rock.csv` to capture default file name
 app$expect_download("downloadData", compare = testthat::compare_file_text)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-get_download"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-get_download}{}}}
-\subsection{Method \code{get_download()}}{
-Get downloadable file
+\subsection{\code{AppDriver$get_download()}}{
+  Get downloadable file
 
-Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}} \code{output} ID, the corresponding
+Given a \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadLink]{shiny::downloadLink()}} \code{output} ID, the corresponding
 file will be downloaded and saved as a file.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_download(output, filename = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{output}}{\code{output} ID of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadButton]{shiny::downloadLink()}}}
-
-\item{\code{filename}}{File path to save the downloaded file to.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\verb{$get_download()} will return the final save location of the file. This
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$get_download(output, filename = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{output}}{\code{output} ID of \code{\link[shiny:downloadButton]{shiny::downloadButton()}}/\code{\link[shiny:downloadLink]{shiny::downloadLink()}}}
+      \item{\code{filename}}{File path to save the downloaded file to.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \verb{$get_download()} will return the final save location of the file. This
 location can change depending on the value of \code{filename} and response
 headers.
 
@@ -1735,11 +1570,10 @@ then a temp file containing this \code{filename} will be
 returned.
 \item Otherwise, a temp file ending in \code{.download} will be returned.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/10_download", package = "shiny")
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/10_download", package = "shiny")
 app <- AppDriver$new(app_path)
 
 # Get rock.csv as a tempfile
@@ -1750,17 +1584,15 @@ app$get_download("downloadData")
 app$get_download("downloadData", filename = "./myfile.csv")
 #> [1] "./myfile.csv"
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-expect_text"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-expect_text}{}}}
-\subsection{Method \code{expect_text()}}{
-Expect snapshot of UI text
+\subsection{\code{AppDriver$expect_text()}}{
+  Expect snapshot of UI text
 
 \verb{$expect_text()} will extract the text value of all matching elements via
 \code{TAG.textContent} and store them in a snapshot file. This method is more
@@ -1774,81 +1606,75 @@ package authors room to alter their HTML structures. The resulting array
 of \code{TAG.textContent} values found will be stored in a snapshot file.
 
 Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robust testing} for more details.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_text(selector, ..., cran = deprecated())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{selector}}{A DOM CSS selector to be passed into \code{document.querySelectorAll()}}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$expect_text(selector, ..., cran = deprecated())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{selector}}{A DOM CSS selector to be passed into \code{document.querySelectorAll()}}
+      \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+      \item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
 this parameter no longer has any effect.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-hello_app <- system.file("examples/01_hello", package = "shiny")
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{hello_app <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(hello_app)
 
 # Make a snapshot of `"Hello Shiny!"`
 app$expect_text("h2")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-get_text"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-get_text}{}}}
-\subsection{Method \code{get_text()}}{
-Get UI text
+\subsection{\code{AppDriver$get_text()}}{
+  Get UI text
 
 \verb{$get_text()} will extract the text value of all matching elements via
 \code{TAG.textContent}. Note, this method will not retrieve any \verb{<input />}
 value's text content, e.g. text inputs or text areas, as the input values
 are not stored in the live HTML.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_text(selector)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{selector}}{A DOM CSS selector to be passed into \code{document.querySelectorAll()}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A vector of character values
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-hello_app <- system.file("examples/01_hello", package = "shiny")
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$get_text(selector)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{selector}}{A DOM CSS selector to be passed into \code{document.querySelectorAll()}}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A vector of character values
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{hello_app <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(hello_app)
 
 app$get_text("h2")
 #> [1] "Hello Shiny!"
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-expect_html"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-expect_html}{}}}
-\subsection{Method \code{expect_html()}}{
-Expect snapshot of UI HTML
+\subsection{\code{AppDriver$expect_html()}}{
+  Expect snapshot of UI HTML
 
 \verb{$expect_html()} will extract the full DOM structures of each matching
 element and store them in a snapshot file. This method captures internal
@@ -1864,45 +1690,40 @@ package authors room to alter their HTML structures. The resulting array
 of \code{TAG.textContent} values found will be stored in a snapshot file.
 
 Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robust testing} for more details.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_html(selector, ..., outer_html = TRUE, cran = deprecated())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{selector}}{A DOM selector to be passed into \code{document.querySelectorAll()}}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{outer_html}}{If \code{TRUE} (default), the full DOM structure will be returned (\code{TAG.outerHTML}).
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$expect_html(selector, ..., outer_html = TRUE, cran = deprecated())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{selector}}{A DOM selector to be passed into \code{document.querySelectorAll()}}
+      \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+      \item{\code{outer_html}}{If \code{TRUE} (default), the full DOM structure will be returned (\code{TAG.outerHTML}).
 If \code{FALSE}, the full DOM structure of the child elements will be returned (\code{TAG.innerHTML}).}
-
-\item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
+      \item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
 this parameter no longer has any effect.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/04_mpg", package = "shiny")
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/04_mpg", package = "shiny")
 app <- AppDriver$new(app_path)
 
 # Save a snapshot of the `caption` output
 app$expect_html("#caption")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-get_html"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-get_html}{}}}
-\subsection{Method \code{get_html()}}{
-Get UI HTML
+\subsection{\code{AppDriver$get_html()}}{
+  Get UI HTML
 
 \verb{$get()} will extract the full DOM structures of each matching
 element. This method captures internal
@@ -1914,26 +1735,24 @@ text content, e.g. text inputs or text areas, as the input values are not
 stored in the live HTML.
 
 Please see \href{https://rstudio.github.io/shinytest2/articles/robust.html}{Robust testing} for more details.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_html(selector, ..., outer_html = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{selector}}{A DOM selector to be passed into \code{document.querySelectorAll()}}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{outer_html}}{If \code{TRUE}, the full DOM structure will be returned (\code{TAG.outerHTML}).
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$get_html(selector, ..., outer_html = TRUE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{selector}}{A DOM selector to be passed into \code{document.querySelectorAll()}}
+      \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+      \item{\code{outer_html}}{If \code{TRUE}, the full DOM structure will be returned (\code{TAG.outerHTML}).
 If \code{FALSE}, the full DOM structure of the child elements will be returned (\code{TAG.innerHTML}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/03_reactivity", package = "shiny")
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/03_reactivity", package = "shiny")
 app <- AppDriver$new(app_path, check_names = FALSE)
 
 app$set_inputs(caption = "Custom value!")
@@ -1944,57 +1763,50 @@ cat(app$get_html(".shiny-input-container")[1])
 #> </div>
 ## ^^ No update to the DOM of `caption`
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-expect_js"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-expect_js}{}}}
-\subsection{Method \code{expect_js()}}{
-Expect snapshot of JavaScript script output
+\subsection{\code{AppDriver$expect_js()}}{
+  Expect snapshot of JavaScript script output
 
 This is a building block function that may be called by other functions.
 For example, \verb{$expect_text()} and \verb{$expect_html()} are thin wrappers around this function.
 
 Once the \code{script} has executed, the JSON result will be saved to a snapshot file.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_js(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$expect_js(
   script = missing_arg(),
   ...,
   file = missing_arg(),
   timeout = missing_arg(),
   pre_snapshot = NULL,
   cran = deprecated()
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{script}}{A string containing the JavaScript script to be executed.}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{file}}{A file containing JavaScript code to be read and used as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
-
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{script}}{A string containing the JavaScript script to be executed.}
+      \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+      \item{\code{file}}{A file containing JavaScript code to be read and used as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
+      \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
 Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
-
-\item{\code{pre_snapshot}}{A function to be called on the result of the script before taking the snapshot.
+      \item{\code{pre_snapshot}}{A function to be called on the result of the script before taking the snapshot.
 \verb{$expect_html()} and \verb{$expect_text()} both use \code{\link[=unlist]{unlist()}}.}
-
-\item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
+      \item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
 this parameter no longer has any effect.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/07_widgets", package = "shiny")
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/07_widgets", package = "shiny")
 app <- AppDriver$new(app_path)
 
 # Track how many clicks are given to `#update` button
@@ -2008,17 +1820,15 @@ app$click("update")
 # Save a snapshot of number of clicks (1)
 app$expect_js("window.test_counter;")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-get_js"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-get_js}{}}}
-\subsection{Method \code{get_js()}}{
-Execute JavaScript code in the browser and return the result
+\subsection{\code{AppDriver$get_js()}}{
+  Execute JavaScript code in the browser and return the result
 
 This function will block the local R session until the code has finished
 executing its \emph{tick} in the browser. If a \code{Promise} is returned from the
@@ -2030,39 +1840,36 @@ Arguments will have to be inserted into the script as there is not access
 to \code{arguments}. This can be done with commands like \code{paste()}. If using
 \code{glue::glue()}, be sure to use uncommon \code{.open} and \code{.close} values to
 avoid having to double all \verb{\{} and \verb{\}}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_js(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$get_js(
   script = missing_arg(),
   ...,
   file = missing_arg(),
   timeout = missing_arg()
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{script}}{JavaScript to execute. If a JavaScript Promise is returned,
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{script}}{JavaScript to execute. If a JavaScript Promise is returned,
 the R session will block until the promise has been resolved and return
 the value.}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{file}}{A (local) file containing JavaScript code to be read and used
+      \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+      \item{\code{file}}{A (local) file containing JavaScript code to be read and used
 as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
-
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
+      \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
 Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Result of the \code{script} (or \code{file} contents)
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-library(shiny)
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Result of the \code{script} (or \code{file} contents)
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{library(shiny)
 shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
 
@@ -2101,50 +1908,45 @@ js_txt <- glue::glue_data(
 app$get_js(js_txt)
 #> [1] 42
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-run_js"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-run_js}{}}}
-\subsection{Method \code{run_js()}}{
-Execute JavaScript code in the browser
+\subsection{\code{AppDriver$run_js()}}{
+  Execute JavaScript code in the browser
 
 This function will block the local R session until the code has finished
 executing its \emph{tick} in the browser.
 
 The final result of the code will be ignored and not returned to the R session.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$run_js(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$run_js(
   script = missing_arg(),
   ...,
   file = missing_arg(),
   timeout = missing_arg()
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{script}}{JavaScript to execute.}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{file}}{A (local) file containing JavaScript code to be read and used
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{script}}{JavaScript to execute.}
+      \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+      \item{\code{file}}{A (local) file containing JavaScript code to be read and used
 as the \code{script}. Only one of \code{script} or \code{file} can be specified.}
-
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
+      \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
 Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-library(shiny)
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{library(shiny)
 shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
 
@@ -2162,17 +1964,15 @@ app$run_js(js_txt)
 app$get_js(js_txt)
 #> [1] "127.0.0.1"
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-expect_screenshot"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-expect_screenshot}{}}}
-\subsection{Method \code{expect_screenshot()}}{
-Expect a screenshot of the Shiny application
+\subsection{\code{AppDriver$expect_screenshot()}}{
+  Expect a screenshot of the Shiny application
 
 This method takes a screenshot of the application (of only the \code{selector}
 area) and compares the image to the expected image.
@@ -2189,8 +1989,9 @@ These differences are explicitly clear when working with plots.
 
 Unless absolutely necessary for application consistency, it is strongly
 recommended to use other expectation methods.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_screenshot(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$expect_screenshot(
   ...,
   threshold = getOption("shinytest2.compare_screenshot.threshold", NULL),
   kernel_size = getOption("shinytest2.compare_screenshot.kernel_size", 5),
@@ -2201,23 +2002,22 @@ recommended to use other expectation methods.
   quiet = FALSE,
   name = NULL,
   cran = deprecated()
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{threshold}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+      \item{\code{threshold}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
 when using the default \code{compare} method. The default value can be set
 globally with the \code{shinytest2.compare_screenshot.threshold} option.
 
 If the value of \code{threshold} is \code{NULL},
 \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}} will act like
-\code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}}. However, if \code{threshold} is a
+\code{\link[testthat:compare_file_binary]{testthat::compare_file_binary}}. However, if \code{threshold} is a
 positive number, it will be compared against the largest convolution
-value found if the two images fail a \code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary}}
+value found if the two images fail a \code{\link[testthat:compare_file_binary]{testthat::compare_file_binary}}
 comparison.
 
 Which value should I use? Threshold values values below 5 help deter
@@ -2225,15 +2025,13 @@ false-positive screenshot comparisons (such as inconsistent rounded
 corners). Larger values in the 10s and 100s will help find \emph{real}
 changes. However, not all values are one size fits all and you will
 need to play with a threshold that fits your needs.}
-
-\item{\code{kernel_size}}{Parameter supplied to
+      \item{\code{kernel_size}}{Parameter supplied to
 \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}} when using the default \code{compare}
 method. The \code{kernel_size} represents the height and width of the
 convolution kernel applied to the pixel differences. This integer-like
 value should be relatively small. The default value can be set globally
 with the \code{shinytest2.compare_screenshot.kernel_size} option.}
-
-\item{\code{screenshot_args}}{This named list of arguments is passed along to
+      \item{\code{screenshot_args}}{This named list of arguments is passed along to
 \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. If missing, the
 value will default to \verb{$new(screenshot_args=)}.
 
@@ -2260,12 +2058,10 @@ In \code{v0.3.0}, the default \code{selector} value was changed from the HTML
 DOM selector (\code{"html"}) to entire scrollable area
 (\code{"scrollable_area"}).
 }}
-
-\item{\code{delay}}{The number of \strong{seconds} to wait before taking the screenshot.
+      \item{\code{delay}}{The number of \strong{seconds} to wait before taking the screenshot.
 This value can be supplied as \code{delay} or \code{screenshot_args$delay}, with the
 \code{delay} parameter having preference.}
-
-\item{\code{selector}}{The selector is a CSS selector that will be used to select a
+      \item{\code{selector}}{The selector is a CSS selector that will be used to select a
 portion of the page to be captured. This value can be supplied as
 \code{selector} or \code{screenshot_args$selector}, with the \code{selector} parameter
 having preference.
@@ -2284,35 +2080,30 @@ what is currently being seen with \verb{$view()}.
 
 In \code{v0.3.0}, the default \code{selector} value was changed from the HTML DOM
 selector (\code{"html"}) to entire scrollable area (\code{"scrollable_area"}).}
-
-\item{\code{compare}}{A function used to compare the screenshot snapshot files.
+      \item{\code{compare}}{A function used to compare the screenshot snapshot files.
 The function should take two inputs, the paths to the \code{old} and \code{new}
 snapshot, and return either \code{TRUE} or \code{FALSE}.
 
 \code{compare} defaults to a function that wraps around
 \code{compare_screenshot_threshold(old, new, threshold = threshold, kernel_size = kernel_size, quiet = quiet)}. Note: if \code{threshold} is
 \code{NULL} (default), \code{compare} will behave as if
-\code{\link[testthat:expect_snapshot_file]{testthat::compare_file_binary()}} was provided, comparing the two
+\code{\link[testthat:compare_file_binary]{testthat::compare_file_binary()}} was provided, comparing the two
 images byte-by-byte.}
-
-\item{\code{quiet}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
+      \item{\code{quiet}}{Parameter supplied to \code{\link[=compare_screenshot_threshold]{compare_screenshot_threshold()}}
 when using the default \code{compare} method. If \code{FALSE}, diagnostic
 information will be presented when the computed value is larger than a
 non-\code{NULL} \code{threshold} value.}
-
-\item{\code{name}}{The file name to be used for the snapshot. The file extension
+      \item{\code{name}}{The file name to be used for the snapshot. The file extension
 will overwritten to \code{.png}. By default, the \code{name} supplied to
 \code{app} on initialization with a counter will be used (e.g. \code{"NAME-001.png"}).}
-
-\item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
+      \item{\code{cran}}{Deprecated. With \code{AppDriver} never testing on CRAN,
 this parameter no longer has any effect.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-# These example lines should be performed in a `./tests/testthat`
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{# These example lines should be performed in a `./tests/testthat`
 # test file so that snapshot files can be properly saved
 
 app_path <- system.file("examples/01_hello", package = "shiny")
@@ -2371,39 +2162,36 @@ app$run_js("window.scroll(30, 70)")
 # Take screenshot of browser viewport
 app$expect_screenshot(selector = "viewport")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-get_screenshot"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-get_screenshot}{}}}
-\subsection{Method \code{get_screenshot()}}{
-Take a screenshot
+\subsection{\code{AppDriver$get_screenshot()}}{
+  Take a screenshot
 
 Take a screenshot of the Shiny application.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_screenshot(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$get_screenshot(
   file = NULL,
   ...,
   screenshot_args = missing_arg(),
   delay = missing_arg(),
   selector = missing_arg()
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{file}}{If \code{NULL}, then the image will be displayed to the current
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{file}}{If \code{NULL}, then the image will be displayed to the current
 Graphics Device. If a file path, then the screenshot will be saved to
 that file.}
-
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{screenshot_args}}{This named list of arguments is passed along to
+      \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+      \item{\code{screenshot_args}}{This named list of arguments is passed along to
 \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}}'s \verb{$get_screenshot()} method. If missing, the
 value will default to \verb{$new(screenshot_args=)}.
 
@@ -2431,12 +2219,10 @@ selector (\code{"html"}) to entire scrollable area (\code{"scrollable_area"}).
 
 If \code{screenshot_args=FALSE} is provided, the parameter will be ignored and a
 screenshot will be taken with default behavior.}
-
-\item{\code{delay}}{The number of \strong{seconds} to wait before taking the screenshot.
+      \item{\code{delay}}{The number of \strong{seconds} to wait before taking the screenshot.
 This value can be supplied as \code{delay} or \code{screenshot_args$delay}, with the
 \code{delay} parameter having preference.}
-
-\item{\code{selector}}{The selector is a CSS selector that will be used to select a
+      \item{\code{selector}}{The selector is a CSS selector that will be used to select a
 portion of the page to be captured. This value can be supplied as
 \code{selector} or \code{screenshot_args$selector}, with the \code{selector} parameter
 having preference.
@@ -2455,13 +2241,12 @@ what is currently being seen with \verb{$view()}.
 
 In \code{v0.3.0}, the default \code{selector} value was changed from the HTML DOM
 selector (\code{"html"}) to entire scrollable area (\code{"scrollable_area"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/01_hello", package = "shiny")
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
 # Display in graphics device
@@ -2476,17 +2261,15 @@ tmpfile <- tempfile(fileext = ".png")
 app$get_screenshot(tmpfile)
 showimage::show_image(tmpfile)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-wait_for_idle"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-wait_for_idle}{}}}
-\subsection{Method \code{wait_for_idle()}}{
-Wait for Shiny to not be busy (idle) for a set amount of time
+\subsection{\code{AppDriver$wait_for_idle()}}{
+  Wait for Shiny to not be busy (idle) for a set amount of time
 
 Waits until Shiny has not been busy for a set duration of time, e.g. no
 reactivity is updating or has occurred.
@@ -2503,29 +2286,28 @@ the application
 \item \verb{$set_window_size(wait = TRUE)} waits for Shiny to not be busy after
 resizing the window.)
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_idle(duration = 500, timeout = missing_arg())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{duration}}{How long Shiny must be idle (in ms) before unblocking the
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$wait_for_idle(duration = 500, timeout = missing_arg())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{duration}}{How long Shiny must be idle (in ms) before unblocking the
 R session.}
-
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
+      \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
 Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{invisible(self)} if Shiny stabilizes within the \code{timeout}.
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{invisible(self)} if Shiny stabilizes within the \code{timeout}.
 Otherwise an error will be thrown
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/01_hello", package = "shiny")
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
 pre_value <- app$get_value(output = "distPlot")
@@ -2553,17 +2335,15 @@ identical(pre_value, middle_value)
 # Will not be equal
 identical(pre_value, post_value)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-wait_for_value"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-wait_for_value}{}}}
-\subsection{Method \code{wait_for_value()}}{
-Wait for a new Shiny value
+\subsection{\code{AppDriver$wait_for_value()}}{
+  Wait for a new Shiny value
 
 Waits until an \code{input}, \code{output}, or \code{export} Shiny value is not one of
 \code{ignore}d values, or the \code{timeout} is reached.
@@ -2572,8 +2352,9 @@ Only a single \code{input}, \code{output}, or \code{export} value may be used.
 
 This function can be useful in helping determine if an application
 has finished processing a complex reactive situation.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_value(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$wait_for_value(
   ...,
   input = missing_arg(),
   output = missing_arg(),
@@ -2581,37 +2362,31 @@ has finished processing a complex reactive situation.
   ignore = list(NULL, ""),
   timeout = missing_arg(),
   interval = 400
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{Must be empty. Allows for parameter expansion.}
-
-\item{\code{input, output, export}}{A name of an input, output, or export value.
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{Must be empty. Allows for parameter expansion.}
+      \item{\code{input, output, export}}{A name of an input, output, or export value.
 Only one of these parameters may be used.}
-
-\item{\code{ignore}}{List of possible values to ignore when checking for
+      \item{\code{ignore}}{List of possible values to ignore when checking for
 updates.}
-
-\item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
+      \item{\code{timeout}}{Amount of time to wait before giving up (milliseconds).
 Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
-
-\item{\code{interval}}{How often to check for the condition, in ms.}
-
-\item{\code{timeout_}}{Amount of time to wait for a new \code{output} value before giving up (milliseconds).
+      \item{\code{interval}}{How often to check for the condition, in ms.}
+      \item{\code{timeout_}}{Amount of time to wait for a new \code{output} value before giving up (milliseconds).
 Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Newly found value
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-library(shiny)
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Newly found value
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{library(shiny)
 shiny_app <- shinyApp(
   fluidPage(
     h1("Dynamic output"),
@@ -2651,46 +2426,42 @@ new_total_value <- app$wait_for_value(output = "total")
 app$get_value(output = "total")
 #> [1] "75"
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-wait_for_js"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-wait_for_js}{}}}
-\subsection{Method \code{wait_for_js()}}{
-Wait for a JavaScript expression to be true
+\subsection{\code{AppDriver$wait_for_js()}}{
+  Wait for a JavaScript expression to be true
 
 Waits until a JavaScript \code{expr}ession evaluates to \code{true} or the
 \code{timeout} is exceeded.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$wait_for_js(script, timeout = missing_arg(), interval = 100)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{script}}{A string containing JavaScript code. This code must
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$wait_for_js(script, timeout = missing_arg(), interval = 100)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{script}}{A string containing JavaScript code. This code must
 eventually return a \href{https://developer.mozilla.org/en-US/docs/Glossary/Truthy}{\code{true}thy value} or a
 timeout error will be thrown.}
-
-\item{\code{timeout}}{How long the script has to return a \code{true}thy value (milliseconds).
+      \item{\code{timeout}}{How long the script has to return a \code{true}thy value (milliseconds).
 Defaults to the resolved \code{timeout} value during the \code{AppDriver} initialization.}
-
-\item{\code{interval}}{How often to check for the condition (milliseconds).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{invisible(self)} if expression evaluates to \code{true} without error
+      \item{\code{interval}}{How often to check for the condition (milliseconds).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{invisible(self)} if expression evaluates to \code{true} without error
 within the timeout. Otherwise an error will be thrown
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
 app <- AppDriver$new(shiny_app)
 
 # Contrived example:
@@ -2704,17 +2475,15 @@ system.time(
 app$run_js(file = "complicated_file.js")
 app$wait_for_js("complicated_condition();")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-expect_unique_names"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-expect_unique_names}{}}}
-\subsection{Method \code{expect_unique_names()}}{
-Expect unique input and output names.
+\subsection{\code{AppDriver$expect_unique_names()}}{
+  Expect unique input and output names.
 
 If the HTML has duplicate input or output elements with matching \code{id}
 values, this function will throw an error. It is similar to
@@ -2723,14 +2492,14 @@ displayed.
 
 This method will not throw if a single input and a single output have the
 same name.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$expect_unique_names()}\if{html}{\out{</div>}}
-}
-
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-shiny_app <- shinyApp(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$expect_unique_names()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{shiny_app <- shinyApp(
   ui = fluidPage(
     # Duplicate input IDs: `"text"`
     textInput("text", "Text 1"),
@@ -2759,82 +2528,77 @@ app$expect_unique_names()
 app$stop()
 }
 }
-\if{html}{\out{</div>}}
-
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-get_dir"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-get_dir}{}}}
-\subsection{Method \code{get_dir()}}{
-Retrieve the Shiny app path
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_dir()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-The directory containing the Shiny application or Shiny runtime
+\subsection{\code{AppDriver$get_dir()}}{
+  Retrieve the Shiny app path
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$get_dir()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The directory containing the Shiny application or Shiny runtime
 document. If a URL was provided to \code{app_dir} during initialization, the
 current directory will be returned.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/01_hello", package = "shiny")
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
 identical(app$get_dir(), app_path)
 #> [1] TRUE
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-get_url"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-get_url}{}}}
-\subsection{Method \code{get_url()}}{
-Retrieve the Shiny app URL
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_url()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-URL where the Shiny app is being hosted
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/01_hello", package = "shiny")
+\subsection{\code{AppDriver$get_url()}}{
+  Retrieve the Shiny app URL
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$get_url()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    URL where the Shiny app is being hosted
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
 browseURL(app$get_url())
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-get_window_size"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-get_window_size}{}}}
-\subsection{Method \code{get_window_size()}}{
-Get window size
+\subsection{\code{AppDriver$get_window_size()}}{
+  Get window size
 
 Get current size of the browser window, as list of numeric scalars
 named \code{width} and \code{height}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_window_size()}\if{html}{\out{</div>}}
-}
-
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/01_hello", package = "shiny")
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$get_window_size()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
 app$get_window_size()
@@ -2844,36 +2608,33 @@ app$get_window_size()
 #> $height
 #> [1] 1323
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-set_window_size"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-set_window_size}{}}}
-\subsection{Method \code{set_window_size()}}{
-Sets size of the browser window.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$set_window_size(width, height, wait = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{width, height}}{Height and width of browser, in pixels.}
-
-\item{\code{wait}}{If \code{TRUE}, \verb{$wait_for_idle()} will be called after setting
+\subsection{\code{AppDriver$set_window_size()}}{
+  Sets size of the browser window.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$set_window_size(width, height, wait = TRUE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{width, height}}{Height and width of browser, in pixels.}
+      \item{\code{wait}}{If \code{TRUE}, \verb{$wait_for_idle()} will be called after setting
 the window size. This will block until any width specific items (such
 as plots) that need to be re-rendered.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/01_hello", package = "shiny")
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/01_hello", package = "shiny")
 # Set init window size
 app <- AppDriver$new(app_path, height = 1400, width = 1000)
 
@@ -2893,30 +2654,28 @@ app$get_window_size()
 #> $height
 #> [1] 1080
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-get_chromote_session"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-get_chromote_session}{}}}
-\subsection{Method \code{get_chromote_session()}}{
-Get Chromote Session
+\subsection{\code{AppDriver$get_chromote_session()}}{
+  Get Chromote Session
 
 Get the \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}} object from the \pkg{chromote} package.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_chromote_session()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}} R6 object
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/01_hello", package = "shiny")
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$get_chromote_session()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{\link[chromote:ChromoteSession]{chromote::ChromoteSession}} R6 object
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
 b <- app$get_chromote_session()
@@ -2931,31 +2690,29 @@ b$Runtime$evaluate("1 + 1")
 #> $result$description
 #> [1] "2"
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-get_variant"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-get_variant}{}}}
-\subsection{Method \code{get_variant()}}{
-Get the variant
+\subsection{\code{AppDriver$get_variant()}}{
+  Get the variant
 
 Get the \code{variant} supplied during initialization
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_variant()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-The \code{variant} value supplied during initialization or \code{NULL} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$get_variant()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The \code{variant} value supplied during initialization or \code{NULL} if
 no value was supplied.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/01_hello", package = "shiny")
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/01_hello", package = "shiny")
 
 app <- AppDriver$new(app_path)
 
@@ -2966,25 +2723,24 @@ app <- AppDriver$new(app_path, variant = platform_variant())
 app$get_variant()
 #> [1] "mac-4.1"
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-get_logs"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-get_logs}{}}}
-\subsection{Method \code{get_logs()}}{
-Get all logs
+\subsection{\code{AppDriver$get_logs()}}{
+  Get all logs
 
 Retrieve all of the debug logs that have been recorded.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$get_logs()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-A data.frame with the following columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$get_logs()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A data.frame with the following columns:
 \itemize{
 \item \code{workerid}: The shiny worker ID found within the browser
 \item \code{timestamp}: POSIXct timestamp of the message
@@ -3008,157 +2764,44 @@ to \code{stderr}.
 \code{console.LEVEL()} function call. Typically, these are "log"\code{and}"error"\verb{but can include}"info"\verb{, }"debug"\verb{, and }"warn"\verb{. If }options(shiny.trace = TRUE)\verb{, then the level will recorded as }"websocket"`.
 }
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app1 <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
-
-app1$get_logs()
-#> \{shinytest2\} R  info   10:00:28.86 Start AppDriver initialization
-#> \{shinytest2\} R  info   10:00:28.86 Starting Shiny app
-#> \{shinytest2\} R  info   10:00:29.76 Creating new ChromoteSession
-#> \{shinytest2\} R  info   10:00:30.56 Navigating to Shiny app
-#> \{shinytest2\} R  info   10:00:30.70 Injecting shiny-tracer.js
-#> \{chromote\}   JS info   10:00:30.75 shinytest2; jQuery found
-#> \{chromote\}   JS info   10:00:30.77 shinytest2; Waiting for shiny session to connect
-#> \{chromote\}   JS info   10:00:30.77 shinytest2; Loaded
-#> \{shinytest2\} R  info   10:00:30.77 Waiting for Shiny to become ready
-#> \{chromote\}   JS info   10:00:30.90 shinytest2; Connected
-#> \{chromote\}   JS info   10:00:30.95 shinytest2; shiny:busy
-#> \{shinytest2\} R  info   10:00:30.98 Waiting for Shiny to become idle for 200ms within 15000ms
-#> \{chromote\}   JS info   10:00:30.98 shinytest2; Waiting for Shiny to be stable
-#> \{chromote\}   JS info   10:00:31.37 shinytest2; shiny:idle
-#> \{chromote\}   JS info   10:00:31.38 shinytest2; shiny:value distPlot
-#> \{chromote\}   JS info   10:00:31.57 shinytest2; Shiny has been idle for 200ms
-#> \{shinytest2\} R  info   10:00:31.57 Shiny app started
-#> \{shiny\}      R  stderr ----------- Loading required package: shiny
-#> \{shiny\}      R  stderr ----------- Running application in test mode.
-#> \{shiny\}      R  stderr -----------
-#> \{shiny\}      R  stderr ----------- Listening on http://127.0.0.1:4679
-
-
-# To capture all websocket traffic, set `options = list(shiny.trace = TRUE)`
-app2 <- AppDriver$new(
-  system.file("examples/01_hello", package = "shiny"),
-  options = list(shiny.trace = TRUE)
-)
-
-app2$get_logs()
-## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
-#> \{shinytest2\} R  info      10:01:57.49 Start AppDriver initialization
-#> \{shinytest2\} R  info      10:01:57.50 Starting Shiny app
-#> \{shinytest2\} R  info      10:01:58.20 Creating new ChromoteSession
-#> \{shinytest2\} R  info      10:01:58.35 Navigating to Shiny app
-#> \{shinytest2\} R  info      10:01:58.47 Injecting shiny-tracer.js
-#> \{chromote\}   JS info      10:01:58.49 shinytest2; jQuery not found
-#> \{chromote\}   JS info      10:01:58.49 shinytest2; Loaded
-#> \{shinytest2\} R  info      10:01:58.50 Waiting for Shiny to become ready
-#> \{chromote\}   JS info      10:01:58.55 shinytest2; jQuery found
-#> \{chromote\}   JS info      10:01:58.55 shinytest2; Waiting for shiny session to connect
-#> \{chromote\}   JS websocket 10:01:58.64 send WEBSOCKET_MSG
-#> \{chromote\}   JS websocket 10:01:58.67 recv WEBSOCKET_MSG
-#> \{chromote\}   JS info      10:01:58.67 shinytest2; Connected
-#> \{chromote\}   JS websocket 10:01:58.71 recv WEBSOCKET_MSG
-#> \{chromote\}   JS websocket 10:01:58.72 recv WEBSOCKET_MSG
-#> \{chromote\}   JS info      10:01:58.72 shinytest2; shiny:busy
-#> \{chromote\}   JS websocket 10:01:58.73 recv WEBSOCKET_MSG
-#> \{chromote\}   JS websocket 10:01:58.73 recv WEBSOCKET_MSG
-#> \{shinytest2\} R  info      10:01:58.75 Waiting for Shiny to become idle for 200ms within 15000ms
-#> \{chromote\}   JS info      10:01:58.75 shinytest2; Waiting for Shiny to be stable
-#> \{chromote\}   JS websocket 10:01:58.81 recv WEBSOCKET_MSG
-#> \{chromote\}   JS websocket 10:01:58.81 recv WEBSOCKET_MSG
-#> \{chromote\}   JS info      10:01:58.81 shinytest2; shiny:idle
-#> \{chromote\}   JS websocket 10:01:58.82 recv WEBSOCKET_MSG
-#> \{chromote\}   JS info      10:01:58.82 shinytest2; shiny:value distPlot
-#> \{chromote\}   JS info      10:01:59.01 shinytest2; Shiny has been idle for 200ms
-#> \{shinytest2\} R  info      10:01:59.01 Shiny app started
-#> \{shiny\}      R  stderr    ----------- Loading required package: shiny
-#> \{shiny\}      R  stderr    ----------- Running application in test mode.
-#> \{shiny\}      R  stderr    -----------
-#> \{shiny\}      R  stderr    ----------- Listening on http://127.0.0.1:4560
-#> \{shiny\}      R  stderr    ----------- SEND \{"config":\{"workerId":"","sessionId"|truncated
-#> \{shiny\}      R  stderr    ----------- RECV \{"method":"init","data":\{"bins":30,|truncated
-#> \{shiny\}      R  stderr    ----------- SEND \{"custom":\{"showcase-src":\{"srcref":|truncated
-#> \{shiny\}      R  stderr    ----------- SEND \{"busy":"busy"\}
-#> \{shiny\}      R  stderr    ----------- SEND \{"custom":\{"showcase-src":\{"srcref":|truncated
-#> \{shiny\}      R  stderr    ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
-#> \{shiny\}      R  stderr    ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
-#> \{shiny\}      R  stderr    ----------- SEND \{"busy":"idle"\}
-#> \{shiny\}      R  stderr    ----------- SEND \{"errors":\{\},"values":\{"distPlot":|truncated
-
-# The log that is returned is a `data.frame()`.
-log <- app2$get_logs()
-tibble::glimpse(log)
-#> Rows: 43
-#> Columns: 5
-#> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-#> $ timestamp <dttm> 2022-09-19 10:01:57, 2022-09-19 10:01:57, 2022-09-19 10:01:58, 2022…
-#> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shinytest2"…
-#> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "info", "inf…
-#> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Creating ne…
-#> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-#> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:…
-#> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shi…
-#> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "inf…
-#> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Cre…
-
-# It may be filtered to find desired logs
-subset(log, level == "websocket")
-## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
-#> \{chromote\} JS websocket 10:01:58.64 send WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.67 recv WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.71 recv WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.72 recv WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.73 recv WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.73 recv WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.81 recv WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.81 recv WEBSOCKET_MSG
-#> \{chromote\} JS websocket 10:01:58.82 recv WEBSOCKET_MSG
-}
-}
-\if{html}{\out{</div>}}
-
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-log_message"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-log_message}{}}}
-\subsection{Method \code{log_message()}}{
-Add a message to the \pkg{shinytest2} log.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$log_message(message)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{message}}{Single message to store in log}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-app_path <- system.file("examples/01_hello", package = "shiny")
+\subsection{\code{AppDriver$log_message()}}{
+  Add a message to the \pkg{shinytest2} log.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$log_message(message)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{message}}{Single message to store in log}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/01_hello", package = "shiny")
 app <- AppDriver$new(app_path)
 
 app$log_message("Setting bins to smaller value")
 app$set_inputs(bins = 10)
 app$get_logs()
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AppDriver-stop"></a>}}
 \if{latex}{\out{\hypertarget{method-AppDriver-stop}{}}}
-\subsection{Method \code{stop()}}{
-Stop the Shiny application driver
+\subsection{\code{AppDriver$stop()}}{
+  Stop the Shiny application driver
 
 This method stops all known processes:
 \itemize{
@@ -3174,29 +2817,29 @@ information.
 Typically, this can be paired with a button that when clicked will call
 \code{shiny::stopApp(info)} to return \code{info} from the test app back to the
 main R session.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AppDriver$stop(signal_timeout = missing_arg())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{signal_timeout}}{Milliseconds to wait between sending a \code{SIGINT},
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$stop(signal_timeout = missing_arg())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{signal_timeout}}{Milliseconds to wait between sending a \code{SIGINT},
 \code{SIGTERM}, and \code{SIGKILL} to the Shiny process. Defaults to 500ms and does
 not utilize the resolved value from \code{AppDriver$new(timeout=)}. However,
 if \pkg{covr} is currently executing, then the \code{timeout} is set to
 20,000ms to allow for the coverage report to be generated.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The result of the background process if the Shiny application has
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The result of the background process if the Shiny application has
 already been terminated.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-rlang::check_installed("reactlog")
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{rlang::check_installed("reactlog")
 
 library(shiny)
 shiny_app <- shinyApp(
@@ -3242,10 +2885,8 @@ str(head(rlog, 2))
 #> ..$ session: chr "bdc7417f2fc8c84fc05c9518e36fdc44"
 #> ..$ time   : num 1.65e+09
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 }
