@@ -1,9 +1,11 @@
 # shinytest2 (development version)
 
-<!-- temp: trigger CI checks -->
-
-
 ## Bug fixes and minor improvements
+
+* Fixed `@examples` in `AppDriver`'s documentation so the reference page
+  builds cleanly under roxygen2 8.0.0. Non-ASCII characters (`•`, `…`) and
+  unbalanced braces in illustrative log output were replaced with ASCII
+  equivalents and balanced, which roxygen2 8.0.0 now validates.
 
 * `AppDriver$new()` no longer intermittently aborts during initialization with
   "Shiny app did not become stable" when the app's port is slow to bind. Shiny

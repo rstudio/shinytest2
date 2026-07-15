@@ -1529,7 +1529,7 @@ AppDriver <- R6Class(
     #' #> Warning:
     #' #> ! Shiny inputs should have unique HTML id values.
     #' #> i The following HTML id values are not unique:
-    #' #> • text
+    #' #> * text
     #' app$stop()
     #'
     #' # Manually assert that all names are unique
@@ -1538,7 +1538,7 @@ AppDriver <- R6Class(
     #' #> Error: `app_check_unique_names(self, private)` threw an unexpected warning.
     #' #> Message: ! Shiny inputs should have unique HTML id values.
     #' #> i The following HTML id values are not unique:
-    #' #>   • text
+    #' #>   * text
     #' #> Class:   rlang_warning/warning/condition
     #' app$stop()
     #' }
@@ -1776,31 +1776,31 @@ AppDriver <- R6Class(
     #' #> \{shiny\}      R  stderr    ----------- Running application in test mode.
     #' #> \{shiny\}      R  stderr    -----------
     #' #> \{shiny\}      R  stderr    ----------- Listening on http://127.0.0.1:4560
-    #' #> \{shiny\}      R  stderr    ----------- SEND \{"config":\{"workerId":"","sessionId"|truncated
-    #' #> \{shiny\}      R  stderr    ----------- RECV \{"method":"init","data":\{"bins":30,|truncated
-    #' #> \{shiny\}      R  stderr    ----------- SEND \{"custom":\{"showcase-src":\{"srcref":|truncated
+    #' #> \{shiny\}      R  stderr    ----------- SEND \{"config":\{"workerId":"","sessionId"\}\}|truncated
+    #' #> \{shiny\}      R  stderr    ----------- RECV \{"method":"init","data":\{"bins":30,\}\}|truncated
+    #' #> \{shiny\}      R  stderr    ----------- SEND \{"custom":\{"showcase-src":\{"srcref":\}\}\}|truncated
     #' #> \{shiny\}      R  stderr    ----------- SEND \{"busy":"busy"\}
-    #' #> \{shiny\}      R  stderr    ----------- SEND \{"custom":\{"showcase-src":\{"srcref":|truncated
-    #' #> \{shiny\}      R  stderr    ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
-    #' #> \{shiny\}      R  stderr    ----------- SEND \{"recalculating":\{"name":"distPlot",|truncated
+    #' #> \{shiny\}      R  stderr    ----------- SEND \{"custom":\{"showcase-src":\{"srcref":\}\}\}|truncated
+    #' #> \{shiny\}      R  stderr    ----------- SEND \{"recalculating":\{"name":"distPlot",\}\}|truncated
+    #' #> \{shiny\}      R  stderr    ----------- SEND \{"recalculating":\{"name":"distPlot",\}\}|truncated
     #' #> \{shiny\}      R  stderr    ----------- SEND \{"busy":"idle"\}
-    #' #> \{shiny\}      R  stderr    ----------- SEND \{"errors":\{\},"values":\{"distPlot":|truncated
+    #' #> \{shiny\}      R  stderr    ----------- SEND \{"errors":\{\},"values":\{"distPlot":\}\}|truncated
     #'
     #' # The log that is returned is a `data.frame()`.
     #' log <- app2$get_logs()
     #' tibble::glimpse(log)
     #' #> Rows: 43
     #' #> Columns: 5
-    #' #> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-    #' #> $ timestamp <dttm> 2022-09-19 10:01:57, 2022-09-19 10:01:57, 2022-09-19 10:01:58, 2022…
-    #' #> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shinytest2"…
-    #' #> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "info", "inf…
-    #' #> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Creating ne…
-    #' #> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-    #' #> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:…
-    #' #> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shi…
-    #' #> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "inf…
-    #' #> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Cre…
+    #' #> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
+    #' #> $ timestamp <dttm> 2022-09-19 10:01:57, 2022-09-19 10:01:57, 2022-09-19 10:01:58, 2022...
+    #' #> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shinytest2"...
+    #' #> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "info", "inf...
+    #' #> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Creating ne...
+    #' #> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
+    #' #> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:...
+    #' #> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shi...
+    #' #> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "inf...
+    #' #> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Cre...
     #'
     #' # It may be filtered to find desired logs
     #' subset(log, level == "websocket")

@@ -698,7 +698,7 @@ app <- AppDriver$new(shiny_app, check_names = TRUE)
 #> Warning:
 #> ! Shiny inputs should have unique HTML id values.
 #> i The following HTML id values are not unique:
-#> • text
+#> * text
 app$stop()
 
 # Manually assert that all names are unique
@@ -707,7 +707,7 @@ app$expect_unique_names()
 #> Error: `app_check_unique_names(self, private)` threw an unexpected warning.
 #> Message: ! Shiny inputs should have unique HTML id values.
 #> i The following HTML id values are not unique:
-#>   • text
+#>   * text
 #> Class:   rlang_warning/warning/condition
 app$stop()
 }
@@ -813,6 +813,116 @@ app$get_variant()
 app <- AppDriver$new(app_path, variant = platform_variant())
 app$get_variant()
 #> [1] "mac-4.1"
+}
+
+## ------------------------------------------------
+## Method `AppDriver$get_logs()`
+## ------------------------------------------------
+
+\dontrun{
+app1 <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
+
+app1$get_logs()
+#> \{shinytest2\} R  info   10:00:28.86 Start AppDriver initialization
+#> \{shinytest2\} R  info   10:00:28.86 Starting Shiny app
+#> \{shinytest2\} R  info   10:00:29.76 Creating new ChromoteSession
+#> \{shinytest2\} R  info   10:00:30.56 Navigating to Shiny app
+#> \{shinytest2\} R  info   10:00:30.70 Injecting shiny-tracer.js
+#> \{chromote\}   JS info   10:00:30.75 shinytest2; jQuery found
+#> \{chromote\}   JS info   10:00:30.77 shinytest2; Waiting for shiny session to connect
+#> \{chromote\}   JS info   10:00:30.77 shinytest2; Loaded
+#> \{shinytest2\} R  info   10:00:30.77 Waiting for Shiny to become ready
+#> \{chromote\}   JS info   10:00:30.90 shinytest2; Connected
+#> \{chromote\}   JS info   10:00:30.95 shinytest2; shiny:busy
+#> \{shinytest2\} R  info   10:00:30.98 Waiting for Shiny to become idle for 200ms within 15000ms
+#> \{chromote\}   JS info   10:00:30.98 shinytest2; Waiting for Shiny to be stable
+#> \{chromote\}   JS info   10:00:31.37 shinytest2; shiny:idle
+#> \{chromote\}   JS info   10:00:31.38 shinytest2; shiny:value distPlot
+#> \{chromote\}   JS info   10:00:31.57 shinytest2; Shiny has been idle for 200ms
+#> \{shinytest2\} R  info   10:00:31.57 Shiny app started
+#> \{shiny\}      R  stderr ----------- Loading required package: shiny
+#> \{shiny\}      R  stderr ----------- Running application in test mode.
+#> \{shiny\}      R  stderr -----------
+#> \{shiny\}      R  stderr ----------- Listening on http://127.0.0.1:4679
+
+
+# To capture all websocket traffic, set `options = list(shiny.trace = TRUE)`
+app2 <- AppDriver$new(
+  system.file("examples/01_hello", package = "shiny"),
+  options = list(shiny.trace = TRUE)
+)
+
+app2$get_logs()
+## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
+#> \{shinytest2\} R  info      10:01:57.49 Start AppDriver initialization
+#> \{shinytest2\} R  info      10:01:57.50 Starting Shiny app
+#> \{shinytest2\} R  info      10:01:58.20 Creating new ChromoteSession
+#> \{shinytest2\} R  info      10:01:58.35 Navigating to Shiny app
+#> \{shinytest2\} R  info      10:01:58.47 Injecting shiny-tracer.js
+#> \{chromote\}   JS info      10:01:58.49 shinytest2; jQuery not found
+#> \{chromote\}   JS info      10:01:58.49 shinytest2; Loaded
+#> \{shinytest2\} R  info      10:01:58.50 Waiting for Shiny to become ready
+#> \{chromote\}   JS info      10:01:58.55 shinytest2; jQuery found
+#> \{chromote\}   JS info      10:01:58.55 shinytest2; Waiting for shiny session to connect
+#> \{chromote\}   JS websocket 10:01:58.64 send WEBSOCKET_MSG
+#> \{chromote\}   JS websocket 10:01:58.67 recv WEBSOCKET_MSG
+#> \{chromote\}   JS info      10:01:58.67 shinytest2; Connected
+#> \{chromote\}   JS websocket 10:01:58.71 recv WEBSOCKET_MSG
+#> \{chromote\}   JS websocket 10:01:58.72 recv WEBSOCKET_MSG
+#> \{chromote\}   JS info      10:01:58.72 shinytest2; shiny:busy
+#> \{chromote\}   JS websocket 10:01:58.73 recv WEBSOCKET_MSG
+#> \{chromote\}   JS websocket 10:01:58.73 recv WEBSOCKET_MSG
+#> \{shinytest2\} R  info      10:01:58.75 Waiting for Shiny to become idle for 200ms within 15000ms
+#> \{chromote\}   JS info      10:01:58.75 shinytest2; Waiting for Shiny to be stable
+#> \{chromote\}   JS websocket 10:01:58.81 recv WEBSOCKET_MSG
+#> \{chromote\}   JS websocket 10:01:58.81 recv WEBSOCKET_MSG
+#> \{chromote\}   JS info      10:01:58.81 shinytest2; shiny:idle
+#> \{chromote\}   JS websocket 10:01:58.82 recv WEBSOCKET_MSG
+#> \{chromote\}   JS info      10:01:58.82 shinytest2; shiny:value distPlot
+#> \{chromote\}   JS info      10:01:59.01 shinytest2; Shiny has been idle for 200ms
+#> \{shinytest2\} R  info      10:01:59.01 Shiny app started
+#> \{shiny\}      R  stderr    ----------- Loading required package: shiny
+#> \{shiny\}      R  stderr    ----------- Running application in test mode.
+#> \{shiny\}      R  stderr    -----------
+#> \{shiny\}      R  stderr    ----------- Listening on http://127.0.0.1:4560
+#> \{shiny\}      R  stderr    ----------- SEND \{"config":\{"workerId":"","sessionId"\}\}|truncated
+#> \{shiny\}      R  stderr    ----------- RECV \{"method":"init","data":\{"bins":30,\}\}|truncated
+#> \{shiny\}      R  stderr    ----------- SEND \{"custom":\{"showcase-src":\{"srcref":\}\}\}|truncated
+#> \{shiny\}      R  stderr    ----------- SEND \{"busy":"busy"\}
+#> \{shiny\}      R  stderr    ----------- SEND \{"custom":\{"showcase-src":\{"srcref":\}\}\}|truncated
+#> \{shiny\}      R  stderr    ----------- SEND \{"recalculating":\{"name":"distPlot",\}\}|truncated
+#> \{shiny\}      R  stderr    ----------- SEND \{"recalculating":\{"name":"distPlot",\}\}|truncated
+#> \{shiny\}      R  stderr    ----------- SEND \{"busy":"idle"\}
+#> \{shiny\}      R  stderr    ----------- SEND \{"errors":\{\},"values":\{"distPlot":\}\}|truncated
+
+# The log that is returned is a `data.frame()`.
+log <- app2$get_logs()
+tibble::glimpse(log)
+#> Rows: 43
+#> Columns: 5
+#> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
+#> $ timestamp <dttm> 2022-09-19 10:01:57, 2022-09-19 10:01:57, 2022-09-19 10:01:58, 2022...
+#> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shinytest2"...
+#> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "info", "inf...
+#> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Creating ne...
+#> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
+#> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:...
+#> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shi...
+#> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "inf...
+#> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Cre...
+
+# It may be filtered to find desired logs
+subset(log, level == "websocket")
+## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
+#> \{chromote\} JS websocket 10:01:58.64 send WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.67 recv WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.71 recv WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.72 recv WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.73 recv WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.73 recv WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.81 recv WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.81 recv WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.82 recv WEBSOCKET_MSG
 }
 
 ## ------------------------------------------------
@@ -2514,7 +2624,7 @@ app <- AppDriver$new(shiny_app, check_names = TRUE)
 #> Warning:
 #> ! Shiny inputs should have unique HTML id values.
 #> i The following HTML id values are not unique:
-#> • text
+#> * text
 app$stop()
 
 # Manually assert that all names are unique
@@ -2523,10 +2633,9 @@ app$expect_unique_names()
 #> Error: `app_check_unique_names(self, private)` threw an unexpected warning.
 #> Message: ! Shiny inputs should have unique HTML id values.
 #> i The following HTML id values are not unique:
-#>   • text
+#>   * text
 #> Class:   rlang_warning/warning/condition
 app$stop()
-}
 }
     \if{html}{\out{</div>}}
   }
@@ -2764,6 +2873,114 @@ to \code{stderr}.
 \code{console.LEVEL()} function call. Typically, these are "log"\code{and}"error"\verb{but can include}"info"\verb{, }"debug"\verb{, and }"warn"\verb{. If }options(shiny.trace = TRUE)\verb{, then the level will recorded as }"websocket"`.
 }
 }
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app1 <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
+
+app1$get_logs()
+#> \{shinytest2\} R  info   10:00:28.86 Start AppDriver initialization
+#> \{shinytest2\} R  info   10:00:28.86 Starting Shiny app
+#> \{shinytest2\} R  info   10:00:29.76 Creating new ChromoteSession
+#> \{shinytest2\} R  info   10:00:30.56 Navigating to Shiny app
+#> \{shinytest2\} R  info   10:00:30.70 Injecting shiny-tracer.js
+#> \{chromote\}   JS info   10:00:30.75 shinytest2; jQuery found
+#> \{chromote\}   JS info   10:00:30.77 shinytest2; Waiting for shiny session to connect
+#> \{chromote\}   JS info   10:00:30.77 shinytest2; Loaded
+#> \{shinytest2\} R  info   10:00:30.77 Waiting for Shiny to become ready
+#> \{chromote\}   JS info   10:00:30.90 shinytest2; Connected
+#> \{chromote\}   JS info   10:00:30.95 shinytest2; shiny:busy
+#> \{shinytest2\} R  info   10:00:30.98 Waiting for Shiny to become idle for 200ms within 15000ms
+#> \{chromote\}   JS info   10:00:30.98 shinytest2; Waiting for Shiny to be stable
+#> \{chromote\}   JS info   10:00:31.37 shinytest2; shiny:idle
+#> \{chromote\}   JS info   10:00:31.38 shinytest2; shiny:value distPlot
+#> \{chromote\}   JS info   10:00:31.57 shinytest2; Shiny has been idle for 200ms
+#> \{shinytest2\} R  info   10:00:31.57 Shiny app started
+#> \{shiny\}      R  stderr ----------- Loading required package: shiny
+#> \{shiny\}      R  stderr ----------- Running application in test mode.
+#> \{shiny\}      R  stderr -----------
+#> \{shiny\}      R  stderr ----------- Listening on http://127.0.0.1:4679
+
+
+# To capture all websocket traffic, set `options = list(shiny.trace = TRUE)`
+app2 <- AppDriver$new(
+  system.file("examples/01_hello", package = "shiny"),
+  options = list(shiny.trace = TRUE)
+)
+
+app2$get_logs()
+## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
+#> \{shinytest2\} R  info      10:01:57.49 Start AppDriver initialization
+#> \{shinytest2\} R  info      10:01:57.50 Starting Shiny app
+#> \{shinytest2\} R  info      10:01:58.20 Creating new ChromoteSession
+#> \{shinytest2\} R  info      10:01:58.35 Navigating to Shiny app
+#> \{shinytest2\} R  info      10:01:58.47 Injecting shiny-tracer.js
+#> \{chromote\}   JS info      10:01:58.49 shinytest2; jQuery not found
+#> \{chromote\}   JS info      10:01:58.49 shinytest2; Loaded
+#> \{shinytest2\} R  info      10:01:58.50 Waiting for Shiny to become ready
+#> \{chromote\}   JS info      10:01:58.55 shinytest2; jQuery found
+#> \{chromote\}   JS info      10:01:58.55 shinytest2; Waiting for shiny session to connect
+#> \{chromote\}   JS websocket 10:01:58.64 send WEBSOCKET_MSG
+#> \{chromote\}   JS websocket 10:01:58.67 recv WEBSOCKET_MSG
+#> \{chromote\}   JS info      10:01:58.67 shinytest2; Connected
+#> \{chromote\}   JS websocket 10:01:58.71 recv WEBSOCKET_MSG
+#> \{chromote\}   JS websocket 10:01:58.72 recv WEBSOCKET_MSG
+#> \{chromote\}   JS info      10:01:58.72 shinytest2; shiny:busy
+#> \{chromote\}   JS websocket 10:01:58.73 recv WEBSOCKET_MSG
+#> \{chromote\}   JS websocket 10:01:58.73 recv WEBSOCKET_MSG
+#> \{shinytest2\} R  info      10:01:58.75 Waiting for Shiny to become idle for 200ms within 15000ms
+#> \{chromote\}   JS info      10:01:58.75 shinytest2; Waiting for Shiny to be stable
+#> \{chromote\}   JS websocket 10:01:58.81 recv WEBSOCKET_MSG
+#> \{chromote\}   JS websocket 10:01:58.81 recv WEBSOCKET_MSG
+#> \{chromote\}   JS info      10:01:58.81 shinytest2; shiny:idle
+#> \{chromote\}   JS websocket 10:01:58.82 recv WEBSOCKET_MSG
+#> \{chromote\}   JS info      10:01:58.82 shinytest2; shiny:value distPlot
+#> \{chromote\}   JS info      10:01:59.01 shinytest2; Shiny has been idle for 200ms
+#> \{shinytest2\} R  info      10:01:59.01 Shiny app started
+#> \{shiny\}      R  stderr    ----------- Loading required package: shiny
+#> \{shiny\}      R  stderr    ----------- Running application in test mode.
+#> \{shiny\}      R  stderr    -----------
+#> \{shiny\}      R  stderr    ----------- Listening on http://127.0.0.1:4560
+#> \{shiny\}      R  stderr    ----------- SEND \{"config":\{"workerId":"","sessionId"\}\}|truncated
+#> \{shiny\}      R  stderr    ----------- RECV \{"method":"init","data":\{"bins":30,\}\}|truncated
+#> \{shiny\}      R  stderr    ----------- SEND \{"custom":\{"showcase-src":\{"srcref":\}\}\}|truncated
+#> \{shiny\}      R  stderr    ----------- SEND \{"busy":"busy"\}
+#> \{shiny\}      R  stderr    ----------- SEND \{"custom":\{"showcase-src":\{"srcref":\}\}\}|truncated
+#> \{shiny\}      R  stderr    ----------- SEND \{"recalculating":\{"name":"distPlot",\}\}|truncated
+#> \{shiny\}      R  stderr    ----------- SEND \{"recalculating":\{"name":"distPlot",\}\}|truncated
+#> \{shiny\}      R  stderr    ----------- SEND \{"busy":"idle"\}
+#> \{shiny\}      R  stderr    ----------- SEND \{"errors":\{\},"values":\{"distPlot":\}\}|truncated
+
+# The log that is returned is a `data.frame()`.
+log <- app2$get_logs()
+tibble::glimpse(log)
+#> Rows: 43
+#> Columns: 5
+#> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
+#> $ timestamp <dttm> 2022-09-19 10:01:57, 2022-09-19 10:01:57, 2022-09-19 10:01:58, 2022...
+#> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shinytest2"...
+#> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "info", "inf...
+#> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Creating ne...
+#> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
+#> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:...
+#> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shi...
+#> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "inf...
+#> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Cre...
+
+# It may be filtered to find desired logs
+subset(log, level == "websocket")
+## (All WebSocket messages have been replaced with `WEBSOCKET_MSG` in example below)
+#> \{chromote\} JS websocket 10:01:58.64 send WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.67 recv WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.71 recv WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.72 recv WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.73 recv WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.73 recv WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.81 recv WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.81 recv WEBSOCKET_MSG
+#> \{chromote\} JS websocket 10:01:58.82 recv WEBSOCKET_MSG
+}
+    \if{html}{\out{</div>}}
   }
 }
 
