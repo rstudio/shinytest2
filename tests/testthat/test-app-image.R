@@ -116,7 +116,11 @@ test_that("screenshot can be expected", {
 
   # This directly calls `app$get_screenshot()`, no need for extra testing
   # Should take a picture of `#green`, not app
-  app$expect_screenshot()
+  # Use a pixel threshold: `#green` is a solid box whose pixels are identical
+  # across platforms, but chromote/Chrome produce non-deterministic PNG bytes
+  # (zlib compression differs by environment). Byte comparison (threshold =
+  # NULL) fails on those identical-but-re-encoded images.
+  app$expect_screenshot(threshold = 10)
 })
 test_that("screenshot can be expected", {
   app <- AppDriver$new(
@@ -127,7 +131,9 @@ test_that("screenshot can be expected", {
 
   # This directly calls `app$get_screenshot()`, no need for extra testing
   # Should take a picture of `#green`, not app
+  # See note above re: pixel `threshold` vs non-deterministic PNG bytes.
   app$expect_screenshot(
-    screenshot_args = list(selector = "#green")
+    screenshot_args = list(selector = "#green"),
+    threshold = 10
   )
 })
