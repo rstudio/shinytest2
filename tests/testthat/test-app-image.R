@@ -107,6 +107,9 @@ test_that("No screenshot is taken", {
 })
 
 test_that("screenshot can be expected", {
+  # `threshold=` comparison reads pixels via {png} (a Suggests dependency),
+  # which is absent when checking with dependencies only.
+  skip_if_not_installed("png")
   app <- AppDriver$new(
     shiny_app,
     variant = NULL,
@@ -123,6 +126,7 @@ test_that("screenshot can be expected", {
   app$expect_screenshot(threshold = 10)
 })
 test_that("screenshot can be expected", {
+  skip_if_not_installed("png")
   app <- AppDriver$new(
     shiny_app,
     variant = NULL,
