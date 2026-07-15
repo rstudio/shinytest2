@@ -129,7 +129,7 @@ To update the snapshot values, you will need to run a variation of
 
 ### Public methods
 
-- [`AppDriver$new()`](#method-AppDriver-new)
+- [`AppDriver$new()`](#method-AppDriver-initialize)
 
 - [`AppDriver$view()`](#method-AppDriver-view)
 
@@ -195,7 +195,7 @@ To update the snapshot values, you will need to run a variation of
 
 ------------------------------------------------------------------------
 
-### Method [`new()`](https://rdrr.io/r/methods/new.html)
+### `AppDriver$new()`
 
 Initialize an `AppDriver` object
 
@@ -376,7 +376,6 @@ documentation.
 
 #### Examples
 
-    \dontrun{
     # Create an AppDriver from the Shiny app in the current directory
     app <- AppDriver()
 
@@ -386,11 +385,10 @@ documentation.
 
     # Expect consistent inital values
     app$expect_values()
-    }
 
 ------------------------------------------------------------------------
 
-### Method `view()`
+### `AppDriver$view()`
 
 View the Shiny application
 
@@ -406,14 +404,12 @@ This method is very helpful for debugging while writing your tests.
 
 #### Examples
 
-    \dontrun{
     # Open app in Chrome
     app$view()
-    }
 
 ------------------------------------------------------------------------
 
-### Method `click()`
+### `AppDriver$click()`
 
 Click an element
 
@@ -450,7 +446,6 @@ need to simulate a click action.
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/07_widgets", package = "shiny")
     app <- AppDriver$new(app_path)
 
@@ -460,11 +455,10 @@ need to simulate a click action.
     app$set_inputs(dataset = "cars", obs = 6)
     app$click("update")
     cat(app$get_text("#view"))
-    }
 
 ------------------------------------------------------------------------
 
-### Method `set_inputs()`
+### `AppDriver$set_inputs()`
 
 Set input values
 
@@ -513,7 +507,6 @@ will not return until an output value has been updated.
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/07_widgets", package = "shiny")
     app <- AppDriver$new(app_path)
 
@@ -521,11 +514,10 @@ will not return until an output value has been updated.
     app$set_inputs(dataset = "cars", obs = 6)
     app$click("update")
     cat(app$get_text("#view"))
-    }
 
 ------------------------------------------------------------------------
 
-### Method `upload_file()`
+### `AppDriver$upload_file()`
 
 Upload a file
 
@@ -553,7 +545,6 @@ Uploads a file to the specified file input.
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/09_upload", package = "shiny")
     app <- AppDriver$new(app_path)
 
@@ -563,11 +554,10 @@ Uploads a file to the specified file input.
 
     # Upload file to input named: file1
     app$upload_file(file1 = tmpfile)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `expect_values()`
+### `AppDriver$expect_values()`
 
 Expect `input`, `output`, and `export` values
 
@@ -656,7 +646,6 @@ The result of the snapshot expectation
 
 #### Examples
 
-    \dontrun{
     library(shiny)
     shiny_app <- shinyApp(
       fluidPage(
@@ -690,11 +679,10 @@ The result of the snapshot expectation
 
     # Snapshot values `"A"` from `input` and `"C"` from `output`
     app$expect_values(input = "A", output = "C")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_value()`
+### `AppDriver$get_value()`
 
 Get a single `input`, `output`, or `export` value
 
@@ -738,7 +726,6 @@ The requested `input`, `output`, or `export` value.
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/04_mpg", package = "shiny")
     app <- AppDriver$new(app_path)
 
@@ -748,11 +735,10 @@ The requested `input`, `output`, or `export` value.
     # Equivalent code using `$get_values()`
     app$get_values(output = "caption")$output$caption
     #> [1] "mpg ~ cyl"
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_values()`
+### `AppDriver$get_values()`
 
 Get `input`, `output`, and `export` values
 
@@ -803,7 +789,6 @@ A named list of all inputs, outputs, and export values.
 
 #### Examples
 
-    \dontrun{
     library(shiny)
     shiny_app <- shinyApp(
       fluidPage(
@@ -857,11 +842,10 @@ A named list of all inputs, outputs, and export values.
     #> ..$ A: int 3
     #> $ output:List of 1
     #> ..$ C: chr "5"
-    }
 
 ------------------------------------------------------------------------
 
-### Method `expect_download()`
+### `AppDriver$expect_download()`
 
 Expect a downloadable file
 
@@ -921,18 +905,16 @@ snapshot file.
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/10_download", package = "shiny")
     app <- AppDriver$new(app_path)
 
     # Save snapshot of rock.csv as 001.download
     # Save snapshot value of `rock.csv` to capture default file name
     app$expect_download("downloadData", compare = testthat::compare_file_text)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_download()`
+### `AppDriver$get_download()`
 
 Get downloadable file
 
@@ -975,7 +957,6 @@ Location logic:
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/10_download", package = "shiny")
     app <- AppDriver$new(app_path)
 
@@ -986,11 +967,10 @@ Location logic:
     # Get rock.csv as a "./myfile.csv"
     app$get_download("downloadData", filename = "./myfile.csv")
     #> [1] "./myfile.csv"
-    }
 
 ------------------------------------------------------------------------
 
-### Method `expect_text()`
+### `AppDriver$expect_text()`
 
 Expect snapshot of UI text
 
@@ -1030,17 +1010,15 @@ more details.
 
 #### Examples
 
-    \dontrun{
     hello_app <- system.file("examples/01_hello", package = "shiny")
     app <- AppDriver$new(hello_app)
 
     # Make a snapshot of `"Hello Shiny!"`
     app$expect_text("h2")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_text()`
+### `AppDriver$get_text()`
 
 Get UI text
 
@@ -1065,17 +1043,15 @@ A vector of character values
 
 #### Examples
 
-    \dontrun{
     hello_app <- system.file("examples/01_hello", package = "shiny")
     app <- AppDriver$new(hello_app)
 
     app$get_text("h2")
     #> [1] "Hello Shiny!"
-    }
 
 ------------------------------------------------------------------------
 
-### Method `expect_html()`
+### `AppDriver$expect_html()`
 
 Expect snapshot of UI HTML
 
@@ -1123,17 +1099,15 @@ more details.
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/04_mpg", package = "shiny")
     app <- AppDriver$new(app_path)
 
     # Save a snapshot of the `caption` output
     app$expect_html("#caption")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_html()`
+### `AppDriver$get_html()`
 
 Get UI HTML
 
@@ -1171,7 +1145,6 @@ more details.
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/03_reactivity", package = "shiny")
     app <- AppDriver$new(app_path, check_names = FALSE)
 
@@ -1182,11 +1155,10 @@ more details.
     #>   <input id="caption" type="text" class="form-control shiny-bound-input" value="Data Summary">
     #> </div>
     ## ^^ No update to the DOM of `caption`
-    }
 
 ------------------------------------------------------------------------
 
-### Method `expect_js()`
+### `AppDriver$expect_js()`
 
 Expect snapshot of JavaScript script output
 
@@ -1241,7 +1213,6 @@ snapshot file.
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/07_widgets", package = "shiny")
     app <- AppDriver$new(app_path)
 
@@ -1255,11 +1226,10 @@ snapshot file.
     app$click("update")
     # Save a snapshot of number of clicks (1)
     app$expect_js("window.test_counter;")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_js()`
+### `AppDriver$get_js()`
 
 Execute JavaScript code in the browser and return the result
 
@@ -1313,7 +1283,6 @@ Result of the `script` (or `file` contents)
 
 #### Examples
 
-    \dontrun{
     library(shiny)
     shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
     app <- AppDriver$new(shiny_app)
@@ -1352,11 +1321,10 @@ Result of the `script` (or `file` contents)
     )
     app$get_js(js_txt)
     #> [1] 42
-    }
 
 ------------------------------------------------------------------------
 
-### Method `run_js()`
+### `AppDriver$run_js()`
 
 Execute JavaScript code in the browser
 
@@ -1397,7 +1365,6 @@ session.
 
 #### Examples
 
-    \dontrun{
     library(shiny)
     shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
     app <- AppDriver$new(shiny_app)
@@ -1415,11 +1382,10 @@ session.
     app$run_js(js_txt)
     app$get_js(js_txt)
     #> [1] "127.0.0.1"
-    }
 
 ------------------------------------------------------------------------
 
-### Method `expect_screenshot()`
+### `AppDriver$expect_screenshot()`
 
 Expect a screenshot of the Shiny application
 
@@ -1588,7 +1554,6 @@ recommended to use other expectation methods.
 
 #### Examples
 
-    \dontrun{
     # These example lines should be performed in a `./tests/testthat`
     # test file so that snapshot files can be properly saved
 
@@ -1647,11 +1612,10 @@ recommended to use other expectation methods.
     app$run_js("window.scroll(30, 70)")
     # Take screenshot of browser viewport
     app$expect_screenshot(selector = "viewport")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_screenshot()`
+### `AppDriver$get_screenshot()`
 
 Take a screenshot
 
@@ -1745,7 +1709,6 @@ Take a screenshot of the Shiny application.
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/01_hello", package = "shiny")
     app <- AppDriver$new(app_path)
 
@@ -1760,11 +1723,10 @@ Take a screenshot of the Shiny application.
     tmpfile <- tempfile(fileext = ".png")
     app$get_screenshot(tmpfile)
     showimage::show_image(tmpfile)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `wait_for_idle()`
+### `AppDriver$wait_for_idle()`
 
 Wait for Shiny to not be busy (idle) for a set amount of time
 
@@ -1806,7 +1768,6 @@ error will be thrown
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/01_hello", package = "shiny")
     app <- AppDriver$new(app_path)
 
@@ -1834,11 +1795,10 @@ error will be thrown
     identical(pre_value, middle_value)
     # Will not be equal
     identical(pre_value, post_value)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `wait_for_value()`
+### `AppDriver$wait_for_value()`
 
 Wait for a new Shiny value
 
@@ -1898,7 +1858,6 @@ Newly found value
 
 #### Examples
 
-    \dontrun{
     library(shiny)
     shiny_app <- shinyApp(
       fluidPage(
@@ -1938,11 +1897,10 @@ Newly found value
     #> [1] "75"
     app$get_value(output = "total")
     #> [1] "75"
-    }
 
 ------------------------------------------------------------------------
 
-### Method `wait_for_js()`
+### `AppDriver$wait_for_js()`
 
 Wait for a JavaScript expression to be true
 
@@ -1979,7 +1937,6 @@ the timeout. Otherwise an error will be thrown
 
 #### Examples
 
-    \dontrun{
     shiny_app <- shinyApp(h1("Empty App"), function(input, output) { })
     app <- AppDriver$new(shiny_app)
 
@@ -1993,11 +1950,10 @@ the timeout. Otherwise an error will be thrown
     ## and use the result to wait for a condition
     app$run_js(file = "complicated_file.js")
     app$wait_for_js("complicated_condition();")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `expect_unique_names()`
+### `AppDriver$expect_unique_names()`
 
 Expect unique input and output names.
 
@@ -2015,7 +1971,6 @@ the same name.
 
 #### Examples
 
-    \dontrun{
     shiny_app <- shinyApp(
       ui = fluidPage(
         # Duplicate input IDs: `"text"`
@@ -2031,7 +1986,7 @@ the same name.
     #> Warning:
     #> ! Shiny inputs should have unique HTML id values.
     #> i The following HTML id values are not unique:
-    #> • text
+    #> * text
     app$stop()
 
     # Manually assert that all names are unique
@@ -2040,14 +1995,13 @@ the same name.
     #> Error: `app_check_unique_names(self, private)` threw an unexpected warning.
     #> Message: ! Shiny inputs should have unique HTML id values.
     #> i The following HTML id values are not unique:
-    #>   • text
+    #>   * text
     #> Class:   rlang_warning/warning/condition
     app$stop()
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_dir()`
+### `AppDriver$get_dir()`
 
 Retrieve the Shiny app path
 
@@ -2063,17 +2017,15 @@ current directory will be returned.
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/01_hello", package = "shiny")
     app <- AppDriver$new(app_path)
 
     identical(app$get_dir(), app_path)
     #> [1] TRUE
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_url()`
+### `AppDriver$get_url()`
 
 Retrieve the Shiny app URL
 
@@ -2087,16 +2039,14 @@ URL where the Shiny app is being hosted
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/01_hello", package = "shiny")
     app <- AppDriver$new(app_path)
 
     browseURL(app$get_url())
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_window_size()`
+### `AppDriver$get_window_size()`
 
 Get window size
 
@@ -2109,7 +2059,6 @@ Get current size of the browser window, as list of numeric scalars named
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/01_hello", package = "shiny")
     app <- AppDriver$new(app_path)
 
@@ -2119,11 +2068,10 @@ Get current size of the browser window, as list of numeric scalars named
     #>
     #> $height
     #> [1] 1323
-    }
 
 ------------------------------------------------------------------------
 
-### Method `set_window_size()`
+### `AppDriver$set_window_size()`
 
 Sets size of the browser window.
 
@@ -2145,7 +2093,6 @@ Sets size of the browser window.
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/01_hello", package = "shiny")
     # Set init window size
     app <- AppDriver$new(app_path, height = 1400, width = 1000)
@@ -2165,11 +2112,10 @@ Sets size of the browser window.
     #>
     #> $height
     #> [1] 1080
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_chromote_session()`
+### `AppDriver$get_chromote_session()`
 
 Get Chromote Session
 
@@ -2188,7 +2134,6 @@ R6 object
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/01_hello", package = "shiny")
     app <- AppDriver$new(app_path)
 
@@ -2203,11 +2148,10 @@ R6 object
     #>
     #> $result$description
     #> [1] "2"
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_variant()`
+### `AppDriver$get_variant()`
 
 Get the variant
 
@@ -2224,7 +2168,6 @@ was supplied.
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/01_hello", package = "shiny")
 
     app <- AppDriver$new(app_path)
@@ -2235,11 +2178,10 @@ was supplied.
     app <- AppDriver$new(app_path, variant = platform_variant())
     app$get_variant()
     #> [1] "mac-4.1"
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_logs()`
+### `AppDriver$get_logs()`
 
 Get all logs
 
@@ -2292,7 +2234,6 @@ A data.frame with the following columns:
 
 #### Examples
 
-    \dontrun{
     app1 <- AppDriver$new(system.file("examples/01_hello", package = "shiny"))
 
     app1$get_logs()
@@ -2358,31 +2299,31 @@ A data.frame with the following columns:
     #> {shiny}      R  stderr    ----------- Running application in test mode.
     #> {shiny}      R  stderr    -----------
     #> {shiny}      R  stderr    ----------- Listening on http://127.0.0.1:4560
-    #> {shiny}      R  stderr    ----------- SEND {"config":{"workerId":"","sessionId"|truncated
-    #> {shiny}      R  stderr    ----------- RECV {"method":"init","data":{"bins":30,|truncated
-    #> {shiny}      R  stderr    ----------- SEND {"custom":{"showcase-src":{"srcref":|truncated
+    #> {shiny}      R  stderr    ----------- SEND {"config":{"workerId":"","sessionId"}}|truncated
+    #> {shiny}      R  stderr    ----------- RECV {"method":"init","data":{"bins":30,}}|truncated
+    #> {shiny}      R  stderr    ----------- SEND {"custom":{"showcase-src":{"srcref":}}}|truncated
     #> {shiny}      R  stderr    ----------- SEND {"busy":"busy"}
-    #> {shiny}      R  stderr    ----------- SEND {"custom":{"showcase-src":{"srcref":|truncated
-    #> {shiny}      R  stderr    ----------- SEND {"recalculating":{"name":"distPlot",|truncated
-    #> {shiny}      R  stderr    ----------- SEND {"recalculating":{"name":"distPlot",|truncated
+    #> {shiny}      R  stderr    ----------- SEND {"custom":{"showcase-src":{"srcref":}}}|truncated
+    #> {shiny}      R  stderr    ----------- SEND {"recalculating":{"name":"distPlot",}}|truncated
+    #> {shiny}      R  stderr    ----------- SEND {"recalculating":{"name":"distPlot",}}|truncated
     #> {shiny}      R  stderr    ----------- SEND {"busy":"idle"}
-    #> {shiny}      R  stderr    ----------- SEND {"errors":{},"values":{"distPlot":|truncated
+    #> {shiny}      R  stderr    ----------- SEND {"errors":{},"values":{"distPlot":}}|truncated
 
     # The log that is returned is a `data.frame()`.
     log <- app2$get_logs()
     tibble::glimpse(log)
     #> Rows: 43
     #> Columns: 5
-    #> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-    #> $ timestamp <dttm> 2022-09-19 10:01:57, 2022-09-19 10:01:57, 2022-09-19 10:01:58, 2022…
-    #> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shinytest2"…
-    #> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "info", "inf…
-    #> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Creating ne…
-    #> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-    #> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:…
-    #> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shi…
-    #> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "inf…
-    #> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Cre…
+    #> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
+    #> $ timestamp <dttm> 2022-09-19 10:01:57, 2022-09-19 10:01:57, 2022-09-19 10:01:58, 2022...
+    #> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shinytest2"...
+    #> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "info", "inf...
+    #> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Creating ne...
+    #> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
+    #> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:...
+    #> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shi...
+    #> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "inf...
+    #> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Cre...
 
     # It may be filtered to find desired logs
     subset(log, level == "websocket")
@@ -2396,11 +2337,10 @@ A data.frame with the following columns:
     #> {chromote} JS websocket 10:01:58.81 recv WEBSOCKET_MSG
     #> {chromote} JS websocket 10:01:58.81 recv WEBSOCKET_MSG
     #> {chromote} JS websocket 10:01:58.82 recv WEBSOCKET_MSG
-    }
 
 ------------------------------------------------------------------------
 
-### Method `log_message()`
+### `AppDriver$log_message()`
 
 Add a message to the shinytest2 log.
 
@@ -2416,18 +2356,16 @@ Add a message to the shinytest2 log.
 
 #### Examples
 
-    \dontrun{
     app_path <- system.file("examples/01_hello", package = "shiny")
     app <- AppDriver$new(app_path)
 
     app$log_message("Setting bins to smaller value")
     app$set_inputs(bins = 10)
     app$get_logs()
-    }
 
 ------------------------------------------------------------------------
 
-### Method [`stop()`](https://rdrr.io/r/base/stop.html)
+### `AppDriver$stop()`
 
 Stop the Shiny application driver
 
@@ -2468,7 +2406,6 @@ already been terminated.
 
 #### Examples
 
-    \dontrun{
     rlang::check_installed("reactlog")
 
     library(shiny)
@@ -2514,14 +2451,13 @@ already been terminated.
     #> ..$ value  : chr " NULL"
     #> ..$ session: chr "bdc7417f2fc8c84fc05c9518e36fdc44"
     #> ..$ time   : num 1.65e+09
-    }
 
 ## Examples
 
 ``` r
 
 ## ------------------------------------------------
-## Method `AppDriver$new`
+## Method `AppDriver$new()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2537,7 +2473,7 @@ app$expect_values()
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$view`
+## Method `AppDriver$view()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2546,7 +2482,7 @@ app$view()
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$click`
+## Method `AppDriver$click()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2562,7 +2498,7 @@ cat(app$get_text("#view"))
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$set_inputs`
+## Method `AppDriver$set_inputs()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2576,7 +2512,7 @@ cat(app$get_text("#view"))
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$upload_file`
+## Method `AppDriver$upload_file()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2592,7 +2528,7 @@ app$upload_file(file1 = tmpfile)
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_values`
+## Method `AppDriver$expect_values()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2632,7 +2568,7 @@ app$expect_values(input = "A", output = "C")
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_value`
+## Method `AppDriver$get_value()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2648,7 +2584,7 @@ app$get_values(output = "caption")$output$caption
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_values`
+## Method `AppDriver$get_values()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2708,7 +2644,7 @@ str(app$get_values(input = "A", output = "C"))
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_download`
+## Method `AppDriver$expect_download()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2721,7 +2657,7 @@ app$expect_download("downloadData", compare = testthat::compare_file_text)
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_download`
+## Method `AppDriver$get_download()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2738,7 +2674,7 @@ app$get_download("downloadData", filename = "./myfile.csv")
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_text`
+## Method `AppDriver$expect_text()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2750,7 +2686,7 @@ app$expect_text("h2")
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_text`
+## Method `AppDriver$get_text()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2762,7 +2698,7 @@ app$get_text("h2")
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_html`
+## Method `AppDriver$expect_html()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2774,7 +2710,7 @@ app$expect_html("#caption")
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_html`
+## Method `AppDriver$get_html()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2791,7 +2727,7 @@ cat(app$get_html(".shiny-input-container")[1])
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_js`
+## Method `AppDriver$expect_js()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2811,7 +2747,7 @@ app$expect_js("window.test_counter;")
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_js`
+## Method `AppDriver$get_js()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2856,7 +2792,7 @@ app$get_js(js_txt)
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$run_js`
+## Method `AppDriver$run_js()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2880,7 +2816,7 @@ app$get_js(js_txt)
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_screenshot`
+## Method `AppDriver$expect_screenshot()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2945,7 +2881,7 @@ app$expect_screenshot(selector = "viewport")
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_screenshot`
+## Method `AppDriver$get_screenshot()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2966,7 +2902,7 @@ showimage::show_image(tmpfile)
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$wait_for_idle`
+## Method `AppDriver$wait_for_idle()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -3000,7 +2936,7 @@ identical(pre_value, post_value)
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$wait_for_value`
+## Method `AppDriver$wait_for_value()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -3046,7 +2982,7 @@ app$get_value(output = "total")
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$wait_for_js`
+## Method `AppDriver$wait_for_js()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -3066,7 +3002,7 @@ app$wait_for_js("complicated_condition();")
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$expect_unique_names`
+## Method `AppDriver$expect_unique_names()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -3085,7 +3021,7 @@ app <- AppDriver$new(shiny_app, check_names = TRUE)
 #> Warning:
 #> ! Shiny inputs should have unique HTML id values.
 #> i The following HTML id values are not unique:
-#> • text
+#> * text
 app$stop()
 
 # Manually assert that all names are unique
@@ -3094,13 +3030,13 @@ app$expect_unique_names()
 #> Error: `app_check_unique_names(self, private)` threw an unexpected warning.
 #> Message: ! Shiny inputs should have unique HTML id values.
 #> i The following HTML id values are not unique:
-#>   • text
+#>   * text
 #> Class:   rlang_warning/warning/condition
 app$stop()
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_dir`
+## Method `AppDriver$get_dir()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -3112,7 +3048,7 @@ identical(app$get_dir(), app_path)
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_url`
+## Method `AppDriver$get_url()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -3123,7 +3059,7 @@ browseURL(app$get_url())
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_window_size`
+## Method `AppDriver$get_window_size()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -3139,7 +3075,7 @@ app$get_window_size()
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$set_window_size`
+## Method `AppDriver$set_window_size()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -3165,7 +3101,7 @@ app$get_window_size()
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_chromote_session`
+## Method `AppDriver$get_chromote_session()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -3186,7 +3122,7 @@ b$Runtime$evaluate("1 + 1")
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_variant`
+## Method `AppDriver$get_variant()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -3203,7 +3139,7 @@ app$get_variant()
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$get_logs`
+## Method `AppDriver$get_logs()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -3272,31 +3208,31 @@ app2$get_logs()
 #> {shiny}      R  stderr    ----------- Running application in test mode.
 #> {shiny}      R  stderr    -----------
 #> {shiny}      R  stderr    ----------- Listening on http://127.0.0.1:4560
-#> {shiny}      R  stderr    ----------- SEND {"config":{"workerId":"","sessionId"|truncated
-#> {shiny}      R  stderr    ----------- RECV {"method":"init","data":{"bins":30,|truncated
-#> {shiny}      R  stderr    ----------- SEND {"custom":{"showcase-src":{"srcref":|truncated
+#> {shiny}      R  stderr    ----------- SEND {"config":{"workerId":"","sessionId"}}|truncated
+#> {shiny}      R  stderr    ----------- RECV {"method":"init","data":{"bins":30,}}|truncated
+#> {shiny}      R  stderr    ----------- SEND {"custom":{"showcase-src":{"srcref":}}}|truncated
 #> {shiny}      R  stderr    ----------- SEND {"busy":"busy"}
-#> {shiny}      R  stderr    ----------- SEND {"custom":{"showcase-src":{"srcref":|truncated
-#> {shiny}      R  stderr    ----------- SEND {"recalculating":{"name":"distPlot",|truncated
-#> {shiny}      R  stderr    ----------- SEND {"recalculating":{"name":"distPlot",|truncated
+#> {shiny}      R  stderr    ----------- SEND {"custom":{"showcase-src":{"srcref":}}}|truncated
+#> {shiny}      R  stderr    ----------- SEND {"recalculating":{"name":"distPlot",}}|truncated
+#> {shiny}      R  stderr    ----------- SEND {"recalculating":{"name":"distPlot",}}|truncated
 #> {shiny}      R  stderr    ----------- SEND {"busy":"idle"}
-#> {shiny}      R  stderr    ----------- SEND {"errors":{},"values":{"distPlot":|truncated
+#> {shiny}      R  stderr    ----------- SEND {"errors":{},"values":{"distPlot":}}|truncated
 
 # The log that is returned is a `data.frame()`.
 log <- app2$get_logs()
 tibble::glimpse(log)
 #> Rows: 43
 #> Columns: 5
-#> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-#> $ timestamp <dttm> 2022-09-19 10:01:57, 2022-09-19 10:01:57, 2022-09-19 10:01:58, 2022…
-#> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shinytest2"…
-#> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "info", "inf…
-#> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Creating ne…
-#> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-#> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:…
-#> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shi…
-#> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "inf…
-#> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Cre…
+#> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
+#> $ timestamp <dttm> 2022-09-19 10:01:57, 2022-09-19 10:01:57, 2022-09-19 10:01:58, 2022...
+#> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shinytest2"...
+#> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "info", "inf...
+#> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Creating ne...
+#> $ workerid  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
+#> $ timestamp <dttm> 2022-03-16 11:09:57, 2022-03-16 11:09:57, 2022-03-16 11:09:...
+#> $ location  <chr> "shinytest2", "shinytest2", "shinytest2", "shinytest2", "shi...
+#> $ level     <chr> "info", "info", "info", "info", "info", "info", "info", "inf...
+#> $ message   <chr> "Start AppDriver initialization", "Starting Shiny app", "Cre...
 
 # It may be filtered to find desired logs
 subset(log, level == "websocket")
@@ -3313,7 +3249,7 @@ subset(log, level == "websocket")
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$log_message`
+## Method `AppDriver$log_message()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -3326,7 +3262,7 @@ app$get_logs()
 } # }
 
 ## ------------------------------------------------
-## Method `AppDriver$stop`
+## Method `AppDriver$stop()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
