@@ -2,6 +2,10 @@
 
 ## Bug fixes and minor improvements
 
+* `{shinytest2}` now requires `httr2 (>= 1.0.0)`. The `Url` helper relies on
+  `httr2::url_parse()`'s curl-based parsing (added in httr2 1.0.0); older
+  versions returned a `NULL` hostname for some URLs.
+
 * Fixed `@examples` in `AppDriver`'s documentation so the reference page
   builds cleanly under roxygen2 8.0.0. Non-ASCII characters (`•`, `…`) and
   unbalanced braces in illustrative log output were replaced with ASCII

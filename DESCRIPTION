@@ -30,7 +30,7 @@ Imports:
     cli,
     fs,
     globals (>= 0.14.0),
-    httr2,
+    httr2 (>= 1.0.0),
     jsonlite,
     lifecycle (>= 1.0.3),
     pingr,
