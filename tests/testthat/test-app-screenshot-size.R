@@ -11,6 +11,13 @@ test_that("images are captured via expect_values", {
 
   bear_path <- normalizePath(test_path("app-files/bear.png"))
   ui <- fluidPage(
+    # Force zero-width scrollbars. Otherwise "classic" scrollbars (present on
+    # some CI runners, e.g. macOS GitHub Actions) consume ~15px and shrink the
+    # captured "viewport" screenshot below the window size, making the exact
+    # dimension assertions below flaky depending on the runner's scrollbar mode.
+    tags$head(tags$style(HTML(
+      "::-webkit-scrollbar { width: 0px; height: 0px; }"
+    ))),
     imageOutput("img", width = img_width, height = img_height),
   )
   server <- function(input, output, session) {
