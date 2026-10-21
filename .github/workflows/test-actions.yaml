@@ -33,6 +33,9 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      - name: Install system dependencies (without the Launchpad PPA)
+        run: . .github/shiny-workflows/package-install.sh
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           needs: |
