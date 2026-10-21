@@ -19,17 +19,21 @@ export(use_shinytest2_test)
 export(with_app_support)
 importFrom(R6,R6Class)
 importFrom(callr,process)
-importFrom(cli,col_blue)
-importFrom(cli,col_cyan)
-importFrom(cli,col_green)
-importFrom(cli,col_magenta)
-importFrom(cli,col_red)
-importFrom(cli,col_silver)
-importFrom(cli,make_ansi_style)
+importFrom(cli,
+  col_blue,
+  col_cyan,
+  col_green,
+  col_magenta,
+  col_red,
+  col_silver,
+  make_ansi_style
+)
 importFrom(lifecycle,deprecated)
-importFrom(rlang,"%||%")
-importFrom(rlang,":=")
-importFrom(rlang,list2)
-importFrom(rlang,missing_arg)
+importFrom(rlang,
+  "%||%",
+  ":=",
+  list2,
+  missing_arg
+)
 importFrom(testthat,default_reporter)
 useDynLib(shinytest2, .registration = TRUE)
