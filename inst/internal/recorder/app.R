@@ -261,12 +261,12 @@ process_input_value <- function(value, input_type) {
 # Try to load a package, but only once; subsequent calls with the same value of
 # `pkg` will do nothing. Returns TRUE if the package is successfully loaded,
 # FALSE otherwise.
-tried_packages <- character()
+tried_packages <- new.env(parent = emptyenv())
 try_load_package <- function(pkg) {
-  if (pkg %in% tried_packages) {
+  if (isTRUE(tried_packages[[pkg]])) {
     return(FALSE)
   }
-  tried_packages <<- c(tried_packages, pkg)
+  tried_packages[[pkg]] <- TRUE
   requireNamespace(pkg, quietly = TRUE)
 }
 

@@ -44,14 +44,12 @@ ckm8_assert_app_driver <- function(
 
 # Cache a value given output of `fn`
 cache_fn_val <- function(fn) {
-  val <- NULL
+  cache <- new.env(parent = emptyenv())
   function() {
-    if (!is.null(val)) {
-      return(val)
+    if (!exists("val", envir = cache)) {
+      assign("val", fn(), envir = cache)
     }
-
-    val <<- fn()
-    val
+    get("val", envir = cache)
   }
 }
 
