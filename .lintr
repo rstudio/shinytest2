@@ -2,8 +2,7 @@ linters: linters_with_defaults(
     line_length_linter = NULL,
     indentation_linter = NULL,
     commented_code_linter = NULL,
-    return_linter = NULL,
-    assignment_linter = assignment_linter(operator = c("<-", "<<-"))
+    return_linter = NULL
   )
 exclusions: list(
     "inst/gha/audit-app.R" = list(

@@ -1,10 +1,10 @@
 # Combined from: https://github.com/rstudio/shinycoreci-apps/blob/3951d87bd91f27928a4cdf439c113590ce804508/apps/081-widgets-gallery/
 library(shiny)
 
-widget_ids <- NULL
+widget_ids <- new.env(parent = emptyenv())
 widget <- function(name, widget_object, title = NULL) {
   # Collect all widget ids
-  widget_ids <<- append(widget_ids, name)
+  widget_ids$ids <- append(widget_ids$ids, name)
 
   column(4,
     wellPanel(
@@ -179,14 +179,14 @@ ui <- fluidPage(
   ),
   h3("tabset:"), verbatimTextOutput("tabset_out"),
 )
-widget_ids <- c(widget_ids, "tabset")
+widget_ids$ids <- c(widget_ids$ids, "tabset")
 
 
 
 server <- function(input, output) {
 
   # Display all widget outputs (except for `file`)
-  lapply(widget_ids, function(widget_id) {
+  lapply(widget_ids$ids, function(widget_id) {
     if (widget_id %in% "file") return()
 
     output[[paste0(widget_id, "_out")]] <- renderPrint({
