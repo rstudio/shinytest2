@@ -2,6 +2,10 @@
 
 ## Bug fixes and minor improvements
 
+* `AppDriver$new()` no longer runs `pkgload::load_all()` on an installed
+  package, such as when tests run via `testthat::test_package()`. Previously
+  the app would see an empty namespace for the package (@zsigmas, #451).
+
 * `{shinytest2}` now requires `httr2 (>= 1.0.0)`. The `Url` helper relies on
   `httr2::url_parse()`'s curl-based parsing (added in httr2 1.0.0); older
   versions returned a `NULL` hostname for some URLs.
