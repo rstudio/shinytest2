@@ -4,6 +4,14 @@
 
 ### Bug fixes and minor improvements
 
+- `AppDriver$new()` no longer runs
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  on an installed package, such as when tests run via
+  [`testthat::test_package()`](https://testthat.r-lib.org/reference/test_package.html).
+  Previously the app would see an empty namespace for the package
+  ([@zsigmas](https://github.com/zsigmas),
+  [\#451](https://github.com/rstudio/shinytest2/issues/451)).
+
 - [shinytest2](https://rstudio.github.io/shinytest2/) now requires
   `httr2 (>= 1.0.0)`. The `Url` helper relies on
   [`httr2::url_parse()`](https://httr2.r-lib.org/reference/url_parse.html)’s
