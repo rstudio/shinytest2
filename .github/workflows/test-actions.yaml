@@ -21,6 +21,8 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      # See .github/shiny-workflows/package-install.sh
+      R_PKG_SYSREQS_GIT_REPO_URL: https://github.com/rstudio/r-system-requirements.git
 
     steps:
       - uses: actions/checkout@v2
@@ -32,9 +34,6 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
-
-      - name: Install system dependencies (without the Launchpad PPA)
-        run: . .github/shiny-workflows/package-install.sh
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
