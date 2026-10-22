@@ -123,6 +123,8 @@ test_that("screenshot can be expected", {
   # across platforms, but chromote/Chrome produce non-deterministic PNG bytes
   # (zlib compression differs by environment). Byte comparison (threshold =
   # NULL) fails on those identical-but-re-encoded images.
+  # Chrome < 156 crops the 100px tall `#green` box to 99px.
+  skip_if_chrome_older_than(app, 156)
   app$expect_screenshot(threshold = 10)
 })
 test_that("screenshot can be expected", {
@@ -136,6 +138,7 @@ test_that("screenshot can be expected", {
   # This directly calls `app$get_screenshot()`, no need for extra testing
   # Should take a picture of `#green`, not app
   # See note above re: pixel `threshold` vs non-deterministic PNG bytes.
+  skip_if_chrome_older_than(app, 156)
   app$expect_screenshot(
     screenshot_args = list(selector = "#green"),
     threshold = 10
