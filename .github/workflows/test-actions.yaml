@@ -21,9 +21,6 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      # See .github/shiny-workflows/package-install.sh
-      # TODO: Remove once https://github.com/r-hub/r-system-requirements/pull/4 is merged
-      R_PKG_SYSREQS_GIT_REPO_URL: https://github.com/rstudio/r-system-requirements.git
 
     steps:
       - uses: actions/checkout@v2
