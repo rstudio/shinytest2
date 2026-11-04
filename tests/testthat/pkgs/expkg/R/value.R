@@ -34,6 +34,22 @@ expkg_shiny_app <- function() {
   )
 }
 
+#' Exported app that reads from an environment at runtime
+#' @export
+expkg_global_app <- function(env = globalenv()) {
+  shiny::shinyApp(
+    ui = shiny::fluidPage(
+      shiny::verbatimTextOutput("data")
+    ),
+    server = function(input, output) {
+      output$data <- shiny::renderText({
+        # Looked up by name at runtime, so it is not found by a static scan
+        get0("expkg_data", envir = env, ifnotfound = "<missing>")
+      })
+    }
+  )
+}
+
 expkg_run_shiny_app <- function() {
   library(expkg)
   shiny::runApp(expkg_shiny_app())
