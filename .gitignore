@@ -10,5 +10,6 @@ inst/doc
 /doc/
 /Meta/
 CRAN-SUBMISSION
-.claude/
+.claude/*
+!.claude/skills
 _dev/

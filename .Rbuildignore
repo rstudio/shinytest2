@@ -24,6 +24,7 @@ _\.new\.png$
 ^tests/testthat/pkgs$
 ^CRAN-SUBMISSION$
 ^_dev$
-^.claude$
-^CLAUDE.md$
+^\.claude$
+^\.agents$
+^AGENTS\.md$
 ^_dev$

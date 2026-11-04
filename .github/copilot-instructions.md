@@ -284,7 +284,7 @@ sudo R -e "install.packages('.', type='source', repos=NULL)"
 ## Important Files Reference
 
 ### Repository Structure:
-- **Root**: `.github/`, `.Rbuildignore`, `.gitignore`, `.lintr`, `CLAUDE.md`, `DESCRIPTION`, `LICENSE`, `LICENSE.md`, `NAMESPACE`, `NEWS.md`, `R/`, `README.md`, `_pkgdown.yml`, `inst/`, `man/`, `pkgdown/`, `shinytest2.Rproj`, `src/`, `tests/`, `vignettes/`
+- **Root**: `.github/`, `.Rbuildignore`, `.gitignore`, `.lintr`, `AGENTS.md`, `DESCRIPTION`, `LICENSE`, `LICENSE.md`, `NAMESPACE`, `NEWS.md`, `R/`, `README.md`, `_pkgdown.yml`, `inst/`, `man/`, `pkgdown/`, `shinytest2.Rproj`, `src/`, `tests/`, `vignettes/`
 
 ### R Source Files (`R/` directory - 42 files):
 AppDriver split across multiple files:
