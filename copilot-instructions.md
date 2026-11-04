@@ -350,7 +350,7 @@ sudo R -e "install.packages('.', type='source', repos=NULL)"
 ### Repository Structure:
 
 - **Root**: `.github/`, `.Rbuildignore`, `.gitignore`, `.lintr`,
-  `CLAUDE.md`, `DESCRIPTION`, `LICENSE`, `LICENSE.md`, `NAMESPACE`,
+  `AGENTS.md`, `DESCRIPTION`, `LICENSE`, `LICENSE.md`, `NAMESPACE`,
   `NEWS.md`, `R/`, `README.md`, `_pkgdown.yml`, `inst/`, `man/`,
   `pkgdown/`, `shinytest2.Rproj`, `src/`, `tests/`, `vignettes/`
 

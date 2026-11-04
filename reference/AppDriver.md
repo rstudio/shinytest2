@@ -2256,7 +2256,7 @@ A data.frame with the following columns:
 - `level`: For a given location, there are different types of log
   levels.
 
-  - `"shinytest2"`: `"log"`; Only log messages are captured.
+  - `"shinytest2"`: `"info"`; Only log messages are captured.
 
   - `"shiny"`: `"stdout"` or `"stderr"`; Note,
     [`message()`](https://rdrr.io/r/base/message.html) output is sent to
