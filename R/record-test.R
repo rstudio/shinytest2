@@ -78,7 +78,7 @@ record_test <- function(
 
   package_path <- NULL
   if (record_in_package) {
-    pkg_path <- tryCatch(pkgload::pkg_path(), error = function(e) NULL)
+    pkg_path <- dev_pkg_path()
     if (is.null(pkg_path)) {
       # No package detected, so do not record in package testing style
       record_in_package <- FALSE

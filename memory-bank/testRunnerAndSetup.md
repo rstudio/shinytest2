@@ -166,5 +166,5 @@ Covers single-app repos, multi-app repos, and packages, using the `actions/test-
 - `local_app_support()` / `with_app_support()` load into a fresh env whose parent is `globalenv()`, not the caller env. `load_app_support()` uses the caller env.
 - `dev_pkg_path()` must stay `NULL` for installed packages. Without the `Meta/` check, `pkgload::pkg_path()` finds the installed package's `DESCRIPTION` and shinytest2 tries to `load_all()` it.
 - `in_dev_pkg()` compares `getwd()` to the package root exactly. A subfolder of a package is not "in" the package for `use_shinytest2()` defaults.
-- `record_test()` uses `pkgload::pkg_path()` directly, not `dev_pkg_path()`.
+- Always use `dev_pkg_path()`, not `pkgload::pkg_path()`, to find the package in development (`record_test()` included).
 - The replaced `library()` / `require()` show up in `ls(globalenv())` inside the app process.

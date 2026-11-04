@@ -966,7 +966,10 @@ shinyApp(
         }
 
         overwrite_test_runner <-
-          if (fs::file_exists(test_runner_file)) {
+          if (in_dev_package) {
+            # Packages use their own runner (e.g. `testthat::test_check()`)
+            FALSE
+          } else if (fs::file_exists(test_runner_file)) {
             if (
               !any(grepl(
                 "test_app(",

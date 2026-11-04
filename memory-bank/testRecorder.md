@@ -21,7 +21,7 @@ Main files:
 ## Flow
 
 1. `record_test()` checks args, needs `shinyvalidate` (>= 0.1.2), and rejects `ShinyDriver` objects and `http(s)://` URLs.
-2. Package detection: if `record_in_package = TRUE` and `pkgload::pkg_path()` finds a package, `package_path` is set. Otherwise `record_in_package` becomes `FALSE`.
+2. Package detection: if `record_in_package = TRUE` and `dev_pkg_path()` finds a package in development (installed packages do not count), `package_path` is set. Otherwise `record_in_package` becomes `FALSE`.
 3. `test_file` defaults to `record_test_file_name(app, record_in_package)`:
    - In a package and `app` is a path: `test-app-<folder name>.R`.
    - Otherwise: `test-shinytest2.R`.
@@ -121,7 +121,7 @@ The app path in the code is `test_path("<app folder relative to tests/testthat>"
 ### On "Save test and exit"
 
 1. Generate code and add it to the end of the test file (`cat(append = TRUE)`). `library(shinytest2)` is added at the top only if the file does not already have it.
-2. If `<here_dir>/tests/testthat.R` is missing, create it from the template. If it exists but has no `test_app(` call, warn and overwrite it with `shinytest2::test_app()`.
+2. Standalone apps only: if `<here_dir>/tests/testthat.R` is missing, create it from the template. If it exists but has no `test_app(` call, warn and overwrite it with `shinytest2::test_app()`. Packages keep their own runner (e.g. `testthat::test_check()`).
 3. Package mode: `use_shinytest2_package()` (add to Suggests). Otherwise: `use_shinytest2_setup()` (add `load_app_support()` setup file). The generated code's `local_app_support()` line is the package-mode partner of this setup file.
 4. Return the file path and close the browser window.
 
@@ -149,6 +149,6 @@ Walks a parsed expression from leaves up to the root and calls `post_fn(expr_lis
 - Remote URLs and `ShinyDriver` objects are not supported.
 - Shiny Rmd apps get a random seed if none is given, because their UI has random ids.
 - Uploaded files must be under `tests/testthat` (relative to `here_dir`) to avoid the inserted warning.
-- The test runner check looks for `test_app(` in `tests/testthat.R` in `here_dir`, also in package mode.
+- The test runner check only runs for standalone apps. In package mode, `tests/testthat.R` is never touched, which matches `use_shinytest2()` defaults (`runner = FALSE` in a package).
 - Snapshot names: each `AppDriver` `name` should be unique in a test file, or snapshot files can overwrite each other.
 - The recorder echoes the target app's stdout/stderr (from `app$get_logs()`) to the console every 500 ms.

@@ -137,7 +137,6 @@ Not part of AppDriver logging. `record_test()` (`R/record-test.R`) wraps `shiny:
 
 - Browser listeners must be registered before `Page$navigate()`; moving `app_init_browser_log()` later loses page load messages.
 - `level` is not checked against a fixed list on purpose (e.g. `console.trace()` levels).
-- The `get_logs` roxygen docs in `R/app-driver.R` say the `shinytest2` level is `"log"`, but `app_log_message()` writes `"info"`.
 - Shiny process rows have no timestamp and always sort to the end, so you cannot read exact timing between `{shiny}` lines and other rows.
 - WebSocket logging is decided once at init from the `options` argument; it cannot be turned on later.
 - Log rows are kept in memory (`private$logs`) for the life of the AppDriver; with `shiny.trace` on, this list can get large.
