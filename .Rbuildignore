@@ -28,3 +28,4 @@ _\.new\.png$
 ^\.agents$
 ^AGENTS\.md$
 ^_dev$
+^memory-bank$

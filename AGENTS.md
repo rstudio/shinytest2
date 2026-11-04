@@ -6,6 +6,17 @@ This file provides guidance to AI coding agents when working with code in this r
 
 shinytest2 is an R package that provides automated testing for Shiny applications using a headless Chromium browser via the chromote package. It integrates with testthat for snapshot-based testing of Shiny apps.
 
+## Memory Bank Files
+
+The `memory-bank/` directory contains architectural documentation with YAML frontmatter (`title`, `description`). **Before exploring the codebase**, invoke the `memory-bank` skill (`.agents/skills/memory-bank/`) and consult relevant documentation. For large documents, use outlines and targeted section reads as described in the skill.
+
+Update the memory bank when:
+
+1. Discovering new architectural patterns that should be documented
+2. After implementing significant changes to core architecture
+3. When the user requests **update memory bank**
+4. When important context needs to be added or clarified
+
 ## Core Architecture
 
 ### Main Components
