@@ -2,6 +2,11 @@
 
 ## Bug fixes and minor improvements
 
+* New `AppDriver$get_process()` returns the background R process that runs the
+  app. Use `app$get_process()$is_alive()` to check if the app is still running,
+  and `app$get_process()$wait()` to wait for an app that calls
+  `shiny::stopApp()` to exit before calling `app$stop()` (#319, #320, #457).
+
 * `AppDriver$new()` no longer runs `pkgload::load_all()` on an installed
   package, such as when tests run via `testthat::test_package()`. Previously
   the app would see an empty namespace for the package (@zsigmas, #451).
