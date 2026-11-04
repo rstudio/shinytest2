@@ -185,6 +185,8 @@ To update the snapshot values, you will need to run a variation of
 
 - [`AppDriver$get_chromote_session()`](#method-AppDriver-get_chromote_session)
 
+- [`AppDriver$get_process()`](#method-AppDriver-get_process)
+
 - [`AppDriver$get_variant()`](#method-AppDriver-get_variant)
 
 - [`AppDriver$get_logs()`](#method-AppDriver-get_logs)
@@ -2151,6 +2153,39 @@ R6 object
 
 ------------------------------------------------------------------------
 
+### `AppDriver$get_process()`
+
+Get the Shiny process
+
+Get the [`callr::r_bg()`](https://callr.r-lib.org/reference/r_bg.html)
+process that runs the Shiny app in the background. Use it to check if
+the app is still running, or to wait for an app that calls
+[`shiny::stopApp()`](https://rdrr.io/pkg/shiny/man/stopApp.html) to exit
+before calling `$stop()`.
+
+#### Usage
+
+    AppDriver$get_process()
+
+#### Returns
+
+[`callr::r_process`](https://callr.r-lib.org/reference/r_process.html)
+R6 object, or `NULL` if the app is not hosted locally (e.g. `app_dir` is
+a URL)
+
+#### Examples
+
+    app_path <- system.file("examples/01_hello", package = "shiny")
+    app <- AppDriver$new(app_path)
+
+    app$get_process()$is_alive()
+    #> [1] TRUE
+    app$stop()
+    app$get_process()$is_alive()
+    #> [1] FALSE
+
+------------------------------------------------------------------------
+
 ### `AppDriver$get_variant()`
 
 Get the variant
@@ -3119,6 +3154,21 @@ b$Runtime$evaluate("1 + 1")
 #>
 #> $result$description
 #> [1] "2"
+} # }
+
+## ------------------------------------------------
+## Method `AppDriver$get_process()`
+## ------------------------------------------------
+
+if (FALSE) { # \dontrun{
+app_path <- system.file("examples/01_hello", package = "shiny")
+app <- AppDriver$new(app_path)
+
+app$get_process()$is_alive()
+#> [1] TRUE
+app$stop()
+app$get_process()$is_alive()
+#> [1] FALSE
 } # }
 
 ## ------------------------------------------------

@@ -4,6 +4,16 @@
 
 ### Bug fixes and minor improvements
 
+- New `AppDriver$get_process()` returns the background R process that
+  runs the app. Use `app$get_process()$is_alive()` to check if the app
+  is still running, and `app$get_process()$wait()` to wait for an app
+  that calls
+  [`shiny::stopApp()`](https://rdrr.io/pkg/shiny/man/stopApp.html) to
+  exit before calling `app$stop()`
+  ([\#319](https://github.com/rstudio/shinytest2/issues/319),
+  [\#320](https://github.com/rstudio/shinytest2/issues/320),
+  [\#457](https://github.com/rstudio/shinytest2/issues/457)).
+
 - New “Apps that read from the global environment” section in
   [`vignette("use-package")`](https://rstudio.github.io/shinytest2/articles/use-package.md)
   shows how to supply test objects to an app that looks them up in

@@ -255,6 +255,69 @@ creating many instances of <code>AppDriver</code>, you may want to call
 <code>withr::defer(app$stop())</code> right after initialization.</p>
 </div>
 <div class="section level2">
+<h2 id="how-can-i-tell-if-my-app-is-still-running">How can I tell if my app is still running?<a class="anchor" aria-label="anchor" href="#how-can-i-tell-if-my-app-is-still-running"></a>
+</h2>
+<p>Use <code>app$get_process()$is_alive()</code>.
+<code>app$get_process()</code> returns the <a href="https://callr.r-lib.org/reference/r_bg.html" class="external-link"><code>callr</code></a>
+process that runs the app in the background. <code>$is_alive()</code>
+returns <code>FALSE</code> once the app has stopped, such as after the
+app calls <code><a href="https://rdrr.io/pkg/shiny/man/stopApp.html" class="external-link">shiny::stopApp()</a></code> or after
+<code>app$stop()</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"Done button stops the app"</span>, <span class="op">{</span></span>
+<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_path.html" class="external-link">test_path</a></span><span class="op">(</span><span class="st">"apps/done"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/logical-expectations.html" class="external-link">expect_true</a></span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="fu">get_process</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">is_alive</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">app</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="st">"done"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>  <span class="co"># Wait up to 5 seconds for the background process to end</span></span>
+<span>  <span class="va">app</span><span class="op">$</span><span class="fu">get_process</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">wait</span><span class="op">(</span><span class="fl">5000</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/logical-expectations.html" class="external-link">expect_false</a></span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="fu">get_process</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">is_alive</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<p>If <code>AppDriver</code> was given a URL, <a href="https://rstudio.github.io/shinytest2/">shinytest2</a>
+did not start the app, so <code>app$get_process()</code> returns
+<code>NULL</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="how-can-i-test-an-app-that-stops-itself">How can I test an app that stops itself?<a class="anchor" aria-label="anchor" href="#how-can-i-test-an-app-that-stops-itself"></a>
+</h2>
+<p>When an app calls <code><a href="https://rdrr.io/pkg/shiny/man/stopApp.html" class="external-link">shiny::stopApp()</a></code>, the background R
+process ends on its own. Use <code>app$get_process()</code> to get that
+<a href="https://callr.r-lib.org/reference/r_bg.html" class="external-link"><code>callr</code></a>
+process. <code>$is_alive()</code> tells you if the app is still running,
+and <code>$wait()</code> pauses until the process ends.</p>
+<p><code>app$stop()</code> returns the process result if the process has
+already ended. If it is still running, <code>app$stop()</code> kills it
+and returns <code>NULL</code>. So wait for the process to end before
+calling <code>app$stop()</code>.</p>
+<p>The result of an app object is the value given to
+<code><a href="https://rdrr.io/pkg/shiny/man/stopApp.html" class="external-link">stopApp()</a></code>. The result of a function app is the value the
+function returns, so it can return objects the app left in the global
+environment:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"Done button saves `foo`"</span>, <span class="op">{</span></span>
+<span>  <span class="va">done_app</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"done"</span>, <span class="st">"Done"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">done</span>, <span class="op">{</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/assign.html" class="external-link">assign</a></span><span class="op">(</span><span class="st">"foo"</span>, <span class="st">"bar"</span>, envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">globalenv</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/stopApp.html" class="external-link">stopApp</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>      <span class="op">}</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="va">done_app</span><span class="op">)</span> <span class="co"># Returns once the app calls `stopApp()`</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/get.html" class="external-link">mget</a></span><span class="op">(</span><span class="st">"foo"</span>, envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">globalenv</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span>  <span class="va">app</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="st">"done"</span>, wait_ <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># Wait up to 5 seconds for the background process to end</span></span>
+<span>  <span class="va">app</span><span class="op">$</span><span class="fu">get_process</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">wait</span><span class="op">(</span><span class="fl">5000</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/logical-expectations.html" class="external-link">expect_false</a></span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="fu">get_process</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">is_alive</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="kw">stop</span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>foo <span class="op">=</span> <span class="st">"bar"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
 <h2 id="how-can-i-open-the-test-to-see-if-bookmarks-are-working">How can I open the test to see if bookmarks are working?<a class="anchor" aria-label="anchor" href="#how-can-i-open-the-test-to-see-if-bookmarks-are-working"></a>
 </h2>
 <p>Testing Shiny bookmarks requires the browser to be loaded with
@@ -265,7 +328,7 @@ url with your specific query parameters! (<a href="https://github.com/rstudio/sh
 code</a>, <a href="https://github.com/rstudio/shinytest2/tree/v0.2.0/tests/testthat/apps/download" class="external-link">Working
 example</a>)</p>
 <p>File: <code>tests/testthat//test-bookmark.R</code></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"Bookmark works"</span>, <span class="op">{</span></span>
 <span>  <span class="co"># Start local app in the background in test mode</span></span>
 <span>  <span class="va">bg_app</span> <span class="op">&lt;-</span> <span class="fu">shinytest2</span><span class="fu">::</span><span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"path/to/shiny/app"</span><span class="op">)</span></span>
@@ -278,18 +341,18 @@ example</a>)</p>
 <span>  <span class="va">app</span><span class="op">$</span><span class="fu">expect_values</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <p>File: <code>tests/testthat/_snaps/bookmark/001.json</code></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="dt">"input"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>    <span class="dt">"._bookmark_"</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>    <span class="dt">"caps"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>    <span class="dt">"txt"</span><span class="fu">:</span> <span class="st">"abcd"</span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="fu">},</span></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="dt">"output"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>    <span class="dt">"out"</span><span class="fu">:</span> <span class="st">"ABCD"</span></span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  <span class="fu">},</span></span>
-<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  <span class="dt">"export"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="dt">"input"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>    <span class="dt">"._bookmark_"</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>    <span class="dt">"caps"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>    <span class="dt">"txt"</span><span class="fu">:</span> <span class="st">"abcd"</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="dt">"output"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>    <span class="dt">"out"</span><span class="fu">:</span> <span class="st">"ABCD"</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>  <span class="dt">"export"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

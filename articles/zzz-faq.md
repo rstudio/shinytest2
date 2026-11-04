@@ -191,6 +191,76 @@ instances of `AppDriver`, you may want to call `app$stop()` when the
 specific test is complete via `withr::defer(app$stop())` right after
 initialization.
 
+## How can I tell if my app is still running?
+
+Use `app$get_process()$is_alive()`. `app$get_process()` returns the
+[`callr`](https://callr.r-lib.org/reference/r_bg.html) process that runs
+the app in the background. `$is_alive()` returns `FALSE` once the app
+has stopped, such as after the app calls
+[`shiny::stopApp()`](https://rdrr.io/pkg/shiny/man/stopApp.html) or
+after `app$stop()`.
+
+``` r
+
+test_that("Done button stops the app", {
+  app <- AppDriver$new(test_path("apps/done"))
+  expect_true(app$get_process()$is_alive())
+
+  app$click("done", wait_ = FALSE)
+  # Wait up to 5 seconds for the background process to end
+  app$get_process()$wait(5000)
+  expect_false(app$get_process()$is_alive())
+})
+```
+
+If `AppDriver` was given a URL,
+[shinytest2](https://rstudio.github.io/shinytest2/) did not start the
+app, so `app$get_process()` returns `NULL`.
+
+## How can I test an app that stops itself?
+
+When an app calls
+[`shiny::stopApp()`](https://rdrr.io/pkg/shiny/man/stopApp.html), the
+background R process ends on its own. Use `app$get_process()` to get
+that [`callr`](https://callr.r-lib.org/reference/r_bg.html) process.
+`$is_alive()` tells you if the app is still running, and `$wait()`
+pauses until the process ends.
+
+`app$stop()` returns the process result if the process has already
+ended. If it is still running, `app$stop()` kills it and returns `NULL`.
+So wait for the process to end before calling `app$stop()`.
+
+The result of an app object is the value given to
+[`stopApp()`](https://rdrr.io/pkg/shiny/man/stopApp.html). The result of
+a function app is the value the function returns, so it can return
+objects the app left in the global environment:
+
+``` r
+
+test_that("Done button saves `foo`", {
+  done_app <- shinyApp(
+    fluidPage(actionButton("done", "Done")),
+    function(input, output, session) {
+      observeEvent(input$done, {
+        assign("foo", "bar", envir = globalenv())
+        stopApp()
+      })
+    }
+  )
+  app <- AppDriver$new(function() {
+    shiny::runApp(done_app) # Returns once the app calls `stopApp()`
+    mget("foo", envir = globalenv())
+  })
+  app$click("done", wait_ = FALSE)
+
+  # Wait up to 5 seconds for the background process to end
+  app$get_process()$wait(5000)
+  expect_false(app$get_process()$is_alive())
+
+  expect_equal(app$stop(), list(foo = "bar"))
+})
+```
+
 ## How can I open the test to see if bookmarks are working?
 
 Testing Shiny bookmarks requires the browser to be loaded with specific

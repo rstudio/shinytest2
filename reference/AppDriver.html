@@ -215,6 +215,7 @@ eventually wrap <code><a href="https://testthat.r-lib.org/reference/expect_snaps
 <li><p><a href="#method-AppDriver-get_window_size"><code>AppDriver$get_window_size()</code></a></p></li>
 <li><p><a href="#method-AppDriver-set_window_size"><code>AppDriver$set_window_size()</code></a></p></li>
 <li><p><a href="#method-AppDriver-get_chromote_session"><code>AppDriver$get_chromote_session()</code></a></p></li>
+<li><p><a href="#method-AppDriver-get_process"><code>AppDriver$get_process()</code></a></p></li>
 <li><p><a href="#method-AppDriver-get_variant"><code>AppDriver$get_variant()</code></a></p></li>
 <li><p><a href="#method-AppDriver-get_logs"><code>AppDriver$get_logs()</code></a></p></li>
 <li><p><a href="#method-AppDriver-log_message"><code>AppDriver$log_message()</code></a></p></li>
@@ -1879,18 +1880,44 @@ as plots) that need to be re-rendered.</p></dd>
 
 </div>
 
+<p></p><hr><a id="method-AppDriver-get_process"></a><div class="section">
+<h3 id="appdriver-get-process-"><code>AppDriver$get_process()</code><a class="anchor" aria-label="anchor" href="#appdriver-get-process-"></a></h3>
+<p>Get the Shiny process</p>
+<p>Get the <code><a href="https://callr.r-lib.org/reference/r_bg.html" class="external-link">callr::r_bg()</a></code> process that runs the Shiny app in the
+background. Use it to check if the app is still running, or to wait for
+an app that calls <code><a href="https://rdrr.io/pkg/shiny/man/stopApp.html" class="external-link">shiny::stopApp()</a></code> to exit before calling <code>$stop()</code>.</p><div class="section">
+<h4 id="usage-28">Usage<a class="anchor" aria-label="anchor" href="#usage-28"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_process</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div><p></p><div class="section">
+<h4 id="returns-13">Returns<a class="anchor" aria-label="anchor" href="#returns-13"></a></h4>
+<p><code><a href="https://callr.r-lib.org/reference/r_process.html" class="external-link">callr::r_process</a></code> R6 object, or <code>NULL</code> if the app is not
+hosted locally (e.g. <code>app_dir</code> is a URL)</p>
+</div><p></p><div class="section">
+<h4 id="examples-28">Examples<a class="anchor" aria-label="anchor" href="#examples-28"></a></h4>
+<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">app_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/01_hello"</span>, package <span class="op">=</span> <span class="st">"shiny"</span><span class="op">)</span></span>
+<span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">app_path</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">app</span><span class="op">$</span><span class="fu">get_process</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">is_alive</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span>
+<span><span class="va">app</span><span class="op">$</span><span class="kw">stop</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">app</span><span class="op">$</span><span class="fu">get_process</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">is_alive</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div><p></p></div>
+</div>
+
+</div>
+
 <p></p><hr><a id="method-AppDriver-get_variant"></a><div class="section">
 <h3 id="appdriver-get-variant-"><code>AppDriver$get_variant()</code><a class="anchor" aria-label="anchor" href="#appdriver-get-variant-"></a></h3>
 <p>Get the variant</p>
 <p>Get the <code>variant</code> supplied during initialization</p><div class="section">
-<h4 id="usage-28">Usage<a class="anchor" aria-label="anchor" href="#usage-28"></a></h4>
+<h4 id="usage-29">Usage<a class="anchor" aria-label="anchor" href="#usage-29"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_variant</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div><p></p><div class="section">
-<h4 id="returns-13">Returns<a class="anchor" aria-label="anchor" href="#returns-13"></a></h4>
+<h4 id="returns-14">Returns<a class="anchor" aria-label="anchor" href="#returns-14"></a></h4>
 <p>The <code>variant</code> value supplied during initialization or <code>NULL</code> if
 no value was supplied.</p>
 </div><p></p><div class="section">
-<h4 id="examples-28">Examples<a class="anchor" aria-label="anchor" href="#examples-28"></a></h4>
+<h4 id="examples-29">Examples<a class="anchor" aria-label="anchor" href="#examples-29"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">app_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/01_hello"</span>, package <span class="op">=</span> <span class="st">"shiny"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">app_path</span><span class="op">)</span></span>
@@ -1909,10 +1936,10 @@ no value was supplied.</p>
 <h3 id="appdriver-get-logs-"><code>AppDriver$get_logs()</code><a class="anchor" aria-label="anchor" href="#appdriver-get-logs-"></a></h3>
 <p>Get all logs</p>
 <p>Retrieve all of the debug logs that have been recorded.</p><div class="section">
-<h4 id="usage-29">Usage<a class="anchor" aria-label="anchor" href="#usage-29"></a></h4>
+<h4 id="usage-30">Usage<a class="anchor" aria-label="anchor" href="#usage-30"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">get_logs</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div><p></p><div class="section">
-<h4 id="returns-14">Returns<a class="anchor" aria-label="anchor" href="#returns-14"></a></h4>
+<h4 id="returns-15">Returns<a class="anchor" aria-label="anchor" href="#returns-15"></a></h4>
 <p>A data.frame with the following columns:</p><ul><li><p><code>workerid</code>: The shiny worker ID found within the browser</p></li>
 <li><p><code>timestamp</code>: POSIXct timestamp of the message</p></li>
 <li><p><code>location</code>: The location of the message was found. One of three values:</p><ul><li><p><code>"shinytest2"</code>: Occurs when <code>$log_message()</code> is called</p></li>
@@ -1932,7 +1959,7 @@ to <code>stderr</code>.</p></li>
 </ul></li>
 </ul><p></p>
 </div><p></p><div class="section">
-<h4 id="examples-29">Examples<a class="anchor" aria-label="anchor" href="#examples-29"></a></h4>
+<h4 id="examples-30">Examples<a class="anchor" aria-label="anchor" href="#examples-30"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">app1</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/01_hello"</span>, package <span class="op">=</span> <span class="st">"shiny"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">app1</span><span class="op">$</span><span class="fu">get_logs</span><span class="op">(</span><span class="op">)</span></span>
@@ -2043,7 +2070,7 @@ to <code>stderr</code>.</p></li>
 <p></p><hr><a id="method-AppDriver-log_message"></a><div class="section">
 <h3 id="appdriver-log-message-"><code>AppDriver$log_message()</code><a class="anchor" aria-label="anchor" href="#appdriver-log-message-"></a></h3>
 <p>Add a message to the <span class="pkg">shinytest2</span> log.</p><div class="section">
-<h4 id="usage-30">Usage<a class="anchor" aria-label="anchor" href="#usage-30"></a></h4>
+<h4 id="usage-31">Usage<a class="anchor" aria-label="anchor" href="#usage-31"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="fu">log_message</span><span class="op">(</span><span class="va">message</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div><p></p><div class="section">
 <h4 id="arguments-22">Arguments<a class="anchor" aria-label="anchor" href="#arguments-22"></a></h4>
@@ -2053,7 +2080,7 @@ to <code>stderr</code>.</p></li>
 
 </dl><p></p></div>
 </div><p></p><div class="section">
-<h4 id="examples-30">Examples<a class="anchor" aria-label="anchor" href="#examples-30"></a></h4>
+<h4 id="examples-31">Examples<a class="anchor" aria-label="anchor" href="#examples-31"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">app_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/01_hello"</span>, package <span class="op">=</span> <span class="st">"shiny"</span><span class="op">)</span></span>
 <span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">app_path</span><span class="op">)</span></span>
 <span></span>
@@ -2076,7 +2103,7 @@ information.</p>
 <p>Typically, this can be paired with a button that when clicked will call
 <code>shiny::stopApp(info)</code> to return <code>info</code> from the test app back to the
 main R session.</p><div class="section">
-<h4 id="usage-31">Usage<a class="anchor" aria-label="anchor" href="#usage-31"></a></h4>
+<h4 id="usage-32">Usage<a class="anchor" aria-label="anchor" href="#usage-32"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AppDriver</span><span class="op">$</span><span class="kw">stop</span><span class="op">(</span>signal_timeout <span class="op">=</span> <span class="fu">missing_arg</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div><p></p><div class="section">
 <h4 id="arguments-23">Arguments<a class="anchor" aria-label="anchor" href="#arguments-23"></a></h4>
@@ -2090,11 +2117,11 @@ if <span class="pkg">covr</span> is currently executing, then the <code>timeout<
 
 </dl><p></p></div>
 </div><p></p><div class="section">
-<h4 id="returns-15">Returns<a class="anchor" aria-label="anchor" href="#returns-15"></a></h4>
+<h4 id="returns-16">Returns<a class="anchor" aria-label="anchor" href="#returns-16"></a></h4>
 <p>The result of the background process if the Shiny application has
 already been terminated.</p>
 </div><p></p><div class="section">
-<h4 id="examples-31">Examples<a class="anchor" aria-label="anchor" href="#examples-31"></a></h4>
+<h4 id="examples-32">Examples<a class="anchor" aria-label="anchor" href="#examples-32"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/is_installed.html" class="external-link">check_installed</a></span><span class="op">(</span><span class="st">"reactlog"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
@@ -2813,6 +2840,21 @@ already been terminated.</p>
 <span class="r-in"><span><span class="co">#&gt;</span></span></span>
 <span class="r-in"><span><span class="co">#&gt; $result$description</span></span></span>
 <span class="r-in"><span><span class="co">#&gt; [1] "2"</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
+<span class="r-in"><span><span class="co">## Method `AppDriver$get_process()`</span></span></span>
+<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="va">app_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/01_hello"</span>, package <span class="op">=</span> <span class="st">"shiny"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="va">AppDriver</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">app_path</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="fu">get_process</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">is_alive</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#&gt; [1] TRUE</span></span></span>
+<span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="kw">stop</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">app</span><span class="op">$</span><span class="fu">get_process</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">is_alive</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#&gt; [1] FALSE</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
