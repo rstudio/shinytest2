@@ -4,6 +4,14 @@
 
 ### Bug fixes and minor improvements
 
+- New “Apps that read from the global environment” section in
+  [`vignette("use-package")`](https://rstudio.github.io/shinytest2/articles/use-package.md)
+  shows how to supply test objects to an app that looks them up in
+  `.GlobalEnv`. A function passed to `AppDriver$new()` copies objects
+  from the test into the background R process. A new FAQ entry explains
+  when an app directory’s `.Rprofile` and `.Renviron` files are run
+  ([\#456](https://github.com/rstudio/shinytest2/issues/456)).
+
 - `AppDriver$new()` no longer runs
   [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
   on an installed package, such as when tests run via

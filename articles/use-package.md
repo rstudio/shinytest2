@@ -133,7 +133,6 @@ wrapper function that loads the package and calls `run_app()`:
 
 # File: tests/testthat/test-app-function.R
 library(shinytest2)
-run_mypkg_app <-
 
 test_that("mypkg app initial values are consistent", {
   # Don't run these tests on the CRAN build servers
@@ -155,9 +154,15 @@ call
 when you execute `library(<pkg>)` or `require(<pkg>)` to load your dev
 package, `<pkg>`, in the background R process. Currently, only the local
 dev package can be loaded. Similar to [mirai](https://mirai.r-lib.org),
-there is also no carryover from the testing environment to the supplied
-function execution within the background R process. All packages may
-need to be [`library()`](https://rdrr.io/r/base/library.html)’ed again!
+packages and the global environment do not carry over from the testing R
+process to the background R process. All packages may need to be
+[`library()`](https://rdrr.io/r/base/library.html)’ed again! However,
+objects in the environment where the function was created
+(e.g. variables in your
+[`test_that()`](https://testthat.r-lib.org/reference/test_that.html)
+block) are copied along with the function. See [Apps that read from the
+global environment](#apps-that-read-from-the-global-environment) for how
+to use this.
 
 ## Application objects
 
@@ -237,6 +242,128 @@ To help create tests, you can call
 on your shiny application object directly. Unfortunately, the test file
 will not be able to be saved. Instead, the test commands can be copied
 into a test script manually.
+
+## Apps that read from the global environment
+
+Some apps look up the user’s objects in `.GlobalEnv` while they run. For
+example, this app lists every data frame in the global environment and
+shows the one the user picks:
+
+``` r
+
+# File: R/pick-data-app.R
+
+pick_data_app <- function() {
+  shinyApp(
+    ui = fluidPage(
+      selectInput("dataset", "Dataset", choices = NULL),
+      tableOutput("table")
+    ),
+    server = function(input, output, session) {
+      env <- globalenv()
+      is_df <- function(name) is.data.frame(get(name, envir = env))
+      updateSelectInput(session, "dataset", choices = Filter(is_df, ls(env)))
+
+      output$table <- renderTable({
+        req(input$dataset)
+        head(get(input$dataset, envir = env))
+      })
+    }
+  )
+}
+```
+
+The app is run in a background R process, which has its own, empty,
+global environment. Objects you create in your test are not there:
+
+``` r
+
+# Does not work: `my_data` only exists in the testing R process
+assign("my_data", datasets::mtcars, envir = globalenv())
+app <- AppDriver$new(pick_data_app())
+```
+
+Passing an app object does not help.
+[shinytest2](https://rstudio.github.io/shinytest2/) can only find the
+objects named in your server code, not the objects looked up by name
+while the app runs.
+
+Instead, pass a function to `AppDriver$new()`. The function is copied to
+the background R process along with the objects it uses from your test.
+Inside the function, put those objects into the background process’s
+global environment, load your package, and then return the app:
+
+``` r
+
+# File: tests/testthat/test-pick-data-app.R
+
+test_that("pick_data_app shows data from the global environment", {
+  # Don't run these tests on the CRAN build servers
+  skip_on_cran()
+
+  my_data <- datasets::mtcars
+
+  app <- AppDriver$new(name = "pick-data", function() {
+    # Runs in the background R process
+    assign("my_data", my_data, envir = globalenv())
+    library(mypkg)
+    pick_data_app()
+  })
+
+  # `my_data` is the only data frame, so it is already selected
+  app$expect_values(output = "table")
+})
+```
+
+A few things to keep in mind:
+
+- Use [`library(mypkg)`](https://rdrr.io/r/base/library.html) or
+  [`require(mypkg)`](https://rdrr.io/r/base/library.html), not
+  `mypkg::pick_data_app()`.
+  [shinytest2](https://rstudio.github.io/shinytest2/) only loads your
+  local package’s source code when
+  [`library()`](https://rdrr.io/r/base/library.html) or
+  [`require()`](https://rdrr.io/r/base/library.html) is called.
+- Create the function inside
+  [`test_that()`](https://testthat.r-lib.org/reference/test_that.html)
+  (or [`local()`](https://rdrr.io/r/base/eval.html)). A function created
+  at the top level of a script or the console lives in the global
+  environment, which is never copied, so `my_data` will not be found.
+- The whole environment of the function is copied, not only the objects
+  it uses. Avoid creating large, unrelated objects in the same
+  [`test_that()`](https://testthat.r-lib.org/reference/test_that.html)
+  block.
+- To load your package,
+  [shinytest2](https://rstudio.github.io/shinytest2/) puts its own
+  [`library()`](https://rdrr.io/r/base/library.html) and
+  [`require()`](https://rdrr.io/r/base/library.html) functions in the
+  background process’s global environment. If your app lists everything
+  in `ls(globalenv())`, these two names will also be listed.
+
+If you can change the app, a cleaner fix is to add an argument for where
+to look, such as `pick_data_app <- function(env = globalenv())`, and use
+`env` instead of
+[`globalenv()`](https://rdrr.io/r/base/environment.html) in the server.
+The test function can then pass in its own environment without touching
+the global environment:
+
+``` r
+
+# File: tests/testthat/test-pick-data-app.R
+
+test_that("pick_data_app shows data from a supplied environment", {
+  skip_on_cran()
+
+  my_data <- datasets::mtcars
+
+  app <- AppDriver$new(name = "pick-data-env", function() {
+    library(mypkg)
+    pick_data_app(env = list2env(list(my_data = my_data)))
+  })
+
+  app$expect_values(output = "table")
+})
+```
 
 ## Understanding app support files: `local_app_support()` and friends
 

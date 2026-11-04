@@ -75,6 +75,33 @@ the [Understanding app support
 files](https://rstudio.github.io/shinytest2/articles/use-package.html#understanding-app-support-files-local_app_support-and-friends)
 section in the “Using shinytest2 with R packages” vignette.
 
+## My app reads objects from the global environment. Why can’t it find my test objects?
+
+The app runs in a background R process with its own global environment,
+so objects created in your test are not there. Pass a function to
+`AppDriver$new()` that copies the objects into the background process’s
+global environment before starting the app. See [Apps that read from the
+global
+environment](https://rstudio.github.io/shinytest2/articles/use-package.html#apps-that-read-from-the-global-environment)
+in the “Using shinytest2 with R packages” vignette.
+
+## Does `{shinytest2}` run my app’s `.Rprofile` or `.Renviron`?
+
+Yes. If you supply a directory to `AppDriver$new(myappdir)`,
+[shinytest2](https://rstudio.github.io/shinytest2/) starts the
+background R process from the supplied directory. So an `.Rprofile` or
+`.Renviron` file in that directory is run before the app starts. This
+can be used to set options, such as `options(shiny.testmode = TRUE)`, or
+to create objects the app expects to find in the global environment.
+
+Your user-level `~/.Rprofile` is never run in the background R process.
+
+If you pass a function or an app object to `AppDriver$new()`, the
+background R process is not started from the app directory, so the app’s
+`.Rprofile` and `.Renviron` are not run. To supply objects to these
+apps, see [Apps that read from the global
+environment](https://rstudio.github.io/shinytest2/articles/use-package.html#apps-that-read-from-the-global-environment).
+
 ## Can I modify the `input` and `output` values that are recorded in snapshots?
 
 For some kinds of outputs, it is problematic to record the raw value

@@ -150,6 +150,38 @@ app support files</a> section in the “Using shinytest2 with R packages”
 vignette.</p>
 </div>
 <div class="section level2">
+<h2 id="my-app-reads-objects-from-the-global-environment--why-cant-it-find-my-test-objects">My app reads objects from the global environment. Why can’t it find
+my test objects?<a class="anchor" aria-label="anchor" href="#my-app-reads-objects-from-the-global-environment--why-cant-it-find-my-test-objects"></a>
+</h2>
+<p>The app runs in a background R process with its own global
+environment, so objects created in your test are not there. Pass a
+function to <code>AppDriver$new()</code> that copies the objects into
+the background process’s global environment before starting the app. See
+<a href="use-package.html#apps-that-read-from-the-global-environment">Apps
+that read from the global environment</a> in the “Using shinytest2 with
+R packages” vignette.</p>
+</div>
+<div class="section level2">
+<h2 id="does-shinytest2-run-my-apps--rprofile-or--renviron">Does <code>{shinytest2}</code> run my app’s <code>.Rprofile</code>
+or <code>.Renviron</code>?<a class="anchor" aria-label="anchor" href="#does-shinytest2-run-my-apps--rprofile-or--renviron"></a>
+</h2>
+<p>Yes. If you supply a directory to
+<code>AppDriver$new(myappdir)</code>, <a href="https://rstudio.github.io/shinytest2/">shinytest2</a> starts
+the background R process from the supplied directory. So an
+<code>.Rprofile</code> or <code>.Renviron</code> file in that directory
+is run before the app starts. This can be used to set options, such as
+<code>options(shiny.testmode = TRUE)</code>, or to create objects the
+app expects to find in the global environment.</p>
+<p>Your user-level <code>~/.Rprofile</code> is never run in the
+background R process.</p>
+<p>If you pass a function or an app object to
+<code>AppDriver$new()</code>, the background R process is not started
+from the app directory, so the app’s <code>.Rprofile</code> and
+<code>.Renviron</code> are not run. To supply objects to these apps, see
+<a href="use-package.html#apps-that-read-from-the-global-environment">Apps
+that read from the global environment</a>.</p>
+</div>
+<div class="section level2">
 <h2 id="can-i-modify-the-input-and-output-values-that-are-recorded-in-snapshots">Can I modify the <code>input</code> and <code>output</code> values
 that are recorded in snapshots?<a class="anchor" aria-label="anchor" href="#can-i-modify-the-input-and-output-values-that-are-recorded-in-snapshots"></a>
 </h2>
