@@ -1,3 +1,9 @@
+app_get_process <- function(self, private) {
+  ckm8_assert_app_driver(self, private)
+
+  private$shiny_process
+}
+
 
 
 

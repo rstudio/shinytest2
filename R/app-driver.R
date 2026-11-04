@@ -1662,6 +1662,28 @@ AppDriver <- R6Class(
       app_get_chromote_session(self, private)
     },
     #' @description
+    #' Get the Shiny process
+    #'
+    #' Get the [`callr::r_bg()`] process that runs the Shiny app in the
+    #' background. Use it to check if the app is still running, or to wait for
+    #' an app that calls [shiny::stopApp()] to exit before calling `$stop()`.
+    #' @return [`callr::r_process`] R6 object, or `NULL` if the app is not
+    #'   hosted locally (e.g. `app_dir` is a URL)
+    #' @examples
+    #' \dontrun{
+    #' app_path <- system.file("examples/01_hello", package = "shiny")
+    #' app <- AppDriver$new(app_path)
+    #'
+    #' app$get_process()$is_alive()
+    #' #> [1] TRUE
+    #' app$stop()
+    #' app$get_process()$is_alive()
+    #' #> [1] FALSE
+    #' }
+    get_process = function() {
+      app_get_process(self, private)
+    },
+    #' @description
     #' Get the variant
     #'
     #' Get the `variant` supplied during initialization

@@ -799,6 +799,21 @@ b$Runtime$evaluate("1 + 1")
 }
 
 ## ------------------------------------------------
+## Method `AppDriver$get_process()`
+## ------------------------------------------------
+
+\dontrun{
+app_path <- system.file("examples/01_hello", package = "shiny")
+app <- AppDriver$new(app_path)
+
+app$get_process()$is_alive()
+#> [1] TRUE
+app$stop()
+app$get_process()$is_alive()
+#> [1] FALSE
+}
+
+## ------------------------------------------------
 ## Method `AppDriver$get_variant()`
 ## ------------------------------------------------
 
@@ -1024,6 +1039,7 @@ str(head(rlog, 2))
     \item \href{#method-AppDriver-get_window_size}{\code{AppDriver$get_window_size()}}
     \item \href{#method-AppDriver-set_window_size}{\code{AppDriver$set_window_size()}}
     \item \href{#method-AppDriver-get_chromote_session}{\code{AppDriver$get_chromote_session()}}
+    \item \href{#method-AppDriver-get_process}{\code{AppDriver$get_process()}}
     \item \href{#method-AppDriver-get_variant}{\code{AppDriver$get_variant()}}
     \item \href{#method-AppDriver-get_logs}{\code{AppDriver$get_logs()}}
     \item \href{#method-AppDriver-log_message}{\code{AppDriver$log_message()}}
@@ -2798,6 +2814,39 @@ b$Runtime$evaluate("1 + 1")
 #>
 #> $result$description
 #> [1] "2"
+}
+    \if{html}{\out{</div>}}
+  }
+}
+
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AppDriver-get_process"></a>}}
+\if{latex}{\out{\hypertarget{method-AppDriver-get_process}{}}}
+\subsection{\code{AppDriver$get_process()}}{
+  Get the Shiny process
+
+Get the \code{\link[callr:r_bg]{callr::r_bg()}} process that runs the Shiny app in the
+background. Use it to check if the app is still running, or to wait for
+an app that calls \code{\link[shiny:stopApp]{shiny::stopApp()}} to exit before calling \verb{$stop()}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AppDriver$get_process()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{\link[callr:r_process]{callr::r_process}} R6 object, or \code{NULL} if the app is not
+hosted locally (e.g. \code{app_dir} is a URL)
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{app_path <- system.file("examples/01_hello", package = "shiny")
+app <- AppDriver$new(app_path)
+
+app$get_process()$is_alive()
+#> [1] TRUE
+app$stop()
+app$get_process()$is_alive()
+#> [1] FALSE
 }
     \if{html}{\out{</div>}}
   }
