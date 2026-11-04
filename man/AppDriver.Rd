@@ -2915,7 +2915,7 @@ for more details
 }
 \item \code{level}: For a given location, there are different types of log levels.
 \itemize{
-\item \code{"shinytest2"}: \code{"log"}; Only log messages are captured.
+\item \code{"shinytest2"}: \code{"info"}; Only log messages are captured.
 \item \code{"shiny"}: \code{"stdout"} or \code{"stderr"}; Note, \code{message()} output is sent
 to \code{stderr}.
 \item \code{"chromote"}: Correspond to any level of a JavaScript

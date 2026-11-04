@@ -1723,7 +1723,7 @@ AppDriver <- R6Class(
     #'      [websocket received](https://chromedevtools.github.io/devtools-protocol/1-3/Network/#event-webSocketFrameReceived)
     #'      for more details
     #' * `level`: For a given location, there are different types of log levels.
-    #'   * `"shinytest2"`: `"log"`; Only log messages are captured.
+    #'   * `"shinytest2"`: `"info"`; Only log messages are captured.
     #'   * `"shiny"`: `"stdout"` or `"stderr"`; Note, `message()` output is sent
     #'     to `stderr`.
     #'   * `"chromote"`: Correspond to any level of a JavaScript
