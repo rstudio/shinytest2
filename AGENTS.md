@@ -10,6 +10,20 @@ shinytest2 is an R package that provides automated testing for Shiny application
 
 The `memory-bank/` directory contains architectural documentation with YAML frontmatter (`title`, `description`). **Before exploring the codebase**, invoke the `memory-bank` skill (`.agents/skills/memory-bank/`) and consult relevant documentation. For large documents, use outlines and targeted section reads as described in the skill.
 
+### Key Architecture Documents
+
+**Consult relevant sections of these files when working on the topics they cover:**
+
+- `projectbrief.md` — Start here: purpose, public API, dependencies, folder layout, map of the other docs
+- `appDriver.md` — `AppDriver` method/file split, private state, `$new()` and `$stop()` flow, local vs URL apps
+- `waitingAndTimeouts.md` — `shiny-tracer.js`, `$wait_for_*()`, how `$set_inputs()` waits, timeout resolution order
+- `snapshotExpectations.md` — `$expect_*()` methods, snapshot file naming, variants, screenshots, `compare_screenshot_threshold()`
+- `loggingAndDebugging.md` — `$get_logs()` sources, `shiny.trace`, `$view()`, debugging a failing `AppDriver`
+- `testRunnerAndSetup.md` — `test_app()`, `use_shinytest2()`, app support loading, dev package loading, `app_dir` rules
+- `testRecorder.md` — `record_test()`, recorder JS, event-to-code conversion, where tests are saved
+- `migrateFromShinytest.md` — `migrate_from_shinytest()` rewrite steps and method mapping
+- `ciAndTesting.md` — This package's test layout, skips, screenshot gotchas, workflows, `actions/test-app`
+
 Update the memory bank when:
 
 1. Discovering new architectural patterns that should be documented
