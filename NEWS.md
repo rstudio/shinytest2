@@ -2,6 +2,12 @@
 
 ## Bug fixes and minor improvements
 
+* New "Apps that read from the global environment" section in
+  `vignette("use-package")` shows how to supply test objects to an app that
+  looks them up in `.GlobalEnv`. A function passed to `AppDriver$new()` copies
+  objects from the test into the background R process. A new FAQ entry explains
+  when an app directory's `.Rprofile` and `.Renviron` files are run (#456).
+
 * `AppDriver$new()` no longer runs `pkgload::load_all()` on an installed
   package, such as when tests run via `testthat::test_package()`. Previously
   the app would see an empty namespace for the package (@zsigmas, #451).
