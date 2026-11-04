@@ -64,7 +64,7 @@ The app runs in a background R process with its own global environment, so objec
 
 ## Does `{shinytest2}` run my app's `.Rprofile` or `.Renviron`?
 
-Yes. If you supply a directory to `AppDriver$new(appdir)`, `{shinytest2}` starts the background R process from the supplied directory.  So an `.Rprofile` or `.Renviron` file in that directory is run before the app starts. This can be used to set options, such as `options(shiny.testmode = TRUE)`, or to create objects the app expects to find in the global environment.
+Yes. If you supply a directory to `AppDriver$new(myappdir)`, `{shinytest2}` starts the background R process from the supplied directory.  So an `.Rprofile` or `.Renviron` file in that directory is run before the app starts. This can be used to set options, such as `options(shiny.testmode = TRUE)`, or to create objects the app expects to find in the global environment.
 
 Your user-level `~/.Rprofile` is never run in the background R process.
 
