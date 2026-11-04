@@ -2,6 +2,10 @@
 
 ## Bug fixes and minor improvements
 
+* `record_test()` no longer treats an installed package as a package in
+  development, and it no longer overwrites a package's `tests/testthat.R`
+  runner when saving a recorded test (#462).
+
 * New `AppDriver$get_process()` returns the background R process that runs the
   app. Use `app$get_process()$is_alive()` to check if the app is still running,
   and `app$get_process()$wait()` to wait for an app that calls
