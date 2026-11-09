@@ -1,5 +1,4 @@
 app_save <- function(app, path = fs::file_temp("st2-")) {
-  rlang::check_installed("globals")
 
   fs::dir_create(path, recurse = TRUE)
   fs::file_copy(
@@ -40,7 +39,6 @@ app_data <- function(app) {
 
 app_server_globals <- function(server) {
   # https://github.com/HenrikBengtsson/globals/issues/61#issuecomment-731777640
-  rlang::check_installed("globals", version = "0.14.0")
 
   # First pass, globals don't need to exist. This pass catches errors that
   # would otherwise be masked by the `mustExist = TRUE` pass.
