@@ -13,10 +13,9 @@ test_that("AppDriver can print while working with `missing_arg()` values", {
   app <- AppDriver$new(
     shinyApp("", function(input, output) {}) # nolint: brace_linter
   )
-    expect_error(
+  expect_no_error(
     utils::capture.output({
       print(app)
-    }),
-    NA
+    })
   )
 })
