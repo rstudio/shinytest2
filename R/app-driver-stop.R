@@ -5,8 +5,6 @@ app_get_process <- function(self, private) {
 }
 
 
-
-
 app_stop <- function(self, private, signal_timeout = missing_arg()) {
   "!DEBUG AppDriver$stop"
   ckm8_assert_app_driver(self, private)
@@ -21,7 +19,10 @@ app_stop <- function(self, private, signal_timeout = missing_arg()) {
   tryCatch(
     self$get_chromote_session()$close(),
     error = function(e) {
-      self$log_message(paste0("Error closing chromote session!\n", conditionMessage(e)))
+      self$log_message(paste0(
+        "Error closing chromote session!\n",
+        conditionMessage(e)
+      ))
     }
   )
 
@@ -51,7 +52,10 @@ app_stop <- function(self, private, signal_timeout = missing_arg()) {
           private$shiny_process$kill()
         },
         error = function(e) {
-          self$log_message(paste0("Error closing Shiny process!\n", conditionMessage(e)))
+          self$log_message(paste0(
+            "Error closing Shiny process!\n",
+            conditionMessage(e)
+          ))
         }
       )
     } else {
@@ -60,7 +64,10 @@ app_stop <- function(self, private, signal_timeout = missing_arg()) {
       tryCatch(
         private$shiny_proc_value <- private$shiny_process$get_result(),
         error = function(e) {
-          self$log_message(paste0("Error getting Shiny process result!\n", conditionMessage(e)))
+          self$log_message(paste0(
+            "Error getting Shiny process result!\n",
+            conditionMessage(e)
+          ))
         }
       )
     }
@@ -71,10 +78,10 @@ app_stop <- function(self, private, signal_timeout = missing_arg()) {
 }
 
 
-
 # Function run on garbage collection
 app_finalize <- function(
-  self, private
+  self,
+  private
 ) {
   ckm8_assert_app_driver(self, private)
 

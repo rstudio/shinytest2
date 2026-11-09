@@ -7,11 +7,11 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
-
   # Display `file` output
   output$file_out <- renderPrint({
-    if (is.null(input$file))
+    if (is.null(input$file)) {
       return(NULL)
+    }
     df <- input$file
     df$datapath <- paste0("<tempdir>/", basename(df$datapath))
     df
@@ -28,6 +28,7 @@ test_that("Make sure upload can use a local file", {
 
   expect_error(
     app$upload_file(file = "missing_file.csv"),
-    "Error finding upload file at path", fixed = TRUE
+    "Error finding upload file at path",
+    fixed = TRUE
   )
 })

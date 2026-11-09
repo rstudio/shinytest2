@@ -3,7 +3,7 @@ library(shiny)
 
 van_der_pol <- function(t, y, mu) {
   d_x <- y[2]
-  d_y <- mu * (1 - y[1] ^ 2) * y[2] - y[1]
+  d_y <- mu * (1 - y[1]^2) * y[2] - y[1]
   list(c(X = d_x, Y = d_y))
 }
 
@@ -23,11 +23,18 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       h3("Init values"),
-      numericInput("X", label = "X", min = 0.0, max = 5,  value = 1, step = 0.2),
-      numericInput("Y", label = "Y", min = 0.0, max = 5,  value = 1, step = 0.2),
+      numericInput("X", label = "X", min = 0.0, max = 5, value = 1, step = 0.2),
+      numericInput("Y", label = "Y", min = 0.0, max = 5, value = 1, step = 0.2),
 
       h3("Parameters"),
-      numericInput("mu", label = "mu", min = 0.0, max = 5,  value = 1, step = 0.1)
+      numericInput(
+        "mu",
+        label = "mu",
+        min = 0.0,
+        max = 5,
+        value = 1,
+        step = 0.1
+      )
     ),
     mainPanel(
       h3("Simulation results"),

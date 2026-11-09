@@ -5,11 +5,9 @@ ui <- fluidPage(
   uiOutput("first")
 )
 server <- function(input, output, session) {
-
   # This app appears in three stages.
   # If the logic was to "wait for idle", it would return after the first stage is init'ed
   # If the logic is to "wait for stable", it would return after sitting idle for a set amount of time. Ex 1500ms
-
 
   timeout <- n # Found in `./R/n.R` # nolint
 

@@ -1,5 +1,4 @@
 function(input, output) {
-
   reg_formula <- reactive({
     as.formula(paste("mpg ~", input$x))
   })
@@ -15,9 +14,16 @@ function(input, output) {
 
   output$download_report <- downloadHandler(
     filename = function() {
-      paste("my-report", sep = ".", switch(
-        input$format, PDF = "pdf", HTML = "html", Word = "docx"
-      ))
+      paste(
+        "my-report",
+        sep = ".",
+        switch(
+          input$format,
+          PDF = "pdf",
+          HTML = "html",
+          Word = "docx"
+        )
+      )
     },
 
     content = function(file) {
@@ -30,12 +36,16 @@ function(input, output) {
       file.copy(src, "report.Rmd", overwrite = TRUE)
 
       library(rmarkdown)
-      out <- render("report.Rmd", switch(
-        input$format,
-        PDF = pdf_document(), HTML = html_document(), Word = word_document()
-      ))
+      out <- render(
+        "report.Rmd",
+        switch(
+          input$format,
+          PDF = pdf_document(),
+          HTML = html_document(),
+          Word = word_document()
+        )
+      )
       file.rename(out, file)
     }
   )
-
 }

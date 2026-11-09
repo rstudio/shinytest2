@@ -294,11 +294,13 @@ app_wait_for_serving <- function(url, timeout = 10000) {
 
   deadline <- Sys.time() + timeout / 1000
   repeat {
-    if (isTRUE(pingr::is_up(
-      pieces$hostname,
-      pieces$port,
-      check_online = FALSE
-    ))) {
+    if (
+      isTRUE(pingr::is_up(
+        pieces$hostname,
+        pieces$port,
+        check_online = FALSE
+      ))
+    ) {
       return(invisible(TRUE))
     }
     if (Sys.time() >= deadline) {

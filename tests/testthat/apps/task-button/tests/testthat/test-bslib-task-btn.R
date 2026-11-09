@@ -10,7 +10,6 @@ test_that("bslib task button", {
   skip_if_not_installed("promises")
   skip_if_not_installed("later")
 
-
   app <- AppDriver$new()
 
   app$click("run_normal")
@@ -20,7 +19,10 @@ test_that("bslib task button", {
   cur_async_value <- app$get_value(export = "async")
   app$click("run_async")
   # Wait until expected output changes
-  new_async_value <- app$wait_for_value(export = "async", ignore = list(cur_async_value))
+  new_async_value <- app$wait_for_value(
+    export = "async",
+    ignore = list(cur_async_value)
+  )
   # Assert new value
   expect_equal(new_async_value, 10)
 })

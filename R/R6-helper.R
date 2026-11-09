@@ -81,7 +81,9 @@ Url <- R6Class(
             cli::cli_abort("Assertion on 'url port' failed")
           }
           if (grepl("parse URL", e$message)) {
-            cli::cli_abort("Assertion on 'url hostname' failed: Must be a single string")
+            cli::cli_abort(
+              "Assertion on 'url hostname' failed: Must be a single string"
+            )
           }
           stop(e)
         }

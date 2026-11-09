@@ -1,9 +1,20 @@
-app_get_timeout <- function(self, private, ..., timeout = missing_arg(), timeout_name = checkmate::vname(timeout)) {
+app_get_timeout <- function(
+  self,
+  private,
+  ...,
+  timeout = missing_arg(),
+  timeout_name = checkmate::vname(timeout)
+) {
   ckm8_assert_app_driver(self, private)
   rlang::check_dots_empty()
 
   timeout <- rlang::maybe_missing(timeout, private$timeout)
-  ckm8_assert_single_number(timeout, lower = 0, finite = TRUE, .var.name = timeout_name)
+  ckm8_assert_single_number(
+    timeout,
+    lower = 0,
+    finite = TRUE,
+    .var.name = timeout_name
+  )
 
   timeout
 }
@@ -64,9 +75,9 @@ timeout_value <- function(
   timeout_name = checkmate::vname(timeout)
 ) {
   # Handle both missing an NULL values
-  rlang::maybe_missing(timeout, NULL) %||%       # user provided
-    timeout_option(option_key) %||%              # local option
-    timeout_env(env_key) %||%                    # system environment variable
+  rlang::maybe_missing(timeout, NULL) %||% # user provided
+    timeout_option(option_key) %||% # local option
+    timeout_env(env_key) %||% # system environment variable
     timeout_default(default_value, timeout_name) # default value
 }
 
@@ -109,7 +120,8 @@ resolve_signal_timeout <- function(signal_timeout) {
 
 
 app_init_timeouts <- function(
-  self, private,
+  self,
+  private,
   ...,
   load_timeout = missing_arg(),
   timeout = missing_arg()

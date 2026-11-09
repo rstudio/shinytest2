@@ -8,6 +8,7 @@ test_that("Make sure upload can use two local files", {
 
   expect_error(
     app$upload_file(files = "missing_file.csv"),
-    "Error finding upload file at path", fixed = TRUE
+    "Error finding upload file at path",
+    fixed = TRUE
   )
 })

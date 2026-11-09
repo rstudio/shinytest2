@@ -25,16 +25,22 @@ test_that("Init and Set window size", {
 
 
 test_that("AppDriver height and width must be positive numbers", {
-  expect_error(AppDriver$new(
-    test_path("../../"),
-    height = 100,
-    width = "150"
-  ), "Assertion on 'width' failed")
-  expect_error(AppDriver$new(
-    test_path("../../"),
-    height = "100",
-    width = 150
-  ), "Assertion on 'height' failed")
+  expect_error(
+    AppDriver$new(
+      test_path("../../"),
+      height = 100,
+      width = "150"
+    ),
+    "Assertion on 'width' failed"
+  )
+  expect_error(
+    AppDriver$new(
+      test_path("../../"),
+      height = "100",
+      width = 150
+    ),
+    "Assertion on 'height' failed"
+  )
 
   expect_error(
     AppDriver$new(test_path("../../"), height = 0, width = 150),

@@ -3,10 +3,18 @@ app_set_window_size <- function(self, private, width, height, wait = TRUE) {
   ckm8_assert_app_driver(self, private)
 
   self$log_message(paste0(
-    "Setting window size to `", width, "`x`", height, "`"
+    "Setting window size to `",
+    width,
+    "`x`",
+    height,
+    "`"
   ))
 
-  chromote_set_window_size(self$get_chromote_session(), width = width, height = height)
+  chromote_set_window_size(
+    self$get_chromote_session(),
+    width = width,
+    height = height
+  )
 
   if (isTRUE(wait)) {
     self$wait_for_idle()

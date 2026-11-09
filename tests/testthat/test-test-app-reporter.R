@@ -1,4 +1,3 @@
-
 # This test content should test all testthat functions or values used
 # within `./R/test-app.R` to make sure their API does not change.
 # This should always run on CRAN to prevent breakages!!
@@ -16,9 +15,10 @@ test_that(custom_test_name, {
   # Make sure it is a multireporter
   expect_s3_class(outer_reporter, "MultiReporter")
 
-
   # Find the SnapshotReporter, as the `test` value is available
-  snapshot_reporters <- Filter(outer_reporter$reporters, f = function(x) inherits(x, "SnapshotReporter"))
+  snapshot_reporters <- Filter(outer_reporter$reporters, f = function(x) {
+    inherits(x, "SnapshotReporter")
+  })
   expect_true(length(snapshot_reporters) > 0)
 
   snapshot_reporter <- snapshot_reporters[[1]]
@@ -43,7 +43,9 @@ test_that(custom_test_name, {
   )) {
     expect_true(api_def$name %in% names(outer_reporter))
     if (!is.null(api_def$args_min_len)) {
-      outer_reporter_arg_count <- length(formals(outer_reporter[[api_def$name]]))
+      outer_reporter_arg_count <- length(formals(outer_reporter[[
+        api_def$name
+      ]]))
       expect_true(outer_reporter_arg_count >= api_def$args_min_len)
     }
   }

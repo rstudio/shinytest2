@@ -13,7 +13,9 @@ app_download <- function(
   # This handles cases where the element is dynamically rendered (e.g., in a
   # modal) or Shiny's output binding hasn't set the href yet. (#445)
   href_js <- paste0(
-    "var el = $('#", output, "'); ",
+    "var el = $('#",
+    output,
+    "'); ",
     "el.length > 0 && el.attr('href') !== undefined && el.attr('href') !== ''"
   )
   tryCatch(
@@ -24,7 +26,8 @@ app_download <- function(
     ),
     error = function(e) {
       app_abort(
-        self, private,
+        self,
+        private,
         c(
           "Download from '#{output}' failed.",
           "i" = "Element not found or its `href` attribute was not set within the timeout.",

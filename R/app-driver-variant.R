@@ -1,5 +1,3 @@
-
-
 app_is_missing_variant <- function(self, private) {
   ckm8_assert_app_driver(self, private)
   is_missing_value(private$variant)

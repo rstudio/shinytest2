@@ -23,6 +23,10 @@ cli_escape <- function(x) {
 }
 # Split text into escaped, named lines so cli keeps the line breaks
 cli_lines <- function(x, name = " ") {
-  x <- cli_escape(unlist(strsplit(paste0(x, collapse = "\n"), "\n", fixed = TRUE)))
+  x <- cli_escape(unlist(strsplit(
+    paste0(x, collapse = "\n"),
+    "\n",
+    fixed = TRUE
+  )))
   rlang::set_names(x, rep(name, length(x)))
 }

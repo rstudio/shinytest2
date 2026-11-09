@@ -41,7 +41,6 @@ recorder_bg <- function(port) {
 #' @return Process or error
 #' @keywords internal
 start_r_bg <- function(fun, path = NULL, port = 3515) {
-
   # remove NULL elements
   args <- Filter(Negate(is.null), list(path = path, port = port))
 
@@ -57,7 +56,9 @@ start_r_bg <- function(fun, path = NULL, port = 3515) {
     Sys.sleep(0.1)
   }
 
-  if (!process$is_alive()) stop("Unable to launch the subprocess")
+  if (!process$is_alive()) {
+    stop("Unable to launch the subprocess")
+  }
 
   process
 }
@@ -101,7 +102,8 @@ record_loadtest <- function(path, timeout = 15, workers = 5) {
   system(
     sprintf(
       "shinycannon recording.log %s --workers %s --loaded-duration-minutes 2 --output-dir run1",
-      target_url, workers
+      target_url,
+      workers
     )
   )
 

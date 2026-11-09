@@ -41,7 +41,12 @@ expect_timeouts <- function(
         )
         # Test values without R6 hackery
         private_env <- new.env(parent = emptyenv())
-        app_init_timeouts(app, private_env, load_timeout = load_timeout, timeout = timeout)
+        app_init_timeouts(
+          app,
+          private_env,
+          load_timeout = load_timeout,
+          timeout = timeout
+        )
         testthat::expect_equal(private_env$load_timeout, expected_load_timeout)
         testthat::expect_equal(private_env$timeout, expected_timeout)
       }
@@ -58,64 +63,64 @@ test_that("timeout initialization values", {
   # Respect given value
   expect_timeouts(
     expected_load_timeout = 1 * 1001,
-    load_timeout          = 1 * 1001,
-    load_timeout_env      = 2 * 1001,
-    load_timeout_option   = 3 * 1001,
+    load_timeout = 1 * 1001,
+    load_timeout_env = 2 * 1001,
+    load_timeout_option = 3 * 1001,
 
-    expected_timeout      = 1 * 1002,
-    timeout               = 1 * 1002,
-    timeout_env           = 2 * 1002,
-    timeout_option        = 3 * 1002
+    expected_timeout = 1 * 1002,
+    timeout = 1 * 1002,
+    timeout_env = 2 * 1002,
+    timeout_option = 3 * 1002
   )
 
   # Respect option value
   expect_timeouts(
     expected_load_timeout = 3 * 1001,
-    load_timeout          = missing_arg(),
-    load_timeout_env      = 2 * 1001,
-    load_timeout_option   = 3 * 1001,
+    load_timeout = missing_arg(),
+    load_timeout_env = 2 * 1001,
+    load_timeout_option = 3 * 1001,
 
-    expected_timeout      = 3 * 1002,
-    timeout               = missing_arg(),
-    timeout_env           = 2 * 1002,
-    timeout_option        = 3 * 1002
+    expected_timeout = 3 * 1002,
+    timeout = missing_arg(),
+    timeout_env = 2 * 1002,
+    timeout_option = 3 * 1002
   )
 
   # Respect env value
   expect_timeouts(
     expected_load_timeout = 2 * 1001,
-    load_timeout          = missing_arg(),
-    load_timeout_env      = 2 * 1001,
-    load_timeout_option   = NULL,
+    load_timeout = missing_arg(),
+    load_timeout_env = 2 * 1001,
+    load_timeout_option = NULL,
 
-    expected_timeout      = 2 * 1002,
-    timeout               = missing_arg(),
-    timeout_env           = 2 * 1002,
-    timeout_option        = NULL
+    expected_timeout = 2 * 1002,
+    timeout = missing_arg(),
+    timeout_env = 2 * 1002,
+    timeout_option = NULL
   )
 
   # Default values
   expect_timeouts(
     expected_load_timeout = 15 * 1000,
-    load_timeout          = missing_arg(),
-    load_timeout_env      = NULL,
-    load_timeout_option   = NULL,
+    load_timeout = missing_arg(),
+    load_timeout_env = NULL,
+    load_timeout_option = NULL,
 
-    expected_timeout      = 4 * 1000,
-    timeout               = missing_arg(),
-    timeout_env           = NULL,
-    timeout_option        = NULL
+    expected_timeout = 4 * 1000,
+    timeout = missing_arg(),
+    timeout_env = NULL,
+    timeout_option = NULL
   )
   # `NULL` Default values
   expect_timeouts(
     expected_load_timeout = 15 * 1000,
-    load_timeout          = NULL,
-    load_timeout_env      = NULL,
-    load_timeout_option   = NULL,
+    load_timeout = NULL,
+    load_timeout_env = NULL,
+    load_timeout_option = NULL,
 
-    expected_timeout      = 4 * 1000,
-    timeout               = NULL,
-    timeout_env           = NULL,
-    timeout_option        = NULL
+    expected_timeout = 4 * 1000,
+    timeout = NULL,
+    timeout_env = NULL,
+    timeout_option = NULL
   )
 })
