@@ -6,7 +6,7 @@
 \alias{shinytest2-package}
 \title{shinytest2: Testing for Shiny Applications}
 \description{
-\if{html}{\figure{logo.svg}{options: style='float: right' alt='logo' width='120'}}
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
 Automated unit testing of Shiny applications through a headless 'Chromium' browser.
 }
