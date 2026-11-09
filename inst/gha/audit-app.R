@@ -79,7 +79,7 @@ record_loadtest <- function(path, timeout = 15, workers = 5) {
   message("\n---- BEGIN LOAD-TEST ---- \n")
   # start app + recorder
   target <- start_r_bg(shiny_bg, path = path)
-  recorder <- start_r_bg(recorder_bg)
+  recorder <- start_r_bg(recorder_bg) # nolint: object_usage_linter.
 
   # start headless chrome (points to `recorder`!).
   # AppDriver also support remote urls.
