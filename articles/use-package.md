@@ -138,7 +138,7 @@ test_that("mypkg app initial values are consistent", {
   # Don't run these tests on the CRAN build servers
   skip_on_cran()
 
-  app <- AppDriver$new(name = "mypkg-app", function() {
+  app <- AppDriver$new(name = "mypkg-app", \() {
     library(mypkg)
     run_app()
   })
@@ -303,7 +303,7 @@ test_that("pick_data_app shows data from the global environment", {
 
   my_data <- datasets::mtcars
 
-  app <- AppDriver$new(name = "pick-data", function() {
+  app <- AppDriver$new(name = "pick-data", \() {
     # Runs in the background R process
     assign("my_data", my_data, envir = globalenv())
     library(mypkg)
@@ -356,7 +356,7 @@ test_that("pick_data_app shows data from a supplied environment", {
 
   my_data <- datasets::mtcars
 
-  app <- AppDriver$new(name = "pick-data-env", function() {
+  app <- AppDriver$new(name = "pick-data-env", \() {
     library(mypkg)
     pick_data_app(env = list2env(list(my_data = my_data)))
   })

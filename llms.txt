@@ -28,8 +28,8 @@ bugs and more confidence in future Shiny application development.
 install.packages("shinytest2")
 
 # Or the development version from GitHub:
-# install.packages("devtools")
-devtools::install_github("rstudio/shinytest2")
+# install.packages("pak")
+pak::pak("rstudio/shinytest2")
 ```
 
 ## Usage

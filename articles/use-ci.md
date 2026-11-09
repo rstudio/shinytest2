@@ -262,7 +262,7 @@ If your workflow file is named `check-app.yaml` in the
 to your README.md with the following line:
 
 ``` md
-![check-app](https://github.com/schloerke/example-app/actions/workflows/check-app.yml/badge.svg)
+![check-app GitHub Actions status badge](https://github.com/schloerke/example-app/actions/workflows/check-app.yml/badge.svg)
 ```
 
 In your `README.md` file, you can add a build status badge, like the one

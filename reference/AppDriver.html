@@ -9,7 +9,7 @@ headless browser that can be used to simulate user actions. This provides
 a full simulation of a Shiny app so that you can test user interactions
 with a live app.
 Methods described below are ordered by perceived popularity.
-Expect methods are grouped next to their corresponding get methods."><meta property="og:image" content="https://rstudio.github.io/shinytest2/logo.svg"></head><body>
+Expect methods are grouped next to their corresponding get methods."><meta property="og:image" content="https://rstudio.github.io/shinytest2/logo.png"></head><body>
     <a href="#container" class="visually-hidden-focusable">Skip to content</a>
 
 
@@ -49,7 +49,7 @@ Expect methods are grouped next to their corresponding get methods."><meta prope
 </nav><div class="container template-reference-topic" id="container">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.svg" class="logo" alt=""><h1>Drive a Shiny application</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Drive a Shiny application</h1>
       <small class="dont-index">Source: <a href="https://github.com/rstudio/shinytest2/blob/main/R/app-driver.R" class="external-link"><code>R/app-driver.R</code></a></small>
       <div class="d-none name"><code>AppDriver.Rd</code></div>
     </div>
@@ -1945,10 +1945,10 @@ no value was supplied.</p>
 <li><p><code>location</code>: The location of the message was found. One of three values:</p><ul><li><p><code>"shinytest2"</code>: Occurs when <code>$log_message()</code> is called</p></li>
 <li><p><code>"shiny"</code>: <code>stdin</code> and <code>stdout</code> messages from the Shiny server. Note <code><a href="https://rdrr.io/r/base/message.html" class="external-link">message()</a></code> output is sent to <code>stdout</code>.</p></li>
 <li><p><code>"chromote"</code>: Captured by the <span class="pkg">chromote</span> event handlers. See
-<a href="https://chromedevtools.github.io/devtools-protocol/1-3/Runtime/#event-consoleAPICalled" class="external-link">console API</a>,
-<a href="https://chromedevtools.github.io/devtools-protocol/1-3/Runtime/#event-exceptionThrown" class="external-link">exception thrown</a>,
-<a href="https://chromedevtools.github.io/devtools-protocol/1-3/Network/#event-webSocketFrameSent" class="external-link">websocket sent</a>, and
-<a href="https://chromedevtools.github.io/devtools-protocol/1-3/Network/#event-webSocketFrameReceived" class="external-link">websocket received</a>
+<a href="https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#event-consoleAPICalled" class="external-link">console API</a>,
+<a href="https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#event-exceptionThrown" class="external-link">exception thrown</a>,
+<a href="https://chromedevtools.github.io/devtools-protocol/tot/Network/#event-webSocketFrameSent" class="external-link">websocket sent</a>, and
+<a href="https://chromedevtools.github.io/devtools-protocol/tot/Network/#event-webSocketFrameReceived" class="external-link">websocket received</a>
 for more details</p></li>
 </ul></li>
 <li><p><code>level</code>: For a given location, there are different types of log levels.</p><ul><li><p><code>"shinytest2"</code>: <code>"info"</code>; Only log messages are captured.</p></li>

@@ -2244,13 +2244,13 @@ A data.frame with the following columns:
     `stdout`.
 
   - `"chromote"`: Captured by the chromote event handlers. See [console
-    API](https://chromedevtools.github.io/devtools-protocol/1-3/Runtime/#event-consoleAPICalled),
+    API](https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#event-consoleAPICalled),
     [exception
-    thrown](https://chromedevtools.github.io/devtools-protocol/1-3/Runtime/#event-exceptionThrown),
+    thrown](https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#event-exceptionThrown),
     [websocket
-    sent](https://chromedevtools.github.io/devtools-protocol/1-3/Network/#event-webSocketFrameSent),
+    sent](https://chromedevtools.github.io/devtools-protocol/tot/Network/#event-webSocketFrameSent),
     and [websocket
-    received](https://chromedevtools.github.io/devtools-protocol/1-3/Network/#event-webSocketFrameReceived)
+    received](https://chromedevtools.github.io/devtools-protocol/tot/Network/#event-webSocketFrameReceived)
     for more details
 
 - `level`: For a given location, there are different types of log

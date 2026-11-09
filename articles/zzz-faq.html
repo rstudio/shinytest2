@@ -70,7 +70,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.svg" class="logo" alt=""><h1>Frequently Asked Questions</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Frequently Asked Questions</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rstudio/shinytest2/blob/main/vignettes/zzz-faq.Rmd" class="external-link"><code>vignettes/zzz-faq.Rmd</code></a></small>
@@ -225,7 +225,7 @@ renderer with something like the following:</p>
 <span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderText</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"This is a random number:"</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span>      <span class="op">}</span><span class="op">)</span>,</span>
-<span>      <span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      \<span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">"[0-9.]+$"</span>, <span class="st">"&lt;a random number&gt;"</span>, <span class="va">value</span><span class="op">)</span></span>
 <span>      <span class="op">}</span></span>
 <span>    <span class="op">)</span></span>
@@ -304,7 +304,7 @@ environment:</p>
 <span>      <span class="op">}</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span>  <span class="op">)</span></span>
-<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>\<span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="va">done_app</span><span class="op">)</span> <span class="co"># Returns once the app calls `stopApp()`</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/get.html" class="external-link">mget</a></span><span class="op">(</span><span class="st">"foo"</span>, envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">globalenv</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>

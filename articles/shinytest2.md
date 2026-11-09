@@ -344,10 +344,10 @@ application’s `tests/testhat` directory.
 
 [shinytest2](https://rstudio.github.io/shinytest2/) can be used with
 [interactive R Markdown
-documents](https://yihui.org/rmarkdown/shiny-documents.html) that use
-`runtime: shiny` or `server: shiny` (sometimes also referred to as Shiny
-documents). This includes those that use the
-[flexdashboard](https://pkgs.rstudio.com/flexdashboard/) package.
+documents](https://pkg.yihui.org/rmarkdown-book/shiny-documents.html)
+that use `runtime: shiny` or `server: shiny` (sometimes also referred to
+as Shiny documents). This includes those that use the
+[flexdashboard](https://rstudio.github.io/flexdashboard/) package.
 
 Shiny documents have some differences compared to regular Shiny
 applications, and so the tests are slightly different. For an example of

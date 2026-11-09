@@ -4,6 +4,8 @@
 
 ### Bug fixes and minor improvements
 
+- shinytest2 now requires R 4.1 or later.
+
 - [`record_test()`](https://rstudio.github.io/shinytest2/reference/record_test.md)
   no longer treats an installed package as a package in development, and
   it no longer overwrites a package’s `tests/testthat.R` runner when

@@ -70,7 +70,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.svg" class="logo" alt=""><h1>Using shinytest2 with R packages</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Using shinytest2 with R packages</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rstudio/shinytest2/blob/main/vignettes/use-package.Rmd" class="external-link"><code>vignettes/use-package.Rmd</code></a></small>
@@ -199,7 +199,7 @@ a wrapper function that loads the package and calls
 <span>  <span class="co"># Don't run these tests on the CRAN build servers</span></span>
 <span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/skip.html" class="external-link">skip_on_cran</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"mypkg-app"</span>, <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"mypkg-app"</span>, \<span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mypkg</span><span class="op">)</span></span>
 <span>    <span class="fu">run_app</span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
@@ -338,7 +338,7 @@ return the app:</p>
 <span></span>
 <span>  <span class="va">my_data</span> <span class="op">&lt;-</span> <span class="fu">datasets</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/datasets/mtcars.html" class="external-link">mtcars</a></span></span>
 <span></span>
-<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"pick-data"</span>, <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"pick-data"</span>, \<span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="co"># Runs in the background R process</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/assign.html" class="external-link">assign</a></span><span class="op">(</span><span class="st">"my_data"</span>, <span class="va">my_data</span>, envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">globalenv</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mypkg</span><span class="op">)</span></span>
@@ -380,7 +380,7 @@ global environment:</p>
 <span></span>
 <span>  <span class="va">my_data</span> <span class="op">&lt;-</span> <span class="fu">datasets</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/datasets/mtcars.html" class="external-link">mtcars</a></span></span>
 <span></span>
-<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"pick-data-env"</span>, <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">app</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AppDriver.html">AppDriver</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"pick-data-env"</span>, \<span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mypkg</span><span class="op">)</span></span>
 <span>    <span class="fu">pick_data_app</span><span class="op">(</span>env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list2env.html" class="external-link">list2env</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>my_data <span class="op">=</span> <span class="va">my_data</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>

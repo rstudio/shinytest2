@@ -1,6 +1,7 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://rstudio.github.io/shinytest2/404.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/AGENTS.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/CODE_OF_CONDUCT.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/LICENSE-text.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/LICENSE.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/articles/in-depth.html</loc></url>
@@ -26,6 +27,7 @@
 <url><loc>https://rstudio.github.io/shinytest2/reference/platform_variant.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/reference/record_test.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/reference/register_input_processor.html</loc></url>
+<url><loc>https://rstudio.github.io/shinytest2/reference/shinytest2-package.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/reference/test_app.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/reference/use_shinytest2.html</loc></url>
 <url><loc>https://rstudio.github.io/shinytest2/todo.html</loc></url>
