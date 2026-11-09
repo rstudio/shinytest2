@@ -1,16 +1,8 @@
 # Changelog
 
-## shinytest2 (development version)
+## shinytest2 0.6.0
 
-### Bug fixes and minor improvements
-
-- shinytest2 now requires R 4.1 or later.
-
-- [`record_test()`](https://rstudio.github.io/shinytest2/reference/record_test.md)
-  no longer treats an installed package as a package in development, and
-  it no longer overwrites a package’s `tests/testthat.R` runner when
-  saving a recorded test
-  ([\#462](https://github.com/rstudio/shinytest2/issues/462)).
+### New features
 
 - New `AppDriver$get_process()` returns the background R process that
   runs the app. Use `app$get_process()$is_alive()` to check if the app
@@ -22,56 +14,49 @@
   [\#320](https://github.com/rstudio/shinytest2/issues/320),
   [\#457](https://github.com/rstudio/shinytest2/issues/457)).
 
-- New “Apps that read from the global environment” section in
-  [`vignette("use-package")`](https://rstudio.github.io/shinytest2/articles/use-package.md)
-  shows how to supply test objects to an app that looks them up in
-  `.GlobalEnv`. A function passed to `AppDriver$new()` copies objects
-  from the test into the background R process. A new FAQ entry explains
-  when an app directory’s `.Rprofile` and `.Renviron` files are run
-  ([\#456](https://github.com/rstudio/shinytest2/issues/456)).
+### Bug fixes and minor improvements
 
-- `AppDriver$new()` no longer runs
+- shinytest2 now requires R 4.1 or later.
+
+- shinytest2 now requires httr2 1.0.0 or later. Older versions of httr2
+  could return a `NULL` hostname when parsing some app URLs.
+
+- `AppDriver$expect_download()` and `AppDriver$get_download()` now build
+  the download URL correctly when the app URL contains query parameters,
+  instead of downloading the app’s HTML page
+  ([\#357](https://github.com/rstudio/shinytest2/issues/357)). They also
+  wait for the download element’s `href` to be set before fetching, so a
+  download link inside a modal or one that Shiny has not yet rendered
+  now returns the intended file
+  ([\#445](https://github.com/rstudio/shinytest2/issues/445)).
+
+- `AppDriver$new()` now waits for the app’s port to accept a connection
+  before opening the app in the browser. This prevents intermittent
+  “Shiny app did not become stable” errors on slow machines, where Shiny
+  prints “Listening on …” before the port is ready
+  ([@nbenn](https://github.com/nbenn),
+  [\#448](https://github.com/rstudio/shinytest2/issues/448)).
+  `AppDriver$new()` also runs
   [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
-  on an installed package, such as when tests run via
-  [`testthat::test_package()`](https://testthat.r-lib.org/reference/test_package.html).
-  Previously the app would see an empty namespace for the package
+  only on packages in development, so apps tested via
+  [`testthat::test_package()`](https://testthat.r-lib.org/reference/test_package.html)
+  now see the installed package’s namespace
   ([@zsigmas](https://github.com/zsigmas),
   [\#451](https://github.com/rstudio/shinytest2/issues/451)).
 
-- [shinytest2](https://rstudio.github.io/shinytest2/) now requires
-  `httr2 (>= 1.0.0)`. The `Url` helper relies on
-  [`httr2::url_parse()`](https://httr2.r-lib.org/reference/url_parse.html)’s
-  curl-based parsing (added in httr2 1.0.0); older versions returned a
-  `NULL` hostname for some URLs.
+- [`record_test()`](https://rstudio.github.io/shinytest2/reference/record_test.md)
+  now treats only packages in development, not installed packages, as
+  the package under test. It also keeps a package’s existing
+  `tests/testthat.R` runner when saving a recorded test
+  ([\#462](https://github.com/rstudio/shinytest2/issues/462)).
 
-- Fixed `@examples` in `AppDriver`’s documentation so the reference page
-  builds cleanly under roxygen2 8.0.0. Non-ASCII characters (`•`, `…`)
-  and unbalanced braces in illustrative log output were replaced with
-  ASCII equivalents and balanced, which roxygen2 8.0.0 now validates.
-
-- `AppDriver$new()` no longer intermittently aborts during
-  initialization with “Shiny app did not become stable” when the app’s
-  port is slow to bind. Shiny prints its “Listening on …” line before it
-  binds the listening socket, so on a slow or loaded host the initial
-  navigation could reach a not-yet-bound port and land on the browser’s
-  error page; the error-page recovery navigation then raced the
-  readiness and idle checks. `AppDriver$new()` now waits for the port to
-  accept a connection before navigating
-  ([@nbenn](https://github.com/nbenn),
-  [\#448](https://github.com/rstudio/shinytest2/issues/448)).
-
-- `$get_download()` and `$expect_download()` now correctly construct the
-  download URL when the app URL contains query parameters. Previously,
-  query parameters were concatenated into the download path, causing an
-  HTML page to be downloaded instead of the expected file
-  ([\#357](https://github.com/rstudio/shinytest2/issues/357)).
-
-- `$get_download()` and `$expect_download()` now wait for the download
-  element’s `href` attribute to be populated before fetching.
-  Previously, if the element wasn’t in the DOM yet (e.g., inside a
-  modal) or Shiny’s output binding hadn’t set the `href`, these methods
-  would silently return the app’s HTML page instead of the intended file
-  ([\#445](https://github.com/rstudio/shinytest2/issues/445)).
+- [`vignette("use-package")`](https://rstudio.github.io/shinytest2/articles/use-package.md)
+  gains a section, “Apps that read from the global environment”, that
+  shows how to supply test objects to an app that looks them up in
+  `.GlobalEnv` by passing a function to `AppDriver$new()`. A new FAQ
+  entry explains when an app directory’s `.Rprofile` and `.Renviron`
+  files are run
+  ([\#456](https://github.com/rstudio/shinytest2/issues/456)).
 
 ## shinytest2 0.5.1
 
