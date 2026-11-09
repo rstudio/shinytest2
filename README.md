@@ -21,8 +21,8 @@ By simply recording your actions as code and extending them to test the more par
 install.packages("shinytest2")
 
 # Or the development version from GitHub:
-# install.packages("devtools")
-devtools::install_github("rstudio/shinytest2")
+# install.packages("pak")
+pak::pak("rstudio/shinytest2")
 ```
 
 ## Usage
