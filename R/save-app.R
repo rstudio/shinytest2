@@ -49,7 +49,7 @@ app_server_globals <- function(server) {
     globals::globalsOf(server, envir = environment(server), recursive = TRUE, mustExist = TRUE)
   }, error = function(cnd) {
     if (grepl("failed to locate", tolower(conditionMessage(cnd)))) {
-      rlang::warn(
+      cli::cli_warn(
         c(
           "Failed to locate globals in server function.",
           "i" = paste(

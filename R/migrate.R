@@ -61,11 +61,11 @@ m__remove_shinytest_files <- function(app_info_env) {
 # Make sure all folders exist as expected
 # @return shinytest runner file location
 m__validate_shinytest_exists <- function() {
-  if (!fs::dir_exists("tests")) rlang::abort("No ./tests directory found")
+  if (!fs::dir_exists("tests")) cli::cli_abort("No ./tests directory found")
   shinytest_file <- fs::dir_ls("tests", regexp = "shinytest\\.[rR]$", type = "file")
-  if (length(shinytest_file) == 0) rlang::abort("No ./tests/shinytest.R file found")
-  if (length(shinytest_file) > 1) rlang::abort("Multiple files matching `./tests/shinytest` found")
-  if (!fs::dir_exists("./tests/shinytest")) rlang::abort("./tests/shinytest folder not found")
+  if (length(shinytest_file) == 0) cli::cli_abort("No ./tests/shinytest.R file found")
+  if (length(shinytest_file) > 1) cli::cli_abort("Multiple files matching `./tests/shinytest` found")
+  if (!fs::dir_exists("./tests/shinytest")) cli::cli_abort("./tests/shinytest folder not found")
 
   # return runner file location
   unname(shinytest_file)
@@ -168,16 +168,16 @@ m__extract_runner_info <- function(app_info_env) {
     testapp_args$appDir <- ".." # nolint
   }
   if (fs::path_rel(testapp_args$appDir) != "..") {
-    rlang::abort(paste0(
-      "shinytest::testApp() must be called on the parent App directory (`appDir = \"..\"`).\n",
-      "{shinytest2} does not know how to automatically migrate this app."
+    cli::cli_abort(c(
+      "shinytest::testApp() must be called on the parent App directory (`appDir = \"..\"`).",
+      "{{shinytest2}} does not know how to automatically migrate this app."
     ))
   }
   # Store knowledge
   withCallingHandlers( # abort() on error
     testnames <- eval(testapp_args$testnames, envir = globalenv()),
     error = function(e) {
-      rlang::abort("Could not parse variable for `testnames` in `shinytest::testApp()`. Only atomic values are supported.")
+      cli::cli_abort("Could not parse variable for `testnames` in `shinytest::testApp()`. Only atomic values are supported.")
     }
   )
   app_info_env$testnames <-
@@ -405,9 +405,9 @@ m__parse_test_text <- function(test_text, test_path, info_env) {
   }
 
   init_infos <- m__find_shinydriver_new(parsed_text, info_env)
-  if (length(init_infos) == 0) rlang::abort(paste0("Can not find `ShinyDriver$new` in test file: ", test_path))
+  if (length(init_infos) == 0) cli::cli_abort("Can not find `ShinyDriver$new` in test file: {test_path}")
   # TODO-future; split the code into parts and recurse
-  if (length(init_infos) > 1) rlang::abort(paste0("Can not migrate file that contains multiple calls to `ShinyDriver$new`: ", test_path))
+  if (length(init_infos) > 1) cli::cli_abort("Can not migrate file that contains multiple calls to `ShinyDriver$new`: {test_path}")
   info_env$app_var <- init_infos[[1]]$app_var
   # info_env$init_args <- init_infos[[1]]$args
 
@@ -498,7 +498,7 @@ shinytest___find_tests <- function(tests_dir, testnames = NULL) {
       testnames_no_ext <- sub("\\.[rR]$", "", testnames)
       idx <- match(testnames_no_ext, found_testnames_no_ext)
       if (any(is.na(idx))) {
-          rlang::abort(c("Test scripts do not exist:", testnames[is.na(idx)]))
+          cli::cli_abort(c("Test scripts do not exist:", cli_escape(testnames[is.na(idx)])))
       }
       found_testnames <- found_testnames[idx]
   }
@@ -534,7 +534,7 @@ parse_next_expr <- function(texts) {
     }
     end <- end + 1
     if (end > texts_len) {
-      rlang::abort(paste0("Can not parse texts:\n", paste0(texts, collapse = "\n")))
+      cli::cli_abort(c("Can not parse texts:", cli_lines(texts, name = "")))
     }
   }
 
@@ -670,7 +670,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
   }
   abort_if_not_character <- function(x, fn_name, arg_name) {
     if (!is.character(x)) {
-      rlang::abort(paste0("`ShinyDriver$", fn_name, "(", arg_name, "=)` must be a character value, not a variable to be auto-converted by {shinytest2}"))
+      cli::cli_abort("`ShinyDriver${fn_name}({arg_name}=)` must be a character value, not a variable to be auto-converted by {{shinytest2}}")
     }
   }
   iotype_arg <- function(matched_args, fn_name, types = c("auto", "input", "output")) {
@@ -690,7 +690,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       if (!is_top_level || isTRUE(matched_args[["values_"]])) {
         matched_args_with_defaults <- match_shinytest_args("setInputs", defaults = TRUE)
         if (isTRUE(matched_args_with_defaults[["values_"]])) {
-          rlang::abort(c(
+          cli::cli_abort(c(
             "`ShinyDriver$setInputs(values_=)` is no longer supported. Use `AppDriver$get_values()` directly.",
             "i" = "This message was thrown because `ShinyDriver$setInputs()`'s result is possibly used.",
             "i" = "To disable this error, set `values_ = FALSE` in your call to `ShinyDriver$setInputs()`"
@@ -736,13 +736,13 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       shinytest2_expr("get_js", fn_args)
     },
     "executeScriptAsync" = {
-      rlang::abort("Please see the `shinytest-migration` vignette for an example on how to convert your `ShinyDriver$executeScriptAsync()` code to `AppDriver$get_js()` using JavaScript Promises.")
+      cli::cli_abort("Please see the `shinytest-migration` vignette for an example on how to convert your `ShinyDriver$executeScriptAsync()` code to `AppDriver$get_js()` using JavaScript Promises.")
     },
     "expectUpdate" = {
       matched_args <- match_shinytest_args("expectUpdate")
       iotype <- iotype_arg(matched_args, "expectUpdate")
       if (iotype == "output") {
-        rlang::abort(c(
+        cli::cli_abort(c(
           "`ShinyDriver$expectUpdate(iotype = \"output\")` is not supported by `AppDriver`.",
           x = "Please set an `iotype = \"input\"`"
         ))
@@ -781,7 +781,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     "findElement" = , # nolint
     "findElements" = , # nolint
     "findWidget" = {
-      rlang::abort(paste0("Please see the `shinytest-migration` vignette for an example on how to convert your `ShinyDriver$", as.character(app_fn_sym), "()` to be {shinytest2} friendly."))
+      cli::cli_abort("Please see the `shinytest-migration` vignette for an example on how to convert your `ShinyDriver${as.character(app_fn_sym)}()` to be {{shinytest2}} friendly.")
     },
 
     "getAllValues" = {
@@ -838,8 +838,8 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     "getSnapshotDir" = , # nolint
     "getRelativePathToApp" = , # nolint
     "getTestsDir" = {
-      rlang::abort(c(
-        i = paste0("`ShinyDriver$", as.character(app_fn_sym), "()` is not implemented in `AppDriver`. {shinytest2} is integrated with {testthat} and `AppDriver` does not support non-standard test file locations."),
+      cli::cli_abort(c(
+        i = "`ShinyDriver${as.character(app_fn_sym)}()` is not implemented in `AppDriver`. {{shinytest2}} is integrated with {{testthat}} and `AppDriver` does not support non-standard test file locations.",
         "x" = "Please remove or replace this function call`"
       ))
     },
@@ -873,8 +873,8 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       matched_args <- match_shinytest_args("setValue")
       iotype <- iotype_arg(matched_args, "setValue")
       if (iotype == "output") {
-        rlang::abort(
-          "`ShinyDriver$setValue(iotype=)` is set to `\"output\"`; {shinytest2} does not support setting output values directly."
+        cli::cli_abort(
+          "`ShinyDriver$setValue(iotype=)` is set to `\"output\"`; {{shinytest2}} does not support setting output values directly."
         )
       }
       if (info_env$verbose) rlang::inform(c(
@@ -908,7 +908,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       shinytest2_expr("run_js", list("window.location.reload();"))
     },
     "clone" = {
-      rlang::abort("`AppDriver$clone()` is not supported.")
+      cli::cli_abort("`AppDriver$clone()` is not supported.")
     },
 
     "listWidgets" = {
@@ -922,13 +922,13 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     "logEvent" = {
       matched_args <- match_shinytest_args("logEvent")
       if (length(matched_args) > 1) {
-        rlang::abort(c(
+        cli::cli_abort(c(
           "`AppDriver$log_message()` does not support multiple arguments.",
           x = "Please store your message into a single argument."
         ))
       }
       if (length(matched_args) == 0) {
-        rlang::abort(c(
+        cli::cli_abort(c(
           "`AppDriver$log_message()` requires a message argument."
         ))
       }
@@ -941,7 +941,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     },
 
     "sendKeys" = {
-      rlang::abort("{shinytest2} does not support `$sendKeys()`")
+      cli::cli_abort("{{shinytest2}} does not support `$sendKeys()`")
     },
 
     "snapshotInit" = {
@@ -980,7 +980,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
             )
           )
         ) {
-          rlang::abort(c(
+          cli::cli_abort(c(
             "`ShinyDriver$snapshot(items=)` can only be auto converted if `items` is missing, `NULL`, or a list of `input`, `output`, and/or `export`. Variables may not be used!"
           ))
         }
@@ -1011,7 +1011,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
         if (!is.null(info_env$screenshot_snapshot_init)) return(info_env$screenshot_snapshot_init)
 
         if (!rlang::is_interactive()) {
-          rlang::abort(c(
+          cli::cli_abort(c(
             "`ShinyDriver$snapshot()` needs instructions on whether to take a screenshot.",
             x = "Please set `include_expect_screenshot` to `TRUE` or `FALSE`."
           ))
@@ -1087,8 +1087,8 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
         "parent" %in% names(matched_args) &&
         !is_false(matched_args$parent)
       ) {
-        rlang::abort(c(
-          "`ShinyDriver$takeScreenshot(parent=)` is not supported in {shinytest2}. Currently, CSS `parent` selector is not officially supported.",
+        cli::cli_abort(c(
+          "`ShinyDriver$takeScreenshot(parent=)` is not supported in {{shinytest2}}. Currently, CSS `parent` selector is not officially supported.",
           x = "Please provide a better `AppDriver$get_screenshot(selector=)` value."
         ))
       }
@@ -1103,7 +1103,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
       if (
         !is_top_level || isTRUE(matched_args[["values_"]])
       ) {
-        rlang::abort("`ShinyDriver$uploadFile(values_=)` is no longer supported. Use `AppDriver$get_values()` directly. (This message was thrown because `ShinyDriver$uploadFile()`'s result is possibly used.)")
+        cli::cli_abort("`ShinyDriver$uploadFile(values_=)` is no longer supported. Use `AppDriver$get_values()` directly. (This message was thrown because `ShinyDriver$uploadFile()`'s result is possibly used.)")
       }
       matched_args[["values_"]] <- NULL
 
@@ -1137,7 +1137,7 @@ match_shinytest_expr <- function(expr_list, is_top_level, info_env) {
     },
 
 
-    rlang::abort(paste0("Unknown method: ", as.character(app_fn_sym)))
+    cli::cli_abort("Unknown method: {as.character(app_fn_sym)}")
   )
 }
 
@@ -1150,7 +1150,7 @@ migrate_shinycoreci_shinytest <- function(app_path) {
   if (any(grepl("shinytest::testApp", lines))) return(FALSE)
 
   if (!identical(lines, "shinycoreci::test_shinytest_app()")) {
-    stop("Non-standard ./tests/shinytest.R file found! -", shinytest_path)
+    cli::cli_abort("Non-standard ./tests/shinytest.R file found! -{shinytest_path}")
   }
 
   cat('# Auto-generated by `shinytest2`

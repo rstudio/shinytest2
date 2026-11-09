@@ -33,7 +33,7 @@ app_check_unique_names <- function(self, private) {
   }
   duplicates_with_stars <- function(x) {
     ret <- unique(x[duplicated(x)])
-    stats::setNames(ret, rep("*", length(ret)))
+    stats::setNames(cli_escape(ret), rep("*", length(ret)))
   }
 
   for (info in list(
@@ -55,7 +55,7 @@ app_check_unique_names <- function(self, private) {
     if (has_duplicate(info$items)) {
       app_warn(self, private,
         c(
-          "!" = paste0("Shiny ", info$name, " should have unique HTML id values."),
+          "!" = "Shiny {info$name} should have unique HTML id values.",
           "i" = "The following HTML id values are not unique:",
           duplicates_with_stars(info$items),
           if (info$question) c("i" = "Do you have a Shiny input and output value with the same name?")

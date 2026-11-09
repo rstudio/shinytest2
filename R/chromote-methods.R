@@ -160,10 +160,11 @@ chromote_wait_for_condition <- function(
       #   ..$ exception   :List of 2
       #   .. ..$ type : chr "string"
       #   .. ..$ value: chr "Timeout waiting for JS condition to be `true`"
-      rlang::abort(c(
+      cli::cli_abort(c(
         "Timed out waiting for JavaScript script to return `true`",
-        "i" = paste0("`timeout`: ", timeout),
-        "i" = paste0("`script`:\n", condition_js)
+        "i" = "`timeout`: {timeout}",
+        "i" = "`script`:",
+        cli_lines(condition_js)
       ))
     }
 
@@ -187,10 +188,12 @@ chromote_wait_for_condition <- function(
     #   .. ..$ className  : chr "SyntaxError"
     #   .. ..$ description: chr "SyntaxError: Unexpected token ';'"
     #   .. ..$ objectId   : chr "7228422962995412097.4.2"
-    rlang::abort(c(
+    cli::cli_abort(c(
       "Error found while waiting for JavaScript script to return `true`.",
-      "i" = paste0("`script`:\n", condition_js),
-      "i" = paste0("Error:\n", obj_to_string(exception))
+      "i" = "`script`:",
+      cli_lines(condition_js),
+      "i" = "Error:",
+      cli_lines(obj_to_string(exception))
     ))
   }
 

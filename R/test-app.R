@@ -153,14 +153,14 @@ test_app <- function(
 
   if (testthat::is_testing()) {
     if (!quiet && !on_cran()) {
-      rlang::warn(
+      cli::cli_warn(
         c(
-          "x" = "Calling `shinytest2::test_app()` within a {testthat} test has been deprecated in {shinytest2} v0.5.0.",
-          "x" = "This will become an error in a future version of {shinytest2}.",
+          "x" = "Calling `shinytest2::test_app()` within a {{testthat}} test has been deprecated in {{shinytest2}} v0.5.0.",
+          "x" = "This will become an error in a future version of {{shinytest2}}.",
           "i" = "If you are testing within a package, it is strongly recommended relocate your app tests to be within your package tests. Please note, you will need to use `local_app_support()` or `with_app_support()` to load your app's support files as needed.",
           "i" = "If you are using CI, don't forget to collect your new snapshots after your initial run!",
-          "i" = "See {.url https://rstudio.github.io/shinytest2/articles/use-package.html } for more details.",
-          "i" = "To suppress this warning, remove `shinytest2::test_app()` calls from your {testthat} tests or add the parameter `test_app(quiet = TRUE)`."
+          "i" = "See {.url https://rstudio.github.io/shinytest2/articles/use-package.html} for more details.",
+          "i" = "To suppress this warning, remove `shinytest2::test_app()` calls from your {{testthat}} tests or add the parameter `test_app(quiet = TRUE)`."
         )
       )
     }

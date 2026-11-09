@@ -139,7 +139,7 @@ app_wait_for_value <- function(
 
     # if too much time has elapsed... throw
     if (now() > end_time) {
-      app_abort(self, private, paste0("timeout reached when waiting for ", ioe$type, ": ", ioe$name))
+      app_abort(self, private, "timeout reached when waiting for {ioe$type}: {ioe$name}")
     }
 
     # wait a little bit for shiny to do some work

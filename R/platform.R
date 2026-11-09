@@ -28,7 +28,7 @@ platform_variant <- function(..., os_name = TRUE, r_version = TRUE) {
   if (os_name && r_version) return(paste0(os_name(), "-", r_version()))
   if (r_version) return(r_version())
   if (os_name) return(os_name())
-  rlang::abort("Both `os_name` and `r_version` can not be `FALSE`")
+  cli::cli_abort("Both `os_name` and `r_version` can not be `FALSE`")
 }
 
 

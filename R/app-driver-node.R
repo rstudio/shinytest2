@@ -55,14 +55,10 @@ app_find_node_id <- function(
   el_node_ids <- chromote_find_elements(self$get_chromote_session(), css_selector)
 
   if (length(el_node_ids) == 0) {
-    app_abort(self, private, paste0(
-      "Cannot find HTML element with selector ", css_selector
-    ))
+    app_abort(self, private, "Cannot find HTML element with selector {css_selector}")
 
   } else if (length(el_node_ids) > 1) {
-    app_warn(self, private, paste0(
-      "Multiple HTML elements found with selector ", css_selector
-    ))
+    app_warn(self, private, "Multiple HTML elements found with selector {css_selector}")
   }
 
   node_id <- el_node_ids[[1]]

@@ -33,8 +33,8 @@ app_upload_file <- function(
     error = function(e) {
       app_abort(self, private,
         c(
-          paste0("Error finding upload file at path: ", filename),
-          i = paste0("`input` id: ", filename)
+          "Error finding upload file at path: {filename}",
+          i = "`input` id: {filename}"
         ),
         parent = e
       )

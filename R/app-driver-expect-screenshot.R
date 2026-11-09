@@ -217,7 +217,7 @@ handle_custom_selector <- function(self, private, screenshot_args) {
         c(0, 0, scroll_size$width, scroll_size$height)
       },
       # Safety
-      stop("Can not create cliprect for unknown selector: ", selector)
+      cli::cli_abort("Can not create cliprect for unknown selector: {selector}")
     )
 
   return(screenshot_args)

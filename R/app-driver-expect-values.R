@@ -129,7 +129,7 @@ app_get_values <- function(
       self,
       private,
       c(
-        paste0("Shiny server returned 404 for values URL: ", url),
+        "Shiny server returned 404 for values URL: {url}",
         "i" = "Is `shiny::runApp(test.mode = TRUE)` enabled?"
       ),
       call = cur_env
@@ -231,7 +231,7 @@ app_expect_values <- function(
       self,
       private,
       c(
-        paste0("Shiny server returned 404 for values URL: ", url),
+        "Shiny server returned 404 for values URL: {url}",
         "i" = "Is `shiny::runApp(test.mode = TRUE)` enabled?"
       ),
       call = cur_env

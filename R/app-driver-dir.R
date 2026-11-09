@@ -57,7 +57,7 @@ app_set_dir <- function(
       private,
       c(
         "`app_dir` must be an existing directory",
-        "i" = paste0("Received: ", cur_dir)
+        "i" = "Received: {cur_dir}"
       )
     )
   }

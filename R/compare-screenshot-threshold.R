@@ -226,11 +226,11 @@ screenshot_max_difference <- function(
 
   # Quit early if images are different size
   if (!identical(dim(old_png), dim(new_png))) {
-    rlang::abort("Images are different dimensions")
+    cli::cli_abort("Images are different dimensions")
   }
 
   if (any(kernel_size >= dim(new_png)[1:2])) {
-    rlang::abort("`kernel_size` must be smaller than the image pixel size")
+    cli::cli_abort("`kernel_size` must be smaller than the image pixel size")
   }
 
   # diff_png <- abs(old_png - new_png)
