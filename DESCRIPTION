@@ -69,6 +69,7 @@ Config/Needs/shinytest2-testing: decor
 Config/Needs/website: pkgdown, tidyverse/tidytemplate
 Config/roxygen2/version: 8.1.1
 Config/testthat/edition: 3
+Config/usethis/last-upkeep: 2026-11-09
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
@@ -115,4 +116,3 @@ Collate:
     'shinytest2-package.R'
     'test-app.R'
     'use.R'
-Config/usethis/last-upkeep: 2026-11-09
