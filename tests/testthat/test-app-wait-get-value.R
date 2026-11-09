@@ -5,6 +5,7 @@ test_that("$get_value errors are caught", {
 
   expect_error(
     app$get_value("txt"),
+    "specify only one"
   )
 
   expect_error(

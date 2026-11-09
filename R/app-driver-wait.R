@@ -1,7 +1,6 @@
-
-
 app_wait_for_js <- function(
-  self, private,
+  self,
+  private,
   script,
   timeout = missing_arg(),
   interval = 100
@@ -20,17 +19,33 @@ app_wait_for_js <- function(
   invisible(self)
 }
 
-app_wait_for_idle <- function(self, private, duration = 500, timeout = missing_arg()) {
+app_wait_for_idle <- function(
+  self,
+  private,
+  duration = 500,
+  timeout = missing_arg()
+) {
   ckm8_assert_app_driver(self, private)
   timeout <- app_get_timeout(self, private, timeout = timeout)
 
   checkmate::assert_number(duration, lower = 0, finite = TRUE)
 
-  self$log_message(paste0("Waiting for Shiny to become idle for ", duration, "ms within ", timeout, "ms"))
+  self$log_message(paste0(
+    "Waiting for Shiny to become idle for ",
+    duration,
+    "ms within ",
+    timeout,
+    "ms"
+  ))
 
-  stable_js <- paste0("
-  let duration = ", duration, "; // time needed to be idle
-  let timeout = ", timeout, "; // max total time
+  stable_js <- paste0(
+    "
+  let duration = ",
+    duration,
+    "; // time needed to be idle
+  let timeout = ",
+    timeout,
+    "; // max total time
 
   new Promise((resolve, reject) => {
 
@@ -76,7 +91,8 @@ app_wait_for_idle <- function(self, private, duration = 500, timeout = missing_a
       idleFn();
     }
   })
-  ")
+  "
+  )
 
   ret <- chromote_eval(
     self$get_chromote_session(),
@@ -85,15 +101,22 @@ app_wait_for_idle <- function(self, private, duration = 500, timeout = missing_a
     timeout = timeout * 2
   )
 
-  if (identical(ret$result$subtype, "error") || length(ret$exceptionDetails) > 0) {
-    app_abort(self, private, "An error occurred while waiting for Shiny to be stable")
+  if (
+    identical(ret$result$subtype, "error") || length(ret$exceptionDetails) > 0
+  ) {
+    app_abort(
+      self,
+      private,
+      "An error occurred while waiting for Shiny to be stable"
+    )
   }
 
   invisible(self)
 }
 
 app_wait_for_value <- function(
-  self, private,
+  self,
+  private,
   input = missing_arg(),
   output = missing_arg(),
   export = missing_arg(),
@@ -119,13 +142,23 @@ app_wait_for_value <- function(
   end_time <- now() + timeoute_sec
 
   ioe <- app_get_single_ioe(
-    self, private,
-    input = input, output = output, export = export
+    self,
+    private,
+    input = input,
+    output = output,
+    export = export
   )
   while (TRUE) {
-    value <- try({
-      self$get_value(input = ioe$input, output = ioe$output, export = ioe$export)
-    }, silent = TRUE)
+    value <- try(
+      {
+        self$get_value(
+          input = ioe$input,
+          output = ioe$output,
+          export = ioe$export
+        )
+      },
+      silent = TRUE
+    )
 
     # if no error when trying to retrieve the value..
     if (!inherits(value, "try-error")) {
@@ -139,7 +172,11 @@ app_wait_for_value <- function(
 
     # if too much time has elapsed... throw
     if (now() > end_time) {
-      app_abort(self, private, paste0("timeout reached when waiting for ", ioe$type, ": ", ioe$name))
+      app_abort(
+        self,
+        private,
+        "timeout reached when waiting for {ioe$type}: {ioe$name}"
+      )
     }
 
     # wait a little bit for shiny to do some work

@@ -9,7 +9,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
+```{r}
+#| label: setup
+#| include: false
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 ```
 
@@ -93,7 +95,7 @@ shinyApp(
       renderText({
         paste("This is a random number:", rnorm(1))
       }),
-      function(value) {
+      \(value) {
         sub("[0-9.]+$", "<a random number>", value)
       }
     )
@@ -157,7 +159,7 @@ test_that("Done button saves `foo`", {
       })
     }
   )
-  app <- AppDriver$new(function() {
+  app <- AppDriver$new(\() {
     shiny::runApp(done_app) # Returns once the app calls `stopApp()`
     mget("foo", envir = globalenv())
   })

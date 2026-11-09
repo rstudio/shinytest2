@@ -71,7 +71,7 @@ record_test <- function(
   rlang::check_installed("shinyvalidate", "0.1.2")
 
   if (inherits(app, "ShinyDriver")) {
-    rlang::abort(
+    cli::cli_abort(
       "Recording tests for `ShinyDriver` objects is not supported."
     )
   }
@@ -114,7 +114,7 @@ record_test <- function(
 
   if (is.character(app)) {
     if (grepl("^http(s?)://", app)) {
-      rlang::abort("Recording tests for remote apps is not supported.")
+      cli::cli_abort("Recording tests for remote apps is not supported.")
     }
 
     # Rmds need a random seed
@@ -131,7 +131,7 @@ record_test <- function(
   }
 
   if (!inherits(app, "AppDriver")) {
-    rlang::abort(
+    cli::cli_abort(
       "Unknown object type to record tests for. Must supply a `AppDriver` object or file path"
     )
   }
@@ -261,7 +261,7 @@ register_input_processor <- function(input_type, processor) {
   if (
     !is.function(processor) || !identical(names(formals(processor)), "value")
   ) {
-    rlang::abort(
+    cli::cli_abort(
       "`processor` must be a function that takes one parameter, `value`"
     )
   }

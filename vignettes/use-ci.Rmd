@@ -9,7 +9,9 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-```{r setup, include=FALSE}
+```{r}
+#| label: setup
+#| include: false
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -232,7 +234,7 @@ See GitHub's docs on [adding a badge](https://docs.github.com/en/actions/monitor
 If your workflow file is named `check-app.yaml` in the `schloerke/example-app` repo, you can add a status badge to your GitHub to your README.md with the following line:
 
 ```md
-![check-app](https://github.com/schloerke/example-app/actions/workflows/check-app.yml/badge.svg)
+![check-app GitHub Actions status badge](https://github.com/schloerke/example-app/actions/workflows/check-app.yml/badge.svg)
 ```
 
 In your `README.md` file, you can add a build status badge, like the one below, so that you can see the status of your code at a glance:

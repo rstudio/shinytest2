@@ -27,37 +27,36 @@ test_that("Stopping the app listens to the signals", {
   # Respect given value
   expect_signal_timeout(
     expected_signal_timeout = 1 * 1001,
-    signal_timeout          = 1 * 1001,
-    signal_timeout_env      = 2 * 1001,
-    signal_timeout_option   = 3 * 1001
+    signal_timeout = 1 * 1001,
+    signal_timeout_env = 2 * 1001,
+    signal_timeout_option = 3 * 1001
   )
   # Respect option value
   expect_signal_timeout(
     expected_signal_timeout = 3 * 1001,
-    signal_timeout          = missing_arg(),
-    signal_timeout_env      = 2 * 1001,
-    signal_timeout_option   = 3 * 1001
+    signal_timeout = missing_arg(),
+    signal_timeout_env = 2 * 1001,
+    signal_timeout_option = 3 * 1001
   )
   # Respect env value
   expect_signal_timeout(
     expected_signal_timeout = 2 * 1001,
-    signal_timeout          = missing_arg(),
-    signal_timeout_env      = 2 * 1001,
-    signal_timeout_option   = NULL
+    signal_timeout = missing_arg(),
+    signal_timeout_env = 2 * 1001,
+    signal_timeout_option = NULL
   )
   # Default values
   expect_signal_timeout(
     expected_signal_timeout = 500,
-    signal_timeout          = missing_arg(),
-    signal_timeout_env      = NULL,
-    signal_timeout_option   = NULL
+    signal_timeout = missing_arg(),
+    signal_timeout_env = NULL,
+    signal_timeout_option = NULL
   )
   expect_signal_timeout(
     expected_signal_timeout = 20 * 1000,
-    signal_timeout          = missing_arg(),
-    signal_timeout_env      = NULL,
-    signal_timeout_option   = NULL,
-    covr_is_set             = TRUE
+    signal_timeout = missing_arg(),
+    signal_timeout_env = NULL,
+    signal_timeout_option = NULL,
+    covr_is_set = TRUE
   )
-
 })

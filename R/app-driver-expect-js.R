@@ -5,7 +5,9 @@ app_js_script_helper <- function(
   file = missing_arg()
 ) {
   ckm8_assert_app_driver(self, private)
-  if (rlang::is_missing(file)) return(script)
+  if (rlang::is_missing(file)) {
+    return(script)
+  }
 
   if (!rlang::is_missing(script)) {
     app_warn(

@@ -210,9 +210,9 @@ app_start_shiny <- function(
     app_abort(
       self,
       private,
-      paste0(
-        "Failed to start shiny. Error:\n",
-        strwrap(readLines(p$get_error_file()))
+      c(
+        "Failed to start shiny. Error:",
+        cli_lines(strwrap(readLines(p$get_error_file())))
       )
     )
   }
@@ -226,17 +226,15 @@ app_start_shiny <- function(
 
     if (!p$is_alive()) {
       msg <- if (is.function(self$get_dir())) {
-        paste0(
-          "The Shiny app function has already terminated. Did you return a Shiny application object or run an App?\n"
-        )
+        "The Shiny app function has already terminated. Did you return a Shiny application object or run an App?"
       }
       app_abort(
         self,
         private,
-        paste0(
+        c(
           msg,
-          "Error starting shiny application:\n",
-          paste(err_lines, collapse = "\n")
+          "Error starting shiny application:",
+          cli_lines(err_lines)
         )
       )
     }
@@ -250,16 +248,14 @@ app_start_shiny <- function(
       app_abort(
         self,
         private,
-        sprintf(
+        c(
           paste(
-            "The Shiny app failed to start up within %s second%s.",
+            "The Shiny app failed to start up within {load_timeout / 1000} second{if (load_timeout == 1000) '' else 's'}.",
             "To increase the loading timeout, consult the documentation in `?AppDriver`",
             "for the `load_timeout` argument of `AppDriver$new()`.",
-            "The app printed the following lines to stderr during start up:\n%s"
+            "The app printed the following lines to stderr during start up:"
           ),
-          load_timeout / 1000,
-          if (load_timeout == 1000) "" else "s",
-          paste(err_lines, collapse = "\n")
+          cli_lines(err_lines)
         )
       )
     }
@@ -298,11 +294,13 @@ app_wait_for_serving <- function(url, timeout = 10000) {
 
   deadline <- Sys.time() + timeout / 1000
   repeat {
-    if (isTRUE(pingr::is_up(
-      pieces$hostname,
-      pieces$port,
-      check_online = FALSE
-    ))) {
+    if (
+      isTRUE(pingr::is_up(
+        pieces$hostname,
+        pieces$port,
+        check_online = FALSE
+      ))
+    ) {
       return(invisible(TRUE))
     }
     if (Sys.time() >= deadline) {

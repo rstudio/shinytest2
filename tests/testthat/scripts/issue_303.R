@@ -28,7 +28,6 @@
 
 foo <- 5
 app <- local({
-
   foo3 <- 19
 
   shiny::shinyApp(

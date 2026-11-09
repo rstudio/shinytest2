@@ -94,7 +94,7 @@ use_shinytest2 <- function(
   }
 
   if (all(!runner, !setup, !ignore, !package)) {
-    stop(
+    cli::cli_abort(
       "At least one of `runner`, `setup`, `ignore`, or `package` must be `TRUE`"
     )
   }

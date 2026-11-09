@@ -154,12 +154,9 @@ app_initialize_ <- function(
       app_abort(
         self,
         private,
-        paste0(
-          "Shiny app did not become stable in ",
-          private$load_timeout,
-          "ms.\n",
-          "Message: ",
-          conditionMessage(e)
+        c(
+          "Shiny app did not become stable in {private$load_timeout}ms.",
+          cli_lines(paste0("Message: ", conditionMessage(e)), name = "")
         ),
         parent = e
       )
@@ -306,12 +303,13 @@ app_initialize <- function(self, private, ..., view = missing_arg()) {
         self,
         private,
         c(
-          conditionMessage(e),
+          cli_lines(conditionMessage(e), name = ""),
           "\n",
           i = cli::col_silver(
             "You can inspect the failed AppDriver object via `rlang::last_error()$app`"
           ),
-          i = paste0("AppDriver logs:\n", logs),
+          i = "AppDriver logs:",
+          cli_lines(logs),
           "\n"
         ),
         parent = e

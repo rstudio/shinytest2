@@ -1,8 +1,12 @@
-
 app_log_message <- function(self, private, message) {
-  app_add_log_entry(self, private, location = "shinytest2", level = "info", message = message)
+  app_add_log_entry(
+    self,
+    private,
+    location = "shinytest2",
+    level = "info",
+    message = message
+  )
 }
-
 
 
 app_log_entry <- function(
@@ -41,15 +45,14 @@ app_add_log_entry <- function(
 ) {
   ckm8_assert_app_driver(self, private)
 
-
   entry <- app_log_entry(
-    self, private,
+    self,
+    private,
     location = location,
     level = level,
     message = message,
     timestamp = timestamp
   )
-
 
   private$logs[[length(private$logs) + 1]] <- entry
 

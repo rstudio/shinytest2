@@ -5,9 +5,6 @@ linters: linters_with_defaults(
     return_linter = NULL
   )
 exclusions: list(
-    "inst/gha/audit-app.R" = list(
-      "object_usage_linter" = 81
-    ),
     "R/cpp11.R",
     "tests/testthat/pkgs/golem/R/run_app.R",
     "vignettes/use-package.Rmd",

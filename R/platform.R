@@ -1,8 +1,8 @@
-
-
 #' @include utils.R
 # nolint start: brace_linter
-is_windows <- cache_fn_val(function() { .Platform$OS.type == "windows" })
+is_windows <- cache_fn_val(function() {
+  .Platform$OS.type == "windows"
+})
 # is_mac     <- function() Sys.info()[["sysname"]] == "Darwin"
 # is_linux   <- function() Sys.info()[["sysname"]] == "Linux"
 # nolint end
@@ -25,16 +25,23 @@ platform_variant <- function(..., os_name = TRUE, r_version = TRUE) {
 
   os_name <- isTRUE(os_name)
   r_version <- isTRUE(r_version)
-  if (os_name && r_version) return(paste0(os_name(), "-", r_version()))
-  if (r_version) return(r_version())
-  if (os_name) return(os_name())
-  rlang::abort("Both `os_name` and `r_version` can not be `FALSE`")
+  if (os_name && r_version) {
+    return(paste0(os_name(), "-", r_version()))
+  }
+  if (r_version) {
+    return(r_version())
+  }
+  if (os_name) {
+    return(os_name())
+  }
+  cli::cli_abort("Both `os_name` and `r_version` can not be `FALSE`")
 }
 
 
 os_name <- cache_fn_val(function() {
   # Inspriation and reduction of https://github.com/rstudio/renv/blob/ffe5790161fed81226577a31231299e2be2c36ba/R/platform.R
-  switch(Sys.info()[["sysname"]],
+  switch(
+    Sys.info()[["sysname"]],
     "Darwin" = "mac",
     "SunOS" = "solaris",
     "Linux" = "linux",

@@ -78,10 +78,12 @@ Url <- R6Class(
           # Convert parsing errors to validation errors
           if (grepl("Port number", e$message)) {
             warning(e$message)
-            stop("Assertion on 'url port' failed")
+            cli::cli_abort("Assertion on 'url port' failed")
           }
           if (grepl("parse URL", e$message)) {
-            stop("Assertion on 'url hostname' failed: Must be a single string")
+            cli::cli_abort(
+              "Assertion on 'url hostname' failed: Must be a single string"
+            )
           }
           stop(e)
         }

@@ -1,5 +1,6 @@
+#' @keywords internal
 #' @useDynLib shinytest2, .registration = TRUE
-NULL
+"_PACKAGE"
 
 release_bullets <- function() {
   c(

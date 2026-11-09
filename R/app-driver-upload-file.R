@@ -1,5 +1,6 @@
 app_upload_file <- function(
-  self, private,
+  self,
+  private,
   ...,
   wait_ = TRUE,
   timeout_ = 3000
@@ -9,7 +10,9 @@ app_upload_file <- function(
 
   inputs <- list2(...)
   if (length(inputs) != 1 || !rlang::is_named(inputs)) {
-    app_abort(self, private,
+    app_abort(
+      self,
+      private,
       "Can only upload file to exactly one input, and input must be named"
     )
   }
@@ -18,23 +21,30 @@ app_upload_file <- function(
   # uploading a file will result in two messages before the file is successfully
   # uploaded.
   self$run_js(paste0(
-    "shinytest2.outputValuesWaiter.start(", toJSON_atomic(timeout_), ", 2);"
+    "shinytest2.outputValuesWaiter.start(",
+    toJSON_atomic(timeout_),
+    ", 2);"
   ))
 
   filename <- inputs[[1]]
-  self$log_message(paste0("Uploading file(s) for id: ",
-                          paste(filename, collapse = ", ")))
+  self$log_message(paste0(
+    "Uploading file(s) for id: ",
+    paste(filename, collapse = ", ")
+  ))
 
   node_id <- app_find_node_id(self, private, input = names(inputs)[1])
 
-  withCallingHandlers( # abort() on error
+  withCallingHandlers(
+    # abort() on error
     # Provide fully defined file path to chromote
     filename <- fs::path_real(filename),
     error = function(e) {
-      app_abort(self, private,
+      app_abort(
+        self,
+        private,
         c(
-          paste0("Error finding upload file at path: ", filename),
-          i = paste0("`input` id: ", filename)
+          "Error finding upload file at path: {filename}",
+          i = "`input` id: {filename}"
         ),
         parent = e
       )
@@ -49,7 +59,9 @@ app_upload_file <- function(
   self$get_js(paste0(
     "
     new Promise((resolve, reject) => {
-      shinytest2.outputValuesWaiter.finish(", toJSON_atomic(wait_), ", resolve);
+      shinytest2.outputValuesWaiter.finish(",
+    toJSON_atomic(wait_),
+    ", resolve);
     });
     "
   ))

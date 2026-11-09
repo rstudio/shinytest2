@@ -35,7 +35,7 @@ app_httr2_get <- function(self, private, url, fn_404 = NULL) {
         )
       }
       # Unknown error, rethrow
-      app_abort(self, private, e)
+      app_abort(self, private, cli_lines(conditionMessage(e), name = ""))
     }
   )
 

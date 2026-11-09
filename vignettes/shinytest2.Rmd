@@ -11,7 +11,9 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-```{r setup, include=FALSE}
+```{r}
+#| label: setup
+#| include: false
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 ```
 
@@ -72,7 +74,8 @@ To record tests, we first need an app.
 
 Here is a simple app that I've placed in `simple-app/app.R`:
 
-```{r, code = readLines('simple-app/app.R')}
+```{r}
+#| code: !expr readLines("simple-app/app.R")
 ```
 
 To test it, I now load {shinytest2}, and call `record_test()` with the path to my app:
@@ -88,7 +91,14 @@ This also launches a special Shiny application in the current R process which di
 We'll refer to this as the **recorder app**.
 You will see something like this:
 
-```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center', fig.alt="Screenshot of the shinytest2 test recorder interface showing the target app on the left side with a 'What is your name?' input field and the recorder app sidebar on the right side with recording controls"}
+```{r}
+#| echo: false
+#| eval: true
+#| out-width: 100%
+#| fig-align: center
+#| fig-alt: Screenshot of the shinytest2 test recorder interface showing the target app
+#|   on the left side with a 'What is your name?' input field and the recorder app sidebar
+#|   on the right side with recording controls
 knitr::include_graphics("images/record-simple-app.png")
 ```
 
@@ -109,7 +119,13 @@ To do this, click the `Expect Shiny values` button on the recorder app.
 
 After modifying some `input`s and making an expectation, it will look something like this:
 
-```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center', fig.alt="Screenshot of the test recorder interface showing the app and recorder sidebar with recorded test code including expect_values() assertion"}
+```{r}
+#| echo: false
+#| eval: true
+#| out-width: 100%
+#| fig-align: center
+#| fig-alt: Screenshot of the test recorder interface showing the app and recorder sidebar
+#|   with recorded test code including expect_values() assertion
 knitr::include_graphics("images/record-simple-app-2.png")
 ```
 
@@ -252,7 +268,13 @@ To view the differences, follow the prompted code `testthat::snapshot_review('sh
 
 It will look something like this:
 
-```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center', fig.alt="Screenshot of the testthat snapshot review interface (diffviewer) showing side-by-side comparison of expected and actual test results"}
+```{r}
+#| echo: false
+#| eval: true
+#| out-width: 100%
+#| fig-align: center
+#| fig-alt: Screenshot of the testthat snapshot review interface (diffviewer) showing
+#|   side-by-side comparison of expected and actual test results
 knitr::include_graphics("images/diffviewer-1.png")
 ```
 
@@ -268,7 +290,13 @@ In the example above, we had a single test script, named `test-shinytest2.R`.
 If you want to have more than one set of tests for an application, you can record new tests, each with a unique name.
 You can enter the name when recording your tests:
 
-```{r echo=FALSE, eval=TRUE, out.width='100%', fig.align='center', fig.alt="Screenshot of the test recorder interface showing a dialog for entering a custom name for the test being recorded"}
+```{r}
+#| echo: false
+#| eval: true
+#| out-width: 100%
+#| fig-align: center
+#| fig-alt: Screenshot of the test recorder interface showing a dialog for entering a
+#|   custom name for the test being recorded
 knitr::include_graphics("images/record-name.png")
 ```
 
@@ -276,8 +304,8 @@ The saved test can be moved to a different testing file, e.g. `tests/testthat/te
 
 ## Interactive R Markdown documents
 
-`{shinytest2}` can be used with [interactive R Markdown documents](https://yihui.org/rmarkdown/shiny-documents.html) that use `runtime: shiny` or `server: shiny` (sometimes also referred to as Shiny documents).
-This includes those that use the [flexdashboard](https://pkgs.rstudio.com/flexdashboard/) package.
+`{shinytest2}` can be used with [interactive R Markdown documents](https://pkg.yihui.org/rmarkdown-book/shiny-documents.html) that use `runtime: shiny` or `server: shiny` (sometimes also referred to as Shiny documents).
+This includes those that use the [flexdashboard](https://rstudio.github.io/flexdashboard/) package.
 
 Shiny documents have some differences compared to regular Shiny applications, and so the tests are slightly different.
 For an example of an interactive Rmd with tests, please follow [this link](https://github.com/rstudio/shinytest2/tree/main/tests/testthat/apps/rmd-shiny).

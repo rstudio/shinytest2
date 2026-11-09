@@ -47,33 +47,35 @@ chromote_eval <- function(
     tryCatch(
       {
         # https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#method-evaluate
-        chromote_session$
-          Runtime$
-          evaluate(
-            js,
-            ...,
-            timeout = timeout,
-            timeout_ = timeout_,
-            awaitPromise = awaitPromise,
-            returnByValue = returnByValue,
-            wait_ = TRUE # All internal functions depend on this logic
-          )
+        chromote_session$Runtime$evaluate(
+          js,
+          ...,
+          timeout = timeout,
+          timeout_ = timeout_,
+          awaitPromise = awaitPromise,
+          returnByValue = returnByValue,
+          wait_ = TRUE # All internal functions depend on this logic
+        )
       },
       error = function(e) {
         # Return something similar to a timeout object
         # Ex: `chromote_wait_for_condition(b, "false", timeout = 100)`
-        list(results = list(
-          type = "object",
-          subtype = "error",
-          className = "Error",
-          description = paste0("Error found while trying to evaluate script: ", as.character(e))
-        ))
+        list(
+          results = list(
+            type = "object",
+            subtype = "error",
+            className = "Error",
+            description = paste0(
+              "Error found while trying to evaluate script: ",
+              as.character(e)
+            )
+          )
+        )
       }
     )
 
   result
 }
-
 
 
 #' Have chromote wait for a js condition to be met
@@ -100,19 +102,26 @@ chromote_wait_for_condition <- function(
   # Escape the user's JS text so that it can be run as is within `eval()`.
   # While `eval(user_txt)` is a security risk, we already allow any user js code to be run via `AppDriver$run_js()`
   # https://github.com/rstudio/shinytest2/issues/236
-  escaped_condition_js <- paste0(deparse(condition_js, width.cutoff = 500L), collapse = " ")
+  escaped_condition_js <- paste0(
+    deparse(condition_js, width.cutoff = 500L),
+    collapse = " "
+  )
 
   # Must use manual calulation of timeout, as `chromote_session` does not have a
   # way to cancel the `setTimeout` that has already been submitted. (Which will never stop resubmitting)
   script <- paste0(
-"new Promise((resolve, reject) => {
+    "new Promise((resolve, reject) => {
   let start = Date.now();
   const condition = () => {
-    return eval(", escaped_condition_js, ");
+    return eval(",
+    escaped_condition_js,
+    ");
   };\n",
-  # Use `chromote_wait_for_condition` as the error message matches the R method
-  "chromote_wait_for_condition = () => {
-    let diffTime = new Date() - (+start + ", timeout, ");
+    # Use `chromote_wait_for_condition` as the error message matches the R method
+    "chromote_wait_for_condition = () => {
+    let diffTime = new Date() - (+start + ",
+    timeout,
+    ");
     if (diffTime > 0) {
       return reject('Timed out waiting for JavaScript script to return `true`');
     }
@@ -123,7 +132,9 @@ chromote_wait_for_condition <- function(
     } catch (e) {
       reject(e);
     }
-    setTimeout(chromote_wait_for_condition, ", interval, ");
+    setTimeout(chromote_wait_for_condition, ",
+    interval,
+    ");
   }
   chromote_wait_for_condition();
 });"
@@ -140,12 +151,12 @@ chromote_wait_for_condition <- function(
     exception <- ret$exceptionDetails$exception
     if (
       exception$type == "string" &&
-      length(exception$value) == 1 &&
-      isTRUE(grepl(
-        "Timed out waiting for JavaScript script",
-        exception$value,
-        fixed = TRUE
-      ))
+        length(exception$value) == 1 &&
+        isTRUE(grepl(
+          "Timed out waiting for JavaScript script",
+          exception$value,
+          fixed = TRUE
+        ))
     ) {
       ## Example `ret`:
       # List of 2
@@ -160,10 +171,11 @@ chromote_wait_for_condition <- function(
       #   ..$ exception   :List of 2
       #   .. ..$ type : chr "string"
       #   .. ..$ value: chr "Timeout waiting for JS condition to be `true`"
-      rlang::abort(c(
+      cli::cli_abort(c(
         "Timed out waiting for JavaScript script to return `true`",
-        "i" = paste0("`timeout`: ", timeout),
-        "i" = paste0("`script`:\n", condition_js)
+        "i" = "`timeout`: {timeout}",
+        "i" = "`script`:",
+        cli_lines(condition_js)
       ))
     }
 
@@ -187,10 +199,12 @@ chromote_wait_for_condition <- function(
     #   .. ..$ className  : chr "SyntaxError"
     #   .. ..$ description: chr "SyntaxError: Unexpected token ';'"
     #   .. ..$ objectId   : chr "7228422962995412097.4.2"
-    rlang::abort(c(
+    cli::cli_abort(c(
       "Error found while waiting for JavaScript script to return `true`.",
-      "i" = paste0("`script`:\n", condition_js),
-      "i" = paste0("Error:\n", obj_to_string(exception))
+      "i" = "`script`:",
+      cli_lines(condition_js),
+      "i" = "Error:",
+      cli_lines(obj_to_string(exception))
     ))
   }
 
@@ -198,9 +212,12 @@ chromote_wait_for_condition <- function(
 }
 
 
-
-
-chromote_set_device_metrics <- function(chromote_session, ..., width = NULL, height = NULL) {
+chromote_set_device_metrics <- function(
+  chromote_session,
+  ...,
+  width = NULL,
+  height = NULL
+) {
   assert_chromote_session(chromote_session)
   rlang::check_dots_empty()
 
@@ -218,7 +235,6 @@ chromote_set_window_size <- function(chromote_session, width, height) {
 }
 
 
-
 chromote_root_node_id <- function(chromote_session) {
   assert_chromote_session(chromote_session)
 
@@ -227,7 +243,11 @@ chromote_root_node_id <- function(chromote_session) {
 }
 
 
-chromote_find_element <- function(chromote_session, css, root_id = chromote_root_node_id(chromote_session)) {
+chromote_find_element <- function(
+  chromote_session,
+  css,
+  root_id = chromote_root_node_id(chromote_session)
+) {
   assert_chromote_session(chromote_session)
   checkmate::assert_character(css, any.missing = FALSE, len = 1)
 
@@ -236,12 +256,18 @@ chromote_find_element <- function(chromote_session, css, root_id = chromote_root
   node_id <- chromote_session$DOM$querySelector(root_id, css)$nodeId
 
   # Do not return a missing nodeId
-  if (node_id == 0L) return(NULL)
+  if (node_id == 0L) {
+    return(NULL)
+  }
   node_id
 }
 
 # Method used by `$click(selector=)` and `$upload_file()`
-chromote_find_elements <- function(chromote_session, css, root_id = chromote_root_node_id(chromote_session)) {
+chromote_find_elements <- function(
+  chromote_session,
+  css,
+  root_id = chromote_root_node_id(chromote_session)
+) {
   assert_chromote_session(chromote_session)
   checkmate::assert_character(css, any.missing = FALSE, len = 1)
 
@@ -252,7 +278,6 @@ chromote_find_elements <- function(chromote_session, css, root_id = chromote_roo
     chromote_session$DOM$querySelectorAll(root_id, css)$nodeIds
   )
 }
-
 
 
 chromote_node_id_to_object_id <- function(chromote_session, node_id) {
@@ -278,7 +303,12 @@ chromote_call_js_on_object <- function(
   checkmate::assert_character(fn_js, any.missing = FALSE, len = 1)
 
   # https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#method-callFunctionOn
-  chromote_session$Runtime$callFunctionOn(fn_js, objectId = object_id, ..., returnByValue = returnByValue)
+  chromote_session$Runtime$callFunctionOn(
+    fn_js,
+    objectId = object_id,
+    ...,
+    returnByValue = returnByValue
+  )
 }
 
 chromote_call_js_on_node <- function(chromote_session, node_id, fn_js, ...) {

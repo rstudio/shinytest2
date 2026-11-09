@@ -1,4 +1,4 @@
-# shinytest2 <a href="https://rstudio.github.io/shinytest2/"><img src="man/figures/logo.svg" align="right" height="139" /></a>
+# shinytest2 <a href="https://rstudio.github.io/shinytest2/"><img src="man/figures/logo.png" align="right" height="138" alt="shinytest2 website" /></a>
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/shinytest2)](https://CRAN.R-project.org/package=shinytest2)
@@ -21,8 +21,8 @@ By simply recording your actions as code and extending them to test the more par
 install.packages("shinytest2")
 
 # Or the development version from GitHub:
-# install.packages("devtools")
-devtools::install_github("rstudio/shinytest2")
+# install.packages("pak")
+pak::pak("rstudio/shinytest2")
 ```
 
 ## Usage

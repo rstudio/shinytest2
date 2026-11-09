@@ -29,3 +29,5 @@ _\.new\.png$
 ^AGENTS\.md$
 ^_dev$
 ^memory-bank$
+^[.]?air[.]toml$
+^\.vscode$

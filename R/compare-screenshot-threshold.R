@@ -1,5 +1,3 @@
-
-
 #' Compare screenshots given threshold value
 #'
 #' \pkg{chromote} can sometimes produce screenshot images with non-deterministic
@@ -131,7 +129,9 @@ compare_screenshot_threshold <- function(
 
   is_same_file <- testthat::compare_file_binary(old, new)
   # Quit early if they are the same file
-  if (is_same_file) return(TRUE)
+  if (is_same_file) {
+    return(TRUE)
+  }
 
   # If no threshold value is provided, return the previous answer of
   # `is_same_file`
@@ -171,11 +171,19 @@ compare_screenshot_threshold <- function(
 
   if (!ret && is_false(quiet)) {
     rlang::inform(c(
-      "!" = paste0("Maximum screenshot convolution value `", conv_max_value, "`",
-      " > `", threshold, "` (threshold)."),
+      "!" = paste0(
+        "Maximum screenshot convolution value `",
+        conv_max_value,
+        "`",
+        " > `",
+        threshold,
+        "` (threshold)."
+      ),
       "*" = paste0("`old`:", old),
       "*" = paste0("`new`:", new),
-      "i" = cli::col_silver("(To remove this message, increase `threshold`, or set `quiet = TRUE`)")
+      "i" = cli::col_silver(
+        "(To remove this message, increase `threshold`, or set `quiet = TRUE`)"
+      )
     ))
   }
 
@@ -226,11 +234,11 @@ screenshot_max_difference <- function(
 
   # Quit early if images are different size
   if (!identical(dim(old_png), dim(new_png))) {
-    rlang::abort("Images are different dimensions")
+    cli::cli_abort("Images are different dimensions")
   }
 
   if (any(kernel_size >= dim(new_png)[1:2])) {
-    rlang::abort("`kernel_size` must be smaller than the image pixel size")
+    cli::cli_abort("`kernel_size` must be smaller than the image pixel size")
   }
 
   # diff_png <- abs(old_png - new_png)

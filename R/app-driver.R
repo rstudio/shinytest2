@@ -1717,10 +1717,10 @@ AppDriver <- R6Class(
     #'   * `"shinytest2"`: Occurs when `$log_message()` is called
     #'   * `"shiny"`: `stdin` and `stdout` messages from the Shiny server. Note `message()` output is sent to `stdout`.
     #'   * `"chromote"`: Captured by the \pkg{chromote} event handlers. See
-    #'      [console API](https://chromedevtools.github.io/devtools-protocol/1-3/Runtime/#event-consoleAPICalled),
-    #'      [exception thrown](https://chromedevtools.github.io/devtools-protocol/1-3/Runtime/#event-exceptionThrown),
-    #'      [websocket sent](https://chromedevtools.github.io/devtools-protocol/1-3/Network/#event-webSocketFrameSent), and
-    #'      [websocket received](https://chromedevtools.github.io/devtools-protocol/1-3/Network/#event-webSocketFrameReceived)
+    #'      [console API](https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#event-consoleAPICalled),
+    #'      [exception thrown](https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#event-exceptionThrown),
+    #'      [websocket sent](https://chromedevtools.github.io/devtools-protocol/tot/Network/#event-webSocketFrameSent), and
+    #'      [websocket received](https://chromedevtools.github.io/devtools-protocol/tot/Network/#event-webSocketFrameReceived)
     #'      for more details
     #' * `level`: For a given location, there are different types of log levels.
     #'   * `"shinytest2"`: `"info"`; Only log messages are captured.
