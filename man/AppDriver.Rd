@@ -2907,10 +2907,10 @@ Retrieve all of the debug logs that have been recorded.
 \item \code{"shinytest2"}: Occurs when \verb{$log_message()} is called
 \item \code{"shiny"}: \code{stdin} and \code{stdout} messages from the Shiny server. Note \code{message()} output is sent to \code{stdout}.
 \item \code{"chromote"}: Captured by the \pkg{chromote} event handlers. See
-\href{https://chromedevtools.github.io/devtools-protocol/1-3/Runtime/#event-consoleAPICalled}{console API},
-\href{https://chromedevtools.github.io/devtools-protocol/1-3/Runtime/#event-exceptionThrown}{exception thrown},
-\href{https://chromedevtools.github.io/devtools-protocol/1-3/Network/#event-webSocketFrameSent}{websocket sent}, and
-\href{https://chromedevtools.github.io/devtools-protocol/1-3/Network/#event-webSocketFrameReceived}{websocket received}
+\href{https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#event-consoleAPICalled}{console API},
+\href{https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#event-exceptionThrown}{exception thrown},
+\href{https://chromedevtools.github.io/devtools-protocol/tot/Network/#event-webSocketFrameSent}{websocket sent}, and
+\href{https://chromedevtools.github.io/devtools-protocol/tot/Network/#event-webSocketFrameReceived}{websocket received}
 for more details
 }
 \item \code{level}: For a given location, there are different types of log levels.
