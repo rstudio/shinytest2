@@ -2,6 +2,8 @@
 
 ## shinytest2 0.6.0
 
+CRAN release: 2026-11-10
+
 ### New features
 
 - New `AppDriver$get_process()` returns the background R process that

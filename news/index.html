@@ -40,11 +40,11 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/rstudio/shinytest2/blob/rc-v0.6.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/rstudio/shinytest2/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.6.0" id="shinytest2-060">shinytest2 0.6.0<a class="anchor" aria-label="anchor" href="#shinytest2-060"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.6.0" id="shinytest2-060">shinytest2 0.6.0<a class="anchor" aria-label="anchor" href="#shinytest2-060"></a></h2><p class="text-muted">CRAN release: 2026-11-10</p>
 <div class="section level3">
 <h3 id="new-features-0-6-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0"></a></h3>
 <ul><li>New <code>AppDriver$get_process()</code> returns the background R process that runs the app. Use <code>app$get_process()$is_alive()</code> to check if the app is still running, and <code>app$get_process()$wait()</code> to wait for an app that calls <code><a href="https://rdrr.io/pkg/shiny/man/stopApp.html" class="external-link">shiny::stopApp()</a></code> to exit before calling <code>app$stop()</code> (<a href="https://github.com/rstudio/shinytest2/issues/319" class="external-link">#319</a>, <a href="https://github.com/rstudio/shinytest2/issues/320" class="external-link">#320</a>, <a href="https://github.com/rstudio/shinytest2/issues/457" class="external-link">#457</a>).</li>
