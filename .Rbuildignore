@@ -31,3 +31,5 @@ _\.new\.png$
 ^memory-bank$
 ^[.]?air[.]toml$
 ^\.vscode$
+^\.git$
+^\.context$
